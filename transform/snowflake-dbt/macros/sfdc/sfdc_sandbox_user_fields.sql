@@ -78,7 +78,7 @@
       sfdc_users.ramping_quota,
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
-      sfdc_user_roles_source.user_role_name                                                                                           AS crm_user_role_name,
+      sfdc_user_roles_source.name                                                                                                     AS crm_user_role_name,
       sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
       sfdc_users.user_role_level_1                                                                                                    AS crm_user_role_level_1,
       sfdc_users.user_role_level_2                                                                                                    AS crm_user_role_level_2,
@@ -108,8 +108,8 @@
       END                                                                                                                             AS is_hybrid_user,
       {%- if model_type == 'live' %}
       CONCAT(
-             UPPER(sfdc_user_roles_source.user_role_name)
-             '-'
+             UPPER(sfdc_user_roles_source.name),
+             '-',
              current_fiscal_year.fiscal_year
             )                                                                                                                         AS dim_crm_user_hierarchy_sk,
       {%- elif model_type == 'snapshot' %}
