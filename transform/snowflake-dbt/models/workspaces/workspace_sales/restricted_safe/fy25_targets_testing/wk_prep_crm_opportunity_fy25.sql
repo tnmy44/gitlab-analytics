@@ -273,7 +273,7 @@
           THEN account_owner.user_area
         ELSE sfdc_opportunity_source.user_area_stamped
       END                                                                                                   AS opportunity_owner_user_area,
-      sfdc_user_roles_source.user_role_name                                                                 AS opportunity_owner_role,
+      sfdc_user_roles_source.name                                                                           AS opportunity_owner_role,
       account_owner.title                                                                                   AS opportunity_owner_title,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
@@ -294,7 +294,7 @@
     LEFT JOIN sfdc_user AS account_owner
       ON sfdc_account.owner_id = account_owner.user_id
     LEFT JOIN sfdc_user_roles_source
-      ON account_owner.user_role_id = sfdc_user_roles_source.user_role_id
+      ON account_owner.user_role_id = sfdc_user_roles_source.id
     WHERE sfdc_opportunity_source.account_id IS NOT NULL
       AND sfdc_opportunity_source.is_deleted = FALSE
 
