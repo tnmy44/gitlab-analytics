@@ -19,13 +19,3 @@ WITH base AS (
 
 SELECT *
 FROM renamed
-
-UNION ALL
-
-SELECT 
-  id,
-  name,
-  lastmodifiedbyid,
-  lastmodifieddate,
-  systemmodstamp
-FROM {{ ref ('fy25_sfdc_sandbox_user_roles_hierarchy') }}

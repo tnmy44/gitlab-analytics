@@ -59,8 +59,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-
-UNION ALL
-
-SELECT * 
-FROM {{ ref ('fy25_sfdc_sandbox_users_hierarchy') }}
