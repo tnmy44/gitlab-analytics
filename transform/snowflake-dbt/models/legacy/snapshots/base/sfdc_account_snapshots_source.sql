@@ -178,7 +178,7 @@ renamed AS (
     -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
-    account_demographics_sales_segment__c AS ultimate_parent_sales_segment_new,
+    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS ultimate_parent_sales_segment_new,
 
       -- ************************************
       -- NF: 2020-12-17
