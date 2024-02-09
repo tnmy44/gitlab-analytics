@@ -199,7 +199,7 @@
       prep_sales_funnel_target.role_level_5
     FROM prep_sales_funnel_target
     WHERE prep_sales_funnel_target.user_role_name IS NOT NULL
-    AND prep_sales_funnel_target.fiscal_year >= 2024
+    AND prep_sales_funnel_target.fiscal_year >= 2025
 
 
 ), user_hierarchy_stamped_opportunity AS (
