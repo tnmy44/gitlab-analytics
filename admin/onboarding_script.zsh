@@ -11,6 +11,7 @@ echo "Setting up path links for your new version of python"
 export PATH="$HOME/Library/Python/3.10/bin":"$PATH" >> ~/.zshrc
 export PATH="$HOME/bin:/usr/local/bin:$PATH" >> ~/.zshrc
 export PATH="$HOME/.poetry/bin:$PATH" >> ~/.zshrc
+export PATH=/Library/Frameworks/Python.framework/Versions/3.10/bin:$PATH ##Resolves the Poetry installation in DBT
 
 rm python-3.10.3-macos11.pkg
 echo "Python succesfully installed"
