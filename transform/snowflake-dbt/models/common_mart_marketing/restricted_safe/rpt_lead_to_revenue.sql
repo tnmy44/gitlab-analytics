@@ -216,8 +216,8 @@
       mart_crm_attribution_touchpoint.bizible_weight_first_touch,
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
-      attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
-      attribution_touchpoint_offer_type.touchpoint_offer_type,  
+      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type,  
       mart_crm_attribution_touchpoint.touchpoint_sales_stage, 
       CASE
           WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null 
