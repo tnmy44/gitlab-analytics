@@ -143,7 +143,7 @@ tables:
       , file_format
       , file_location
       , locked
-      FROM ci_job_artifacts
+      FROM p_ci_job_artifacts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_artifacts:
