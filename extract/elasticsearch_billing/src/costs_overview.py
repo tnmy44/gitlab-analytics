@@ -79,9 +79,9 @@ def get_costs_overview_backfill():
     )
     output_list = []
     # iterate each month over the years in between extraction_start_date and extraction_end_date and call API for each month
-    
+
     for year in range(extraction_start_date.year, extraction_end_date.year + 1):
-        for month in range(1, 13):
+        for month in range(1, 12):
             current_month = date(year, month, 1)
             start_date = current_month
             print(f"start_date is {start_date}")
@@ -89,7 +89,9 @@ def get_costs_overview_backfill():
             print(f"end_date is {end_date}")
             if start_date >= extraction_start_date and end_date <= extraction_end_date:
                 info(f"{start_date} till {end_date}")
-                costs_endpoint_url = f"/billing/costs/{org_id}?from={start_date}&to={end_date}"
+                costs_endpoint_url = (
+                    f"/billing/costs/{org_id}?from={start_date}&to={end_date}"
+                )
                 data = get_response(costs_endpoint_url)
                 row_list = [
                     data,
