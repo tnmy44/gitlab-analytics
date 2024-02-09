@@ -49,7 +49,7 @@
       NULL                AS user_role_level_5
     FROM prep_crm_person 
 
-), user_hierarchy_source AS (
+), user_geo_hierarchy_source AS (
 
     SELECT 
       DISTINCT 
@@ -60,6 +60,34 @@
       prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
       prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
       prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
+      NULL                                                             AS user_role_name,
+      NULL                                                             AS user_role_level_1,
+      NULL                                                             AS user_role_level_2,
+      NULL                                                             AS user_role_level_3,
+      NULL                                                             AS user_role_level_4,
+      NULL                                                             AS user_role_level_5
+    FROM prep_crm_user_daily_snapshot
+    INNER JOIN dim_date 
+      ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
+    WHERE prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
+      AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
+      AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
+      AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
+      AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
+      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      AND prep_crm_user_daily_snapshot.is_active = TRUE
+
+), user_role_hierarchy_source AS (
+
+    SELECT 
+      DISTINCT 
+      dim_date.fiscal_year,
+      NULL                                                             AS user_segment,
+      NULL                                                             AS user_geo,
+      NULL                                                             AS user_region,
+      NULL                                                             AS user_area,
+      NULL                                                             AS user_business_unit,
+      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
       prep_crm_user_daily_snapshot.crm_user_role_name                  AS user_role_name,
       prep_crm_user_daily_snapshot.crm_user_role_level_1               AS user_role_level_1,
       prep_crm_user_daily_snapshot.crm_user_role_level_2               AS user_role_level_2,
@@ -69,14 +97,8 @@
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE (prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
-      AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
-      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual)) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
-      OR prep_crm_user_daily_snapshot.crm_user_role_level_1 IS NOT NULL
-      AND prep_crm_user_daily_snapshot.is_active = TRUE 
+    WHERE prep_crm_user_daily_snapshot.crm_user_role_name IS NOT NULL
+    AND dim_date.fiscal_year >= 2025
 
 ), account_hierarchy_snapshot_source AS (
 
@@ -129,7 +151,7 @@
       AND prep_crm_account.parent_crm_account_region IS NOT NULL
       AND prep_crm_account.parent_crm_account_area IS NOT NULL
 
-), user_hierarchy_sheetload AS (
+), user_geo_hierarchy_sheetload AS (
 /*
   To get a complete picture of the hierarchy and to ensure fidelity with the target setting model, we will union in the distinct hierarchy values from the file.
 */
@@ -142,6 +164,33 @@
       prep_sales_funnel_target.user_area,
       prep_sales_funnel_target.user_business_unit,
       prep_sales_funnel_target.dim_crm_user_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
+    FROM prep_sales_funnel_target
+    WHERE prep_sales_funnel_target.user_area != 'N/A'
+      AND prep_sales_funnel_target.user_segment IS NOT NULL
+      AND prep_sales_funnel_target.user_geo IS NOT NULL
+      AND prep_sales_funnel_target.user_region IS NOT NULL
+      AND prep_sales_funnel_target.user_area IS NOT NULL
+      AND prep_sales_funnel_target.role_level_1 IS NULL
+
+), user_role_hierarchy_sheetload AS (
+/*
+  To get a complete picture of the hierarchy and to ensure fidelity with the target setting model, we will union in the distinct hierarchy values from the file.
+*/
+
+    SELECT DISTINCT  
+      prep_sales_funnel_target.fiscal_year,
+      NULL                                                             AS user_segment,
+      NULL                                                             AS user_geo,
+      NULL                                                             AS user_region,
+      NULL                                                             AS user_area,
+      NULL                                                             AS user_business_unit,
+      prep_sales_funnel_target.dim_crm_user_hierarchy_sk,
       prep_sales_funnel_target.user_role_name,
       prep_sales_funnel_target.role_level_1,
       prep_sales_funnel_target.role_level_2,
@@ -149,11 +198,9 @@
       prep_sales_funnel_target.role_level_4,
       prep_sales_funnel_target.role_level_5
     FROM prep_sales_funnel_target
-    WHERE prep_sales_funnel_target.user_area != 'N/A'
-      AND prep_sales_funnel_target.user_segment IS NOT NULL
-      AND prep_sales_funnel_target.user_geo IS NOT NULL
-      AND prep_sales_funnel_target.user_region IS NOT NULL
-      AND prep_sales_funnel_target.user_area IS NOT NULL
+    WHERE prep_sales_funnel_target.user_role_name IS NOT NULL
+    AND prep_sales_funnel_target.fiscal_year >= 2024
+
 
 ), user_hierarchy_stamped_opportunity AS (
 /*
@@ -168,12 +215,12 @@
       prep_crm_opportunity.user_area_stamped                         AS user_area,
       prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
       prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk,
-      NULL                AS user_role_name,
-      NULL                AS user_role_level_1,
-      NULL                AS user_role_level_2,
-      NULL                AS user_role_level_3,
-      NULL                AS user_role_level_4,
-      NULL                AS user_role_level_5
+      NULL                                                           AS user_role_name,
+      NULL                                                           AS user_role_level_1,
+      NULL                                                           AS user_role_level_2,
+      NULL                                                           AS user_role_level_3,
+      NULL                                                           AS user_role_level_4,
+      NULL                                                           AS user_role_level_5
     FROM prep_crm_opportunity
     WHERE is_live = 1
   
@@ -183,12 +230,22 @@
 */
 
     SELECT *
-    FROM user_hierarchy_source
+    FROM user_geo_hierarchy_source
+
+    UNION
+
+    SELECT *
+    FROM user_role_hierarchy_source
   
     UNION
  
     SELECT *
-    FROM user_hierarchy_sheetload
+    FROM user_geo_hierarchy_sheetload
+
+    UNION
+
+    SELECT *
+    FROM user_role_hierarchy_sheetload
 
     UNION
 
@@ -224,12 +281,12 @@
       UPPER(user_area)          AS user_area,
       NULL                      AS user_business_unit,
       dim_crm_user_hierarchy_sk,
-      UPPER(user_role_name)     AS user_role_name,
-      UPPER(user_role_level_1)  AS user_role_level_1,
-      UPPER(user_role_level_2)  AS user_role_level_2,
-      UPPER(user_role_level_3)  AS user_role_level_3,
-      UPPER(user_role_level_4)  AS user_role_level_4,
-      UPPER(user_role_level_5)  AS user_role_level_5
+      NULL                      AS user_role_name,
+      NULL                      AS user_role_level_1,
+      NULL                      AS user_role_level_2,
+      NULL                      AS user_role_level_3,
+      NULL                      AS user_role_level_4,
+      NULL                      AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year < 2024
 
@@ -248,12 +305,12 @@
       UPPER(user_area)          AS user_area,
       UPPER(user_business_unit) AS user_business_unit,
       dim_crm_user_hierarchy_sk,
-      UPPER(user_role_name)     AS user_role_name,
-      UPPER(user_role_level_1)  AS user_role_level_1,
-      UPPER(user_role_level_2)  AS user_role_level_2,
-      UPPER(user_role_level_3)  AS user_role_level_3,
-      UPPER(user_role_level_4)  AS user_role_level_4,
-      UPPER(user_role_level_5)  AS user_role_level_5
+      NULL                      AS user_role_name,
+      NULL                      AS user_role_level_1,
+      NULL                      AS user_role_level_2,
+      NULL                      AS user_role_level_3,
+      NULL                      AS user_role_level_4,
+      NULL                      AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year = 2024
 
