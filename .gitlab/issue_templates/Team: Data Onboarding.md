@@ -146,7 +146,7 @@ Your computer set up is critical to working efficiently.  This section will help
 | [Google Cloud](#google-cloud) | No | No | No | Yes | Yes |
 | [Jupyter](#jupyter) | No | No | No | Yes | No |
 | [Airflow local development environment](#airflow) | No | No | No | No | Yes |
-| [Optional Steps](#optional-steps) | No | Yes | No | Yes | Yes |
+| [Optional Steps](#optional-steps) | No | No | No | Yes | Yes |
 
 
 ### Core Steps
