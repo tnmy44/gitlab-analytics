@@ -163,12 +163,15 @@ class TestPostgresUtils:
             f"{os.path.dirname(os.path.realpath(__file__))}/test_iter_csv.csv",
             chunksize=5,
         )
+        df = pd.read_csv(
+            f"{os.path.dirname(os.path.realpath(__file__))}/test_iter_csv.csv"
+        )
         mock_read_sql_tmpfile.return_value = iter_csv
         some_engine = MagicMock(spec=Engine)
 
         query = "select 1;"
         primary_key = "ID"
-        max_source_id = 10
+        max_source_id = df[primary_key].max()
         initial_load_start_date = datetime.utcnow()
         database_kwargs = {
             "source_database": "some_db",
@@ -189,8 +192,8 @@ class TestPostgresUtils:
             load_by_id_export_type,
         )
 
-        assert mock_upload_to_gcs.call_count == 2
-        assert mock_write_metadata.call_count == 2
+        assert mock_upload_to_gcs.call_count == 4
+        assert mock_write_metadata.assert_called_once()
         mock_upload_to_snowflake_after_extraction.assert_called_once()
 
         assert returned_initial_load_start_date == initial_load_start_date

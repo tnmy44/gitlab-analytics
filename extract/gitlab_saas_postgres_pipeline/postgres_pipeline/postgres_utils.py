@@ -607,30 +607,31 @@ def chunk_and_upload_metadata(
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(f"Uploaded {row_count} rows to GCS in {upload_file_name}")
 
-    is_export_completed = max_last_extracted_id >= max_source_id
-    # upload to Snowflake before writing metadata=complete for safety
-    if is_export_completed:
-        upload_to_snowflake_after_extraction(
-            chunk_df,
-            database_kwargs,
-            load_by_id_export_type,
+    if rows_uploaded > 0:
+        is_export_completed = max_last_extracted_id >= max_source_id
+        # upload to Snowflake before writing metadata=complete for safety
+        if is_export_completed:
+            upload_to_snowflake_after_extraction(
+                chunk_df,
+                database_kwargs,
+                load_by_id_export_type,
+                initial_load_start_date,
+                advanced_metadata,
+            )
+        # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
+        write_metadata(
+            database_kwargs["metadata_engine"],
+            database_kwargs["metadata_table"],
+            database_kwargs["source_database"],
+            database_kwargs["real_target_table"],
             initial_load_start_date,
-            advanced_metadata,
+            upload_date,
+            upload_file_name,
+            max_last_extracted_id,
+            max_source_id,
+            is_export_completed,
+            row_count,
         )
-    # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
-    write_metadata(
-        database_kwargs["metadata_engine"],
-        database_kwargs["metadata_table"],
-        database_kwargs["source_database"],
-        database_kwargs["real_target_table"],
-        initial_load_start_date,
-        upload_date,
-        upload_file_name,
-        max_last_extracted_id,
-        max_source_id,
-        is_export_completed,
-        row_count,
-    )
     # need to return `initial_load_start_date` in case it was first set here
     return initial_load_start_date
 
