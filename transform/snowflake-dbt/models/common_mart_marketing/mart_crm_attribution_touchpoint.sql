@@ -114,7 +114,7 @@
               THEN 'Stage 6 - Closed Won'
             WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_lost_date
               THEN 'Stage 6 - Closed Lost'
-            ELSE fct_crm_opportunity.stage_name||'-Mapping Missing'
+            ELSE stage_name||'-Mapping Missing'
           END AS touchpoint_sales_stage,
 
       -- person info
