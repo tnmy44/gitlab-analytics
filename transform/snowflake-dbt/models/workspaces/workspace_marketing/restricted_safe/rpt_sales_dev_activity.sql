@@ -343,6 +343,9 @@
     NULL AS is_mql,
     NULL AS is_first_order_person,
     NULL AS person_first_country,
+    NULL AS person_geo_combined,
+    NULL AS lead_score_classification,
+    NULL AS country_name_iso_based,
     NULL AS propensity_to_purchase_score_group,
     NULL AS is_high_ptp_lead,
     NULL AS marketo_last_interesting_moment,
@@ -411,7 +414,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-12-08",
+    updated_date="2024-02-12",
   ) }}
