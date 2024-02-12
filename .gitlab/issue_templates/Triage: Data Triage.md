@@ -160,6 +160,11 @@ The link to the Data Team Incident issue is <link>
 </details>
 
 
+## Sensitive Data Nullified Columns
+
+Several columns were nullified or removed entirely from Snowflake, due to work being done to remove all red / sensitive data from Snowflake.
+You can find details on those columns in the [Sensitive Data Handbook entry](https://internal.gitlab.com/handbook/enterprise-data/platform/sensitive-data/) and use it as a quick check, whenever some clarification request comes over via Slack, where team members are wondering why some data is suddenly missing.
+
 ## Finishing the Day
 
 
