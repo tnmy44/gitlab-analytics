@@ -13,7 +13,7 @@ map AS (
 
 report AS (
   SELECT
-    {{ dbt_utils.star(from=ref('gitlab_pto_source'), except=["HR_EMPLOYEE_ID"]) }}, 
+    {{ dbt_utils.star(from=ref('gitlab_pto_source'), except=["HR_EMPLOYEE_ID"]) }},
     CASE pto_status
       WHEN 'AP' THEN 'Approved'
       WHEN 'DN' THEN 'Denied'
