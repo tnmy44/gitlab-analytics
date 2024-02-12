@@ -14,7 +14,8 @@ from postgres_utils import (
 )
 
 # needed for `get_is_past_due_deletes()`
-os.environ['DATE_INTERVAL_END'] = pendulum.parse('2024-01-01').to_iso8601_string()
+os.environ["DATE_INTERVAL_END"] = pendulum.parse("2024-01-01").to_iso8601_string()
+
 
 def insert_into_metadata_db(metadata_engine, full_table_path, metadata):
     insert_query = f"""

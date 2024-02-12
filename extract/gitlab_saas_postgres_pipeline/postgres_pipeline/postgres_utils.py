@@ -878,7 +878,9 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     it means that deletes needs to be run
     """
     dbt_full_refresh_monthly_schedule = "45 8 * * SUN#1"
-    date_interval_end = datetime.strptime(os.environ.get("DATE_INTERVAL_END"), "%Y-%m-%dT%H:%M:%SZ")
+    date_interval_end = datetime.strptime(
+        os.environ.get("DATE_INTERVAL_END"), "%Y-%m-%dT%H:%M:%SZ"
+    )
 
     next_monthly_full_refresh_run = croniter(
         dbt_full_refresh_monthly_schedule
