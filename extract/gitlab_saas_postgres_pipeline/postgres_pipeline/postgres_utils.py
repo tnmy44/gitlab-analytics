@@ -248,9 +248,7 @@ def seed_table(
     target_table_name: str,
     target_engine: Engine,
 ) -> None:
-    """
-    Sets the proper data types and column names.
-    """
+    """Sets the proper data types and column names."""
     logging.info(f"Creating table {target_table_name}")
     snowflake_types.append(Column("_uploaded_at", Float))
     if advanced_metadata:
@@ -878,12 +876,16 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     it means that deletes needs to be run
     """
     dbt_full_refresh_monthly_schedule = "45 8 * * SUN#1"
-    airflow_run_interval_end = datetime.strptime(
-        os.environ.get("DATE_INTERVAL_END"), "%Y-%m-%dT%H:%M:%SZ"
+    try:
+        data_interval_end_str = os.environ["DATE_INTERVAL_END"]
+    except KeyError:
+        raise KeyError("Airflow `data_interval_end` env var required, but missing")
+    airflow_data_interval_end = datetime.strptime(
+        data_interval_end_str, "%Y-%m-%dT%H:%M:%SZ"
     )
 
     next_monthly_full_refresh_run = croniter(
-        dbt_full_refresh_monthly_schedule, airflow_run_interval_end
+        dbt_full_refresh_monthly_schedule, airflow_data_interval_end
     ).get_next(datetime)
 
     days_till_refresh_threshold = 2
@@ -891,10 +893,10 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
         days_till_refresh_threshold
     )
     is_past_due = (prev_initial_load_start_date < date_threshold) and (
-        airflow_run_interval_end > date_threshold
+        airflow_data_interval_end > date_threshold
     )
     logging.info(
-        f"\ndeletes date_threshold: {date_threshold}, airflow_run_interval_end: {airflow_run_interval_end}, is_past_due: {is_past_due}"
+        f"\ndeletes_date_threshold: {date_threshold}, airflow_data_interval_end: {airflow_data_interval_end}, is_past_due: {is_past_due}"
     )
 
     return is_past_due

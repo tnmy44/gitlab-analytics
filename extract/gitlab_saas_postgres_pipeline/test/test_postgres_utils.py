@@ -434,7 +434,7 @@ class TestPostgresUtils:
         assert is_past_due is False
 
     def test_range_generator(self):
-        # stop is less than step
+        # 1) stop is less than step
         start, stop, step = 1, 1, 300
         id_pairs = []
         for id_pair in range_generator(start, stop, step):
@@ -442,7 +442,7 @@ class TestPostgresUtils:
 
         assert id_pairs == [(start, step)]
 
-        # stop is on one of the steps
+        # 2) stop is on one of the steps
         start, stop, step = 1, 600, 300
         id_pairs = []
         for id_pair in range_generator(start, stop, step):
@@ -450,7 +450,12 @@ class TestPostgresUtils:
 
         assert id_pairs == [(start, step), (step + 1, step * 2)]
 
-        # stop is not on one of the steps
+        # check that the pairs don't overlap
+        first_pair_stop = id_pairs[0][1]
+        second_pair_start = id_pairs[1][0]
+        assert first_pair_stop + 1 == second_pair_start
+
+        # 3) stop is not on one of the steps
         start, stop, step = 1, 602, 300
         id_pairs = []
         for id_pair in range_generator(start, stop, step):
@@ -461,3 +466,8 @@ class TestPostgresUtils:
             (step + 1, step * 2),
             (step * 2 + 1, step * 3),
         ]
+
+        # check that the pairs don't overlap
+        first_pair_stop = id_pairs[0][1]
+        second_pair_start = id_pairs[1][0]
+        assert first_pair_stop + 1 == second_pair_start
