@@ -23,6 +23,7 @@ from postgres_utils import (
     upload_to_snowflake_after_extraction,
     is_delete_export_needed,
     get_is_past_due_deletes,
+    range_generator,
 )
 
 CSV_CHUNKSIZE = 500
@@ -431,3 +432,32 @@ class TestPostgresUtils:
         prev_initial_load_start_date = datetime(2999, 12, 31)
         is_past_due = get_is_past_due_deletes(prev_initial_load_start_date)
         assert is_past_due is False
+
+    def test_range_generator(self):
+        # stop is less than step
+        start, stop, step = 1, 1, 300
+        id_pairs = []
+        for id_pair in range_generator(start, stop, step):
+            id_pairs.append(id_pair)
+
+        assert id_pairs == [(start, step)]
+
+        # stop is on one of the steps
+        start, stop, step = 1, 600, 300
+        id_pairs = []
+        for id_pair in range_generator(start, stop, step):
+            id_pairs.append(id_pair)
+
+        assert id_pairs == [(start, step), (step + 1, step * 2)]
+
+        # stop is not on one of the steps
+        start, stop, step = 1, 602, 300
+        id_pairs = []
+        for id_pair in range_generator(start, stop, step):
+            id_pairs.append(id_pair)
+
+        assert id_pairs == [
+            (start, step),
+            (step + 1, step * 2),
+            (step * 2 + 1, step * 3),
+        ]

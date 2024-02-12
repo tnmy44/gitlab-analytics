@@ -665,7 +665,7 @@ def range_generator(
         if start > stop:
             logging.info("No more id pairs to extract. Stopping")
             break
-        yield tuple([start, start + step])
+        yield tuple([start, start + step - 1])
         start += step
 
 
@@ -878,12 +878,12 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     it means that deletes needs to be run
     """
     dbt_full_refresh_monthly_schedule = "45 8 * * SUN#1"
-    date_interval_end = datetime.strptime(
+    airflow_run_interval_end = datetime.strptime(
         os.environ.get("DATE_INTERVAL_END"), "%Y-%m-%dT%H:%M:%SZ"
     )
 
     next_monthly_full_refresh_run = croniter(
-        dbt_full_refresh_monthly_schedule, date_interval_end
+        dbt_full_refresh_monthly_schedule, airflow_run_interval_end
     ).get_next(datetime)
 
     days_till_refresh_threshold = 2
@@ -891,10 +891,10 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
         days_till_refresh_threshold
     )
     is_past_due = (prev_initial_load_start_date < date_threshold) and (
-        date_interval_end > date_threshold
+        airflow_run_interval_end > date_threshold
     )
     logging.info(
-        f"\ndeletes date_threshold: {date_threshold}, date_interval_end: {date_interval_end}, is_past_due: {is_past_due}"
+        f"\ndeletes date_threshold: {date_threshold}, airflow_run_interval_end: {airflow_run_interval_end}, is_past_due: {is_past_due}"
     )
 
     return is_past_due
