@@ -75,7 +75,8 @@
     attribution_touchpoint_offer_type.touchpoint_offer_type,
     attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
     sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model/100 AS bizible_count_custom_model,
-    sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model
+    sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model,
+    mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
     FROM 
     sfdc_bizible_attribution_touchpoint_snapshots_source
 
@@ -223,6 +224,7 @@ combined_models AS (
 --Touchpoint Dimensions
     attribution_touchpoint_snapshot_base.bizible_touchpoint_type,
     attribution_touchpoint_snapshot_base.bizible_integrated_campaign_grouping,
+    attribution_touchpoint_snapshot_base.opp_touchpoint_sales_stage,
     CASE 
       WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'SDR Generated' 
         AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
@@ -363,6 +365,7 @@ combined_models AS (
 --Touchpoint Dimensions
     NULL AS bizible_touchpoint_type,
     NULL AS bizible_integrated_campaign_grouping,
+    NULL AS opp_touchpoint_sales_stage,
     'Other' AS bizible_marketing_channel,
     'Other.Removed Touchpoint' AS bizible_marketing_channel_path,
     'Other' AS snapshot_marketing_channel,
@@ -433,7 +436,7 @@ combined_models AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-04-11",
-    updated_date="2023-10-23",
+    updated_date="2024-01-24",
   ) }}

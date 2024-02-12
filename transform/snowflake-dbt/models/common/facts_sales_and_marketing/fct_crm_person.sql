@@ -36,6 +36,8 @@ WITH account_dims_mapping AS (
       zoominfo_contact_id,
       is_bdr_sdr_worked,
       is_partner_recalled,
+      is_high_priority,
+      high_priority_datetime,
       propensity_to_purchase_days_since_trial_start,
       propensity_to_purchase_score_date,
       email_hash,
@@ -306,7 +308,7 @@ WITH account_dims_mapping AS (
       COALESCE(sfdc_contacts.worked_datetime, sfdc_leads.worked_datetime)::DATE                                 AS worked_date,
       {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
       {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
-
+      crm_person.high_priority_datetime,
      -- flags
       CASE
           WHEN mqls.first_mql_date IS NOT NULL THEN 1
@@ -319,6 +321,7 @@ WITH account_dims_mapping AS (
       crm_person.is_bdr_sdr_worked,
       crm_person.is_partner_recalled,
       crm_person.is_lead_source_trial,
+      crm_person.is_high_priority,
 
      -- information fields
       crm_person.name_of_active_sequence,
@@ -467,5 +470,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-11-08"
+    updated_date="2024-01-19"
 ) }}
