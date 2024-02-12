@@ -40,11 +40,7 @@
     mart_crm_attribution_touchpoint.bizible_weight_custom_model/100 AS bizible_count_custom_model,
     mart_crm_attribution_touchpoint.bizible_weight_custom_model,
     mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
-    FROM 
-    mart_crm_attribution_touchpoint 
-    LEFT JOIN attribution_touchpoint_offer_type
-    ON  mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=attribution_touchpoint_offer_type.dim_crm_touchpoint_id
-
+    FROM mart_crm_attribution_touchpoint 
 )
 
 , wk_sales_sfdc_opportunity_xf_base AS (
@@ -252,5 +248,5 @@ combined_models AS (
     created_by="@dmicovic",
     updated_by="@rkohnke",
     created_date="2023-09-01",
-    updated_date="2024-01-31",
+    updated_date="2024-02-12",
   ) }}
