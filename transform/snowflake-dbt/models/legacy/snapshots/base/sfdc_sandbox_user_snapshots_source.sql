@@ -1,11 +1,14 @@
-{{ config(
-    tags=["six_hourly"]
-) }}
-
 WITH source AS (
 
     SELECT *
-    FROM {{ source('salesforce', 'user') }}
+    FROM {{ ref('sfdc_sandbox_user_snapshots') }}
+
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
 
 ), renamed AS(
 
@@ -16,8 +19,6 @@ WITH source AS (
       name                                                              AS name,
       email                                                             AS user_email,
       employeenumber                                                    AS employee_number,
-      profileid                                                         AS profile_id,
-      username                                                          AS user_name,
 
       -- info
       title                                                             AS title,
@@ -34,7 +35,6 @@ WITH source AS (
       role_level_4__c                                                   AS user_role_level_4,
       role_level_5__c                                                   AS user_role_level_5,
       start_date__c                                                     AS start_date,
-      ramping_quota__c                                                  AS ramping_quota,
       {{ sales_hierarchy_sales_segment_cleaning('user_segment__c') }}   AS user_segment,
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
@@ -42,7 +42,7 @@ WITH source AS (
       user_business_unit__c                                             AS user_business_unit,
       user_segment_geo_region_area__c                                   AS user_segment_geo_region_area,
       timezonesidkey                                                    AS user_timezone,
-      CASE
+      CASE 
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment
       END                                                               AS user_segment_grouped,
@@ -58,7 +58,13 @@ WITH source AS (
       systemmodstamp,
 
       --dbt last run
-      convert_timezone('America/Los_Angeles',convert_timezone('UTC',current_timestamp())) AS _last_dbt_run
+      convert_timezone('America/Los_Angeles',convert_timezone('UTC',current_timestamp())) AS _last_dbt_run,
+
+      -- snapshot metadata
+      dbt_scd_id,
+      dbt_updated_at,
+      dbt_valid_from,
+      dbt_valid_to
 
     FROM source
 

@@ -1,11 +1,7 @@
-{{ config(
-    tags=["six_hourly"]
-) }}
-
 WITH source AS (
 
     SELECT *
-    FROM {{ source('salesforce', 'user') }}
+    FROM {{ source('salesforce_sandbox', 'user') }}
 
 ), renamed AS(
 
@@ -16,8 +12,6 @@ WITH source AS (
       name                                                              AS name,
       email                                                             AS user_email,
       employeenumber                                                    AS employee_number,
-      profileid                                                         AS profile_id,
-      username                                                          AS user_name,
 
       -- info
       title                                                             AS title,
@@ -34,7 +28,6 @@ WITH source AS (
       role_level_4__c                                                   AS user_role_level_4,
       role_level_5__c                                                   AS user_role_level_5,
       start_date__c                                                     AS start_date,
-      ramping_quota__c                                                  AS ramping_quota,
       {{ sales_hierarchy_sales_segment_cleaning('user_segment__c') }}   AS user_segment,
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
@@ -48,7 +41,7 @@ WITH source AS (
       END                                                               AS user_segment_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}
                                                                         AS user_segment_region_grouped,
-      hybrid__c                                                         AS is_hybrid_user,
+      hybrid__c::BOOLEAN                                                AS is_hybrid_user,
 
       --metadata
       createdbyid                                                       AS created_by_id,

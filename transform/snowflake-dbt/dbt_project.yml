@@ -306,6 +306,9 @@ models:
           +schema: sensitive
           secure: true
 
+      sfdc_sandbox:
+        +schema: sfdc_sandbox
+
       sheetload:
         +schema: sheetload
 
