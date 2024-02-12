@@ -152,7 +152,7 @@ class TestPostgresUtils:
         Test that when we have reached the max_source_id,
         that the files ARE uploaded to Snowflake
 
-        Should reach max_source_id after 2 loops and then terminate.
+        Should reach max_source_id after 4 loops and then terminate.
         Therefore, test that upload_to_gcs() and write_metadata()
         are called twice.
 
@@ -193,7 +193,7 @@ class TestPostgresUtils:
         )
 
         assert mock_upload_to_gcs.call_count == 4
-        assert mock_write_metadata.assert_called_once()
+        mock_write_metadata.assert_called_once()
         mock_upload_to_snowflake_after_extraction.assert_called_once()
 
         assert returned_initial_load_start_date == initial_load_start_date

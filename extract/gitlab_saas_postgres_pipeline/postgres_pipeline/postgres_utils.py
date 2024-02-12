@@ -568,6 +568,7 @@ def chunk_and_upload_metadata(
         - COPY to Snowflake after all files have been uploaded to GCS
     """
     rows_uploaded = 0
+    # the chunks from the copy to stdout are not ordered- need to track max
     max_last_extracted_id = -1
 
     with tempfile.TemporaryFile() as tmpfile:
@@ -877,7 +878,7 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     it means that deletes needs to be run
     """
     dbt_full_refresh_monthly_schedule = "45 8 * * SUN#1"
-    next_execution_date = os.environ.get("NEXT_EXECUTION_DATE")
+    date_interval_end = datetime.strptime(os.environ.get("DATE_INTERVAL_END"), "%Y-%m-%dT%H:%M:%SZ")
 
     next_monthly_full_refresh_run = croniter(
         dbt_full_refresh_monthly_schedule
@@ -888,10 +889,10 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
         days_till_refresh_threshold
     )
     is_past_due = (prev_initial_load_start_date < date_threshold) and (
-        next_execution_date > date_threshold
+        date_interval_end > date_threshold
     )
     logging.info(
-        f"\ndeletes date_threshold: {date_threshold}, next_execution_date: {next_execution_date}, is_past_due: {is_past_due}"
+        f"\ndeletes date_threshold: {date_threshold}, date_interval_end: {date_interval_end}, is_past_due: {is_past_due}"
     )
 
     return is_past_due
