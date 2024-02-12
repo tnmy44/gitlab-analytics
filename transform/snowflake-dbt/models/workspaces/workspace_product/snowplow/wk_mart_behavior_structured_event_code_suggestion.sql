@@ -85,7 +85,7 @@ code_suggestions_joined_to_fact_and_dim AS (
     dim_behavior_event.event_label,
     dim_behavior_event.event_property,
     CASE
-      WHEN ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
+      WHEN joined_code_suggestions_contexts.ide_name = 'Visual Studio Code' AND joined_code_suggestions_contexts.extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
       ELSE FALSE
     END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
@@ -115,7 +115,6 @@ filtered_code_suggestion_events AS (
     model_name,
     prefix_length,
     suffix_length,
-    user_agent,
     api_status_code,
     extension_name,
     extension_version,
@@ -156,7 +155,7 @@ filtered_code_suggestion_events AS (
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
     created_by="@cbraza",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2023-10-09",
-    updated_date="2024-01-08"
+    updated_date="2024-02-07"
 ) }}

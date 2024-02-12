@@ -74,12 +74,7 @@ WITH all_events AS (
       ev.geo_region,
       ev.geo_region_name,
       ev.geo_city,
-      ev.geo_zipcode,
-      ev.geo_latitude,
-      ev.geo_longitude,
       ev.geo_timezone,
-
-      ev.user_ipaddress,
 
       ev.ip_isp,
       ev.ip_organization,
