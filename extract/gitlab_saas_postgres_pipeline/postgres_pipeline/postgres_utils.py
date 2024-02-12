@@ -883,7 +883,7 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     )
 
     next_monthly_full_refresh_run = croniter(
-        dbt_full_refresh_monthly_schedule
+        dbt_full_refresh_monthly_schedule, date_interval_end
     ).get_next(datetime)
 
     days_till_refresh_threshold = 2
