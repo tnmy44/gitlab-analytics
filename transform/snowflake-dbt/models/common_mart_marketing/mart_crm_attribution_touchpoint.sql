@@ -106,9 +106,9 @@
               THEN 'Stage 3'
             WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_4_proposal_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_5_negotiating_date OR fct_crm_opportunity.stage_5_negotiating_date IS NULL)
               THEN 'Stage 4'
-            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date_date OR fct_crm_opportunity.stage_6_awaiting_signature_date_date IS NULL)
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date OR fct_crm_opportunity.stage_6_awaiting_signature_date IS NULL)
               THEN 'Stage 5'
-            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date_date AND ((dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_won_date OR dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_lost_date) OR (fct_crm_opportunity.stage_6_closed_won_date IS NULL AND fct_crm_opportunity.stage_6_closed_lost_date IS NULL))
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date AND ((dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_won_date OR dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_lost_date) OR (fct_crm_opportunity.stage_6_closed_won_date IS NULL AND fct_crm_opportunity.stage_6_closed_lost_date IS NULL))
               THEN 'Stage 6 - Awaiting Signature'
             WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date AND fct_crm_opportunity.is_closed_won = TRUE
               THEN 'Stage 6 - Closed Won'
