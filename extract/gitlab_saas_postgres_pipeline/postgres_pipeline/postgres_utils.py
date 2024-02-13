@@ -609,7 +609,7 @@ def chunk_and_upload_metadata(
     if rows_uploaded > 0:
         is_export_completed = max_last_extracted_id >= max_source_id
         # upload to Snowflake before writing metadata=complete for safety
-        '''
+        """
         if is_export_completed:
             upload_to_snowflake_after_extraction(
                 chunk_df,
@@ -618,7 +618,7 @@ def chunk_and_upload_metadata(
                 initial_load_start_date,
                 advanced_metadata,
             )
-        '''
+        """
         # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
         write_metadata(
             database_kwargs["metadata_engine"],
@@ -1032,7 +1032,9 @@ def add_deletes_column(target_engine, target_table_path, field_details):
     """
     try:
         alter_query_results = query_executor(target_engine, alter_query)
-        logging.info(f"add_deletes_column, {alter_query_results[0][0]}")
+        logging.info(
+            f"add field if not exists `{field_details}`, {alter_query_results[0][0]}"
+        )
     except sqlalchemy.exc.ProgrammingError:
         raise
 
