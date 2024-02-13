@@ -5,7 +5,7 @@
         tags=['product']
 ) }}
 
-{{ 
+{{
     simple_cte([
     ('page_views', 'prep_snowplow_page_views_all'),
     ])
@@ -32,6 +32,7 @@
       gsc_project_id,
       gsc_pseudonymized_user_id,
       gsc_source,
+      gsc_is_gitlab_team_member,
       min_tstamp                                                                    AS page_view_start_at,
       max_tstamp                                                                    AS page_view_end_at,
       time_engaged_in_s                                                             AS engaged_seconds,
@@ -80,6 +81,7 @@
       page_views_w_clean_url.gsc_plan,
       page_views_w_clean_url.gsc_pseudonymized_user_id,
       page_views_w_clean_url.gsc_source,
+      page_views_w_clean_url.gsc_is_gitlab_team_member,
       page_views_w_clean_url.gsc_namespace_id,
       page_views_w_clean_url.gsc_project_id,
 
@@ -99,7 +101,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-07-22",
-    updated_date="2023-08-17"
+    updated_date="2024-01-25"
 ) }}

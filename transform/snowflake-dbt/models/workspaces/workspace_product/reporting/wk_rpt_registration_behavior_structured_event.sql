@@ -26,6 +26,7 @@ behavior_structured_event AS (
     gsc_extra,
     gsc_plan,
     gsc_source,
+    gsc_is_gitlab_team_member,
     event_value,
     session_index,
     session_id,
