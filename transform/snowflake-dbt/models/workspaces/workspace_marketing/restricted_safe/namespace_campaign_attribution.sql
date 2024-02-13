@@ -1,6 +1,6 @@
 {{ config(
     materialized='table',
-    tags=["mnpi_exception", "marketing"],
+    tags=["mnpi_exception"],
     enabled=false
 ) }}
 
