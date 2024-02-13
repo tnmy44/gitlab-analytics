@@ -1054,7 +1054,7 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
     add_is_deleted_field_query = f"""
     ALTER TABLE {target_table_path}
     ADD COLUMN pgp_is_deleted boolean default false,
-    ADD COLUMN pgp_is_deleted_updated_at timestamp default current_timestamp;"
+    pgp_is_deleted_updated_at timestamp default current_timestamp;"
     """
     try:
         alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
