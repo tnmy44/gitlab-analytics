@@ -12,6 +12,8 @@ renamed AS (
     source.employee_id::NUMBER                          AS employee_id,
     d.value['WORKDAY_ID']::VARCHAR                      AS workday_id,
     d.value['BUSINESS_PROCESS_TYPE']::VARCHAR           AS business_process_type,
+    d.value['BUSINESS_PROCESS_CATEGORY']::VARCHAR       AS business_process_category,
+    d.value['BUSINESS_PROCESS_REASON']::VARCHAR         AS business_process_reason,
     d.value['HIRE_DATE']::DATE                          AS hire_date,
     d.value['TERMINATION_DATE']::DATE                   AS termination_date,
     d.value['COUNTRY_CURRENT']::VARCHAR                 AS country_past,
