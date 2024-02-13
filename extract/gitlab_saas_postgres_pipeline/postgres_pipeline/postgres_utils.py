@@ -590,7 +590,7 @@ def chunk_and_upload_metadata(
                 f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
             )
 
-            # one caveat is that we no longer write all uploaded files only the final upload of the chunk...
+            # one caveat is that we no longer write metadata for all uploaded files only the final upload of the chunk...
             upload_date = datetime.utcnow()
             if initial_load_start_date is None:
                 initial_load_start_date = upload_date
