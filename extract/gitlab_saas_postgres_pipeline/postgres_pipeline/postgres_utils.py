@@ -609,6 +609,7 @@ def chunk_and_upload_metadata(
     if rows_uploaded > 0:
         is_export_completed = max_last_extracted_id >= max_source_id
         # upload to Snowflake before writing metadata=complete for safety
+        '''
         if is_export_completed:
             upload_to_snowflake_after_extraction(
                 chunk_df,
@@ -617,6 +618,7 @@ def chunk_and_upload_metadata(
                 initial_load_start_date,
                 advanced_metadata,
             )
+        '''
         # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
         write_metadata(
             database_kwargs["metadata_engine"],
