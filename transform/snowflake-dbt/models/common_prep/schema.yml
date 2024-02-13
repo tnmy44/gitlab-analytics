@@ -2412,3 +2412,57 @@ models:
         description: The date when the cloud activation/licensing was updated on customer's instance
         tests:
           - not_null
+
+  - name: prep_license_subscription
+    description: '{{ doc("prep_license_subscription") }}'  
+    columns:
+      - name: reporting_month
+        description: '{{ doc("reporting_month") }}'
+      - name: license_id
+        description: '{{ doc("license_id") }}'
+      - name: license_md5
+        description: '{{ doc("license_md5") }}'
+      - name: license_sha256
+        description: '{{ doc("license_sha256") }}'
+      - name: license_company_name
+        description: '{{ doc("license_company_name") }}'
+      - name: license_expire_date
+        description: '{{ doc("license_expire_date") }}'
+      - name: original_subscription_name_slugify
+        description: '{{ doc("original_subscription_name_slugify") }}'
+      - name: dim_subscription_id
+        description: '{{ doc("dim_subscription_id") }}'
+      - name: subscription_start_month
+        description: '{{ doc("subscription_start_month") }}'
+      - name: subscription_end_month
+        description: '{{ doc("subscription_end_month") }}'
+      - name: dim_subscription_id_original
+        description: '{{ doc("dim_subscription_id_original") }}'
+      - name: dim_billing_account_id
+        description: '{{ doc("dim_billing_account_id") }}'
+      - name: crm_account_name
+        description: '{{ doc("crm_account_name") }}'
+      - name: dim_parent_crm_account_id
+        description: '{{ doc("dim_parent_crm_account_id") }}'
+      - name: parent_crm_account_name
+        description: '{{ doc("parent_crm_account_name") }}'
+      - name: parent_crm_account_upa_country
+        description: '{{ doc("parent_crm_account_upa_country") }}'
+      - name: parent_crm_account_sales_segment
+        description: '{{ doc("parent_crm_account_sales_segment") }}'
+      - name: parent_crm_account_industry
+        description: '{{ doc("parent_crm_account_industry") }}'
+      - name: parent_crm_account_territory
+        description: '{{ doc("parent_crm_account_territory") }}'
+      - name: technical_account_manager
+        description: '{{ doc("technical_account_manager") }}'
+      - name: is_paid_subscription
+        description: '{{ doc("is_paid_subscription") }}'
+      - name: is_program_subscription
+        description: '{{ doc("is_program_subscription") }}'
+      - name: product_category_array
+        description: '{{ doc("product_category_array") }}'
+      - name: product_rate_plan_name_array
+        description: '{{ doc("product_rate_plan_name_array") }}'
+      - name: latest_subscription_id
+        description: '{{ doc("latest_subscription_id") }}'
