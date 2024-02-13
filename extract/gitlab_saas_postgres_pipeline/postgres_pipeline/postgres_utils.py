@@ -1028,7 +1028,7 @@ def add_deletes_column(target_engine, target_table_path, field_details):
     # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
     alter_query = f"""
     ALTER TABLE {target_table_path}
-    ADD COLUMN IF NOT EXISTS {field_details};"
+    ADD COLUMN IF NOT EXISTS {field_details};
     """
     try:
         alter_query_results = query_executor(target_engine, alter_query)
