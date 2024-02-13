@@ -64,7 +64,7 @@ WITH filtered_source as (
             {'field':'plan'},
             {'field':'google_analytics_id'},
             {'field':'project_id', 'data_type':'number'},
-            {'field':'pseudonymized_user_id'},
+            {'field':'user_id', 'alias':'pseudonymized_user_id'},
             {'field':'source'},
             {'field':'is_gitlab_team_member'}
             ]
