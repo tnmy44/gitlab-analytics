@@ -7832,20 +7832,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: nfiguera
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - ASM AMER Commercial Restricted Access
-      - ASM EMEA Commercial Restricted Access
-      - General All Access
-      - General SAFE Access
-      - RSA SAFE Access
-      - Sales All Access
-      - Sales Development SAFE Access
-      - Sales Project Lead
-      - Go To Market Project Lead
   - user_name: nganguyen
     user_name_domain: gitlab.com
     site_role: Unlicensed
