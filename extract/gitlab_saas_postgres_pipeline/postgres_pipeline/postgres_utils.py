@@ -1021,6 +1021,20 @@ def update_import_query_for_delete_export(import_query: str, primary_key: str):
     return updated_query
 
 
+def add_deletes_column(target_engine, target_table_path, field_details):
+    # Add pgp_is_deleted field to target table if not exists
+    # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
+    alter_query = f"""
+    ALTER TABLE {target_table_path}
+    ADD COLUMN IF NOT EXISTS {field_details};"
+    """
+    try:
+        alter_query_results = query_executor(target_engine, alter_query)
+        logging.info(f"add_deletes_column, {alter_query_results[0][0]}")
+    except sqlalchemy.exc.ProgrammingError:
+        raise
+
+
 def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: str):
     """
     Run a series of sql statements to update the target table's pgp_is_deleted' field:
@@ -1049,20 +1063,11 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
         target_engine.dispose()
         return
 
-    # Add pgp_is_deleted field to target table if not exists
-    # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
-    add_is_deleted_field_query = f"""
-    ALTER TABLE {target_table_path}
-    ADD COLUMN pgp_is_deleted boolean default false,
-    pgp_is_deleted_updated_at timestamp default current_timestamp;"
-    """
-    try:
-        alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
-        logging.info(f"pgp_is_deleted add column, {alter_query_results[0][0]}")
-    except sqlalchemy.exc.ProgrammingError as e:
-        # 'ambiguous column name' msg means is_delete column already exists, continue
-        if "ambiguous column name" not in str(e):
-            raise
+    # Add pgp_is_deleted/pgp_is_deleted_updated_at fields to target table if not exists
+    pgp_delete_field = "pgp_is_deleted boolean"
+    add_deletes_column(target_engine, target_table_path, pgp_delete_field)
+    pgp_delete_updated_at_field = "pgp_is_deleted_updated_at timestamp"
+    add_deletes_column(target_engine, target_table_path, pgp_delete_updated_at_field)
 
     logging.info("Running update query for pgp_is_deleted column...")
     # Run UPDATE on target table 'pgp_is_deleted' field
@@ -1073,14 +1078,13 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
       WHEN NOT EXISTS (
         SELECT *
         FROM
-          {deletes_table_path}
+          {deletes_table_path} s
         WHERE
-          {deletes_table_path}.{primary_key} = t.{primary_key}
+          s.{primary_key} = t.{primary_key}
         ) THEN TRUE
         ELSE FALSE
       END,
-      SET
-        pgp_is_deleted_updated_at = current_timestamp;
+      t.pgp_is_deleted_updated_at = CURRENT_TIMESTAMP();
       """
 
     update_query_results = query_executor(target_engine, update_query)
