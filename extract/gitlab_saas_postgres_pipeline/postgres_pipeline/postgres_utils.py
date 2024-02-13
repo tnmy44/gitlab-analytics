@@ -690,7 +690,12 @@ def get_source_and_target_columns(
         pd.read_sql(sql=target_query.format(target_table), con=target_engine)
         .drop(
             axis=1,
-            columns=["_uploaded_at", "_task_instance", "pgp_is_deleted"],
+            columns=[
+                "_uploaded_at",
+                "_task_instance",
+                "pgp_is_deleted",
+                "pgp_is_deleted_updated_at",
+            ],
             errors="ignore",
         )
         .columns
