@@ -20,8 +20,7 @@ stages:
   - 🐍 Python
   - 🛑 Snowflake Stop
   - triage
-  - triage run'[
-  - ]
+  - triage run
 
 include:
   -  template: Jobs/Secret-Detection.gitlab-ci.yml
