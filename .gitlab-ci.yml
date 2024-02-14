@@ -17,10 +17,10 @@ stages:
   - 📚 dbt Docs
   - 🛑🐍 Python Critical
   - 🐍 Python
+  - test
   - 🛑 Snowflake Stop
   - triage
   - triage run
-  - test
 
 include:
   - "extract/extract-ci.yml"
