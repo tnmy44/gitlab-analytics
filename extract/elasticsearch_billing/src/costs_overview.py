@@ -85,7 +85,10 @@ def get_costs_overview_backfill():
             current_month = date(year, month, 1)
             start_date = current_month
             print(f"start_date is {start_date}")
-            end_date = date(year, month + 1, 1) - timedelta(days=1)
+            if month != 12:
+                end_date = date(year, month + 1, 1) - timedelta(days=1)
+            else:
+                end_date = date(year + 1, 1, 1) - timedelta(days=1)
             print(f"end_date is {end_date}")
             if start_date >= extraction_start_date and end_date <= extraction_end_date:
                 info(f"{start_date} till {end_date}")
