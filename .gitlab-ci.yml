@@ -24,7 +24,7 @@ stages:
 include:
   - "extract/extract-ci.yml"
   - "transform/snowflake-dbt/snowflake-dbt-ci.yml"
-
+  -  template: Jobs/Secret-Detection.gitlab-ci.yml
 
 # ======
 # Snowflake Database Clones
