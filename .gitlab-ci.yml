@@ -27,6 +27,10 @@ include:
   - "transform/snowflake-dbt/snowflake-dbt-ci.yml"
   -  template: Jobs/Secret-Detection.gitlab-ci.yml
 
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
+
 # ======
 # Snowflake Database Clones
 # ======
