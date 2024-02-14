@@ -29,6 +29,8 @@
       dim_crm_touchpoint.bizible_touchpoint_source,
       dim_crm_touchpoint.bizible_touchpoint_source_type,
       dim_crm_touchpoint.bizible_touchpoint_type,
+      dim_crm_touchpoint.touchpoint_offer_type,
+      dim_crm_touchpoint.touchpoint_offer_type_grouped,
       dim_crm_touchpoint.bizible_ad_campaign_name,
       dim_crm_touchpoint.bizible_ad_content,
       dim_crm_touchpoint.bizible_ad_group_name,
@@ -360,5 +362,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-01-29"
+    updated_date="2024-01-31"
 ) }}

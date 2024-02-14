@@ -4054,6 +4054,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - jlarsen:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jonglee:
         member_of:
             - data_science_readonly
@@ -6611,6 +6617,11 @@ users:
     - jhope:
         can_login: no
         member_of: []
+
+    - jlarsen:
+        can_login: yes
+        member_of:
+            - jlarsen
 
     - jonglee:
         can_login: yes
