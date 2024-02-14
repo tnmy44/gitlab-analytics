@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('fct_sales_funnel_target_daily', 'fct_sales_funnel_target_daily'),
+    ('fct_sales_funnel_target_daily', 'wk_fct_sales_funnel_target_daily'),
     ('dim_date', 'dim_date')
     ])
 
@@ -13,7 +13,7 @@ quarterly_targets AS (
       dim_crm_user_hierarchy_sk,
       dim_sales_qualified_source_id,
       dim_order_type_id,
-      SUM(monthly_allocated_target) AS quarterly_allocated_target
+      SUM(daily_allocated_target) AS quarterly_allocated_target
   FROM fct_sales_funnel_target_daily
   GROUP BY 1,2,3,4,5
 
