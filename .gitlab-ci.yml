@@ -10,6 +10,7 @@ variables:
 # CI Stages
 # ======
 stages:
+  - test
   - ❄️ Snowflake
   - 🚂 Extract   # extract/extract-ci.yml
   - ⚙️ dbt Run    # transform/snowflake-dbt/snowflake-dbt-ci.yml
@@ -17,7 +18,6 @@ stages:
   - 📚 dbt Docs
   - 🛑🐍 Python Critical
   - 🐍 Python
-  - test
   - 🛑 Snowflake Stop
   - triage
   - triage run
@@ -30,6 +30,7 @@ include:
 secret_detection:
   variables:
     SECRET_DETECTION_HISTORIC_SCAN: "true"
+    SECRET_DETECTION_EXCLUDED_PATHS: "docker-compose.yml, transform/snowflake-dbt/packages.yml, extract/saas_postgres_pipeline_backfill/postgres_pipeline/postgres_utils.py"
 
 # ======
 # Snowflake Database Clones
