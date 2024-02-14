@@ -112,8 +112,6 @@ models:
       default:
         snowplow_web_events:
           +enabled: false
-        snowplow_page_views:
-          +enabled: false
 
   # ------------------
   # Snowflake Spend Package https://gitlab.com/gitlab-data/snowflake_spend
