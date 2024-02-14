@@ -79,26 +79,25 @@ def get_itemized_costs_by_deployments_backfill():
     for deployments in deployments_list:
         deployment_id = deployments
         info(f"Retrieving itemized costs for deployment {deployment_id}")
-        for month in range(extraction_start_date.month, extraction_end_date.month + 1):
-            current_month = date(extraction_start_date.year, month, 1)
-            start_date = current_month
-            # if month == extraction_end_date.month:
-            #     end_date = extraction_end_date
-            # else:
-            # update end_date to ending date of next month
-            end_date = date(current_month.year, current_month.month + 1, 1) - timedelta(
-                days=1
-            )
-            info(f"{start_date} till {end_date}")
-            itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={start_date}&end_date={end_date}"
-            data = get_response(itemised_costs_by_deployments_url)
-            row_list = [
-                deployment_id,
-                data,
-                start_date,
-                end_date,
-            ]
-            output_list.append(row_list)
+        for year in range(extraction_start_date.year, extraction_end_date.year + 1):
+            for month in range(1, 13):
+                current_month = date(year, month, 1)
+                start_date = current_month
+                if month != 12:
+                    end_date = date(year, month + 1, 1) - timedelta(days=1)
+                else:
+                    end_date = date(year + 1, 1, 1) - timedelta(days=1)
+            if start_date >= extraction_start_date and end_date <= extraction_end_date:
+                info(f"{start_date} till {end_date}")
+                itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={start_date}&end_date={end_date}"
+                data = get_response(itemised_costs_by_deployments_url)
+                row_list = [
+                    deployment_id,
+                    data,
+                    start_date,
+                    end_date,
+                ]
+                output_list.append(row_list)
 
     columns_list = [
         "deployment_id",
