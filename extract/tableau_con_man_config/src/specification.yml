@@ -2123,7 +2123,7 @@ groups:
   - group_name: Sales Restricted Access
   - group_name: Security Restricted Access
   - group_name: Self-Service SAFE Access
-  - group name: Executive RLS SAFE Access
+  - group_name: Executive RLS SAFE Access
 
 # ==========================================
 # Admin Groups
