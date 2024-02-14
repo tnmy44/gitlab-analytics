@@ -2414,12 +2414,22 @@ models:
           - not_null
 
   - name: prep_license_subscription
-    description: '{{ doc("prep_license_subscription") }}'  
+    description: '{{ doc("prep_license_subscription") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - reporting_month
+            - license_id
+            - dim_subscription_id
     columns:
       - name: reporting_month
         description: '{{ doc("reporting_month") }}'
+        tests:
+          - not_null
       - name: license_id
         description: '{{ doc("license_id") }}'
+        tests:
+          - not_null
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256
@@ -2432,6 +2442,8 @@ models:
         description: '{{ doc("original_subscription_name_slugify") }}'
       - name: dim_subscription_id
         description: '{{ doc("dim_subscription_id") }}'
+        tests:
+          - not_null
       - name: subscription_start_month
         description: '{{ doc("subscription_start_month") }}'
       - name: subscription_end_month
