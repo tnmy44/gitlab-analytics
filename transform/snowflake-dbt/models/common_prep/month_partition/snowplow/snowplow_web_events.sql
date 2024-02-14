@@ -71,10 +71,15 @@ WITH all_events AS (
       ev.mkt_network,
 
       ev.geo_country,
+      NULL AS geo_zipcode,
+      NULL AS geo_latitude,
+      NULL AS geo_longitude,
       ev.geo_region,
       ev.geo_region_name,
       ev.geo_city,
       ev.geo_timezone,
+
+      NULL AS user_ipaddress,
 
       ev.ip_isp,
       ev.ip_organization,

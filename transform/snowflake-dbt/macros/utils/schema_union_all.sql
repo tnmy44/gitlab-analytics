@@ -1,4 +1,4 @@
-{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none, day_limit=none, boolean_filter_statement=none) -%}
+{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none, day_limit=none, boolean_filter_statement=none, excluded_col=[]) -%}
 
 {% set local = var('local', 'no') %}
 
@@ -45,12 +45,37 @@
 
     {%- set value_list = load_result('get_schemata') -%}
 
-    {%- if value_list and value_list['data'] -%}
+    {%- if value_list and value_list['data'] and excluded_col -%}
+
+        {%- set values = value_list['data'] | map(attribute=0) | list -%}
+        
+        {%- set excluded_fields = [] -%}
+
+        {%- for col in excluded_col -%}
+        
+            {%- set excluded_col_string = excluded_fields.append(col | as_text) -%}
+  
+        {%- endfor -%}
+
+        {%- set excluded_col_fields_string = ','.join(excluded_fields) -%}
+            
+          {% for schematable in values -%}
+                SELECT * EXCLUDE ({{excluded_col_fields_string}})
+                FROM "{{ database }}".{{ schematable }}
+                {%- if boolean_filter_statement %}
+                WHERE {{ boolean_filter_statement }}
+                {%- endif -%}
+                {% if not loop.last %}
+                UNION ALL
+                {% endif -%}
+              {% endfor %}
+
+    {%- elif value_list and value_list['data'] and not excluded_col -%}
 
         {%- set values = value_list['data'] | map(attribute=0) | list -%}
             
           {% for schematable in values -%}
-                SELECT *
+                SELECT * 
                 FROM "{{ database }}".{{ schematable }}
                 {%- if boolean_filter_statement %}
                 WHERE {{ boolean_filter_statement }}
