@@ -29,6 +29,8 @@
       dim_crm_touchpoint.bizible_touchpoint_source,
       dim_crm_touchpoint.bizible_touchpoint_source_type,
       dim_crm_touchpoint.bizible_touchpoint_type,
+      dim_crm_touchpoint.touchpoint_offer_type,
+      dim_crm_touchpoint.touchpoint_offer_type_grouped,
       dim_crm_touchpoint.bizible_ad_campaign_name,
       dim_crm_touchpoint.bizible_ad_content,
       dim_crm_touchpoint.bizible_ad_group_name,
@@ -94,28 +96,28 @@
       fct_crm_attribution_touchpoint.bizible_revenue_w_shaped,
       dim_crm_touchpoint.bizible_created_date, 
       CASE
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_0_pending_acceptance_date
-          THEN 'Pre Opp Creation'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_0_pending_acceptance_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_1_discovery_date
-          THEN 'Stage 0'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_1_discovery_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_2_scoping_date
-          THEN 'Stage 1'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_2_scoping_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_3_technical_evaluation_date
-          THEN 'Stage 2'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_3_technical_evaluation_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_4_proposal_date
-          THEN 'Stage 3'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_4_proposal_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_5_negotiating_date
-          THEN 'Stage 4'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date
-          THEN 'Stage 5'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_won_date OR dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_lost_date)
-          THEN 'Stage 6 - Awaiting Signature'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date AND fct_crm_opportunity.is_closed_won = TRUE
-          THEN 'Stage 6 - Closed Won'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_lost_date
-          THEN 'Stage 6 - Closed Lost'
-        ELSE stage_name||'-Mapping Missing'
-      END AS touchpoint_sales_stage,
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_0_pending_acceptance_date
+              THEN 'Pre Opp Creation'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_0_pending_acceptance_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_1_discovery_date OR fct_crm_opportunity.stage_1_discovery_date IS NULL)
+              THEN 'Stage 0'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_1_discovery_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_2_scoping_date OR fct_crm_opportunity.stage_2_scoping_date IS NULL)
+              THEN 'Stage 1'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_2_scoping_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_3_technical_evaluation_date OR fct_crm_opportunity.stage_3_technical_evaluation_date IS NULL)
+              THEN 'Stage 2'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_3_technical_evaluation_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_4_proposal_date OR fct_crm_opportunity.stage_4_proposal_date IS NULL)
+              THEN 'Stage 3'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_4_proposal_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_5_negotiating_date OR fct_crm_opportunity.stage_5_negotiating_date IS NULL)
+              THEN 'Stage 4'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND (dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date OR fct_crm_opportunity.stage_6_awaiting_signature_date IS NULL)
+              THEN 'Stage 5'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date AND ((dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_won_date OR dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_lost_date) OR (fct_crm_opportunity.stage_6_closed_won_date IS NULL AND fct_crm_opportunity.stage_6_closed_lost_date IS NULL))
+              THEN 'Stage 6 - Awaiting Signature'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date AND fct_crm_opportunity.is_closed_won = TRUE
+              THEN 'Stage 6 - Closed Won'
+            WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_lost_date
+              THEN 'Stage 6 - Closed Lost'
+            ELSE stage_name||'-Mapping Missing'
+          END AS touchpoint_sales_stage,
 
       -- person info
       fct_crm_attribution_touchpoint.dim_crm_person_id,
@@ -360,5 +362,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-01-29"
+    updated_date="2024-01-31"
 ) }}

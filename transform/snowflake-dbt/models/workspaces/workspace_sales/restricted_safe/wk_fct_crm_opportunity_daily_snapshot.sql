@@ -22,6 +22,7 @@
     sfdc_opportunity.dim_crm_opportunity_id,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                       AS dim_sales_qualified_source_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
+    {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                          AS dim_order_type_live_id,
     {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                AS dim_crm_user_hierarchy_sk,
     sfdc_opportunity.merged_opportunity_id                                                                              AS merged_crm_opportunity_id,
     sfdc_opportunity.dim_crm_account_id,
@@ -244,6 +245,8 @@
     ON sfdc_opportunity.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
   LEFT JOIN order_type
     ON sfdc_opportunity.order_type = order_type.order_type_name
+  LEFT JOIN order_type AS order_type_live
+    ON sfdc_opportunity.order_type_live = order_type_live.order_type_name
   LEFT JOIN sales_rep AS sales_rep_account
     ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id 
   WHERE is_live = 0

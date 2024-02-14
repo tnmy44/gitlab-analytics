@@ -3307,6 +3307,7 @@ roles:
             - reporter
             - restricted_safe
             - bi_tool_eval_read
+            - static_sensitive
         warehouses:
             - reporting
 
@@ -3328,10 +3329,8 @@ roles:
             - dev_xs
 
     - bvandre:
-        member_of:
-            - snowflake_analyst_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - caitlin:
         member_of: []
@@ -3624,6 +3623,15 @@ roles:
             - xactly
         warehouses:
             - dev_xs
+
+    - dmack:
+        member_of:
+            - analyst_sales
+            - reporter
+            - restricted_safe
+            - static_sensitive
+        warehouses:
+            - reporting
 
     - dmicovic:
         member_of:
@@ -4045,6 +4053,12 @@ roles:
     - jhope:
         member_of: []
         warehouses: []
+
+    - jlarsen:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - jonglee:
         member_of:
@@ -4758,6 +4772,7 @@ roles:
             - analyst_sales
             - restricted_safe
             - bi_tool_eval_read
+            - static_sensitive
         warehouses:
             - dev_xs
             - dev_l
@@ -6398,9 +6413,8 @@ users:
             - bnguyen
 
     - bvandre:
-        can_login: yes
-        member_of:
-            - bvandre
+        can_login: no
+        member_of: []
 
     - caitlin:
         can_login: no
@@ -6474,6 +6488,11 @@ users:
         can_login: yes
         member_of:
             - dgupta
+
+    - dmack:
+        can_login: yes
+        member_of:
+            - dmack
 
     - dmicovic:
         can_login: yes
@@ -6598,6 +6617,11 @@ users:
     - jhope:
         can_login: no
         member_of: []
+
+    - jlarsen:
+        can_login: yes
+        member_of:
+            - jlarsen
 
     - jonglee:
         can_login: yes
