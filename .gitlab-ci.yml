@@ -24,12 +24,13 @@ stages:
 
 include:
   -  template: Jobs/Secret-Detection.gitlab-ci.yml
-     rules:
-       - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   - "extract/extract-ci.yml"
   - "transform/snowflake-dbt/snowflake-dbt-ci.yml"
 
 secret_detection:
+  only:
+    refs:
+      - merge_requests
   variables:
     SECRET_DETECTION_EXCLUDED_PATHS: "docker-compose.yml, transform/snowflake-dbt/packages.yml, extract/saas_postgres_pipeline_backfill/postgres_pipeline/postgres_utils.py"
 
