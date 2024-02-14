@@ -10,8 +10,8 @@ variables:
 # CI Stages
 # ======
 stages:
-  - test
   - ❄️ Snowflake
+  - test
   - 🚂 Extract   # extract/extract-ci.yml
   - ⚙️ dbt Run    # transform/snowflake-dbt/snowflake-dbt-ci.yml
   - 🛠 dbt Misc  # transform/snowflake-dbt/snowflake-dbt-ci.yml
@@ -23,9 +23,9 @@ stages:
   - triage run
 
 include:
+  -  template: Jobs/Secret-Detection.gitlab-ci.yml
   - "extract/extract-ci.yml"
   - "transform/snowflake-dbt/snowflake-dbt-ci.yml"
-  -  template: Jobs/Secret-Detection.gitlab-ci.yml
 
 secret_detection:
   variables:
