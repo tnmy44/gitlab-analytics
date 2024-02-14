@@ -82,17 +82,18 @@ def get_itemized_costs_backfill():
                 end_date = date(year, month + 1, 1) - timedelta(days=1)
             else:
                 end_date = date(year + 1, 1, 1) - timedelta(days=1)
-            info(f"{start_date} till {end_date}")
-            itemised_costs_url = (
-                f"/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
-            )
-            data = get_response(itemised_costs_url)
-            row_list = [
-                data,
-                start_date,
-                end_date,
-            ]
-            output_list.append(row_list)
+            if start_date >= extraction_start_date and end_date <= extraction_end_date:
+                info(f"{start_date} till {end_date}")
+                itemised_costs_url = (
+                    f"/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
+                )
+                data = get_response(itemised_costs_url)
+                row_list = [
+                    data,
+                    start_date,
+                    end_date,
+                ]
+                output_list.append(row_list)
     # upload this data to snowflake
     columns_list = [
         "payload",
