@@ -2123,6 +2123,7 @@ groups:
   - group_name: Sales Restricted Access
   - group_name: Security Restricted Access
   - group_name: Self-Service SAFE Access
+  - group name: Executive RLS SAFE Access
 
 # ==========================================
 # Admin Groups
@@ -7775,10 +7776,11 @@ users:
       - Sales All Access
   - user_name: nbilgrami
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: ncassar
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9786,6 +9788,7 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+      - People Restricted Access
   - user_name: tangelos
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10934,3 +10937,17 @@ users:
     groups:
       - General All Access
       - General SAFE Access                                    
+  - user_name: vhempel
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: 
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access          
