@@ -20,7 +20,8 @@ stages:
   - 🐍 Python
   - 🛑 Snowflake Stop
   - triage
-  - triage run
+  - triage run'[
+  - ]
 
 include:
   -  template: Jobs/Secret-Detection.gitlab-ci.yml
@@ -29,7 +30,6 @@ include:
 
 secret_detection:
   variables:
-    SECRET_DETECTION_HISTORIC_SCAN: "true"
     SECRET_DETECTION_EXCLUDED_PATHS: "docker-compose.yml, transform/snowflake-dbt/packages.yml, extract/saas_postgres_pipeline_backfill/postgres_pipeline/postgres_utils.py"
 
 # ======
