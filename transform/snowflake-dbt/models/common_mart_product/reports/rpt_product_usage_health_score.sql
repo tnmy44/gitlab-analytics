@@ -267,7 +267,8 @@
                 IFF(security_adopted = 1, 'Security', NULL)
             ) AS adopted_use_case_names_array,
         ARRAY_TO_STRING(adopted_use_case_names_array, ', ') AS adopted_use_case_names_string,
-        CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1 
+        CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
+              and instance_type = 'Production' 
              THEN True 
              ELSE False 
         END AS is_primary_instance_subscription 
@@ -282,12 +283,57 @@ LEFT JOIN mart_arr
 WHERE paid_user_metrics.license_user_count != 0
 qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instance_identifier ORDER BY paid_user_metrics.ping_created_at DESC NULLs last) = 1
 
+),
+
+final as (
+
+select
+   *,
+   lag(ci_pipeline_utilization_color) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as ci_color_previous_month,
+   lag(ci_pipeline_utilization_color, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as ci_color_previous_3_month,
+   lag(ci_pipeline_utilization) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as ci_pipeline_utilization_previous_month,
+   lag(ci_pipeline_utilization, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as ci_pipeline_utilization_previous_3_month,
+   lag(scm_color) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as scm_color_previous_month,
+   lag(scm_color, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as scm_color_previous_3_month,
+   lag(git_operation_utilization) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as git_operation_utilization_previous_month,
+   lag(git_operation_utilization, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as git_operation_utilization_previous_3_month,
+   lag(cd_color) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as cd_color_previous_month,
+   lag(cd_color, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as cd_color_previous_3_month,
+   lag(security_color_ultimate_only) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as security_color_previous_month,
+   lag(security_color_ultimate_only, 3) over (partition by hostname_or_namespace_id 
+order by
+   snapshot_month) as security_color_previous_3_month 
+from
+   joined
+
 )
 
 {{ dbt_audit(
-    cte_ref="joined",
+    cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@jonglee1218",
     created_date="2023-12-10",
-    updated_date="2023-12-10"
+    updated_date="2024-02-15"
 ) }}
