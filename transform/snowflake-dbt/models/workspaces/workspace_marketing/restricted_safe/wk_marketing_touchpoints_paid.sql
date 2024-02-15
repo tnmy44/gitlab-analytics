@@ -27,5 +27,10 @@ where
    and touchpoint_type = 'Person Touchpoint'
 )
 
-SELECT * 
-FROM final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@jonglee1218",
+    updated_by="@jonglee1218",
+    created_date="2024-02-15",
+    updated_date="2024-02-15",
+  ) }}
