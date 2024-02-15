@@ -101,24 +101,6 @@ def get_costs_overview_backfill():
                 ]
                 output_list.append(row_list)
 
-    # for month in range(extraction_start_date.month, extraction_end_date.month + 1):
-    #     current_month = date(extraction_start_date.year, month, 1)
-    #     start_date = current_month
-    #     # if month == extraction_end_date.month:
-    #     #     end_date = extraction_end_date
-    #     # update end_date to ending date of next month
-    #     end_date = date(current_month.year, current_month.month + 1, 1) - timedelta(
-    #         days=1
-    #     )
-    #     info(f"{start_date} till {end_date}")
-    #     costs_endpoint_url = f"/billing/costs/{org_id}?from={start_date}&to={end_date}"
-    #     data = get_response(costs_endpoint_url)
-    #     row_list = [
-    #         data,
-    #         start_date,
-    #         end_date,
-    #     ]
-    #     output_list.append(row_list)
     # upload this data to snowflake
     columns_list = [
         "payload",

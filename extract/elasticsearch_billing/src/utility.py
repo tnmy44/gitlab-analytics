@@ -144,7 +144,9 @@ def get_response_and_upload_costs_by_deployments(
     output_list = []
     for deployments in deployments_list:
         deployment_id = deployments
-        info(f"Retrieving itemized costs for deployment {deployment_id} from {extraction_start_date} till {extraction_end_date}")
+        info(
+            f"Retrieving itemized costs for deployment {deployment_id} from {extraction_start_date} till {extraction_end_date}"
+        )
         itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(itemised_costs_by_deployments_url)
         # upload this data to snowflake
