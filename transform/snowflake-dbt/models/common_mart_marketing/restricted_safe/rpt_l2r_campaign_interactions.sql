@@ -105,6 +105,8 @@
       mart_crm_touchpoint.utm_allptnr,
       mart_crm_touchpoint.utm_partnerid,
       mart_crm_touchpoint.integrated_budget_holder,
+      mart_crm_touchpoint.touchpoint_offer_type,
+      mart_crm_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_touchpoint.bizible_marketing_channel,
       mart_crm_touchpoint.bizible_marketing_channel_path,
@@ -326,6 +328,8 @@
       mart_crm_attribution_touchpoint.utm_allptnr,
       mart_crm_attribution_touchpoint.utm_partnerid,
       mart_crm_attribution_touchpoint.integrated_budget_holder,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_attribution_touchpoint.bizible_marketing_channel,
       mart_crm_attribution_touchpoint.bizible_marketing_channel_path,
@@ -386,7 +390,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=180)}}
+  {{dbt_utils.group_by(n=182)}}
     
 ), cohort_base_combined AS (
   
@@ -562,6 +566,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
@@ -773,6 +779,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
