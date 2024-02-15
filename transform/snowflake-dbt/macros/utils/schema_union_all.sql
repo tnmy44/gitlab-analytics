@@ -45,45 +45,39 @@
 
     {%- set value_list = load_result('get_schemata') -%}
 
-    {%- if value_list and value_list['data'] and excluded_col -%}
+    {%- if value_list and value_list['data'] -%}
 
         {%- set values = value_list['data'] | map(attribute=0) | list -%}
-        
-        {%- set excluded_fields = [] -%}
+              
+        {%- if excluded_col -%}
 
-        {%- for col in excluded_col -%}
+          {%- set excluded_fields = [] -%}
+
+          {%- for col in excluded_col -%}
         
             {%- set excluded_col_string = excluded_fields.append(col | as_text) -%}
   
-        {%- endfor -%}
+          {%- endfor -%}
 
-        {%- set excluded_col_fields_string = ','.join(excluded_fields) -%}
+          {%- set excluded_col_fields_string = "EXCLUDE (" + ','.join(excluded_fields) + ")" -%}
             
-          {% for schematable in values -%}
-                SELECT * EXCLUDE ({{excluded_col_fields_string}})
-                FROM "{{ database }}".{{ schematable }}
-                {%- if boolean_filter_statement %}
-                WHERE {{ boolean_filter_statement }}
-                {%- endif -%}
-                {% if not loop.last %}
-                UNION ALL
-                {% endif -%}
-              {% endfor %}
+        {%- else -%}
 
-    {%- elif value_list and value_list['data'] and not excluded_col -%}
+          {%- set excluded_col_fields_string = "" -%}
 
-        {%- set values = value_list['data'] | map(attribute=0) | list -%}
-            
-          {% for schematable in values -%}
-                SELECT * 
-                FROM "{{ database }}".{{ schematable }}
-                {%- if boolean_filter_statement %}
-                WHERE {{ boolean_filter_statement }}
-                {%- endif -%}
-                {% if not loop.last %}
-                UNION ALL
-                {% endif -%}
-              {% endfor %}
+        {%- endif -%}
+          
+        {% for schematable in values -%}
+              SELECT * {{excluded_col_fields_string}}
+              FROM "{{ database }}".{{ schematable }}
+              {%- if boolean_filter_statement %}
+              WHERE {{ boolean_filter_statement }}
+              {%- endif -%}
+              {% if not loop.last %}
+              UNION ALL
+              {% endif -%}
+        {% endfor %}
+
             
     {%- else -%}
 
