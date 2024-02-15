@@ -50,7 +50,7 @@ def get_reconciliation_data():
     """
     date_today = datetime.utcnow().date()
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
-    if date_today.day in [7, 14]:
+    if date_today.day in [3, 7, 14, 15]:
         info("Performing reconciliation...")
         (
             extraction_start_date,
