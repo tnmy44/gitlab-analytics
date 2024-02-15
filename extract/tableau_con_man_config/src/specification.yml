@@ -3923,6 +3923,14 @@ users:
     groups:
       - Engineering All Access
       - General All Access
+  - user_name: dadushkina
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Product All Access
   - user_name: daknox
     user_name_domain: gitlab.com
     site_role: Viewer
