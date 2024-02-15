@@ -92,7 +92,7 @@ def get_itemized_costs_by_deployments_backfill():
                     and end_date <= extraction_end_date
                 ):
                     info(f"{start_date} till {end_date}")
-                    itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={start_date}&end_date={end_date}"
+                    itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?from={start_date}&to={end_date}"
                     data = get_response(itemised_costs_by_deployments_url)
                     row_list = [
                         deployment_id,
