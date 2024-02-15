@@ -6085,8 +6085,10 @@ roles:
             - dev_xs
 
     - tjayaramaraju:
-        member_of: []
-        warehouses: []
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - tliu:
         member_of:
@@ -7081,8 +7083,9 @@ users:
             - tfigueiro
 
     - tjayaramaraju:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - tjayaramaraju
 
     - tliu:
         can_login: yes
