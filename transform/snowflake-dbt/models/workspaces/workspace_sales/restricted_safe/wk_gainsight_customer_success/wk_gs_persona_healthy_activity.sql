@@ -69,7 +69,7 @@
 
 )     
       SELECT
-        sfdc_account_id,
+        activity.sfdc_account_id,
         gs_company_id,
         most_recent_exec_activity,
         last_workshop_delivered_date,
