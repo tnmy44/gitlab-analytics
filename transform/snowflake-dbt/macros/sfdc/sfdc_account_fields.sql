@@ -659,6 +659,8 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.owner_id = account_owner.user_id
     LEFT JOIN sfdc_users AS proposed_account_owner
       ON proposed_account_owner.user_id = sfdc_account.proposed_account_owner
+    LEFT JOIN sfdc_users AS executive_sponsor
+      ON executive_sponsor.user_id = sfdc_account.executive_sponsor_id
     LEFT JOIN sfdc_users created_by
       ON sfdc_account.created_by_id = created_by.user_id
     LEFT JOIN sfdc_users AS last_modified_by
