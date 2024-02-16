@@ -188,6 +188,7 @@ WITH map_merged_crm_account AS (
       account_owner.user_id                                               AS crm_account_owner_id,
       proposed_account_owner.user_id                                      AS proposed_crm_account_owner_id,
       technical_account_manager.user_id                                   AS technical_account_manager_id,
+      sfdc_account.executive_sponsor_id,                                   
       sfdc_account.master_record_id,
       prep_crm_person.dim_crm_person_id                                   AS dim_crm_person_primary_contact_id,
 
@@ -210,6 +211,9 @@ WITH map_merged_crm_account AS (
 
       --technical account manager attributes
       technical_account_manager.manager_name AS tam_manager,
+
+      --executive sponsor field
+      executive_sponsor.name as executive_sponsor,
 
       --6 sense fields
       sfdc_account.has_six_sense_6_qa,
@@ -671,6 +675,9 @@ WITH map_merged_crm_account AS (
     LEFT JOIN sfdc_users AS proposed_account_owner
       ON proposed_account_owner.user_id = sfdc_account.proposed_account_owner
         AND proposed_account_owner.snapshot_id = sfdc_account.snapshot_id
+    LEFT JOIN sfdc_users AS executive_sponsor
+      ON executive_sponsor.user_id = sfdc_account.executive_sponsor_id
+        AND executive_sponsor.snapshot_id = sfdc_account.snapshot_id
     LEFT JOIN lam_corrections
       ON sfdc_account.ultimate_parent_account_id = lam_corrections.dim_parent_crm_account_id
         AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
