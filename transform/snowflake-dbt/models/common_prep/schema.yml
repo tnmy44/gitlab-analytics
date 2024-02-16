@@ -2442,8 +2442,6 @@ models:
         description: '{{ doc("original_subscription_name_slugify") }}'
       - name: dim_subscription_id
         description: '{{ doc("dim_subscription_id") }}'
-        tests:
-          - not_null
       - name: subscription_start_month
         description: '{{ doc("subscription_start_month") }}'
       - name: subscription_end_month

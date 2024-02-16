@@ -76,7 +76,7 @@ license_subscriptions AS (
   FROM dim_license
   INNER JOIN subscription_source
     ON dim_license.dim_subscription_id = subscription_source.subscription_id
-  INNER JOIN dim_subscription
+  LEFT JOIN dim_subscription
     ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
   LEFT JOIN subscription_source AS all_subscriptions
     ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
