@@ -4085,6 +4085,7 @@ roles:
             - gainsight_customer_success
             - gitlab_data_yaml
             - gitlab_dotcom
+            - gitlab_dotcom_prep
             - marketo
             - postgres_pipeline
             - reporter
