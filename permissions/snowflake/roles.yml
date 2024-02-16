@@ -1952,6 +1952,23 @@ roles:
                 read:
                     - raw.gainsight.*
 
+    - gainsight_customer_success:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.gainsight_customer_success
+                    - prep.gainsight_customer_success
+            tables:
+                read:
+                    - raw.gainsight_customer_success.*
+                    - prep.gainsight_customer_success.*
+                 
     - gcp_billing:
         warehouses:
             - dev_xs
@@ -4065,9 +4082,12 @@ roles:
             - data_science_readonly
             - driveload
             - gainsight
+            - gainsight_customer_success
             - gitlab_data_yaml
             - gitlab_dotcom
+            - gitlab_dotcom_prep
             - marketo
+            - postgres_pipeline
             - reporter
             - restricted_safe
             - salesforce
@@ -4079,6 +4099,7 @@ roles:
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
             - zuora_stitch_rest_api
+            - zuora_revenue
             - zuora_query_api
         warehouses:
             - dev_xs
