@@ -96,7 +96,8 @@ final AS (
     END AS booked_net_arr_in_snapshot_week,
     CASE 
       WHEN is_pipeline_created_in_snapshot_week = 1
-        THEN net_arr
+        AND is_net_arr_pipeline_created_combined = 1
+          THEN net_arr
       ELSE 0
     END AS pipeline_created_in_snapshot_week,
     CASE 
