@@ -57,9 +57,7 @@
         WHEN close_fiscal_year < dim_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
           THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_hierarchy_sk') }} -- account hierarchy
         ELSE sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk -- stamped account owner hierarchy
-      END                                                                                                                         AS dim_crm_current_account_set_hierarchy_sk,
-      CASE
-
+    END                                                                                                                         AS dim_crm_current_account_set_hierarchy_sk,
     crm_account_dimensions.dim_parent_sales_territory_id,
     crm_account_dimensions.dim_parent_industry_id,
     
@@ -286,8 +284,6 @@
     ON sfdc_opportunity.deal_path = deal_path.deal_path_name
   LEFT JOIN sales_segment
     ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
-  LEFT JOIN prep_crm_user_hierarchy AS account_hierarchy
-      ON prep_crm_account.dim_crm_parent_account_hierarchy_sk = account_hierarchy.dim_crm_user_hierarchy_sk
   WHERE is_live = 0
 
   {% if is_incremental() %}

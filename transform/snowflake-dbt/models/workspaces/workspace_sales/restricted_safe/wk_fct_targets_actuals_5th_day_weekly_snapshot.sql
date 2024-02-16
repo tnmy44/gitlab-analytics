@@ -94,6 +94,18 @@ final AS (
         THEN booked_net_arr
       ELSE 0
     END AS booked_net_arr_in_snapshot_week,
+    CASE 
+      WHEN is_pipeline_created_in_snapshot_week = 1
+        THEN net_arr
+      ELSE 0
+    END AS pipeline_created_in_snapshot_week,
+    CASE 
+      WHEN is_eligible_open_pipeline_combined = 1
+        AND is_close_in_snapshot_week = 1
+          AND is_excluded_from_pipeline_created_combined = 0
+        THEN net_arr
+      ELSE 0
+    END AS open_pipeline_in_snapshot_week,
     IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list

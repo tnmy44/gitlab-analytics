@@ -92,8 +92,6 @@ combined AS (
     actuals.product_details,
     actuals.product_category,
     actuals.intended_product_tier,
-    actuals.product_category_tier,
-    actuals.product_category_deployment,
 
     actuals.products_purchased,
     actuals.growth_type,

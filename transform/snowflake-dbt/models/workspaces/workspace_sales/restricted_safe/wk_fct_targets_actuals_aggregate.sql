@@ -129,6 +129,9 @@ aggregate_data AS (
     trials_ytd_target,
     is_current_snapshot_quarter,
     -- numbers for current week
+
+    SUM(open_pipeline_in_snapshot_week)                   AS open_pipeline_in_snapshot_week,
+    SUM(pipeline_created_in_snapshot_week)                AS pipeline_created_in_snapshot_week,
     SUM(created_arr_in_snapshot_week)                     AS created_arr_in_snapshot_week,
     SUM(created_net_arr_in_snapshot_week)                 AS created_net_arr_in_snapshot_week,
     SUM(created_deal_count_in_snapshot_week)              AS created_deal_count_in_snapshot_week,
