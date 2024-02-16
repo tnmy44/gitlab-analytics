@@ -1959,12 +1959,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.gainsight_customer_success
+                    - prep.gainsight_customer_success
             tables:
                 read:
                     - raw.gainsight_customer_success.*
+                    - prep.gainsight_customer_success.*
                  
     - gcp_billing:
         warehouses:
