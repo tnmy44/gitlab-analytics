@@ -4086,6 +4086,7 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - marketo
+            - postgres_pipeline
             - reporter
             - restricted_safe
             - salesforce
