@@ -1,9 +1,9 @@
 {{ config(materialized='table') }}
 
 {{ simple_cte([
-('campaigns', 'rpt_l2r_campaign_interactions'),
-('touchpoint_offer','person_touchpoint_offer_type'),
-('account', 'mart_crm_account')
+    ('campaigns', 'rpt_l2r_campaign_interactions'),
+    ('touchpoint_offer','person_touchpoint_offer_type'),
+    ('account', 'mart_crm_account')
 ]) }}
 
 ,final AS (
