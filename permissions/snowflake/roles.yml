@@ -6525,7 +6525,7 @@ users:
         member_of:
             - dfelton
 
-     - dfrey:
+    - dfrey:
         can_login: yes
         member_of:
             - dfrey
@@ -6557,7 +6557,7 @@ users:
             - accountadmin
             - securityadmin
 
-     - ebonet:
+    - ebonet:
         can_login: yes
         member_of:
             - ebonet
@@ -6883,7 +6883,7 @@ users:
         member_of:
             - mramirez
 
-     - msaleiko:
+    - msaleiko:
         can_login: yes
         member_of:
             - msaleiko
