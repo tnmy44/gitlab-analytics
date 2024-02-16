@@ -1,5 +1,0 @@
-version: 2
-
-models:
-  - name: wk_marketing_touchpoints_paid
-    description: marketing touchpoint data for current paying customer
