@@ -3629,6 +3629,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - dfrey:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - dgupta:
         member_of:
             - adaptive
@@ -3742,6 +3748,12 @@ roles:
                 write:
                     - dvanrooijen_prep.*.*
                     - dvanrooijen_prod.*.*
+
+    - ebonet:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - eneuberger:
         member_of:
@@ -5024,6 +5036,12 @@ roles:
                 write:
                     - mramirez_prep.*.*
                     - mramirez_prod.*.*
+
+    - msaleiko:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - mvilain:
         member_of:
@@ -6507,6 +6525,11 @@ users:
         member_of:
             - dfelton
 
+    - dfrey:
+        can_login: yes
+        member_of:
+            - dfrey
+
     - dgupta:
         can_login: yes
         member_of:
@@ -6533,6 +6556,11 @@ users:
             - dvanrooijen
             - accountadmin
             - securityadmin
+
+    - ebonet:
+        can_login: yes
+        member_of:
+            - ebonet
 
     - eneuberger:
         can_login: yes
@@ -6854,6 +6882,11 @@ users:
         can_login: yes
         member_of:
             - mramirez
+
+    - msaleiko:
+        can_login: yes
+        member_of:
+            - msaleiko
 
     - mvilain:
         can_login: yes
