@@ -4079,6 +4079,7 @@ roles:
             - data_science_readonly
             - driveload
             - gainsight
+            - gainsight_customer_success
             - gitlab_data_yaml
             - gitlab_dotcom
             - marketo
