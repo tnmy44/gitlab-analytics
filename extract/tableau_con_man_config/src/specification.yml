@@ -3927,6 +3927,14 @@ users:
     groups:
       - Engineering All Access
       - General All Access
+  - user_name: dadushkina
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Product All Access
   - user_name: daknox
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4099,7 +4107,7 @@ users:
       - General SAFE Access
   - user_name: dferguson
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -6950,6 +6958,14 @@ users:
       - General SAFE Access
       - RSA SAFE Access
       - Sales All Access
+  - user_name: mbabin
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Product All Access
   - user_name: mbalzer
     user_name_domain: gitlab.com
     site_role: Viewer
