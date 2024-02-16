@@ -1952,6 +1952,20 @@ roles:
                 read:
                     - raw.gainsight.*
 
+    - gainsight_customer_success:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.gainsight_customer_success
+            tables:
+                read:
+                    - raw.gainsight_customer_success.*
+                 
     - gcp_billing:
         warehouses:
             - dev_xs
