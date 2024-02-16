@@ -6,7 +6,7 @@
     ('account', 'mart_crm_account')
 ]) }}
 
-,final AS (
+, final AS (
 
   select
     campaigns.*,
@@ -23,7 +23,6 @@
 where
    account.crm_account_type = 'Customer' 
    and account.is_deleted = false
-   and account.carr_this_account > 0
    and touchpoint_type = 'Person Touchpoint'
 )
 
