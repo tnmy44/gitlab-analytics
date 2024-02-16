@@ -11,7 +11,7 @@ site:
   status_reason: null
   storage: null
   user_quota: 1310
-  storage_quota: 100000
+  storage_quota: 100000 
   content_url: gitlab
   disable_subscriptions: false
   name: GitLab
