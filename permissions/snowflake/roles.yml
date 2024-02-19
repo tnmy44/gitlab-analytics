@@ -6272,6 +6272,18 @@ roles:
         warehouses:
             - dev_xs
 
+    - svedova:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - svistas:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - tableau:
         warehouses:
             - reporting
@@ -6422,6 +6434,11 @@ roles:
         warehouses:
             - dev_xs
 
+   - tzallmann:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - usinghal:
         member_of:
@@ -6477,6 +6494,12 @@ roles:
             - data_team_analyst
             - restricted_safe
             - xactly
+        warehouses:
+            - dev_xs
+
+    - vburton:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -6536,6 +6559,18 @@ roles:
                 write:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
+
+    - vtatarintev:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - vwilson:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - warias:
         member_of:
