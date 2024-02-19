@@ -6865,6 +6865,16 @@ users:
         member_of:
             - kgliksman
 
+    - kkolpakova:
+        can_login: yes
+        member_of:
+            - kkolpakova
+
+    - kmisirli:
+        can_login: yes
+        member_of:
+            - kmisirli
+
     - kpaizee:
         can_login: yes
         member_of:
@@ -6888,6 +6898,11 @@ users:
         can_login: yes
         member_of:
             - ksu
+
+    - ksvoboda:
+        can_login: yes
+        member_of:
+            - ksvoboda
 
     - lcharles:
         can_login: yes
