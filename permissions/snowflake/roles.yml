@@ -6994,6 +6994,11 @@ users:
         member_of:
             - mfleisher
 
+    - mgill:
+        can_login: yes
+        member_of:
+            - mgill
+
     - mgilgalindo:
         can_login: yes
         member_of:
@@ -7009,9 +7014,19 @@ users:
         member_of:
             - mikesmith
 
+    - mlapierre:
+        can_login: yes
+        member_of:
+            - mlapierre
+
     - mnohr:
         can_login: no
         member_of: []
+
+    - mnuzzo:
+        can_login: yes
+        member_of:
+            - mnuzzo
 
     - mpetersen:
         can_login: yes
@@ -7042,6 +7057,11 @@ users:
         can_login: yes
         member_of:
             - mwielich
+
+    - mwortschack:
+        can_login: yes
+        member_of:
+            - mwortschack
 
     - mxiao:
         can_login: yes
