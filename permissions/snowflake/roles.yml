@@ -6948,10 +6948,20 @@ users:
         member_of:
             - manggara
 
+   - marin:
+        can_login: yes
+        member_of:
+            - marin
+
     - marntz:
         can_login: yes
         member_of:
             - marntz
+
+    - mchao:
+        can_login: yes
+        member_of:
+            - mchao
 
     - mconteanu:
         can_login: yes
