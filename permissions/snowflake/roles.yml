@@ -6378,20 +6378,6 @@ users:
             - sales_analytics
             - reporter
 
-    - aghosh:
-        can_login: yes
-        member_of:
-            - aghosh
-
-    - agulina:
-        can_login: yes
-        member_of:
-            - agulina
-
-    - agupta:
-        can_login: yes
-        member_of:
-            - agupta
 
     - data_science_loader:
         can_login: yes
@@ -6410,10 +6396,27 @@ users:
             - accountadmin
             - securityadmin
 
+    - aghosh:
+        can_login: yes
+        member_of:
+            - aghosh
+
+    - agulina:
+        can_login: yes
+        member_of:
+            - agulina
+
+    - agupta:
+        can_login: yes
+        member_of:
+            - agupta
+
     - ahan:
         can_login: yes
         member_of:
             - ahan
+
+
 
     - akapungu:
         can_login: yes
