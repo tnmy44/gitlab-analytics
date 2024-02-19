@@ -4220,7 +4220,10 @@ roles:
 
     - jgarcia:
         member_of:
+            - salesforce
+            - snapshots
             - snowflake_analyst
+            - zendesk
         warehouses:
             - dev_xs
 
