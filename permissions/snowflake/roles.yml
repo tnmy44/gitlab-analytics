@@ -4642,6 +4642,17 @@ roles:
                     - kgliksman_prep.*.*
                     - kgliksman_prod.*.*
 
+    - kkolpakova:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+    - kmisirli:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - kpaizee:
         member_of:
             - reporter
@@ -4706,6 +4717,12 @@ roles:
     - kkarthikeyan:
         member_of: []
         warehouses: []
+
+    - ksvoboda:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - ksu:
         member_of:
@@ -4932,6 +4949,12 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - marin:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
