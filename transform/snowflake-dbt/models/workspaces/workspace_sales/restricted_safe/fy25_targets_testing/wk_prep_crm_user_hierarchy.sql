@@ -401,5 +401,5 @@
 
 )
 
-SELECT *
+SELECT DISTINCT *
 FROM final
