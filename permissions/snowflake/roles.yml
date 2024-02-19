@@ -6416,7 +6416,10 @@ users:
         member_of:
             - ahan
 
-
+    - aherrero:
+        can_login: yes
+        member_of:
+            - aherrero
 
     - akapungu:
         can_login: yes
