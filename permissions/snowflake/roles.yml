@@ -3161,11 +3161,13 @@ roles:
             - snowflake_analyst
         warehouses:
             - dev_xs
+
     - agulina:
         member_of:
             - snowflake_analyst
         warehouses:
             - dev_xs
+
     - agupta:
         member_of:
             - snowflake_analyst
@@ -3925,6 +3927,7 @@ roles:
             - snowflake_analyst
         warehouses:
             - dev_xs
+
     - frose:
         member_of:
             - snowflake_analyst
@@ -4647,6 +4650,7 @@ roles:
             - snowflake_analyst
         warehouses:
             - dev_xs
+
     - kmisirli:
         member_of:
             - snowflake_analyst
@@ -6925,6 +6929,7 @@ users:
         can_login: yes
         member_of:
             - fpitino
+
     - frose:
         can_login: yes
         member_of:
@@ -7558,6 +7563,7 @@ users:
         can_login: yes
         member_of:
             - svedova
+
     - svistas:
         can_login: yes
         member_of:
@@ -7659,6 +7665,7 @@ users:
         can_login: yes
         member_of:
             - vtatarintev
+            
     - vwilson:
         can_login: yes
         member_of:
