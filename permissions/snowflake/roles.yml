@@ -4063,6 +4063,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - james:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jbare:
         member_of:
             - analyst_growth
@@ -7016,6 +7022,11 @@ users:
         can_login: yes
         member_of:
             - jahye
+
+    - james:
+        can_login: yes
+        member_of:
+            - james
 
     - jbare:
         can_login: yes
