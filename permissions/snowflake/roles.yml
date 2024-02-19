@@ -6507,6 +6507,11 @@ users:
         member_of:
             - aarts
 
+    - cdu:
+        can_login: yes
+        member_of:
+            - cdu
+
     - cleroux:
         can_login: yes
         member_of:
