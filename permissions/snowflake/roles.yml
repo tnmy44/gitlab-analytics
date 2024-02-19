@@ -7360,6 +7360,11 @@ users:
         member_of:
             - twoodham
 
+    - tzallmann:
+        can_login: yes
+        member_of:
+            - tzallmann
+
     - usinghal:
         can_login: yes
         member_of:
@@ -7369,6 +7374,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vburton:
+        can_login: yes
+        member_of:
+            - vburton
 
     - vlu:
         can_login: yes
@@ -7386,6 +7396,15 @@ users:
             - accountadmin
             - securityadmin
             - vprakash
+
+    - vtatarintev:
+        can_login: yes
+        member_of:
+            - vtatarintev
+    - vwilson:
+        can_login: yes
+        member_of:
+            - vwilson
 
     - warias:
         can_login: yes
