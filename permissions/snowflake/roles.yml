@@ -5337,6 +5337,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - ndular:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - nfiguera:
         member_of:
             - analyst_sales
@@ -5431,6 +5437,12 @@ roles:
                 write:
                     - nhervas_prep.*.*
                     - nhervas_prod.*.*
+
+    - niskhakova:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - nkhanna:
         member_of:
@@ -5698,6 +5710,12 @@ roles:
     - permission_bot:
         warehouses:
             - admin
+
+    - pleitzen:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - rakreddy:
         member_of:
