@@ -6356,6 +6356,11 @@ roles:
 # ==========================================
 users:
 
+    - aadesanya:
+        can_login: yes
+        member_of:
+            - aadesanya
+
     - aarts:
         can_login: yes
         member_of:
