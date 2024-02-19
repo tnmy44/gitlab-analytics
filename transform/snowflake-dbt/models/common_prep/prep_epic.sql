@@ -63,7 +63,7 @@
 
     SELECT 
       -- surrogate key
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_epics_dedupe_source.id']) }}                AS dim_epic_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_epics_dedupe_source.id']) }}                AS dim_epic_sk,
 
       -- natural key
       gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS epic_id,

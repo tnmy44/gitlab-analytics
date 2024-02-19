@@ -9,7 +9,7 @@ WITH source AS (
       task_id, 
 
       --keys
-      {{ dbt_utils.surrogate_key(['source.task_id']) }}             AS dim_crm_task_sk,
+      {{ dbt_utils.generate_surrogate_key(['source.task_id']) }}             AS dim_crm_task_sk,
       source.task_id                                                AS dim_crm_task_pk,
       source.account_id                                             AS dim_crm_account_id,
       source.owner_id                                               AS dim_crm_user_id,

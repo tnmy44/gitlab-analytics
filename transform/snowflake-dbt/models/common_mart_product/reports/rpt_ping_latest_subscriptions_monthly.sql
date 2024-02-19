@@ -238,7 +238,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ping_created_date_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                      AS ping_latest_subscriptions_monthly_id,
+        {{ dbt_utils.generate_surrogate_key(['ping_created_date_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                      AS ping_latest_subscriptions_monthly_id,
         latest_subs_unioned.ping_created_date_month                                                                                                                               AS ping_created_date_month,
         latest_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
         latest_subs_unioned.latest_subscription_id                                                                                                                                AS latest_subscription_id,

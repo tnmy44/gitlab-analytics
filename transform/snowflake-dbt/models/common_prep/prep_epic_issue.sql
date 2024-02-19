@@ -12,7 +12,7 @@
 
     SELECT 
       -- Surrogate Key
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_epic_issues_source.epic_issues_relation_id']) }}  AS dim_epic_issue_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_epic_issues_source.epic_issues_relation_id']) }}  AS dim_epic_issue_sk,
 
       -- Natural Key
       gitlab_dotcom_epic_issues_source.epic_issues_relation_id                                     AS epic_issue_id,

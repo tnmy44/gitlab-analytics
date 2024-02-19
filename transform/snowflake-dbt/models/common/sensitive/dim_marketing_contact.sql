@@ -244,7 +244,7 @@ WITH sfdc_lead AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['emails.email_address']) }}                                                            AS dim_marketing_contact_id,
+      {{ dbt_utils.generate_surrogate_key(['emails.email_address']) }}                                                            AS dim_marketing_contact_id,
       emails.email_address,
       COALESCE(zuora.first_name, marketo_lead.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name) 
                                                                                                                          AS first_name,

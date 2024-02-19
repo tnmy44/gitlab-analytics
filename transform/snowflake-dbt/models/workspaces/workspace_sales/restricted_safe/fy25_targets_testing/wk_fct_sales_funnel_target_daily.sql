@@ -6,7 +6,7 @@
 , daily_targets AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['fct_sales_funnel_target.sales_funnel_target_id', 'prep_date.date_day']) }}
+      {{ dbt_utils.generate_surrogate_key(['fct_sales_funnel_target.sales_funnel_target_id', 'prep_date.date_day']) }}
                                                                                         AS sales_funnel_target_daily_pk,
       prep_date.date_day                                                                AS target_date,
       prep_date.date_id                                                                 AS target_date_id,

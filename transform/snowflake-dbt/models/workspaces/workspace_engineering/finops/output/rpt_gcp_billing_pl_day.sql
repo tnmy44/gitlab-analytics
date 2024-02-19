@@ -132,6 +132,6 @@ add_path AS (
 
 SELECT
   *,
-  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS pl_pk
+  {{ dbt_utils.generate_surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS pl_pk
 FROM add_path
 

@@ -22,7 +22,7 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['ptpl_score_email.email_address']) }} AS dim_marketing_contact_id,
+  {{ dbt_utils.generate_surrogate_key(['ptpl_score_email.email_address']) }} AS dim_marketing_contact_id,
   ptpl_score_email.lead_id,
   ptpl_score_email.score,
   ptpl_score_email.score_group,
