@@ -128,8 +128,11 @@ aggregate_data AS (
     trials_qtd_target,
     trials_ytd_target,
     is_current_snapshot_quarter,
-    -- numbers for current week
 
+    -- numbers for current week
+    SUM(closed_lost_opps_in_snapshot_week)                AS closed_lost_opps_in_snapshot_week,
+    SUM(closed_won_opps_in_snapshot_week)                 AS closed_won_opps_in_snapshot_week,
+    SUM(closed_opps_in_snapshot_week)                     AS closed_opps_in_snapshot_week,
     SUM(open_pipeline_in_snapshot_week)                   AS open_pipeline_in_snapshot_week,
     SUM(pipeline_created_in_snapshot_week)                AS pipeline_created_in_snapshot_week,
     SUM(created_arr_in_snapshot_week)                     AS created_arr_in_snapshot_week,
