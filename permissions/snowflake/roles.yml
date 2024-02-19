@@ -4196,11 +4196,23 @@ roles:
         warehouses:
             - dev_xs
 
+    - jenshin:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jhope:
         member_of: []
         warehouses: []
 
     - jlarsen:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - jmccure:
         member_of:
             - snowflake_analyst
         warehouses:
@@ -4443,6 +4455,12 @@ roles:
                 write:
                     - jsingh_prep.*.*
                     - jsingh_prod.*.*
+
+    - jslaughter:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - jstark:
         member_of:
