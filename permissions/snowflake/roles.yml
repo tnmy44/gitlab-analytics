@@ -6566,10 +6566,25 @@ users:
         member_of:
             - dcharukulvanich
 
+    - dcook:
+        can_login: yes
+        member_of:
+            - dcook
+
+    - dcroft:
+        can_login: yes
+        member_of:
+            - dcroft
+
     - ddeng:
         can_login: yes
         member_of:
             - ddeng
+
+    - ddieulivol:
+        can_login: yes
+        member_of:
+            - ddieulivol
 
     - degan:
         can_login: yes
@@ -6606,12 +6621,22 @@ users:
         member_of:
             - dpeterson
 
+    - dsatcher:
+        can_login: yes
+        member_of:
+            - dsatcher
+
     - dvanrooijen:
         can_login: yes
         member_of:
             - dvanrooijen
             - accountadmin
             - securityadmin
+
+    - ebajao:
+        can_login: yes
+        member_of:
+            - ebajao
 
     - ebonet:
         can_login: yes
