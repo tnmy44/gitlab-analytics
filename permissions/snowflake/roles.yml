@@ -4969,6 +4969,12 @@ roles:
             - dev_l
             - dev_xl
 
+    - mchao:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - mconteanu:
         member_of:
             - analyst_marketing
@@ -5093,6 +5099,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - mgill:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - mgilgalindo:
         member_of:
             - analyst_sales
@@ -5112,9 +5124,21 @@ roles:
         warehouses:
             - dev_xs
 
+    - mlapierre:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - mnohr:
         member_of: []
         warehouses: []
+
+    - mnuzzo:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - mpetersen:
         member_of:
@@ -5283,6 +5307,12 @@ roles:
     - mwielich:
         member_of:
             - analyst_growth
+        warehouses:
+            - dev_xs
+
+    - mwortschack:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
