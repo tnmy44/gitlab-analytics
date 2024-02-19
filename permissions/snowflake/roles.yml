@@ -1952,6 +1952,23 @@ roles:
                 read:
                     - raw.gainsight.*
 
+    - gainsight_customer_success:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.gainsight_customer_success
+                    - prep.gainsight_customer_success
+            tables:
+                read:
+                    - raw.gainsight_customer_success.*
+                    - prep.gainsight_customer_success.*
+                 
     - gcp_billing:
         warehouses:
             - dev_xs
@@ -3612,6 +3629,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - dfrey:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - dgupta:
         member_of:
             - adaptive
@@ -3725,6 +3748,12 @@ roles:
                 write:
                     - dvanrooijen_prep.*.*
                     - dvanrooijen_prod.*.*
+
+    - ebonet:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - eneuberger:
         member_of:
@@ -4054,14 +4083,23 @@ roles:
         member_of: []
         warehouses: []
 
+    - jlarsen:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jonglee:
         member_of:
             - data_science_readonly
             - driveload
             - gainsight
+            - gainsight_customer_success
             - gitlab_data_yaml
             - gitlab_dotcom
+            - gitlab_dotcom_prep
             - marketo
+            - postgres_pipeline
             - reporter
             - restricted_safe
             - salesforce
@@ -4073,6 +4111,7 @@ roles:
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
             - zuora_stitch_rest_api
+            - zuora_revenue
             - zuora_query_api
         warehouses:
             - dev_xs
@@ -4997,6 +5036,12 @@ roles:
                 write:
                     - mramirez_prep.*.*
                     - mramirez_prod.*.*
+
+    - msaleiko:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - mvilain:
         member_of:
@@ -6079,8 +6124,10 @@ roles:
             - dev_xs
 
     - tjayaramaraju:
-        member_of: []
-        warehouses: []
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - tliu:
         member_of:
@@ -6478,6 +6525,11 @@ users:
         member_of:
             - dfelton
 
+    - dfrey:
+        can_login: yes
+        member_of:
+            - dfrey
+
     - dgupta:
         can_login: yes
         member_of:
@@ -6504,6 +6556,11 @@ users:
             - dvanrooijen
             - accountadmin
             - securityadmin
+
+    - ebonet:
+        can_login: yes
+        member_of:
+            - ebonet
 
     - eneuberger:
         can_login: yes
@@ -6611,6 +6668,11 @@ users:
     - jhope:
         can_login: no
         member_of: []
+
+    - jlarsen:
+        can_login: yes
+        member_of:
+            - jlarsen
 
     - jonglee:
         can_login: yes
@@ -6820,6 +6882,11 @@ users:
         can_login: yes
         member_of:
             - mramirez
+
+    - msaleiko:
+        can_login: yes
+        member_of:
+            - msaleiko
 
     - mvilain:
         can_login: yes
@@ -7070,8 +7137,9 @@ users:
             - tfigueiro
 
     - tjayaramaraju:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - tjayaramaraju
 
     - tliu:
         can_login: yes

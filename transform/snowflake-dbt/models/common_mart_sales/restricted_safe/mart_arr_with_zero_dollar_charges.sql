@@ -35,7 +35,7 @@
 
     SELECT
       --primary_key
-      {{ dbt_utils.surrogate_key(['fct_mrr_all.dim_date_id', 'dim_subscription.subscription_name', 'fct_mrr_all.dim_product_detail_id']) }}
+      {{ dbt_utils.generate_surrogate_key(['fct_mrr_all.dim_date_id', 'dim_subscription.subscription_name', 'fct_mrr_all.dim_product_detail_id']) }}
                                                                                       AS primary_key,
 
       --date info

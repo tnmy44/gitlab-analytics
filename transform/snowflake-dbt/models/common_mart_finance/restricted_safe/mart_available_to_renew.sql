@@ -844,7 +844,7 @@
 
     SELECT
       CONCAT(dim_date.fiscal_quarter_name_fy, base_{{renewal_fiscal_year}}.term_end_month, base_{{renewal_fiscal_year}}.dim_charge_id)      AS concat_primary_key,
-      {{ dbt_utils.surrogate_key(['concat_primary_key' ]) }}                                                                                AS primary_key,
+      {{ dbt_utils.generate_surrogate_key(['concat_primary_key' ]) }}                                                                                AS primary_key,
       dim_date.fiscal_year                                                                                                                  AS fiscal_year,
       dim_date.fiscal_quarter_name_fy                                                                                                       AS fiscal_quarter_name_fy,
       opportunity_term_group.close_month                                                                                                    AS close_month,

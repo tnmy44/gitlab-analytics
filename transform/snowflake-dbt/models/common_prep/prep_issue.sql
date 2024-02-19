@@ -96,7 +96,7 @@
     SELECT
 
       -- SURROGATE KEY
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
 
       -- NATURAL KEY
       gitlab_dotcom_issues_source.issue_id                                    AS issue_id,
