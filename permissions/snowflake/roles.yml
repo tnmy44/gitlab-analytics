@@ -6383,6 +6383,11 @@ users:
         member_of:
             - aghosh
 
+    - agulina:
+        can_login: yes
+        member_of:
+            - agulina
+
     - data_science_loader:
         can_login: yes
         member_of:
