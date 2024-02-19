@@ -3493,6 +3493,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - cpoole:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - csharp:
         member_of:
             - analytics_engineer_core
@@ -3550,9 +3556,27 @@ roles:
                     - csharp_prep.*.*
                     - csharp_prod.*.*
 
+    - csimpson:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - csouthard:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - cswords:
         member_of:
             - reporter
+        warehouses:
+            - dev_xs
+
+    - cwoolley:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -3571,6 +3595,18 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - dcook:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - dcroft:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -3613,6 +3649,12 @@ roles:
                 write:
                     - ddeng_prep.*.*
                     - ddeng_prod.*.*
+
+    - ddieulivol:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - degan:
         member_of:
@@ -3747,6 +3789,12 @@ roles:
                 write:
                     - dpeterson_prep.*.*
                     - dpeterson_prod.*.*
+
+    - dsatcher:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - dvanrooijen:
         member_of:
