@@ -6547,6 +6547,11 @@ users:
         member_of:
             - cswords
 
+    - cwoolley:
+        can_login: yes
+        member_of:
+            - cwoolley
+
     - david:
         can_login: no
         member_of: []
