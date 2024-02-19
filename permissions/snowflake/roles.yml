@@ -6672,6 +6672,11 @@ users:
         member_of:
             - frose
 
+    - hmuralidhar:
+        can_login: yes
+        member_of:
+            - hmuralidhar
+
     - gainsight:
         can_login: yes
         member_of:
