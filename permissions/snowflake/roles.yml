@@ -4210,7 +4210,7 @@ roles:
             - snowflake_analyst
         warehouses:
             - dev_xs
-            
+
     - jlarsen:
         member_of:
             - snowflake_analyst
@@ -5137,8 +5137,11 @@ roles:
             - dev_xs
 
     - mnohr:
-        member_of: []
-        warehouses: []
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
 
     - mnuzzo:
         member_of:
@@ -7036,8 +7039,9 @@ users:
             - jenshin
 
     - jhope:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - jhope
 
     - jlarsen:
         can_login: yes
@@ -7285,8 +7289,9 @@ users:
             - mlapierre
 
     - mnohr:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of: 
+            - mnohr
 
     - mnuzzo:
         can_login: yes
