@@ -3837,6 +3837,12 @@ roles:
                     - dvanrooijen_prep.*.*
                     - dvanrooijen_prod.*.*
 
+    - ebajao:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - ebonet:
         member_of:
             - snowflake_analyst
