@@ -5843,6 +5843,12 @@ roles:
                     - rdemiri_prep.*.*
                     - rdemiri_prod.*.*
 
+    - remy:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - rkohnke:
         member_of:
             - analyst_marketing
@@ -5895,6 +5901,18 @@ roles:
     - rnealon:
         member_of:
             - reporter
+        warehouses:
+            - dev_xs
+
+    - rnienaber:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - rpereira:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
