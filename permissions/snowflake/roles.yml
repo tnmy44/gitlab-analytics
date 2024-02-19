@@ -7081,6 +7081,11 @@ users:
         can_login: no
         member_of: []
 
+    - ndular:
+        can_login: yes
+        member_of:
+            - ndular
+
     - nfiguera:
         can_login: yes
         member_of:
@@ -7095,6 +7100,11 @@ users:
         can_login: yes
         member_of:
             - nhervas
+
+    - niskhakova:
+        can_login: yes
+        member_of:
+            - niskhakova
 
     - nkhanna:
         can_login: yes
@@ -7150,6 +7160,11 @@ users:
             - securityadmin
             - sysadmin
 
+    - pleitzen:
+        can_login: yes
+        member_of:
+            - pleitzen
+
     - rakreddy:
         can_login: yes
         member_of:
@@ -7167,6 +7182,11 @@ users:
             - accountadmin
             - securityadmin
 
+    - remy:
+        can_login: yes
+        member_of:
+            - remy
+
     - rkohnke:
         can_login: yes
         member_of:
@@ -7176,6 +7196,16 @@ users:
         can_login: yes
         member_of:
             - rnealon
+
+    - rnienaber:
+        can_login: yes
+        member_of:
+            - rnienaber
+
+    - rpereira:
+        can_login: yes
+        member_of:
+            - rpereira
 
     - rrendon:
         can_login: yes
@@ -7265,6 +7295,15 @@ users:
         can_login: yes
         member_of:
             - stseng
+
+    - svedova:
+        can_login: yes
+        member_of:
+            - svedova
+    - svistas:
+        can_login: yes
+        member_of:
+            - svistas
 
     - tableau:
         can_login: yes
