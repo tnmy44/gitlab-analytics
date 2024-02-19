@@ -4218,6 +4218,15 @@ roles:
         warehouses:
             - dev_xs
 
+    - jgarcia:
+        member_of:
+            - salesforce
+            - snapshots
+            - snowflake_analyst
+            - zendesk
+        warehouses:
+            - dev_xs
+
     - jhope:
         member_of:
             - snowflake_analyst
@@ -7060,6 +7069,11 @@ users:
         can_login: yes
         member_of:
             - jenshin
+
+    - jgarcia:
+        can_login: yes
+        member_of:
+            - jgarcia
 
     - jhope:
         can_login: yes
