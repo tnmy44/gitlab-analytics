@@ -16,7 +16,7 @@ unioned AS (
 
 
   SELECT 
-    granular_data.*
+    granular_data.*,
     TRUE AS is_granular
   FROM granular_data
   WHERE is_current_snapshot_quarter
@@ -66,7 +66,7 @@ unioned AS (
     NULL AS dim_account_location_country_id,
     NULL AS dim_account_location_region_id,
 
-    report_user_segment_geo_region_area_sqs_ot,
+    NULL AS report_user_segment_geo_region_area_sqs_ot,
     order_type_name,
     sales_qualified_source_name,
     crm_user_sales_segment,
