@@ -6643,6 +6643,11 @@ users:
         member_of:
             - ebonet
 
+    - eguo:
+        can_login: yes
+        member_of:
+            - eguo
+
     - eneuberger:
         can_login: yes
         member_of:
@@ -6657,6 +6662,15 @@ users:
         can_login: yes
         member_of:
             - fivetran_role
+
+    - fpitino:
+        can_login: yes
+        member_of:
+            - fpitino
+    - frose:
+        can_login: yes
+        member_of:
+            - frose
 
     - gainsight:
         can_login: yes
