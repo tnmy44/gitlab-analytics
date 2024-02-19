@@ -6522,6 +6522,11 @@ users:
         member_of:
             - cmeddaugh
 
+    - cpoole:
+        can_login: yes
+        member_of:
+            - cpoole
+
     - csharp:
         can_login: yes
         member_of:
