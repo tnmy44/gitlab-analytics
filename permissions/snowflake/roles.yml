@@ -6532,6 +6532,16 @@ users:
         member_of:
             - csharp
 
+    - csimpson:
+        can_login: yes
+        member_of:
+            - csimpson
+
+    - csouthard:
+        can_login: yes
+        member_of:
+            - csouthard
+
     - cswords:
         can_login: yes
         member_of:
