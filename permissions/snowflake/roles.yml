@@ -6378,6 +6378,11 @@ users:
             - sales_analytics
             - reporter
 
+    - aghosh:
+        can_login: yes
+        member_of:
+            - aghosh
+
     - data_science_loader:
         can_login: yes
         member_of:
