@@ -203,8 +203,6 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
-    sfdc_opportunity.incremental_acv                                                                                      AS iacv,
-    sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
     sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     sfdc_opportunity.calculated_from_ratio_net_arr,
     sfdc_opportunity.net_arr,

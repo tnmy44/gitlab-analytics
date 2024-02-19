@@ -63,7 +63,7 @@ final AS (
         THEN 1
       ELSE 0
     END AS is_closed_lost_in_snapshot_week,
-    
+
 
     -- Pull in the metric only when the corresponding flag is set
     -- ie. Only calculate created arr in the week where the opportunity was created
@@ -113,6 +113,12 @@ final AS (
           THEN net_arr
       ELSE 0
     END AS pipeline_created_in_snapshot_week,
+    CASE 
+      WHEN is_arr_created_in_snapshot_week = 1
+        AND is_net_arr_pipeline_created_combined = 1
+          THEN calculated_deal_count
+      ELSE 0
+    END AS calculated_deal_count_in_snapshot_week,
     CASE 
       WHEN is_eligible_open_pipeline_combined = 1
         AND is_close_in_snapshot_week = 1

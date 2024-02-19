@@ -147,8 +147,6 @@ combined AS (
     actuals.comp_channel_neutral,
 
     --additive fields
-    actuals.iacv,
-    actuals.net_iacv,
     actuals.segment_order_type_iacv_to_net_arr_ratio,
     actuals.calculated_from_ratio_net_arr,
     actuals.net_arr,

@@ -143,6 +143,7 @@ aggregate_data AS (
     SUM(closed_new_logo_count_in_snapshot_week)           AS closed_new_logo_count_in_snapshot_week,
     SUM(closed_cycle_time_in_snapshot_week)               AS closed_cycle_time_in_snapshot_week,
     SUM(booked_net_arr_in_snapshot_week)                  AS booked_net_arr_in_snapshot_week,
+    SUM(calculated_deal_count_in_snapshot_week)           AS calculated_deal_count_in_snapshot_week,
 
     -- Additive fields
     SUM(segment_order_type_iacv_to_net_arr_ratio)         AS segment_order_type_iacv_to_net_arr_ratio,

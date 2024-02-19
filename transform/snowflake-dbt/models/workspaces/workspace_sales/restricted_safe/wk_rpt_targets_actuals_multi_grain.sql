@@ -16,7 +16,7 @@ unioned AS (
 
 
   SELECT 
-    granular_data.*,
+    granular_data.*
     TRUE AS is_granular
   FROM granular_data
   WHERE is_current_snapshot_quarter
@@ -24,7 +24,6 @@ unioned AS (
   UNION
 
   SELECT 
-    snapshot_date,
     NULL AS actuals_targets_pk,
     NULL AS dim_crm_opportunity_id,
     dim_sales_qualified_source_id,
@@ -67,6 +66,7 @@ unioned AS (
     NULL AS dim_account_location_country_id,
     NULL AS dim_account_location_region_id,
 
+    report_user_segment_geo_region_area_sqs_ot,
     order_type_name,
     sales_qualified_source_name,
     crm_user_sales_segment,
@@ -74,6 +74,8 @@ unioned AS (
     crm_user_region,
     crm_user_area,
     crm_user_business_unit,
+
+    snapshot_date,
 
     NULL AS is_closed,
     NULL AS is_won,
@@ -181,7 +183,7 @@ unioned AS (
     override_arr_basis_clari,
     vsa_start_date_net_arr,
     cycle_time_in_days_combined,
-    
+    NULL AS created_in_snapshot_quarter_deal_count,
     snapshot_day,
     snapshot_day_name,
     snapshot_fiscal_year,
@@ -415,11 +417,6 @@ unioned AS (
     NULL AS is_sales_accepted_in_snapshot_week,
     NULL AS is_closed_won_in_snapshot_week,
     NULL AS is_closed_lost_in_snapshot_week,
-    closed_lost_opps_in_snapshot_week,
-    closed_won_opps_in_snapshot_week,
-    closed_opps_in_snapshot_week,
-    open_pipeline_in_snapshot_week,
-    pipeline_created_in_snapshot_week,
     created_arr_in_snapshot_week,
     created_net_arr_in_snapshot_week,
     created_deal_count_in_snapshot_week,
@@ -428,11 +425,16 @@ unioned AS (
     closed_new_logo_count_in_snapshot_week,
     closed_cycle_time_in_snapshot_week,
     booked_net_arr_in_snapshot_week,
+    pipeline_created_in_snapshot_week,
+    calculated_deal_count_in_snapshot_week,
+    open_pipeline_in_snapshot_week,
     closed_lost_opps_in_snapshot_week,
     closed_won_opps_in_snapshot_week,
     closed_opps_in_snapshot_week,
+    NULL AS is_current_snapshot_quarter,
     FALSE AS is_granular
   FROM aggregate_data
+  WHERE NOT is_current_snapshot_quarter
 
 
 )
