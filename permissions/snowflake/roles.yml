@@ -6388,6 +6388,11 @@ users:
         member_of:
             - agulina
 
+    - agupta:
+        can_login: yes
+        member_of:
+            - agupta
+
     - data_science_loader:
         can_login: yes
         member_of:
