@@ -6765,6 +6765,11 @@ users:
         member_of:
             - jcolyer
 
+    - jenshin:
+        can_login: yes
+        member_of:
+            - jenshin
+
     - jhope:
         can_login: no
         member_of: []
@@ -6773,6 +6778,11 @@ users:
         can_login: yes
         member_of:
             - jlarsen
+
+    - jmccure:
+        can_login: yes
+        member_of:
+            - jmccure
 
     - jonglee:
         can_login: yes
@@ -6818,6 +6828,11 @@ users:
         can_login: yes
         member_of:
             - jsingh
+
+    - jslaughter:
+        can_login: yes
+        member_of:
+            - jslaughter
 
     - jstark:
         can_login: yes
