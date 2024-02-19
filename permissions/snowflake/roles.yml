@@ -4206,9 +4206,11 @@ roles:
             - dev_xs
 
     - jhope:
-        member_of: []
-        warehouses: []
-
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+            
     - jlarsen:
         member_of:
             - snowflake_analyst
