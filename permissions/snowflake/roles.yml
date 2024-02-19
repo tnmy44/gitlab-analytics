@@ -3849,6 +3849,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - eguo:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - eneuberger:
         member_of:
             - analyst_growth
@@ -3914,6 +3920,17 @@ roles:
                 write:
                     - raw.netsuite_fivetran.*
 
+    - fpitino:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+    - frose:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - fstein:
         warehouses:
             - admin
@@ -3942,6 +3959,12 @@ roles:
             - bi_tool_eval_read
             - reporter
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - hmuralidhar:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
