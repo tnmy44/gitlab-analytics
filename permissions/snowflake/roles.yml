@@ -3070,6 +3070,12 @@ roles:
 # User Roles
 # ==========================================
 
+    - aadesanya:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - aarts:
         member_of:
             - analyst_sales
@@ -3150,10 +3156,32 @@ roles:
                     - abright_prep.*.*
                     - abright_prod.*.*
 
+    - aghosh:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+    - agulina:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+    - agupta:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - ahan:
         member_of:
             - reporter
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - aherrero:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -3197,6 +3225,12 @@ roles:
                 write:
                     - akapungu_prep.*.*
                     - akapungu_prod.*.*
+
+    - akotte:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - akramer:
         member_of: []
@@ -3378,6 +3412,12 @@ roles:
             - xactly
             - restricted_safe
             - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
+    - cdu:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
