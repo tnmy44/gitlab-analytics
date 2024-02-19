@@ -6426,6 +6426,11 @@ users:
         member_of:
             - akapungu
 
+    - akotte:
+        can_login: yes
+        member_of:
+            - akotte
+
     - akramer:
         can_login: no
         member_of: []
