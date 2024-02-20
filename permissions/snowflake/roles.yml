@@ -4169,6 +4169,7 @@ roles:
             - analytics_engineer_core
             - reporter
             - restricted_safe
+            - jbare #temp provisioning https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/27160
         warehouses:
             - dev_xs
         owns:
@@ -4269,6 +4270,7 @@ roles:
             - zuora_stitch_rest_api
             - zuora_revenue
             - zuora_query_api
+            - jbare #temp provisioning https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/27160
         warehouses:
             - dev_xs
         owns:
@@ -4782,6 +4784,7 @@ roles:
             - analytics_engineer_core
             - reporter
             - restricted_safe
+            - jbare #temp provisioning https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/27160
         warehouses:
             - dev_xs
         owns:
@@ -5495,6 +5498,7 @@ roles:
             - xactly
             - bi_tool_eval_db
             - zuora_stitch_rest_api
+            - jbare #temp provisioning https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/27160
         warehouses:
             - dev_xs
         owns:
