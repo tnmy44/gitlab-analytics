@@ -48,7 +48,6 @@
       NULL                AS user_role_level_4,
       NULL                AS user_role_level_5
     FROM prep_crm_person 
-    {# WHERE created_date_fiscal_year < 2025 #}
 
 ), user_geo_hierarchy_source AS (
 
@@ -77,7 +76,6 @@
       AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
       AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
       AND prep_crm_user_daily_snapshot.is_active = TRUE
-      {# AND dim_date.fiscal_year < 2025 #}
 
 ), user_role_hierarchy_source AS (
 
@@ -102,7 +100,6 @@
     WHERE prep_crm_user_daily_snapshot.crm_user_role_level_1 IS NOT NULL
       AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
       AND prep_crm_user_daily_snapshot.is_active = TRUE
-    {# AND dim_date.fiscal_year >= 2025 #}
 
 ), account_hierarchy_snapshot_source AS (
 
@@ -130,7 +127,6 @@
       AND prep_crm_account_daily_snapshot.parent_crm_account_area IS NOT NULL
       AND IFF(dim_date.fiscal_year > 2023, prep_crm_account_daily_snapshot.parent_crm_account_business_unit IS NOT NULL, TRUE) -- with the change in structure, business unit must be present after FY23
       AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year, dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
-      {# AND dim_date.fiscal_year < 2025 #}
 
 ), account_hierarchy_source AS (
 
@@ -155,7 +151,6 @@
       AND prep_crm_account.parent_crm_account_geo IS NOT NULL
       AND prep_crm_account.parent_crm_account_region IS NOT NULL
       AND prep_crm_account.parent_crm_account_area IS NOT NULL
-      {# AND current_fiscal_year.fiscal_year < 2025 #}
 
 ), user_geo_hierarchy_sheetload AS (
 /*
@@ -183,7 +178,6 @@
       AND prep_sales_funnel_target.user_region IS NOT NULL
       AND prep_sales_funnel_target.user_area IS NOT NULL
       AND prep_sales_funnel_target.role_level_1 IS NULL
-      {# AND prep_sales_funnel_target.fiscal_year < 2025 #}
 
 ), user_role_hierarchy_sheetload AS (
 /*
@@ -206,7 +200,6 @@
       prep_sales_funnel_target.role_level_5
     FROM prep_sales_funnel_target
     WHERE prep_sales_funnel_target.role_level_1 IS NOT NULL
-    {# AND prep_sales_funnel_target.fiscal_year >= 2025 #}
 
 
 ), user_hierarchy_stamped_opportunity AS (
