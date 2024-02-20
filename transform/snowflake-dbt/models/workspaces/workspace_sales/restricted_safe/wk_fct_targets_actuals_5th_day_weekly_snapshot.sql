@@ -121,7 +121,6 @@ final AS (
     END AS calculated_deal_count_in_snapshot_week,
     CASE 
       WHEN is_eligible_open_pipeline_combined = 1
-        AND is_close_in_snapshot_week = 1
           AND is_excluded_from_pipeline_created_combined = 0
         THEN net_arr
       ELSE 0
@@ -142,7 +141,6 @@ final AS (
           THEN 1
       ELSE 0
     END AS closed_opps_in_snapshot_week,
-
     IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list
