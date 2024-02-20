@@ -223,7 +223,6 @@
       NULL                                                           AS user_role_level_5
     FROM prep_crm_opportunity
     WHERE is_live = 1
-    {# AND prep_crm_opportunity.close_fiscal_year < 2025 #}
   
 ), unioned AS (
 /*
