@@ -324,11 +324,11 @@
 
     SELECT DISTINCT
       fiscal_year,
-      NULL                      AS user_segment,
-      NULL                      AS user_geo,
-      NULL                      AS user_region,
-      NULL                      AS user_area,
-      NULL                      AS user_business_unit,
+      UPPER(user_segment)       AS user_segment,
+      UPPER(user_geo)           AS user_geo,
+      UPPER(user_region)        AS user_region,
+      UPPER(user_area)          AS user_area,
+      UPPER(user_business_unit) AS user_business_unit,
       dim_crm_user_hierarchy_sk,
       UPPER(user_role_name)     AS user_role_name,
       UPPER(user_role_level_1)  AS user_role_level_1,
