@@ -116,7 +116,16 @@
         THEN latest_ptpf_score_date
       WHEN ptp_source = 'Lead'
         THEN latest_ptpl_score_date
-    END AS last_score_date
+    END AS last_score_date,
+
+    CASE
+      WHEN ptp_source = 'Trial'
+        THEN 1 -- When trial score is the same as the free or lead score do not collaspe
+      WHEN ptp_source = 'Free'
+        THEN 2 -- When free or lead score are the same then combine into one
+      WHEN ptp_source = 'Lead'
+        THEN 2 -- When free or lead score are the same then combine into one
+    END AS score_priority
     
   FROM prep_ptpt_scores_by_user
   FULL JOIN prep_ptpf_scores_by_user 
@@ -133,10 +142,12 @@
       *,
         --Determine when a score changes based on previous score
       LAG(score_group, 1, NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) AS prev_group,
+       --Determine when a model type changes based on previous type (Free and Leads are treated as same type)
+      LAG(score_priority, 1, NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) AS prev_score_priority,
       --Determine the next time the model was scored so we know when a score is valid until
       LAG(score_date_combined, -1, NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) AS next_score_date,
-      --Group scores for a marketing ID together if they dont change. Once the score changes then a new "rank" is created
-      CONDITIONAL_TRUE_EVENT(score_group != prev_group) OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) AS score_group_rank
+       --Group scores for a marketing ID together if they dont change. Once the score changes then a new "rank" is created
+      CONDITIONAL_TRUE_EVENT(score_group != prev_group OR score_priority != prev_score_priority) OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) AS score_group_rank 
     FROM combined_historic_scores
 
 ), valid_to_from AS (
@@ -151,14 +162,16 @@
       latest_score_date,
       prev_group,
       score_group_rank,
+      score_priority,
+      prev_score_priority,
       --Determine the first date the score occured within the "rank"
-      FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, ptp_source ORDER BY score_date) AS valid_from,
+      FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, score_priority ORDER BY score_date) AS valid_from,
       --Determine the last time the score occured within the "rank"
-      LAST_VALUE(next_score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, ptp_source ORDER BY score_date) AS valid_to_prep,
-      --If score_date is the same date as the most recent score date. If it is then null valid_to because that score it still valid. If if does not equal, then the valid_to date is the day before the next valid_from date.
+      LAST_VALUE(next_score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, score_priority ORDER BY score_date) AS valid_to_prep,
+      --If score_date is the same date as the most recent score date. If it is then use, otherwise the valid_to date is the day before the next valid_from date.
       CASE
         WHEN score_date = latest_score_date
-          THEN NULL
+          THEN latest_score_date
         ELSE DATEADD('day', -1, valid_to_prep)
       END AS valid_to
     FROM combined_historic_scores_lag 
@@ -175,5 +188,6 @@ SELECT
   valid_from,
   valid_to
 FROM valid_to_from
+WHERE VALID_TO IS NOT NULL
 QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id, valid_from, valid_to ORDER BY last_score_date DESC) = 1
 ORDER BY dim_marketing_contact_id, valid_from

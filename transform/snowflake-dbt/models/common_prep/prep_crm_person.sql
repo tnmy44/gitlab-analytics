@@ -120,7 +120,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['sfdc_contacts.contact_id']) }} AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_contacts.contact_id']) }} AS dim_crm_person_id,
       sfdc_contacts.contact_id                      AS sfdc_record_id,
       bizible_person_id                             AS bizible_person_id,
       'contact'                                     AS sfdc_record_type,
@@ -173,7 +173,12 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
-      is_high_priority,
+      high_priority_datetime,
+      CASE
+        WHEN high_priority_datetime IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
@@ -280,7 +285,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['lead_id']) }} AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['lead_id']) }} AS dim_crm_person_id,
       lead_id                                    AS sfdc_record_id,
       bizible_person_id                          AS bizible_person_id,
       'lead'                                     AS sfdc_record_type,
@@ -333,7 +338,12 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
-      is_high_priority,
+      high_priority_datetime,
+      CASE
+        WHEN high_priority_datetime IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
@@ -485,5 +495,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-11-01"
+    updated_date="2024-01-19"
 ) }}

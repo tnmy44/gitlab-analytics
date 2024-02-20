@@ -28,11 +28,7 @@ WITH source_user AS (
       edm_user.manager_name,
       edm_user.manager_id,
       
-      CASE 
-        WHEN LOWER(edm_user.crm_user_geo) IN ('amer','apac','jihu','emea','pubsec')
-          THEN IFNULL(edm_user.crm_user_geo, 'Other')   
-        ELSE 'Other'
-      END                                                   AS user_geo,
+      IFNULL(edm_user.crm_user_geo, 'Other')                AS user_geo,
       IFNULL(edm_user.crm_user_region, 'Other')             AS user_region,
 
 

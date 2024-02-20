@@ -3,10 +3,10 @@
 ) }}
 
 {{ simple_cte([
-    ('namespace_current', 'gitlab_dotcom_namespaces_source'),
+    ('namespaces', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'prep_namespace_hist'),
     ('namespace_settings', 'gitlab_dotcom_namespace_settings_source'),
-    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_subscription_plan_scd'),
+    ('namespace_lineage', 'gitlab_dotcom_namespace_lineage'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('product_tiers', 'prep_product_tier'),
@@ -58,46 +58,18 @@ creators AS (
 
 ),
 
-namespace_lineage AS (
-  SELECT
-    dim_namespace_id AS namespace_id,
-    parent_id,
-    upstream_lineage,
-    ultimate_parent_id,
-    namespace_is_internal,
-    ultimate_parent_plan_id,
-    seats,
-    seats_in_use,
-    max_seats_used,
-    is_current,
-    is_current       AS ultimate_parent_is_current,
-    plan_title       AS ultimate_parent_plan_title,
-    plan_is_paid     AS ultimate_parent_plan_is_paid,
-    plan_name        AS ultimate_parent_plan_name
-  FROM namespace_lineage_historical
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id, parent_id, ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
-),
-
-namespaces AS (
-
-  SELECT
-    namespace_snapshots.*,
-    IFF(namespace_current.namespace_id IS NOT NULL,
-      TRUE, FALSE) AS is_current
-  FROM namespace_snapshots
-  LEFT JOIN namespace_current
-    ON namespace_snapshots.dim_namespace_id = namespace_current.namespace_id
-
-),
-
 joined AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['namespaces.dim_namespace_id']) }}          AS dim_namespace_sk,
+
+    -- Surrogate Key
+    {{ dbt_utils.generate_surrogate_key(['namespaces.namespace_id']) }}              AS dim_namespace_sk,
 
     -- Natural Key
-    namespaces.dim_namespace_id,
-    namespaces.dim_namespace_id                                             AS namespace_id,
+    namespaces.namespace_id                                                 AS namespace_id,
+
+    -- Legacy Natural Key
+    namespaces.namespace_id                                                 AS dim_namespace_id,
 
     -- Foreign Keys
     namespaces.owner_id,
@@ -106,22 +78,23 @@ joined AS (
     namespace_lineage.ultimate_parent_plan_id                               AS gitlab_plan_id,
     COALESCE(namespace_lineage.ultimate_parent_id,
       namespaces.parent_id,
-      namespaces.dim_namespace_id)                                          AS ultimate_parent_namespace_id,
+      namespaces.namespace_id)                                              AS ultimate_parent_namespace_id,
     {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
 
     -- Attributes
-    IFF(namespaces.dim_namespace_id = COALESCE(namespace_lineage.ultimate_parent_id,
+    IFF(namespaces.namespace_id = COALESCE(namespace_lineage.ultimate_parent_id,
       namespaces.parent_id,
-      namespaces.dim_namespace_id),
+      namespaces.namespace_id),
       TRUE, FALSE)                                                          AS namespace_is_ultimate_parent,
     IFF(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL,
       TRUE, FALSE)                                                          AS namespace_is_internal,
     CASE
       WHEN namespaces.visibility_level = 'public'
-        OR namespace_is_internal THEN namespace_name
+        OR namespace_is_internal THEN namespaces.namespace_name
       WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
       WHEN namespaces.visibility_level = 'private' THEN 'private - masked'
     END                                                                     AS namespace_name,
+    namespaces.namespace_name                                               AS namespace_name_unmasked,
     CASE
       WHEN namespaces.visibility_level = 'public'
         OR namespace_is_internal THEN namespace_path
@@ -130,8 +103,8 @@ joined AS (
     END                                                                     AS namespace_path,
     namespaces.namespace_type                                               AS namespace_type,
     namespaces.has_avatar,
-    namespaces.namespace_created_at                                         AS created_at,
-    namespaces.namespace_updated_at                                         AS updated_at,
+    namespaces.created_at                                                   AS created_at,
+    namespaces.updated_at                                                   AS updated_at,
     namespaces.is_membership_locked,
     namespaces.has_request_access_enabled,
     namespaces.has_share_with_group_locked,
@@ -160,19 +133,20 @@ joined AS (
     COALESCE(members.member_count, 0)                                       AS namespace_member_count,
     COALESCE(projects.project_count, 0)                                     AS namespace_project_count,
     namespace_settings.code_suggestions                                     AS has_code_suggestions_enabled,
-    COALESCE(namespaces.is_current AND namespace_lineage.is_current, FALSE) AS is_currently_valid
+    -- keep as legacy field until code can be refactored
+    TRUE                                                                    AS is_currently_valid 
   FROM namespaces
   LEFT JOIN namespace_lineage
-    ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
-      AND COALESCE(namespaces.parent_id, namespaces.dim_namespace_id) = COALESCE(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+    ON namespaces.namespace_id = namespace_lineage.namespace_id
+      AND COALESCE(namespaces.parent_id, namespaces.namespace_id) = COALESCE(namespace_lineage.parent_id, namespace_lineage.namespace_id)
   LEFT JOIN namespace_settings
-    ON namespaces.dim_namespace_id = namespace_settings.namespace_id
+    ON namespaces.namespace_id = namespace_settings.namespace_id
   LEFT JOIN members
-    ON namespaces.dim_namespace_id = members.source_id
+    ON namespaces.namespace_id = members.source_id
   LEFT JOIN projects
-    ON namespaces.dim_namespace_id = projects.namespace_id
+    ON namespaces.namespace_id = projects.namespace_id
   LEFT JOIN creators
-    ON namespaces.dim_namespace_id = creators.group_id
+    ON namespaces.namespace_id = creators.group_id
   LEFT JOIN users
     ON creators.creator_id = users.dim_user_id
   LEFT JOIN map_namespace_internal
@@ -182,13 +156,6 @@ joined AS (
       AND namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
         saas_product_tiers.product_tier_historical_short,
         'ultimate_trial'))
-  QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY
-        namespaces.dim_namespace_id,
-        namespaces.parent_id,
-        namespace_lineage.ultimate_parent_id
-      ORDER BY namespaces.namespace_updated_at DESC
-    ) = 1
 
 )
 
@@ -197,5 +164,5 @@ joined AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-14",
-    updated_date="2023-09-06"
+    updated_date="2024-01-22"
 ) }}

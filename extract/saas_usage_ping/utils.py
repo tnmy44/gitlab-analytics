@@ -86,11 +86,15 @@ class Utils:
     METRICS_EXCEPTION_INSTANCE_SQL = (
         "counts.clusters_platforms_eks",
         "counts.clusters_platforms_gke",
+        "counts.issues_created_from_alerts",
+        "counts.requirement_test_reports_manual",
+        "counts.requirement_test_reports_ci",
+        "counts.requirements_with_test_report",
+        "counts_weekly.batched_background_migration_count_failed_jobs_metric",
         "usage_activity_by_stage.configure.clusters_platforms_gke",
         "usage_activity_by_stage.configure.clusters_platforms_eks",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
-        "counts_weekly.batched_background_migration_count_failed_jobs_metric",
     )
 
     # Map table which are renamed on the source side

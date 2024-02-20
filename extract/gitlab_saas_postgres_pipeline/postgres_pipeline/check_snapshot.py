@@ -1,3 +1,6 @@
+"""
+    This module is used to check the connectivity of the database and also check the health of the database.
+"""
 import logging
 import sys
 import os
@@ -5,6 +8,20 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy import create_engine
 from gitlabdata.orchestration_utils import query_executor
 import fire
+
+
+def check_snapshot_health(source_engine: Engine) -> None:
+    """
+    The primary objective of this function is to validate if the snapshot restored is not older than 12 hours.
+    If it is older than 12 hours it should fail the task and send notification in slack.
+    """
+    snapshot_health_query = "SELECT ROUND((EXTRACT(EPOCH FROM NOW()) - EXTRACT(EPOCH FROM PG_LAST_XACT_REPLAY_TIMESTAMP()))/3600);"
+    snapshot_age = query_executor(source_engine, snapshot_health_query)[0][0]
+    if snapshot_age > 12:
+        logging.info(
+            "Snapshot restored is older than 12 hours. Please investigate before running downstream"
+        )
+        sys.exit(1)
 
 
 def check_snapshot_replica(source_engine: Engine) -> None:
@@ -27,6 +44,7 @@ def check_snapshot_replica(source_engine: Engine) -> None:
     else:
         logging.info("No Current date found")
         sys.exit(1)
+
     if pg_last_xact_replay_timestamp is not None:
         logging.info(
             f"pg_last_xact_replay_timestamp from Postgres:{pg_last_xact_replay_timestamp}"
@@ -53,6 +71,8 @@ def check_snapshot_ci() -> None:
     )
     logging.info(engine)
     check_snapshot_replica(engine)
+    logging.info("Check health of snapshot")
+    check_snapshot_health(engine)
     logging.info("Complete")
 
 
@@ -73,6 +93,8 @@ def check_snapshot_main_db_incremental() -> None:
     )
     logging.info(engine)
     check_snapshot_replica(engine)
+    logging.info("Check health of snapshot")
+    check_snapshot_health(engine)
     logging.info("Complete")
 
 

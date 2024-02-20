@@ -123,6 +123,8 @@
       dim_crm_opportunity.renewal_manager, 
       dim_crm_opportunity.renewal_forecast_health,
       dim_crm_opportunity.renewal_ownership,
+      dim_crm_opportunity.ptc_predicted_arr,
+      dim_crm_opportunity.ptc_predicted_renewal_risk_category,    
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -187,8 +189,6 @@
       fct_crm_opportunity.is_abm_tier_closed_won,
 
       -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
@@ -585,9 +585,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@snalamaru",
     created_date="2020-12-07",
-    updated_date="2023-11-01"
+    updated_date="2024-01-24"
   ) }}
 
 

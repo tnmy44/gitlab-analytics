@@ -153,7 +153,7 @@ unioned_counts AS (
 final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition','estimation_grain', 'ping_deployment_type']) }} AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
+    {{ dbt_utils.generate_surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition','estimation_grain', 'ping_deployment_type']) }} AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                AS percent_reporting
   FROM unioned_counts

@@ -72,7 +72,7 @@
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(surrogate_key_array) }}                              AS primary_key,
+      {{ dbt_utils.generate_surrogate_key(surrogate_key_array) }}                              AS primary_key,
       {% for field in fields %}
         retention_subs.{{field}}                                                      AS {{field}},
       {% endfor %}

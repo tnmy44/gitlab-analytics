@@ -1,1 +1,0 @@
-See [`handbook/business-technology/data-team/platform/pipelines`](https://add-docs-for-internal-filtering.about.gitlab-review.app/handbook/business-technology/data-team/platform/pipelines/#postgres_pipeline-pgp---postgres-extractor-)

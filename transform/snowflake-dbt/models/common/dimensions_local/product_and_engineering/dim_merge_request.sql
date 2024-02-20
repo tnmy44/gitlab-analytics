@@ -24,13 +24,13 @@ WITH prep_merge_request AS (
       created_date_id,
       dim_plan_sk_at_creation,
       dim_milestone_sk,
-      dim_user_sk_author,
-      dim_user_sk_assignee,
-      dim_user_sk_merge_user,
-      dim_user_sk_updated_by,
-      dim_user_sk_last_edited_by,
-      dim_user_sk_merged_by,
-      dim_user_sk_latest_closed_by,
+      dim_user_author_sk,
+      dim_user_assignee_sk,
+      dim_user_merge_user_sk,
+      dim_user_updated_by_sk,
+      dim_user_last_edited_by_sk,
+      dim_user_merged_by_sk,
+      dim_user_latest_closed_by_sk,
       dim_ci_pipeline_sk_head,
       latest_merge_request_diff_id,
 
@@ -78,7 +78,7 @@ WITH prep_merge_request AS (
 {{ dbt_audit(
     cte_ref="prep_merge_request",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-17",
-    updated_date="2023-11-09"
+    updated_date="2023-12-11"
 ) }}

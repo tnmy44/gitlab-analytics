@@ -13,10 +13,13 @@ issues AS (
   SELECT
     issues.*,
     internal_projects.parent_namespace_id AS namespace_id,
-    internal_projects.ultimate_parent_namespace_id
+    internal_projects.ultimate_parent_namespace_id,
+    gitlab_dotcom_work_item_type_source.work_item_type_name AS issue_type
   FROM {{ ref('gitlab_dotcom_issues_source') }} AS issues
   INNER JOIN internal_projects
     ON issues.project_id = internal_projects.project_id
+  LEFT JOIN {{ ref('gitlab_dotcom_work_item_type_source') }}
+    ON issues.work_item_type_id = gitlab_dotcom_work_item_type_source.work_item_type_id
 
 
 ),
@@ -225,7 +228,7 @@ joined AS (
     issues.service_desk_reply_to,
     issues.duplicated_to_id,
     issues.promoted_to_epic_id,
-    issues.work_item_type_id as issue_type,
+    issues.issue_type,
     agg_labels.labels,
     ARRAY_TO_STRING(agg_labels.labels, '|')                                                                                                                          AS masked_label_title,
     issue_metrics.first_mentioned_in_commit_at,

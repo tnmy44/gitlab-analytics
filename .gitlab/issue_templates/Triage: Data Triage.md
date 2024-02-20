@@ -97,7 +97,6 @@ Completed with x errors and x warnings:
 ## Data Engineer tasks
 
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
-* [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
 * [ ] Investigate and respond to each **active** failure and alert in **#data-pipelines** and **#data-prom-alerts** by:
     * [ ] Updating the [Monte Carlo](https://getmontecarlo.com/monitors) status via Slack according to the defined action
     * [ ] [Creating an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%3A%20Errors%20DE) for each failure or relevant alert.
@@ -105,6 +104,7 @@ The focus area for the Data Engineer are the Data Pipelines and Data Infrastruct
        * [ ] Notify Data Customers of any [data refresh SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
 * [ ] Investigate the `Data Warehouse::Impact Check` [MR list](https://gitlab.com/groups/gitlab-org/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) for any schema changes to the gitlab/customers database. More detail in the [handbook](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-databases-structure-changes).
 * [ ] Check for any unresolved [incidents](https://getmontecarlo.com/incidents?include-normalized=false&types=freshness_anomaly%2Cvolume_anomaly%2Cdimension_anomaly%2Cfield_metrics_anomaly%2CDBT_ERRORS%2Cfreshness_sli_rule_breach%2Cvolume_sli_rule_breach%2Csql_rule_breach) (incidents with `No Status`) in Monte Carlo. **All such incidents should be given the appropriate status and have an open issue on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)** end of day.
+* [ ] Provision Tableau access follwing this [runbook](https://gitlab.com/gitlab-data/tableau/-/blob/main/admin/runbooks/tableau%20provisioning.md) by [checking for any approved access requests](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/?sort=updated_desc&state=opened&label_name%5B%5D=NewTableauTeamMember&label_name%5B%5D=ReadyForProvisioning&first_page_size=100)
 
 In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) as well as updating the [runbooks](https://gitlab.com/gitlab-data/runbooks) project where relevant.
 
@@ -159,6 +159,11 @@ The link to the Data Team Incident issue is <link>
 
 </details>
 
+
+## Sensitive Data Nullified Columns
+
+Several columns were nullified or removed entirely from Snowflake, due to work being done to remove all red / sensitive data from Snowflake.
+You can find details on those columns in the [Sensitive Data Handbook entry](https://internal.gitlab.com/handbook/enterprise-data/platform/sensitive-data/) and use it as a quick check, whenever some clarification request comes over via Slack, where team members are wondering why some data is suddenly missing.
 
 ## Finishing the Day
 

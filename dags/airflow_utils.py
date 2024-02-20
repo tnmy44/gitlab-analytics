@@ -17,7 +17,7 @@ else:
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.31"
-DATA_IMAGE_3_10 = "registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.3"
+DATA_IMAGE_3_10 = "registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.5"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.3"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.15.4"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
@@ -302,6 +302,9 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
+    "DBT_RUNNER": "{{ task_instance_key_str }}__{{ run_id }}__{{ task_instance.try_number }}"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}",
 }
 
 # git commands

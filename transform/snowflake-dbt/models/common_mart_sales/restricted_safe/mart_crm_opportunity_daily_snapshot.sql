@@ -169,8 +169,6 @@ final AS (
     dim_crm_account.is_jihu_account,
 
     -- crm opp owner/account owner fields stamped at SAO date
-    fct_crm_opportunity.sao_crm_opp_owner_stamped_name,
-    fct_crm_opportunity.sao_crm_account_owner_stamped_name,
     fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
     fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
     fct_crm_opportunity.sao_crm_opp_owner_geo_stamped,

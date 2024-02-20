@@ -9,7 +9,7 @@ WITH source AS (
     
     SELECT 
       --Surrogate Key
-      {{ dbt_utils.surrogate_key(['order_id'])}} AS dim_order_sk,
+      {{ dbt_utils.generate_surrogate_key(['order_id'])}} AS dim_order_sk,
       
       --Natural Key
       order_id                                   AS internal_order_id, --Can only be joined to CDot Orders

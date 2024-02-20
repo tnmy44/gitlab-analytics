@@ -81,6 +81,10 @@ sheets:
     owner: '@hselim'
     tabs:
       - fy23_quota
+  - name: fy25_account_geo_map
+    owner: '@rkohnke'
+    tabs:
+      - fy25_account_geo_map
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
@@ -325,14 +329,21 @@ sheets:
     owner: '@nick_vh'
     tabs:
       - leading_organization_entry_dates
-
   - name: abm_key_account_list
     owner: '@dmicovic'
     tabs: 
       - abm_key_account_list
-
   - name: partner_discount_summary
     owner: '@vagrawalg'
     tabs: 
       - partner_discount_summary
-  
+  - name: sales_targets
+    owner: '@chrissharp'
+    tabs:
+      - sales_targets
+  - name: devrel_campaigns
+    owner: '@degan'
+    tabs: 
+      - devrel_influenced_campaigns
+      - youtube_views_gitlab
+      - devrel_blog_posts_views

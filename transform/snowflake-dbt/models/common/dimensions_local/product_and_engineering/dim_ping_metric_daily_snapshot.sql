@@ -48,7 +48,7 @@ WITH source AS (
 ), ping_metric_spined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['metrics_path', 'snapshot_dates.date_id']) }}         AS ping_metric_hist_id,
+      {{ dbt_utils.generate_surrogate_key(['metrics_path', 'snapshot_dates.date_id']) }}         AS ping_metric_hist_id,
       snapshot_dates.date_id                                                            AS snapshot_id,
       ping_metric_hist.snapshot_date,
       ping_metric_hist.metrics_path,

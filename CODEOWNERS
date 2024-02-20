@@ -19,12 +19,14 @@ LICENSE.md         @iweeks @dvanrooijen2 @nmcavinue @amiebright
 README.md          @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
 [Data Engineering]
-/dags/              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
-/extract/           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/load/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/orchestration/     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/permissions/       @dvanrooijen2 @paul_armstrong @jjstark
-/pump/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/dags/                              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
+/extract/                           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/extract/tableau_con_man_config/    @paul_armstrong @pempey @iweeks @ttnguyen28 @nmcavinue
+/load/                              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/orchestration/                     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/permissions/                       @dvanrooijen2 @paul_armstrong @jjstark
+/pump/                              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/extract/gitlab_saas_postgres_pipeline/ @jjstark @paul_armstrong @vedprakash2021 @rbacovic @juwong
 
 [Data Science]
 /dags/data_science/ @paul_armstrong @rigerta
@@ -43,12 +45,12 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 [dbt]
 /transform/                                         @jjstark @paul_armstrong @vedprakash2021
 /transform/general/                                 @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey @mdrussell
+/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey @mdrussell @snalamaru
 /transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021
 
-/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021 @pempey @mdrussell
+/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021 @pempey @mdrussell @snalamaru
 /transform/snowflake-dbt/docs/                      @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/macros/                    @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 
@@ -142,9 +144,9 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 transform/snowflake-dbt/models/marts/pumps/                 @jjstark @paul_armstrong @dparker @Karuna16
 transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armstrong @dparker @Karuna16
 
-/transform/snowflake-dbt/models/workspaces/workspace_sales/          @nfiguera @mvilain @snalamaru
+/transform/snowflake-dbt/models/workspaces/workspace_sales/          @nfiguera @mvilain @snalamaru @chrissharp @lisvinueza
 
-/transform/snowflake-dbt/models/workspaces/workspace_finance/        @iweeks @michellecooper @jeanpeguero @vagrawalg @snalamaru
+/transform/snowflake-dbt/models/workspaces/workspace_finance/        @iweeks @michellecooper @jeanpeguero @vagrawalg @snalamaru @annapiaseczna
 
 /transform/snowflake-dbt/models/workspaces/workspace_engineering/    @pempey @iweeks @meks @lmai1 @clem.lr @lisvinueza
 

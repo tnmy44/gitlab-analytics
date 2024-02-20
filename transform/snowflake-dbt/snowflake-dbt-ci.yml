@@ -18,7 +18,7 @@
     - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
-    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}-${CI_JOB_ID}"
     - echo $DBT_RUNNER
     - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
@@ -236,7 +236,7 @@ specify_dbt_parameters:
     - echo $DBT_CI_FULL_REFRESH
     # VARS format "key":"value","key":"value"
     - export DBT_CI_VARS=""
-    - if [ ! -z $VARS ]; then DBT_CI_VARS="--vars {$VARS}"; fi
+    - if [ ! -z "$VARS" ]; then DBT_CI_VARS="--vars {$VARS}"; fi
     - echo $DBT_CI_VARS
     - dbt deps $CI_PROFILE_TARGET
     - dbt $DBT_CI_FAIL_FAST clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_FULL_REFRESH $DBT_CI_STATE || FAILED=true

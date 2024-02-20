@@ -53,7 +53,7 @@ WITH prep_ci_runner AS (
       WHEN ci_runner_description LIKE '%saas-linux-2xlarge-amd64%'
         THEN 'SaaS Runner Linux - 2XLarge'
       --- MacOS Runners
-      WHEN ci_runner_description LIKE '%macOS%'
+      WHEN ci_runner_description LIKE '%macos%'
         THEN 'SaaS Runners macOS - Medium - amd64'
       --- Window Runners 
       WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
@@ -87,5 +87,5 @@ WITH prep_ci_runner AS (
     created_by="@snalamaru",
     updated_by="@nhervas",
     created_date="2021-06-23",
-    updated_date="2023-08-30"
+    updated_date="2024-01-30"
 ) }}

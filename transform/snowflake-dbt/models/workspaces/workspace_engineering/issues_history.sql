@@ -28,7 +28,7 @@ workflow_labels AS (
 
 final AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['dates.date_actual','issues.issue_id']) }} AS daily_issue_id,
+    {{ dbt_utils.generate_surrogate_key(['dates.date_actual','issues.issue_id']) }} AS daily_issue_id,
     dates.date_actual,
     issues.issue_id,
     issues.issue_iid,
@@ -156,6 +156,7 @@ final AS (
     issues.epic_state,
     issues.is_milestone_issue_reporting,
     issues.is_customer_related,
+    issues.issue_type,
     MAX(dates.date_actual) OVER ()                                                                                         AS last_updated_at,
     COALESCE(date_actual = last_updated_at, FALSE)                                                                         AS most_recent,
     ROW_NUMBER() OVER (

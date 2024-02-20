@@ -728,7 +728,7 @@
   
     SELECT
       unioned.*,
-      {{ dbt_utils.surrogate_key(
+      {{ dbt_utils.generate_surrogate_key(
         [
           'snapshot_month',
           'dim_subscription_id',

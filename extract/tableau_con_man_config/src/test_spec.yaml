@@ -284,6 +284,7 @@ groups:
 
   - group_name: Test Group
   - group_name: Test Group Two
+  - group_name: Test Group Three
 
 # ==========================================
 # Users
@@ -302,6 +303,7 @@ users:
     groups:
       - Test Group
       - Test Group Two
+      - Test Group Three
 
   - user_name: iweeks@gitlab.com
     site_role: SiteAdministratorCreator

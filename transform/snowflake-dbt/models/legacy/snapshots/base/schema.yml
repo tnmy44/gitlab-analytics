@@ -264,6 +264,8 @@ models:
   - name: zuora_subscription_snapshots_source
     description: Source layer for Zuora Subscriptions
 
+  - name: sfdc_sandbox_user_snapshots_source
+
   - name: customers_db_billing_accounts_snapshots_base
     description: This is the base model for snapshotted billing accounts data from the customers.gitlab.com database.
     columns:

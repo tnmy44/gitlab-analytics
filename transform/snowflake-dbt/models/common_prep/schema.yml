@@ -130,6 +130,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_partner_crm_id
+        description: The partner associated with this campaign through Vartopia.
 
   - name: prep_crm_person
     description: '{{ doc("prep_crm_person") }}'
@@ -139,6 +141,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: is_high_priority
+        description: A person-level flag to indicate if the person is a high prioirty person, according to Salesforce field logic. 
       - name: person_first_country
         description: >
           Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
@@ -148,6 +152,24 @@ models:
     columns:
       - name: dim_crm_user_id
         description: Unique identifier of a Salesforce user
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_crm_touchpoint
+    description: PREP layer for the SFDC Bizible person touchpoint object
+    columns:
+      - name: touchpoint_id
+        description: Unique identifier of a Salesforce Bizible Person touchpoint
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_crm_attribution_touchpoint
+    description: PREP layer for the SFDC Bizible attribution touchpoint object
+    columns:
+      - name: touchpoint_id
+        description: Unique identifier of a Salesforce Bizible Attribution touchpoint
         tests:
           - not_null
           - unique
@@ -301,6 +323,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: namespace_name_unmasked
+        description: '{{ doc("namespace_name_unmasked") }}'
+        meta:
+          masking_policy: analyst_marketing_sensitive
 
   - name: prep_order_hist
     description: '{{ doc("dim_order_hist") }}'
@@ -757,6 +783,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_name
+        description: The unique identifier of a subscription.
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
       - name: license_user_count
@@ -781,6 +809,7 @@ models:
         description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
       - name: is_active_user_count_available
         description: Flags rows where `active_user_count` is NULL in source.
+
 
   - name: prep_gainsight_source_model_counts
     description: '{{ doc("prep_gainsight_source_model_counts") }}'
@@ -1011,8 +1040,6 @@ models:
           # - unique
       - name: event_id
         description: '{{ doc("event_id") }}'
-      - name: stage_name
-        description: This field is _not_ the SSOT for the event-to-stage mapping. Please use [`map_gitlab_dotcom_xmau_metrics`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.map_gitlab_dotcom_xmau_metrics) for the mapping of event to stage.
 
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'
@@ -2046,39 +2073,39 @@ models:
       - name: country
         description: Current/latest country the team member resides in
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: nationality
         description: Masked. Team member nationality.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: ethnicity 
         description: Masked. Team member ethnicity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: gender 
         description: Masked. Team member gender
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: date_of_birth 
         description: Masked. Team member date of birth
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: key_talent_status 
         description: Masked. Team member Key Talent status
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: growth_potential_rating 
         description: Masked. Team member growth potential rating
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: performance_rating 
         description: Masked. Team member performance rating
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
 
   - name: prep_billing_account
     description: '{{ doc("prep_billing_account") }}'
@@ -2142,8 +2169,6 @@ models:
         description: OAuth provider. Used for GL.com authentication.
       - name: user_provider_user_id
         description:  The User ID provided by the User to log in to  GitLab.com.
-      - name: zuora_account_id
-        description: A unique Zuora account number associated with the User
       - name: country
         description: User Country selected during registration
       - name: state
@@ -2209,7 +2234,7 @@ models:
       - name: entity
         description: The team member's entity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_position_active
         description: Whether the team member's current job position is active in the job_profiles table
       - name: is_current
@@ -2258,7 +2283,7 @@ models:
       - name: entity
         description: The team member's entity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_position_active
         description: Whether the team member's job position is active.
       - name: employment_status
@@ -2268,15 +2293,15 @@ models:
       - name: termination_reason
         description: Categorical variable that indicates the reason why a team member has been terminated
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: termination_type
         description: Categorical variable that indicates whether the termination was voluntary or involuntary.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: exit_impact
         description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_current
         description: Whether the team status is the most current as of the date the query is run.
       - name: valid_from

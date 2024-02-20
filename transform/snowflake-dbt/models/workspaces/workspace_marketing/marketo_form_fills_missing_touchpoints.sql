@@ -14,7 +14,7 @@
   
   SELECT DISTINCT
     wk_marketo_activity_fill_out_form.lead_id::VARCHAR AS marketo_lead_id,
-    wk_marketo_activity_fill_out_form.activity_date,
+    wk_marketo_activity_fill_out_form.activity_date::DATE AS activity_date,
     wk_marketo_activity_fill_out_form.primary_attribute_value AS marketo_form_name,
     CASE 
       WHEN referrer_url LIKE '%free-trial/index%' THEN 'https://about.gitlab.com/free-trial/.html'
@@ -72,6 +72,7 @@
     activity_date,
     marketo_form_fill.form_url,
     marketo_form_fill.trial_url AS full_url,
+    SPLIT_PART(full_url, '&mkt_tok', 1) AS final_url,
     marketo_form_name
   FROM marketo_form_fill
   FULL JOIN mart_crm_touchpoint_base
@@ -95,11 +96,11 @@
     activity_date::DATE AS activity_date,
     marketo_form_name,
     form_url,
-    full_url,
-    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_campaign') }} AS utm_campaign,
-    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_channel') }} AS utm_channel,
-    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_medium') }} AS utm_medium,
-    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_source') }} AS utm_source
+    final_url,
+    {{ dbt_utils.get_url_parameter(field='final_url', url_parameter='utm_campaign') }} AS utm_campaign,
+    {{ dbt_utils.get_url_parameter(field='final_url', url_parameter='utm_channel') }} AS utm_channel,
+    {{ dbt_utils.get_url_parameter(field='final_url', url_parameter='utm_medium') }} AS utm_medium,
+    {{ dbt_utils.get_url_parameter(field='final_url', url_parameter='utm_source') }} AS utm_source
   FROM intermediate
 
 )
@@ -109,5 +110,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-12",
-    updated_date="2023-12-13",
+    updated_date="2023-12-19",
   ) }}
