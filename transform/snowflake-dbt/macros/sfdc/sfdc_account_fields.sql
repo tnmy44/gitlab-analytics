@@ -213,7 +213,7 @@ WITH map_merged_crm_account AS (
       technical_account_manager.manager_name AS tam_manager,
 
       --executive sponsor field
-      executive_sponsor.name as executive_sponsor,
+      executive_sponsor.name AS executive_sponsor,
 
       --6 sense fields
       sfdc_account.has_six_sense_6_qa,
