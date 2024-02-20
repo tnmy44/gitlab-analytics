@@ -13,7 +13,6 @@ aggregate_data AS (
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_crm_user_hierarchy_sk,
-    order_type_name,
     sales_qualified_source_name,
     crm_user_sales_segment,
     crm_user_geo,
