@@ -45,6 +45,10 @@ SELECT
     WHEN event_label = 'pipelines_table_component'
         AND event_action in( 'click_retry_button', 'click_manual_actions', 'click_artifacts_dropdown', 'click_cancel_button')
     THEN 'pipeline_table_action_buttons'
+    WHEN event_label = 'pipeline_editor'
+        AND event_action = 'browse_catalog'
+        AND event_category = 'projects:ci:pipeline_editor:show'
+    THEN 'browser_catalog_clicks'
     END as metric,
     COUNT(DISTINCT behavior_structured_event_pk) as total_events
 FROM {{ ref('mart_behavior_structured_event') }}
@@ -66,5 +70,5 @@ SELECT * FROM structured_events
     created_by="@nhervas",
     updated_by="@nhervas",
     created_date="2024-02-15",
-    updated_date="2024-02-15"
+    updated_date="2024-02-20"
 ) }}
