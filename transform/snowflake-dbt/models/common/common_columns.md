@@ -656,7 +656,6 @@ Boolean flag set to True if the subscription is under an EDU or OSS Program. Thi
 
 {% docs reporting_month %}
 
-This model contains the logic for connecting product licenses and subscriptions for use in connecting service ping data to customer accounts.
 
 {% enddocs %}
 
