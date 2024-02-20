@@ -16,7 +16,7 @@ SELECT
             THEN 'pipeline_editor_pageview'
         END as metric, 
         COUNT(DISTINCT fct_behavior_website_page_view_sk) as total_events
-    FROM {{ ref('fct_behavior_website_page_view as page_view') }}
+    FROM {{ ref('fct_behavior_website_page_view') }} as page_view
     LEFT JOIN {{ ref('dim_plan') }} as plan 
       ON plan.plan_name = page_view.gsc_plan
     LEFT JOIN {{ref ('dim_namespace')}} as namespaces
