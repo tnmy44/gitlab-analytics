@@ -154,11 +154,11 @@ transfer AS (
   SELECT 
     DISTINCT employee_id,
     effective_date,
-    business_process_type,
+    MAX(business_process_reason)                                                               AS business_process_reason,
     MAX(IFF(COALESCE(job_code_past, '1') != COALESCE(job_code_current, '2'), 'TRUE', 'FALSE')) AS transfer_job_change
   FROM staff_hist
-  WHERE business_process_type = 'Transfer Employee Inbound'
-  GROUP BY 1, 2, 3 
+  WHERE business_process_category = 'Lateral Move'
+  GROUP BY 1, 2
   
 ),
 
@@ -218,7 +218,7 @@ eda AS (
     is_hire_date,
     is_termination_date,
     UPPER(IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion)) AS is_promotion,
-    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                              AS is_transfer,
+    IFF(LEFT(transfer.business_process_reason,8) = 'Transfer', 'TRUE', 'FALSE')                                     AS is_transfer,
     COALESCE(transfer.transfer_job_change, 'FALSE')                                                                 AS transfer_job_change,
     staff_hist.employee_type_current                                                                                AS employee_type,
     cost_center,
@@ -299,7 +299,7 @@ eda AS (
     is_hire_date,
     is_termination_date,
     UPPER(IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion)) AS is_promotion,
-    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                              AS is_transfer,
+    IFF(LEFT(transfer.business_process_reason,8) = 'Transfer', 'TRUE', 'FALSE')                                     AS is_transfer,
     COALESCE(transfer.transfer_job_change, 'FALSE')                                                                 AS transfer_job_change,
     staff_hist.employee_type_current                                                                                AS employee_type,
     cost_center,
@@ -452,7 +452,6 @@ hist_stage AS (
       WHEN COALESCE(cur_job_grade, '1') != COALESCE(pr_job_grade, '1') THEN 1
       WHEN COALESCE(cur_employee_type, '1') != COALESCE(pr_employee_type, '1') THEN 1
       WHEN cur_is_promotion = 'TRUE' THEN 1
-      WHEN cur_is_transfer = 'TRUE' AND COALESCE(cur_job_title, '1') != COALESCE(pr_job_title, '1') THEN 1
       WHEN cur_is_transfer = 'TRUE' AND cur_transfer_job_change = 'TRUE' THEN 1
       WHEN total_discretionary_bonuses >= 1 THEN 1
       ELSE 0
@@ -508,7 +507,6 @@ SELECT
     WHEN hire_date = min_date AND hire_rank > 1 THEN 'Rehire'
     WHEN hist_stage.employment_status = 'T' THEN 'Termination'
     WHEN cur_is_promotion = 'TRUE' OR min_date = promotion_date::DATE THEN 'Promotion'
-    WHEN cur_is_transfer = 'TRUE' AND COALESCE(hist_stage.cur_job_title, '1') != COALESCE(pr_job_title, '1') THEN 'Transfer'
     WHEN cur_is_transfer = 'TRUE' AND cur_transfer_job_change = 'TRUE' THEN 'Transfer'
     WHEN COALESCE(hist_stage.cur_employee_type, '1') != COALESCE(pr_employee_type, '1') THEN 'Employee Type Change'
     WHEN COALESCE(hist_stage.cur_region, '1') != COALESCE(pr_region, '1') THEN 'Organization Change'
