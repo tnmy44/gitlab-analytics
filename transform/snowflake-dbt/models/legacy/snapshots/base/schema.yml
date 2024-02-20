@@ -185,6 +185,8 @@ models:
         description: The Account's 6QA segment. 
       - name: gs_health_csm_sentiment
         description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
+      - name: executive_sponsor_id
+        description: sfdc_user_id of an executive sponsor for this account
 
 
   - name: sfdc_bizible_attribution_touchpoint_snapshots_source
