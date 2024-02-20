@@ -121,7 +121,8 @@ final AS (
     END AS calculated_deal_count_in_snapshot_week,
     CASE 
       WHEN is_eligible_open_pipeline_combined = 1
-        AND is_excluded_from_pipeline_created_combined = 0
+        AND is_close_in_snapshot_week = 1
+          AND is_excluded_from_pipeline_created_combined = 0
         THEN net_arr
       ELSE 0
     END AS open_pipeline_in_snapshot_week,
