@@ -67,13 +67,18 @@ unioned AS (
     NULL AS dim_account_location_region_id,
 
     NULL AS report_user_segment_geo_region_area_sqs_ot,
-    order_type_name,
     sales_qualified_source_name,
     crm_user_sales_segment,
     crm_user_geo,
     crm_user_region,
     crm_user_area,
     crm_user_business_unit,
+    order_type,
+    order_type_live,
+    stage_name,
+    deal_path_name,
+    sales_type,
+    parent_crm_account_industry,
 
     snapshot_date,
 

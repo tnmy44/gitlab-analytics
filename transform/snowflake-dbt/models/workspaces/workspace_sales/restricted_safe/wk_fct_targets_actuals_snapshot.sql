@@ -68,13 +68,18 @@ combined AS (
 
     --targets attributes
     actuals.report_user_segment_geo_region_area_sqs_ot,
-    actuals.order_type_name,
     actuals.sales_qualified_source_name,
     actuals.crm_user_sales_segment, 
     actuals.crm_user_geo, 
     actuals.crm_user_region, 
     actuals.crm_user_area, 
     actuals.crm_user_business_unit,
+    actuals.order_type,
+    actuals.order_type_live,
+    actuals.stage_name,
+    actuals.deal_path_name,
+    actuals.sales_type,
+    actuals.parent_crm_account_industry,
 
     -- snapshot info
     actuals.snapshot_date,

@@ -75,12 +75,17 @@
     --attributes
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
     sales_qualified_source.sales_qualified_source_name,
-    order_type.order_type_name,
+    order_type.order_type_name AS order_type,
+    order_type_live.order_type_name AS order_type_live,
     sales_rep_account.crm_user_sales_segment, 
     sales_rep_account.crm_user_geo, 
     sales_rep_account.crm_user_region, 
     sales_rep_account.crm_user_area, 
     sales_rep_account.crm_user_business_unit,
+    sfdc_opportunity.stage_name,
+    deal_path.deal_path_name,
+    sfdc_opportunity.sales_type,
+    prep_crm_account.parent_crm_account_industry,
 
     -- dates
     sfdc_opportunity.snapshot_date,

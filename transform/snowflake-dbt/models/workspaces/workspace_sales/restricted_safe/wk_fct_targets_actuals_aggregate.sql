@@ -9,7 +9,7 @@ aggregate_data AS (
 
   SELECT
 
-    --target attributes
+    -- attributes
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_crm_user_hierarchy_sk,
@@ -20,6 +20,12 @@ aggregate_data AS (
     crm_user_region,
     crm_user_area,
     crm_user_business_unit,
+    order_type,
+    order_type_live,
+    stage_name,
+    deal_path_name,
+    sales_type,
+    parent_crm_account_industry,
 
     --dates
     snapshot_date,
