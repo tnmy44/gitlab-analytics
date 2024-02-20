@@ -1065,6 +1065,7 @@ models:
         - name: sfdc_account_id
         - name: gs_company_id
         - name: most_recent_exec_activity
+        - name: last_workshop_delivered_date
         - name: exec_persona_cnt
         - name: champion_persona_cnt
         - name: buyer_persona_cnt
