@@ -89,7 +89,7 @@
               AND table_schema IN ('SNAPSHOTS')
               AND data_type NOT IN {{data_types}}
               AND LOWER(column_name) NOT IN {{exclude_columns}}
-              AND LOWER(column_name) NOT LIKE '%id%'
+              AND NOT (LOWER(column_name) LIKE ANY ('%id%', '%\_at'))
               AND LOWER(column_name) NOT IN {{exclude_columns}}
               AND LOWER(table_name) LIKE ('gitlab_dotcom_%')
             GROUP BY 1
