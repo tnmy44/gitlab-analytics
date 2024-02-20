@@ -125,6 +125,8 @@ unioned AS (
     NULL AS growth_type,
     NULL AS opportunity_deal_size,
     NULL AS closed_buckets,
+    calculated_deal_size,
+    deal_size,
     NULL AS lead_source,
     NULL AS dr_partner_deal_type,
     NULL AS dr_partner_engagement,

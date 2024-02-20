@@ -129,6 +129,8 @@ combined AS (
     actuals.growth_type,
     actuals.opportunity_deal_size,
     actuals.closed_buckets,
+    actuals.calculated_deal_size,
+    actuals.deal_size,
 
     --channel fields
     actuals.lead_source,

@@ -185,6 +185,8 @@
     sfdc_opportunity.growth_type,
     sfdc_opportunity.opportunity_deal_size,
     sfdc_opportunity.closed_buckets,
+    sfdc_opportunity.calculated_deal_size,
+    sfdc_opportunity.deal_size,
 
     -- channel fields
     sfdc_opportunity.lead_source,
