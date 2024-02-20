@@ -139,7 +139,7 @@ echo "Copied successfully"
 
 echo "export SNOWFLAKE_TRANSFORM_WAREHOUSE=ANALYST_XS" >> ~/.zshrc
 echo "export SNOWFLAKE_LOAD_DATABASE=RAW" >> ~/.zshrc
-echo "export SNOWFLAKE_SNAPSHOT_DATABASE='SNOWFLAKE'" >> ~/.zshrc
+echo "export SNOWFLAKE_SNAPSHOT_DATABASE='RAW'" >> ~/.zshrc
 echo "export SNOWFLAKE_STATIC_DATABASE='STATIC'" >> ~/.zshrc
 echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.zshrc
 echo 'export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"' >> ~/.zshrc
