@@ -394,7 +394,7 @@ unioned AS (
   UNION
 
   SELECT 
-    NULL AS snapshot_date,
+    snapshot_date,
     NULL AS actuals_targets_pk,
     NULL AS dim_crm_opportunity_id,
     dim_sales_qualified_source_id,
@@ -527,8 +527,8 @@ unioned AS (
     vsa_start_date_net_arr,
     cycle_time_in_days_combined,
     
-    NULL AS snapshot_day,
-    NULL AS snapshot_day_name,
+    snapshot_day,
+    snapshot_day_name,
     snapshot_fiscal_year,
     snapshot_fiscal_quarter_name,
     snapshot_fiscal_quarter_date,

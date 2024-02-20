@@ -22,6 +22,9 @@ aggregate_data AS (
     crm_user_business_unit,
 
     --dates
+    snapshot_date,
+    snapshot_day,
+    snapshot_day_name,
     snapshot_fiscal_year,
     snapshot_fiscal_quarter_name,
     snapshot_fiscal_quarter_date,

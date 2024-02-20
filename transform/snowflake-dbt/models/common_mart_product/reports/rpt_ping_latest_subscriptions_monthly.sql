@@ -128,8 +128,8 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     mart_charge_cleaned.arr_month                                                                           AS ping_created_date_month,
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_subscription_id,
-    IFNULL(joined_subscriptions.ping_delivery_type, mart_charge_cleaned.product_delivery_type)              AS ping_delivery_type, 
-    IFNULL(joined_subscriptions.ping_deployment_type, mart_charge_cleaned.product_deployment_type)          AS ping_deployment_type, 
+    IFNULL(joined_subscriptions.ping_delivery_type, mart_charge_cleaned.product_delivery_type)              AS ping_delivery_type,
+    IFNULL(joined_subscriptions.ping_deployment_type, mart_charge_cleaned.product_deployment_type)          AS ping_deployment_type,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
     joined_subscriptions.version_is_prerelease                                                              AS version_is_prerelease,
     joined_subscriptions.major_minor_version_id                                                             AS major_minor_version_id,
@@ -238,7 +238,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ping_created_date_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                      AS ping_latest_subscriptions_monthly_id,
+        {{ dbt_utils.generate_surrogate_key(['ping_created_date_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                      AS ping_latest_subscriptions_monthly_id,
         latest_subs_unioned.ping_created_date_month                                                                                                                               AS ping_created_date_month,
         latest_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
         latest_subs_unioned.latest_subscription_id                                                                                                                                AS latest_subscription_id,
@@ -255,6 +255,8 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         latest_subs_unioned.is_missing_charge_subscription                                                                                                                        AS is_missing_charge_subscription
     FROM latest_subs_unioned
       WHERE ping_created_date_month < DATE_TRUNC('month', CURRENT_DATE)
+      -- temporary filter per issue: https://gitlab.com/gitlab-data/analytics/-/issues/19656#note_1767039874
+      AND NOT (ping_latest_subscriptions_monthly_id = '9231096c6e7328e697abeea620407d85' AND ping_delivery_type = 'SaaS')
 
 )
 

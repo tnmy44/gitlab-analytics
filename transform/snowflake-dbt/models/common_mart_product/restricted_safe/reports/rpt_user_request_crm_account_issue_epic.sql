@@ -6,7 +6,7 @@ WITH mart_user_request AS (
 ), issue_account_summary AS (
     
     SELECT
-        {{ dbt_utils.surrogate_key(['issue_id', 'epic_id', 'dim_crm_account_id']) }} AS primary_key,
+        {{ dbt_utils.generate_surrogate_key(['issue_id', 'epic_id', 'dim_crm_account_id']) }} AS primary_key,
         issue_id,
         epic_id,
         user_request_in,

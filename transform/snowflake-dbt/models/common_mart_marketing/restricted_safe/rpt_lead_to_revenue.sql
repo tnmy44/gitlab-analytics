@@ -9,8 +9,6 @@
     ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
-    ('attribution_touchpoint_offer_type','attribution_touchpoint_offer_type'),
-    ('person_touchpoint_offer_type','person_touchpoint_offer_type'),
     ('mart_crm_account', 'mart_crm_account'),
     ('dim_date','dim_date')
 ]) }}
@@ -113,8 +111,8 @@
       mart_crm_touchpoint.count_accepted AS accepted_sum,
       mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
       mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum,
-      person_touchpoint_offer_type.touchpoint_offer_type_grouped,
-      person_touchpoint_offer_type.touchpoint_offer_type   
+      mart_crm_touchpoint.touchpoint_offer_type_grouped,
+      mart_crm_touchpoint.touchpoint_offer_type   
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -124,9 +122,6 @@
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
-    LEFT JOIN person_touchpoint_offer_type
-      ON mart_crm_touchpoint.dim_crm_touchpoint_id=person_touchpoint_offer_type.dim_crm_touchpoint_id
-
   
   ), opp_base_with_batp AS (
     
@@ -221,8 +216,8 @@
       mart_crm_attribution_touchpoint.bizible_weight_first_touch,
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
-      attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
-      attribution_touchpoint_offer_type.touchpoint_offer_type,  
+      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type,  
       mart_crm_attribution_touchpoint.touchpoint_sales_stage, 
       CASE
           WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null 
@@ -364,8 +359,6 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-    LEFT JOIN attribution_touchpoint_offer_type
-      ON mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=attribution_touchpoint_offer_type.dim_crm_touchpoint_id
     FULL JOIN mart_crm_account
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
@@ -625,5 +618,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-01-24",
+    updated_date="2024-01-31",
   ) }}

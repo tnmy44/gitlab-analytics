@@ -11,7 +11,7 @@ WITH source AS (
 
     SELECT
       --Surrogate Key
-      {{ dbt_utils.surrogate_key(['customer_id'])}}  AS dim_user_sk,
+      {{ dbt_utils.generate_surrogate_key(['customer_id'])}}  AS dim_user_sk,
 
       --Natural Key
       customer_id                                    AS dim_user_id,

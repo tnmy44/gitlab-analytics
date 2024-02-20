@@ -156,6 +156,24 @@ models:
           - not_null
           - unique
 
+  - name: prep_crm_touchpoint
+    description: PREP layer for the SFDC Bizible person touchpoint object
+    columns:
+      - name: touchpoint_id
+        description: Unique identifier of a Salesforce Bizible Person touchpoint
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_crm_attribution_touchpoint
+    description: PREP layer for the SFDC Bizible attribution touchpoint object
+    columns:
+      - name: touchpoint_id
+        description: Unique identifier of a Salesforce Bizible Attribution touchpoint
+        tests:
+          - not_null
+          - unique
+
   - name: prep_crm_user_hierarchy
     description: '{{ doc("prep_crm_user_hierarchy") }}'
     columns:

@@ -110,7 +110,7 @@
 
   SELECT 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['joined.internal_order_id', 'joined.dim_namespace_id', 'joined.subscription_name', 'joined.order_updated_at']) }} AS trial_pk,
+     {{ dbt_utils.generate_surrogate_key(['joined.internal_order_id', 'joined.dim_namespace_id', 'joined.subscription_name', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
     joined.internal_order_id, 

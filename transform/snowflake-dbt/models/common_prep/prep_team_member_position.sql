@@ -48,7 +48,7 @@ team_info AS (
   -- Solve for gaps and islands problem in data
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_title                                                                                                                  AS position,
     reports_to                                                                                                                 AS manager,
@@ -84,7 +84,7 @@ team_info_group AS (
 job_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_multi_select','termination_date']) }}   
+    {{ dbt_utils.generate_surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_multi_select','termination_date']) }}
                                                                                                                                AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_role                                                                                                                   AS management_level,
@@ -279,8 +279,8 @@ final AS (
 
   SELECT 
     -- Surrogate keys
-    {{ dbt_utils.surrogate_key(['union_clean.employee_id'])}}                                                                  AS dim_team_member_sk,                                                                                                              
-    {{ dbt_utils.surrogate_key(['union_clean.team_id'])}}                                                                      AS dim_team_sk,
+    {{ dbt_utils.generate_surrogate_key(['union_clean.employee_id'])}}                                                                  AS dim_team_member_sk,
+    {{ dbt_utils.generate_surrogate_key(['union_clean.team_id'])}}                                                                      AS dim_team_sk,
 
     -- Team member position attributes
     union_clean.employee_id                                                                                                    AS employee_id,

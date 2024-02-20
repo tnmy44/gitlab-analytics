@@ -1441,9 +1441,7 @@ tables:
       , allow_mfa_for_subgroups
       , NULL AS default_branch_name
       , repository_read_only
-      , delayed_project_removal
       , resource_access_token_creation_allowed
-      , lock_delayed_project_removal
       , prevent_sharing_groups_outside_hierarchy
       , new_user_signups_cap
       , setup_for_company

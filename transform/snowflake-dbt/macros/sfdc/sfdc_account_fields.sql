@@ -66,7 +66,7 @@ WITH map_merged_crm_account AS (
     {%- if model_type == 'live' %}
         *
     {%- elif model_type == 'snapshot' %}
-        {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
+        {{ dbt_utils.generate_surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
         snapshot_dates.date_id                                                                                AS snapshot_id,
         snapshot_dates.date_actual                                                                            AS snapshot_date,
         snapshot_dates.fiscal_year                                                                            AS snapshot_fiscal_year,
@@ -104,7 +104,7 @@ WITH map_merged_crm_account AS (
       {%- if model_type == 'live' %}
         *
       {%- elif model_type == 'snapshot' %}
-      {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
       snapshot_dates.date_id                                                                           AS snapshot_id,
       sfdc_user_snapshots_source.*
       {%- endif %}

@@ -120,7 +120,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['sfdc_contacts.contact_id']) }} AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_contacts.contact_id']) }} AS dim_crm_person_id,
       sfdc_contacts.contact_id                      AS sfdc_record_id,
       bizible_person_id                             AS bizible_person_id,
       'contact'                                     AS sfdc_record_type,
@@ -285,7 +285,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['lead_id']) }} AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['lead_id']) }} AS dim_crm_person_id,
       lead_id                                    AS sfdc_record_id,
       bizible_person_id                          AS bizible_person_id,
       'lead'                                     AS sfdc_record_type,

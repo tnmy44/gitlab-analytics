@@ -25,6 +25,6 @@ WITH prep_sales_funnel_target AS (
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['kpi_name'])}} AS dim_sales_funnel_kpi_sk,
+  {{ dbt_utils.generate_surrogate_key(['kpi_name'])}} AS dim_sales_funnel_kpi_sk,
   kpi_name                                   AS sales_funnel_kpi_name
 FROM unioned

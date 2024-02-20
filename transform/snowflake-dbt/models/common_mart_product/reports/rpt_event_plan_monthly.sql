@@ -56,7 +56,7 @@ plan_id_by_month AS (
 mart_usage_event_plan_monthly AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['mart_with_date_range.event_calendar_month', 'plan_id_by_month.plan_id_at_event_date', 'mart_with_date_range.event_name']) }} AS event_plan_monthly_id,
+    {{ dbt_utils.generate_surrogate_key(['mart_with_date_range.event_calendar_month', 'plan_id_by_month.plan_id_at_event_date', 'mart_with_date_range.event_name']) }} AS event_plan_monthly_id,
     mart_with_date_range.event_calendar_month,
     mart_with_date_range.event_calendar_quarter,
     mart_with_date_range.event_calendar_year,
