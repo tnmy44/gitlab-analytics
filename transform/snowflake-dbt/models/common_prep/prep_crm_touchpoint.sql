@@ -32,12 +32,17 @@ WITH bizible_person_touchpoint_source AS (
         THEN 'Web Chat'
       WHEN bizible_touchpoint_type = 'Web Form' 
         AND bizible_form_url_clean IN ('gitlab.com/-/trial_registrations/new',
-                                'about.gitlab.com/free-trial',
                                 'gitlab.com/-/trial_registrations',
-                                'gitlab.com/-/trials/new',
-                                'about.gitlab.com/free-trial/index.html',
                                 'gitlab.com/-/trials/new')
-        THEN 'Trial'      
+        THEN 'GitLab Dot Com Trial'
+      WHEN bizible_touchpoint_type = 'Web Form' 
+        AND bizible_form_url_clean IN (
+                                'about.gitlab.com/free-trial/index',
+                                'about.gitlab.com/free-trial',
+                                'about.gitlab.com/free-trial/self-managed',
+                                'about.gitlab.com/free-trial/self-managed/index'
+                                )
+        THEN 'GitLab Self-Managed Trial'
       WHEN  bizible_form_url_clean LIKE '%/sign_up%' 
         THEN 'Sign Up Form'
       WHEN bizible_form_url_clean = 'about.gitlab.com/sales' 
@@ -104,7 +109,7 @@ WITH bizible_person_touchpoint_source AS (
         THEN 'Online Content'
       WHEN touchpoint_offer_type = 'Sign Up Form' 
         THEN 'Sign Up Form'
-      WHEN touchpoint_offer_type = 'Trial' 
+      WHEN touchpoint_offer_type in ('GitLab Dot Com Trial', 'GitLab Self-Managed Trial')
         THEN 'Trials'
       WHEN touchpoint_offer_type = 'Web Chat' 
         THEN 'Web Chat'
