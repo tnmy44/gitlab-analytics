@@ -73,12 +73,13 @@ SELECT
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
-      AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
-      AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
+    WHERE IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL, 1=1)
+      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL, 1=1)
+      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL, 1=1)
+      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL, 1=1)
+      AND IFF(dim_date.fiscal_year BETWEEN 2023 AND 2024, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
       AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      AND IFF(dim_date.fiscal_year >= 2025, prep_crm_user_daily_snapshot.crm_user_role_name IS NOT NULL, 1=1) -- switch to role based hierarchy in FY25
       AND prep_crm_user_daily_snapshot.is_active = TRUE
 
 ), account_hierarchy_snapshot_source AS (
