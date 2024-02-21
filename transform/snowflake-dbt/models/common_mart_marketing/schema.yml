@@ -741,3 +741,6 @@ models:
           description: T/F Flag to indicate if a Quote is the final version on the Opportunity. 
         - name: is_first_subscription_institution
           description: T/F Flag to indicate if an Opportunity is the first subscription for a given account hierarchy. 
+
+    - name: rpt_l2r_campaign_interactions_paid_account
+      description: filtered version of rpt_l2r_campaign_interactions on current paying accounts only          
