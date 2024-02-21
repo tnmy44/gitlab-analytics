@@ -124,6 +124,7 @@ clicks AS (
     flattened_namespaces.namespace_id                       AS namespace_id,
     dim_namespace.ultimate_parent_namespace_id,
     dim_namespace_w_bdg.latest_subscription_name            AS subscription_name,
+    dim_namespace.namespace_is_internal,
     dim_crm_account.dim_crm_account_id                      AS dim_crm_account_id,
     dim_crm_account.dim_parent_crm_account_id,
     dim_crm_account.crm_account_name,
@@ -153,7 +154,8 @@ clicks AS (
     ARRAY_SIZE(dim_crm_account_ids)                                                                         AS count_dim_crm_account_ids,
     ARRAY_SIZE(dim_parent_crm_account_ids)                                                                  AS count_dim_parent_crm_account_ids,
     ARRAY_SIZE(crm_account_names)                                                                           AS count_crm_account_names,
-    ARRAY_SIZE(parent_crm_account_names)                                                                    AS count_parent_crm_account_names
+    ARRAY_SIZE(parent_crm_account_names)                                                                    AS count_parent_crm_account_names,
+    MAX(namespace_is_internal)                                                                              AS namespace_is_internal
   FROM code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts
   GROUP BY ALL
 
@@ -242,7 +244,8 @@ clicks AS (
       COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.parent_crm_account_names,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.parent_crm_account_names,0))::VARCHAR, NULL)                AS parent_crm_account_name,
     IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_ultimate_parent_namespace_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,0)::VARCHAR, NULL)         AS ultimate_parent_namespace_id,
     IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_installation_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,0)::VARCHAR, NULL)                               AS dim_installation_id,
-    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_host_names = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,0)::VARCHAR, NULL)                                                   AS installation_host_name
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_host_names = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,0)::VARCHAR, NULL)                                                   AS installation_host_name,
+    code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.namespace_is_internal                                                                                                                                                      AS namespace_is_internal
   FROM code_suggestion_context
   LEFT JOIN code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.behavior_structured_event_pk
