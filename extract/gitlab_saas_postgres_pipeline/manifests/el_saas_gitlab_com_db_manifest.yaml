@@ -2311,6 +2311,25 @@ tables:
       FROM subscription_add_ons
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  subscription_add_on_purchases:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: 'subscription_add_on_purchases'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , subscription_add_on_id
+      , namespace_id
+      , quantity
+      , expires_on
+      , purchase_xid
+      FROM subscription_add_on_purchases
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   system_note_metadata:
     dbt_source_model: true
     deletes_exempt: True
