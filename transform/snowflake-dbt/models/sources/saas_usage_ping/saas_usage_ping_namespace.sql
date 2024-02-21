@@ -19,7 +19,7 @@ WITH base AS (
 ), renamed AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key( ['namespace_ultimate_parent_id',
+      {{ dbt_utils.generate_surrogate_key( ['namespace_ultimate_parent_id',
                                     'ping_name', 
                                     'ping_date'])}}           AS saas_usage_ping_gitlab_dotcom_namespace_id,
       namespace_ultimate_parent_id::INT                       AS namespace_ultimate_parent_id,

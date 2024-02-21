@@ -8,7 +8,7 @@ WITH source AS (
     SELECT
 
       --Surrogate Key
-      {{ dbt_utils.surrogate_key(['leads_id'])}}  AS dim_lead_sk,
+      {{ dbt_utils.generate_surrogate_key(['leads_id'])}}  AS dim_lead_sk,
       
       --Natural Key(CDot System-generated)
       leads_id                                    AS internal_lead_id,

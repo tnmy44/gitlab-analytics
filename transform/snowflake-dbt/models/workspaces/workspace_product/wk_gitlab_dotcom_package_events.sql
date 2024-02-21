@@ -78,7 +78,7 @@ WITH structured_events AS (
 ), final AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
     metric,
@@ -92,7 +92,7 @@ WITH structured_events AS (
 UNION ALL 
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
     metric,

@@ -483,6 +483,10 @@ models:
         description: A short description of the work the devrel team did on the campaign.
       - name: devrel_campaign_influence_type
         description: The output the devrel team created to contribute to the campaign.
+      - name: touchpoint_offer_type
+        description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+      - name: touchpoint_offer_type_grouped
+        description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
         
   - name: dim_date
     description: '{{ doc("dim_date") }}'
@@ -4695,6 +4699,8 @@ models:
         description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
       - name: tam_manager
         description: The name of the manager for the tehchnical account manager who manages the account.
+      - name: executive_sponsor
+        description: executive sponsor of this account
 
 
 
@@ -6455,11 +6461,15 @@ models:
         description: '{{ doc("has_subscription_auto_renew_context") }}'
       - name: experiment_name
         tests:
-          - not_null      
+          - not_null:
+              config:
+                error_if: ">5784"
         description: '{{ doc("experiment_name") }}'        
       - name: experiment_variant
         tests:
-          - not_null      
+          - not_null:
+              config:
+                error_if: ">5784"
         description: '{{ doc("experiment_variant") }}'
       - name: context_key
         description: '{{ doc("context_key") }}'

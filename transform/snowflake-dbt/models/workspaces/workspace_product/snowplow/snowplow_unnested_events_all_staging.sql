@@ -14,7 +14,7 @@ WITH unioned_view AS (
 SELECT
   event_id                                                                                                          AS event_id,
   derived_tstamp::TIMESTAMP                                                                                         AS behavior_at,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'event', 
     'event_name', 
     'platform', 
@@ -49,7 +49,7 @@ SELECT
   br_version                                                                                                        AS browser_minor_version,
   br_lang                                                                                                           AS browser_language,
   br_renderengine                                                                                                   AS browser_engine,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'br_family', 
     'br_name', 
     'br_version', 
@@ -68,7 +68,7 @@ SELECT
   {{ clean_url('page_urlpath') }} AS clean_url_path,
   page_urlfragment                                                                                                  AS page_url_fragment,
   page_urlquery                                                                                                     AS page_url_query,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'page_url_host_path', 
     'app_id', 
     'page_url_scheme'
@@ -84,7 +84,7 @@ SELECT
   os_timezone                                                                                                       AS os_timezone,
   os_family                                                                                                         AS os,
   os_manufacturer                                                                                                   AS os_manufacturer,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'os_name', 
     'os_timezone'
     ]) }}                                                                                                           AS dim_behavior_operating_system_sk,
@@ -96,7 +96,7 @@ SELECT
   refr_urlscheme                                                                                                    AS referrer_url_scheme,
   refr_urlquery                                                                                                     AS referrer_url_query,
   REGEXP_REPLACE(page_referrer, '^https?:\/\/')                                                                     AS referrer_url_host_path,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'referrer_url_host_path', 
     'app_id', 
     'referrer_url_scheme'
@@ -106,7 +106,7 @@ SELECT
   IFNULL(geo_region, 'Unknown')::VARCHAR                                                                            AS user_region,
   IFNULL(geo_region_name, 'Unknown')::VARCHAR                                                                       AS user_region_name,
   IFNULL(geo_timezone, 'Unknown')::VARCHAR                                                                          AS user_timezone_name,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'user_city', 
     'user_country',
     'user_region',
@@ -124,7 +124,7 @@ SELECT
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/secure_scan/'), FALSE)::BOOLEAN                                      AS has_secure_scan_context,
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/gitlab_experiment/'), FALSE)::BOOLEAN                                AS has_gitlab_experiment_context,
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/subscription_auto_renew/'), FALSE)::BOOLEAN                          AS has_subscription_auto_renew_context,
-  {{ dbt_utils.surrogate_key([
+  {{ dbt_utils.generate_surrogate_key([
     'has_performance_timing_context', 
     'has_web_page_context',
     'has_ci_build_failed_context',

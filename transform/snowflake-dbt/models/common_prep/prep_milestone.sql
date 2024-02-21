@@ -31,7 +31,7 @@
     SELECT 
 
       -- SURROGATE KEY
-     {{ dbt_utils.surrogate_key(['milestone_id']) }}                                                AS dim_milestone_sk,
+     {{ dbt_utils.generate_surrogate_key(['milestone_id']) }}                                                AS dim_milestone_sk,
 
       -- NATURAL KEY
       milestone_id                                                                                  AS milestone_id,

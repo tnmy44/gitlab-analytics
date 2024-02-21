@@ -257,19 +257,19 @@
 ), final AS (
 
     SELECT DISTINCT 
-      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk']) }}                                                AS dim_crm_user_hierarchy_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk']) }}                                                AS dim_crm_user_hierarchy_id,
       final_unioned.dim_crm_user_hierarchy_sk,
       final_unioned.fiscal_year,
       final_unioned.user_business_unit                                                                                          AS crm_user_business_unit,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_business_unit']) }}                                                       AS dim_crm_user_business_unit_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.user_business_unit']) }}                                                       AS dim_crm_user_business_unit_id,
       final_unioned.user_segment                                                                                                AS crm_user_sales_segment,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_segment']) }}                                                             AS dim_crm_user_sales_segment_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.user_segment']) }}                                                             AS dim_crm_user_sales_segment_id,
       final_unioned.user_geo                                                                                                    AS crm_user_geo,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_geo']) }}                                                                 AS dim_crm_user_geo_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.user_geo']) }}                                                                 AS dim_crm_user_geo_id,
       final_unioned.user_region                                                                                                 AS crm_user_region,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_user_region_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_user_region_id,
       final_unioned.user_area                                                                                                   AS crm_user_area,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_user_area_id,
+      {{ dbt_utils.generate_surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_user_area_id,
       CASE
           WHEN final_unioned.user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE final_unioned.user_segment

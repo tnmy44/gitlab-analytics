@@ -55,6 +55,7 @@
       prep_crm_account.account_owner,
       prep_crm_account.technical_account_manager,
       prep_crm_account.tam_manager,
+      prep_crm_account.executive_sponsor,
       prep_crm_account.owner_role,
       prep_crm_account.user_role_type,
 
@@ -240,9 +241,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@snalamaru",
+    updated_by="@jonglee1218",
     created_date="2020-06-01",
-    updated_date="2023-11-16"
+    updated_date="2024-02-16"
 ) }}
 
 

@@ -109,6 +109,8 @@ models:
       - name: is_pto_date
       - name: is_pto_full_day
       - name: is_pto_holiday
+      - name: pto_group_type
+      - name: pto_type_name
       - name: running_pto_sum
       - name: running_pto_sum_mtd
       - name: running_pto_sum_qtd

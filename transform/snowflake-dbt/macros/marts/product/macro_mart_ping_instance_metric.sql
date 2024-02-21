@@ -231,7 +231,7 @@
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'metrics_path']) }} AS ping_instance_metric_id,
+      {{ dbt_utils.generate_surrogate_key(['dim_ping_instance_id', 'metrics_path']) }} AS ping_instance_metric_id,
       dim_ping_date_id,
       metrics_path,
       metric_value,

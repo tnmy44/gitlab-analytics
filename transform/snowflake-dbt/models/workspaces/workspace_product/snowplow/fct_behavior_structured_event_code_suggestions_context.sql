@@ -38,7 +38,6 @@ clicks AS (
     flat_contexts.value['data']['prefix_length']::INT                               AS prefix_length,
     flat_contexts.value['data']['suffix_length']::INT                               AS suffix_length,
     flat_contexts.value['data']['language']::VARCHAR                                AS language,
-    flat_contexts.value['data']['user_agent']::VARCHAR                              AS user_agent,
     CASE
       WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IN (
         'SaaS',
@@ -257,7 +256,7 @@ clicks AS (
 {{ dbt_audit(
     cte_ref="combined",
     created_by="@mdrussell",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2023-09-25",
-    updated_date="2024-01-08"
+    updated_date="2024-02-07"
 ) }}

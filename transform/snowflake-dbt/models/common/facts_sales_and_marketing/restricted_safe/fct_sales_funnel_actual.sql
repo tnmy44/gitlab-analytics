@@ -251,7 +251,7 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
+  {{ dbt_utils.generate_surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
   prep_sales_funnel_kpi.dim_sales_funnel_kpi_sk,
   metrics.*
 FROM metrics

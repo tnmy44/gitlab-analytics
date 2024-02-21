@@ -30,7 +30,7 @@
 ), joined AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_requirements_dedupe_source.id']) }}       AS dim_requirement_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_requirements_dedupe_source.id']) }}       AS dim_requirement_sk,
       gitlab_dotcom_requirements_dedupe_source.id::NUMBER                                  AS requirement_id,
       gitlab_dotcom_requirements_dedupe_source.project_id::NUMBER                          AS dim_project_id,
       prep_project.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,

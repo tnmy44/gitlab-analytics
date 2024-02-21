@@ -6,7 +6,7 @@ WITH date_details AS (
     FROM {{ ref("dim_date") }}
     -- reduce size of results significantly
     WHERE date_actual > '2020-03-01'
-      AND date_actual <  {{ dbt_utils.current_timestamp() }}::DATE
+      AND date_actual <  {{ dbt.current_timestamp() }}::DATE
 
 ), project_snapshots AS (
 

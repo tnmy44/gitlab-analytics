@@ -89,6 +89,9 @@ vars:
     'snowplow:page_ping_frequency': 30
     'snowplow:app_ids': ['gitlab', 'about', 'gitlab_customers', 'docs', 'gitlab-staging', 'gitlab_customers_stg']
 
+  dbt_utils:
+    surrogate_key_treat_nulls_as_empty_strings: True
+
 # ==================
 # Model Configs
 # ==================
@@ -305,6 +308,9 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      sfdc_sandbox:
+        +schema: sfdc_sandbox
 
       sheetload:
         +schema: sheetload

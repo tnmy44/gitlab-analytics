@@ -525,3 +525,42 @@ models:
         description: Job grades. GitLab job grades aid in mapping a role for internal equity with respect to cash and equity.
       - name: is_job_profile_active
         description: Flag indicating whether the job profile is currently active.
+
+  - name: staffing_history_approved_source
+    columns:
+      - name: employee_id
+        description: The unique organization identifier
+        tests:
+          - not_null
+      - name: workday_id
+      - name: business_process_type
+      - name: business_process_category
+      - name: business_process_reason
+      - name: hire_date
+      - name: termination_date
+      - name: country_past
+      - name: country_current
+      - name: region_past
+      - name: region_current
+      - name: department_past
+      - name: department_current
+      - name: employee_type_past
+      - name: employee_type_current
+      - name: entity_past
+      - name: entity_current
+      - name: job_code_past
+      - name: job_code_current
+      - name: job_specialty_multi_past
+      - name: job_specialty_multi_current
+      - name: job_specialty_single_past
+      - name: job_specialty_single_current
+      - name: locality_past
+      - name: locality_current
+      - name: manager_past
+      - name: manager_current
+      - name: suporg_past
+      - name: suporg_current
+      - name: team_id_past
+      - name: team_id_current
+      - name: date_time_initiated
+      - name: effective_date

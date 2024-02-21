@@ -10,7 +10,7 @@
 
      SELECT 
       -- Surrogate Key
-      {{ dbt_utils.surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS dim_cloud_activation_sk,
+      {{ dbt_utils.generate_surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS dim_cloud_activation_sk,
 
       -- Natural Key
       cloud_activation_id                                                      AS dim_cloud_activation_id,

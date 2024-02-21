@@ -140,3 +140,4 @@ LEFT JOIN date_details close_date
   ON lead_to_revenue.close_date=close_date.date_day
 WHERE (dim_quote_final.is_primary_quote = TRUE
      OR lead_to_revenue.sales_qualified_source_name= 'Web Direct Generated')
+     AND community_data_type IS NOT NULL

@@ -105,11 +105,11 @@ models:
         - name: termination_type
           description: For an employment status record equal to "Terminated" the termination_type will identify if it was voluntary or involuntary.
           meta:
-            masking_policy: analyst_people
+            masking_policy: analyst_people_sensitive
         - name: next_employment_status
           description: Captures the next employment status if one exists. In the case there is none the next_employment_status will be null.
           meta:
-            masking_policy: analyst_people
+            masking_policy: analyst_people_sensitive
         - name: valid_from_date
           description: Provides the start date for the specific employment status record.
           tests:
