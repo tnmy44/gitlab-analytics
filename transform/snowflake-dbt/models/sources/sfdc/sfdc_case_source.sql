@@ -53,6 +53,6 @@ renamed AS (
   FROM source
 
 )
-
+g
 SELECT *
 FROM renamed
