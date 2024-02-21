@@ -2308,6 +2308,8 @@ tables:
       SELECT id
       , created_at
       , updated_at
+      , name
+      , description
       FROM subscription_add_ons
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
