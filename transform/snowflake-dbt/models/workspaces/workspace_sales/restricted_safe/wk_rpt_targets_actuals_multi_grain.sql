@@ -75,6 +75,7 @@ unioned AS (
     crm_user_business_unit,
     order_type,
     order_type_live,
+    order_type_grouped,
     stage_name,
     deal_path_name,
     sales_type,

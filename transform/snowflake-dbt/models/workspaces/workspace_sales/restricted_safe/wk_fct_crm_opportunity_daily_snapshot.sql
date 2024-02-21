@@ -77,6 +77,7 @@
     sales_qualified_source.sales_qualified_source_name,
     order_type.order_type_name AS order_type,
     order_type_live.order_type_name AS order_type_live,
+    sfdc_opportunity.order_type_grouped,
     sales_rep_account.crm_user_sales_segment, 
     sales_rep_account.crm_user_geo, 
     sales_rep_account.crm_user_region, 
