@@ -27,7 +27,7 @@ aggregate_data AS (
     sales_type,
     calculated_deal_size,
     deal_size,
-  parent_crm_account_industry,
+    parent_crm_account_industry,
 
     --dates
     snapshot_date,
