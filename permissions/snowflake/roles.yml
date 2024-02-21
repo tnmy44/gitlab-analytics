@@ -211,11 +211,6 @@ databases:
     - mwawrzyniak_prep:
         shared: no
 
-    - nfiguera_prod:
-        shared: no
-    - nfiguera_prep:
-        shared: no
-
     - nhervas_prod:
         shared: no
     - nhervas_prep:
@@ -5378,53 +5373,8 @@ roles:
             - dev_xs
 
     - nfiguera:
-        member_of:
-            - analyst_sales
-            - restricted_safe
-            - data_team_analyst
-            - bi_tool_eval_read
-            - xactly
-            - sales_analytics
-            - data_science_readonly
-            - marketo
-            - static_sensitive
-            - zendesk
-            - zuora_order
-            - zuora_stitch_rest_api
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - nfiguera_prep
-                - nfiguera_prod
-            schemas:
-                - nfiguera_prep.*
-                - nfiguera_prod.*
-            tables:
-                - nfiguera_prep.*.*
-                - nfiguera_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - nfiguera_prep
-                    - nfiguera_prod
-                write:
-                    - nfiguera_prep
-                    - nfiguera_prod
-            schemas:
-                read:
-                    - nfiguera_prep.*
-                    - nfiguera_prod.*
-                write:
-                    - nfiguera_prep.*
-                    - nfiguera_prod.*
-            tables:
-                read:
-                    - nfiguera_prep.*.*
-                    - nfiguera_prod.*.*
-                write:
-                    - nfiguera_prep.*.*
-                    - nfiguera_prod.*.*
+        member_of: []
+        warehouses: []
 
     - nhertz:
         member_of:
@@ -7398,9 +7348,8 @@ users:
             - ndular
 
     - nfiguera:
-        can_login: yes
-        member_of:
-            - nfiguera
+        can_login: no
+        member_of: []
 
     - nhertz:
         can_login: yes

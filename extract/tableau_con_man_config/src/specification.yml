@@ -7828,7 +7828,7 @@ users:
       - General All Access
   - user_name: nfiguera
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: Unlicensed
     auth_setting: SAML
     groups:
       - ASM AMER Commercial Restricted Access
