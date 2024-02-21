@@ -76,6 +76,7 @@ combined AS (
     actuals.crm_user_business_unit,
     actuals.order_type,
     actuals.order_type_live,
+    actuals.order_type_grouped,
     actuals.stage_name,
     actuals.deal_path_name,
     actuals.sales_type,

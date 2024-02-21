@@ -21,12 +21,13 @@ aggregate_data AS (
     crm_user_business_unit,
     order_type,
     order_type_live,
+    order_type_grouped,
     stage_name,
     deal_path_name,
     sales_type,
     calculated_deal_size,
     deal_size,
-  parent_crm_account_industry,
+    parent_crm_account_industry,
 
     --dates
     snapshot_date,
