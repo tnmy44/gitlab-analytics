@@ -2557,7 +2557,3 @@ String of labels associated with a GitLab object (issue, merge request, epic, et
 Top-level namespace name that is unmasked for any user who has been assigned the appropriate access.
 
 {% enddocs %}
-
-
-
-
