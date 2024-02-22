@@ -10,6 +10,7 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_crm_user_daily_snapshot', 'wk_prep_crm_user_daily_snapshot'),
+    ('prep_crm_user', 'wk_prep_crm_user'),
     ('prep_crm_account_daily_snapshot', 'prep_crm_account_daily_snapshot'),
     ('prep_crm_account', 'prep_crm_account'),
     ('prep_crm_opportunity', 'wk_prep_crm_opportunity_fy25'),
@@ -49,7 +50,7 @@
       NULL                AS user_role_level_5
     FROM prep_crm_person 
 
-), user_hierarchy_source AS (
+), user_geo_hierarchy_source AS (
 
 SELECT 
       DISTINCT
@@ -59,28 +60,67 @@ SELECT
       prep_crm_user_daily_snapshot.crm_user_region                     AS user_region,
       prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
       prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
-      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
-      CASE 
-        WHEN dim_date.fiscal_year < 2025 
-        THEN NULL
-        ELSE prep_crm_user_daily_snapshot.crm_user_role_name 
-      END                                                              AS user_role_name,
-      prep_crm_user_daily_snapshot.crm_user_role_level_1               AS user_role_level_1,
-      prep_crm_user_daily_snapshot.crm_user_role_level_2               AS user_role_level_2,
-      prep_crm_user_daily_snapshot.crm_user_role_level_3               AS user_role_level_3,
-      prep_crm_user_daily_snapshot.crm_user_role_level_4               AS user_role_level_4,
-      prep_crm_user_daily_snapshot.crm_user_role_level_5               AS user_role_level_5
+      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk           AS dim_crm_user_hierarchy_sk ,
+      NULL                                                             AS user_role_name,
+      NULL                                                             AS user_role_level_1,
+      NULL                                                             AS user_role_level_2,
+      NULL                                                             AS user_role_level_3,
+      NULL                                                             AS user_role_level_4,
+      NULL                                                             AS user_role_level_5
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL, 1=1)
-      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL, 1=1)
-      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL, 1=1)
-      AND IFF(dim_date.fiscal_year < 2025, prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL, 1=1)
-      AND IFF(dim_date.fiscal_year BETWEEN 2023 AND 2024, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
-      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
-      AND IFF(dim_date.fiscal_year >= 2025, prep_crm_user_daily_snapshot.crm_user_role_name IS NOT NULL, 1=1) -- switch to role based hierarchy in FY25
-      AND prep_crm_user_daily_snapshot.is_active = TRUE
+    WHERE prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
+        AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
+        AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
+        AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
+        AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
+        AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+        AND dim_date.fiscal_year < 2025 -- stop geo hierarchy after 2024
+        AND prep_crm_user_daily_snapshot.is_active = TRUE
+
+), user_role_hierarchy_snapshot_source AS (
+    SELECT DISTINCT
+      dim_date.fiscal_year,
+      NULL                                                            AS user_segment,
+      NULL                                                            AS user_geo,
+      NULL                                                            AS user_region,
+      NULL                                                            AS user_area,
+      NULL                                                            AS user_business_unit,
+      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
+      prep_crm_user_daily_snapshot.crm_user_role_name, 
+      prep_crm_user_daily_snapshot.crm_user_role_level_1, 
+      prep_crm_user_daily_snapshot.crm_user_role_level_2, 
+      prep_crm_user_daily_snapshot.crm_user_role_level_3, 
+      prep_crm_user_daily_snapshot.crm_user_role_level_4, 
+      prep_crm_user_daily_snapshot.crm_user_role_level_5
+    FROM prep_crm_user_daily_snapshot
+    INNER JOIN dim_date 
+      ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
+    WHERE crm_user_role_level_1 IS NOT NULL
+    AND dim_date.fiscal_year >= 2025
+    AND is_active = TRUE
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY crm_user_role_name ORDER BY snapshot_id DESC) = 1
+
+), user_role_hierarchy_live_source AS (
+    SELECT DISTINCT
+      current_fiscal_year.fiscal_year,
+      NULL                                                            AS user_segment,
+      NULL                                                            AS user_geo,
+      NULL                                                            AS user_region,
+      NULL                                                            AS user_area,
+      NULL                                                            AS user_business_unit,
+      prep_crm_user.dim_crm_user_hierarchy_sk,
+      prep_crm_user.crm_user_role_name, 
+      prep_crm_user.crm_user_role_level_1, 
+      prep_crm_user.crm_user_role_level_2, 
+      prep_crm_user.crm_user_role_level_3, 
+      prep_crm_user.crm_user_role_level_4, 
+      prep_crm_user.crm_user_role_level_5
+    FROM prep_crm_user
+    LEFT JOIN current_fiscal_year
+    WHERE crm_user_role_level_1 IS NOT NULL
+    AND is_active = TRUE
 
 ), account_hierarchy_snapshot_source AS (
 
@@ -211,7 +251,17 @@ SELECT
 */
 
     SELECT *
-    FROM user_hierarchy_source
+    FROM user_geo_hierarchy_source
+
+    UNION
+
+    SELECT *
+    FROM user_role_hierarchy_snapshot_source
+
+    UNION
+
+    SELECT *
+    FROM user_role_hierarchy_live_source
   
     UNION
  
