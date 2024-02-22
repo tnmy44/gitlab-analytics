@@ -109,6 +109,7 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.sales_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf.order_type_stamped AS order_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf.sales_qualified_source AS sales_qualified_source_name,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.stage_name,
 
 --Account Info
     wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_sales_segment,
@@ -124,6 +125,7 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_fiscal_year,
     wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.close_date,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.close_fiscal_quarter_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date AS opportunity_snapshot_date,
     dim_date.day_of_fiscal_quarter_normalised as pipeline_created_day_of_fiscal_quarter_normalised,
     dim_date.day_of_fiscal_year_normalised as pipeline_created_day_of_fiscal_year_normalised,
@@ -191,6 +193,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_fiscal_quarter_name,
     attribution_touchpoint_snapshot_base.bizible_touchpoint_date,
     attribution_touchpoint_snapshot_base.touchpoint_snapshot_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.opportunity_snapshot_date,
@@ -218,7 +221,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.order_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name,
-
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.stage_name,
 
 --Touchpoint Dimensions
     attribution_touchpoint_snapshot_base.bizible_touchpoint_type,
@@ -331,6 +334,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_fiscal_quarter_name,
     NULL AS bizible_touchpoint_date,
     NULL AS touchpoint_snapshot_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.opportunity_snapshot_date,
@@ -358,6 +362,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.order_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.stage_name,
 
 
 --Touchpoint Dimensions
@@ -435,5 +440,5 @@ combined_models AS (
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-10-23",
+    updated_date="2024-02-22",
   ) }}
