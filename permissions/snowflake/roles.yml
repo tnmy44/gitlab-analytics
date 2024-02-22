@@ -4536,6 +4536,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jtucker:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - juwong:
         member_of:
             - engineer
@@ -7106,6 +7112,11 @@ users:
         can_login: yes
         member_of:
             - jthome
+
+    - jtucker:
+        can_login: yes
+        member_of:
+            - jtucker
 
     - juwong:
         can_login: yes
