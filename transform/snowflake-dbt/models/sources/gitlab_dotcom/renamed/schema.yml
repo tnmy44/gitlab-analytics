@@ -1791,6 +1791,57 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_subscription_add_ons_source
+    description: Base model for Gitlab.com subscriptions_add_ons
+    columns:
+      - name: id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_subscription_add_on_purchases_source
+    description: Base model for Gitlab.com subscriptions_add_ons_purchases
+    columns:
+      - name: id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+        
+  - name: gitlab_dotcom_subscription_user_add_on_assignments_source
+    description: Base model for Gitlab.com subscriptions_add_ons_user_add_on_assignments
+    columns:
+      - name: id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_system_note_metadata_source
     description: Base model for Gitlab.com system_note_metadata
     columns:
