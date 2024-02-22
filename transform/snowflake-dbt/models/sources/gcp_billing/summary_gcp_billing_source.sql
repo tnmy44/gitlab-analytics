@@ -43,7 +43,7 @@ grouped AS (
 renamed AS (
   
   SELECT
-    {{ dbt_utils.surrogate_key(['value']) }} as primary_key,
+    {{ dbt_utils.generate_surrogate_key(['value']) }} as primary_key,
     value['billing_account_id']::VARCHAR AS billing_account_id,
     value['cost']::FLOAT * occurrence_multiplier AS cost,
     value['cost_type']::VARCHAR AS cost_type,

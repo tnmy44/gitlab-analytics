@@ -47,6 +47,7 @@ renamed AS (
     sdr_assigned__c AS sales_development_rep,
     -- solutions_architect__c                     AS solutions_architect,
     technical_account_manager_lu__c AS technical_account_manager_id,
+    executive_sponsor__c AS executive_sponsor_id,
 
      -- info
     "{{ this.database }}".{{ target.schema }}.ID15TO18(SUBSTRING(REGEXP_REPLACE(

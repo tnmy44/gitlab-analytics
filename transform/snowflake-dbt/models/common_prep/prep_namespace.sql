@@ -63,7 +63,7 @@ joined AS (
   SELECT
 
     -- Surrogate Key
-    {{ dbt_utils.surrogate_key(['namespaces.namespace_id']) }}              AS dim_namespace_sk,
+    {{ dbt_utils.generate_surrogate_key(['namespaces.namespace_id']) }}              AS dim_namespace_sk,
 
     -- Natural Key
     namespaces.namespace_id                                                 AS namespace_id,

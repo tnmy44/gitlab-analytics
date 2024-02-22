@@ -9,17 +9,25 @@ aggregate_data AS (
 
   SELECT
 
-    --target attributes
+    -- attributes
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_crm_user_hierarchy_sk,
-    order_type_name,
     sales_qualified_source_name,
     crm_user_sales_segment,
     crm_user_geo,
     crm_user_region,
     crm_user_area,
     crm_user_business_unit,
+    order_type,
+    order_type_live,
+    order_type_grouped,
+    stage_name,
+    deal_path_name,
+    sales_type,
+    calculated_deal_size,
+    deal_size,
+    parent_crm_account_industry,
 
     --dates
     snapshot_date,
@@ -128,7 +136,13 @@ aggregate_data AS (
     trials_qtd_target,
     trials_ytd_target,
     is_current_snapshot_quarter,
+
     -- numbers for current week
+    SUM(closed_lost_opps_in_snapshot_week)                AS closed_lost_opps_in_snapshot_week,
+    SUM(closed_won_opps_in_snapshot_week)                 AS closed_won_opps_in_snapshot_week,
+    SUM(closed_opps_in_snapshot_week)                     AS closed_opps_in_snapshot_week,
+    SUM(open_pipeline_in_snapshot_week)                   AS open_pipeline_in_snapshot_week,
+    SUM(pipeline_created_in_snapshot_week)                AS pipeline_created_in_snapshot_week,
     SUM(created_arr_in_snapshot_week)                     AS created_arr_in_snapshot_week,
     SUM(created_net_arr_in_snapshot_week)                 AS created_net_arr_in_snapshot_week,
     SUM(created_deal_count_in_snapshot_week)              AS created_deal_count_in_snapshot_week,
@@ -137,6 +151,7 @@ aggregate_data AS (
     SUM(closed_new_logo_count_in_snapshot_week)           AS closed_new_logo_count_in_snapshot_week,
     SUM(closed_cycle_time_in_snapshot_week)               AS closed_cycle_time_in_snapshot_week,
     SUM(booked_net_arr_in_snapshot_week)                  AS booked_net_arr_in_snapshot_week,
+    SUM(calculated_deal_count_in_snapshot_week)           AS calculated_deal_count_in_snapshot_week,
 
     -- Additive fields
     SUM(segment_order_type_iacv_to_net_arr_ratio)         AS segment_order_type_iacv_to_net_arr_ratio,

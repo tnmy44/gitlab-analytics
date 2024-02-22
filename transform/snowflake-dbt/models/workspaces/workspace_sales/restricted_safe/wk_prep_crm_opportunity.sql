@@ -56,7 +56,7 @@ sfdc_opportunity_live AS (
     sfdc_opportunity_source.sales_accepted_date::DATE                                                             AS sales_accepted_date_live,
     sfdc_opportunity_source.close_date::DATE                                                                      AS close_date_live,
     sfdc_opportunity_source.net_arr                                                                               AS net_arr_live,
-    {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                         AS crm_opportunity_snapshot_id,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                         AS crm_opportunity_snapshot_id,
     sfdc_account.is_jihu_account                                                                                  AS is_jihu_account_live,
     sfdc_opportunity_source.iacv_created_date                                                                     AS arr_created_date_live,   
     CASE

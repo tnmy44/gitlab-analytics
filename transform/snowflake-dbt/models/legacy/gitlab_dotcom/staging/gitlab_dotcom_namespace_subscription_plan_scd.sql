@@ -43,7 +43,7 @@ plans AS (
 
 missing_subscription_entry AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['CURRENT_DATE', 'gitlab_subscription_id'] ) }}                                        
+    {{ dbt_utils.generate_surrogate_key(['CURRENT_DATE', 'gitlab_subscription_id'] ) }}
     AS new_gitlab_subscription_snapshot_id,
     gitlab_subscription_id,
     gitlab_subscription_start_date,

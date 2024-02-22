@@ -26,7 +26,7 @@ metric_bridge AS (
 
 joined AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['behavior_structured_event_pk', 'metrics_path']) }} AS snowplow_events_service_ping_metrics_sk,
+    {{ dbt_utils.generate_surrogate_key(['behavior_structured_event_pk', 'metrics_path']) }} AS snowplow_events_service_ping_metrics_sk,
     service_ping_events.behavior_structured_event_pk,
     service_ping_events.behavior_at,
     service_ping_events.gsc_pseudonymized_user_id,

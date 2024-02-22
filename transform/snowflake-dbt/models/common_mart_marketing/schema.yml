@@ -620,6 +620,10 @@ models:
           description: The custom bucketing of the Opps' Lead Source
         - name: touchpoint_sales_stage
           description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
@@ -672,6 +676,10 @@ models:
           description: Shows if the person record is a lead or contact in SFDC.
         - name: touchpoint_sales_stage
           description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
 
 
@@ -762,3 +770,6 @@ models:
           description: T/F Flag to indicate if a Quote is the final version on the Opportunity. 
         - name: is_first_subscription_institution
           description: T/F Flag to indicate if an Opportunity is the first subscription for a given account hierarchy. 
+
+    - name: rpt_l2r_campaign_interactions_paid_account
+      description: filtered version of rpt_l2r_campaign_interactions on current paying accounts only          

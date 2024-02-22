@@ -31,6 +31,7 @@
       dim_crm_account.tam_manager,
       dim_crm_account.owner_role,
       dim_crm_account.user_role_type,
+      dim_crm_account.executive_sponsor,
 
       --crm account owner attributes
       crm_account_owner.manager_name as crm_account_owner_manager,
@@ -242,7 +243,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@lisvinueza",
+    updated_by="@jonglee1218",
     created_date="2022-08-10",
-    updated_date="2023-05-21"
+    updated_date="2024-02-16"
 ) }}

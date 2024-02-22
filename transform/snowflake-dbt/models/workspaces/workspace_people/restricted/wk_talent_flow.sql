@@ -294,11 +294,11 @@ transfer AS (
   SELECT 
     employee_id,
     effective_date,
-    business_process_type,
+    MAX(business_process_reason)                                                               AS business_process_reason,
     MAX(IFF(COALESCE(job_code_past, '1') != COALESCE(job_code_current, '2'), 'TRUE', 'FALSE')) AS transfer_job_change
   FROM staff_hist
-  WHERE business_process_type = 'Transfer Employee Inbound'
-  GROUP BY 1, 2,3
+  WHERE business_process_category = 'Lateral Move'
+  GROUP BY 1, 2
 
 ),
 
@@ -375,7 +375,7 @@ listing AS (
     listing_stage.term_rank,
     listing_stage.last_date,
     IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'true', listing_stage.is_promotion) AS is_promotion,
-    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                           AS is_transfer,
+    IFF(LEFT(transfer.business_process_reason,8) = 'Transfer', 'TRUE', 'FALSE')                                  AS is_transfer,
     COALESCE(transfer.transfer_job_change, 'FALSE')                                                              AS transfer_job_change,
     staff_hist.employee_type_current                                                                             AS employee_type,
     bonus.total_discretionary_bonuses
@@ -437,7 +437,7 @@ listing AS (
     listing_stage.term_rank,
     listing_stage.last_date,
     IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'true', listing_stage.is_promotion) AS is_promotion,
-    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                           AS is_transfer,
+    IFF(LEFT(transfer.business_process_reason,8) = 'Transfer', 'TRUE', 'FALSE')                                  AS is_transfer,
     COALESCE(transfer.transfer_job_change, 'FALSE')                                                              AS transfer_job_change,
     staff_hist.employee_type_current                                                                             AS employee_type,
     bonus.total_discretionary_bonuses
@@ -548,9 +548,6 @@ hist_stage AS (
       WHEN cur_is_promotion = 'true'
         THEN 1
       WHEN cur_is_transfer = 'TRUE'
-        AND COALESCE(cur_job_title, '1') != COALESCE(pr_job_title, '1')
-        THEN 1
-      WHEN cur_is_transfer = 'TRUE'
         AND cur_transfer_job_change = 'TRUE'
         THEN 1
       WHEN total_discretionary_bonuses >= 1
@@ -587,9 +584,6 @@ final AS (
       WHEN cur_is_promotion = 'true'
         OR min_date = promotion_date::DATE
         THEN 'Promotion'
-      WHEN cur_is_transfer = 'TRUE'
-        AND COALESCE(hist_stage.cur_job_title, '1') != COALESCE(pr_job_title, '1')
-        THEN 'Transfer'
       WHEN cur_is_transfer = 'TRUE'
         AND cur_transfer_job_change = 'TRUE'
         THEN 'Transfer'
