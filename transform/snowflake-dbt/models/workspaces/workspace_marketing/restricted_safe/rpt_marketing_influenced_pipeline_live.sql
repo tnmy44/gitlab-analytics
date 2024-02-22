@@ -5,7 +5,6 @@
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_xf','wk_sales_sfdc_opportunity_xf'),
-    ('attribution_touchpoint_offer_type','attribution_touchpoint_offer_type'),
     ('dim_date','dim_date')
 ]) }}
 
@@ -36,15 +35,12 @@
     mart_crm_attribution_touchpoint.type as sfdc_campaign_type,
     mart_crm_attribution_touchpoint.gtm_motion,
     mart_crm_attribution_touchpoint.account_demographics_sales_segment AS person_sales_segment,
-    attribution_touchpoint_offer_type.touchpoint_offer_type,
-    attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
+    mart_crm_attribution_touchpoint.touchpoint_offer_type,
+    mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
     mart_crm_attribution_touchpoint.bizible_weight_custom_model/100 AS bizible_count_custom_model,
-    mart_crm_attribution_touchpoint.bizible_weight_custom_model
-    FROM 
-    mart_crm_attribution_touchpoint 
-    LEFT JOIN attribution_touchpoint_offer_type
-    ON  mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=attribution_touchpoint_offer_type.dim_crm_touchpoint_id
-
+    mart_crm_attribution_touchpoint.bizible_weight_custom_model,
+    mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
+    FROM mart_crm_attribution_touchpoint 
 )
 
 , wk_sales_sfdc_opportunity_xf_base AS (
@@ -172,6 +168,7 @@ combined_models AS (
 --Touchpoint Dimensions
     attribution_touchpoint_base.bizible_touchpoint_type,
     attribution_touchpoint_base.bizible_integrated_campaign_grouping,
+    attribution_touchpoint_base.opp_touchpoint_sales_stage,
     CASE 
       WHEN wk_sales_sfdc_opportunity_xf_base.sales_qualified_source_name = 'SDR Generated' 
         AND attribution_touchpoint_base.dim_crm_touchpoint_id IS NULL
@@ -254,7 +251,7 @@ combined_models AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@dmicovic",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-09-01",
     updated_date="2024-02-22",
   ) }}

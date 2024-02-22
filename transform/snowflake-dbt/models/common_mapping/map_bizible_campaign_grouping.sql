@@ -56,7 +56,7 @@ WITH bizible_touchpoints AS (
 ), touchpoints_with_campaign AS (
     
     SELECT 
-      {{ dbt_utils.surrogate_key(['campaign.dim_campaign_id','campaign.dim_parent_campaign_id',
+      {{ dbt_utils.generate_surrogate_key(['campaign.dim_campaign_id','campaign.dim_parent_campaign_id',
       								'bizible.bizible_touchpoint_type','bizible.bizible_landing_page',
       								'bizible.bizible_referrer_page','bizible.bizible_form_url',
       								'bizible.bizible_ad_campaign_name','bizible.bizible_marketing_channel_path'

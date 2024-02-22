@@ -142,4 +142,6 @@ sources:
         identifier: accountshare
       - name: opportunity_share
         identifier: opportunityshare
+      - name: user_territory_association
+        identifier: userterritory2association
 

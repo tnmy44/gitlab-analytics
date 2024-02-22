@@ -116,11 +116,13 @@
       worked_date_pt.date_day                  AS worked_date_pt,
       worked_date.first_day_of_month           AS worked_month,
       worked_date_pt.first_day_of_month        AS worked_month_pt,
+      fct_crm_person.high_priority_datetime,
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       is_valuable_signup,
       dim_crm_person.email_hash,
       dim_crm_person.status,
+      dim_crm_person.sfdc_record_type,
       dim_crm_person.lead_source,
       dim_crm_person.title,
       dim_crm_person.was_converted_lead,
@@ -207,6 +209,7 @@
       fct_crm_person.is_bdr_sdr_worked,
       fct_crm_person.is_abm_tier_inquiry,
       fct_crm_person.is_abm_tier_mql,
+      fct_crm_person.is_high_priority,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -298,7 +301,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2023-11-21",
+    updated_date="2024-02-01",
   ) }}  

@@ -165,7 +165,7 @@ final AS (
 
     -- Surrogate keys
     team_member.dim_team_member_sk,
-    {{ dbt_utils.surrogate_key(['team_member.team_id']) }}                AS dim_team_sk,
+    {{ dbt_utils.generate_surrogate_key(['team_member.team_id']) }}                AS dim_team_sk,
 
     --Natural keys
     team_member.employee_id,

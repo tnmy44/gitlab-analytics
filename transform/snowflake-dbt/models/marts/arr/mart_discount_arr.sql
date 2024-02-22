@@ -69,7 +69,7 @@ WITH dim_date AS (
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['arr_agg.dim_charge_id']) }}          AS primary_key,
+      {{ dbt_utils.generate_surrogate_key(['arr_agg.dim_charge_id']) }}          AS primary_key,
       arr_agg.dim_charge_id                                             AS dim_charge_id,
       arr_agg.dim_subscription_id                                       AS dim_subscription_id,
       arr_agg.effective_start_month                                     AS effective_start_month,

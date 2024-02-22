@@ -76,6 +76,12 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -129,6 +135,10 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: mart_crm_person
       description: Model with person and MQL business logic.
@@ -196,6 +206,10 @@ models:
           description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of Inquiry
         - name: is_abm_tier_mql
           description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of MQL
+        - name: sfdc_record_type
+          description: Shows if the person record is a lead or contact in SFDC.
+        - name: is_high_priority
+          description: A person-level flag to indicate if the person is a high prioirty person, according to Salesforce field logic. 
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -235,6 +249,8 @@ models:
           description: The sum of MQLs by the various dimensions. 
         - name: saos
           description: The sum of SAOs by the various dimensions.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
 
 
     - name: rpt_lead_to_revenue
@@ -602,6 +618,12 @@ models:
           description: The Opp's Lead Source from SFDC
         - name: opp_source_buckets
           description: The custom bucketing of the Opps' Lead Source
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
@@ -650,6 +672,15 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: sfdc_record_type
+          description: Shows if the person record is a lead or contact in SFDC.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
+
 
 
     - name: rpt_l2r_community_data
@@ -739,3 +770,6 @@ models:
           description: T/F Flag to indicate if a Quote is the final version on the Opportunity. 
         - name: is_first_subscription_institution
           description: T/F Flag to indicate if an Opportunity is the first subscription for a given account hierarchy. 
+
+    - name: rpt_l2r_campaign_interactions_paid_account
+      description: filtered version of rpt_l2r_campaign_interactions on current paying accounts only          

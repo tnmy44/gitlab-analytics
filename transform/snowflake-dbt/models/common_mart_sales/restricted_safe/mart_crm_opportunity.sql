@@ -123,6 +123,8 @@
       dim_crm_opportunity.renewal_manager, 
       dim_crm_opportunity.renewal_forecast_health,
       dim_crm_opportunity.renewal_ownership,
+      dim_crm_opportunity.ptc_predicted_arr,
+      dim_crm_opportunity.ptc_predicted_renewal_risk_category,    
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -583,9 +585,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@snalamaru",
     created_date="2020-12-07",
-    updated_date="2023-11-01"
+    updated_date="2024-01-24"
   ) }}
 
 

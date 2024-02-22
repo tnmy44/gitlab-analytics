@@ -151,3 +151,5 @@ models:
     description: '{{ doc("pump_daily_data_science_scores") }}'
   - name: pump_churn_forecasting_scores
     description: '{{ doc("pump_churn_forecasting_scores") }}'
+  - name: pump_opportunity_forecasting_scores
+    description: '{{ doc("pump_opportunity_forecasting_scores") }}'

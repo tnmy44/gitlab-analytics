@@ -30,7 +30,7 @@
 ), renamed AS (
   
     SELECT
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_packages_packages_source.packages_package_id']) }}     AS dim_package_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_packages_packages_source.packages_package_id']) }}     AS dim_package_sk,
       packages_package_id                                                                               AS package_id,
       -- FOREIGN KEYS
       prep_project.dim_project_id                                                                       AS dim_project_id,

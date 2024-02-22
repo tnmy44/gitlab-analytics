@@ -81,6 +81,10 @@ sheets:
     owner: '@hselim'
     tabs:
       - fy23_quota
+  - name: fy25_account_geo_map
+    owner: '@rkohnke'
+    tabs:
+      - fy25_account_geo_map
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:

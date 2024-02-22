@@ -237,6 +237,10 @@ WITH prep_crm_opportunity AS (
 
       prep_crm_opportunity.downgrade_details,
 
+      -- PTC related fields
+      prep_crm_opportunity.ptc_predicted_arr,
+      prep_crm_opportunity.ptc_predicted_renewal_risk_category,
+
       -- metadata
       prep_crm_opportunity._last_dbt_run
 
@@ -247,7 +251,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@snalamaru",
     created_date="2020-11-20",
-    updated_date="2023-10-13"
+    updated_date="2024-01-24"
 ) }}

@@ -58,11 +58,21 @@
       FROM joined
       GROUP BY 1, 2
 
-)
+), last_workshop_delivered as (
+
       SELECT
-        sfdc_account_id,
+        wk_gs_activity_timeline.account_id AS sfdc_account_id,
+        max(case when type_name = 'Workshop' then activity_date end) as last_workshop_delivered_date
+        
+      FROM wk_gs_activity_timeline
+      GROUP BY 1
+
+)     
+      SELECT
+        activity.sfdc_account_id,
         gs_company_id,
         most_recent_exec_activity,
+        last_workshop_delivered_date,
         iff(exec_cnt > 0, 1, 0) AS exec_persona_cnt,
         iff(champion_cnt > 0, 1, 0) AS champion_persona_cnt,
         iff(buyer_cnt > 0, 1, 0) AS buyer_persona_cnt,
@@ -81,3 +91,5 @@
 
       FROM activity
 
+      left join last_workshop_delivered 
+        on last_workshop_delivered.sfdc_account_id = activity.sfdc_account_id

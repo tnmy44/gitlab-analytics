@@ -1135,4 +1135,4 @@ models:
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'
 
   - name: mart_crm_subscription_id
-    description: '{{ doc("mart_crm_subscription_id") }}'
+    description: '{{ doc("mart_crm_opportunity_id") }}'
