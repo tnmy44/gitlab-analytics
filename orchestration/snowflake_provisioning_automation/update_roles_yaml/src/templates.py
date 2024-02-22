@@ -16,10 +16,16 @@ def render_template_for_username(
     Renders string template using Jinja templating
     Then reads in the string as json obj (dict/list)
     """
+    prod_database = f"{username}_prod"
+    prep_database = f"{username}_prep"
     context = {
         "username": username,
-        "prod_database": f"{username}_prod",
-        "prep_database": f"{username}_prep",
+        "prod_database": prod_database,
+        "prep_database": prep_database,
+        "prod_schemas": f"{prod_database}.*",
+        "prep_schemas": f"{prep_database}.*",
+        "prod_tables": f"{prod_database}.*.*",
+        "prep_tables": f"{prep_database}.*.*",
     }
     template = Template(template_content)
     rendered_template = template.render(**context)

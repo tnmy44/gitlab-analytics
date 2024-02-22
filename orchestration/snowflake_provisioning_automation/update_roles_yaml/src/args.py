@@ -19,8 +19,8 @@ def get_usernames_removed() -> list:
 def get_default_databases_template() -> str:
     """unused currently because default is None (do not allocate dev_db)"""
     return """[
-        {"{{ prod_database }}": {"shared": False}},
-        {"{{ prep_database }}": {"shared": False}},
+        {"{{ prod_database }}": {"shared": false}},
+        {"{{ prep_database }}": {"shared": false}}
     ]"""
 
 
