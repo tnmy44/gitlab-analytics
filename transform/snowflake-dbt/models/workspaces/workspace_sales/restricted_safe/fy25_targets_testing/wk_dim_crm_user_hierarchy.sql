@@ -22,6 +22,18 @@ WITH source AS (
     dim_crm_user_area_id,
     crm_user_sales_segment_grouped,
     crm_user_sales_segment_region_grouped,
+    crm_user_role_name,
+    dim_crm_user_role_name_id,
+    crm_user_role_level_1,
+    dim_crm_user_role_level_1_id,
+    crm_user_role_level_2,
+    dim_crm_user_role_level_2_id,
+    crm_user_role_level_3,
+    dim_crm_user_role_level_3_id,
+    crm_user_role_level_4,
+    dim_crm_user_role_level_4_id,
+    crm_user_role_level_5,
+    dim_crm_user_role_level_5_id,
     is_current_crm_user_hierarchy
   FROM {{ ref('wk_prep_crm_user_hierarchy') }}
 
