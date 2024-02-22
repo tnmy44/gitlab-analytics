@@ -1,5 +1,5 @@
 import pytest
-from templates import render_template_for_username, concat_template_values
+from render_templates import render_template_for_username, concat_template_values
 
 
 def test_render_template_for_username():

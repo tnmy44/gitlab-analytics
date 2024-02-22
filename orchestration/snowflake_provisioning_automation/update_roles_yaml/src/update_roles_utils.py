@@ -58,12 +58,12 @@ def save_roles_to_yaml(data):
 def run_git_diff_command(file_path, base_branch="master"):
     """Run git diff command and capture the output"""
 
-    git_diff_command = f"""git diff {base_branch}  -- {file_path} | grep '^[+-]' | grep -Ev '^(--- a/|\\+\\+\\+ b/|--- /dev/null)'"""
+    git_diff_command = f"""
+    git diff {base_branch}  -- {file_path} \
+    | grep '^[+-]' | grep -Ev '^(--- a/|\\+\\+\\+ b/|--- /dev/null)'
+    """
 
     diff_output = subprocess.check_output(git_diff_command, shell=True, text=True)
-    logging.info(
-        f"\ngit_diff_command: {git_diff_command} returns diff_output:\n{diff_output}"
-    )
     return diff_output
 
 
