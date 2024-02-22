@@ -31,7 +31,7 @@ from update_roles_utils import (
     get_roles_from_yaml,
     save_roles_to_yaml,
 )
-from templates import concat_template_values
+from render_templates import concat_template_values
 from roles_struct import RolesStruct
 
 
