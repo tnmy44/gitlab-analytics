@@ -59,6 +59,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -104,6 +105,8 @@
       mart_crm_touchpoint.utm_allptnr,
       mart_crm_touchpoint.utm_partnerid,
       mart_crm_touchpoint.integrated_budget_holder,
+      mart_crm_touchpoint.touchpoint_offer_type,
+      mart_crm_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_touchpoint.bizible_marketing_channel,
       mart_crm_touchpoint.bizible_marketing_channel_path,
@@ -275,6 +278,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -314,6 +318,7 @@
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
       mart_crm_attribution_touchpoint.bizible_landing_page_raw,
+      mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage,
     -- UTM Parameters 
       mart_crm_attribution_touchpoint.utm_campaign,
       mart_crm_attribution_touchpoint.utm_medium,
@@ -323,6 +328,8 @@
       mart_crm_attribution_touchpoint.utm_allptnr,
       mart_crm_attribution_touchpoint.utm_partnerid,
       mart_crm_attribution_touchpoint.integrated_budget_holder,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_attribution_touchpoint.bizible_marketing_channel,
       mart_crm_attribution_touchpoint.bizible_marketing_channel_path,
@@ -383,7 +390,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=178)}}
+  {{dbt_utils.group_by(n=182)}}
     
 ), cohort_base_combined AS (
   
@@ -437,6 +444,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -548,6 +556,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      NULL AS opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
@@ -557,6 +566,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
@@ -565,7 +576,7 @@
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
       bizible_salesforce_campaign,
-	  campaign_rep_role_name,
+	    campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
       pipe_name,
@@ -646,6 +657,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -757,6 +769,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
@@ -766,6 +779,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
@@ -1023,7 +1038,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2024-01-08",
+    updated_date="2024-02-01",
   ) }}

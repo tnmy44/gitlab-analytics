@@ -22,7 +22,7 @@
     SELECT
       opportunity_id,                                                             -- opportunity_id
       contact_id                                                                  AS sfdc_contact_id,
-      {{ dbt_utils.surrogate_key(['contact_id']) }}                               AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                               AS dim_crm_person_id,
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
 
@@ -125,7 +125,7 @@
       sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                                   AS sales_accepted_date,
       sfdc_opportunity_snapshots_source.close_date::DATE                                                            AS close_date,
       sfdc_opportunity_snapshots_source.net_arr                                                                     AS raw_net_arr,
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
       snapshot_dates.date_id                                                                                        AS snapshot_id,
       snapshot_dates.date_actual                                                                                    AS snapshot_date,
       snapshot_dates.first_day_of_month                                                                             AS snapshot_month,
@@ -220,7 +220,7 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       live_date.date_actual                                                                                 AS snapshot_date,
       live_date.first_day_of_month                                                                          AS snapshot_month,
@@ -1335,7 +1335,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@chrisharp",
+    updated_by="@snalamaru",
     created_date="2022-02-23",
-    updated_date="2023-12-06"
+    updated_date="2024-01-24"
 ) }}

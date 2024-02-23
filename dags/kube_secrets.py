@@ -334,6 +334,21 @@ ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = Secret(
     "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME",
 )
 
+# Elastic Search API Key and Org ID
+ELASTIC_SEARCH_BILLING_API_KEY = Secret(
+    "env",
+    "ELASTIC_SEARCH_BILLING_API_KEY",
+    "airflow",
+    "ELASTIC_SEARCH_BILLING_API_KEY",
+)
+
+ELASTIC_CLOUD_ORG_ID = Secret(
+    "env",
+    "ELASTIC_CLOUD_ORG_ID",
+    "airflow",
+    "ELASTIC_CLOUD_ORG_ID",
+)
+
 # Writing to GSheets from Jupyter notebooks
 GSHEETS_SERVICE_ACCOUNT_CREDENTIALS = Secret(
     "env",

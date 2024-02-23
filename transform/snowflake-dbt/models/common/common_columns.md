@@ -654,6 +654,35 @@ Boolean flag set to True if the subscription is under an EDU or OSS Program. Thi
 
 {% enddocs %}
 
+{% docs reporting_month %}
+
+
+{% enddocs %}
+
+{% docs license_id %}
+
+{% enddocs %}
+
+{% docs license_company_name %}
+
+{% enddocs %}
+
+{% docs license_expire_date %}
+
+{% enddocs %}
+
+{% docs dim_subscription_id %}
+
+{% enddocs %}
+
+{% docs dim_subscription_id_original %}
+
+{% enddocs %}
+
+{% docs parent_crm_account_upa_country %}
+
+{% enddocs %}
+
 {% docs crm_account_name %}
 
 The name of the crm account coming from SFDC
@@ -2552,3 +2581,8 @@ String of labels associated with a GitLab object (issue, merge request, epic, et
 
 {% enddocs %}
 
+{% docs namespace_name_unmasked %}
+
+Top-level namespace name that is unmasked for any user who has been assigned the appropriate access.
+
+{% enddocs %}

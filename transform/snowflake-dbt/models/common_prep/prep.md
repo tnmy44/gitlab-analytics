@@ -855,3 +855,9 @@ This model contains data for the cloud activations sourced from tap-postgres tab
 This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce, Zuora, dimdate data respectively.
 
 {% enddocs %}
+
+{% docs prep_license_subscription %}
+
+This model contains the logic for connecting product licenses and subscriptions for use in connecting service ping data to customer accounts.
+
+{% enddocs %}

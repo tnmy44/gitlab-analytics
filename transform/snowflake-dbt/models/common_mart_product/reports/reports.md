@@ -41,6 +41,7 @@ This model is used for xMAU/PI reporting and is the source for paid GitLab.com x
 **Data Grain:**
 - event_calendar_month
 - plan_id_at_event_month
+- plan_name_at_event_month
 - event_name
 
 **Filters Applied to Model:**
@@ -55,31 +56,13 @@ This model is used for xMAU/PI reporting and is the source for paid GitLab.com x
 
 **Business Logic in this Model:** 
 - The Last Plan Id of the Month for the Namespace is used for the `plan_id_at_event_month` attribution
+- Similarly, The Last Plan Name of the Month for the Namespace is used for the `plan_name_at_event_month` attribution
 - Usage is aggregated by `event_name`, meaning you cannot dedupe user or namespace counts across multiple events using this model.
   - Since some xMAU metrics aggregate across multiple events, use [`rpt_event_xmau_metric_monthly`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_event_xmau_metric_monthly) for xMAU reporting
 - Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `user_count = 0` or `ultimate_parent_namespace_count = 0` for these events.
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the installation-level Service Ping metrics by getting a 28-day count
-
-**Tips for Use:**
-- The model currently exposes a plan_id, but not a plan_name. It is recommended to JOIN to [`prep_gitlab_dotcom_plan`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_gitlab_dotcom_plan) to map the IDs to names. (Issue to add the plan_name to this model [here](https://gitlab.com/gitlab-data/analytics/-/issues/15172))
-
-Example query to map plan_id to plan_name
-
-```
-SELECT
-  event_calendar_month,
-  plan_id_at_event_month,
-  prep_gitlab_dotcom_plan.plan_name_modified AS plan_name_at_event_month, --plan_name_modified maps to current plan names
-  event_name,
-  user_count
-FROM common_mart_product.rpt_event_plan_monthly
-JOIN common_prep.prep_gitlab_dotcom_plan
-  ON rpt_event_plan_monthly.plan_id_at_event_month = prep_gitlab_dotcom_plan.dim_plan_id
-ORDER BY 1,2,3,4
-;
-```
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.

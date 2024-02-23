@@ -30,7 +30,7 @@ experiment_events AS
       experiment.gsc_pseudonymized_user_id,
       experiment.user_snowplow_domain_id,       
       experiment.dim_namespace_id,             
-      experiment.context_key,                   
+      experiment.experiment_context_key,                   
       experiment.behavior_at           
     FROM fct_behavior_structured_event_experiment AS experiment
     INNER JOIN dim_behavior_event AS event_details
@@ -55,7 +55,7 @@ experiment_events AS
       stag.gsc_pseudonymized_user_id,
       stag.user_snowplow_domain_id,
       stag.gsc_namespace_id,
-      experiment.context_key,
+      experiment.context_key AS experiment_context_key,
       stag.behavior_at
     FROM snowplow_unnested_events_all_staging AS stag 
     INNER JOIN prep_snowplow_gitlab_events_experiment_contexts_all experiment 
@@ -72,7 +72,7 @@ experiment_events AS
       behavior_at::DATE                       AS behavior_date,
       dim_namespace.ultimate_parent_namespace_id,
       experiment_events.dim_namespace_id,
-      COALESCE(experiment_events.dim_namespace_id::VARCHAR, context_key::VARCHAR)   
+      COALESCE(experiment_events.dim_namespace_id::VARCHAR, experiment_context_key::VARCHAR)   
                                               AS entity_id, --context_key if namespace id is not present
       IFF(experiment_events.dim_namespace_id IS NULL, 'context_key', 'namespace')
                                               AS entity_category,
@@ -98,7 +98,7 @@ experiment_events AS
 	{{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@eneuberger",
+    updated_by="@michellecooper",
     created_date="2023-10-23",
-    updated_date="2023-10-23"
+    updated_date="2024-02-12"
 ) }}

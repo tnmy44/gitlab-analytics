@@ -58,6 +58,8 @@ models:
       description: '{{ doc("event_calendar_year") }}'
     - name: plan_id_at_event_month
       description: '{{ doc("plan_id_at_event_month") }}'
+    - name: plan_name_at_event_month
+      description: '{{ doc("plan_name_at_event_month") }}'
     - name: event_name
       description: '{{ doc("event_name") }}'
     - name: stage_name
@@ -1890,7 +1892,27 @@ models:
     - name: adopted_use_case_names_string 
       description: A string field that lists out the names of the Use Cases that are considered adopted
     - name: is_primary_instance_subscription
-      description: A flag to indicate if the subscription is being received from a primary instance or not
+      description: A flag to indicate if the subscription is being received from a primary production instance or not
+    - name: ci_color_previous_month
+      description: CI use case adoption color on previous month 
+    - name: ci_color_previous_3_month
+      description: CI use case adoption color on previous 3 months 
+    - name: ci_pipeline_utilization_previous_month
+      description: CI pipeline utilization % previous months 
+    - name: ci_pipeline_utilization_previous_3_month
+      description: CI pipeline utilization % previous 3 months 
+    - name: scm_color_previous_month
+      description: SCM use case adoption color on previous month 
+    - name: scm_color_previous_3_month
+      description: SCM use case adoption color on previous 3 months 
+    - name: cd_color_previous_month
+      description: CD use case adoption color on previous month 
+    - name: cd_color_previous_3_month
+      description: CD use case adoption color on previous 3 months 
+    - name: security_color_previous_month
+      description: Security use case adoption color on previous month 
+    - name: security_color_previous_3_month
+      description: Security use case adoption color on previous 3 months 
     - name: created_by 
       description: The GitLab user who created this model
     - name: updated_by 

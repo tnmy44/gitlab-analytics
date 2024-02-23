@@ -96,7 +96,7 @@ Getting to know the team will require purposeful steps on your part in our all-r
 
 <summary>Team Member Steps</summary>
 
-- [ ] Review the [org chart](https://comp-calculator.gitlab.net/org_chart) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
+- [ ] Review the [org chart](https://www.myworkday.com/gitlab/d/inst/247$55/rel-task/2998$10935.htmld) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
 - [ ] Schedule coffee chats with members of the Data Team starting with those in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 - [ ] Schedule a cofee chat with the Sr. Director of Data and Analytics
 
@@ -145,14 +145,14 @@ Your computer set up is critical to working efficiently.  This section will help
 | [Command Line Interface](#command-line-interface) | No | No | No | No | Yes |
 | [Google Cloud](#google-cloud) | No | No | No | Yes | Yes |
 | [Jupyter](#jupyter) | No | No | No | Yes | No |
-| [Airflow local development environment](#airflow) | No | No | Yes | No | Yes |
-| [Optional Steps](#optional-steps) | No | Yes | Yes | Yes | Yes |
+| [Airflow local development environment](#airflow) | No | No | No | No | Yes |
+| [Optional Steps](#optional-steps) | No | No | No | Yes | Yes |
 
 
 ### Core Steps
 
 - [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
-  - [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
+  - [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/user/ssh.html).  Make the SSH key with no password.
 
 **Note:** The following script is intended to set up the basic tools and environments that are standard for working with the data at GitLab.  There are optional tools and set up in the following sections.  If you are comfortable using the terminal to install these tools then you can use the script as a guide, otherwise run the script with the provided commands. 
 

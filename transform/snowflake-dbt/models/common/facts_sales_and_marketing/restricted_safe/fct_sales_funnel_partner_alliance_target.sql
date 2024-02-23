@@ -27,7 +27,7 @@
 ), final_targets AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['prep_sales_funnel_partner_alliance_target.area', 
+      {{ dbt_utils.generate_surrogate_key(['prep_sales_funnel_partner_alliance_target.area',
                                  'date.fiscal_year', 
                                  'prep_sales_funnel_partner_alliance_target.kpi_name', 
                                  'prep_sales_funnel_partner_alliance_target.first_day_of_month', 

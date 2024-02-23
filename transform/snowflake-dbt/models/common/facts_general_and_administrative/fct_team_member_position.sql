@@ -1,7 +1,7 @@
 WITH final AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'team_id', 'valid_from']) }}  AS team_member_position_pk,
+    {{ dbt_utils.generate_surrogate_key(['employee_id', 'team_id', 'valid_from']) }}  AS team_member_position_pk,
     {{ get_keyed_nulls('prep_team_member_position.dim_team_member_sk') }} AS dim_team_member_sk,
     {{ get_keyed_nulls('prep_team_member_position.dim_team_sk') }} AS dim_team_sk,
     prep_team_member_position.employee_id,

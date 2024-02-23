@@ -512,7 +512,7 @@
 ), user_request_with_account_opp_attributes AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['user_request.issue_id',
+      {{ dbt_utils.generate_surrogate_key(['user_request.issue_id',
                                   'user_request.epic_id',
                                   'user_request.dim_crm_account_id',
                                   'user_request.dim_crm_opportunity_id',

@@ -147,7 +147,7 @@
 
 ), flattened_high_level as (
     SELECT
-      {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'joined_payload.metrics_path']) }}                      AS ping_instance_metric_id,
+      {{ dbt_utils.generate_surrogate_key(['dim_ping_instance_id', 'joined_payload.metrics_path']) }}                      AS ping_instance_metric_id,
       dim_ping_instance_id                                                                                        AS dim_ping_instance_id,
       dim_app_release_major_minor_sk                                                                              AS dim_app_release_major_minor_sk,
       dim_latest_available_app_release_major_minor_sk                                                             AS dim_latest_available_app_release_major_minor_sk,

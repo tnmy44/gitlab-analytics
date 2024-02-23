@@ -99,3 +99,20 @@ models:
       - name: termination_initiated_at
       - name: employee_type
       - name: discretionary_bonus_count
+  - name: wk_pto
+    columns: 
+      - name: employee_id
+      - name: hire_date
+      - name: term_date
+      - name: last_date
+      - name: date_actual
+      - name: is_pto_date
+      - name: is_pto_full_day
+      - name: is_pto_holiday
+      - name: pto_group_type
+      - name: pto_type_name
+      - name: running_pto_sum
+      - name: running_pto_sum_mtd
+      - name: running_pto_sum_qtd
+      - name: running_pto_sum_ytd
+      - name: running_pto_sum_r12

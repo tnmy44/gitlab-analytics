@@ -35,7 +35,7 @@ WITH source AS (
       dbt_version,
       schema_version,
       generated_at,
-      {{ dbt_utils.surrogate_key([
+      {{ dbt_utils.generate_surrogate_key([
           'model_unique_id', 
           'compilation_started_at',
           'uploaded_at'
@@ -62,7 +62,7 @@ WITH source AS (
       'PRE 0.19.0'                                                   AS dbt_version,
       'https://schemas.getdbt.com/dbt/run-results/v0.json'           AS schema_version,
       generated_at,
-      {{ dbt_utils.surrogate_key([
+      {{ dbt_utils.generate_surrogate_key([
           'model_unique_id', 
           'compilation_started_at',
           'uploaded_at'

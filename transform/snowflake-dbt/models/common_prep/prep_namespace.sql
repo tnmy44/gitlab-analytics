@@ -63,7 +63,7 @@ joined AS (
   SELECT
 
     -- Surrogate Key
-    {{ dbt_utils.surrogate_key(['namespaces.namespace_id']) }}              AS dim_namespace_sk,
+    {{ dbt_utils.generate_surrogate_key(['namespaces.namespace_id']) }}              AS dim_namespace_sk,
 
     -- Natural Key
     namespaces.namespace_id                                                 AS namespace_id,
@@ -90,10 +90,11 @@ joined AS (
       TRUE, FALSE)                                                          AS namespace_is_internal,
     CASE
       WHEN namespaces.visibility_level = 'public'
-        OR namespace_is_internal THEN namespace_name
+        OR namespace_is_internal THEN namespaces.namespace_name
       WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
       WHEN namespaces.visibility_level = 'private' THEN 'private - masked'
     END                                                                     AS namespace_name,
+    namespaces.namespace_name                                               AS namespace_name_unmasked,
     CASE
       WHEN namespaces.visibility_level = 'public'
         OR namespace_is_internal THEN namespace_path
@@ -163,5 +164,5 @@ joined AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-14",
-    updated_date="2023-12-15"
+    updated_date="2024-01-22"
 ) }}
