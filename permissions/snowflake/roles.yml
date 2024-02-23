@@ -308,7 +308,7 @@ databases:
     - vprakash_prep:
         shared: no
 
-#  Staging Enviornment 
+#  Staging Enviornment
     - snowplow_stg_test_ved_prep:
         shared: yes
     - snowplow_stg_test_ved_prod:
@@ -444,6 +444,7 @@ roles:
             - static
             - tableau_cloud
             - airflow_stitch
+            - entitlement
 
     - analyst_engineering:
         warehouses:
@@ -596,7 +597,7 @@ roles:
     - analyst_people_sensitive: # role for dynamic masking of people data
         warehouses:
             - dev_xs
-        
+
     - analyst_people:
         warehouses:
             - dev_xs
@@ -1408,7 +1409,7 @@ roles:
                 read:
                     - raw.airflow_stitch.*
                     - prep.airflow.*
-    
+
     - adaptive:
         warehouses:
             - dev_xs
@@ -1422,7 +1423,7 @@ roles:
             tables:
                 read:
                     - raw.adaptive_custom.*
-    
+
     - aws_billing:
         warehouses:
             - dev_xs
@@ -1675,7 +1676,7 @@ roles:
             schemas:
                 read:
                     - prod.restricted_safe_common
-                    - prod.restricted_safe_common_mapping 
+                    - prod.restricted_safe_common_mapping
                     - prod.restricted_safe_common_mart_finance
                     - prod.restricted_safe_common_mart_product
                     - prod.restricted_safe_common_mart_sales
@@ -1886,6 +1887,20 @@ roles:
                 read:
                     - raw.elasticsearch_billing.*
 
+    - entitlement:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.entitlement
+            tables:
+                read:
+                    - prod.entitlement.*
+
     - facebook_ads:
         privileges:
             databases:
@@ -1897,20 +1912,6 @@ roles:
             tables:
                 read:
                     - raw.facebook_ads.*
-
-    - feature_store:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - feature_store
-            schemas:
-                read: 
-                    - feature_store.feast
-            tables:
-                read: 
-                    - feature_store.feast.*
 
     - gainsight_pump:
         warehouses:
@@ -1977,7 +1978,7 @@ roles:
                 read:
                     - raw.gainsight_customer_success.*
                     - prep.gainsight_customer_success.*
-                 
+
     - gcp_billing:
         warehouses:
             - dev_xs
@@ -2284,7 +2285,7 @@ roles:
                 read:
                     - prep.gitlab_dotcom.gitlab_dotcom_users_source
                     - prep.gitlab_dotcom.gitlab_dotcom_members_source
-                    - prep.marketo.marketo_lead_source 
+                    - prep.marketo.marketo_lead_source
                     - prep.sensitive.pump_marketing_contact_namespace_detail
                     - prod.common.dim_namespace
                     - prod.legacy.gitlab_dotcom_memberships
@@ -2426,8 +2427,8 @@ roles:
                     - prep.gitlab_pto
             tables:
                 read:
-                    - raw.pto.*   
-                    - prep.gitlab_pto.*     
+                    - raw.pto.*
+                    - prep.gitlab_pto.*
 
     - public:
         member_of:
@@ -2554,7 +2555,7 @@ roles:
             tables:
                 read:
                     - prod.restricted_workspace_people.*
-                    
+
     - salesforce:
         warehouses:
             - dev_xs
@@ -4603,7 +4604,6 @@ roles:
             - analyst_core
             - bi_tool_eval_read
             - data_team_analyst
-            - feature_store
             - google_analytics_360
             - marketo
             - salesforce
@@ -4711,7 +4711,6 @@ roles:
             - customers_db
             - data_team_analyst
             - analyst_finance
-            - feature_store
             - gainsight
             - analyst_core
             - restricted_safe
@@ -4836,7 +4835,7 @@ roles:
                 write:
                     - lhatakeda_prep.*.*
                     - lhatakeda_prod.*.*
-                    
+
     - lkozloff:
         member_of:
             - gitlab_dotcom
@@ -5381,7 +5380,7 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of: [] 
+        member_of: []
         warehouses: []
 
     - ncregan:
@@ -6583,7 +6582,6 @@ roles:
         member_of:
             - data_team_analyst
             - analyst_core
-            - feature_store
             - restricted_safe
             - snowplow
         warehouses:
@@ -7309,7 +7307,7 @@ users:
 
     - mnohr:
         can_login: yes
-        member_of: 
+        member_of:
             - mnohr
 
     - mnuzzo:
@@ -7690,7 +7688,7 @@ users:
         can_login: yes
         member_of:
             - vtatarintev
-            
+
     - vwilson:
         can_login: yes
         member_of:
@@ -7761,7 +7759,7 @@ warehouses:
 
     - loading:
         size: x-small
-         
+
     - loading_m:
         size: medium
 
@@ -7788,4 +7786,4 @@ warehouses:
 
     - usage_ping:
         size: small
- 
+
