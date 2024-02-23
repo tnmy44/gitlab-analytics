@@ -24,7 +24,7 @@ class IndentDumper(yaml.Dumper):
 
 
 def get_roles_from_yaml():
-    """ " read in roles.yml file as python data structure"""
+    """read in roles.yml file as python data structure"""
     roles_file_name = "roles.yml"
     roles_file_path = os.path.join(YAML_PATH, roles_file_name)
 

@@ -91,7 +91,3 @@ if __name__ == "__main__":
     databases = args.databases
     role = args.role
     user = args.user
-
-    print(f"Databases: {databases}")
-    print(f"Role: {role}")
-    print(f"User: {user}")
