@@ -1,6 +1,8 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
+{{ config({
+    "tags":["mnpi_exception"],
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_user_hierarchy_sk', not_null_test_cols = []) }}"
+    }) 
+}}
 
 
 WITH source AS (
