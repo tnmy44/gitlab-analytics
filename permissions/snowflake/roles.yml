@@ -5380,7 +5380,7 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of: 
+        member_of:
             - snowflake_analyst
         warehouses:
             - dev_xs
@@ -7563,6 +7563,12 @@ users:
         can_login: yes
         member_of:
             - snalamaru
+
+    - snowflake_provisioner:
+        can_login: yes
+        member_of:
+            - sysadmin
+            - securityadmin
 
     - sranasinghe:
         can_login: yes
