@@ -29,7 +29,7 @@ models:
  - name: all_test_stats_source
    description: Base model for all_test_stats
    columns:
-     - name: id
+     - name: all_test_stats_id
        description: Unique id to identify a testcase in RSpec.
        tests:
          - not_null
@@ -82,7 +82,7 @@ models:
  - name: main_test_stats_source
    description: Base model for main_test_stats
    columns:
-     - name: id
+     - name: main_test_stats_id
        tests:
          - not_null
      - name: testcase
