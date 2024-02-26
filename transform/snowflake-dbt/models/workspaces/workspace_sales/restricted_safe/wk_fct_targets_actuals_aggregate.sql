@@ -12,6 +12,7 @@ aggregate_data AS (
     -- attributes
     dim_sales_qualified_source_id,
     dim_order_type_id,
+    dim_order_type_live_id,
     dim_crm_user_hierarchy_sk,
     sales_qualified_source_name,
     order_type,
