@@ -4,7 +4,7 @@
 --->
 
 
-Please see the new [dbt change workflow](https://handbook.gitlab.com/handbook/business-technology/data-team/how-we-work/dbt-change-workflow/) handbook page for guidance on submitting a dbt MR.
+Please see the [dbt change workflow](https://handbook.gitlab.com/handbook/business-technology/data-team/how-we-work/dbt-change-workflow/) handbook page for details on these sections.
 
 ## Plan
 
@@ -32,6 +32,7 @@ Add any results from the local testing here for documentation.
 
 ## Verify
 
+The database and tables created as part of the CI process will act as the remove environment for the changes. 
 Using the defined plan, set up the remote environment and perform the remote testing.
 
 ### Remote Testing
@@ -43,7 +44,7 @@ Add the results of the testing in the remote environment here for review and doc
 Before requesting a review consider the following:
 - Do the changes require a change to the existing Entity Relationship Diagrams?
 - Have the changes been tested sufficiently to have confidence in the effect of the change?
-- Have all of the needful CI Jobs been run?
+- Have all of the required CI Jobs been run?
 - Do the changes meet the team's style and structure standards?
 - Have the changes' impact on performance been evaluated?
 - Have Masking Policies on columns and their dependencies been considered?
@@ -64,7 +65,8 @@ To be completed by Maintainers
 - [ ] Checked if pipelines have been run and passed.
 - [ ] Checked for proper documentation.
 - [ ] Checked for impact on performance.
-- [ ] Checked changes for alignment to SQL style and structure
+- [ ] Checked changes for alignment to SQL style and structure.
+- [ ] Checked if the stated testing has been performed.
 
 ## References
 
@@ -96,7 +98,7 @@ Integration testing should be sufficient to be confident of the effect and impac
 </details>
 
 <details>
-<summary><i>Pipelines</i></summary>
+<summary><i>Pipelines and Remote Environment Set Up</i></summary>
 
 - The `generate_dbt_docs` job can be used when only the documentation is changed.
 - The `build_changes` job should be used for most changes.
@@ -104,9 +106,9 @@ Integration testing should be sufficient to be confident of the effect and impac
 - The `custom_invocation` job can be used to capture anything not covered by the `build_changes` job.
 - [dbt CI Jobs](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#-dbt-run)
 
-**Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
+**Which pipeline job do I run?** See the crosswalk our [handbook page](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#build_changes) on our CI jobs to better understand which job to run base on what changes are being made.
 
-**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
+**What to do for failed pipelines** See our [handbook page](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
 
 
 </details>
