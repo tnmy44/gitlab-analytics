@@ -788,3 +788,12 @@ models:
         description: the date the pipeline finished
         tests:
           - not_null
+
+  - name: influx_db_all_fabrication_stats
+    description: A model containing data for all_fabrication_stats generated from influx db.
+
+  - name: influx_db_all_test_stats
+    description: A model containing data for all_test_stats generated from influx db.
+
+  - name: influx_db_main_test_stats
+      description: A model containing data for main_test_stats generated from influx db.
