@@ -1290,19 +1290,115 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-    END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
-
-    CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity_stage.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date.date_actual, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity_stage.is_closed = 1
+      END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
+      CASE
+          WHEN is_renewal = 1 AND sfdc_opportunity_stage.is_closed = 1
+              THEN DATEDIFF(day, arr_created_date.date_actual, close_date.date_actual)
+          WHEN is_renewal = 0 AND sfdc_opportunity_stage.is_closed = 1
+              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
+          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
+              THEN DATEDIFF(day, arr_created_date.date_actual, sfdc_opportunity.snapshot_date)
+          WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
+              THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+      END                                                           AS cycle_time_in_days,
+      COALESCE(
+        sfdc_opportunity.is_pipeline_created_eligible,
+        CASE
+          WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+            AND sfdc_opportunity_live.is_edu_oss  = 0
+            AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
+            AND sfdc_opportunity_live.opportunity_category  IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
+            -- 20211222 Adjusted to remove the ommitted filter
+            AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+            AND (net_arr > 0
+              OR sfdc_opportunity_live.opportunity_category  = 'Credit')
+            -- 20220128 Updated to remove webdirect SQS deals
+            AND sfdc_opportunity_live.sales_qualified_source   != 'Web Direct Generated'
+            AND sfdc_opportunity_live.is_jihu_account = 0
+          THEN 1
+          ELSE 0
+        END
+      )                                                                                                                 AS is_net_arr_pipeline_created_combined,
+      CASE
+        WHEN LOWER(sfdc_opportunity_live.order_type_grouped) LIKE ANY ('%growth%', '%new%')
+          AND sfdc_opportunity_live.is_edu_oss = 0
+          AND is_stage_1_plus = 1
+          AND sfdc_opportunity.forecast_category_name != 'Omitted'
+          AND sfdc_opportunity.is_open = 1
+          THEN 1
+          ELSE 0
+      END                                                                                                               AS is_eligible_open_pipeline_combined,
+      CASE
+        WHEN
+        sfdc_opportunity.dim_parent_crm_account_id IN (
+          '001610000111bA3',
+          '0016100001F4xla',
+          '0016100001CXGCs',
+          '00161000015O9Yn',
+          '0016100001b9Jsc'
+        )
+        AND sfdc_opportunity.close_date < '2020-08-01'
+        THEN 1
+      -- NF 2021 - Pubsec extreme deals
+        WHEN
+          sfdc_opportunity.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3', '0064M00000Xb975QAB')
+          AND (sfdc_opportunity.snapshot_date < '2021-05-01' OR sfdc_opportunity.is_live = 1)
+          THEN 1
+        -- exclude vision opps from FY21-Q2
+        WHEN arr_created_date.fiscal_quarter_name_fy = 'FY21-Q2'
+          AND sfdc_opportunity.snapshot_day_of_fiscal_quarter_normalised = 90
+          AND sfdc_opportunity.stage_name IN (
+            '00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+          )
+          THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN
+          sfdc_opportunity.dim_crm_opportunity_id IN (
+            '0064M00000ZGpfQQAT', '0064M00000ZGpfVQAT', '0064M00000ZGpfGQAT'
+          )
+          THEN 1
+          -- remove test accounts
+          WHEN
+            sfdc_opportunity.dim_crm_account_id = '0014M00001kGcORQA0'
+            THEN 1
+          --remove test accounts
+          WHEN (sfdc_opportunity.dim_parent_crm_account_id = ('0016100001YUkWVAA1')
+              OR sfdc_opportunity.dim_crm_account_id IS NULL)
+            THEN 1
+          -- remove jihu accounts
+          WHEN sfdc_opportunity_live.is_jihu_account = 1
+            THEN 1
+          -- remove deleted opps
+          WHEN sfdc_opportunity.is_deleted = 1
+            THEN 1
+            ELSE 0
+      END                                                                                                               AS is_excluded_from_pipeline_created_combined,
+      CASE
+        WHEN arr_created_date.first_day_of_fiscal_quarter = close_date.first_day_of_fiscal_quarter
+          AND is_net_arr_pipeline_created_combined = 1
+            THEN net_arr
+        ELSE 0
+      END                                                                                                               AS created_and_won_same_quarter_net_arr_combined,
+      CASE
+        WHEN sfdc_opportunity_live.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND is_renewal = 0
+          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
+          AND sfdc_opportunity.is_web_portal_purchase = 0
+            THEN 1
+          ELSE 0
+      END                                                                                                               AS is_eligible_age_analysis_combined,
+      CASE
+        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
+            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-         WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date.date_actual, sfdc_opportunity.snapshot_date)
+          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
+            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
         WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-    END                                                           AS cycle_time_in_days
-
+      END                                                                                                               AS cycle_time_in_days_combined
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
@@ -1325,6 +1421,8 @@ LEFT JOIN cw_base
         AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
     LEFT JOIN sfdc_record_type_source 
       ON sfdc_opportunity.record_type_id = sfdc_record_type_source.record_type_id
+    LEFT JOIN sfdc_opportunity_live
+    ON sfdc_opportunity_live.dim_crm_opportunity_id = sfdc_opportunity.dim_crm_opportunity_id
     LEFT JOIN abm_tier_unioned
       ON sfdc_opportunity.dim_crm_opportunity_id=abm_tier_unioned.dim_crm_opportunity_id
         AND sfdc_opportunity.is_live = 1

@@ -4,7 +4,7 @@
     ('dim_date', 'dim_date'),
     ('prep_crm_user', 'wk_prep_crm_user_daily_snapshot'),
     ('prep_crm_account', 'prep_crm_account_daily_snapshot'),
-    ('sfdc_opportunity', 'wk_prep_crm_opportunity'),
+    ('sfdc_opportunity', 'wk_prep_crm_opportunity_fy25'),
     ('deal_path', 'prep_deal_path')
 ]) }},
 
