@@ -796,4 +796,4 @@ models:
     description: A model containing data for all_test_stats generated from influx db.
 
   - name: influx_db_main_test_stats
-      description: A model containing data for main_test_stats generated from influx db.
+    description: A model containing data for main_test_stats generated from influx db.
