@@ -32,7 +32,7 @@ WITH page_views AS (
         date_trunc('month', behavior_at) as reporting_month, 
         plan_name_modified,
         ultimate_parent_namespace_id,
-        dim_project_id,
+        dim_project_id as gsc_project_id,
         CASE
         WHEN event_label = 'pipelines_filtered_search'
             AND event_action = 'click_filtered_search'
