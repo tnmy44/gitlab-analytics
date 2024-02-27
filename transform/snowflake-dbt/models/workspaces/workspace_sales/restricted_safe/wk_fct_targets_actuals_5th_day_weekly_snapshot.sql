@@ -11,7 +11,8 @@ day_5_list AS (
     date_actual AS day_5_current_week,
     LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
   FROM {{ ref('dim_date') }}
-  WHERE day_of_week = 5
+  WHERE day_of_week = 5 
+    AND date_actual >= DATEADD(YEAR, -2, current_first_day_of_fiscal_quarter) -- include only the last 8 quarters
 
 ),
 
