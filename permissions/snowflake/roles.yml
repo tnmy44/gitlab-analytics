@@ -5405,6 +5405,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - nhashizume:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - nhertz:
         member_of:
             - reporter
@@ -7390,6 +7396,11 @@ users:
     - nfiguera:
         can_login: no
         member_of: []
+
+    - nhashizume:
+        can_login: yes
+        member_of:
+            - nhashizume
 
     - nhertz:
         can_login: yes
