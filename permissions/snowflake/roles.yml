@@ -4004,6 +4004,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jli:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - ikosenko:
         member_of:
             - gitlab_dotcom
@@ -5380,7 +5386,8 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of:
+        member_of: 
+            - analyst_growth
             - snowflake_analyst
         warehouses:
             - dev_xs
@@ -5398,6 +5405,12 @@ roles:
     - nfiguera:
         member_of: []
         warehouses: []
+
+    - nhashizume:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - nhertz:
         member_of:
@@ -6994,6 +7007,11 @@ users:
         member_of:
             - idawson
 
+    - jli:
+        can_login: yes
+        member_of:
+            - jli
+
     - ikosenko:
         can_login: yes
         member_of:
@@ -7379,6 +7397,11 @@ users:
     - nfiguera:
         can_login: no
         member_of: []
+
+    - nhashizume:
+        can_login: yes
+        member_of:
+            - nhashizume
 
     - nhertz:
         can_login: yes
