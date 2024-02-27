@@ -2,8 +2,7 @@
     ('fct_crm_opportunity', 'wk_fct_crm_opportunity'),
     ('fct_crm_person', 'fct_crm_person'),
     ('prep_date', 'prep_date'),
-    ('prep_order_type', 'prep_order_type'),
-    ('prep_sales_funnel_kpi', 'wk_prep_sales_funnel_kpi')
+    ('prep_order_type', 'prep_order_type')
 ]) }}
 
 , first_order_key AS (
@@ -252,8 +251,5 @@
 
 SELECT
   {{ dbt_utils.generate_surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
-  prep_sales_funnel_kpi.dim_sales_funnel_kpi_sk,
   metrics.*
 FROM metrics
-LEFT JOIN prep_sales_funnel_kpi
-  ON prep_sales_funnel_kpi.sales_funnel_kpi_name = metrics.sales_funnel_kpi_name
