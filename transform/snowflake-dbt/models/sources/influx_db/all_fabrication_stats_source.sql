@@ -16,7 +16,7 @@ WITH source AS (
       info::VARCHAR                         AS info,
       job_url::VARCHAR                      AS job_url,
       _uploaded_at::TIMESTAMP               AS _uploaded_at,
-      CONCAT(timestamp, resource, fabrication_method, http_method, run_type, merge_request, fabrication_time, info, job_url, _uploaded_at) AS combined_composite_keys
+      {{ dbt_utils.generate_surrogate_key(['timestamp', 'resource', 'fabrication_method', 'http_method', 'run_type', 'merge_request', 'fabrication_time', 'info', 'job_url', '_uploaded_at']) }} AS combined_composite_keys
     FROM source
 )
 

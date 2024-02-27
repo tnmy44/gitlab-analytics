@@ -31,7 +31,7 @@ WITH source AS (
       api_fabrication::NUMBER                          AS api_fabrication,
       total_fabrication::NUMBER                        AS pipeline_total_fabrication,
       _uploaded_at::TIMESTAMP                          AS _uploaded_at,
-      CONCAT(ID, TESTCASE, FILE_PATH, NAME, PRODUCT_GROUP, STAGE, JOB_ID, JOB_NAME, JOB_URL, PIPELINE_ID, PIPELINE_URL, MERGE_REQUEST, MERGE_REQUEST_IID, SMOKE, RELIABLE, QUARANTINED, RETRIED, RETRY_ATTEMPTS, RUN_TIME, RUN_TYPE, STATUS, UI_FABRICATION, API_FABRICATION, TOTAL_FABRICATION, _UPLOADED_AT) AS combined_composite_keys
+      {{ dbt_utils.generate_surrogate_key(['ID', 'TESTCASE', 'FILE_PATH', 'NAME', 'PRODUCT_GROUP', 'STAGE', 'JOB_ID', 'JOB_NAME', 'JOB_URL', 'PIPELINE_ID', 'PIPELINE_URL', 'MERGE_REQUEST', 'MERGE_REQUEST_IID', 'SMOKE', 'RELIABLE', 'QUARANTINED', 'RETRIED', 'RETRY_ATTEMPTS', 'RUN_TIME', 'RUN_TYPE', 'STATUS', 'UI_FABRICATION', 'API_FABRICATION', 'TOTAL_FABRICATION', '_UPLOADED_AT']) }} AS combined_composite_keys
     FROM source
 )
 
