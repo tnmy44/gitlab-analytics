@@ -267,7 +267,7 @@
                 IFF(security_adopted = 1, 'Security', NULL)
             ) AS adopted_use_case_names_array,
         ARRAY_TO_STRING(adopted_use_case_names_array, ', ') AS adopted_use_case_names_string,
-        CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
+        CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type, instance_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
               and instance_type = 'Production' 
              THEN True 
              ELSE False 
@@ -335,5 +335,5 @@ from
     created_by="@snalamaru",
     updated_by="@jonglee1218",
     created_date="2023-12-10",
-    updated_date="2024-02-15"
+    updated_date="2024-02-26"
 ) }}
