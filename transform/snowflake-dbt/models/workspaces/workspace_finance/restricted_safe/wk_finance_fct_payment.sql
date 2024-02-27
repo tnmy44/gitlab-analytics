@@ -22,20 +22,20 @@ WITH zuora_account AS (
 
 SELECT
    -- primary key 
-     id                          						          AS payment_id,
+      zuora_payment.id                          			AS payment_id,
 
    -- keys
-      paymentnumber               					          AS payment_number,     
-      accountid                  					            AS account_id,
+      zuora_payment.paymentnumber               			AS payment_number,     
+      zuora_payment.accountid                  				AS account_id,
 
    -- payment dates
-     effectivedate                     					      AS payment_date,
+      zuora_payment.effectivedate                     AS payment_date,
      {{ get_date_id('zuora_payment.effectivedate') }} AS payment_date_id,
 
    -- additive fields
-      status                      					          AS payment_status,
-      type                     						            AS payment_type,
-      amount                        					        AS payment_amount
+      zuora_payment.status                      			AS payment_status,
+      zuora_payment.type                     					AS payment_type,
+      zuora_payment.amount                        		AS payment_amount
 
 
 
