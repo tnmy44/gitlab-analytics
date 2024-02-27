@@ -10,7 +10,7 @@ WITH structured_events AS (
     SELECT 
         DATE_TRUNC('month', behavior_date) as reporting_month, 
         event_category,
-        dim_namespace_id as gsc_namespace_id,
+        ultimate_parent_namespace_id,
         dim_project_id as gsc_project_id,
         gsc_pseudonymized_user_id,
         plan_name_modified,
@@ -49,7 +49,7 @@ WITH structured_events AS (
         date_trunc('month', behavior_at) as reporting_month, 
         NULL as event_category,
         plan_name_modified,
-        gsc_namespace_id,
+        ultimate_parent_namespace_id,
         gsc_project_id,
         gsc_pseudonymized_user_id,
         CASE 
@@ -69,7 +69,7 @@ WITH structured_events AS (
     LEFT JOIN {{ ref('dim_plan')}} as plan 
       ON plan.plan_name = page_view.gsc_plan
     LEFT JOIN {{ ref('dim_namespace')}} as namespaces
-      ON namespaces.dim_namespace_id = page_view.gsc_namespace_id
+      ON namespaces.ultimate_parent_namespace_id = page_view.gsc_namespace_id
     WHERE metric IS NOT NULL
     --- filter out any namespaces that are internal and include any data from any records with no namespace
       AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
@@ -78,12 +78,12 @@ WITH structured_events AS (
 ), final AS (
 
   SELECT 
-    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
     metric,
     plan_name_modified,
-    gsc_namespace_id,
+    ultimate_parent_namespace_id,
     gsc_project_id,
     gsc_pseudonymized_user_id,
     total_events 
@@ -92,12 +92,12 @@ WITH structured_events AS (
 UNION ALL 
 
   SELECT 
-    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+    {{ dbt_utils.generate_surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
     metric,
     plan_name_modified,
-    gsc_namespace_id,
+    ultimate_parent_namespace_id,
     gsc_project_id,
     gsc_pseudonymized_user_id,
     total_events 
@@ -109,5 +109,5 @@ UNION ALL
     created_by="@nhervas",
     updated_by="@nhervas",
     created_date="2023-09-05",
-    updated_date="2024-02-22"
+    updated_date="2024-02-27"
 ) }}
