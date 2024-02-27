@@ -9,7 +9,7 @@ WITH page_views AS (
     SELECT 
             date_trunc('month', behavior_at) as reporting_month, 
             plan_name_modified,
-            gsc_namespace_id,
+            gsc_namespace_id as ultimate_parent_namespace_id,
             gsc_project_id,
             CASE 
                 WHEN page_url_path LIKE '%ci/editor%' 
@@ -20,7 +20,7 @@ WITH page_views AS (
         LEFT JOIN {{ ref('dim_plan') }} as plan 
         ON plan.plan_name = page_view.gsc_plan
         LEFT JOIN {{ref ('dim_namespace')}} as namespaces
-        ON namespaces.dim_namespace_id = page_view.gsc_namespace_id
+        ON namespaces.ultimate_parent_namespace_id = page_view.gsc_namespace_id
         WHERE metric IS NOT NULL
         --- filter out any namespaces that are internal and include any data from any records with no namespace
         AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
