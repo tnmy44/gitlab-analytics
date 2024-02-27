@@ -1,8 +1,8 @@
-{{ config({
-    materialized: "view",
-    tags: "mnpi"
-   }) 
-}}
+{{ config(
+    materialized=["view"]
+    tags=["mnpi"]
+) }}
+
 
 
 WITH zuora_account AS (
