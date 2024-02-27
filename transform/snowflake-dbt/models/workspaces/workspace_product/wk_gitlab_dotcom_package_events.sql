@@ -72,7 +72,7 @@ WITH structured_events AS (
       ON namespaces.ultimate_parent_namespace_id = page_view.gsc_namespace_id
     WHERE metric IS NOT NULL
     --- filter out any namespaces that are internal and include any data from any records with no namespace
-      AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
+      AND (namespace_is_internal = FALSE OR ultimate_parent_namespace_id IS NULL)
   {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
