@@ -14,9 +14,12 @@ WITH source AS (
       merge_request::VARCHAR                AS merge_request,
       fabrication_time::FLOAT               AS fabrication_time,
       info::VARCHAR                         AS info,
-      job_url::VARCHAR                      AS job_url
+      job_url::VARCHAR                      AS job_url,
+      _uploaded_at::TIMESTAMP               AS _uploaded_at,
+      CONCAT(timestamp, resource, fabrication_method, http_method, run_type, merge_request, fabrication_time, info, job_url, _uploaded_at) AS combined_composite_keys
     FROM source
 )
 
 SELECT *
 FROM final
+QUALIFY ROW_NUMBER() OVER (PARTITION BY combined_composite_keys ORDER BY _uploaded_at DESC) = 1

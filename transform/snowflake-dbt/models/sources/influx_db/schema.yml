@@ -24,6 +24,10 @@ models:
        description: Any information regarding the resource created.
      - name: job_url
        description: Name of the CI Job where tests are run.
+     - name: combined_composite_keys
+       description: Combined Composite Keys for all columns
+       tests:
+         - unique
  - name: all_test_stats_source
    description: Base model for all_test_stats
    columns:
@@ -77,6 +81,10 @@ models:
        description: Number of milliseconds to finish fabrication of test resources via API.
      - name: total_fabrication
        description: Total number of milliseconds to finish fabrication of test resources via API and UI.0
+     - name: combined_composite_keys
+       description: Combined Composite Keys for all columns
+       tests:
+         - unique
  - name: main_test_stats_source
    description: Base model for main_test_stats
    columns:
@@ -129,3 +137,7 @@ models:
        description: Number of milliseconds to finish fabrication of test resources via API.
      - name: total_fabrication
        description: Total number of milliseconds to finish fabrication of test resources via API and UI.0
+     - name: combined_composite_keys
+       description: Combined Composite Keys for all columns
+       tests:
+         - unique
