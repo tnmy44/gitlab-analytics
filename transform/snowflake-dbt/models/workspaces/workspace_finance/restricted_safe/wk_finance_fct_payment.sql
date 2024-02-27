@@ -22,26 +22,26 @@ WITH zuora_account AS (
 
 SELECT
    -- primary key 
-      zuora_payment.id                          			AS payment_id,
+      zuora_payment.id                          		AS payment_id,
 
    -- keys
-      zuora_payment.paymentnumber               			AS payment_number,     
-      zuora_payment.accountid                  				AS account_id,
+      zuora_payment.paymentnumber               		AS payment_number,     
+      zuora_payment.accountid                  			AS account_id,
 
    -- payment dates
       zuora_payment.effectivedate                     AS payment_date,
      {{ get_date_id('zuora_payment.effectivedate') }} AS payment_date_id,
 
    -- additive fields
-      zuora_payment.status                      			AS payment_status,
-      zuora_payment.type                     					AS payment_type,
+      zuora_payment.status                      		AS payment_status,
+      zuora_payment.type                     			AS payment_type,
       zuora_payment.amount                        		AS payment_amount
 
 
 
 FROM zuora_payment
 INNER JOIN zuora_account
-  ON zuora_payment.account_id = zuora_account.account_id
+  ON zuora_payment.accountid = zuora_account.account_id
 )
 
 {{ dbt_audit(
