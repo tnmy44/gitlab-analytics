@@ -5732,6 +5732,12 @@ roles:
         warehouses:
             - admin
 
+    - pkanellidis:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - pleitzen:
         member_of:
             - snowflake_analyst
@@ -7471,6 +7477,11 @@ users:
             - permission_bot
             - securityadmin
             - sysadmin
+
+    - pkanellidis:
+        can_login: yes
+        member_of:
+            - pkanellidis
 
     - pleitzen:
         can_login: yes
