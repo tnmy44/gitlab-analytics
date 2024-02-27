@@ -135,6 +135,7 @@ gitlab-org/security-products/license-db/license-interfacer,39622674,@thiagocsf
 gitlab-org/security-products/license-db/license-processor,39229232,@thiagocsf
 gitlab-org/security-products/license-db/deployment,39233486,@thiagocsf
 gitlab-org/security-products/license-db/schema,39193358,@thiagocsf
+gitlab-org/ruby/gems/semver_dialects,25944737,@thiagocsf
 gitlab-org/security-products/analyzers/trivy-k8s-wrapper,52241202,@thiagocsf
 gitlab-org/security-products/sast,5373222
 gitlab-org/serverless/runtimes/nodejs,11373038
