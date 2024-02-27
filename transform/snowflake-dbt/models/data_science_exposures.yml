@@ -70,7 +70,7 @@ exposures:
       - ref('gitlab_dotcom_usage_data_events')
       - ref('gitlab_dotcom_users_source')
       - ref('snowplow_structured_events')
-      - ref('snowplow_gitlab_events_experiment_contexts')
+      - ref('snowplow_gitlab_events_context_flattened')
       - ref('mart_product_usage_free_user_metrics_monthly')
       - ref('monthly_stage_usage_by_namespace')
     owner:
@@ -89,6 +89,8 @@ exposures:
       - ref('mart_crm_attribution_touchpoint')
       - ref('sfdc_task')
       - ref('sfdc_lead_source')      
+      - ref('snowplow_structured_events')
+      - ref('snowplow_gitlab_events_context_flattened')
     owner:
       name: Kevin Dietz
       email: kdietz@gitlab.com
@@ -104,8 +106,6 @@ exposures:
       - ref('gitlab_dotcom_users_xf')
       - ref('gitlab_dotcom_memberships')
       - ref('gitlab_dotcom_users_source')
-      - ref('snowplow_structured_events')
-      - ref('snowplow_gitlab_events_experiment_contexts')
       - ref('mart_product_usage_free_user_metrics_monthly')
       - ref('monthly_stage_usage_by_namespace')
       - ref('gitlab_dotcom_usage_data_events')
@@ -134,21 +134,21 @@ exposures:
       name: Klaudia Magda
       email: kmagda@gitlab.com
 
-  - name: opportunity_forecasting
+  - name: churn_forecasting
     type: ml
     maturity: high
-    url: https://gitlab.com/gitlab-data/data-science-projects/oppty-forecasting/-/blob/main/prod/oppty_forecasting_query.sql
+    url: https://gitlab.com/gitlab-data/data-science-projects/churn-forecasting/-/blob/main/prod/training_query.sql
     depends_on:
-      - ref('mart_crm_opportunity_daily_snapshot')
-      - ref('dim_crm_opportunity') 
       - ref('mart_arr_snapshot_model')
+      - ref('dim_subscription')
+      - ref('dim_billing_account')
       - ref('mart_arr_snapshot_bottom_up')
-      - ref('dim_crm_account_daily_snapshot')
+      - ref('wk_sales_sfdc_opportunity_snapshot_history_xf')
       - ref('mart_crm_attribution_touchpoint')
       - ref('mart_product_usage_paid_user_metrics_monthly')
-      - ref('mart_product_usage_free_user_metrics_monthly')
       - ref('zendesk_tickets_xf')
       - ref('zendesk_satisfaction_ratings_source')
+      - ref('customers_db_orders_source')
     owner:
-      name: Kevin Dietz
-      email: kdietz@gitlab.com
+      name: Klaudia Magda
+      email: kmagda@gitlab.com
