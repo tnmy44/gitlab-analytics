@@ -59,11 +59,27 @@ WITH page_views AS (
 
 ), final AS (
 
-    SELECT * FROM page_views 
+    SELECT 
+        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+        reporting_month, 
+        plan_name_modified,
+        ultimate_parent_namespace_id, 
+        gsc_project_id,
+        metric,
+        total_events
+    FROM page_views
 
     UNION ALL 
 
-    SELECT * FROM structured_events
+    SELECT 
+        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
+        reporting_month, 
+        plan_name_modified,
+        ultimate_parent_namespace_id, 
+        gsc_project_id,
+        metric,
+        total_events
+    FROM structured_events
 
 )
 
