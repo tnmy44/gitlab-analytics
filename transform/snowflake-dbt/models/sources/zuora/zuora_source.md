@@ -41,6 +41,12 @@ The invoice payment source table contains info about payments made on invoices. 
 
 {% enddocs %}
 
+{% docs zuora_payment_source %}
+
+The payment source table contains info about payments received into Zuora. The payments can be applied to the invoices or to the account as credit [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/Payment_object)
+
+{% enddocs %}
+
 {% docs zuora_payment_method_source %}
 
 The payment method source table contains info about payment method details associated with a customer account. [Link to Documentation](https://knowledgecenter.zuora.com/Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/PaymentMethod)

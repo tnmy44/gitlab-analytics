@@ -1145,3 +1145,8 @@ models:
         tests:
           - not_null
           - unique
+  
+  - name: wk_finance_fct_payment
+    description: Zuora payment transaction - grain is one payment
+    columns:
+      - name: payment_id 
