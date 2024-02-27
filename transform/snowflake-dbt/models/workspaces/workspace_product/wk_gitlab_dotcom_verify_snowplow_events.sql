@@ -60,7 +60,7 @@ WITH page_views AS (
 ), final AS (
 
     SELECT 
-        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
+        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
         reporting_month, 
         plan_name_modified,
         ultimate_parent_namespace_id, 
@@ -72,7 +72,7 @@ WITH page_views AS (
     UNION ALL 
 
     SELECT 
-        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'metric', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
+        {{ dbt_utils.generate_surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} AS event_reporting_month_pk,
         reporting_month, 
         plan_name_modified,
         ultimate_parent_namespace_id, 
