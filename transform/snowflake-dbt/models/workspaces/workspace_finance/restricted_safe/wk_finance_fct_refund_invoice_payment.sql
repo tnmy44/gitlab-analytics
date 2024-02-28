@@ -37,7 +37,7 @@ SELECT
      {{ get_date_id('zuora_refund_invoice_payment.createddate') }} AS refund_invoice_payment_date_id,
 
    -- additive fields
-      zuora_refund_invoice_payment.amount                        	 AS refund_invoice_payment_amount
+      zuora_refund_invoice_payment.refundamount                    AS refund_invoice_payment_amount
 
 
 
