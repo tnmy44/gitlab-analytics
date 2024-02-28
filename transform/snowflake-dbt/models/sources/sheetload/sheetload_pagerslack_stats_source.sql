@@ -23,4 +23,4 @@ WITH SOURCE AS (
    )
 
 SELECT *
-FROM source
+FROM renamed
