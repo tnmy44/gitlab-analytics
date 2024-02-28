@@ -125,4 +125,4 @@ tableau_workbook_migrate = KubernetesPodOperator(
     dag=dag,
 )
 
-tableau_provision_users >> tableau_workbook_migrate
+
