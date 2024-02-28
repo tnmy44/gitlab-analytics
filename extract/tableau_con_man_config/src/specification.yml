@@ -2668,7 +2668,7 @@ users:
       - General All Access
   - user_name: anelson
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: SiteAdministratorCreator
     auth_setting: SAML
     groups:
       - General All Access
@@ -2909,7 +2909,7 @@ users:
       - General All Access
   - user_name: atucker
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: Unlicensed
     auth_setting: SAML
     groups:
       - Finance All Access
@@ -9435,7 +9435,7 @@ users:
       - General All Access
   - user_name: snalamaru
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: SiteAdministratorCreator
     auth_setting: SAML
     groups:
       - Ad-hoc Project Lead
@@ -11090,3 +11090,15 @@ users:
     auth_setting: SAML
     groups:
       - General All Access                                           
+  - user_name: rskolnik
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: gsodhi
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access        
