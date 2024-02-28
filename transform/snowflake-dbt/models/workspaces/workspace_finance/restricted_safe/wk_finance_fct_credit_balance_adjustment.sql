@@ -25,7 +25,7 @@ SELECT
       zuora_credit_balance_adjustment.id                          		AS credit_balance_adjustment_id,
 
    -- keys
-     zuora_credit_balance_adjustment.adjustmentnumber                 AS credit_balance_adjustment_number,
+      zuora_credit_balance_adjustment.number                AS credit_balance_adjustment_number,
       zuora_credit_balance_adjustment.accountid                  		  AS account_id,
       zuora_credit_balance_adjustment.invoiceid                  		  AS invoice_id,
       zuora_credit_balance_adjustment.accountingperiodid              AS accounting_period_id,
