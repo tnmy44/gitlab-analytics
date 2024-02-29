@@ -77,6 +77,12 @@ models:
           - customers_db
         tests:
           - not_null
+      - name: uuid
+        tests:
+          - not_null
+      - name: hostname
+        tests:
+          - not_null
 
   - name: customers_db_license_seat_links_installation_source
     description: '{{ doc("customers_db_license_seat_links_installation_source") }}' 
