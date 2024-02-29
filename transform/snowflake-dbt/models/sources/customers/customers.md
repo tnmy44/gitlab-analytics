@@ -20,6 +20,12 @@ subscription can appear to fluctuate wildly from day to day, when in reality it 
 
 {% enddocs %}
 
+{% docs customers_db_license_seat_links_installation_source %}
+
+Self-managed EE instances will send seat link information to the customers portal on a daily basis. This model limits down to the last-updated record for each installation for each day. This information includes a count of active users and a maximum count of users historically in order to assist the true up process.
+
+{% enddocs %}
+
 {% docs customers_db_orders_source %}
 
 This model is the data from tap-postgres for the orders table from customers.gitlab.com. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
