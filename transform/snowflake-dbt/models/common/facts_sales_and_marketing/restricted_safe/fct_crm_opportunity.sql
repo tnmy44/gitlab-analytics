@@ -279,7 +279,11 @@
       sfdc_opportunity.forecasted_churn_for_clari,
       sfdc_opportunity.override_arr_basis_clari,
       sfdc_opportunity.vsa_start_date_net_arr,
-      sfdc_opportunity.cycle_time_in_days
+      sfdc_opportunity.cycle_time_in_days,
+
+      -- PTC related fields
+      sfdc_opportunity.ptc_predicted_arr,
+      sfdc_opportunity.ptc_predicted_renewal_risk_category
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions
@@ -320,7 +324,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@snalamaru",
     created_date="2020-11-30",
-    updated_date="2023-11-21"
+    updated_date="2024-02-21"
 ) }}

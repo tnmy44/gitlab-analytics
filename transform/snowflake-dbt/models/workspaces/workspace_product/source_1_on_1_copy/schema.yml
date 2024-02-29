@@ -23,6 +23,15 @@ models:
   - name: version_usage_ping_metadata
     description: Workspace model of the source data (one to one copy).
 
+  - name: gitlab_dotcom_subscription_add_ons
+    description: Workspace model of the source data (one to one copy).
+
+  - name: gitlab_dotcom_subscription_add_on_purchases
+    description: Workspace model of the source data (one to one copy).
+
+  - name: gitlab_dotcom_subscription_user_add_on_assignments
+    description: Workspace model of the source data (one to one copy).
+
   - name: gitlab_dotcom_ml_candidates
     description: Workspace model of the GitLab.com ml_candidates table (deduplicated).
     columns:

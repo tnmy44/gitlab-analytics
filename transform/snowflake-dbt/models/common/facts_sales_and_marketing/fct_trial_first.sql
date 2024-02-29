@@ -43,7 +43,7 @@ WITH first_trial AS (
   SELECT 
 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['first_trial.internal_order_id', 'first_trial.latest_namespace_id']) }} AS trial_first_pk,
+     {{ dbt_utils.generate_surrogate_key(['first_trial.internal_order_id', 'first_trial.latest_namespace_id']) }} AS trial_first_pk,
 
    --Natural Key--
     first_trial.internal_order_id                                                                        AS internal_order_id, --Can only be used to join to CDot Orders

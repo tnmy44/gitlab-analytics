@@ -22,9 +22,17 @@ stages:
   - triage run
 
 include:
+  -  template: Jobs/Secret-Detection.gitlab-ci.yml
   - "extract/extract-ci.yml"
   - "transform/snowflake-dbt/snowflake-dbt-ci.yml"
 
+secret_detection:
+  stage: 🛑🐍 Python Critical
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  allow_failure: false
+  variables:
+    SECRET_DETECTION_EXCLUDED_PATHS: "docker-compose.yml, transform/snowflake-dbt/packages.yml, extract/saas_postgres_pipeline_backfill/postgres_pipeline/postgres_utils.py"
 
 # ======
 # Snowflake Database Clones
@@ -178,7 +186,7 @@ clone_stop:
   stage: 🐍 Python
   tags:
     - analytics
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.6
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.7
   only:
     changes:
       - "**/*.py"
@@ -252,7 +260,7 @@ clone_stop:
 
 📁yaml_validation:
   <<: *yaml_validate
-  script: | 
+  script: |
     # Iterate over each changed YAML file using Python's yaml.safe_load
     for file in $CHANGED_FILES; do
       if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then

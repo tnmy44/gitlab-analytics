@@ -26,7 +26,7 @@ renamed AS (
     SPLIT_PART(project_ancestors_flat.value['resource_name']::VARCHAR, '/', 2)                AS folder_id,
     ROW_NUMBER() OVER (PARTITION BY source.primary_key ORDER BY project_ancestors_flat.index) AS hierarchy_level,
     source.uploaded_at                                                                        AS uploaded_at,
-    {{ dbt_utils.surrogate_key([
+    {{ dbt_utils.generate_surrogate_key([
             'source_primary_key',
             'folder_name',
             'folder_id'] ) }}                                                                                            AS project_folder_label_pk

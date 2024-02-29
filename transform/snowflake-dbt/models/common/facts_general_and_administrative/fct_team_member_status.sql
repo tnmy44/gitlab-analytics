@@ -70,9 +70,9 @@ final AS (
   SELECT
 
     -- Primary key
-    {{ dbt_utils.surrogate_key(['employee_id', 'employment_status', 'effective_date'])}}    AS team_member_status_pk,
+    {{ dbt_utils.generate_surrogate_key(['employee_id', 'employment_status', 'effective_date'])}}    AS team_member_status_pk,
     -- Surrogate key                                                                                                     
-    {{ dbt_utils.surrogate_key(['employee_id'])}}                                           AS dim_team_member_sk,
+    {{ dbt_utils.generate_surrogate_key(['employee_id'])}}                                           AS dim_team_member_sk,
 
     -- Team member status attributes
     employee_id                                                                             AS employee_id,

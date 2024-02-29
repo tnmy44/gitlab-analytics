@@ -47,6 +47,7 @@ renamed AS (
     sdr_assigned__c AS sales_development_rep,
     -- solutions_architect__c                     AS solutions_architect,
     technical_account_manager_lu__c AS technical_account_manager_id,
+    executive_sponsor__c AS executive_sponsor_id,
 
      -- info
     "{{ this.database }}".{{ target.schema }}.ID15TO18(SUBSTRING(REGEXP_REPLACE(
@@ -178,7 +179,7 @@ renamed AS (
     -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
-    account_demographics_sales_segment__c AS ultimate_parent_sales_segment_new,
+    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS ultimate_parent_sales_segment_new,
 
       -- ************************************
       -- NF: 2020-12-17

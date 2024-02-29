@@ -60,7 +60,9 @@ pto AS (
       PARTITION BY
         hr_employee_id,
         pto_date
-      ORDER BY end_date DESC
+      ORDER BY
+        end_date DESC,
+        pto_uuid DESC
     )                                                      AS pto_rank,
     'Y'                                                    AS is_pto_date
   FROM pto_source
@@ -69,6 +71,8 @@ pto AS (
     AND pto_day_of_week BETWEEN 1
     AND 5
     AND pto_days_requested <= 25
+    AND COALESCE(pto_group_type, '') != 'EXL'
+    AND NOT COALESCE(pto_type_name, '') IN ('CEO Shadow Program', 'Conference', 'Customer Visit')
   QUALIFY pto_rank = 1
 ),
 
@@ -88,6 +92,12 @@ final AS (
     dates.fiscal_month_name_fy,
     dates.fiscal_quarter_name_fy,
     dates.fiscal_year,
+    pto.pto_group_type,
+    IFF(
+      pto.pto_type_name = 'Out Sick'
+      AND DATEDIFF('day', pto.start_date, pto.end_date) > 4, 'Out Sick-Extended', pto.pto_type_name
+    )                                                                                               AS pto_type_name,
+    pto.is_pto,
     COALESCE(pto.is_pto_date, 'N')                                                                  AS is_pto_date,
     IFF(pto.is_full_day = 'TRUE', 'Y', 'N')                                                         AS is_pto_full_day,
     IFF(pto.is_holiday = 'TRUE', 'Y', 'N')                                                          AS is_pto_holiday,
@@ -133,7 +143,7 @@ final AS (
     ON start_to_end.hire_id = pto2.hr_employee_id
       AND dates.date_actual >= pto2.pto_date
       AND r12_start_date <= pto2.pto_date
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
   ORDER BY 1 ASC, 5 DESC
 )
 
@@ -146,10 +156,11 @@ SELECT
   is_pto_date,
   is_pto_full_day,
   is_pto_holiday,
+  pto_group_type,
+  pto_type_name,
   running_pto_sum,
   running_pto_sum_mtd,
   running_pto_sum_qtd,
   running_pto_sum_ytd,
   running_pto_sum_r12
 FROM final
-

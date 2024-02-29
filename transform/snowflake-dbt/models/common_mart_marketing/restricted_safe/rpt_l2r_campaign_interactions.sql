@@ -59,6 +59,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -104,6 +105,8 @@
       mart_crm_touchpoint.utm_allptnr,
       mart_crm_touchpoint.utm_partnerid,
       mart_crm_touchpoint.integrated_budget_holder,
+      mart_crm_touchpoint.touchpoint_offer_type,
+      mart_crm_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_touchpoint.bizible_marketing_channel,
       mart_crm_touchpoint.bizible_marketing_channel_path,
@@ -275,6 +278,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -324,6 +328,8 @@
       mart_crm_attribution_touchpoint.utm_allptnr,
       mart_crm_attribution_touchpoint.utm_partnerid,
       mart_crm_attribution_touchpoint.integrated_budget_holder,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type,
+      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       mart_crm_attribution_touchpoint.bizible_marketing_channel,
       mart_crm_attribution_touchpoint.bizible_marketing_channel_path,
@@ -384,7 +390,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=179)}}
+  {{dbt_utils.group_by(n=182)}}
     
 ), cohort_base_combined AS (
   
@@ -438,6 +444,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -559,6 +566,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
@@ -648,6 +657,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -769,6 +779,8 @@
       utm_allptnr,
       utm_partnerid,
       integrated_budget_holder,
+      touchpoint_offer_type,
+      touchpoint_offer_type_grouped,
       -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
@@ -1028,5 +1040,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2024-01-24",
+    updated_date="2024-02-01",
   ) }}

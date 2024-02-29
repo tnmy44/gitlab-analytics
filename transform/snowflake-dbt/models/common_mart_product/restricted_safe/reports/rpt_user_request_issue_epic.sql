@@ -167,7 +167,7 @@ WITH mart_user_request AS (
 ), issue_summary AS (
     
     SELECT
-        {{ dbt_utils.surrogate_key(['prep_issue_summary.issue_id', 'prep_issue_summary.epic_id']) }}
+        {{ dbt_utils.generate_surrogate_key(['prep_issue_summary.issue_id', 'prep_issue_summary.epic_id']) }}
                                                                                             AS primary_key,
         prep_issue_summary.*,
         prep_issue_opp_zendesk_links.unique_opportunities,

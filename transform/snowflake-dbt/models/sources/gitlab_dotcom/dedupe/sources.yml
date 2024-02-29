@@ -370,6 +370,12 @@ sources:
         identifier: gitlab_db_ssh_signatures
       - name: subscriptions
         identifier: gitlab_db_subscriptions
+      - name: subscription_add_ons
+        identifier: gitlab_db_subscription_add_ons
+      - name: subscription_add_on_purchases
+        identifier: gitlab_db_subscription_add_on_purchases
+      - name: subscription_user_add_on_assignments
+        identifier: gitlab_db_subscription_user_add_on_assignments
       - name: system_note_metadata
         identifier: gitlab_db_system_note_metadata
       - name: snippets

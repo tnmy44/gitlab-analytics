@@ -134,7 +134,7 @@ clone-dbt-select-local-user:
 	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 clone-dbt-select-local-user-noscript:
-	cd transform/snowflake-dbt/ && curl https://dbt.gitlabdata.com/manifest.json -o reference_state/manifest.json && dbt clone --select $(DBT_MODELS) --state reference_state --full-refresh;
+	cd transform/snowflake-dbt/ && curl https://dbt.gitlabdata.com/manifest.json -o reference_state/manifest.json && poetry run dbt clone --select $(DBT_MODELS) --state reference_state --full-refresh;
 
 dbt-deps:
 	"$(DBT_DEPS)"
@@ -205,3 +205,7 @@ python_code_quality: black mypy pylint complexity flake8 vulture pytest
 clean-python:
 	@echo "Running clean-python..."
 	@poetry env remove python3
+
+update_roles: 
+	echo "Running updates_roles_yaml.py..." && poetry run python3 orchestration/snowflake_provisioning_automation/update_roles_yaml/src/update_roles_yaml.py
+	

@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('fct_sales_funnel_target_daily', 'fct_sales_funnel_target_daily'),
+    ('fct_sales_funnel_target_daily', 'wk_fct_sales_funnel_target_daily'),
     ('dim_date', 'dim_date')
     ])
 
@@ -13,7 +13,7 @@ quarterly_targets AS (
       dim_crm_user_hierarchy_sk,
       dim_sales_qualified_source_id,
       dim_order_type_id,
-      SUM(monthly_allocated_target) AS quarterly_allocated_target
+      SUM(daily_allocated_target) AS quarterly_allocated_target
   FROM fct_sales_funnel_target_daily
   GROUP BY 1,2,3,4,5
 
@@ -37,7 +37,7 @@ quarterly_monthly_targets AS (
 final AS (
   
   SELECT  
-    {{ dbt_utils.surrogate_key(['quarterly_monthly_targets.dim_crm_user_hierarchy_sk', 
+    {{ dbt_utils.generate_surrogate_key(['quarterly_monthly_targets.dim_crm_user_hierarchy_sk',
                                  'dim_date.fiscal_year', 
                                  'dim_date.first_day_of_month', 
                                  'quarterly_monthly_targets.dim_sales_qualified_source_id',

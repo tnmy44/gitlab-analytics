@@ -5,7 +5,6 @@
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_xf','wk_sales_sfdc_opportunity_xf'),
-    ('attribution_touchpoint_offer_type','attribution_touchpoint_offer_type'),
     ('dim_date','dim_date')
 ]) }}
 
@@ -36,16 +35,12 @@
     mart_crm_attribution_touchpoint.type as sfdc_campaign_type,
     mart_crm_attribution_touchpoint.gtm_motion,
     mart_crm_attribution_touchpoint.account_demographics_sales_segment AS person_sales_segment,
-    attribution_touchpoint_offer_type.touchpoint_offer_type,
-    attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
+    mart_crm_attribution_touchpoint.touchpoint_offer_type,
+    mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
     mart_crm_attribution_touchpoint.bizible_weight_custom_model/100 AS bizible_count_custom_model,
     mart_crm_attribution_touchpoint.bizible_weight_custom_model,
     mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
-    FROM 
-    mart_crm_attribution_touchpoint 
-    LEFT JOIN attribution_touchpoint_offer_type
-    ON  mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=attribution_touchpoint_offer_type.dim_crm_touchpoint_id
-
+    FROM mart_crm_attribution_touchpoint 
 )
 
 , wk_sales_sfdc_opportunity_xf_base AS (
@@ -60,6 +55,7 @@
     wk_sales_sfdc_opportunity_xf.sales_type,
     wk_sales_sfdc_opportunity_xf.order_type_stamped AS order_type,
     wk_sales_sfdc_opportunity_xf.sales_qualified_source AS sales_qualified_source_name,
+    wk_sales_sfdc_opportunity_xf.stage_name,
 
 --Account Info
     wk_sales_sfdc_opportunity_xf.parent_crm_account_sales_segment,
@@ -75,6 +71,8 @@
     wk_sales_sfdc_opportunity_xf.pipeline_created_fiscal_year,
     wk_sales_sfdc_opportunity_xf.net_arr_created_date,
     wk_sales_sfdc_opportunity_xf.close_date,
+    wk_sales_sfdc_opportunity_xf.close_fiscal_quarter_name,
+
     dim_date.day_of_fiscal_quarter_normalised as pipeline_created_day_of_fiscal_quarter_normalised,
     dim_date.day_of_fiscal_year_normalised as pipeline_created_day_of_fiscal_year_normalised,
 
@@ -140,6 +138,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_xf_base.close_date,
+    wk_sales_sfdc_opportunity_xf_base.close_fiscal_quarter_name,
     attribution_touchpoint_base.bizible_touchpoint_date,
   --Account Info
     wk_sales_sfdc_opportunity_xf_base.parent_crm_account_sales_segment,
@@ -163,6 +162,7 @@ combined_models AS (
     wk_sales_sfdc_opportunity_xf_base.sales_type,
     wk_sales_sfdc_opportunity_xf_base.order_type,
     wk_sales_sfdc_opportunity_xf_base.sales_qualified_source_name,
+    wk_sales_sfdc_opportunity_xf_base.stage_name,
 
 
 --Touchpoint Dimensions
@@ -253,5 +253,5 @@ combined_models AS (
     created_by="@dmicovic",
     updated_by="@rkohnke",
     created_date="2023-09-01",
-    updated_date="2024-01-24",
+    updated_date="2024-02-22",
   ) }}

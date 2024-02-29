@@ -16,6 +16,11 @@ The contact source table contains info about an account’s point-of-contact. [L
 
 {% enddocs %}
 
+{% docs zuora_credit_balance_adjustment_source %}
+
+This table contains info about the credit balance adjustments made on the invoice or account. [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/CreditBalanceAdjustment)
+
+{% enddocs %}
 
 {% docs zuora_discount_applied_metrics_source %}
 
@@ -35,9 +40,27 @@ The invoice source table contains info about invoices, which are bills to custom
 
 {% enddocs %}
 
+{% docs zuora_invoice_item_adjustment_source %}
+
+The invoice item adjustment source table contains info about the invoice item adjustments made on the invoice. [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/InvoiceItemAdjustment)
+
+{% enddocs %}
+
+{% docs zuora_invoice_aging_detail_source %}
+
+This source table contains info about the invoice aging detail. [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Zuora_Finance/E_Accounting_Periods/F_View_Accounting_Period_Balances/Accounts_Receivable_Aging#:~:text=nine%20decimal%20places.-,Invoice%20Aging%20Details,click%20%5BDownload%20Aging%20Detail%5D)
+
+{% enddocs %}
+
 {% docs zuora_invoice_payment_source %}
 
 The invoice payment source table contains info about payments made on invoices. [Link to Documentation](https://knowledgecenter.zuora.com/Developer_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/InvoicePayment)
+
+{% enddocs %}
+
+{% docs zuora_payment_source %}
+
+The payment source table contains info about payments received into Zuora. The payments can be applied to the invoices or to the account as credit [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/Payment_object)
 
 {% enddocs %}
 
@@ -68,6 +91,12 @@ This is the source table for Zuora Rate Plan Charges. [Link to Documentation](ht
 {% docs zuora_refund_source %}
 
 This is the source table for Zuora Refunds. [Link to Documentation](https://knowledgecenter.zuora.com/DC_Developers/G_SOAP_API/E1_SOAP_API_Object_Reference/Refund)
+
+{% enddocs %}
+
+{% docs zuora_refund_invoice_payment_source %}
+
+This is the source table for Zuora Refund Invoice Payments. [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/RefundInvoicePayment)
 
 {% enddocs %}
 

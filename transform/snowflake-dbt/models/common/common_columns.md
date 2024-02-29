@@ -654,6 +654,35 @@ Boolean flag set to True if the subscription is under an EDU or OSS Program. Thi
 
 {% enddocs %}
 
+{% docs reporting_month %}
+
+
+{% enddocs %}
+
+{% docs license_id %}
+
+{% enddocs %}
+
+{% docs license_company_name %}
+
+{% enddocs %}
+
+{% docs license_expire_date %}
+
+{% enddocs %}
+
+{% docs dim_subscription_id %}
+
+{% enddocs %}
+
+{% docs dim_subscription_id_original %}
+
+{% enddocs %}
+
+{% docs parent_crm_account_upa_country %}
+
+{% enddocs %}
+
 {% docs crm_account_name %}
 
 The name of the crm account coming from SFDC
@@ -2555,5 +2584,71 @@ String of labels associated with a GitLab object (issue, merge request, epic, et
 {% docs namespace_name_unmasked %}
 
 Top-level namespace name that is unmasked for any user who has been assigned the appropriate access.
+
+{% enddocs %}
+
+{% docs dim_milestone_sk %}
+
+The surrogate key for milestones.
+
+{% enddocs %}
+
+{% docs milestone_id %}
+
+The natural key for milestones.
+
+{% enddocs %}
+
+{% docs dim_milestone_id %}
+
+The legacy unique identifier for milestones.
+
+{% enddocs %}
+
+{% docs milestone_created_at %}
+
+The date a milestone was created.
+
+{% enddocs %}
+
+{% docs milestone_updated_at %}
+
+The most date a milestone was most recently updated.
+
+{% enddocs %}
+
+{% docs milestone_created_date_id %}
+
+The id associated with the milestone's created date that can be joined to `dim_date`.
+
+{% enddocs %}
+
+{% docs milestone_title %}
+
+The title of a milestone. Only available for internal milestones.
+
+{% enddocs %}
+
+{% docs milestone_description %}
+
+A text field description of the milestone.
+
+{% enddocs %}
+
+{% docs milestone_start_date %}
+
+The date the milestone is set to begin.
+
+{% enddocs %}
+
+{% docs milestone_due_date %}
+
+The date the milestone is set to end.
+
+{% enddocs %}
+
+{% docs milestone_status %}
+
+A status indicating if the milestone is `Active` or `Closed`.
 
 {% enddocs %}

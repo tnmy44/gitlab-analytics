@@ -1441,15 +1441,12 @@ tables:
       , allow_mfa_for_subgroups
       , NULL AS default_branch_name
       , repository_read_only
-      , delayed_project_removal
       , resource_access_token_creation_allowed
-      , lock_delayed_project_removal
       , prevent_sharing_groups_outside_hierarchy
       , new_user_signups_cap
       , setup_for_company
       , jobs_to_be_done
       , experiment_features_enabled
-      , third_party_ai_features_enabled
       , code_suggestions
       FROM namespace_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2297,6 +2294,57 @@ tables:
       , updated_at
       , project_id
       FROM subscriptions
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  subscription_add_ons:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: 'subscription_add_ons'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , name
+      , description
+      FROM subscription_add_ons
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  subscription_add_on_purchases:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: 'subscription_add_on_purchases'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , subscription_add_on_id
+      , namespace_id
+      , quantity
+      , expires_on
+      , purchase_xid
+      FROM subscription_add_on_purchases
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  subscription_user_add_on_assignments:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: 'subscription_user_add_on_assignments'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , add_on_purchase_id
+      , user_id
+      FROM subscription_user_add_on_assignments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   system_note_metadata:

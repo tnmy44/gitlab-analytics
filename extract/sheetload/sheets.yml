@@ -81,6 +81,10 @@ sheets:
     owner: '@hselim'
     tabs:
       - fy23_quota
+  - name: fy25_account_geo_map
+    owner: '@rkohnke'
+    tabs:
+      - fy25_account_geo_map
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
@@ -343,3 +347,7 @@ sheets:
       - devrel_influenced_campaigns
       - youtube_views_gitlab
       - devrel_blog_posts_views
+  - name: pagerslack_stats
+    owner: '@jameslopez'
+    tabs: 
+      - pagerslack_stats

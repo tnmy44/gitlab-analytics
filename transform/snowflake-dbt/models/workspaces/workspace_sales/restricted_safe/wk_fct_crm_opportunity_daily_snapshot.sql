@@ -2,9 +2,10 @@
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('order_type', 'prep_order_type'),
     ('dim_date', 'dim_date'),
-    ('sales_rep', 'prep_crm_user'),
-    ('prep_crm_account', 'prep_crm_account'),
-    ('sfdc_opportunity', 'wk_prep_crm_opportunity')
+    ('prep_crm_user', 'wk_prep_crm_user_daily_snapshot'),
+    ('prep_crm_account', 'prep_crm_account_daily_snapshot'),
+    ('sfdc_opportunity', 'wk_prep_crm_opportunity_fy25'),
+    ('deal_path', 'prep_deal_path')
 ]) }},
 
 
@@ -12,18 +13,35 @@
  final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['sales_rep_account.dim_crm_user_hierarchy_sk', 
+    {{ dbt_utils.generate_surrogate_key(['prep_crm_user.dim_crm_user_hierarchy_sk',
                                  'dim_date.fiscal_year', 
                                  'dim_date.first_day_of_month', 
                                  'sales_qualified_source.dim_sales_qualified_source_id',
                                  'order_type.dim_order_type_id',
                                  'dim_date.date_day'
-                                 ]) }}                                                                                  AS actuals_targets_pk,
+                                 ]) }}                                                                                          AS actuals_targets_pk,
     sfdc_opportunity.dim_crm_opportunity_id,
-    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                       AS dim_sales_qualified_source_id,
-    {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
-    {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                          AS dim_order_type_live_id,
-    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                AS dim_crm_user_hierarchy_sk,
+    
+
+    --Common dimension keys
+    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
+    {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
+    {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                                  AS dim_order_type_live_id,
+    {{ get_keyed_nulls('prep_crm_user.dim_crm_user_hierarchy_sk') }}                                                            AS dim_crm_user_hierarchy_sk,
+    prep_crm_user.crm_user_business_unit,
+    prep_crm_user.crm_user_sales_segment,
+    prep_crm_user.crm_user_geo,
+    prep_crm_user.crm_user_region,
+    prep_crm_user.crm_user_area,
+    prep_crm_user.crm_user_role_name,
+    prep_crm_user.crm_user_role_level_1,
+    prep_crm_user.crm_user_role_level_2,
+    prep_crm_user.crm_user_role_level_3,
+    prep_crm_user.crm_user_role_level_4,
+    prep_crm_user.crm_user_role_level_5,
+    prep_crm_user.crm_user_sales_segment_grouped,
+    prep_crm_user.crm_user_sales_segment_region_grouped,
+    
     sfdc_opportunity.merged_opportunity_id                                                                              AS merged_crm_opportunity_id,
     sfdc_opportunity.dim_crm_account_id,
     sfdc_opportunity.dim_crm_person_id,
@@ -33,12 +51,13 @@
     --attributes
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
     sales_qualified_source.sales_qualified_source_name,
-    order_type.order_type_name,
-    sales_rep_account.crm_user_sales_segment, 
-    sales_rep_account.crm_user_geo, 
-    sales_rep_account.crm_user_region, 
-    sales_rep_account.crm_user_area, 
-    sales_rep_account.crm_user_business_unit,
+    order_type.order_type_name AS order_type,
+    order_type_live.order_type_name AS order_type_live,
+    sfdc_opportunity.order_type_grouped,
+    sfdc_opportunity.stage_name,
+    deal_path.deal_path_name,
+    sfdc_opportunity.sales_type,
+    prep_crm_account.parent_crm_account_industry,
 
     -- dates
     sfdc_opportunity.snapshot_date,
@@ -134,29 +153,12 @@
     sfdc_opportunity.product_details,
     sfdc_opportunity.product_category,
     sfdc_opportunity.intended_product_tier,
-    CASE
-      WHEN LOWER(product_category) LIKE '%premium%'
-          THEN 'Premium'
-      WHEN LOWER(product_category) LIKE '%ultimate%'
-          THEN 'Ultimate'
-      WHEN LOWER(intended_product_tier) LIKE '%premium%'
-          THEN 'Premium'
-      WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
-          THEN 'Ultimate'
-      ELSE 'Other'
-    END AS  product_category_tier,
-
-    CASE
-      WHEN LOWER(product_category) LIKE '%saas%'
-              THEN 'SaaS'
-      WHEN LOWER(product_category) LIKE '%self-managed%'
-              THEN 'Self-Managed'
-      ELSE 'Other'
-    END AS  product_category_deployment,
     sfdc_opportunity.products_purchased,
     sfdc_opportunity.growth_type,
     sfdc_opportunity.opportunity_deal_size,
     sfdc_opportunity.closed_buckets,
+    sfdc_opportunity.calculated_deal_size,
+    sfdc_opportunity.deal_size,
 
     -- channel fields
     sfdc_opportunity.lead_source,
@@ -180,8 +182,6 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
-    sfdc_opportunity.incremental_acv                                                                                      AS iacv,
-    sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
     sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     sfdc_opportunity.calculated_from_ratio_net_arr,
     sfdc_opportunity.net_arr,
@@ -240,15 +240,19 @@
   INNER JOIN dim_date
     ON sfdc_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN prep_crm_account
-  ON sfdc_opportunity.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+    ON sfdc_opportunity.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+      AND sfdc_opportunity.snapshot_id = prep_crm_account.snapshot_id
   LEFT JOIN sales_qualified_source
     ON sfdc_opportunity.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
   LEFT JOIN order_type
     ON sfdc_opportunity.order_type = order_type.order_type_name
   LEFT JOIN order_type AS order_type_live
     ON sfdc_opportunity.order_type_live = order_type_live.order_type_name
-  LEFT JOIN sales_rep AS sales_rep_account
-    ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id 
+  LEFT JOIN prep_crm_user
+    ON sfdc_opportunity.dim_crm_user_id = prep_crm_user.dim_crm_user_id
+      AND sfdc_opportunity.snapshot_id = prep_crm_user.snapshot_id
+  LEFT JOIN deal_path
+    ON sfdc_opportunity.deal_path = deal_path.deal_path_name
   WHERE is_live = 0
 
   {% if is_incremental() %}

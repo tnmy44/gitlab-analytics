@@ -26,7 +26,7 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['namespace_creator_ptpf_score.email_address']) }} AS dim_marketing_contact_id,
+  {{ dbt_utils.generate_surrogate_key(['namespace_creator_ptpf_score.email_address']) }} AS dim_marketing_contact_id,
   namespace_creator_ptpf_score.namespace_id,
   namespace_creator_ptpf_score.score,
   namespace_creator_ptpf_score.insights,

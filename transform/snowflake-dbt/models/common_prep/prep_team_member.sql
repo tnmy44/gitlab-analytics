@@ -47,7 +47,7 @@ team_member_info AS (
   */
 
   SELECT
-    {{ dbt_utils.surrogate_key(['employee_id', 'team_id_current', 'country_current','region_current','employee_type_current']) }}              AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['employee_id', 'team_id_current', 'country_current','region_current','employee_type_current']) }}              AS unique_key,
     employee_id                                                                                                                                AS employee_id,
     team_id_current                                                                                                                            AS team_id,
     country_current                                                                                                                            AS country,
@@ -163,7 +163,7 @@ date_range AS (
 final AS (
 
  SELECT 
-    {{ dbt_utils.surrogate_key(['all_team_members.employee_id'])}}                                          AS dim_team_member_sk,
+    {{ dbt_utils.generate_surrogate_key(['all_team_members.employee_id'])}}                                          AS dim_team_member_sk,
     all_team_members.employee_id                                                                            AS employee_id,
     COALESCE(all_team_members.nationality, 'Unknown Nationality')                                           AS nationality,
     COALESCE(all_team_members.ethnicity, 'Unknown Ethnicity')                                               AS ethnicity,

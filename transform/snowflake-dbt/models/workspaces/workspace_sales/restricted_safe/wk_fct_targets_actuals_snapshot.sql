@@ -28,7 +28,21 @@ combined AS (
     actuals.dim_crm_opportunity_id,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
+    actuals.dim_order_type_live_id,
     actuals.dim_crm_user_hierarchy_sk,
+    actuals.crm_user_business_unit,
+    actuals.crm_user_sales_segment,
+    actuals.crm_user_geo,
+    actuals.crm_user_region,
+    actuals.crm_user_area,
+    actuals.crm_user_role_name,
+    actuals.crm_user_role_level_1,
+    actuals.crm_user_role_level_2,
+    actuals.crm_user_role_level_3,
+    actuals.crm_user_role_level_4,
+    actuals.crm_user_role_level_5,
+    actuals.crm_user_sales_segment_grouped,
+    actuals.crm_user_sales_segment_region_grouped,
     actuals.merged_crm_opportunity_id,
     actuals.dim_crm_account_id,
     actuals.dim_crm_person_id,
@@ -38,16 +52,15 @@ combined AS (
     actuals.technical_evaluation_date_id,
     actuals.ssp_id,
     actuals.ga_client_id,
-
-    --targets attributes
     actuals.report_user_segment_geo_region_area_sqs_ot,
-    actuals.order_type_name,
     actuals.sales_qualified_source_name,
-    actuals.crm_user_sales_segment, 
-    actuals.crm_user_geo, 
-    actuals.crm_user_region, 
-    actuals.crm_user_area, 
-    actuals.crm_user_business_unit,
+    actuals.order_type,
+    actuals.order_type_live,
+    actuals.order_type_grouped,
+    actuals.stage_name,
+    actuals.deal_path_name,
+    actuals.sales_type,
+    actuals.parent_crm_account_industry,
 
     -- snapshot info
     actuals.snapshot_date,
@@ -78,6 +91,7 @@ combined AS (
     actuals.is_renewal,
     actuals.is_deleted,
     actuals.is_excluded_from_pipeline_created_combined,
+    actuals.created_in_snapshot_quarter_deal_count,
     actuals.is_duplicate,
     actuals.is_contract_reset,
     actuals.is_comp_new_logo_override,
@@ -87,18 +101,16 @@ combined AS (
     actuals.is_booked_net_arr,
     actuals.is_abm_tier_sao,
     actuals.is_abm_tier_closed_won,
-
     actuals.primary_solution_architect,
     actuals.product_details,
     actuals.product_category,
     actuals.intended_product_tier,
-    actuals.product_category_tier,
-    actuals.product_category_deployment,
-
     actuals.products_purchased,
     actuals.growth_type,
     actuals.opportunity_deal_size,
     actuals.closed_buckets,
+    actuals.calculated_deal_size,
+    actuals.deal_size,
 
     --channel fields
     actuals.lead_source,
@@ -122,8 +134,6 @@ combined AS (
     actuals.comp_channel_neutral,
 
     --additive fields
-    actuals.iacv,
-    actuals.net_iacv,
     actuals.segment_order_type_iacv_to_net_arr_ratio,
     actuals.calculated_from_ratio_net_arr,
     actuals.net_arr,
@@ -167,7 +177,6 @@ combined AS (
     actuals.override_arr_basis_clari,
     actuals.vsa_start_date_net_arr,
     actuals.cycle_time_in_days_combined,
-    actuals.created_in_snapshot_quarter_deal_count,
 
     --dates
     dim_date.date_day                                               AS snapshot_day,
