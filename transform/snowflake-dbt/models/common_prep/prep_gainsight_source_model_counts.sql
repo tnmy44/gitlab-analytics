@@ -1,4 +1,11 @@
-WITH counts AS (
+WITH filtered_seats AS (
+   
+   SELECT
+     *
+   FROM  {{ ref('customers_db_license_seat_links_source') }}
+   QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, report_date ORDER BY updated_at DESC) = 1
+
+), counts AS (
   
    SELECT 
     'version_raw_usage_data_source' AS model_name,
@@ -38,8 +45,7 @@ WITH counts AS (
    SELECT 
     'customers_db_license_seat_links_source' AS model_name,
     COUNT(*) AS row_count
-   FROM  {{ ref('customers_db_license_seat_links_source') }}
-   QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, report_date ORDER BY updated_at DESC) = 1
+   FROM  filtered_seats
 
 )
 
