@@ -20,7 +20,7 @@ WITH source AS (
       license_user_count::NUMBER         AS license_user_count,
       max_historical_user_count::NUMBER  AS max_historical_user_count
     FROM source  
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY hostname, uuid, report_date ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, hostname, uuid, report_date ORDER BY updated_at DESC) = 1
 
 )
 
