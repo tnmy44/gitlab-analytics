@@ -349,20 +349,21 @@ SELECT
 
     SELECT DISTINCT
       fiscal_year,
-      UPPER(user_segment)       AS user_segment,
-      UPPER(user_geo)           AS user_geo,
-      UPPER(user_region)        AS user_region,
-      UPPER(user_area)          AS user_area,
-      UPPER(user_business_unit) AS user_business_unit,
-      dim_crm_user_hierarchy_sk,
-      UPPER(user_role_name)     AS user_role_name,
-      UPPER(user_role_level_1)  AS user_role_level_1,
-      UPPER(user_role_level_2)  AS user_role_level_2,
-      UPPER(user_role_level_3)  AS user_role_level_3,
-      UPPER(user_role_level_4)  AS user_role_level_4,
-      UPPER(user_role_level_5)  AS user_role_level_5
+      MAX(UPPER(user_segment))       AS user_segment,
+      MAX(UPPER(user_geo))           AS user_geo,
+      MAX(UPPER(user_region))        AS user_region,
+      MAX(UPPER(user_area))          AS user_area,
+      MAX(UPPER(user_business_unit)) AS user_business_unit,
+      dim_crm_user_hierarchy_sk      AS dim_crm_user_hierarchy_sk,
+      MAX(UPPER(user_role_name))     AS user_role_name,
+      MAX(UPPER(user_role_level_1))  AS user_role_level_1,
+      MAX(UPPER(user_role_level_2))  AS user_role_level_2,
+      MAX(UPPER(user_role_level_3))  AS user_role_level_3,
+      MAX(UPPER(user_role_level_4))  AS user_role_level_4,
+      MAX(UPPER(user_role_level_5))  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
+    GROUP BY fiscal_year, dim_crm_user_hierarchy_sk
 
 ), final_unioned AS (
 
