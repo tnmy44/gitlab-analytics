@@ -4,6 +4,7 @@
 {% set end_date = (start_date + modules.datetime.timedelta(days=31)).strftime('%Y-%m-01') %}
 
 {{config({
+    "materialized":"incremental",
     "unique_key":"event_id",
     "cluster_by":['derived_tstamp_date']
   })

@@ -1,4 +1,5 @@
 {{config({
+    "materialized":"incremental",
     "unique_key":"event_id",
     "cluster_by":['event', 'derived_tstamp::DATE']
   })
