@@ -41,9 +41,9 @@ class GoogleDriveClient:
             try:
                 return func(*args, **kwargs)
             except ssl.SSLError as e:
-                print(f"Caught SSL error: {e}")
+                info(f"Caught SSL error: {e}")
                 if retry_request_count < max_retry_request_count - 1:
-                    print(
+                    info(
                         f"Retrying in {wait} seconds, attempt {retry_request_count + 1}/{max_retry_request_count}"
                     )
                     time.sleep(wait)
