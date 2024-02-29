@@ -39,6 +39,7 @@ WITH counts AS (
     'customers_db_license_seat_links_source' AS model_name,
     COUNT(*) AS row_count
    FROM  {{ ref('customers_db_license_seat_links_source') }}
+   QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, report_date ORDER BY updated_at DESC) = 1
 
 )
 

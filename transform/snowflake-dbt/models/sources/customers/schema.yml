@@ -84,29 +84,6 @@ models:
         tests:
           - not_null
 
-  - name: customers_db_license_seat_links_installation_source
-    description: '{{ doc("customers_db_license_seat_links_installation_source") }}' 
-    columns:
-      - name: zuora_subscription_id
-      - name: order_id
-        tags:
-          - tdf
-          - customers_db
-        tests:
-          - not_null
-      - name: report_timestamp
-        tags:
-          - tdf
-          - customers_db
-        tests:
-          - not_null
-      - name: uuid
-        tests:
-          - not_null
-      - name: hostname
-        tests:
-          - not_null
-
   - name: customers_db_licenses_source
     description: This table contains data from licenses in customers portal.
     columns:
