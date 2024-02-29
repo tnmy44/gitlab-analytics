@@ -15,7 +15,7 @@ This model is the data from tap-postgres for the leads table from customers.gitl
 Self-managed EE instances will send seat link information to the customers portal on a daily basis. This information includes a count of active users and a maximum count of users historically in order to assist the true up process.
 
 Because this model limits to the last-updated record per subscription per day, it has been found to be inaccurate for subscriptions that have multiple installations sending seat
-link informaton each day. In this case, it is just a matter of chance on which installation sends it update last on any given day. As a result, the seat information for a given
+link information each day. In this case, it is just a matter of chance on which installation sends its update last on any given day. As a result, the seat information for a given
 subscription can appear to fluctuate wildly from day to day, when in reality it is a result of the timing of when installations send their license data.
 
 {% enddocs %}
