@@ -83,7 +83,7 @@ WITH raw_seat_link AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-02-02",
-    updated_date="2023-12-27"
+    updated_date="2024-02-29"
 ) }}
