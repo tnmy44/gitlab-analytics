@@ -11101,4 +11101,5 @@ users:
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access        
+      - General All Access
+      - General SAFE Access                
