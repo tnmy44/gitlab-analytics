@@ -54,6 +54,7 @@ unioned AS (
     NULL AS ga_client_id,
 
     NULL AS report_user_segment_geo_region_area_sqs_ot,
+    NULL AS opp_owner_name,
     sales_qualified_source_name,
     order_type,
     order_type_live,
@@ -228,6 +229,7 @@ unioned AS (
     current_day_of_month,
     current_day_of_fiscal_quarter,
     current_day_of_fiscal_year,
+    current_week_of_fiscal_quarter_normalised,
 
     NULL AS created_date,
     NULL AS created_month,
@@ -411,7 +413,6 @@ unioned AS (
     created_deal_count_in_snapshot_week,
     closed_net_arr_in_snapshot_week,
     closed_deal_count_in_snapshot_week,
-    closed_new_logo_count_in_snapshot_week,
     closed_cycle_time_in_snapshot_week,
     booked_net_arr_in_snapshot_week,
     pipeline_created_in_snapshot_week,

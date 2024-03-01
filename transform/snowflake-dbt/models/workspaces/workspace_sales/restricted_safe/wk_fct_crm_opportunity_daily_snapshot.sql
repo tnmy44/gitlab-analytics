@@ -50,6 +50,7 @@
 
     --attributes
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
+    prep_crm_user.user_name                                           AS opp_owner_name,
     sales_qualified_source.sales_qualified_source_name,
     order_type.order_type_name AS order_type,
     order_type_live.order_type_name AS order_type_live,

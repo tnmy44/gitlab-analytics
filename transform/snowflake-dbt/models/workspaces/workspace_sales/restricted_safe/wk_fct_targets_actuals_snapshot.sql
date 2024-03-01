@@ -54,6 +54,7 @@ combined AS (
     actuals.ga_client_id,
     actuals.report_user_segment_geo_region_area_sqs_ot,
     actuals.sales_qualified_source_name,
+    actuals.opp_owner_name,
     actuals.order_type,
     actuals.order_type_live,
     actuals.order_type_grouped,
@@ -234,6 +235,8 @@ combined AS (
     dim_date.current_day_of_month                                   AS current_day_of_month,
     dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
     dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
+    FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7)) + 1                    
+                                                                    AS current_week_of_fiscal_quarter_normalised,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
