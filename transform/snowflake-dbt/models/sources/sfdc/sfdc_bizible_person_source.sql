@@ -13,6 +13,7 @@ WITH source AS (
       isdeleted::BOOLEAN              AS is_deleted
       
     FROM source
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY bizible_contact_id ORDER BY lastmodifieddate DESC) = 1
 )
 
 SELECT *
