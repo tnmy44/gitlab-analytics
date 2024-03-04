@@ -100,7 +100,7 @@ SELECT
   snapshot.dim_crm_opportunity_id,
   snapshot.dim_crm_account_id,
   account.crm_account_name                  AS account_name,
-  snapshot.dim_crm_parent_account_id,
+  snapshot.dim_parent_crm_account_id,
   account.parent_crm_account_name,
   live.opportunity_category,
   live.sales_type,
@@ -110,7 +110,7 @@ SELECT
 
   --Account Info
   account.owner_role                        AS account_owner_role,
-  parent_crm_account_territory,
+  account.parent_crm_account_territory,
   live.parent_crm_account_sales_segment,
   live.parent_crm_account_geo,
   live.parent_crm_account_region,
@@ -171,7 +171,7 @@ INNER JOIN snapshot_dates
 LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist AS live
   ON snapshot.dim_crm_opportunity_id = live.dim_crm_opportunity_id
 LEFT JOIN mart_crm_account AS account
-  ON mart_crm_opportunity_daily_snapshot.dim_crm_account_id = account.dim_crm_account_id
+  ON snapshot.dim_crm_account_id = account.dim_crm_account_id
 LEFT JOIN dim_date 
   ON snapshot.pipeline_created_date = dim_date.date_day
 WHERE snapshot_dates.fiscal_quarter_name_fy = snapshot.pipeline_created_fiscal_quarter_name
