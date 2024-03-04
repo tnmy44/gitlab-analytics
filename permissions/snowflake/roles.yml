@@ -3645,10 +3645,8 @@ roles:
             - dev_xs
 
     - dcroft:
-        member_of:
-            - snowflake_analyst
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - ddeng:
         member_of:
@@ -6889,9 +6887,8 @@ users:
             - dcook
 
     - dcroft:
-        can_login: yes
-        member_of:
-            - dcroft
+        can_login: no
+        member_of: [] 
 
     - ddeng:
         can_login: yes
