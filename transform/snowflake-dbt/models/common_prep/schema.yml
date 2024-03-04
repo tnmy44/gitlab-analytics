@@ -2059,9 +2059,6 @@ models:
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
-
-  - name: prep_snowplow_gitlab_events_experiment_contexts_all
-    description: View combining all snowplow_gitlab_events_experiment_contexts partitions.
     
   - name: prep_team_member
     tests:
