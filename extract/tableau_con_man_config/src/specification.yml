@@ -8887,14 +8887,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: rtaira
-    user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
-    auth_setting: SAML
-    groups:
-      - Finance All Access
-      - General All Access
-      - General SAFE Access
   - user_name: rtran
     user_name_domain: gitlab.com
     site_role: Viewer
