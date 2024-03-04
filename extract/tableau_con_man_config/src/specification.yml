@@ -8684,15 +8684,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: rhueston
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM Restricted Access
-      - General All Access
-      - General SAFE Access
-      - Sales All Access
   - user_name: rjackson
     user_name_domain: gitlab.com
     site_role: Viewer
