@@ -185,7 +185,7 @@ combined_models AS (
   --IDs
     opportunity_snapshot_base.dim_crm_opportunity_id,
     opportunity_snapshot_base.dim_crm_account_id,
-    opportunity_snapshot_base.dim_crm_ultimate_parent_account_id,
+    opportunity_snapshot_base.dim_parent_crm_account_id,
     attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id,
 
   --Dates
@@ -330,7 +330,7 @@ combined_models AS (
  --IDs
     opportunity_snapshot_base.dim_crm_opportunity_id,
     opportunity_snapshot_base.dim_crm_account_id,
-    opportunity_snapshot_base.dim_crm_ultimate_parent_account_id,
+    opportunity_snapshot_base.dim_parent_crm_account_id,
     NULL AS dim_crm_touchpoint_id,
 
   --Dates
