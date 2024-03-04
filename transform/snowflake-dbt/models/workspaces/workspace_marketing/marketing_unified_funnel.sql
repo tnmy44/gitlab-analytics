@@ -485,8 +485,7 @@
                 first_paid_subscription_start_date <= day_45_of_trial 
                 -- ensure the paid sub IS after the trial
                 AND first_paid_subscription_start_date >= trial_start_date 
-                THEN ultimate_parent_namespace_id END)
-            COUNT(DISTINCT ultimate_parent_namespace_id)   AS metric_value
+                THEN ultimate_parent_namespace_id END)     AS metric_value
     FROM namespaces_on_day_45_of_trial
     WHERE metric_time >= '2022-01-01'  
         AND creator_is_valuable_signup
