@@ -157,9 +157,9 @@ SELECT
   live.is_refund,
   live.is_credit                            AS is_credit_flag,
   --    is_eligible_sao_flag,
-  live.is_eligible_open_pipeline,
-  live.is_booked_net_arr,
-  live.is_eligible_age_analysis,
+  live.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
+  live.is_booked_net_arr AS is_booked_net_arr_flag,
+  live.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
 
   --Metrics
   snapshot.net_arr                          AS opp_net_arr
