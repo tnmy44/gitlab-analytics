@@ -1,5 +1,5 @@
 {{ simple_cte([
-      ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy'),
+      ('dim_crm_user_hierarchy', 'wk_dim_crm_user_hierarchy'),
       ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
       ('dim_order_type', 'dim_order_type'),
       ('daily_targets', 'wk_fct_sales_funnel_target_daily')
@@ -26,7 +26,7 @@ SELECT
     daily_targets.dim_crm_user_hierarchy_sk,
     daily_targets.fiscal_quarter_name,
     dim_sales_qualified_source.sales_qualified_source_name,
-    dim_order_type.order_type,
+    dim_order_type.order_type_name AS order_type,
     dim_order_type.order_type_grouped,
     dim_crm_user_hierarchy.crm_user_business_unit,
     dim_crm_user_hierarchy.crm_user_sales_segment,
@@ -45,11 +45,11 @@ SELECT
     daily_targets.qtd_allocated_target
 FROM daily_targets
 LEFT JOIN dim_sales_qualified_source
-    ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
+    ON daily_targets.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
 LEFT JOIN dim_order_type
-    ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
+    ON daily_targets.dim_order_type_id = dim_order_type.dim_order_type_id
 LEFT JOIN dim_crm_user_hierarchy
-    ON fct_sales_funnel_target.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+    ON daily_targets.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
 LEFT JOIN quarterly_targets 
     ON daily_targets.fiscal_quarter_name = quarterly_targets.fiscal_quarter_name
         AND daily_targets.dim_order_type_id = quarterly_targets.dim_order_type_id
