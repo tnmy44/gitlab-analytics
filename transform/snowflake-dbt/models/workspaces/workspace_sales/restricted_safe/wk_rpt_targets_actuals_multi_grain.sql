@@ -62,7 +62,6 @@ unioned AS (
     stage_name,
     deal_path_name,
     sales_type,
-    parent_crm_account_industry,
 
     snapshot_date,
 
@@ -111,6 +110,7 @@ unioned AS (
     NULL AS closed_buckets,
     calculated_deal_size,
     deal_size,
+    NULL AS opportunity_name,
     NULL AS lead_source,
     NULL AS dr_partner_deal_type,
     NULL AS dr_partner_engagement,

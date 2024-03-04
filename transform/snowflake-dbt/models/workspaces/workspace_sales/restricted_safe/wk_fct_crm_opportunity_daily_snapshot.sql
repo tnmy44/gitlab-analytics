@@ -49,6 +49,7 @@
     sfdc_opportunity.record_type_id,
 
     --attributes
+    sfdc_opportunity.opportunity_name,
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
     prep_crm_user.user_name                                           AS opp_owner_name,
     sales_qualified_source.sales_qualified_source_name,
@@ -58,7 +59,6 @@
     sfdc_opportunity.stage_name,
     deal_path.deal_path_name,
     sfdc_opportunity.sales_type,
-    prep_crm_account.parent_crm_account_industry,
 
     -- dates
     sfdc_opportunity.snapshot_date,

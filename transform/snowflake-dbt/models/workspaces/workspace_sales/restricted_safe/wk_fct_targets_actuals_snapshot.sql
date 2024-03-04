@@ -61,7 +61,6 @@ combined AS (
     actuals.stage_name,
     actuals.deal_path_name,
     actuals.sales_type,
-    actuals.parent_crm_account_industry,
 
     -- snapshot info
     actuals.snapshot_date,
@@ -113,7 +112,8 @@ combined AS (
     actuals.calculated_deal_size,
     actuals.deal_size,
 
-    --channel fields
+    -- fields
+    actuals.opportunity_name,
     actuals.lead_source,
     actuals.dr_partner_deal_type,
     actuals.dr_partner_engagement,
