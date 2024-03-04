@@ -3645,10 +3645,8 @@ roles:
             - dev_xs
 
     - dcroft:
-        member_of:
-            - snowflake_analyst
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - ddeng:
         member_of:
@@ -6007,11 +6005,8 @@ roles:
         warehouses: []
 
     - rtaira:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - rwoo:
         member_of: []
@@ -6889,9 +6884,8 @@ users:
             - dcook
 
     - dcroft:
-        can_login: yes
-        member_of:
-            - dcroft
+        can_login: no
+        member_of: [] 
 
     - ddeng:
         can_login: yes
@@ -7572,9 +7566,8 @@ users:
         member_of: []
 
     - rtaira:
-        can_login: yes
-        member_of:
-            - rtaira
+        can_login: no
+        member_of: []
 
     - rwoo:
         can_login: no
