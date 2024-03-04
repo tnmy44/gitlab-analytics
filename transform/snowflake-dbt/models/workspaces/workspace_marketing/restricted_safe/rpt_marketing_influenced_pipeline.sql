@@ -201,7 +201,7 @@ combined_models AS (
     opportunity_snapshot_base.close_fiscal_quarter_name,
     attribution_touchpoint_snapshot_base.bizible_touchpoint_date,
     attribution_touchpoint_snapshot_base.touchpoint_snapshot_date,
-    opportunity_snapshot_base.opportunity_snapshot_date,WK_SALES_SFDC_OPPORTUNITY_SNAPSHOT_HISTORY_XF_BASE
+    opportunity_snapshot_base.opportunity_snapshot_date,
   
   --Account Info
     opportunity_snapshot_base.account_owner_role,
