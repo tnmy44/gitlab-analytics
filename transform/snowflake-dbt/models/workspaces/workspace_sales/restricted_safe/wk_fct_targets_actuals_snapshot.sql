@@ -235,7 +235,7 @@ combined AS (
     dim_date.current_day_of_month                                   AS current_day_of_month,
     dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
     dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
-    FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7)) + 1                    
+    FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7))                   
                                                                     AS current_week_of_fiscal_quarter_normalised,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
