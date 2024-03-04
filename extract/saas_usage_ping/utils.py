@@ -99,7 +99,10 @@ class Utils:
 
     # Map table which are renamed on the source side
 
-    RENAMED_TABLE_MAPPING = {"p_ci_builds": "ci_builds"}
+    RENAMED_TABLE_MAPPING = {
+        "p_ci_builds": "ci_builds",
+        "p_ci_job_artifacts": "ci_job_artifacts",
+    }
 
     def __init__(self):
         config_dict = env.copy()
