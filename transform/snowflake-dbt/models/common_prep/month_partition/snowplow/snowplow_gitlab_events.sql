@@ -199,6 +199,11 @@ WITH filtered_source as (
         AND IFF(event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
             , FALSE
             , TRUE)
+    {% if is_incremental() %}
+
+      AND derived_tstamp > (SELECT MAX(behavior_at) FROM {{this}})
+
+    {% endif %}
 
 )
 

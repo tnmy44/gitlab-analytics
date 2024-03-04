@@ -29,6 +29,11 @@ WITH filtered_source as (
     WHERE TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
       AND derived_tstamp >= '{{ start_date }}'
       AND derived_tstamp < '{{ end_date }}'
+    {% if is_incremental() %}
+
+      AND derived_tstamp > (SELECT MAX(behavior_at) FROM {{this}})
+
+    {% endif %}
 )
 
 , base AS (

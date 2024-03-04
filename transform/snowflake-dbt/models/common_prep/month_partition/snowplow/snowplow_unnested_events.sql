@@ -20,3 +20,8 @@ WITH gitlab as (
 SELECT *
 FROM gitlab
 WHERE event_id NOT IN (SELECT event_id FROM events_to_ignore)
+{% if is_incremental() %}
+
+  AND derived_tstamp > (SELECT MAX(behavior_at) FROM {{this}})
+
+{% endif %}
