@@ -10018,12 +10018,6 @@ users:
       - General SAFE Access
       - Go To Market Project Lead
       - Team Member Project Lead
-  - user_name: vbajura
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: vbell
     user_name_domain: gitlab.com
     site_role: Viewer
