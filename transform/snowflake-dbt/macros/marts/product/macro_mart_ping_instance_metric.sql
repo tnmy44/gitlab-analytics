@@ -1,15 +1,31 @@
 {% macro macro_mart_ping_instance_metric(model_name1) %}
 
+{{ config(
+    materialized = "incremental",
+    unique_key = "ping_instance_metric_id"
+) }}
+
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('dim_ping_instance', 'dim_ping_instance'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric'),
     ('dim_app_release_major_minor', 'dim_app_release_major_minor'),
+    ('subscriptions', 'dim_subscription'),
     ('license_subscriptions','prep_license_subscription')
     ])
 
 }},
+
+{% if is_incremental() %}
+updated_subscriptions AS (
+  SELECT
+    dim_subscription_id
+  FROM subscriptions
+  QUALIFY MAX(subscription_updated_date) OVER (PARTITION BY dim_subscription_id_original) > (SELECT MAX(subscription_checked_at) FROM {{ this }} )
+),
+
+{% endif %}
 
 bdg_license_instance AS (
   SELECT DISTINCT
@@ -47,6 +63,10 @@ fct_ping_instance_metric AS (
   SELECT *
   FROM {{ ref(model_name1) }}
   WHERE IS_REAL(TO_VARIANT(metric_value))
+  {% if is_incremental() %}
+  AND (uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }})
+  OR dim_subscription_id IN (SELECT * FROM updated_subscriptions) )
+  {% endif %}
 
 ),
 
@@ -131,7 +151,9 @@ joined AS (
     dim_ping_instance.is_last_ping_of_week                                                                     AS is_last_ping_of_week,
     fct_ping_instance_metric.dim_location_country_id                                                           AS dim_location_country_id,
     dim_location.country_name                                                                                  AS country_name,
-    dim_location.iso_2_country_code                                                                            AS iso_2_country_code
+    dim_location.iso_2_country_code                                                                            AS iso_2_country_code,
+    fct_ping_instance_metric.uploaded_at,
+    CURRENT_TIMESTAMP() AS subscription_checked_at
   FROM fct_ping_instance_metric
   LEFT JOIN dim_ping_metric
     ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
@@ -193,6 +215,7 @@ sorted AS (
     is_staging,
     is_trial,
     umau_value,
+    uploaded_at,
 
     -- metadata metrics
 
@@ -216,6 +239,7 @@ sorted AS (
     product_rate_plan_name_array,
     is_paid_subscription,
     is_program_subscription,
+    subscription_checked_at,
 
     -- account metadata
     crm_account_name,
