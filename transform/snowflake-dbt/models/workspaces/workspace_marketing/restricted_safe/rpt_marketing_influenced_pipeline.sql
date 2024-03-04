@@ -201,7 +201,7 @@ combined_models AS (
     opportunity_snapshot_base.close_fiscal_quarter_name,
     attribution_touchpoint_snapshot_base.bizible_touchpoint_date,
     attribution_touchpoint_snapshot_base.touchpoint_snapshot_date,
-    opportunity_snapshot_base.opportunity_snapshot_date,
+    opportunity_snapshot_base.opportunity_snapshot_date,WK_SALES_SFDC_OPPORTUNITY_SNAPSHOT_HISTORY_XF_BASE
   
   --Account Info
     opportunity_snapshot_base.account_owner_role,
@@ -305,7 +305,7 @@ combined_models AS (
     opportunity_snapshot_base.is_booked_net_arr_flag,
     opportunity_snapshot_base.is_eligible_age_analysis_flag
     
-  FROM wk_sales_sfdc_opportunity_snapshot_history_xf_base
+  FROM opportunity_snapshot_base
   LEFT JOIN attribution_touchpoint_snapshot_base
     ON opportunity_snapshot_base.dim_crm_opportunity_id = attribution_touchpoint_snapshot_base.dim_crm_opportunity_id
     AND opportunity_snapshot_base.opportunity_snapshot_date = attribution_touchpoint_snapshot_base.touchpoint_snapshot_date
@@ -434,7 +434,7 @@ combined_models AS (
 
     FROM missing_net_arr_difference
     INNER JOIN
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base ON missing_net_arr_difference.dim_crm_opportunity_id = opportunity_snapshot_base.dim_crm_opportunity_id 
+    opportunity_snapshot_base ON missing_net_arr_difference.dim_crm_opportunity_id = opportunity_snapshot_base.dim_crm_opportunity_id 
     AND missing_net_arr_difference.pipeline_created_fiscal_quarter_name = opportunity_snapshot_base.pipeline_created_fiscal_quarter_name
 
 ), final AS (
