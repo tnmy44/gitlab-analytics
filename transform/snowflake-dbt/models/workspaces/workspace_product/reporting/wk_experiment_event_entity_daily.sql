@@ -6,9 +6,8 @@
 {{ simple_cte([
     ('fct_behavior_structured_event_experiment','fct_behavior_structured_event_experiment'),
     ('dim_behavior_event', 'dim_behavior_event'),
-	('snowplow_unnested_events_all_staging', 'snowplow_unnested_events_all_staging'),
-	('prep_snowplow_gitlab_events_experiment_contexts_all', 'prep_snowplow_gitlab_events_experiment_contexts_all'),
-	('dim_namespace', 'dim_namespace')
+    ('snowplow_unnested_events_all_staging', 'snowplow_unnested_events_all_staging'),
+    ('dim_namespace', 'dim_namespace')
     ])
 }},
 
@@ -42,11 +41,11 @@ experiment_events AS
 
     
     SELECT -- Staging events
-      experiment.experiment_name,
+      stag.experiment_name,
       IFF(stag.app_id IN ('gitlab','gitlab_customers'), 'production', 'staging')                     
                                                                AS dev_environment,
       stag.app_id,
-      experiment.experiment_variant,
+      stag.experiment_variant,
       stag.event_action,
       stag.event_property,
       stag.event_label,
@@ -55,12 +54,11 @@ experiment_events AS
       stag.gsc_pseudonymized_user_id,
       stag.user_snowplow_domain_id,
       stag.gsc_namespace_id,
-      experiment.context_key AS experiment_context_key,
+      stag.experiment_context_key,
       stag.behavior_at
     FROM snowplow_unnested_events_all_staging AS stag 
-    INNER JOIN prep_snowplow_gitlab_events_experiment_contexts_all experiment 
-      ON experiment.event_id = stag.event_id
     WHERE stag.has_gitlab_experiment_context = TRUE 
+      AND stag.event = 'struct'
       AND stag.event_name = 'event'
       AND stag.behavior_at::DATE BETWEEN DATEADD(YEAR,-1,CURRENT_DATE()) and CURRENT_DATE() -- events triggered in the past 1 year for query efficiency
 
@@ -85,7 +83,7 @@ experiment_events AS
       event_property,
       event_category,
       COUNT(DISTINCT gsc_pseudonymized_user_id) 
-	                                          AS count_daily_gsc_pseudonymized_user_id,
+	                                            AS count_daily_gsc_pseudonymized_user_id,
       COUNT(DISTINCT user_snowplow_domain_id) AS count_daily_user_snowplow_domain_id,
       COUNT(DISTINCT event_id)                AS count_daily_events
     FROM experiment_events
@@ -98,7 +96,7 @@ experiment_events AS
 	{{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2023-10-23",
-    updated_date="2024-02-12"
+    updated_date="2024-03-04"
 ) }}
