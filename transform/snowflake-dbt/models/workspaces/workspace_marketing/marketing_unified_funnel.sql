@@ -152,8 +152,8 @@
         AND ga360_session.visit_start_time >= '2022-01-01'  
         AND LOWER(ga360_session_hit.hit_type) LIKE 'event'
         AND ga360_session_hit.host_name IN ('about.gitlab.com')
-        AND LOWER(h.event_category) IN ('cta click')
-        AND LOWER(h.event_action) NOT LIKE 'in-line'
+        AND LOWER(ga360_session_hit.event_category) IN ('cta click')
+        AND LOWER(ga360_session_hit.event_action) NOT LIKE 'in-line'
         AND (ga360_session_hit.custom_dimensions:"Click URL" LIKE '%about.gitlab.com/sales/%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trials/new%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trial_registrations/new%'
