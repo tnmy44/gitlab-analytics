@@ -3,18 +3,36 @@ WITH source AS (
     SELECT *
     FROM {{ source('salesforce', 'bizible_person') }}
 
-), renamed AS (
+), deduped AS (
+
+    SELECT 
+      base.id                              AS person_id,
+      CASE
+        WHEN base.bizible2__lead__c IS NULL THEN contact.bizible2__lead__c
+        ELSE base.bizible2__lead__c
+      END                                  AS bizible_lead_id,
+      base.bizible2__lead__c               AS base_lead_id,
+      contact.bizible2__lead__c            AS contact_lead_id,
+      base.bizible2__contact__c            AS bizible_contact_id,
+      base.isdeleted::BOOLEAN              AS is_deleted
+    FROM RAW.SALESFORCE_V2_STITCH.BIZIBLE2__BIZIBLE_PERSON__C base
+    LEFT JOIN RAW.SALESFORCE_V2_STITCH.BIZIBLE2__BIZIBLE_PERSON__C contact
+        ON base.bizible2__contact__c=contact.bizible2__contact__c
+    WHERE is_deleted = 'FALSE' 
+    QUALIFY (ROW_NUMBER() OVER(PARTITION BY bizible_contact_id ORDER BY base.lastmodifieddate DESC, base.createddate DESC) = 1
+        OR ROW_NUMBER() OVER(PARTITION BY bizible_lead_id ORDER BY base.lastmodifieddate DESC, base.createddate DESC) = 1 )
+
+), final AS (
 
     SELECT
-      id                              AS person_id,
-      bizible2__lead__c               AS bizible_lead_id,
-      bizible2__contact__c            AS bizible_contact_id,
+      person_id,
+      bizible_lead_id,
+      bizible_contact_id,
 
-      isdeleted::BOOLEAN              AS is_deleted
+      is_deleted
       
-    FROM source
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY bizible_contact_id ORDER BY lastmodifieddate DESC) = 1
+    FROM deduped
 )
 
 SELECT *
-FROM renamed
+FROM final
