@@ -4,7 +4,7 @@
 
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
-    ('wk_sales_sfdc_opportunity_snapshot_history_xf','wk_sales_sfdc_opportunity_snapshot_history_xf'),
+    ('mart_crm_opportunity_daily_snapshot','mart_crm_opportunity_daily_snapshot'),
     ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
     ('mart_crm_account','mart_crm_account'),
     ('sfdc_bizible_attribution_touchpoint_snapshots_source', 'sfdc_bizible_attribution_touchpoint_snapshots_source'),
@@ -96,6 +96,87 @@
 
 , wk_sales_sfdc_opportunity_snapshot_history_xf_base AS (
 
+  SELECT 
+    snapshot.dim_crm_opportunity_id,
+    snapshot.dim_crm_account_id,
+    account.crm_account_name AS account_name,
+    snapshot.dim_crm_parent_account_id,
+    account.parent_crm_account_name,
+    live.opportunity_category,
+    live.sales_type,
+    live.order_type,
+    live.sales_qualified_source_name,
+    snapshot.stage_name,
+
+--Account Info
+    account.owner_role as account_owner_role,
+    parent_crm_account_territory,
+    live.parent_crm_account_sales_segment,
+    live.parent_crm_account_geo,
+    live.parent_crm_account_region,
+    live.parent_crm_account_area,
+    live.opportunity_owner_role,
+
+--Dates 
+    snapshot.created_date,
+    snapshot.sales_accepted_date,
+    snapshot.pipeline_created_date,
+    snapshot.pipeline_created_fiscal_quarter_name,
+    snapshot.pipeline_created_fiscal_year,
+    snapshot.net_arr_created_date,
+    snapshot.close_date,
+    snapshot.close_fiscal_quarter_name,
+    snapshot.snapshot_date AS opportunity_snapshot_date,
+--    dim_date.day_of_fiscal_quarter_normalised as pipeline_created_day_of_fiscal_quarter_normalised,
+--    dim_date.day_of_fiscal_year_normalised as pipeline_created_day_of_fiscal_year_normalised,
+
+--User Hierarchy
+    snapshot.report_opportunity_user_segment as snapshot_report_opportunity_user_segment,
+    live.report_opportunity_user_segment,
+    snapshot.report_opportunity_user_geo as snapshot_report_opportunity_user_segment,
+    live.report_opportunity_user_geo,
+    snapshot.report_opportunity_user_region as snapshot_report_opportunity_user_region,
+    live.report_opportunity_user_region,
+    snapshot.report_opportunity_user_area as snapshot_report_opportunity_user_area,
+    live.report_opportunity_user_area,
+--    report_opportunity_user_business_unit,
+--    report_opportunity_user_sub_business_unit,
+--    report_opportunity_user_division,
+--    report_opportunity_user_asm,
+
+--Flags
+    live.is_sao,
+    live.is_won,
+    live.is_web_portal_purchase,
+    live.is_edu_oss,
+    live.is_net_arr_pipeline_created AS is_eligible_created_pipeline_flag,
+    live.is_open,
+    live.is_lost,
+    live.is_closed,
+    live.is_renewal,
+    live.is_refund,
+    live.is_credit AS is_credit_flag,
+--    is_eligible_sao_flag,
+    live.is_eligible_open_pipeline,
+    live.is_booked_net_arr,
+    live.is_eligible_age_analysis,
+
+--Metrics
+    snapshot.net_arr AS opp_net_arr
+
+FROM 
+mart_crm_opportunity_daily_snapshot snapshot 
+LEFT JOIN 
+mart_crm_opportunity_stamped_hierarchy_hist live ON snapshot.dim_crm_opportunity_id = live.dim_crm_opportunity_id
+LEFT JOIN 
+mart_crm_account account 
+ON mart_crm_opportunity_daily_snapshot.dim_crm_account_id = account.dim_crm_account_id 
+where opportunity_snapshot_date = '2023-03-01'
+
+
+
+  /* 
+
   SELECT
     wk_sales_sfdc_opportunity_snapshot_history_xf.opportunity_id AS dim_crm_opportunity_id,
     wk_sales_sfdc_opportunity_snapshot_history_xf.account_id AS dim_crm_account_id,
@@ -163,7 +244,7 @@
 --Metrics
     wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr AS opp_net_arr
 
-  FROM wk_sales_sfdc_opportunity_snapshot_history_xf
+  FROM wk_sales_sfdc_opportunity_snapshot_history_xf */
   INNER JOIN snapshot_dates ON wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date = snapshot_dates.date_day
   LEFT JOIN dim_date on wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_date = dim_date.date_day 
   WHERE snapshot_dates.fiscal_quarter_name_fy = pipeline_created_fiscal_quarter_name
