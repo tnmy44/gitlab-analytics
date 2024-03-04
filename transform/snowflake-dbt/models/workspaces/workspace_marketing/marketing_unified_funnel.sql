@@ -429,7 +429,7 @@
     SELECT
         DATE_TRUNC('month', day_14_of_trial)         AS metric_time,
         '14_day_activation_rate'                     AS metric_name,
-        NULL                                         AS channel_GROUP ing,
+        NULL                                         AS channel_grouping,
         COUNT(DISTINCT CASE WHEN has_team_activation THEN ultimate_parent_namespace_id END)
             / COUNT(DISTINCT ultimate_parent_namespace_id) AS metric_value
     FROM day_14_active_trials_rate
