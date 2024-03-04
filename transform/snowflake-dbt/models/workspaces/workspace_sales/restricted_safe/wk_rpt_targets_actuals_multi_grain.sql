@@ -15,7 +15,7 @@ aggregate_data AS (
 targets AS (
 
   SELECT * 
-  FROM {{ ref('wk_mart_sales_funnel_target_quarterly')}}
+  FROM {{ ref('wk_rpt_net_arr_targets_quarterly')}}
 
 ),
 
