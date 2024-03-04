@@ -99,7 +99,7 @@
     GROUP BY 1,2,3
 
 -- engaged_sessions, could pull FROM the a seperate SELECT but thIS woks AS well
-), engaged_sessiON AS (
+), engaged_session AS (
 
     SELECT 
         DATE_TRUNC('month', ga360_session.visit_start_time)              AS metric_time,
@@ -233,7 +233,7 @@
         AND page_view_sign_in.visitor_id IS NULL
     GROUP BY 1,2,3
 
--- snowplow FROM here down
+-- snowplow from here down
 
 ), trials_base AS (
 
@@ -390,7 +390,7 @@
     GROUP BY 1,2,3
 
 -- SaAS new User
-),  user_welcome_page AS ( 
+), user_welcome_page AS ( 
     --welcome page can come after standard or SSO steps, so including requirement for all users in subsequent steps to view users/sign_up Page prior to, but ON the same day as subsequent steps. 
 
    SELECT DISTINCT
@@ -537,7 +537,7 @@
         AND creator_is_valuable_signup
     GROUP BY 1,2,3
 
-), final_uniON AS (
+), final_union AS (
 
     SELECT *
     FROM site_sessions
@@ -620,8 +620,8 @@
 
 {{ dbt_audit(
     cte_ref="final",
-    created_BY ="@rkohnke",
-    updated_BY ="@rkohnke",
+    created_by ="@rkohnke",
+    updated_by ="@rkohnke",
     created_date="2024-03-01",
     updated_date="2024-03-01",
   ) }}
