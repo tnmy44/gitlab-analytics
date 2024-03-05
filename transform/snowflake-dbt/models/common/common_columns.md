@@ -1534,42 +1534,6 @@ Host/Domain information
 
 {% enddocs %}
 
-{% docs gsc_pseudonymized_user_id %}
-
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
-
-- The event occurred before `2021-09-29` (when the collection of this data started)
-- A user is not logged in
-- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
-- It is an unstructured event
-- The event is not associated with a user (some backend events)
-
-{% enddocs %}
-
-{% docs gsc_google_analytics_client_id %}
-
-Google Analytics ID, present when set from our marketing sites.
-
-{% enddocs %}
-
-{% docs gsc_extra %}
-
-Any additional data associated with the event, in the form of key-value pairs.
-
-{% enddocs %}
-
-{% docs gsc_plan %}
-
-Name of the plan for the namespace, such as free, premium, or ultimate. Automatically picked from the namespace.
-
-{% enddocs %}
-
-{% docs gsc_source %}
-
-Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
-
-{% enddocs %}
-
 {% docs dim_behavior_operating_system_sk %}
 
 Surrogate key consisting of os_name and os_timezone, easily JOINed to dim_behavior_operating_system. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `os_name` and `os_timezone`.
@@ -2650,5 +2614,558 @@ The date the milestone is set to end.
 {% docs milestone_status %}
 
 A status indicating if the milestone is `Active` or `Closed`.
+
+{% enddocs %}
+
+{% docs gitlab_standard_context %}
+
+Standard fields added to Snowplow events by GitLab as defined in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_standard/jsonschema)
+
+{% enddocs %}
+
+{% docs gitlab_standard_context_schema %}
+
+Schema version of the Snowplow event for events with the [GitLab Standard Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_standard/jsonschema).
+
+{% enddocs %}
+
+{% docs has_gitlab_standard_context %}
+
+Flag indicating the Snowplow event includes fields from the [GitLab Standard Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_standard/jsonschema).
+
+{% enddocs %}
+
+{% docs gsc_environment %}
+
+Name of the source environment, such as `production` or `staging.
+
+{% enddocs %}
+
+{% docs gsc_extra %}
+
+Any additional data associated with the event, in the form of key-value pairs.
+
+{% enddocs %}
+
+{% docs gsc_namespace_id %}
+
+ID of the namespace associated with the Snowplow event.
+
+{% enddocs %}
+
+{% docs gsc_plan %}
+
+Name of the plan, such as  `free`, `bronze`, `silver`, `premium`, `gold` or `ultimate` sent on the Snowplow event.
+
+{% enddocs %}
+
+{% docs gsc_google_analytics_id %}
+
+Google Analytics ID from the marketing site
+
+{% enddocs %}
+
+{% docs gsc_google_analytics_client_id %}
+
+Google Analytics Client ID calculated from the Google Analytics ID from the marketing site
+
+{% enddocs %}
+
+{% docs gsc_project_id %}
+
+ID of the project associated with the Snowplow event
+
+{% enddocs %}
+
+{% docs gsc_pseudonymized_user_id %}
+
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+
+- The event occurred before `2021-09-29` (when the collection of this data started)
+- A user is not logged in
+- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
+- It is an unstructured event
+- The event is not associated with a user (some backend events)
+
+{% enddocs %}
+
+{% docs gsc_source %}
+
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
+
+{% enddocs %}
+
+{% docs gsc_is_gitlab_team_member %}
+
+Indicates if the Snowplow event was triggered by a GitLab team member
+
+{% enddocs %}
+
+{% docs web_page_context %}
+
+Web page fields added to Snowplow as defined in the [schema](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0)
+
+{% enddocs %}
+
+{% docs web_page_context_schema %}
+
+Schema version of the Snowplow event for events with the [Web Page Context](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0).
+
+{% enddocs %}
+
+{% docs has_web_page_context %}
+
+Flag indicating the Snowplow event includes fields from the [Web Page Context](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0).
+
+{% enddocs %}
+
+{% docs web_page_id %}
+
+Web page id provided by Snowplow event.
+
+{% enddocs %}
+
+{% docs gitlab_experiment_context %}
+
+Experiment fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_experiment/jsonschema).
+
+{% enddocs %}
+
+{% docs gitlab_experiment_context_schema %}
+
+Schema version of the Snowplow event for events with the [GitLab Experiment Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_experiment/jsonschema).
+
+{% enddocs %}
+
+{% docs has_gitlab_experiment_context %}
+
+Flag indicating the Snowplow event includes fields from the [GitLab Experiment Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_experiment/jsonschema).
+
+{% enddocs %}
+
+{% docs experiment_name %}
+
+The name of the experiment.
+
+{% enddocs %}
+
+{% docs experiment_context_key %}
+
+Context key, as generated from the experiment context.
+
+{% enddocs %}
+
+{% docs experiment_variant %}
+
+Variant determined to use for the context key.
+
+{% enddocs %}
+
+{% docs experiment_migration_keys %}
+
+Previous context key, as generated from experiment context.
+
+{% enddocs %}
+
+{% docs code_suggestions_context %}
+
+Code Suggestion fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+
+{% enddocs %}
+
+{% docs code_suggestions_context_schema %}
+
+Schema version of the Snowplow event for events with the [Code Suggestions Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+
+{% enddocs %}
+
+{% docs has_code_suggestions_context %}
+
+Flag indicating the Snowplow event includes fields from the [Code Suggestions Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+
+{% enddocs %}
+
+{% docs model_engine %}
+
+Model engine used for the completions.
+
+{% enddocs %}
+
+{% docs model_name %}
+
+Model name used for the completions.
+
+{% enddocs %}
+
+{% docs prefix_length %}
+
+Length of the prefix in characters.
+
+{% enddocs %}
+
+{% docs suffix_length %}
+
+Length of the suffix in characters.
+
+{% enddocs %}
+
+{% docs language %}
+
+Programming language of the completions request.
+
+{% enddocs %}
+
+{% docs user_agent %}
+
+User-agent string of the request (holds information about the origin of the request).
+
+{% enddocs %}
+
+{% docs delivery_type %}
+
+Buckets Code Suggestions Snowplow events into `SaaS` or `Self-Managed` delivery type based on `gitlab_realm`.
+
+{% enddocs %}
+
+{% docs api_status_code %}
+
+HTTP status code of GitLab API.
+
+{% enddocs %}
+
+{% docs duo_namespace_ids %}
+
+List of the namespace IDs that the user has a Duo Pro Add-Onn provisioned from (available GitLab.com only).
+
+{% enddocs %}
+
+{% docs saas_namespace_ids %}
+
+List of the namespace IDs that the user has a Code Suggestions subscription in SaaS for.
+
+{% enddocs %}
+
+{% docs namespace_ids %}
+
+Coalesced list of namespace ids from `duo_namespace_ids` and `saas_namespace_ids` to create a complete list of namespaces that provide access to Code Suggestions/Duo Pro.
+
+{% enddocs %}
+
+{% docs instance_id %}
+
+ID of the GitLab instance where the request comes from.
+
+{% enddocs %}
+
+{% docs ide_extension_version_context %}
+
+IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+
+{% enddocs %}
+
+{% docs ide_extension_version_context_schema %}
+
+Schema version of the Snowplow event for events with the [IDE Extension Version Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+
+{% enddocs %}
+
+{% docs has_ide_extension_version_context %}
+
+Flag indicating the Snowplow event includes fields from the [IDE Extension Version Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema.
+
+{% enddocs %}
+
+{% docs extension_name %}
+
+Name of the IDE extension, e.g. GitLab Workflow.
+
+{% enddocs %}
+
+{% docs extension_version %}
+
+Version number of the IDE extension, e.g. 3.81.1.
+
+{% enddocs %}
+
+{% docs ide_name %}
+
+Name of the IDE, e.g. RubyMibe.
+
+{% enddocs %}
+
+{% docs ide_vendor %}
+
+Name of the IDEs vendor, e.g. Microsoft.
+
+{% enddocs %}
+
+{% docs ide_version %}
+
+Version number of the IDE, e.g. 1.81.1.
+
+{% enddocs %}
+
+{% docs language_server_version %}
+
+Version number of the Language Server, e.g. 3.9.0.
+
+{% enddocs %}
+
+{% docs gitlab_service_ping_context %}
+
+Service Ping fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema).
+
+{% enddocs %}
+
+{% docs gitlab_service_ping_context_schema %}
+
+Schema version of the Snowplow event for events with the [GitLab Service Ping Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema).
+
+{% enddocs %}
+
+{% docs has_gitlab_service_ping_context %}
+
+Flag indicating the Snowplow event includes fields from the [GitLab Service Ping Context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema).
+
+{% enddocs %}
+
+{% docs redis_event_name %}
+
+Name of the redis event (for Redis HLL/unique metrics) or the redis key (for Redis/total metrics).
+
+{% enddocs %}
+
+{% docs key_path %}
+
+`key_path` attribute from metrics YAML definition. This is a legacy field and is combined with `data_source` to get full coverage on metrics.
+
+{% enddocs %}
+
+{% docs data_source %}
+
+`data_source` attribute from metrics YAML definition.
+
+{% enddocs %}
+
+{% docs performance_timing_context %}
+
+Performance Timing fields added to Snowplow as defined in the [schema](https://github.com/snowplow/iglu-central/blob/master/schemas/org.w3/PerformanceTiming/jsonschema/1-0-0). 
+
+Definitions for these attributes can be found [here](https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface).
+
+{% enddocs %}
+
+{% docs performance_timing_context_schema %}
+
+Schema version of the Snowplow event for events with the [Performance Timing Context](https://github.com/snowplow/iglu-central/blob/master/schemas/org.w3/PerformanceTiming/jsonschema/1-0-0).
+
+Definitions for these attributes can be found [here](https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface).
+
+{% enddocs %}
+
+{% docs has_performance_timing_context %}
+
+Flag indicating the Snowplow event includes fields from the [Performance Timing Context](https://github.com/snowplow/iglu-central/blob/master/schemas/org.w3/PerformanceTiming/jsonschema/1-0-0).
+
+{% enddocs %}
+
+{% docs connect_end %}
+
+This attribute must return the time immediately after the user agent finishes establishing the connection to the server to retrieve the current document. If a persistent connection is used or the current document is retrieved from relevant application caches or local resources, this attribute must return the value of domainLookupEnd
+
+If the transport connection fails and the user agent reopens a connection, connectStart and connectEnd should return the corresponding values of the new connection.
+
+`connect_end` must include the time interval to establish the transport connection as well as other time interval such as SSL handshake and SOCKS authentication.
+
+{% enddocs %}
+
+{% docs connect_start %}
+
+This attribute must return the time immediately before the user agent start establishing the connection to the server to retrieve the document. If a persistent connection is used or the current document is retrieved from relevant application caches or local resources, this attribute must return value of domainLookupEnd.
+
+{% enddocs %}
+
+{% docs dom_complete %}
+
+This attribute must return the time immediately before the user agent sets the current document readiness to "complete".
+
+If the current document readiness changes to the same state multiple times, `dom_loading`, `dom_interactive`, `dom_content_loaded_event_start`, `dom_content_loaded_event_end` and `dom_complete` must return the time of the first occurrence of the corresponding document readiness change.
+
+{% enddocs %}
+
+{% docs dom_content_loaded_event_end %}
+
+This attribute must return the time immediately after the document's `dom_content_loaded` event completes.
+
+{% enddocs %}
+
+{% docs dom_content_loaded_event_start %}
+
+This attribute must return the time immediately before the user agent fires the `dom_content_loaded` event at the Document.
+
+{% enddocs %}
+
+{% docs dom_interactive %}
+
+This attribute must return the time immediately before the user agent sets the current document readiness to "interactive".
+
+{% enddocs %}
+
+{% docs dom_loading %}
+
+This attribute must return the time immediately before the user agent sets the current document readiness to "loading".
+
+{% enddocs %}
+
+{% docs domain_lookup_end %}
+
+This attribute must return the time immediately after the user agent finishes the domain name lookup for the current document. If a persistent connection is used or the current document is retrieved from relevant application caches or local resources, this attribute must return the same value as `fetch_start`.
+
+{% enddocs %}
+
+{% docs domain_lookup_start %}
+
+This attribute must return the time immediately before the user agent starts the domain name lookup for the current document. If a persistent connection is used or the current document is retrieved from relevant application caches or local resources, this attribute must return the same value as `fetch_start`.
+
+{% enddocs %}
+
+{% docs fetch_start %}
+
+If the new resource is to be fetched using HTTP GET or equivalent, `fetch_start` must return the time immediately before the user agent starts checking any relevant application caches. Otherwise, it must return the time when the user agent starts fetching the resource.
+
+{% enddocs %}
+
+{% docs load_event_end %}
+
+This attribute must return the time when the load event of the current document is completed. It must return zero when the load event is not fired or is not completed.
+
+{% enddocs %}
+
+{% docs load_event_start %}
+
+This attribute must return the time immediately before the load event of the current document is fired. It must return zero when the load event is not fired yet.
+
+{% enddocs %}
+
+{% docs navigation_start %}
+
+This attribute must return the time immediately after the user agent finishes prompting to unload the previous document. If there is no previous document, this attribute must return the same value as `fetch_start`.
+
+{% enddocs %}
+
+{% docs redirect_end %}
+
+If there are HTTP redirects or equivalent when navigating and all redirects and equivalents are from the same origin, this attribute must return the time immediately after receiving the last byte of the response of the last redirect. Otherwise, this attribute must return zero.
+
+{% enddocs %}
+
+{% docs redirect_start %}
+
+If there are HTTP redirects or equivalent when navigating and if all the redirects or equivalent are from the same origin, this attribute must return the starting time of the fetch that initiates the redirect. Otherwise, this attribute must return zero.
+
+{% enddocs %}
+
+{% docs request_start %}
+
+This attribute must return the time immediately before the user agent starts requesting the current document from the server, or from relevant application caches or from local resources.
+
+If the transport connection fails after a request is sent and the user agent reopens a connection and resend the request, `request_start` should return the corresponding values of the new request.
+
+This interface does not include an attribute to represent the completion of sending the request, e.g., `request_end`.
+
+Completion of sending the request from the user agent does not always indicate the corresponding completion time in the network transport, which brings most of the benefit of having such an attribute.
+Some user agents have high cost to determine the actual completion time of sending the request due to the HTTP layer encapsulation.
+
+{% enddocs %}
+
+{% docs response_end %}
+
+This attribute must return the time immediately after the user agent receives the last byte of the current document or immediately before the transport connection is closed, whichever comes first. The document here can be received either from the server, relevant application caches or from local resources.
+
+{% enddocs %}
+
+{% docs response_start %}
+
+This attribute must return the time immediately after the user agent receives the first byte of the response from the server, or from relevant application caches or from local resources.
+
+{% enddocs %}
+
+{% docs secure_connection_start %}
+
+If the scheme of the current page is HTTPS, this attribute must return the time immediately before the user agent starts the handshake process to secure the current connection. If this attribute is available but HTTPS is not used, this attribute must return zero.
+
+{% enddocs %}
+
+{% docs unload_event_end %}
+
+If the previous document and the current document have the same same origin, this attribute must return the time immediately after the user agent finishes the unload event of the previous document. If there is no previous document or the previous document has a different origin than the current document or the unload is not yet completed, this attribute must return zero.
+
+If there are HTTP redirects or equivalent when navigating and not all the redirects or equivalent are from the same origin, both `unload_event_start` and `unload_event_end` must return the zero.
+
+{% enddocs %}
+
+{% docs unload_event_start %}
+
+If the previous document and the current document have the same origin, this attribute must return the time immediately before the user agent starts the unload event of the previous document. If there is no previous document or the previous document has a different origin than the current document, this attribute must return zero.
+
+{% enddocs %}
+
+{% docs code_suggestions_ultimate_parent_namespace_ids %}
+
+All ultimate parent namespace ids mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_subscription_names %}
+
+All subscriptions mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_dim_crm_account_ids %}
+
+All CRM account ids mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_crm_account_names %}
+
+All CRM account names mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_dim_installation_ids %}
+
+All installation ids mapped to the instance id associated with the Code Suggestion event.
+
+{% enddocs %}
+
+{% docs code_suggestions_dim_crm_account_id %}
+
+If only one `dim_crm_account_id` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_subscription_name %}
+
+If only one `subscription_name` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_crm_account_name %}
+
+If only one `crm_account_name` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_dim_installation_id %}
+
+If only one `dim_installation_id` can be mapped to the Code Suggestion event through the instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_installation_host_name %}
+
+If only one `host_name` can be mapped to the Code Suggestion event through the instance id, then it is listed here.
 
 {% enddocs %}
