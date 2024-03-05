@@ -15,6 +15,7 @@ WITH source AS (
       contact.bizible2__lead__c            AS contact_lead_id,
       base.bizible2__contact__c            AS bizible_contact_id,
       base.isdeleted::BOOLEAN              AS is_deleted
+      
     FROM source AS base
     LEFT JOIN source AS contact
         ON base.bizible2__contact__c = contact.bizible2__contact__c
@@ -28,7 +29,6 @@ WITH source AS (
       person_id,
       bizible_lead_id,
       bizible_contact_id,
-
       is_deleted
       
     FROM deduped
