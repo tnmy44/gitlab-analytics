@@ -6,6 +6,7 @@
 {{ 
     simple_cte([
     ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
+    ('namespaces_hist', 'gitlab_dotcom_namespace_lineage_scd'),
     ('dim_behavior_event', 'dim_behavior_event')
     ])
 }}
@@ -22,6 +23,7 @@
       fct_behavior_structured_event.dim_behavior_browser_sk,
       fct_behavior_structured_event.dim_behavior_operating_system_sk,
       fct_behavior_structured_event.dim_namespace_id,
+      namespaces_hist.ultimate_parent_id                              AS ultimate_parent_namespace_id,
       fct_behavior_structured_event.dim_project_id,
       fct_behavior_structured_event.dim_behavior_event_sk,
 
@@ -36,6 +38,7 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
+      dim_behavior_event.event_action,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       fct_behavior_structured_event.gsc_google_analytics_client_id,
@@ -49,6 +52,8 @@
     FROM fct_behavior_structured_event
     INNER JOIN dim_behavior_event
       ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
+    LEFT JOIN namespaces_hist ON namespaces_hist.namespace_id = fct_behavior_structured_event.dim_namespace_id
+      AND fct_behavior_structured_event.behavior_at BETWEEN namespaces_hist.lineage_valid_from AND namespaces_hist.lineage_valid_to
     WHERE dim_behavior_event.event_action IN (
     'g_analytics_valuestream',
     'action_active_users_project_repo',
@@ -72,5 +77,5 @@
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-01-25"
+    updated_date="2024-03-05"
 ) }}
