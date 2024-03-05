@@ -174,8 +174,8 @@ LEFT JOIN mart_crm_account AS account
   ON snapshot.dim_crm_account_id = account.dim_crm_account_id
 LEFT JOIN dim_date 
   ON snapshot.pipeline_created_date = dim_date.date_day
-WHERE snapshot_dates.fiscal_quarter_name_fy = snapshot.pipeline_created_fiscal_quarter_name
-
+WHERE snapshot_dates.fiscal_quarter_name_fy = snapshot.pipeline_created_fiscal_quarter_name 
+  AND snapshot.dim_crm_account_id != '0014M00001kGcORQA0'  -- test account
 ), 
 
 
