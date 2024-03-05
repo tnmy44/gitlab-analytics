@@ -8424,6 +8424,13 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: pthote
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
   - user_name: pwietchner
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -9690,6 +9697,12 @@ users:
   - user_name: syarynovskyi
     user_name_domain: gitlab.com
     site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: syao
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
