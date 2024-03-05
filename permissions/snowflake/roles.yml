@@ -1196,6 +1196,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+            - entitlement
         privileges:
             databases:
                 read:
