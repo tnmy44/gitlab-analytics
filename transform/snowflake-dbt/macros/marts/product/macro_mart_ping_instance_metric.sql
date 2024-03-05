@@ -25,6 +25,13 @@ updated_subscriptions AS (
   QUALIFY MAX(subscription_updated_date) OVER (PARTITION BY dim_subscription_id_original) > (SELECT MAX(subscription_checked_at) FROM {{ this }} )
 ),
 
+updated_ping_instance AS (
+  SELECT 
+    dim_ping_instance_id
+  FROM dim_ping_instance
+  WHERE last_ping_change_at > (SELECT MAX(subscription_checked_at) FROM {{ this }} )
+),
+
 {% endif %}
 
 bdg_license_instance AS (
@@ -65,7 +72,9 @@ fct_ping_instance_metric AS (
   WHERE IS_REAL(TO_VARIANT(metric_value))
   {% if is_incremental() %}
   AND (uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }})
-  OR dim_subscription_id IN (SELECT * FROM updated_subscriptions) )
+  OR dim_subscription_id IN (SELECT * FROM updated_subscriptions) 
+  OR dim_ping_instance_id  IN (SELECT * FROM updated_ping_instance)
+  )
   {% endif %}
 
 ),
