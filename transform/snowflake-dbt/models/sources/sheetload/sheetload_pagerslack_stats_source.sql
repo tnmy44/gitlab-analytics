@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload','pagerslack_stats') }}
+    FROM {{ source('sheetload','pagerslack_stats') }}
 
 ),renamed AS (
 
