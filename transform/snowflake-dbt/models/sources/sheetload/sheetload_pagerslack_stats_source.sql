@@ -6,6 +6,7 @@ WITH source AS (
 ),renamed AS (
 
     SELECT
+        --raw extract
         attempts::NUMBER                AS attempts,
         weekend_pinged::BOOLEAN         AS weekend_pinged,
         unavailable::BOOLEAN            AS unavailable,
@@ -14,6 +15,7 @@ WITH source AS (
         reported_at::TIMESTAMP          AS reported_at,
         time_to_response::NUMBER        AS time_to_response,
         time_at_response::TIMESTAMP     AS time_at_response,
+        --calculations for tableau
         1                               AS escalations,
         CASE
             WHEN date_part('hour', time_at_response::TIMESTAMP) > 0
