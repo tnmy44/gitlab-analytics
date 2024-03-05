@@ -13,7 +13,7 @@ WITH source AS (
         incident_url::VARCHAR           AS incident_url,
         reported_by::VARCHAR            AS reported_by,
         reported_at::TIMESTAMP          AS reported_at,
-        time_to_response::NUMBER        AS time_to_response,
+        time_to_response::FLOAT         AS time_to_response,
         time_at_response::TIMESTAMP     AS time_at_response,
         --calculations for tableau
         1                               AS escalations,
@@ -26,7 +26,7 @@ WITH source AS (
             THEN 'EMEA'
             ELSE 'AMER'
         END                             AS timezone,
-        time_to_response::NUMBER/60000  AS minutes_to_response,
+        time_to_response::FLOAT/60000   AS minutes_to_response,
         iff(unavailable::BOOLEAN=True, 'Response', 'No response')
                                         AS response_type_copy,
         iff(unavailable::BOOLEAN=True, 'Escalated', 'Bot')
