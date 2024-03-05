@@ -6166,6 +6166,12 @@ roles:
                     - skhan_prep.*.*
                     - skhan_prod.*.*
 
+    - sliaquat:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - smccormack:
         member_of:
             - analyst_people
@@ -7607,6 +7613,11 @@ users:
         can_login: yes
         member_of:
             - skhan
+
+    - sliaquat:
+        can_login: yes
+        member_of:
+            - sliaquat
 
     - smccormack:
         can_login: yes
