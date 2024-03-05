@@ -219,7 +219,7 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}        AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       live_date.date_actual                                                                                 AS snapshot_date,
       live_date.first_day_of_month                                                                          AS snapshot_month,
@@ -1292,7 +1292,7 @@ LEFT JOIN cw_base
                     )
         WHEN close_fiscal_year >= 2025
           THEN CONCAT(
-                      UPPER(sfdc_opportunity.opportunity_owner_role),
+                      UPPER(COALESCE(sfdc_opportunity.crm_opp_owner_role_stamped, sfdc_opportunity.opportunity_owner_role)),
                       '-',
                       close_fiscal_year
                       ) 
