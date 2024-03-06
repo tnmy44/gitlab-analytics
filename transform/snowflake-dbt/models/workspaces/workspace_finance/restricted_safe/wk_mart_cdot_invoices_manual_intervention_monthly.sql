@@ -1,8 +1,7 @@
 {{ config(
     materialized="table",
     tags=["mnpi"]
-) 
-}}
+) }}
 
 WITH cdot_created_invoices  AS (
 
