@@ -502,6 +502,30 @@ specify_dbt_parameters:
 
 
 # ======
+# Tableau Model Check
+# ======
+
+.tableau_direct_dependencies_query: &tableau_direct_dependencies_query
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  tags:
+    - analytics
+  only:
+    changes:
+      - "transform/snowflake-dbt/models/**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: true
+
+🔍tableau_direct_dependencies_query:
+  <<: *tableau_direct_dependencies_query
+  script:
+    - git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD --name-only | grep -iEo "(.*)\.sql" | sed -E 's/\.sql//' | awk -F '/' '{print tolower($NF)}' | sort | uniq > diff.txt
+    - touch comparison.txt
+    - python3 transform/tableau_dependency_query/tableau_query.py
+    - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these!" && cat comparison.txt && exit 1; else echo "All good, no dependencies found" && exit 0; fi;
+
+# ======
 # Lint dbt SQL
 # ======
 .dbt_sql_lint: &dbt_sql_lint
