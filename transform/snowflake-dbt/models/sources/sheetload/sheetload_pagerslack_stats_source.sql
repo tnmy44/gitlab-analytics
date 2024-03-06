@@ -14,7 +14,7 @@ WITH source AS (
         reported_at::TIMESTAMP          AS reported_at,
         time_to_response::FLOAT         AS time_to_response,
         time_at_response::TIMESTAMP     AS time_at_response
-
+    FROM source
 )
 
 SELECT *
