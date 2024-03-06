@@ -25,9 +25,9 @@ SELECT DISTINCT
 DATE(DATE_TRUNC('month', invoice_date)) AS invoice_month,
 dim_invoice.dim_invoice_id
 FROM {{ ref('dim_invoice') }}
-LEFT JOIN {{ref(‘wk_finance_fct_invoice_item_adjustment’)}} ON wk_finance_fct_invoice_item_adjustment.invoice_id = dim_invoice.dim_invoice_id
-LEFT JOIN {{ref(‘wk_finance_fct_credit_balance_adjustment’)}} ON wk_finance_fct_credit_balance_adjustment.invoice_id = dim_invoice.dim_invoice_id
-LEFT JOIN {{ref(‘wk_finance_fct_refund_invoice_payment’)}} ON wk_finance_fct_refund_invoice_payment.invoice_id = dim_invoice.dim_invoice_id
+LEFT JOIN {{ref('wk_finance_fct_invoice_item_adjustment')}} ON wk_finance_fct_invoice_item_adjustment.invoice_id = dim_invoice.dim_invoice_id
+LEFT JOIN {{ref('wk_finance_fct_credit_balance_adjustment')}} ON wk_finance_fct_credit_balance_adjustment.invoice_id = dim_invoice.dim_invoice_id
+LEFT JOIN {{ref('wk_finance_fct_refund_invoice_payment')}} ON wk_finance_fct_refund_invoice_payment.invoice_id = dim_invoice.dim_invoice_id
 WHERE dim_invoice.status = 'Posted'
 AND wk_finance_fct_invoice_item_adjustment.invoice_id IS NULL
 AND wk_finance_fct_credit_balance_adjustment.invoice_id IS NULL
