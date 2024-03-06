@@ -28,7 +28,7 @@ models:
               where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         - not_null
 
-  - name: fct_behavior_structured_event_ide_extension_version
+  - name: wk_fct_behavior_structured_event_ide_extension_version
     description: Derived fact table that parses out the [ide_extension_version context](https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/256#contexts) based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) which can optionally be sent with an event.
     columns:
       - name: behavior_structured_event_pk
@@ -43,17 +43,17 @@ models:
       - name: ide_extension_version_context
         description: '{{ doc("ide_extension_version_context") }}'
       - name: extension_name
-        description: '{{ doc("ide_extension_name") }}'
+        description: '{{ doc("extension_name") }}'
       - name: extension_version
-        description: '{{ doc("ide_extension_version") }}'
+        description: '{{ doc("extension_version") }}'
       - name: ide_name
-        description: '{{ doc("ide_extension_ide_name") }}'
+        description: '{{ doc("ide_name") }}'
       - name: ide_vendor
-        description: '{{ doc("ide_extension_ide_vendor") }}'
+        description: '{{ doc("ide_vendor") }}'
       - name: ide_version
-        description: '{{ doc("ide_extension_ide_version") }}'
+        description: '{{ doc("ide_version") }}'
       - name: language_server_version
-        description: '{{ doc("ide_extension_language_server_version") }}'
+        description: '{{ doc("language_server_version") }}'
 
   - name: fct_behavior_structured_event_code_suggestions_context
     description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
@@ -70,24 +70,24 @@ models:
       - name: code_suggestions_context
         description: '{{ doc("code_suggestions_context") }}'
       - name: model_engine
-        description: '{{ doc("code_suggestions_model_engine") }}'
+        description: '{{ doc("model_engine") }}'
       - name: model_name
-        description: '{{ doc("code_suggestions_model_name") }}'
+        description: '{{ doc("model_name") }}'
       - name: prefix_length
-        description: '{{ doc("code_suggestions_prefix_length") }}'
+        description: '{{ doc("prefix_length") }}'
       - name: suffix_length
-        description: '{{ doc("code_suggestions_suffix_length") }}'
+        description: '{{ doc("suffix_length") }}'
       - name: language
-        description: '{{ doc("code_suggestions_language") }}'
+        description: '{{ doc("language") }}'
       - name: user_agent
-        description: '{{ doc("code_suggestions_user_agent") }}'
+        description: '{{ doc("user_agent") }}'
       - name: delivery_type
         description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`.'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
       - name: api_status_code
-        description: '{{ doc("code_suggestions_api_status_code") }}'
+        description: '{{ doc("api_status_code") }}'
       - name: namespace_ids
         description: List of the namespace IDs that the user has a Code Suggestions subscription in SaaS for
       - name: ultimate_parent_namespace_ids
@@ -148,36 +148,36 @@ models:
       - name: event_label
         description: '{{ doc("event_label") }} On Code Suggestions events, this field is the unique identifier for the suggestion and can be used to join across events. This suggestion identifier is present on events from `app_id = gitlab_ide_extension`, but not `app_id = gitlab_ai_gateway`.'
       - name: language
-        description: '{{ doc("code_suggestions_language") }}'
+        description: '{{ doc("language") }}'
       - name: delivery_type
         description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`.'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
       - name: model_engine
-        description: '{{ doc("code_suggestions_model_engine") }}'
+        description: '{{ doc("model_engine") }}'
       - name: model_name
-        description: '{{ doc("code_suggestions_model_name") }}'
+        description: '{{ doc("model_name") }}'
       - name: prefix_length
-        description: '{{ doc("code_suggestions_prefix_length") }}'
+        description: '{{ doc("prefix_length") }}'
       - name: suffix_length
-        description: '{{ doc("code_suggestions_suffix_length") }}'
+        description: '{{ doc("suffix_length") }}'
       - name: user_agent
-        description: '{{ doc("code_suggestions_user_agent") }}'
+        description: '{{ doc("user_agent") }}'
       - name: api_status_code
-        description: '{{ doc("code_suggestions_api_status_code") }}'
+        description: '{{ doc("api_status_code") }}'
       - name: extension_name
-        description: '{{ doc("ide_extension_name") }}'
+        description: '{{ doc("extension_name") }}'
       - name: extension_version
-        description: '{{ doc("ide_extension_version") }}'
+        description: '{{ doc("extension_version") }}'
       - name: ide_name
-        description: '{{ doc("ide_extension_ide_name") }}'
+        description: '{{ doc("ide_name") }}'
       - name: ide_vendor
-        description: '{{ doc("ide_extension_ide_vendor") }}'
+        description: '{{ doc("ide_vendor") }}'
       - name: ide_version
-        description: '{{ doc("ide_extension_ide_version") }}'
+        description: '{{ doc("ide_version") }}'
       - name: language_server_version
-        description: '{{ doc("ide_extension_language_server_version") }}'
+        description: '{{ doc("language_server_version") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
       - name: code_suggestions_context

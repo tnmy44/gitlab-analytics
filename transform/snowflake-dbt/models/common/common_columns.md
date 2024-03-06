@@ -1769,30 +1769,6 @@ Fragment aka anchor. Ex. For gitlab.com/projects/new#blank_project, the page_url
 
 {% enddocs %}
 
-{% docs experiment_name %}
-
-The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
-
-{% enddocs %}
-
-{% docs experiment_variant %}
-
-Experiment group (control/candidate) to which the event belongs to. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
-
-{% enddocs %}
-
-{% docs context_key %}
-
-The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
-
-{% enddocs %}
-
-{% docs experiment_migration_keys %}
-
-This column may contain a list of migration keys.
-
-{% enddocs %}
-
 {% docs gs_first_value_date %}
 
 Date when the account reached 10% of license utiliztion. The goal is to reach this within 30 days.
@@ -2375,108 +2351,6 @@ Year To Date allocated target.
 
 {% enddocs %}
 
-{% docs code_suggestions_context %}
-
-Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
-
-{% enddocs %}
-
-{% docs code_suggestions_model_engine %}
-
-Model engine used for the completions. Appears in the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_model_name %}
-
-Model name used for the completions. Appears in the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_prefix_length %}
-
-Length of the prefix in characters. Appears in the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_suffix_length %}
-
-Length of the suffix in characters. Appears in the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_language %}
-
-Programming language of the completions request. Appears in the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_user_agent %}
-
-Do not use this field. It is not reliable and is going to be removed from the `code_suggestions_context`
-
-{% enddocs %}
-
-{% docs code_suggestions_api_status_code %}
-
-HTTP status code of GitLab API
-
-{% enddocs %}
-
-{% docs ide_extension_version_context %}
-
-Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
-
-{% enddocs %}
-
-{% docs ide_extension_name %}
-
-Name of the IDE extension, e.g. GitLab Workflow. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs ide_extension_version %}
-
-Version number of the IDE extension, e.g. 3.81.1. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs ide_extension_ide_name %}
-
-Name of the IDE, e.g. RubyMibe. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs ide_extension_ide_vendor %}
-
-Name of the IDEs vendor, e.g. Microsoft. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs ide_extension_ide_version %}
-
-Version number of the IDE, e.g. 1.81.1. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs ide_extension_language_server_version %}
-
-Version number of the Language Server, e.g. 3.9.0. Appears in the `ide_extension_version` context
-
-{% enddocs %}
-
-{% docs has_code_suggestions_context %}
-
-A flag to indicate if the event has additional information in the context field related to `code_suggestions_context`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
-
-{% enddocs %}
-
-{% docs has_ide_extension_version_context %}
-
-A flag to indicate if the event has additional information in the context field related to `ide_extension_version`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema)
-
-{% enddocs %}
-
 {% docs dim_cloud_activation_sk %}
 
 The surrogate key of `prep_cloud_activation` model. Currently identified by hashing the `cloud_activation_id` field that is being sourced from customers portal at gitlab.com.
@@ -2745,25 +2619,25 @@ Flag indicating the Snowplow event includes fields from the [GitLab Experiment C
 
 {% docs experiment_name %}
 
-The name of the experiment.
-
-{% enddocs %}
-
-{% docs experiment_context_key %}
-
-Context key, as generated from the experiment context.
+The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
 
 {% enddocs %}
 
 {% docs experiment_variant %}
 
-Variant determined to use for the context key.
+Experiment group (control/candidate) to which the event belongs to. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs experiment_context_key %}
+
+The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
 
 {% enddocs %}
 
 {% docs experiment_migration_keys %}
 
-Previous context key, as generated from experiment context.
+This column may contain a list of migration keys.
 
 {% enddocs %}
 
@@ -2818,12 +2692,6 @@ Programming language of the completions request.
 {% docs user_agent %}
 
 User-agent string of the request (holds information about the origin of the request).
-
-{% enddocs %}
-
-{% docs delivery_type %}
-
-Buckets Code Suggestions Snowplow events into `SaaS` or `Self-Managed` delivery type based on `gitlab_realm`.
 
 {% enddocs %}
 
@@ -2935,13 +2803,13 @@ Name of the redis event (for Redis HLL/unique metrics) or the redis key (for Red
 
 {% enddocs %}
 
-{% docs key_path %}
+{% docs service_ping_key_path %}
 
 `key_path` attribute from metrics YAML definition. This is a legacy field and is combined with `data_source` to get full coverage on metrics.
 
 {% enddocs %}
 
-{% docs data_source %}
+{% docs service_ping_data_source %}
 
 `data_source` attribute from metrics YAML definition.
 
@@ -3128,9 +2996,27 @@ All CRM account ids mapped to the list of namespace ids that granted the user ac
 
 {% enddocs %}
 
+{% docs code_suggestions_dim_parent_crm_account_ids %}
+
+All ultimate parent CRM account ids mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
 {% docs code_suggestions_crm_account_names %}
 
 All CRM account names mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_parent_crm_account_names %}
+
+All ultimate parent CRM account names mapped to the list of namespace ids that granted the user access to Code Suggestions for this event.
+
+{% enddocs %}
+
+{% docs code_suggestions_host_names %}
+
+All host names mapped to the instance id associated with the Code Suggestion event.
 
 {% enddocs %}
 
@@ -3143,6 +3029,12 @@ All installation ids mapped to the instance id associated with the Code Suggesti
 {% docs code_suggestions_dim_crm_account_id %}
 
 If only one `dim_crm_account_id` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_dim_parent_crm_account_id %}
+
+If only one `dim_parent_crm_account_id` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
 
 {% enddocs %}
 
@@ -3167,5 +3059,17 @@ If only one `dim_installation_id` can be mapped to the Code Suggestion event thr
 {% docs code_suggestions_installation_host_name %}
 
 If only one `host_name` can be mapped to the Code Suggestion event through the instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_ultimate_parent_namespace_id %}
+
+If only one ultimate parent namespace id can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
+{% docs code_suggestions_namespace_is_internal %}
+
+Flag indicates if any namespace associated with the Code Suggestion is internal. Since a Code Suggestion can permissioned at the user-level, it has a 1:many relationship with namespaces, so the event can be associated with multiple namespace IDs. We look at all possible associations to verify if the event is internal.
 
 {% enddocs %}

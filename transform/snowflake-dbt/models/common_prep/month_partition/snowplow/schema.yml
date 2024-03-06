@@ -50,7 +50,6 @@ models:
           description: ' {{ doc("behavior_structured_event_pk") }} '
         - name: derived_tstamp_date
           description: ' {{ doc("behavior_date") }} '
-          description: 
         - name: gitlab_standard_context
           description: ' {{ doc("gitlab_standard_context") }} '
         - name: gitlab_standard_context_schema
@@ -118,7 +117,9 @@ models:
         - name: user_agent
           description: ' {{ doc("user_agent") }} '
         - name: delivery_type
-          description: ' {{ doc("delivery_type") }} '
+          description: '{{ doc("product_delivery_type") }}'
+          accepted_values:
+            values: ['Self-Managed', 'SaaS']
         - name: api_status_code
           description: ' {{ doc("api_status_code") }} '
         - name: duo_namespace_ids
@@ -158,9 +159,9 @@ models:
         - name: redis_event_name
           description: ' {{ doc("redis_event_name") }} '
         - name: key_path
-          description: ' {{ doc("key_path") }} '
+          description: ' {{ doc("service_ping_key_path") }} '
         - name: data_source
-          description: ' {{ doc("data_source") }} '
+          description: ' {{ doc("service_ping_data_source") }} '
         - name: performance_timing_context
           description: ' {{ doc("performance_timing_context") }} '
         - name: performance_timing_context_schema

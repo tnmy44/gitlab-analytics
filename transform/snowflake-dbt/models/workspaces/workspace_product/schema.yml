@@ -124,32 +124,32 @@ models:
           - not_null
           - unique
       - name: language
-        description: '{{ doc("code_suggestions_language") }}'
+        description: '{{ doc("language") }}'
       - name: delivery_type
         description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`.'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
       - name: model_engine
-        description: '{{ doc("code_suggestions_model_engine") }}'
+        description: '{{ doc("model_engine") }}'
       - name: model_name
-        description: '{{ doc("code_suggestions_model_name") }}'
+        description: '{{ doc("model_name") }}'
       - name: prefix_length
-        description: '{{ doc("code_suggestions_prefix_length") }}'
+        description: '{{ doc("prefix_length") }}'
       - name: suffix_length
-        description: '{{ doc("code_suggestions_suffix_length") }}'
+        description: '{{ doc("suffix_length") }}'
       - name: extension_name
-        description: '{{ doc("ide_extension_name") }}'
+        description: '{{ doc("extension_name") }}'
       - name: extension_version
-        description: '{{ doc("ide_extension_version") }}'
+        description: '{{ doc("extension_version") }}'
       - name: ide_name
-        description: '{{ doc("ide_extension_ide_name") }}'
+        description: '{{ doc("ide_name") }}'
       - name: ide_vendor
-        description: '{{ doc("ide_extension_ide_vendor") }}'
+        description: '{{ doc("ide_vendor") }}'
       - name: ide_version
-        description: '{{ doc("ide_extension_ide_version") }}'
+        description: '{{ doc("ide_version") }}'
       - name: language_server_version
-        description: '{{ doc("ide_extension_language_server_version") }}'
+        description: '{{ doc("language_server_version") }}'
       - name: requested_at
         description: Timestamp of the `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend.
       - name: loaded_at
