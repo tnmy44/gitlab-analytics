@@ -38,8 +38,8 @@ final_cdot_invoices_manual_intervention_monthly AS (
 
 SELECT
 cdot_created_invoices.invoice_month,
-count(cdot_created_invoices.dim_invoice_id) AS count_all_cdot_invoices,
-count(cdot_created_invoices.dim_invoice_id) - count(m.dim_invoice_id) AS count_cdot_modified_invoices,
+COUNT(cdot_created_invoices.dim_invoice_id) AS count_all_cdot_invoices,
+COUNT(cdot_created_invoices.dim_invoice_id) - COUNT(m.dim_invoice_id) AS count_cdot_modified_invoices,
 ROUND((( count_cdot_modified_invoices / count_all_cdot_invoices) * 100),2) AS percentage_manually_modified_cdot_invoices 
 FROM cdot_created_invoices  
 LEFT JOIN manually_modified_invoices ON manually_modified_invoices.dim_invoice_id = cdot_created_invoices.dim_invoice_id
