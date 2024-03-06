@@ -18,6 +18,8 @@
     dim_crm_account_id,
     dim_crm_opportunity_id,
     net_arr,
+    xdr_net_arr_stage_1,
+    xdr_net_arr_stage_3,
     sales_accepted_date AS sales_accepted_date,
     sales_accepted_fiscal_quarter_name,
     dim_date.day_of_fiscal_quarter AS sao_day_of_fiscal_quarter,
@@ -216,6 +218,7 @@
     ON sales_dev_opps.dim_crm_account_id = activity_summarised.dim_crm_account_id 
       AND activity_summarised.activity_date <= sales_dev_opps.sales_accepted_date 
       AND sales_dev_opps.sdr_bdr_user_id = activity_summarised.dim_crm_user_id
+
 ), opps_missing_link AS (
 
   SELECT * 
@@ -265,6 +268,8 @@
     opp_to_lead.dim_crm_opportunity_id,
     opp_to_lead.sdr_bdr_user_id,
     opp_to_lead.net_arr,
+    opp_to_lead.xdr_net_arr_stage_1,
+    opp_to_lead.xdr_net_arr_stage_3,
     opp_to_lead.sales_accepted_date,
     opp_to_lead.sales_accepted_fiscal_quarter_name,
     opp_to_lead.sao_day_of_fiscal_quarter,
@@ -353,6 +358,8 @@
     opps_missing_link.dim_crm_opportunity_id,
     opps_missing_link.sdr_bdr_user_id,
     opps_missing_link.net_arr,
+    opps_missing_link.xdr_net_arr_stage_1,
+    opps_missing_link.xdr_net_arr_stage_3,
     opps_missing_link.sales_accepted_date,
     opps_missing_link.sales_accepted_fiscal_quarter_name,
     opps_missing_link.sao_day_of_fiscal_quarter,
@@ -408,7 +415,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-12-08",
+    updated_date="2024-03-06",
   ) }}

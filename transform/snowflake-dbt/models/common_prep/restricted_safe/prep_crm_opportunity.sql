@@ -125,6 +125,8 @@
       sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                                   AS sales_accepted_date,
       sfdc_opportunity_snapshots_source.close_date::DATE                                                            AS close_date,
       sfdc_opportunity_snapshots_source.net_arr                                                                     AS raw_net_arr,
+      sfdc_opportunity_snapshots_source.xdr_net_arr_stage_1,
+      sfdc_opportunity_snapshots_source.xdr_net_arr_stage_3,
       {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
       snapshot_dates.date_id                                                                                        AS snapshot_id,
       snapshot_dates.date_actual                                                                                    AS snapshot_date,
@@ -220,6 +222,8 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
+      sfdc_opportunity_source.xdr_net_arr_stage_1,
+      sfdc_opportunity_source.xdr_net_arr_stage_3,
       {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       live_date.date_actual                                                                                 AS snapshot_date,
@@ -1335,7 +1339,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@snalamaru",
+    updated_by="@rkohnke",
     created_date="2022-02-23",
-    updated_date="2024-01-24"
+    updated_date="2024-03-05"
 ) }}

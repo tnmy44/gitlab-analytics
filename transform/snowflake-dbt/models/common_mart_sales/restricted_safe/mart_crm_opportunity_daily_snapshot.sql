@@ -464,6 +464,8 @@ final AS (
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
+    fct_crm_opportunity.xdr_net_arr_stage_1,
+    fct_crm_opportunity.xdr_net_arr_stage_3,
     fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
