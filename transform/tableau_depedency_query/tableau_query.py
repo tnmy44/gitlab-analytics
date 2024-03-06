@@ -14,6 +14,14 @@ headers = {
     'Content-Type': 'application/json'
 }
 
+def get_response(json):
+    """
+    Return response object from Monte Carlo API
+    """
+    response = requests.post(url, headers=headers, json=json)
+    response_content = response.json()
+    return response_content
+
 def get_table_path_query(tableId):
     """
     Return table path based on table name
@@ -26,8 +34,7 @@ def get_table_path_query(tableId):
             'query': 'query GetTables($dwId:UUID,$tableId:String,$first:Int) {getTables(dwId:$dwId,tableId:$tableId,first:$first) {edges{node{mcon,fullTableId}}}}',
             'variables': {"dwId":f"{dwId}","tableId":f"{tableId}", "first":f"{first}"}
         }
-    response = requests.post(url, headers=headers, json=json)
-    response_content = response.json()
+    response_content = get_response(json)
     full_table_path = response_content["data"]["getTables"]["edges"][0]["node"]["fullTableId"]
     return full_table_path
 
@@ -43,8 +50,7 @@ def query_table(fullTableId):
         'variables':{"dwId":f"{dwId}","fullTableId":f"{fullTableId}"}
     }
 
-    response = requests.post(url, headers=headers, json=json)
-    response_content = response.json()
+    response_content = get_response(json)
     table_mcon = response_content["data"]["getTable"]["mcon"]
 
     return table_mcon
@@ -59,8 +65,7 @@ def get_downstream_node_dependencies(source_table_mcon):
         'variables': {"direction": f"{direction}","mcon":f"{source_table_mcon}"}
     }
 
-    response = requests.post(url, headers=headers, json=json)
-    response_content = response.json()
+    response_content = get_response(json)
     response_derived_tables_partial_lineage = response_content["data"]["getTableLineage"]
 
     return response_derived_tables_partial_lineage
@@ -87,7 +92,9 @@ with open("diff.txt", "r") as f:
     for line in lines:
         info("Checking for downstream dependencies in Tableau for the model " + line.strip() + "")
         full_table_path = get_table_path_query(line)
+        # if no path is returned exit the script
         source_table_mcon = query_table(full_table_path)
+        #if no mcon is found raise a status saying no mcon detected and exit
         response_downstream_node_dependencies = get_downstream_node_dependencies(source_table_mcon)
         output_list = check_response_for_tableau_dependencies(response_downstream_node_dependencies)
 
