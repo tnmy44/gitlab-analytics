@@ -2119,3 +2119,46 @@ models:
           - not_null
       - name: user_id
       - name: deleted_on
+
+  - name: gitlab_dotcom_zoekt_indices_source
+    description: Base model for Gitlab.com zoekt indices source.
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: zoekt_enabled_namespace_id
+      - name: zoekt_node_id
+        tests:
+          - not_null
+      - name: namespace_id
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+  - name: gitlab_dotcom_zoekt_enabled_namespaces_source
+    description: Base model for Gitlab.com zoekt indices source.
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: root_namespace_id
+        tests:
+          - not_null
+      - name: search
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
