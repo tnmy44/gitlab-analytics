@@ -135,6 +135,7 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
         if full_table_path is None:
             logging.info(f"No dependencies returned for model {format(line)}")
         else:
+            logging.info(f"Dependencies returned for model {format(line)}")
             source_table_mcon = query_table(full_table_path)
             response_downstream_node_dependencies = get_downstream_node_dependencies(
                 source_table_mcon
