@@ -49,7 +49,7 @@ def get_table_path_query(table_id):
         "variables": {"dwId": f"{dwId}", "tableId": f"{table_id}", "first": f"{first}"},
     }
     response_content = get_response(json)
-    table_path = response_content["data"]["getTables"]["edges"][0]["node"]["fullTableId"    ]
+    table_path = response_content["data"]["getTables"]["edges"][0]["node"]["fullTableId"]
     return table_path
 
 
