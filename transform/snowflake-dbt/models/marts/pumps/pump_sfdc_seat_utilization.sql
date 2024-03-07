@@ -7,7 +7,7 @@
 
 {{ simple_cte([
     ('pump_gainsight_metrics_monthly_paid','pump_gainsight_metrics_monthly_paid'),
-    ('seat_link','prep_usage_seat_link_installation_daily')
+    ('seat_link','prep_latest_seat_link_installation')
 ]) }}
 
 , production_installations_namespaces AS (
