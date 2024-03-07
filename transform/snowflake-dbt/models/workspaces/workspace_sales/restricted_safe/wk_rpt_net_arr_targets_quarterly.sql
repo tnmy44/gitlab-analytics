@@ -13,8 +13,6 @@ snapshot_date_list AS (
             THEN date_actual
         WHEN day_of_fiscal_quarter % 7 = 0 AND day_of_fiscal_quarter != 91
             THEN date_actual
-        WHEN date_actual = first_day_of_fiscal_quarter
-            THEN date_actual
     END AS day_7_current_week,
     day_of_fiscal_quarter,
     fiscal_quarter_name,
