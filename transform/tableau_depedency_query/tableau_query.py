@@ -1,6 +1,5 @@
 """
-This is responsible for fetching the direct tableau dependencies for a model using the Monte Carlo API. 
-
+Responsible for fetching the direct tableau dependencies for a model, using the Monte Carlo API.
 This acts as a base script for the tableau_direct_dependency_query CI job.
 """
 
@@ -11,23 +10,23 @@ import requests
 dwId = os.environ.get("CI_DATA_WAREHOUSE_ID")
 x_mcd_id = os.environ.get("CI_MCD_TOKEN_ID")
 x_mcd_token = os.environ.get("CI_MCD_TOKEN_SECRET")
-url = "https://api.getmontecarlo.com/graphql"
+URL = "https://api.getmontecarlo.com/graphql"
 
 
-headers = {
+HEADERS = {
     "x-mcd-id": x_mcd_id,
     "x-mcd-token": x_mcd_token,
     "Content-Type": "application/json",
 }
 
 
-def get_response(json):
+def get_response(payload):
     """
     Return response object from Monte Carlo API
     """
     # try to get response from Monte Carlo API
 
-    response = requests.post(url, headers=headers, json=json)
+    response = requests.post(URL, headers=HEADERS, json=payload, timeout=180)
     if response.status_code != 200:
         raise Exception(
             f"Error fetching data from Monte Carlo API. Status code: {response.status_code}"
@@ -36,26 +35,27 @@ def get_response(json):
     return response_content
 
 
-def get_table_path_query(tableId):
+def get_table_path_query(table_id):
     """
     Return table path based on table name
     i.e table_name='instance_redis_metrics'
 
-    For this particular use case, it will return the full_table_path i.e, raw:saas_usage_ping.instance_redis_metrics
+    For this particular use case, it will return the table_path
+    i.e, raw:saas_usage_ping.instance_redis_metrics
     """
     first = 1
     json = {
         "query": "query GetTables($dwId:UUID,$tableId:String,$first:Int) {getTables(dwId:$dwId,tableId:$tableId,first:$first) {edges{node{mcon,fullTableId}}}}",
-        "variables": {"dwId": f"{dwId}", "tableId": f"{tableId}", "first": f"{first}"},
+        "variables": {"dwId": f"{dwId}", "tableId": f"{table_id}", "first": f"{first}"},
     }
     response_content = get_response(json)
-    full_table_path = response_content["data"]["getTables"]["edges"][0]["node"][
+    table_path = response_content["data"]["getTables"]["edges"][0]["node"][
         "fullTableId"
     ]
-    return full_table_path
+    return table_path
 
 
-def query_table(fullTableId):
+def query_table(full_table_id):
     """
     Return table information based on full_table_path
     i.e full_table_path='raw:saas_usage_ping.instance_redis_metrics'
@@ -64,7 +64,7 @@ def query_table(fullTableId):
     """
     json = {
         "query": "query GetTable($dwId: UUID,$fullTableId: String){getTable(dwId:$dwId,fullTableId:$fullTableId){tableId,mcon}}",
-        "variables": {"dwId": f"{dwId}", "fullTableId": f"{fullTableId}"},
+        "variables": {"dwId": f"{dwId}", "fullTableId": f"{full_table_id}"},
     }
 
     response_content = get_response(json)
@@ -73,14 +73,14 @@ def query_table(fullTableId):
     return table_mcon
 
 
-def get_downstream_node_dependencies(source_table_mcon):
+def get_downstream_node_dependencies(table_mcon):
     """
     This will return all directly dependent downstream tableau nodes for a given model.
     """
     direction = "downstream"
     json = {
         "query": "query GetTableLineage($direction: String!, $mcon: String) {getTableLineage(direction:$direction,mcon:$mcon){connectedNodes{displayName,mcon,objectType}}}",
-        "variables": {"direction": f"{direction}", "mcon": f"{source_table_mcon}"},
+        "variables": {"direction": f"{direction}", "mcon": f"{table_mcon}"},
     }
 
     response_content = get_response(json)
@@ -91,12 +91,12 @@ def get_downstream_node_dependencies(source_table_mcon):
     return response_derived_tables_partial_lineage
 
 
-def check_response_for_tableau_dependencies(response_downstream_node_dependencies):
+def check_response_for_tableau_dependencies(response_downstream_dependencies):
     """
     This will return all dependent downstream nodes for a given source table.
     """
-    output_list = []
-    for node in response_downstream_node_dependencies["connectedNodes"]:
+    dependency_list = []
+    for node in response_downstream_dependencies["connectedNodes"]:
         output_dict = {}
         object_type = [
             "tableau-published-datasource-live",
@@ -111,14 +111,14 @@ def check_response_for_tableau_dependencies(response_downstream_node_dependencie
             output_dict[
                 node["displayName"]
             ] = f"https://getmontecarlo.com/assets/{node['mcon']} ({node['objectType']})"
-            # append output_dict to output_list
-            output_list.append(output_dict)
+            # append output_dict to dependency_list
+            dependency_list.append(output_dict)
 
-    return output_list
+    return dependency_list
 
 
 # Assumes git diff was run to output the sql files that changed
-with open("diff.txt", "r") as f:
+with open("diff.txt", "r", encoding="UTF-8") as f:
     lines = f.readlines()
     for line in lines:
         info(
@@ -129,22 +129,21 @@ with open("diff.txt", "r") as f:
         full_table_path = get_table_path_query(line)
         # if no path is returned exit the script
         if not full_table_path:
-            raise ValueError("No table path returned for model {}".format(line))
-        else:
-            source_table_mcon = query_table(full_table_path)
-            response_downstream_node_dependencies = get_downstream_node_dependencies(
-                source_table_mcon
-            )
-            output_list = check_response_for_tableau_dependencies(
-                response_downstream_node_dependencies
-            )
+            raise ValueError(f"No table path returned for model {format(line)}")
+        source_table_mcon = query_table(full_table_path)
+        response_downstream_node_dependencies = get_downstream_node_dependencies(
+            source_table_mcon
+        )
+        output_list = check_response_for_tableau_dependencies(
+            response_downstream_node_dependencies
+        )
 
-            # if length of output_list is greater then zero then show the list of downstream dependencies
-            if len(output_list) > 0:
-                # show each key value pair in output_list and append them in comparison.txt
-                with open("comparison.txt", "a") as f:
-                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
-                    f.write(write_string)
-                    for item in output_list:
-                        for key, value in item.items():
-                            f.write(f"\n{key}: {value}")
+        # if length of output_list > 0 then show the list of downstream dependencies
+        if len(output_list) > 0:
+            # show each key value pair in output_list and append them in comparison.txt
+            with open("comparison.txt", "a", encoding="UTF-8") as f:
+                write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                f.write(write_string)
+                for item in output_list:
+                    for key, value in item.items():
+                        f.write(f"\n{key}: {value}")
