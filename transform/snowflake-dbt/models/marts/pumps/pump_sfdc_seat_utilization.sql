@@ -10,7 +10,7 @@
     ('seat_link','prep_usage_seat_link_installation_daily')
 ]) }}
 
-production_installations_namespaces AS (
+, production_installations_namespaces AS (
   SELECT
     delivery_type,
     deployment_type,
@@ -31,9 +31,9 @@ production_installations_namespaces AS (
     AND DATE_TRUNC('month', ping_created_at) BETWEEN DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE)) 
       AND DATE_TRUNC('month', GETDATE())
     AND ping_created_at IS NOT NULL
-),
+)
 
-joined AS (
+, joined AS (
   SELECT 
     production_installations_namespaces.delivery_type,
     production_installations_namespaces.deployment_type,
