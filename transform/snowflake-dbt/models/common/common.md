@@ -1935,3 +1935,9 @@ This dimension model holds all requirement records and provides dimensional data
 All milestones created within a namespace, with details including the start date, due date, description, and title.
 
 {% enddocs %}
+
+{% docs fct_latest_seat_link_installation %}
+
+Contains the latest Seat Link record for every installation in the source Seat Link model.
+
+{% enddocs %}

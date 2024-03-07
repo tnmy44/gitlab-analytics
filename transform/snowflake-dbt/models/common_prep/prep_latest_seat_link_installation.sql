@@ -1,4 +1,5 @@
 {{ config(
+    materialized='view'
     tags=["mnpi_exception"]
 ) }}
 

@@ -7,7 +7,7 @@
 
 {{ simple_cte([
     ('pump_gainsight_metrics_monthly_paid','pump_gainsight_metrics_monthly_paid'),
-    ('seat_link','prep_latest_seat_link_installation')
+    ('seat_link','fct_latest_seat_link_installation')
 ]) }}
 
 , production_installations_namespaces AS (
@@ -46,8 +46,8 @@
     COALESCE(seat_link.max_historical_user_count, production_installations_namespaces.max_historical_user_count) AS max_historical_user_count,
     COALESCE(seat_link.license_user_count, production_installations_namespaces.license_user_count) AS license_user_count
   FROM production_installations_namespaces
-  LEFT JOIN seat_link ON seat_link.hostname = production_installations_namespaces.hostname
-    AND seat_link.uuid = production_installations_namespaces.uuid
+  LEFT JOIN seat_link ON seat_link.host_name = production_installations_namespaces.hostname
+    AND seat_link.dim_instance_id = production_installations_namespaces.uuid
   QUALIFY ROW_NUMBER() OVER(PARTITION BY production_installations_namespaces.dim_subscription_id_original ORDER BY production_installations_namespaces.billable_user_count DESC) = 1
 )
 
@@ -56,5 +56,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2024-03-06",
-    updated_date="2024-03-06"
+    updated_date="2024-03-07"
 ) }}
