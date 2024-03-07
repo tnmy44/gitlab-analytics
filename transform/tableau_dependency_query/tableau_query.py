@@ -124,10 +124,8 @@ def check_response_for_tableau_dependencies(response_downstream_dependencies):
 with open("diff.txt", "r", encoding="UTF-8") as f:
     lines = f.readlines()
     for line in lines:
-        info(
-            "Checking for downstream dependencies in Tableau for the model "
-            + line.strip()
-            + ""
+        print(
+            f"Checking for downstream dependencies in Tableau for the model {line.strip()}"
         )
         full_table_path = get_table_path_query(line)
         print(line)
