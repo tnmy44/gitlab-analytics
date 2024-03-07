@@ -14,6 +14,7 @@ WITH dedicated_legacy_0475 AS (
 
 ),
 
+
 dedicated_dev_3675 AS (
 
   SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_ FROM {{ source('aws_billing', 'dedicated_dev_3675') }}

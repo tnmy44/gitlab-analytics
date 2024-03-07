@@ -128,7 +128,6 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
             f"Checking for downstream dependencies in Tableau for the model {line.strip()}"
         )
         full_table_path = get_table_path_query(line)
-        print(line)
         # if no path is returned exit the script
         if full_table_path is None:
             print("No dependencies returned for model {}".format(line))
