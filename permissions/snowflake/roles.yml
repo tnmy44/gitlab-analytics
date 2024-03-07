@@ -462,7 +462,7 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - handbook
-            - license_db
+            - influx_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -489,7 +489,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - handbook
-            - license_db
             - gitlab_dotcom
             - postgres_pipeline
             - netsuite
@@ -531,7 +530,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -613,7 +611,6 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - greenhouse
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -640,7 +637,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -693,7 +689,6 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - handbook
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -720,7 +715,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -1138,7 +1132,6 @@ roles:
             - dbt_analytics
             - driveload
             - gitlab_dotcom
-            - license_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -1195,6 +1188,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+            - entitlement
         privileges:
             databases:
                 read:
@@ -1578,21 +1572,6 @@ roles:
                 read:
                     - bi_tool_eval.*.*
 
-    - coupa:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.coupa_sandbox
-            tables:
-                read:
-                    - raw.coupa_sandbox.*
-
-
     - covid19:
         privileges:
             databases:
@@ -1912,6 +1891,18 @@ roles:
             tables:
                 read:
                     - raw.facebook_ads.*
+
+    - feature_store:
+        privileges:
+            databases:
+                read:
+                    - feature_store
+            schemas:
+                read:
+                    - feature_store.feast
+            tables:
+                read:
+                    - feature_store.feast.*
 
     - gainsight_pump:
         warehouses:
@@ -2291,6 +2282,21 @@ roles:
                     - prod.legacy.gitlab_dotcom_memberships
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
+    
+    - influx_db:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.influx_db
+                    - raw.influx_db
+            tables:
+                read:
+                    - prep.influx_db.*
+                    - raw.influx_db.*
 
     - iterable:
         privileges:
@@ -2303,22 +2309,6 @@ roles:
             tables:
                 read:
                     - raw.iterable.*
-
-
-    - license_db:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.license_db
-                    - raw.license_db
-            tables:
-                read:
-                    - prep.license_db.*
-                    - raw.license_db.*
 
     - linkedin_ads:
         privileges:
@@ -3267,6 +3257,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - apanchal:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - aperez:
         member_of:
             - analyst_people
@@ -3517,7 +3513,6 @@ roles:
             - analyst_engineering
             - analyst_growth
             - bi_tool_eval_read
-            - coupa
             - customers_db
             - data_science_readonly
             - gitlab_dotcom
@@ -3617,10 +3612,8 @@ roles:
             - dev_xs
 
     - dcroft:
-        member_of:
-            - snowflake_analyst
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - ddeng:
         member_of:
@@ -4001,6 +3994,12 @@ roles:
     - idawson:
         member_of:
             - reporter
+        warehouses:
+            - dev_xs
+
+    - jli:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -4395,6 +4394,7 @@ roles:
             - snowplow
             - static_admin
             - workday
+            - feature_store
         warehouses:
             - dev_xs
             - dev_l
@@ -4613,6 +4613,7 @@ roles:
             - zendesk_community_relations
             - data_science
             - data_science_sensitive
+            - feature_store
         warehouses:
             - dev_xs
         owns:
@@ -4717,6 +4718,7 @@ roles:
             - snowplow
             - data_science
             - data_science_sensitive
+            - feature_store
         warehouses:
             - dev_xs
         owns:
@@ -5380,8 +5382,11 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of: []
-        warehouses: []
+        member_of: 
+            - analyst_growth
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - ncregan:
         member_of: []
@@ -5396,6 +5401,12 @@ roles:
     - nfiguera:
         member_of: []
         warehouses: []
+
+    - nhashizume:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - nhertz:
         member_of:
@@ -5459,7 +5470,6 @@ roles:
         member_of:
             - adaptive
             - analyst_finance
-            - coupa
             - customers_db
             - data_team_analyst
             - data_manager
@@ -5717,6 +5727,12 @@ roles:
         warehouses:
             - admin
 
+    - pkanellidis:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - pleitzen:
         member_of:
             - snowflake_analyst
@@ -5955,11 +5971,8 @@ roles:
         warehouses: []
 
     - rtaira:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - rwoo:
         member_of: []
@@ -6118,6 +6131,12 @@ roles:
                 write:
                     - skhan_prep.*.*
                     - skhan_prod.*.*
+
+    - sliaquat:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - smccormack:
         member_of:
@@ -6584,6 +6603,7 @@ roles:
             - analyst_core
             - restricted_safe
             - snowplow
+            - feature_store
         warehouses:
             - dev_xs
 
@@ -6708,6 +6728,11 @@ users:
         can_login: yes
         member_of:
             - alu
+
+    - apanchal:
+        can_login: yes
+        member_of:
+            - apanchal
 
     - aperez:
         can_login: yes
@@ -6836,9 +6861,8 @@ users:
             - dcook
 
     - dcroft:
-        can_login: yes
-        member_of:
-            - dcroft
+        can_login: no
+        member_of: [] 
 
     - ddeng:
         can_login: yes
@@ -6991,6 +7015,11 @@ users:
         can_login: yes
         member_of:
             - idawson
+
+    - jli:
+        can_login: yes
+        member_of:
+            - jli
 
     - ikosenko:
         can_login: yes
@@ -7361,8 +7390,9 @@ users:
             - nbilgrami
 
     - nbelokolodov:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            -  nbelokolodov
 
     - ncregan:
         can_login: no
@@ -7376,6 +7406,11 @@ users:
     - nfiguera:
         can_login: no
         member_of: []
+
+    - nhashizume:
+        can_login: yes
+        member_of:
+            - nhashizume
 
     - nhertz:
         can_login: yes
@@ -7446,6 +7481,11 @@ users:
             - securityadmin
             - sysadmin
 
+    - pkanellidis:
+        can_login: yes
+        member_of:
+            - pkanellidis
+
     - pleitzen:
         can_login: yes
         member_of:
@@ -7503,9 +7543,8 @@ users:
         member_of: []
 
     - rtaira:
-        can_login: yes
-        member_of:
-            - rtaira
+        can_login: no
+        member_of: []
 
     - rwoo:
         can_login: no
@@ -7546,6 +7585,11 @@ users:
         member_of:
             - skhan
 
+    - sliaquat:
+        can_login: yes
+        member_of:
+            - sliaquat
+
     - smccormack:
         can_login: yes
         member_of:
@@ -7560,6 +7604,12 @@ users:
         can_login: yes
         member_of:
             - snalamaru
+
+    - snowflake_provisioner:
+        can_login: yes
+        member_of:
+            - sysadmin
+            - securityadmin
 
     - sranasinghe:
         can_login: yes

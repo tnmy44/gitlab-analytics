@@ -11,27 +11,27 @@ WITH prep_ci_runner AS (
     --- CI Runner Manager Mapping
     CASE
       --- Private Runners
-      WHEN ci_runner_description LIKE '%private%manager%'
+      WHEN ci_runner_description ILIKE '%private%manager%'
         THEN 'private-runner-mgr'
       --- Linux Runners
-      WHEN ci_runner_description LIKE 'shared-runners-manager%'
+      WHEN ci_runner_description ILIKE 'shared-runners-manager%'
         THEN 'linux-runner-mgr'
-      WHEN ci_runner_description LIKE '%.shared.runners-manager.%'
+      WHEN ci_runner_description ILIKE '%.shared.runners-manager.%'
         THEN 'linux-runner-mgr'
-      WHEN ci_runner_description LIKE '%saas-linux-%-amd64%'
-        AND ci_runner_description NOT LIKE '%shell%'
+      WHEN ci_runner_description ILIKE '%saas-linux-%-amd64%'
+        AND ci_runner_description NOT ILIKE '%shell%'
         THEN 'linux-runner-mgr'
       --- Internal GitLab Runners
-      WHEN ci_runner_description LIKE 'gitlab-shared-runners-manager%'
+      WHEN ci_runner_description ILIKE 'gitlab-shared-runners-manager%'
         THEN 'gitlab-internal-runner-mgr'
       --- Window Runners 
-      WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
+      WHEN ci_runner_description ILIKE 'windows-shared-runners-manager%'
         THEN 'windows-runner-mgr'
       --- Shared Runners
-      WHEN ci_runner_description LIKE '%.shared-gitlab-org.runners-manager.%'
+      WHEN ci_runner_description ILIKE '%.shared-gitlab-org.runners-manager.%'
         THEN 'shared-gitlab-org-runner-mgr'
       --- macOS Runners
-      WHEN ci_runner_description LIKE '%macOS%'
+      WHEN ci_runner_description ILIKE '%macOS%'
         THEN 'macos-runner-mgr'
       --- Other
       ELSE 'Other'
@@ -40,23 +40,25 @@ WITH prep_ci_runner AS (
     --- CI Runner Machine Type Mapping
     CASE
       --- SaaS Linux Runners
-      WHEN ci_runner_description LIKE '%.shared.runners-manager.%'
+      WHEN ci_runner_description ILIKE '%.shared.runners-manager.%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description LIKE '%.saas-linux-small-amd64.runners-manager.gitlab.com%'
+      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64.runners-manager.gitlab.com%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description LIKE '%saas-linux-medium-amd64%'
+      WHEN ci_runner_description ILIKE '%green-4.saas-linux-medium-amd64.runners-manager%'
         THEN 'SaaS Runner Linux - Medium'
-      WHEN ci_runner_description LIKE '%saas-linux-large-amd64%'
+      WHEN ci_runner_description ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
+        THEN 'SaaS GPU-Enabled Runners'
+      WHEN ci_runner_description ILIKE '%saas-linux-large-amd64%'
         THEN 'SaaS Runner Linux - Large'
-      WHEN ci_runner_description LIKE '%saas-linux-xlarge-amd64%'
+      WHEN ci_runner_description ILIKE '%saas-linux-xlarge-amd64%'
         THEN 'SaaS Runner Linux - XLarge'
-      WHEN ci_runner_description LIKE '%saas-linux-2xlarge-amd64%'
+      WHEN ci_runner_description ILIKE '%saas-linux-2xlarge-amd64%'
         THEN 'SaaS Runner Linux - 2XLarge'
       --- MacOS Runners
-      WHEN ci_runner_description LIKE '%macos%'
+      WHEN ci_runner_description ILIKE '%macos%'
         THEN 'SaaS Runners macOS - Medium - amd64'
       --- Window Runners 
-      WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
+      WHEN ci_runner_description ILIKE 'windows-shared-runners-manager%'
         THEN 'SaaS Runners Windows - Medium'
       ELSE 'Other'
     END         AS ci_runner_machine_type,
@@ -87,5 +89,5 @@ WITH prep_ci_runner AS (
     created_by="@snalamaru",
     updated_by="@nhervas",
     created_date="2021-06-23",
-    updated_date="2024-01-30"
+    updated_date="2024-02-12"
 ) }}

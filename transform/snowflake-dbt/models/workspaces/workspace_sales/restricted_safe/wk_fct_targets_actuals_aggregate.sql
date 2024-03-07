@@ -12,13 +12,9 @@ aggregate_data AS (
     -- attributes
     dim_sales_qualified_source_id,
     dim_order_type_id,
+    dim_order_type_live_id,
     dim_crm_user_hierarchy_sk,
     sales_qualified_source_name,
-    crm_user_sales_segment,
-    crm_user_geo,
-    crm_user_region,
-    crm_user_area,
-    crm_user_business_unit,
     order_type,
     order_type_live,
     order_type_grouped,
@@ -27,7 +23,20 @@ aggregate_data AS (
     sales_type,
     calculated_deal_size,
     deal_size,
-    parent_crm_account_industry,
+    crm_user_business_unit,
+    crm_user_sales_segment,
+    crm_user_geo,
+    crm_user_region,
+    crm_user_area,
+    crm_user_role_name,
+    crm_user_role_level_1,
+    crm_user_role_level_2,
+    crm_user_role_level_3,
+    crm_user_role_level_4,
+    crm_user_role_level_5,
+    crm_user_sales_segment_grouped,
+    crm_user_sales_segment_region_grouped,
+    
 
     --dates
     snapshot_date,
@@ -70,6 +79,7 @@ aggregate_data AS (
     current_day_of_month,
     current_day_of_fiscal_quarter,
     current_day_of_fiscal_year,
+    current_week_of_fiscal_quarter_normalised,
 
     --targets
     --deals_daily_target,
@@ -148,7 +158,6 @@ aggregate_data AS (
     SUM(created_deal_count_in_snapshot_week)              AS created_deal_count_in_snapshot_week,
     SUM(closed_net_arr_in_snapshot_week)                  AS closed_net_arr_in_snapshot_week,
     SUM(closed_deal_count_in_snapshot_week)               AS closed_deal_count_in_snapshot_week,
-    SUM(closed_new_logo_count_in_snapshot_week)           AS closed_new_logo_count_in_snapshot_week,
     SUM(closed_cycle_time_in_snapshot_week)               AS closed_cycle_time_in_snapshot_week,
     SUM(booked_net_arr_in_snapshot_week)                  AS booked_net_arr_in_snapshot_week,
     SUM(calculated_deal_count_in_snapshot_week)           AS calculated_deal_count_in_snapshot_week,

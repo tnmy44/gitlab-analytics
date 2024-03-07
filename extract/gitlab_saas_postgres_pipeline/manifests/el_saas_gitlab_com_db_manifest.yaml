@@ -1447,7 +1447,6 @@ tables:
       , setup_for_company
       , jobs_to_be_done
       , experiment_features_enabled
-      , third_party_ai_features_enabled
       , code_suggestions
       FROM namespace_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2403,6 +2402,7 @@ tables:
       , note_id
       , commit_id
       , group_id
+      , resolved_by_action
       FROM todos
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2687,6 +2687,38 @@ tables:
       , created_at
       , updated_at
       FROM workspaces
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  zoekt_enabled_namespaces:
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: zoekt_enabled_namespaces
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id 
+      , root_namespace_id 
+      , search
+      , created_at 
+      , updated_at 
+      FROM zoekt_enabled_namespaces
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  zoekt_indices:
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: zoekt_indices
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id 
+      , zoekt_enabled_namespace_id 
+      , zoekt_node_id 
+      , namespace_id
+      , created_at 
+      , updated_at 
+      , state
+      FROM zoekt_indices
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   zoom_meetings:

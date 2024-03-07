@@ -11,7 +11,8 @@ day_5_list AS (
     date_actual AS day_5_current_week,
     LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
   FROM {{ ref('dim_date') }}
-  WHERE day_of_week = 5
+  WHERE day_of_week = 5 
+    AND date_actual >= DATEADD(YEAR, -2, current_first_day_of_fiscal_quarter) -- include only the last 8 quarters
 
 ),
 
@@ -79,24 +80,19 @@ final AS (
     END AS created_net_arr_in_snapshot_week,
     CASE
       WHEN is_created_in_snapshot_week = 1
-        THEN 1
+        THEN calculated_deal_count
       ELSE 0
     END AS created_deal_count_in_snapshot_week,
+    CASE
+      WHEN is_close_in_snapshot_week = 1
+        THEN calculated_deal_count
+      ELSE 0
+    END AS closed_deal_count_in_snapshot_week,
     CASE
       WHEN is_close_in_snapshot_week = 1
         THEN net_arr
       ELSE 0
     END AS closed_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_new_logo_count_in_snapshot_week,
     CASE
       WHEN is_close_in_snapshot_week = 1
         THEN close_date - created_date
@@ -121,8 +117,6 @@ final AS (
     END AS calculated_deal_count_in_snapshot_week,
     CASE 
       WHEN is_eligible_open_pipeline_combined = 1
-        AND is_close_in_snapshot_week = 1
-          AND is_excluded_from_pipeline_created_combined = 0
         THEN net_arr
       ELSE 0
     END AS open_pipeline_in_snapshot_week,

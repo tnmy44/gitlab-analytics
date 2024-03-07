@@ -267,6 +267,9 @@ models:
       handbook:
         +schema: handbook
 
+      influx_db:
+        +schema: influx_db
+
       level_up:
         +schema: level_up
 
@@ -739,6 +742,9 @@ snapshots:
       +tags: ["edm_snapshot"]
 
     netsuite:
+      +tags: ["daily"]
+
+    sfdc_sandbox:
       +tags: ["daily"]
 
     sfdc:
