@@ -42,7 +42,7 @@ SELECT
 DATE(DATE_TRUNC('month', payment_date)) AS payment_month,
 SUM(payment_amount)                     AS payment_amount,
 COUNT(payment_amount)                   AS payment_count
-FROM {{ ref('dwk_finance_fct_payment') }}
+FROM {{ ref('wk_finance_fct_payment') }}
 WHERE payment_status = 'Processed'
 GROUP BY payment_month
 
