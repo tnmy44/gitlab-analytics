@@ -114,3 +114,23 @@ models:
       - name: running_pto_sum_qtd
       - name: running_pto_sum_ytd
       - name: running_pto_sum_r12
+  - name: wk_talent_acquisition
+    columns: 
+      - name: id
+      - name: job_id
+      - name: job_opening_id
+      - name: candidate_id
+      - name: application_id
+      - name: offer_id
+      - name: start_datetime
+      - name: end_datetime
+      - name: start_date
+      - name: end_date
+      - name: id
+      - name: status
+      - name: status_id
+      - name: max_start_date
+      - name: max_end_date
+      - name: min_start_date
+      - name: is_max_record
+      - name: is_max_hire_progress_step
