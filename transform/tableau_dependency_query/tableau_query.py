@@ -49,8 +49,12 @@ def get_table_path_query(table_id):
         "variables": {"dwId": f"{dwId}", "tableId": f"{table_id}", "first": f"{first}"},
     }
     response_content = get_response(json)
-    print(response_content)
-    table_path = response_content["data"]["getTables"]["edges"][0]["node"]["fullTableId"]
+    if len(response_content["data"]["getTables"]["edges"]) > 0:
+        table_path = response_content["data"]["getTables"]["edges"][0]["node"][
+            "fullTableId"
+        ]
+    else:
+        table_path = None
     return table_path
 
 
@@ -83,7 +87,9 @@ def get_downstream_node_dependencies(table_mcon):
     }
 
     response_content = get_response(json)
-    response_derived_tables_partial_lineage = response_content["data"]["getTableLineage"]
+    response_derived_tables_partial_lineage = response_content["data"][
+        "getTableLineage"
+    ]
 
     return response_derived_tables_partial_lineage
 
@@ -98,7 +104,7 @@ def check_response_for_tableau_dependencies(response_downstream_dependencies):
         object_type = [
             "tableau-published-datasource-live",
             "tableau-published-datasource-extract",
-            "tableau-view"
+            "tableau-view",
         ]
         if (
             node["objectType"] in object_type
@@ -126,8 +132,8 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
         print(line)
         full_table_path = get_table_path_query(line)
         # if no path is returned exit the script
-        if not full_table_path:
-            raise ValueError(f"No table path returned for model {format(line)}")
+        if full_table_path is None:
+            print("No table path returned for model {}".format(line))
         source_table_mcon = query_table(full_table_path)
         response_downstream_node_dependencies = get_downstream_node_dependencies(
             source_table_mcon
