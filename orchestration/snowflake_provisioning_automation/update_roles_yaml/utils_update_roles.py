@@ -7,8 +7,10 @@ import yaml
 from typing import Union
 
 # needed to import shared utils module
-sys.path.insert(1, os.path.join(sys.path[0], "../.."))
-from snowflake_provisioning_automation.utils_snowflake_provisioning import (
+abs_path = os.path.dirname(os.path.realpath(__file__))
+parent_path = abs_path[: abs_path.find("/update_roles_yaml")]
+sys.path.insert(1, parent_path)
+from utils_snowflake_provisioning import (
     get_username_changes,
     YAML_PATH,
 )

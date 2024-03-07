@@ -110,9 +110,9 @@ def main():
         databases_template,
         roles_template,
         users_template,
-        test_run,
+        is_test_run,
     ) = process_args()
-    logging.info(f"update_roles_yaml test_run: {test_run}")
+    logging.info(f"update_roles_yaml is_test_run: {is_test_run}")
     time.sleep(5)  # give user a chance to abort
     logging.info(f"usernames_to_add: {usernames_to_add}")
     logging.info(f"usernames_to_remove: {usernames_to_remove}\n")
@@ -129,7 +129,7 @@ def main():
     if usernames_to_remove:
         remove_users(roles_data, usernames_to_remove)
 
-    if not test_run and (usernames_to_add or usernames_to_remove):
+    if not is_test_run and (usernames_to_add or usernames_to_remove):
         save_roles_to_yaml(roles_data)
 
 

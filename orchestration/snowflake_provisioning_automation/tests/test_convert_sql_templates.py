@@ -1,4 +1,5 @@
 """ Test convert_sql_templates.py module """
+
 from jinja2 import Template
 
 from convert_sql_templates import render_template, convert_to_sql_statements

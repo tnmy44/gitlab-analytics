@@ -2,8 +2,9 @@
 utils module for both `provision_users/` and `update_roles_yaml/`
 
 Child modules access this utils file by running
-sys.path.insert(1, os.path.join(sys.path[0], "../.."))
-per https://stackoverflow.com/q/714063#comment23054549_11158224
+abs_path = os.path.dirname(os.path.realpath(__file__))
+parent_path = abs_path[: abs_path.find("/update_roles_yaml")]
+sys.path.insert(1, parent_path)
 """
 
 import os

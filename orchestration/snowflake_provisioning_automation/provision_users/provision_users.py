@@ -110,11 +110,11 @@ def provision_all():
     """
     usernames_to_remove, usernames_to_add, is_dev_db, is_test_run = process_args()
 
+    logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
+    time.sleep(5)  # give user a chance to abort
     logging.info(f"usernames_to_add: {usernames_to_add}")
     logging.info(f"usernames_to_remove: {usernames_to_remove}\n")
 
-    logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
-    time.sleep(5)  # give user a chance to abort
     securityadmin_connection = get_securityadmin_connection(is_test_run)
     sysadmin_connection = get_sysadmin_connection(is_test_run)
 
