@@ -1580,21 +1580,6 @@ roles:
                 read:
                     - bi_tool_eval.*.*
 
-    - coupa:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.coupa_sandbox
-            tables:
-                read:
-                    - raw.coupa_sandbox.*
-
-
     - covid19:
         privileges:
             databases:
@@ -3552,7 +3537,6 @@ roles:
             - analyst_engineering
             - analyst_growth
             - bi_tool_eval_read
-            - coupa
             - customers_db
             - data_science_readonly
             - gitlab_dotcom
@@ -5510,7 +5494,6 @@ roles:
         member_of:
             - adaptive
             - analyst_finance
-            - coupa
             - customers_db
             - data_team_analyst
             - data_manager
