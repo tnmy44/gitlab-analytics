@@ -129,11 +129,11 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
             + line.strip()
             + ""
         )
-        print(line)
         full_table_path = get_table_path_query(line)
+        print(line)
         # if no path is returned exit the script
         if full_table_path is None:
-            print("No table path returned for model {}".format(line))
+            print("No dependencies returned for model {}".format(line))
         else:
             source_table_mcon = query_table(full_table_path)
             response_downstream_node_dependencies = get_downstream_node_dependencies(
