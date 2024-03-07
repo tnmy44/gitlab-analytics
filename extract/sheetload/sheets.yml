@@ -347,3 +347,7 @@ sheets:
       - devrel_influenced_campaigns
       - youtube_views_gitlab
       - devrel_blog_posts_views
+  - name: fy25_yearlies_target
+    owner: '@nmcavinue'
+    tabs: 
+      - fy25_yearlies_target
