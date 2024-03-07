@@ -4,7 +4,6 @@ This acts as a base script for the tableau_direct_dependency_query CI job.
 """
 
 import os
-from logging import info
 import requests
 
 dwId = os.environ.get("CI_DATA_WAREHOUSE_ID")
@@ -130,7 +129,7 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
         full_table_path = get_table_path_query(line)
         # if no path is returned exit the script
         if full_table_path is None:
-            print("No dependencies returned for model {}".format(line))
+            print(f"No dependencies returned for model {format(line)}")
         else:
             source_table_mcon = query_table(full_table_path)
             response_downstream_node_dependencies = get_downstream_node_dependencies(
