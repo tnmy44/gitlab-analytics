@@ -507,7 +507,7 @@ specify_dbt_parameters:
 
 .tableau_direct_dependencies_query: &tableau_direct_dependencies_query
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.7
   tags:
     - analytics
   only:
