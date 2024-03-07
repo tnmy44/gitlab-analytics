@@ -1,18 +1,18 @@
 import os
 import yaml
 import pytest
-from src import roles_struct
+import roles_struct
 
 
-def get_roles_yml():
+def get_roles_data():
     """function to read in test roles.yml file as py obj"""
     script_dir = os.path.dirname(os.path.realpath(__file__))
     roles_file_name = "roles_test.yml"
     file_path = os.path.join(script_dir, roles_file_name)
 
     with open(file_path, "r", encoding="utf-8") as yaml_file:
-        roles_yml = yaml.safe_load(yaml_file)
-    return roles_yml
+        roles_data = yaml.safe_load(yaml_file)
+    return roles_data
 
 
 @pytest.fixture
@@ -21,13 +21,13 @@ def my_roles_struct():
     Creates a fixture instance of RolesStruct to be used by all test functions
     This instance is used specifically to test database additions
     """
-    roles_yaml = get_roles_yml()
+    roles_data = get_roles_data()
     yaml_key = "databases"
     new_values = [{"user3_prod": {"shared": False}}, {"user3_prep": {"shared": False}}]
     usernames_to_remove = ["user1", "user2"]
 
     obj = roles_struct.RolesStruct(
-        roles_yaml, yaml_key, new_values, usernames_to_remove
+        roles_data, yaml_key, new_values, usernames_to_remove
     )
     return obj
 
@@ -40,14 +40,14 @@ def test_add_values(my_roles_struct):
     """
     # Test 1: test that the new values are inserted at the end
     my_roles_struct.add_values()
-    databases = my_roles_struct.roles_yaml["databases"]
+    databases = my_roles_struct.roles_data["databases"]
     original_len = len(databases)
     assert databases[-1] == {"user3_prep": {"shared": False}}
     assert databases[-2] == {"user3_prod": {"shared": False}}
 
     # Test 2: adding values (duplicates) doesn't insert any new values
     my_roles_struct.add_values()
-    databases = my_roles_struct.roles_yaml["databases"]
+    databases = my_roles_struct.roles_data["databases"]
     new_len = len(databases)
     assert original_len == new_len
 
@@ -69,7 +69,7 @@ def test_pop_values(my_roles_struct):
     for key_to_remove in keys_to_remove:
         assert key_to_remove in original_value_keys
 
-    databases = my_roles_struct.roles_yaml[yaml_key]
+    databases = my_roles_struct.roles_data[yaml_key]
     original_len = len(databases)
     my_roles_struct._pop_values(yaml_key, keys_to_remove)
     remaining_value_keys = my_roles_struct.get_existing_value_keys(yaml_key)
@@ -79,7 +79,7 @@ def test_pop_values(my_roles_struct):
 
     # Test 2: test that duplicate keys are removed as well
     # There are 2 keys to remove, but 4 instances of those keys exist
-    databases = my_roles_struct.roles_yaml[yaml_key]
+    databases = my_roles_struct.roles_data[yaml_key]
     new_len = len(databases)
     assert original_len == new_len + 4
 
@@ -87,7 +87,7 @@ def test_pop_values(my_roles_struct):
     yaml_key = "roles"
     keys_to_remove = my_roles_struct.get_existing_value_keys(yaml_key)
     my_roles_struct._pop_values(yaml_key, keys_to_remove)
-    roles = my_roles_struct.roles_yaml[yaml_key]
+    roles = my_roles_struct.roles_data[yaml_key]
     assert len(roles) == 0
 
     # Test 4: remove the first item in users (user1)

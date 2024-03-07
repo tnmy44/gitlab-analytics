@@ -22,9 +22,12 @@ For specific instructions, please see the handbook.
 """
 
 import logging
+import time
+
 from typing import Tuple
-from args import parse_arguments
-from update_roles_utils import (
+
+from args_update_roles_yaml import parse_arguments
+from utils_update_roles import (
     DATABASES_KEY,
     ROLES_KEY,
     USERS_KEY,
@@ -51,25 +54,26 @@ def process_args() -> Tuple[list, list, str, str, str]:
         args.databases_template,
         args.roles_template,
         args.users_template,
+        args.test_run,
     )
 
 
 def add_user_values(
-    roles_yaml: str, yaml_key: str, usernames_to_add: list, template: str
+    roles_data: dict, yaml_key: str, usernames_to_add: list, template: str
 ):
     """
-    Adds users and their values to the the roles_yaml data structure:
+    Adds users and their values to the the roles_data data structure:
     First converts the values template to a dict
     Then creates a RolesStruct object
-    Finally, using the instantiated object, update the roles_yaml data structure.
+    Finally, using the instantiated object, update the roles_data data structure.
     """
     values = concat_template_values(usernames_to_add, template)
-    roles_struct = RolesStruct(roles_yaml, yaml_key, values)
+    roles_struct = RolesStruct(roles_data, yaml_key, values)
     roles_struct.add_values()
 
 
 def add_users(
-    roles_yaml: str,
+    roles_data: dict,
     usernames_to_add: list,
     databases_template: str,
     roles_template: str,
@@ -81,38 +85,41 @@ def add_users(
     it should be skipped, or the user did not pass it in via command line.
     """
     if databases_template:
-        add_user_values(roles_yaml, DATABASES_KEY, usernames_to_add, databases_template)
+        add_user_values(roles_data, DATABASES_KEY, usernames_to_add, databases_template)
 
     if roles_template:
-        add_user_values(roles_yaml, ROLES_KEY, usernames_to_add, roles_template)
+        add_user_values(roles_data, ROLES_KEY, usernames_to_add, roles_template)
 
     if users_template:
-        add_user_values(roles_yaml, USERS_KEY, usernames_to_add, users_template)
+        add_user_values(roles_data, USERS_KEY, usernames_to_add, users_template)
 
 
-def remove_users(roles_yaml: str, usernames_to_remove: list):
+def remove_users(roles_data: dict, usernames_to_remove: list):
     """Remove each username from roles.yml"""
-    remove_struct = RolesStruct(roles_yaml, usernames_to_remove=usernames_to_remove)
+    remove_struct = RolesStruct(roles_data, usernames_to_remove=usernames_to_remove)
     remove_struct.remove_values()
 
 
 def main():
     """entrypoint function"""
     configure_logging()
-    roles_yaml = get_roles_from_yaml()
+    roles_data = get_roles_from_yaml()
     (
         usernames_to_remove,
         usernames_to_add,
         databases_template,
         roles_template,
         users_template,
+        test_run,
     ) = process_args()
+    logging.info(f"update_roles_yaml test_run: {test_run}")
+    time.sleep(5)  # give user a chance to abort
     logging.info(f"usernames_to_add: {usernames_to_add}")
     logging.info(f"usernames_to_remove: {usernames_to_remove}\n")
 
     if usernames_to_add:
         add_users(
-            roles_yaml,
+            roles_data,
             usernames_to_add,
             databases_template,
             roles_template,
@@ -120,9 +127,10 @@ def main():
         )
 
     if usernames_to_remove:
-        remove_users(roles_yaml, usernames_to_remove)
+        remove_users(roles_data, usernames_to_remove)
 
-    save_roles_to_yaml(roles_yaml)
+    if not test_run and (usernames_to_add or usernames_to_remove):
+        save_roles_to_yaml(roles_data)
 
 
 if __name__ == "__main__":

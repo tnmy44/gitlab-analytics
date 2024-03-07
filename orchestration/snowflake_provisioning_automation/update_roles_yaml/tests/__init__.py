@@ -7,5 +7,5 @@ import sys
 import os
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
-src_path = abs_path[: abs_path.find("/tests")] + "/src/"
-sys.path.append(src_path)
+parent_path = abs_path[: abs_path.find("/tests")]
+sys.path.append(parent_path)

@@ -1,9 +1,9 @@
 """
-This module args.py parses the commandline arguments provided by the user.
+This module args.py parses the command line arguments provided by the user.
 """
 
 import argparse
-from update_roles_utils import get_username_changes
+from utils_update_roles import get_username_changes
 
 
 def get_usernames_added() -> list:
@@ -34,7 +34,7 @@ def get_default_users_template() -> str:
     return '{"{{ username }}": {"can_login": true, "member_of": ["{{ username }}"]}}'
 
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """
     The user can pass in the following arguemnts:
         --usernames-to-add
@@ -80,6 +80,14 @@ def parse_arguments():
         "--users-template",
         default=get_default_users_template(),
         help="User values template- pass in a JSON string object",
+    )
+    # by default, only print what would happen to roles.yml, but don't overwrite it
+    parser.add_argument(
+        "-t",
+        "--test-run",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="If test, only print the sql statements, rather than running them in Snowflake",
     )
 
     return parser.parse_args()
