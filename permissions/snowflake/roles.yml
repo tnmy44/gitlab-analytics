@@ -463,7 +463,6 @@ roles:
             - gitlab_dotcom
             - handbook
             - influx_db
-            - license_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -490,7 +489,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - handbook
-            - license_db
             - gitlab_dotcom
             - postgres_pipeline
             - netsuite
@@ -532,7 +530,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -614,7 +611,6 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - greenhouse
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -641,7 +637,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -694,7 +689,6 @@ roles:
             - gitlab_data_yaml
             - gitlab_dotcom
             - handbook
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -721,7 +715,6 @@ roles:
             - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
-            - license_db
             - netsuite
             - postgres_pipeline
             - salesforce
@@ -1139,7 +1132,6 @@ roles:
             - dbt_analytics
             - driveload
             - gitlab_dotcom
-            - license_db
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -1579,21 +1571,6 @@ roles:
             tables:
                 read:
                     - bi_tool_eval.*.*
-
-    - coupa:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.coupa_sandbox
-            tables:
-                read:
-                    - raw.coupa_sandbox.*
-
 
     - covid19:
         privileges:
@@ -2332,22 +2309,6 @@ roles:
             tables:
                 read:
                     - raw.iterable.*
-
-
-    - license_db:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.license_db
-                    - raw.license_db
-            tables:
-                read:
-                    - prep.license_db.*
-                    - raw.license_db.*
 
     - linkedin_ads:
         privileges:
@@ -3296,6 +3257,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - apanchal:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - aperez:
         member_of:
             - analyst_people
@@ -3546,7 +3513,6 @@ roles:
             - analyst_engineering
             - analyst_growth
             - bi_tool_eval_read
-            - coupa
             - customers_db
             - data_science_readonly
             - gitlab_dotcom
@@ -5504,7 +5470,6 @@ roles:
         member_of:
             - adaptive
             - analyst_finance
-            - coupa
             - customers_db
             - data_team_analyst
             - data_manager
@@ -6763,6 +6728,11 @@ users:
         can_login: yes
         member_of:
             - alu
+
+    - apanchal:
+        can_login: yes
+        member_of:
+            - apanchal
 
     - aperez:
         can_login: yes
