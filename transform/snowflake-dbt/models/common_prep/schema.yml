@@ -814,9 +814,9 @@ models:
     description: '{{ doc("prep_latest_seat_link_installation") }}'
     tests:
       - dbt_utils.unique_combination_of_columns:
-        combination_of_columns:
-          - host_name
-          - dim_instance_id
+          combination_of_columns:
+            - host_name
+            - dim_instance_id
 
   - name: prep_gainsight_source_model_counts
     description: '{{ doc("prep_gainsight_source_model_counts") }}'
