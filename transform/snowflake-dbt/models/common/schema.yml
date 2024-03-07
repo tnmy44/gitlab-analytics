@@ -6797,6 +6797,13 @@ models:
       - name: has_subscription_auto_renew_context
         description: '{{ doc("has_subscription_auto_renew_context") }}'  
 
+  - name: fct_behavior_structured_event_redis_hll_counters
+    description: Derived fact table for structured events related to redis hll metrics.
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
 
   - name: fct_behavior_unstructured_event
     description: '{{ doc("fct_behavior_unstructured_event") }}'
