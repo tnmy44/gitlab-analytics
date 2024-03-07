@@ -54,7 +54,7 @@ LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = invoice_detail.payment
 )
 
 {{ dbt_audit(
-cte_ref="mart_collections_monthly",
+cte_ref="wk_mart_collections_monthly",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-03-07",
