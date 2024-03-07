@@ -523,7 +523,7 @@ specify_dbt_parameters:
     - git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD --name-only | grep -iEo "(.*)\.sql" | sed -E 's/\.sql//' | awk -F '/' '{print tolower($NF)}' | sort | uniq > diff.txt
     - touch comparison.txt
     - python3 transform/tableau_dependency_query/tableau_query.py
-    - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these!" && cat comparison.txt && exit 1; else echo "All good, no dependencies found" && exit 0; fi;
+    - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these tableau dependencies!" && cat comparison.txt && exit 1; else echo "All good, no dependencies found in tableau" && exit 0; fi;
 
 # ======
 # Lint dbt SQL
