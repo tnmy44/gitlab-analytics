@@ -3296,6 +3296,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - apanchal:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - aperez:
         member_of:
             - analyst_people
@@ -6763,6 +6769,11 @@ users:
         can_login: yes
         member_of:
             - alu
+
+    - apanchal:
+        can_login: yes
+        member_of:
+            - apanchal
 
     - aperez:
         can_login: yes
