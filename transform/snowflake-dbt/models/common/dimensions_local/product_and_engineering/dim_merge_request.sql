@@ -3,7 +3,6 @@
     "post-hook": "{{ missing_member_column(primary_key = 'dim_merge_request_sk', not_null_test_cols = []) }}"
 }) }}
 
-
 WITH prep_merge_request AS (
 
     SELECT 

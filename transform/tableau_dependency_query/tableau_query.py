@@ -4,6 +4,7 @@ This acts as a base script for the tableau_direct_dependency_query CI job.
 """
 
 import os
+import sys
 import logging
 import requests
 
@@ -12,6 +13,8 @@ x_mcd_id = os.environ.get("CI_MCD_TOKEN_ID")
 x_mcd_token = os.environ.get("CI_MCD_TOKEN_SECRET")
 URL = "https://api.getmontecarlo.com/graphql"
 
+# Set logging defaults
+logging.basicConfig(stream=sys.stdout, level=20)
 
 HEADERS = {
     "x-mcd-id": x_mcd_id,
