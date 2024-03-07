@@ -2,7 +2,6 @@
 Propensity to Purchase Leads DAG
 """
 
-
 import os
 from datetime import datetime, timedelta
 
