@@ -134,20 +134,21 @@ with open("diff.txt", "r", encoding="UTF-8") as f:
         # if no path is returned exit the script
         if full_table_path is None:
             print("No table path returned for model {}".format(line))
-        source_table_mcon = query_table(full_table_path)
-        response_downstream_node_dependencies = get_downstream_node_dependencies(
-            source_table_mcon
-        )
-        output_list = check_response_for_tableau_dependencies(
-            response_downstream_node_dependencies
-        )
+        else:
+            source_table_mcon = query_table(full_table_path)
+            response_downstream_node_dependencies = get_downstream_node_dependencies(
+                source_table_mcon
+            )
+            output_list = check_response_for_tableau_dependencies(
+                response_downstream_node_dependencies
+            )
 
-        # if length of output_list > 0 then show the list of downstream dependencies
-        if len(output_list) > 0:
-            # show each key value pair in output_list and append them in comparison.txt
-            with open("comparison.txt", "a", encoding="UTF-8") as f:
-                write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
-                f.write(write_string)
-                for item in output_list:
-                    for key, value in item.items():
-                        f.write(f"\n{key}: {value}")
+            # if length of output_list > 0 then show the list of downstream dependencies
+            if len(output_list) > 0:
+                # show each key value pair in output_list and append them in comparison.txt
+                with open("comparison.txt", "a", encoding="UTF-8") as f:
+                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                    f.write(write_string)
+                    for item in output_list:
+                        for key, value in item.items():
+                            f.write(f"\n{key}: {value}")
