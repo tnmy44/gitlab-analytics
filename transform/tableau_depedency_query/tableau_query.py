@@ -1,6 +1,12 @@
+"""
+This is responsible for fetching the direct tableau dependencies for a model using the Monte Carlo API. 
+
+This acts as a base script for the tableau_direct_dependency_query CI job.
+"""
+
 import os
-import requests
 from logging import info
+import requests
 
 dwId = os.environ.get("CI_DATA_WAREHOUSE_ID")
 x_mcd_id = os.environ.get("CI_MCD_TOKEN_ID")
@@ -19,7 +25,13 @@ def get_response(json):
     """
     Return response object from Monte Carlo API
     """
+    # try to get response from Monte Carlo API
+
     response = requests.post(url, headers=headers, json=json)
+    if response.status_code != 200:
+        raise Exception(
+            f"Error fetching data from Monte Carlo API. Status code: {response.status_code}"
+        )
     response_content = response.json()
     return response_content
 
@@ -116,21 +128,23 @@ with open("diff.txt", "r") as f:
         )
         full_table_path = get_table_path_query(line)
         # if no path is returned exit the script
-        source_table_mcon = query_table(full_table_path)
-        # if no mcon is found raise a status saying no mcon detected and exit
-        response_downstream_node_dependencies = get_downstream_node_dependencies(
-            source_table_mcon
-        )
-        output_list = check_response_for_tableau_dependencies(
-            response_downstream_node_dependencies
-        )
+        if not full_table_path:
+            raise ValueError("No table path returned for model {}".format(line))
+        else:
+            source_table_mcon = query_table(full_table_path)
+            response_downstream_node_dependencies = get_downstream_node_dependencies(
+                source_table_mcon
+            )
+            output_list = check_response_for_tableau_dependencies(
+                response_downstream_node_dependencies
+            )
 
-        # if length of output_list is greater then zero then show the list of downstream dependencies
-        if len(output_list) > 0:
-            # show each key value pair in output_list and append them in comparison.txt
-            with open("comparison.txt", "a") as f:
-                write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
-                f.write(write_string)
-                for item in output_list:
-                    for key, value in item.items():
-                        f.write(f"\n{key}: {value}")
+            # if length of output_list is greater then zero then show the list of downstream dependencies
+            if len(output_list) > 0:
+                # show each key value pair in output_list and append them in comparison.txt
+                with open("comparison.txt", "a") as f:
+                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                    f.write(write_string)
+                    for item in output_list:
+                        for key, value in item.items():
+                            f.write(f"\n{key}: {value}")
