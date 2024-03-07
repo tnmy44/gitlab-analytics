@@ -1189,3 +1189,5 @@ models:
   - name: wk_mart_booking_billing_AR_monthly
     description: Comparison of monthly booking (opportunity), invoice and payment amounts and counts
    
+  - name: wk_mart_collections_monthly
+    description: Monthly payment amounts applied to invoices against billed amounts
