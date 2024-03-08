@@ -11,9 +11,9 @@
 WITH gitlab_ide_extension_events AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('wk_mart_behavior_structured_event_code_suggestion'), except=["CREATED_BY", 
+    {{ dbt_utils.star(from=ref('mart_behavior_structured_event_code_suggestion'), except=["CREATED_BY", 
     "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
-  FROM {{ ref('wk_mart_behavior_structured_event_code_suggestion') }}
+  FROM {{ ref('mart_behavior_structured_event_code_suggestion') }}
   WHERE app_id = 'gitlab_ide_extension' --events that can be used to calculate suggestion outcome
     AND event_label IS NOT NULL --required field in order to stitch the events together
     {% if is_incremental() %}
@@ -130,6 +130,7 @@ suggestion_level AS (
     requested.delivery_type,
     requested.prefix_length,
     requested.suffix_length,
+    requested.is_streaming,
     requested.extension_name,
     requested.extension_version,
     requested.ide_name,
@@ -196,9 +197,9 @@ suggestion_level AS (
 
 {{ dbt_audit(
     cte_ref="suggestion_level",
-    created_by="@cbraza",
-    updated_by="@cbraza",
-    created_date="2023-10-20",
-    updated_date="2023-10-20"
+    created_by="@michellecooper",
+    updated_by="@michellecooper",
+    created_date="2024-03-08",
+    updated_date="2024-03-08"
 ) }}
 

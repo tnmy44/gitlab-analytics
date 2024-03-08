@@ -93,6 +93,7 @@ structured_event_renamed AS (
       namespace_ids,
       instance_id,
       host_name,
+      is_streaming,
       gitlab_service_ping_context,
       redis_event_name,
       key_path,
@@ -223,6 +224,7 @@ structured_events_w_dim AS (
       events_with_plan.namespace_ids,
       events_with_plan.instance_id,
       events_with_plan.host_name,
+      events_with_plan.is_streaming,
 
       -- Degenerate Dimensions (Service Ping)
       events_with_plan.gitlab_service_ping_context,

@@ -6370,33 +6370,31 @@ models:
       - name: has_code_suggestions_context
         description: ' {{ doc("has_code_suggestions_context") }} '
       - name: model_engine
-        description: ' {{ doc("model_engine") }} '
+        description: ' {{ doc("code_suggestions_model_engine") }} '
       - name: model_name
-        description: ' {{ doc("model_name") }} '
+        description: ' {{ doc("code_suggestions_model_name") }} '
       - name: prefix_length
-        description: ' {{ doc("prefix_length") }} '
+        description: ' {{ doc("code_suggestions_prefix_length") }} '
       - name: suffix_length
-        description: ' {{ doc("suffix_length") }} '
+        description: ' {{ doc("code_suggestions_suffix_length") }} '
       - name: language
-        description: ' {{ doc("language") }} '
+        description: ' {{ doc("code_suggestions_language") }} '
       - name: user_agent
-        description: ' {{ doc("user_agent") }} '
+        description: ' {{ doc("code_suggestions_user_agent") }} '
       - name: delivery_type
         description: '{{ doc("product_delivery_type") }}'
         accepted_values:
           values: ['Self-Managed', 'SaaS']
       - name: api_status_code
-        description: ' {{ doc("api_status_code") }} '
-      - name: duo_namespace_ids
-        description:  ' {{ doc("duo_namespace_ids") }} '
-      - name: saas_namespace_ids
-        description:  ' {{ doc("saas_namespace_ids") }} '
+        description: ' {{ doc("code_suggestions_api_status_code") }} '
       - name: namespace_ids
-        description: ' {{ doc("namespace_ids") }} '
+        description: ' {{ doc("code_suggestions_namespace_ids") }} '
       - name: instance_id
-        description: ' {{ doc("instance_id") }} '
+        description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
+      - name: is_streaming
+        description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -8397,27 +8395,29 @@ models:
     - name: code_suggestions_context
       description: '{{ doc("code_suggestions_context") }}'
     - name: model_engine
-      description: '{{ doc("model_engine") }}'
+      description: '{{ doc("code_suggestions_model_engine") }}'
     - name: model_name
-      description: '{{ doc("model_name") }}'
+      description: '{{ doc("code_suggestions_model_name") }}'
     - name: prefix_length
-      description: '{{ doc("prefix_length") }}'
+      description: '{{ doc("code_suggestions_prefix_length") }}'
     - name: suffix_length
-      description: '{{ doc("suffix_length") }}'
+      description: '{{ doc("code_suggestions_suffix_length") }}'
     - name: language
-      description: '{{ doc("language") }}'
+      description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type
       description: '{{ doc("product_delivery_type") }}'
       accepted_values:
         values: ['Self-Managed', 'SaaS']
     - name: api_status_code
-      description: '{{ doc("api_status_code") }}'
+      description: '{{ doc("code_suggestions_api_status_code") }}'
     - name: namespace_ids
-      description: '{{ doc("namespace_ids") }}'
+      description: '{{ doc("code_suggestions_namespace_ids") }}'
     - name: instance_id
-      description: '{{ doc("instance_id") }}'
+      description: '{{ doc("dim_instance_id") }}'
     - name: host_name
       description: '{{ doc("host_name") }}'
+    - name: is_streaming
+      description: '{{ doc("code_suggestions_is_streaming") }}'
     - name: ultimate_parent_namespace_ids
       description: '{{ doc("code_suggestions_ultimate_parent_namespace_ids") }} '
     - name: subscription_names
@@ -8443,7 +8443,7 @@ models:
     - name: crm_account_name
       description: '{{ doc("code_suggestions_crm_account_name") }}'
     - name: parent_crm_account_name
-      description: ' {{ doc("parent_crm_account_name") }}'
+      description: ' {{ doc("code_suggestions_parent_crm_account_name") }}'
     - name: ultimate_parent_namespace_id
       description: '{{ doc("code_suggestions_ultimate_parent_namespace_id") }}'
     - name: dim_installation_id

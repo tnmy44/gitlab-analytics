@@ -2659,69 +2659,69 @@ Flag indicating the Snowplow event includes fields from the [Code Suggestions Co
 
 {% enddocs %}
 
-{% docs model_engine %}
+{% docs code_suggestions_model_engine %}
 
 Model engine used for the completions.
 
 {% enddocs %}
 
-{% docs model_name %}
+{% docs code_suggestions_model_name %}
 
 Model name used for the completions.
 
 {% enddocs %}
 
-{% docs prefix_length %}
+{% docs code_suggestions_prefix_length %}
 
 Length of the prefix in characters.
 
 {% enddocs %}
 
-{% docs suffix_length %}
+{% docs code_suggestions_suffix_length %}
 
 Length of the suffix in characters.
 
 {% enddocs %}
 
-{% docs language %}
+{% docs code_suggestions_language %}
 
 Programming language of the completions request.
 
 {% enddocs %}
 
-{% docs user_agent %}
+{% docs code_suggestions_user_agent %}
 
 User-agent string of the request (holds information about the origin of the request).
 
 {% enddocs %}
 
-{% docs api_status_code %}
+{% docs code_suggestions_api_status_code %}
 
 HTTP status code of GitLab API.
 
 {% enddocs %}
 
-{% docs duo_namespace_ids %}
+{% docs code_suggestions_duo_namespace_ids %}
 
 List of the namespace IDs that the user has a Duo Pro Add-Onn provisioned from (available GitLab.com only).
 
 {% enddocs %}
 
-{% docs saas_namespace_ids %}
+{% docs code_suggestions_saas_namespace_ids %}
 
 List of the namespace IDs that the user has a Code Suggestions subscription in SaaS for.
 
 {% enddocs %}
 
-{% docs namespace_ids %}
+{% docs code_suggestions_namespace_ids %}
 
 Coalesced list of namespace ids from `duo_namespace_ids` and `saas_namespace_ids` to create a complete list of namespaces that provide access to Code Suggestions/Duo Pro.
 
 {% enddocs %}
 
-{% docs instance_id %}
+{% docs code_suggestions_is_streaming %}
 
-ID of the GitLab instance where the request comes from.
+Code suggestions can be returned to the user in a single response or as a stream (in chunks). This boolean field distinguishes between the streamed and non-streamed responses.
 
 {% enddocs %}
 
@@ -3050,6 +3050,12 @@ If only one `crm_account_name` can be mapped to the Code Suggestion event throug
 
 {% enddocs %}
 
+{% docs code_suggestions_parent_crm_account_name %}
+
+If only one ultimate parent `crm_account_name` can be mapped to the Code Suggestion event through the namespace or instance id, then it is listed here.
+
+{% enddocs %}
+
 {% docs code_suggestions_dim_installation_id %}
 
 If only one `dim_installation_id` can be mapped to the Code Suggestion event through the instance id, then it is listed here.
@@ -3071,5 +3077,125 @@ If only one ultimate parent namespace id can be mapped to the Code Suggestion ev
 {% docs code_suggestions_namespace_is_internal %}
 
 Flag indicates if any namespace associated with the Code Suggestion is internal. Since a Code Suggestion can permissioned at the user-level, it has a 1:many relationship with namespaces, so the event can be associated with multiple namespace IDs. We look at all possible associations to verify if the event is internal.
+
+{% enddocs %}
+
+{% docs code_suggestions_suggestion_id %}
+
+The unique identifier for the code suggestion. Appears as `event_label` on the Snowplow events
+
+{% enddocs %}
+
+{% docs code_suggestions_requested_at %}
+
+Timestamp of the `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend.
+
+{% enddocs %}
+
+{% docs code_suggestions_loaded_at %}
+
+Timestamp of the `suggestion_loaded` event. This event is sent when the suggestion request returns without error.
+
+{% enddocs %}
+
+{% docs code_suggestions_shown_at %}
+
+Timestamp of the `suggestion_shown` event. This event is sent when the suggestion is shown to the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_accepted_at %}
+
+Timestamp of the `suggestion_accepted` event. This event is sent when the suggestion was shown and then accepted by the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_rejected_at %}
+
+Timestamp of the `suggestion_rejected` event. This event is sent when the suggestion was shown and then rejected by the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_cancelled_at %}
+
+Timestamp of the `suggestion_cancelled` event. This event is sent when the suggestion request was canceled and not shown. For example, the user starts typing again before the suggestion is shown.
+
+{% enddocs %}
+
+{% docs code_suggestions_not_provided_at %}
+
+Timestamp of the `suggestion_not_provided` event. This event is sent when no suggestion was provided that could be shown to the user. This can happen if the suggestion does not meet a rule designed to limit poor suggestions from being shown. For example, the suggestion is all whitespace characters.
+
+{% enddocs %}
+
+{% docs code_suggestions_error_at %}
+
+Timestamp of the `suggestion_error` event. This event is sent when the suggestion request leads to an error.
+
+{% enddocs %}
+
+{% docs code_suggestions_load_time_in_ms %}
+
+The difference (in ms) between the `suggestion_requested` and `suggestion_loaded` events
+
+{% enddocs %}
+
+{% docs code_suggestions_display_time_in_ms %}
+
+The difference (in ms) between the `suggestion_shown` and `suggestion_accepted` or `suggestion_rejected` events
+
+{% enddocs %}
+
+{% docs code_suggestions_suggestion_outcome %}
+
+The outcome of the suggestion (ex. `suggestion_accepted`, `suggestion_rejected`, `suggestion_cancelled`, `suggestion_error`, etc)
+
+{% enddocs %}
+
+{% docs code_suggestions_was_requested %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend. This field will always be TRUE.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_loaded %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_loaded` event. This event is sent when the suggestion request returns without error.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_shown %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_shown` event. This event is sent when the suggestion is shown to the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_accepted %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_accepted` event. This event is sent when the suggestion was shown and then accepted by the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_rejected %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_rejected` event. This event is sent when the suggestion was shown and then rejected by the user.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_cancelled %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_cancelled` event. This event is sent when the suggestion request was canceled and not shown. For example, the user starts typing again before the suggestion is shown.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_not_provided %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` event. This event is sent when no suggestion was provided that could be shown to the user. This can happen if the suggestion does not meet a rule designed to limit poor suggestions from being shown. For example, the suggestion is all whitespace characters.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_error %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event. This event is sent when the suggestion request leads to an error.
 
 {% enddocs %}

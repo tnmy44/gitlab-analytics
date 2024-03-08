@@ -169,6 +169,7 @@ SELECT
   namespace_ids                                                                                                     AS namespace_ids,
   instance_id                                                                                                       AS instance_id,
   host_name                                                                                                         AS host_name,
+  is_streaming                                                                                                      AS is_streaming,
   gitlab_service_ping_context                                                                                       AS gitlab_service_ping_context,
   redis_event_name                                                                                                  AS redis_event_name,
   key_path                                                                                                          AS key_path,

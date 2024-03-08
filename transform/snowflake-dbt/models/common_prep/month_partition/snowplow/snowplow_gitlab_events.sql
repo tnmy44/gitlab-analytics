@@ -399,6 +399,7 @@ WITH filtered_source as (
       events_with_flattened_context.namespace_ids,
       events_with_flattened_context.instance_id,
       events_with_flattened_context.host_name,
+      events_with_flattened_context.is_streaming,
       events_with_flattened_context.gitlab_service_ping_context,
       events_with_flattened_context.has_gitlab_service_ping_context,
       events_with_flattened_context.redis_event_name,

@@ -11,7 +11,7 @@
 
 {{ simple_cte([
     ('fct_behavior_structured_event_code_suggestion', 'fct_behavior_structured_event_code_suggestion'),
-    ('fct_behavior_structured_event_ide_extension_version', 'wk_fct_behavior_structured_event_ide_extension_version'),
+    ('fct_behavior_structured_event_ide_extension_version', 'fct_behavior_structured_event_ide_extension_version'),
     ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
     ('dim_behavior_event', 'dim_behavior_event')
 ]) }}
@@ -132,6 +132,7 @@ filtered_code_suggestion_events AS (
     has_ide_extension_version_context,
     instance_id,
     host_name,
+    is_streaming,
     namespace_ids,
     ultimate_parent_namespace_ids,
     dim_installation_ids,

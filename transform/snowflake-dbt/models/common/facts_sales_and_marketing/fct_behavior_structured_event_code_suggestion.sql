@@ -43,7 +43,8 @@ clicks AS (
     fct_behavior_structured_event.api_status_code,
     fct_behavior_structured_event.namespace_ids,
     fct_behavior_structured_event.instance_id,
-    fct_behavior_structured_event.host_name
+    fct_behavior_structured_event.host_name,
+    fct_behavior_structured_event.is_streaming
   FROM fct_behavior_structured_event
   WHERE has_code_suggestions_context = TRUE
     {% if is_incremental() %}

@@ -116,7 +116,8 @@ WITH filtered_source as (
             {'field':'gitlab_saas_namespace_ids', 'alias':'saas_namespace_ids'},
             {'field':'gitlab_saas_duo_pro_namespace_ids', 'alias':'duo_namespace_ids'},
             {'field':'gitlab_instance_id', 'alias':'instance_id'},
-            {'field':'gitlab_host_name', 'alias':'host_name'}
+            {'field':'gitlab_host_name', 'alias':'host_name'},
+            {'field':'is_streaming', 'data_type':'boolean'}
             ]
         )
       }},
@@ -246,6 +247,7 @@ SELECT
   MAX(column_selection.namespace_ids)                         AS namespace_ids,
   MAX(column_selection.instance_id)                           AS instance_id,
   MAX(column_selection.host_name)                             AS host_name,
+  MAX(column_selection.is_streaming)                          AS is_streaming,
 
   MAX(column_selection.ide_extension_version_context)         AS ide_extension_version_context,
   MAX(column_selection.ide_extension_version_context_schema)  AS ide_extension_version_context_schema,
