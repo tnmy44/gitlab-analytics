@@ -2906,20 +2906,6 @@ roles:
                       - prep.zengrc.*
                       - raw.tap_zengrc.*
 
-    - zoom:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.tap_zoom
-            tables:
-                read:
-                    - raw.tap_zoom.*
-
     - zoominfo:
         privileges:
             databases:
