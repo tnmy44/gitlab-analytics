@@ -1086,7 +1086,6 @@ roles:
         warehouses:
             - loading
         member_of:
-            - zoom
             - xactly
             - adaptive
             - zendesk
