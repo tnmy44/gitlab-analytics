@@ -1,4 +1,5 @@
 """Source code to perform extraction of YAML file from Gitlab handbook, internal handbook, comp calculator"""
+
 import logging
 import subprocess
 import sys
