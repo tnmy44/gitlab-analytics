@@ -12,7 +12,7 @@ WITH final AS (
 )
 
 {{ dbt_audit(
-    cte_ref="seat_link",
+    cte_ref="final",
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2024-03-07",
