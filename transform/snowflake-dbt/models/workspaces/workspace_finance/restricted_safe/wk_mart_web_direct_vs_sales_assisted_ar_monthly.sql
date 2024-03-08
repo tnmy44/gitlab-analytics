@@ -3,8 +3,6 @@
     tags=["mnpi"]
 ) }}
 
-WITH balance_per_purchase_path AS (
-
 WITH purchase_path  AS (
 
 /* Determine purchase path of open invoices monthly */
@@ -23,7 +21,9 @@ END AS purchase_path
 FROM {{ ref('wk_finance_fct_invoice_aging_detail') }}
 LEFT JOIN {{ ref('dim_invoice') }} ON dim_invoice.dim_invoice_id = wk_finance_fct_invoice_aging_detail.invoice_id
 
-)
+),
+
+balance_per_purchase_path AS (
 
 /* Determine the total balances per purchase path monthly */
 
