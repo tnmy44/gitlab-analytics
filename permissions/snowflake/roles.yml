@@ -5871,6 +5871,7 @@ roles:
             - linkedin_ads
             - reporter
             - restricted_safe
+            - snowplow
             - zuora_order
             - zuora_stitch_rest_api
         warehouses:
