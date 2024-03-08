@@ -58,7 +58,8 @@ clicks AS (
         IFF(saas_namespace_ids = '[]', NULL, saas_namespace_ids)
         )                                                                           AS namespace_ids,
     flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS instance_id,
-    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name
+    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name,
+    flat_contexts.value['data']['is_streaming']::VARCHAR                            AS is_streaming
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
