@@ -31,7 +31,7 @@ WITH filtered_source as (
       AND derived_tstamp < '{{ end_date }}'
     {% if is_incremental() %}
 
-      AND derived_tstamp > (SELECT MAX(behavior_at) FROM {{this}})
+      AND derived_tstamp > (SELECT MAX(derived_tstamp_date) FROM {{this}})
 
     {% endif %}
 )

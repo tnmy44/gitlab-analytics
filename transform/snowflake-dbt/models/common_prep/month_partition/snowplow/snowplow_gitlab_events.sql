@@ -201,7 +201,7 @@ WITH filtered_source as (
             , TRUE)
     {% if is_incremental() %}
 
-      AND derived_tstamp > (SELECT MAX(behavior_at) FROM {{this}})
+      AND derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{this}})
 
     {% endif %}
 
