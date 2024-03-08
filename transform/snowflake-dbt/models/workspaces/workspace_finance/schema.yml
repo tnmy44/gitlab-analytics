@@ -1194,3 +1194,6 @@ models:
 
   - name: wk_mart_web_direct_vs_sales_assisted_ar_monthly
     description: Comparison of collections for web direct vs sales assisted invoices
+
+  - name: wk_mart_payment_type
+    description: Comparison of amounts and volumes by payment type (electronic vs. external) by month
