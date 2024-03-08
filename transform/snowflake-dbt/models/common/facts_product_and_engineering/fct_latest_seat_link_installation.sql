@@ -6,7 +6,19 @@
 WITH final AS (
 
     SELECT
-      *
+      dim_subscription_id,
+      subscription_name,
+      host_name,
+      dim_instance_id,
+      order_id,
+      report_timestamp,
+      report_date,
+      license_starts_on,
+      created_at,
+      updated_at,
+      active_user_count,
+      license_user_count,
+      max_historical_user_count
     FROM {{ ref('prep_latest_seat_link_installation') }}
 
 )
