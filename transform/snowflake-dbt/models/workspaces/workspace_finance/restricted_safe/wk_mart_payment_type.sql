@@ -8,7 +8,7 @@ WITH payment_by_type AS (
 /* Table providing payment amounts and volumes by type, electronic or external, per month */
 
 SELECT
-DATE(DATE_TRUNC(‘month’, wk_finance_fct_payment.payment_date)) AS payment_month,
+DATE(DATE_TRUNC('month', wk_finance_fct_payment.payment_date)) AS payment_month,
 wk_finance_fct_payment.payment_type AS payment_type,
 SUM(wk_finance_fct_payment.payment_amount) AS payment_amount_by_type,
 COUNT(wk_finance_fct_payment.payment_amount) AS number_of_payments_by_type
@@ -23,7 +23,7 @@ all_payments AS (
 /* Table providing total payment amounts and volumes per month */
 
 SELECT
-DATE(DATE_TRUNC(‘month’, wk_finance_fct_payment.payment_date)) AS payment_month,
+DATE(DATE_TRUNC('month', wk_finance_fct_payment.payment_date)) AS payment_month,
 SUM(wk_finance_fct_payment.payment_amount) AS total_payment_amount,
 COUNT(wk_finance_fct_payment.payment_amount) AS total_number_of_payments
 FROM  {{ ref('wk_finance_fct_payment') }}
