@@ -1191,3 +1191,6 @@ models:
    
   - name: wk_mart_collections_monthly
     description: Monthly payment amounts applied to invoices against billed amounts
+
+  - name: wk_mart_web_direct_vs_sales_assisted_ar_monthly
+    description: Comparison of collections for web direct vs sales assisted invoices
