@@ -216,9 +216,7 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
-      dim_crm_person.person_first_country,
-      dim_crm_person.person_geo_combined,
-      dim_crm_person.country_name_iso_based
+      dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -306,5 +304,5 @@
     created_by="@iweeks",
     updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2024-02-05",
+    updated_date="2024-03-11",
   ) }}  

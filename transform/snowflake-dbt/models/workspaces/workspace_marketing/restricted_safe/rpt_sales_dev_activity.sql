@@ -240,9 +240,7 @@
     mart_crm_person.is_mql,
     mart_crm_person.is_first_order_person,
     mart_crm_person.person_first_country,
-    mart_crm_person.person_geo_combined,
     mart_crm_person.lead_score_classification,
-    mart_crm_person.country_name_iso_based,
     CASE 
       WHEN mart_crm_person.propensity_to_purchase_score_group IS NULL 
         THEN 'No PTP Score' 
@@ -343,9 +341,7 @@
     NULL AS is_mql,
     NULL AS is_first_order_person,
     NULL AS person_first_country,
-    NULL AS person_geo_combined,
     NULL AS lead_score_classification,
-    NULL AS country_name_iso_based,
     NULL AS propensity_to_purchase_score_group,
     NULL AS is_high_ptp_lead,
     NULL AS marketo_last_interesting_moment,
@@ -416,5 +412,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2024-02-12",
+    updated_date="2024-03-11",
   ) }}
