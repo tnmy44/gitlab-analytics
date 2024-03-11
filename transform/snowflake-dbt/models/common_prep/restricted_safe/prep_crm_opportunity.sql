@@ -224,7 +224,7 @@
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
       sfdc_opportunity_source.xdr_net_arr_stage_1,
       sfdc_opportunity_source.xdr_net_arr_stage_3,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}        AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       live_date.date_actual                                                                                 AS snapshot_date,
       live_date.first_day_of_month                                                                          AS snapshot_month,
