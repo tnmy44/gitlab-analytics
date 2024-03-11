@@ -223,7 +223,8 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     dim_marketing_contact_no_pii.sfdc_record_id,
     role                                                                  AS namespace_creator_role,
     jobs_to_be_done                                                       AS namespace_creator_jtbd,
-    is_first_order_person
+    is_first_order_person,
+    is_defaulted_trial
   FROM namespaces
   INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON namespaces.creator_id = dim_user.dim_user_id
@@ -376,7 +377,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 {{ dbt_audit(
     cte_ref="base",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@rkohnke",
     created_date="2023-11-10",
-    updated_date="2023-11-10"
+    updated_date="2024-03-11"
 ) }}

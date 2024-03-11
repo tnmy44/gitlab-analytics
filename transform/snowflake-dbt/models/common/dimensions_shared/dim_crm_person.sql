@@ -118,6 +118,7 @@ WITH crm_person AS (
       propensity_to_purchase_namespace_id,
       propensity_to_purchase_past_insights,
       propensity_to_purchase_past_score_group,
+      is_defaulted_trial,
       lead_score_classification,
       person_first_country
     FROM crm_person

@@ -138,6 +138,11 @@ renamed AS (
     ptp_namespace_id__c AS ptp_namespace_id,
     ptp_past_insights__c AS ptp_past_insights,
     ptp_past_score_group__c AS ptp_past_score_group,
+    is_defaulted_trial__c as is_defaulted_trial,
+    pqlnamespacecreatorjobdescription__c AS pql_namespace_creator_job_description,
+    pql_namespace_id__c AS pql_namespace_id,
+    pql_namespace_name__c AS pql_namespace_name,
+    pqlnamespaceusers__c AS pql_namespace_users,
     lead_score_classification__c AS lead_score_classification,
 
     {{ sfdc_source_buckets('leadsource') }}
