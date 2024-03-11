@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from tableau_query import query_table, get_table_path_query
+from transform.tableau_dependency_query.src.tableau_query import query_table, get_table_path_query
 
 
 def test_get_table_path_query():
