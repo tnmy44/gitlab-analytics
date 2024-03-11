@@ -261,6 +261,7 @@ WITH biz_person AS (
       ptp_past_insights                              AS propensity_to_purchase_past_insights,
       ptp_past_score_group                           AS propensity_to_purchase_past_score_group,
       lead_score_classification,
+      is_defaulted_trial,
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
       NULL                                           AS is_partner_recalled,
