@@ -119,9 +119,7 @@ WITH crm_person AS (
       propensity_to_purchase_past_insights,
       propensity_to_purchase_past_score_group,
       lead_score_classification,
-      person_first_country,
-      person_geo_combined,
-      country_name_iso_based
+      person_first_country
     FROM crm_person
 )
 
@@ -130,5 +128,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2024-02-05"
+    updated_date="2024-03-11"
 ) }}
