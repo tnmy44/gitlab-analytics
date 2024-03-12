@@ -54,6 +54,7 @@
         ELSE '3. Growth'
       END AS person_order_type,
       person_base.lead_score_classification,
+      person_base.is_defaulted_trial,
 
   --Account Data
       mart_crm_account.crm_account_name,
@@ -411,6 +412,7 @@
       traction_first_response_time_seconds,
       traction_response_time_in_business_hours,
       lead_score_classification,
+      is_defaulted_trial,
   
   --Opp Data
       opportunity_name,
@@ -620,5 +622,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-03-11",
+    updated_date="2024-03-12",
   ) }}
