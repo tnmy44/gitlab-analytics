@@ -1570,6 +1570,12 @@ Name of the source application/ event tracker, such as gitlab-rails or gitlab-ja
 
 {% enddocs %}
 
+{% docs gsc_is_gitlab_team_member %}
+
+Name of the property that allows to distinguish between Gitlab Employees and non-employees. When `gsc_is_gitlab_team_member = TRUE` THEN the event was triggered by a GitLab team member. When `gsc_is_gitlab_team_member = FALSE` THEN the event was not triggered by a GitLab team member.
+
+{% enddocs %}
+
 {% docs dim_behavior_operating_system_sk %}
 
 Surrogate key consisting of os_name and os_timezone, easily JOINed to dim_behavior_operating_system. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `os_name` and `os_timezone`.
