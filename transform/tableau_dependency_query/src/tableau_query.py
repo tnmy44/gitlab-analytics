@@ -23,7 +23,7 @@ HEADERS = {
 }
 
 
-def get_response(payload):
+def get_response(payload: dict) -> dict:
     """
     Return response object from Monte Carlo API
     """
@@ -38,7 +38,7 @@ def get_response(payload):
     return response_content
 
 
-def get_table_path_query(table_id):
+def get_table_path_query(table_id: str):
     """
     Return table path based on table name
     i.e table_name='instance_redis_metrics'
@@ -61,7 +61,7 @@ def get_table_path_query(table_id):
     return table_path
 
 
-def query_table(full_table_id):
+def query_table(full_table_id: str) -> str:
     """
     Return table information based on full_table_path
     i.e full_table_path='raw:saas_usage_ping.instance_redis_metrics'
@@ -79,7 +79,7 @@ def query_table(full_table_id):
     return table_mcon
 
 
-def get_downstream_node_dependencies(table_mcon):
+def get_downstream_node_dependencies(table_mcon: str) -> dict:
     """
     This will return all directly dependent downstream tableau nodes for a given model.
     """
@@ -97,7 +97,9 @@ def get_downstream_node_dependencies(table_mcon):
     return response_derived_tables_partial_lineage
 
 
-def check_response_for_tableau_dependencies(response_downstream_dependencies):
+def check_response_for_tableau_dependencies(
+    response_downstream_dependencies: dict,
+) -> list:
     """
     This will return all dependent downstream nodes for a given source table.
     """
