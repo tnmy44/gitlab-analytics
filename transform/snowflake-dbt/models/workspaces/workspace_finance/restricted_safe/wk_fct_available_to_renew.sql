@@ -143,7 +143,7 @@
     WHERE dim_crm_account.is_jihu_account != 'TRUE'*/
     FROM mart_charge
     LEFT JOIN zuora_ramp
-      ON mart_charge.order_id = zuora_ramp.order_id
+      ON mart_charge.dim_order_id = zuora_ramp.order_id
 
 ), mart_charge AS (
 
