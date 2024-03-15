@@ -41,7 +41,7 @@ ping_metric AS (
       || REPLACE(metrics_path, '.', '''][''')
       || ''']'                                               AS sql_friendly_path,
     data_source                                              AS data_source,
-    lower(data_category)                                     AS data_category,
+    LOWER(data_category)                                     AS data_category,
     distribution                                             AS distribution,
     description                                              AS description,
     IFF(SUBSTRING(product_group, 0, 5) = 'group',
