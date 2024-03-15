@@ -1935,3 +1935,9 @@ This dimension model holds all requirement records and provides dimensional data
 All milestones created within a namespace, with details including the start date, due date, description, and title.
 
 {% enddocs %}
+
+{% docs fct_behavior_structured_event_service_ping %}
+
+Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [Service Ping context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema) and columns, which indicates they are Service Ping events.
+
+{% enddocs %}

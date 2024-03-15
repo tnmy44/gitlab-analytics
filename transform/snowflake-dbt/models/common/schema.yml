@@ -8268,3 +8268,26 @@ models:
         description: '{{ doc("milestone_due_date") }}'
       - name: milestone_status
         description: '{{ doc("milestone_status") }}'
+
+  - name: fct_behavior_structured_event_service_ping
+    description: '{{ doc("fct_behavior_structured_event_service_ping") }}'
+    columns:
+      - name: behavior_structured_event_pk
+        description: '{{ doc("behavior_structured_event_pk") }}'
+        tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
