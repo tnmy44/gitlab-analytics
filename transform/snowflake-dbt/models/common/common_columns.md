@@ -310,6 +310,18 @@ Manually input ISO date of when model was updated
 
 {% enddocs %}
 
+{% docs valid_from %}
+
+Timestamp of when this metric path mapping is valid from
+
+{% enddocs %}
+
+{% docs valid_to %}
+
+Timestamp of when this metric path mapping is valid until
+
+{% enddocs %}
+
 {% docs event_count %}
 
 The count of events generated
@@ -1191,6 +1203,48 @@ The unique identifier of a license subscription. This value is synonymous with `
 
 {% enddocs %}
 
+{% docs ping_metric_id %}
+
+The unique ID of the dim_ping_metric model consisting of metrics_path, created using the dbt surrogate_key macro
+
+{% enddocs %}
+
+{% docs ping_metric_hist_id %}
+
+The unique composite ID of the dim_ping_metric_daily_snapshot model consisting of metrics_path and date_id
+
+{% enddocs %}
+
+{% docs sql_friendly_path %}
+
+Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+
+{% enddocs %}
+
+{% docs description_ping_metric %}
+
+A description of the metric
+
+{% enddocs %}
+
+{% docs skip_validation_ping_metric %}
+
+This will always be NULL
+
+{% enddocs %}
+
+{% docs tier_ping_metric %}
+
+The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium or ultimate (ex. `[   "free",   "premium",   "ultimate" ]`)
+
+{% enddocs %}
+
+{% docs value_type_ping_metric %}
+
+One of `string`, `number`, `boolean`, `object`
+
+{% enddocs %}
+
 {% docs milestone_ping_metric %}
 
 The milestone when the metric was introduced and when it was available to Self-Managed installations with the official GitLab release
@@ -1208,6 +1262,43 @@ The milestone when the metric was introduced and when it was available to Self-M
 The source of the metric. May be set to a value like `database`, `redis`, `redis_hll`, `prometheus`, `system`.
 
 {% enddocs %}
+
+{% docs data_category_ping_metric %}
+
+The category of the metric. May be set to a value like `operational`, `optional`, `subscription`, `standard`.
+
+{% enddocs %}
+
+{% docs distribution_ping_metric %}
+
+The distribution where the tracked feature is available, formatted as an array containing one or a combination of `ce, ee` or `ee` (ex. `["ce", "ee"]`)
+
+{% enddocs %}
+
+{% docs performance_indicator_type_ping_metric %}
+
+The performance indicator type of the metric. May be set to a value like `gmau`, `smau`, `paid_gmau`, `umau` or `customer_health_score`.
+
+{% enddocs %}
+
+{% docs snapshot_date_ping_metric %}
+
+The date the data was extracted from metrics YAML files
+
+{% enddocs %}
+
+{% docs uploaded_at_ping_metric %}
+
+The time the data was extracted from metrics YAML files
+
+{% enddocs %}
+
+{% docs data_by_row_ping_metric %}
+
+JSON object with all fields from YAML file
+
+{% enddocs %}
+
 
 {% docs dim_crm_task_sk %}
 
