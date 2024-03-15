@@ -338,14 +338,13 @@
       dim_subscription_last_term.current_term,
       mart_charge.is_single_fiscal_year_term_subscription,
       CASE 
-      WHEN is_ramp_deal = 'TRUE' 
-      AND mart_charge.term_end_fiscal_year != '{{renewal_fiscal_year}}' 
-      AND dim_subscription_last_term.current_term > 12
-      THEN 'TRUE'  ELSE 'FALSE' END                                                                                                                              
-      AS is_multi_year_booking,
+        WHEN is_ramp_deal = 'TRUE' 
+          AND mart_charge.term_end_fiscal_year != '{{renewal_fiscal_year}}' 
+          AND dim_subscription_last_term.current_term > 12
+        THEN 'TRUE'  ELSE 'FALSE' END                                                                                                                   AS is_multi_year_booking,
       CASE
-        WHEN dim_subscription_last_term.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}})
-          THEN TRUE
+        WHEN is_ramp_deal = 'TRUE' 
+        THEN TRUE
         ELSE FALSE
       END                                                                                                                                               AS is_multi_year_booking_with_multi_subs,
       mart_charge.is_paid_in_full,
