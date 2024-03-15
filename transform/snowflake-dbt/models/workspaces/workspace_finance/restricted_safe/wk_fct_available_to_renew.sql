@@ -6,7 +6,7 @@
 
 {% set renewal_fiscal_years = dbt_utils.get_column_values(
         table=ref('prep_renewal_fiscal_years'),
-        where="fiscal_year >= 2022",
+        where="fiscal_year >= 2019",
         column='fiscal_year',
         order_by='fiscal_year' )%}
 
