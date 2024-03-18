@@ -8056,7 +8056,7 @@ users:
       - Customer Success All Access
       - General All Access
       - General SAFE Access
-  - user_name: ocotroneo
+  - user_name: otopper
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
