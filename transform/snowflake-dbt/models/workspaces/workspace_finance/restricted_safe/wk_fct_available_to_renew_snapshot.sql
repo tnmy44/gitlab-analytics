@@ -22,7 +22,8 @@
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_product_detail', 'dim_product_detail'),
     ('dim_amendment', 'dim_amendment'),
-    ('zuora_ramp', 'zuora_query_api_ramps_source')
+    ('zuora_ramp', 'zuora_query_api_ramps_source'),
+    ('mart_arr_snapshot_model', 'mart_arr_snapshot_model')
 ]) }}
 
 , dim_subscription_source AS (
@@ -117,6 +118,13 @@
       ON dim_subscription.dim_subscription_id = base_subscriptions.dim_subscription_id
     WHERE last_term_version = 1
 
+), snapshot_dates AS (
+    --Use the 8th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
+    SELECT DISTINCT
+      first_day_of_month,
+      snapshot_date_fpa
+    FROM dim_date
+    ORDER BY 1 DESC
 
 ), mart_charge_base AS (
 
@@ -250,20 +258,30 @@
 
       --ARR Analysis Framework
       dim_charge.type_of_arr_change,
+      mart_arr_snapshot_model.arr_month,
+      snapshot_dates.first_day_of_month,
 
       --Additive Fields
+      mart_arr_snapshot_model.arr as arr_snapshot,
       fct_charge.mrr,
       fct_charge.previous_mrr,
       fct_charge.delta_mrr,
       fct_charge.arr,
+ 
       fct_charge.previous_arr,
       fct_charge.delta_arr,
       fct_charge.quantity,
+      mart_arr_snapshot_model.quantity as quantity_snapshot,
       fct_charge.previous_quantity,
       fct_charge.delta_quantity,
       fct_charge.delta_tcv,
       fct_charge.estimated_total_future_billings
     FROM fct_charge
+    LEFT JOIN mart_arr_snapshot_model
+    ON fct_charge.dim_subscription_id = mart_arr_snapshot_model.dim_subscription_id
+    INNER JOIN snapshot_dates
+    ON mart_arr_snapshot_model.arr_month = snapshot_dates.first_day_of_month
+    AND mart_arr_snapshot_model.snapshot_date = snapshot_dates.snapshot_date_fpa
     INNER JOIN dim_charge
       ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
     INNER JOIN dim_subscription
@@ -360,7 +378,10 @@
       renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                                              AS multi_year_booking_subscription_end_month,
       DATEDIFF(month,mart_charge.effective_start_month,mart_charge.effective_end_month)                                                                 AS charge_term,
       mart_charge.quantity,
-      mart_charge.arr
+      mart_charge.arr,
+      mart_charge.first_day_of_month,
+      mart_charge.arr_month,
+      mart_charge.arr_snapshot
     FROM mart_charge
     LEFT JOIN dim_subscription_last_term
       ON mart_charge.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
@@ -408,10 +429,14 @@
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(arr)      AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
+
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term <= 12
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), agg_charge_term_greater_than_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for terms > 12 months. These terms need additional logic.
 
@@ -460,10 +485,13 @@
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(arr)                              AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term > 12
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -491,11 +519,14 @@
       term_start_month,
       DATEADD('month',current_term/2,term_start_month)  AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                          AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 13 AND 24
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -523,11 +554,14 @@
       term_start_month,
       DATEADD('month',current_term/3,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                              AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -555,11 +589,14 @@
       term_start_month,
       DATEADD('month',current_term/3*2,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                              AS arr
+          first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -588,11 +625,14 @@
       term_start_month,
       DATEADD('month',current_term/4,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                              AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -620,11 +660,14 @@
       term_start_month,
       DATEADD('month',current_term/4*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                                  AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -652,11 +695,14 @@
       term_start_month,
       DATEADD('month',current_term/4*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                                  AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -685,11 +731,14 @@
       term_start_month,
       DATEADD('month',current_term/5,term_start_month)          AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                                  AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -717,11 +766,14 @@
       term_start_month,
       DATEADD('month',current_term/5*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                                  AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -749,11 +801,14 @@
       term_start_month,
       DATEADD('month',current_term/5*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                                  AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -781,10 +836,13 @@
       term_start_month,
       DATEADD('month',current_term/5*4,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(arr)                                              AS arr
+      first_day_of_month,
+      arr_month,
+      SUM(arr)      AS arr,
+      SUM(arr_snapshot)      AS arr_snapshot
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), combined_{{renewal_fiscal_year}} AS (--union all of the charges
@@ -906,7 +964,10 @@
         ELSE opportunity_term_group.opportunity_term_group
       END                                                                                                                                   AS opportunity_term_group,
       base_{{renewal_fiscal_year}}.quantity                                                                                                 AS quantity,
-      base_{{renewal_fiscal_year}}.arr                                                                                                      AS arr
+      base_{{renewal_fiscal_year}}.arr                                                                                                      AS arr,
+      base_{{renewal_fiscal_year}}.arr_snapshot                                                                                             AS arr_snapshot,
+      base_{{renewal_fiscal_year}}.first_day_of_month                                                                                       AS first_day_of_month,
+      base_{{renewal_fiscal_year}}.arr_month                                                                                                AS arr_month
     FROM combined_{{renewal_fiscal_year}}
     LEFT JOIN dim_date
       ON combined_{{renewal_fiscal_year}}.term_end_month = dim_date.first_day_of_month
@@ -971,7 +1032,10 @@
     is_available_to_renew,
     opportunity_term_group,
     quantity,
-    arr
+    arr,
+    arr_snapshot,
+    first_day_of_month,
+    arr_month
     FROM renewal_report_{{renewal_fiscal_year}}
     {%- if not loop.last %} UNION ALL {%- endif %}
 
