@@ -32,9 +32,6 @@ class TableauDependecyCheck:
     Class for checking tableau dependencies
     """
 
-    def __init__(self, config_vars: Dict):
-        self.environment = config_vars["ENVIRONMENT"].upper()
-
     def check_tableau_dependencies(self, model_ids: List):
         """
         :param model_input:
