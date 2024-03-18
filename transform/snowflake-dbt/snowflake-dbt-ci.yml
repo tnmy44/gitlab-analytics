@@ -520,7 +520,7 @@ specify_dbt_parameters:
 🔍tableau_direct_dependencies_query:
   <<: *tableau_direct_dependencies_query
   script:
-    - DIFF=(git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD --name-only | grep -iEo "(.*)\.sql" | sed -E 's/\.sql//' | awk -F '/' '{print tolower($NF)}' | sort | uniq)
+    - DIFF=(git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD --name-only | grep -iEo "(.*)\.sql" | sed -E 's/\.sql//' | sort | uniq )
     - python3 orchestration/tableau_dependency_query/src/tableau_query.py $DIFF
   variables:
     LOGURU_COLORIZE: "true"
