@@ -500,6 +500,14 @@ More information about [CI Pipelines here](https://docs.gitlab.com/ee/user/proje
 
 {% enddocs %}
 
+{% docs prep_member_accepted_invites %}
+
+Prep table used to capture user accepted invites to any namespace.
+An 'accept_invite' event is captured only when the user takes an action to accept the invite to a namespace, in this case the INVITE_ACCEPTED_AT IS NOT NULL.
+Existing users who're granted the access to a namespace are not included as they don't need to take an action to 'accept' the invite, In such cases, the INVITE_ACCEPTED_AT IS NULL.
+
+{% enddocs %}
+
 {% docs prep_ci_build %}
 
 Prep table used to build the `dim_ci_build` table.
