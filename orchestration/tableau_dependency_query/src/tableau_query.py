@@ -4,9 +4,13 @@ This acts as a base script for the tableau_direct_dependency_query CI job.
 """
 
 import os
+from os import environ as env
 import sys
+import argparse
 import logging
 import requests
+from typing import Dict, List
+
 
 dwId = os.environ.get("CI_DATA_WAREHOUSE_ID")
 x_mcd_id = os.environ.get("CI_MCD_TOKEN_ID")
@@ -21,6 +25,47 @@ HEADERS = {
     "x-mcd-token": x_mcd_token,
     "Content-Type": "application/json",
 }
+
+
+class TableauDependecyCheck:
+    """
+    Class for checking tableau dependencies
+    """
+
+    def __init__(self, config_vars: Dict):
+        self.environment = config_vars["ENVIRONMENT"].upper()
+
+    def check_tableau_dependencies(self, model_ids: List):
+        """
+        :param model_input:
+        :return:
+        """
+        for line in model_ids:
+            logging.info(
+                f"Checking for downstream dependencies in Tableau for the model {line.strip()}"
+            )
+            full_table_path = get_table_path_query(line)
+            # if no path is returned exit the script
+            if full_table_path is None:
+                logging.info(f"No dependencies returned for model {format(line)}")
+            else:
+                logging.info(f"Dependencies returned for model {format(line)}")
+                source_table_mcon = query_table(full_table_path)
+                response_downstream_node_dependencies = (
+                    get_downstream_node_dependencies(source_table_mcon)
+                )
+                output_list = check_response_for_tableau_dependencies(
+                    response_downstream_node_dependencies
+                )
+
+                # if length of output_list > 0 then show the list of downstream dependencies
+                if len(output_list) > 0:
+                    # show each key value pair in output_list
+                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                    logging.info(write_string)
+                    for item in output_list:
+                        for key, value in item.items():
+                            logging.info(f"\n{key}: {value}")
 
 
 def get_response(payload: dict) -> dict:
@@ -125,33 +170,10 @@ def check_response_for_tableau_dependencies(
     return dependency_list
 
 
-# Assumes git diff was run to output the sql files that changed
-with open("diff.txt", "r", encoding="UTF-8") as f:
-    lines = f.readlines()
-    for line in lines:
-        logging.info(
-            f"Checking for downstream dependencies in Tableau for the model {line.strip()}"
-        )
-        full_table_path = get_table_path_query(line)
-        # if no path is returned exit the script
-        if full_table_path is None:
-            logging.info(f"No dependencies returned for model {format(line)}")
-        else:
-            logging.info(f"Dependencies returned for model {format(line)}")
-            source_table_mcon = query_table(full_table_path)
-            response_downstream_node_dependencies = get_downstream_node_dependencies(
-                source_table_mcon
-            )
-            output_list = check_response_for_tableau_dependencies(
-                response_downstream_node_dependencies
-            )
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("INPUT", nargs="+")
+    args = parser.parse_args()
 
-            # if length of output_list > 0 then show the list of downstream dependencies
-            if len(output_list) > 0:
-                # show each key value pair in output_list and append them in comparison.txt
-                with open("comparison.txt", "a", encoding="UTF-8") as f:
-                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
-                    f.write(write_string)
-                    for item in output_list:
-                        for key, value in item.items():
-                            f.write(f"\n{key}: {value}")
+    tableauchecker = TableauDependecyCheck(env.copy())
+    tableauchecker.check_tableau_dependencies(args.INPUT)
