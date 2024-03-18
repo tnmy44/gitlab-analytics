@@ -69,116 +69,65 @@ final AS (
     -- Pull in the metric only when the corresponding flag is set
     -- ie. Only calculate created arr in the week where the opportunity was created
 
-    -- Net arr created in the last week
+    -- ARR Generated (pipeline generation) 
     CASE
       WHEN is_arr_created_in_snapshot_week = 1
-        THEN net_arr
+        AND is_net_arr_pipeline_created = 1
+          AND stage_1_discovery_date IS NOT NULL
+            THEN net_arr
       ELSE 0
     END AS created_arr_in_snapshot_week,
 
-    -- Deal count created in the last week
+    -- Deals Generated 
     CASE
       WHEN is_created_in_snapshot_week = 1
         THEN calculated_deal_count
       ELSE 0
     END AS created_deal_count_in_snapshot_week,
 
-    -- Closed Won deals in the last week. 
+    -- Booked Net ARR
     CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND fpa_master_bookings_flag = 1
-          THEN calculated_deal_count
-      ELSE 0
-    END AS closed_won_deal_count_in_snapshot_week,
-
-    -- Closed Lost deals in snapshot week
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND fpa_master_bookings_flag = 0
-          AND is_open = 0
-            THEN calculated_deal_count
-      ELSE 0
-    END AS closed_lost_deal_count_in_snapshot_week,
-
-    -- All closed deals in snapshot week (includes won and lost)
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND is_open = 0
-          THEN calculated_deal_count
-      ELSE 0
-    END AS closed_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND fpa_master_bookings_flag = 1
-          AND is_open = 0
-        THEN net_arr
-      ELSE 0
-    END AS closed_won_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND fpa_master_bookings_flag = 0
-          AND is_open = 0
-        THEN net_arr
-      ELSE 0
-    END AS closed_lost_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        AND is_open = 0
-          THEN net_arr
-      ELSE 0
-    END AS closed_net_arr_in_snapshot_week,
-
-    CASE 
-      WHEN is_close_in_snapshot_week = 1 
-        AND new_logo_count = 1
-          THEN 1 
-        ELSE 0 
-    END AS closed_new_logo_count_in_snapshot_week,
-
-
-    {# CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN close_date - created_date
-      ELSE 0
-    END AS closed_cycle_time_in_snapshot_week,
-    CASE 
       WHEN is_close_in_snapshot_week = 1
         THEN booked_net_arr
       ELSE 0
     END AS booked_net_arr_in_snapshot_week,
-    CASE 
-      WHEN is_pipeline_created_in_snapshot_week = 1
-        AND is_net_arr_pipeline_created_combined = 1
-          THEN net_arr
-      ELSE 0
-    END AS pipeline_created_in_snapshot_week,
-    CASE 
-      WHEN is_arr_created_in_snapshot_week = 1
-        AND is_net_arr_pipeline_created_combined = 1
-          THEN calculated_deal_count
-      ELSE 0
-    END AS calculated_deal_count_in_snapshot_week,
-    CASE 
-      WHEN is_eligible_open_pipeline_combined = 1
-        THEN net_arr
-      ELSE 0
-    END AS open_pipeline_in_snapshot_week,
-    CASE 
-      WHEN is_closed_lost_in_snapshot_week = 1
-        THEN 1
+
+    -- Deals closed lost
+    CASE
+      WHEN is_close_in_snapshot_week = 1 
+        AND stage_name = '8-Closed Lost'
+          AND is_net_arr_pipeline_created = 1
+            THEN calculated_deal_count
       ELSE 0
     END AS closed_lost_opps_in_snapshot_week,
+
+    -- Deals closed won
+    CASE
+      WHEN is_close_in_snapshot_week = 1 
+        AND stage_name = 'Closed Won'
+          AND is_net_arr_pipeline_created = 1
+            THEN calculated_deal_count
+      ELSE 0
+    END AS closed_won_opps_in_snapshot_week,
+
+    -- All closed deals
+    CASE
+      WHEN is_close_in_snapshot_week = 1 
+        AND stage_name IN ('Closed Won', '8-Closed Lost')
+          AND is_net_arr_pipeline_created = 1
+            THEN calculated_deal_count
+      ELSE 0
+    END AS closed_opps_in_snapshot_week,
+
+    -- Deal Cycle
     CASE 
-      WHEN is_closed_won_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_won_opps_in_snapshot_week, #}
-    {# CASE 
-      WHEN is_closed_won_in_snapshot_week = 1
-        OR is_closed_lost_in_snapshot_week = 1
-          THEN 1
-      ELSE 0
-    END AS closed_opps_in_snapshot_week, #}
+      WHEN is_close_in_snapshot_week = 1 
+        CASE WHEN is_renewal = 1
+          THEN close_date - arr_created_date
+        ELSE close_date - created_date 
+    END AS closed_cycle_time_in_snapshot_week,
+
+
     IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list
