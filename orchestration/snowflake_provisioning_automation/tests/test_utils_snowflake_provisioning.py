@@ -1,3 +1,7 @@
+"""
+Test utils file, most notably
+that the correct usernames are returned based off the git diff.
+"""
 from unittest.mock import patch
 from utils_snowflake_provisioning import YAML_PATH, get_username_changes
 

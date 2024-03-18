@@ -3,8 +3,9 @@
 import sys
 import os
 import logging
-import yaml
 from typing import Union
+
+import yaml
 
 # needed to import shared utils module
 abs_path = os.path.dirname(os.path.realpath(__file__))
@@ -12,7 +13,7 @@ parent_path = abs_path[: abs_path.find("/update_roles_yaml")]
 sys.path.insert(1, parent_path)
 from utils_snowflake_provisioning import (
     get_username_changes,
-    YAML_PATH,
+    YAML_PATH,  # used by downstream modules
 )
 
 # imported by other modules

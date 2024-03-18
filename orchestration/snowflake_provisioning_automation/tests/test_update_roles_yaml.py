@@ -1,3 +1,6 @@
+"""
+Make sure that update_roles_yaml main script runs without any errors.
+"""
 import sys
 from update_roles_yaml import main
 

@@ -1,3 +1,6 @@
+"""
+Make sure that provision_users main script runs without any errors.
+"""
 import sys
 from provision_users import main
 
