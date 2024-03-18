@@ -58,10 +58,10 @@ class TableauDependecyCheck:
                 if len(output_list) > 0:
                     # show each key value pair in output_list
                     write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
-                    logging.info(write_string)
                     for item in output_list:
                         for key, value in item.items():
                             logging.info(f"\n{key}: {value}")
+                raise ValueError("Check these models before proceeding!")
 
 
 def get_response(payload: dict) -> dict:
