@@ -4,7 +4,6 @@ This acts as a base script for the tableau_direct_dependency_query CI job.
 """
 
 import os
-from os import environ as env
 import sys
 import argparse
 import logging
@@ -172,5 +171,5 @@ if __name__ == "__main__":
     parser.add_argument("INPUT", nargs="+")
     args = parser.parse_args()
 
-    tableauchecker = TableauDependecyCheck(env.copy())
+    tableauchecker = TableauDependecyCheck()
     tableauchecker.check_tableau_dependencies(args.INPUT)
