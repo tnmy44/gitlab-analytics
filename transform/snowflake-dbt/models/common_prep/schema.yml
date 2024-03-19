@@ -1189,6 +1189,17 @@ models:
           - unique
           - not_null
 
+  - name: prep_member_accepted_invites
+    description: '{{ doc("prep_member_accepted_invites") }}'
+    columns:
+      - name: dim_member_id
+        tests:
+          - unique
+          - not_null
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+
   - name: prep_epic
     description: '{{ doc("prep_epic") }}'
     columns:

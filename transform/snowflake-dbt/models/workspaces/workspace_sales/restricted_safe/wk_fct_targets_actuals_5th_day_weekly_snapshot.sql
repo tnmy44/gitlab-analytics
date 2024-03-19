@@ -5,14 +5,19 @@ WITH targets_actuals AS (
 
 ),
 
-day_5_list AS (
+day_7_list AS (
 
   SELECT 
-    date_actual AS day_5_current_week,
-    LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
-  FROM {{ ref('dim_date') }}
-  WHERE day_of_week = 5 
-    AND date_actual >= DATEADD(YEAR, -2, current_first_day_of_fiscal_quarter) -- include only the last 8 quarters
+    CASE WHEN date_actual = last_day_of_fiscal_quarter 
+            THEN date_actual
+        WHEN day_of_fiscal_quarter % 7 = 0 AND day_of_fiscal_quarter != 91
+            THEN date_actual
+    END AS day_7_current_week,
+    day_of_fiscal_quarter,
+    LAG(day_7_current_week) OVER (ORDER BY day_7_current_week) + 1 AS day_8_previous_week
+  FROM {{ref('dim_date')}}
+  WHERE day_7_current_week IS NOT NULL 
+    AND date_actual >= DATEADD(YEAR, -2, current_first_day_of_fiscal_quarter) -- include only the last 8 quarters 
 
 ),
 
@@ -25,42 +30,42 @@ final AS (
     -- Create flags to know whether an action happened in the current snapshot week 
     -- ie. Whether it happened between last Friday and current Thursday
     CASE
-      WHEN created_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN created_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_created_in_snapshot_week, 
     CASE  
-      WHEN close_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN close_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_close_in_snapshot_week, 
     CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN arr_created_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_arr_created_in_snapshot_week, 
     CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN arr_created_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_net_arr_created_in_snapshot_week, 
     CASE  
-      WHEN pipeline_created_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN pipeline_created_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_pipeline_created_in_snapshot_week,
     CASE  
-      WHEN sales_accepted_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN sales_accepted_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_sales_accepted_in_snapshot_week,
     CASE  
-      WHEN stage_6_closed_won_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN stage_6_closed_won_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_closed_won_in_snapshot_week,
     CASE 
-      WHEN stage_6_closed_lost_date BETWEEN day_6_previous_week AND day_5_current_week
+      WHEN stage_6_closed_lost_date BETWEEN day_8_previous_week AND day_7_current_week
         THEN 1
       ELSE 0
     END AS is_closed_lost_in_snapshot_week,
@@ -69,11 +74,11 @@ final AS (
     -- Pull in the metric only when the corresponding flag is set
     -- ie. Only calculate created arr in the week where the opportunity was created
 
-    -- ARR Generated (pipeline generation) 
+    -- ARR created in snapshot week (pipeline generated)
     CASE
       WHEN is_arr_created_in_snapshot_week = 1
-        AND is_net_arr_pipeline_created = 1
-          AND stage_1_discovery_date IS NOT NULL
+        AND is_net_arr_pipeline_created_combined = 1
+          AND stage_1_discovery_date IS NOT NULL -- Excludes closed lost opps that could have gone from stage 0 straight to lost
             THEN net_arr
       ELSE 0
     END AS created_arr_in_snapshot_week,
@@ -130,8 +135,8 @@ final AS (
 
     IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
-  INNER JOIN day_5_list
-    ON targets_actuals.snapshot_date = day_5_list.day_5_current_week
+  INNER JOIN day_7_list
+    ON targets_actuals.snapshot_date = day_7_list.day_7_current_week
 
 )
 
