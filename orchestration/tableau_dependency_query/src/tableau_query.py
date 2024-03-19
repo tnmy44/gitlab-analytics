@@ -7,8 +7,8 @@ import os
 import sys
 import argparse
 import logging
+from typing import List
 import requests
-from typing import Dict, List
 
 
 dwId = os.environ.get("CI_DATA_WAREHOUSE_ID")

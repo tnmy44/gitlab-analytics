@@ -10,6 +10,19 @@ from orchestration.tableau_dependency_query.src.tableau_query import (
 )
 
 
+# test function validate status code 200
+def test_status_code_200(mocker):
+    """
+    Test query function returns status code 200
+    """
+    mock_resp = mocker.Mock()
+    mock_resp.status_code = 200
+    mocker.patch("requests.get", return_value=mock_resp)
+
+    response = query_table("raw:tap_zendesk.tickets")
+    assert response.status_code == 200
+
+
 def test_get_table_path_query():
     """
     Test get_table_path_query function
@@ -17,15 +30,8 @@ def test_get_table_path_query():
     table_name = "tickets"
     expected_path = "raw:tap_zendesk.tickets"
 
-    # Mock get_response to return fake response
-    def mock_get_response():
-        return {
-            "data": {"getTables": {"edges": [{"node": {"fullTableId": expected_path}}]}}
-        }
-
     # Patch get_response with mock
-    with patch("get_response", side_effect=mock_get_response):
-        actual_path = get_table_path_query(table_name)
+    actual_path = get_table_path_query(table_name)
 
     assert actual_path == expected_path
 
