@@ -32,7 +32,7 @@ quarterly_targets AS (
         fiscal_quarter_name,
         SUM(daily_allocated_target) AS total_quarter_target
     FROM daily_targets
-    WHERE kpi_name = 'Net ARR Company'
+    WHERE kpi_name = 'Net ARR'
     GROUP BY 1,2,3,4
 
 )
@@ -75,4 +75,4 @@ LEFT JOIN quarterly_targets
     AND daily_targets.dim_order_type_id = quarterly_targets.dim_order_type_id
       AND daily_targets.dim_sales_qualified_source_id = quarterly_targets.dim_sales_qualified_source_id
         AND daily_targets.dim_crm_user_hierarchy_sk = quarterly_targets.dim_crm_user_hierarchy_sk
-WHERE kpi_name = 'Net ARR Company'
+WHERE kpi_name = 'Net ARR'

@@ -16,7 +16,7 @@
   SELECT
     close_date_id                               AS actual_date_id,
     close_date::DATE                            AS actual_date,
-    'Net ARR Company'                           AS sales_funnel_kpi_name,
+    'Net ARR'                                   AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -37,7 +37,7 @@
     net_arr
 
   FROM fct_crm_opportunity
-  WHERE is_net_arr_closed_deal = TRUE
+  WHERE fpa_master_bookings_flag = TRUE
 
 ), closed_deals AS (
 
