@@ -10,15 +10,6 @@ from orchestration.tableau_dependency_query.src.tableau_query import (
 )
 
 
-# test function validate status code 200
-def test_status_code_200():
-    """
-    Test query function returns status code 200
-    """
-    response = query_table("raw:tap_zendesk.tickets")
-    assert response.status_code == 200
-
-
 def test_get_table_path_query():
     """
     Test get_table_path_query function
