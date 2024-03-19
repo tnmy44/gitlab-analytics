@@ -37,7 +37,7 @@
     net_arr
 
   FROM fct_crm_opportunity
-  WHERE is_net_arr_closed_deal = TRUE
+  WHERE fpa_master_bookings_flag = TRUE
 
 ), closed_deals AS (
 
