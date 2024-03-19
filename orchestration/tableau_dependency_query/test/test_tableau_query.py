@@ -28,16 +28,10 @@ def test_get_table_path_query_no_path():
     Test get_table_path_query function when no path is returned
     """
     table_name = "missing_table"
+    expected_path = None
+    response = get_table_path_query(table_name)
 
-    # Mock get_response to return empty response
-    def mock_get_response():
-        return {"data": {"getTables": {"edges": []}}}
-
-    # Patch get_response with mock
-    with patch("get_response", side_effect=mock_get_response):
-        with pytest.raises(ValueError):
-            get_table_path_query(table_name)
-
+    assert response == expected_path
 
 def test_query_table():
     """

@@ -4,7 +4,7 @@ WITH source AS (
   FROM {{ ref('aws_billing_source')}}
 
 )
- 
+
 SELECT
   DATE(line_item_usage_start_date) AS date_day, --date
   bill_payer_account_id AS billing_account_id, -- acount id  
