@@ -2,8 +2,6 @@
 This file contains tests for the tableau_query.py file.
 """
 
-from unittest.mock import patch
-import pytest
 from orchestration.tableau_dependency_query.src.tableau_query import (
     query_table,
     get_table_path_query,
