@@ -11,14 +11,10 @@ from orchestration.tableau_dependency_query.src.tableau_query import (
 
 
 # test function validate status code 200
-def test_status_code_200(mocker):
+def test_status_code_200():
     """
     Test query function returns status code 200
     """
-    mock_resp = mocker.Mock()
-    mock_resp.status_code = 200
-    mocker.patch("requests.get", return_value=mock_resp)
-
     response = query_table("raw:tap_zendesk.tickets")
     assert response.status_code == 200
 
