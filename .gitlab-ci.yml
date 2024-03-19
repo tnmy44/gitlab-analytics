@@ -361,7 +361,7 @@ snowflake_provisioning_roles_yaml:
     - export USERS_TEMPLATE_FINAL=""
     - if [ ! -z "$USERS_TEMPLATE" ]; then USERS_TEMPLATE_FINAL="--users-template $USERS_TEMPLATE"; fi
 
-    - echo "CI job arguments, missing key/values will use default python values:"
+    - echo "Below are CI job arguments, missing key/values will use default Python values:"
     - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
       USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n\
       USERNAMES_TO_REMOVE=$USERNAMES_TO_REMOVE_FINAL\n\
