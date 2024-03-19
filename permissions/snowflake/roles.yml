@@ -6434,6 +6434,12 @@ roles:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*
 
+    - trizzi:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - tscott:
         member_of:
             - data_team_analyst
@@ -7676,6 +7682,11 @@ users:
         can_login: yes
         member_of:
             - tnguyen
+
+    - trizzi:
+        can_login: yes
+        member_of:
+            - trizzi
 
     - tscott:
         can_login: yes
