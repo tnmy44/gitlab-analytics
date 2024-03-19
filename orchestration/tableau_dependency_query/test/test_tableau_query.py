@@ -33,6 +33,7 @@ def test_get_table_path_query_no_path():
 
     assert response == expected_path
 
+
 def test_query_table():
     """
     Test query_table function
