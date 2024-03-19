@@ -139,8 +139,8 @@ WITH source AS (
         arr_net__c                                                                          AS net_arr,
         arr_basis__c                                                                        AS arr_basis,
         arr__c                                                                              AS arr,
-        stage_3_net_arr__c                                                                  AS xdr_net_arr_stage_3,
-        stage_1_xdr_net_arr__c                                                              AS xdr_net_arr_stage_1,
+        stage_3_net_arr__c                                                                  AS xdr_net_arr_stage_1,
+        stage_1_xdr_net_arr__c                                                              AS xdr_net_arr_stage_3,
         days_in_sao__c                                                                      AS days_in_sao,
         new_logo_count__c                                                                   AS new_logo_count,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
