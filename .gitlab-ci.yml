@@ -87,6 +87,17 @@ secret_detection:
   variables:
     GIT_STRATEGY: clone
 
+push-back-to-remote:
+  <<: *snowflake_start_clone
+  script:
+    - git config user.email "analyticsapi@gitlab.com"
+    - git config user.name "snowflake_provisioning_automation"
+    - git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
+    - touch test_file.txt
+    - git add .
+    - git commit -m "push back from pipeline"
+    - git push gitlab_origin HEAD:$BRANCH_NAME
+
 # Clone Jobs
 📈clone_prod:
   <<: *snowflake_start_clone
