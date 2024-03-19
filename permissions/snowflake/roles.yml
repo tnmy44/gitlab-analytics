@@ -4237,6 +4237,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jlongo:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jmccure:
         member_of:
             - snowflake_analyst
@@ -7084,6 +7090,11 @@ users:
         can_login: yes
         member_of:
             - jlarsen
+
+    - jlongo:
+        can_login: yes
+        member_of:
+            - jlongo
 
     - jmccure:
         can_login: yes
