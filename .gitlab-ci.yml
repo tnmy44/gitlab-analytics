@@ -87,17 +87,6 @@ secret_detection:
   variables:
     GIT_STRATEGY: clone
 
-push-back-to-remote:
-  <<: *snowflake_start_clone
-  script:
-    - git config user.email "analyticsapi@gitlab.com"
-    - git config user.name "snowflake_provisioning_automation"
-    - git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
-    - touch test_file.txt
-    - git add .
-    - git commit -m "push back from pipeline"
-    - git push gitlab_origin HEAD:$BRANCH_NAME
-
 # Clone Jobs
 📈clone_prod:
   <<: *snowflake_start_clone
@@ -358,6 +347,37 @@ snowflake_provisioning_snowflake_users:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
   allow_failure: true
+
+snowflake_provisioning_roles_yaml:
+  <<: *snowflake_provisioning_automation
+  script:
+    # set-up and run `update_roles_yaml.py`
+    - export DATABASES_TEMPLATE_FINAL=""
+    - if [ ! -z "$DATABASES_TEMPLATE" ]; then DATABASES_TEMPLATE_FINAL="--databases-template $DATABASES_TEMPLATE"; fi
+
+    - export ROLES_TEMPLATE_FINAL=""
+    - if [ ! -z "$ROLES_TEMPLATE" ]; then ROLES_TEMPLATE_FINAL="--roles-template $ROLES_TEMPLATE"; fi
+
+    - export USERS_TEMPLATE_FINAL=""
+    - if [ ! -z "$USERS_TEMPLATE" ]; then USERS_TEMPLATE_FINAL="--users-template $USERS_TEMPLATE"; fi
+
+    - echo "CI job arguments, missing key/values will use default python values:"
+    - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
+      USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n\
+      USERNAMES_TO_REMOVE=$USERNAMES_TO_REMOVE_FINAL\n\
+      DATABASES_TEMPLATE=$DATABASES_TEMPLATE_FINAL\n\
+      ROLES_TEMPLATE=$ROLES_TEMPLATE_FINAL\n\
+      USERS_TEMPLATE=$USERS_TEMPLATE_FINAL"
+
+    - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $USERNAMES_TO_REMOVE_FINAL $DATABASES_TEMPLATE_FINAL $ROLES_TEMPLATE_FINAL $USERS_TEMPLATE_FINAL
+
+    # Push roles.yml changes back to the repo
+    - git config user.email "analyticsapi@gitlab.com"
+    - git config user.name "snowflake_provisioning_automation"
+    - git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
+    - git add .
+    - git commit -m "pushed from `snowflake_provisioning_roles_yaml` job"
+    - git push gitlab_origin HEAD:$BRANCH_NAME
 
 # ======
 # dbt docs to GitLab Pages
