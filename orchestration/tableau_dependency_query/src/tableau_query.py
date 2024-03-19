@@ -57,7 +57,9 @@ class TableauDependecyCheck:
                 # if length of output_list > 0 then show the list of downstream dependencies
                 if len(output_list) > 0:
                     # show each key value pair in output_list
-                    write_string = f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                    logging.info(
+                        f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                    )
                     for item in output_list:
                         for key, value in item.items():
                             logging.info(f"\n{key}: {value}")
@@ -156,11 +158,21 @@ def check_response_for_tableau_dependencies(
             node["objectType"] in object_type
             and node["objectType"] != "periscope-chart"
         ):
-            # append node to output_dict
+            # # append node to output_dict
+            # output_dict[
+            #     node["displayName"]
+            # ] = f"https://getmontecarlo.com/assets/{node['mcon']} ({node['objectType']})"
+            # # append output_dict to dependency_list
+            # dependency_list.append(output_dict)
+
+            object_type_resource_name = (
+                f"{node['objectType']} : {node['displayName']} - "
+            )
+
             output_dict[
-                node["displayName"]
-            ] = f"https://getmontecarlo.com/assets/{node['mcon']} ({node['objectType']})"
-            # append output_dict to dependency_list
+                object_type_resource_name
+            ] = f"https://getmontecarlo.com/assets/{node['mcon']}"
+
             dependency_list.append(output_dict)
 
     return dependency_list
