@@ -303,6 +303,11 @@ databases:
     - usinghal_prep:
         shared: no
 
+    - vhempel_prod:
+        shared: no
+    - vhempel_prep:
+        shared: no
+
     - vprakash_prod:
         shared: no
     - vprakash_prep:
@@ -6538,6 +6543,13 @@ roles:
         warehouses:
             - dev_xs
 
+    - vhempel:
+        member_of:
+            - analyst_marketing
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -7727,6 +7739,11 @@ users:
         can_login: yes
         member_of:
             - vmairet
+
+    - vhempel:
+        can_login: yes
+        member_of:
+            - vhempel
 
     - vprakash:
         can_login: yes
