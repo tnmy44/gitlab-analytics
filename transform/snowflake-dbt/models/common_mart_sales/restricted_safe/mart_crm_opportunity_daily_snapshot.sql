@@ -573,7 +573,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@snalamaru",
+    updated_by="@rkohnke",
     created_date="2022-05-05",
-    updated_date="2024-02-21"
+    updated_date="2024-03-19"
   ) }}
