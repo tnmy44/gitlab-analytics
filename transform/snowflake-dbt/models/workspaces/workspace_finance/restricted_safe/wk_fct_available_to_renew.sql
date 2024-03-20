@@ -118,6 +118,7 @@
     WHERE last_term_version = 1
 
 
+
 ), mart_charge_base AS (
 
     SELECT
