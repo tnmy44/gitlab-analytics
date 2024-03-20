@@ -1183,6 +1183,20 @@ models:
     columns:
       - name: credit_balance_adjustment_id
 
-
   - name: wk_mart_cdot_invoices_manual_intervention_monthly
     description: Comparison of all CDot created invoices vs. CDot invoices that were updated manually by the Billing team
+
+  - name: wk_mart_booking_billing_AR_monthly
+    description: Comparison of monthly booking (opportunity), invoice and payment amounts and counts
+   
+  - name: wk_mart_collections_monthly
+    description: Monthly payment amounts applied to invoices against billed amounts
+
+  - name: wk_mart_web_direct_vs_sales_assisted_ar_monthly
+    description: Comparison of collections for web direct vs sales assisted invoices
+
+  - name: wk_mart_payment_type
+    description: Comparison of amounts and volumes by payment type (electronic vs. external) by month
+
+  - name: wk_mart_ar_per_SSP_channel_monthly
+    description: Compare balances and count per SSP channel vs. the total balances for all open invoices monthly
