@@ -1,4 +1,4 @@
-{%- macro sfdc_account_fields(model_type) %}
+{%- macro sfdc_sandbox_account_fields(model_type) %}
 
 WITH map_merged_crm_account AS (
 
