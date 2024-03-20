@@ -244,7 +244,7 @@ WITH map_merged_crm_account AS (
         CONCAT(
                UPPER(account_owner_role),
                '-',
-               sfdc_account.snapshot_fiscal_year
+               current_fiscal_year.fiscal_year
                )                                                                                                                     AS dim_crm_parent_account_hierarchy_sk,
       {%- elif model_type == 'snapshot' %}
       CASE
