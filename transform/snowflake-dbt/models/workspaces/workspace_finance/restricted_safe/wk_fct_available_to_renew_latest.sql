@@ -122,19 +122,7 @@
       ON dim_subscription_latest_version.subscription_name = dim_subscription_cancelled.subscription_name				
       AND dim_subscription_latest_version.term_start_date = dim_subscription_cancelled.term_start_date				
     WHERE dim_subscription_cancelled.subscription_name IS NULL	
-
-), mart_charge AS (
-
-    SELECT mart_charge_base.*,
-    IFF(zuora_ramp.order_id IS NOT null, TRUE, FALSE) AS is_ramp_deal
-    FROM mart_charge_base    
-    LEFT JOIN zuora_ramp
-      ON mart_charge_base.dim_order_id = zuora_ramp.order_id
-    INNER JOIN dim_subscription_last_term
-      ON mart_charge_base.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
-    WHERE is_included_in_arr_calc = 'TRUE'
-      AND mart_charge_base.term_end_month = mart_charge_base.effective_end_month
-      AND arr != 0			
+	
 
 ), ramp_ssp_id_min_max_dates AS (
 
