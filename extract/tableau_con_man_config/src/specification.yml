@@ -11041,49 +11041,49 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:lma
+  - user_name: lma
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:fayhan
+  - user_name: fayhan
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:kmisirli
+  - user_name: kmisirli
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:awolfe
+  - user_name: awolfe
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:lmontemayor
+  - user_name: lmontemayor
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:rkadam
+  - user_name: rkadam
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:bsandlin
+  - user_name: bsandlin
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name:fcaplette
+  - user_name: fcaplette
     user_name_domain: gitlab.com
     site role: Viewer
     auth_setting: SAML
