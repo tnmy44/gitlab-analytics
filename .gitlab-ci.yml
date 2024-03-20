@@ -251,6 +251,7 @@ clone_stop:
   only:
     changes:
       - "permissions/snowflake/roles.yml"
+      - "permissions/snowflake/snowflake_usernames.yml"
       - "extract/tableau_con_man_config/src/*"
     refs:
       - merge_requests
@@ -271,6 +272,45 @@ clone_stop:
       fi
     done;
   allow_failure: false
+
+.snowflake_provisioning_automation: &snowflake_provisioning_automation
+  stage: 🐍 Python
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.7
+  tags:
+    - analytics
+  before_script:
+    - cd orchestration/snowflake_provisioning_automation/
+
+    # shared arguments
+    - export IS_TEST_RUN_FINAL="--no-test-run"
+    - if [ -n $IS_TEST_RUN ]; then IS_TEST_RUN_FINAL="--test-run"; fi
+
+    - export USERNAMES_TO_ADD_FINAL=""
+    - if [ -n "$USERNAMES_TO_ADD" ]; then USERNAMES_TO_ADD_FINAL="--usernames-to-add $USERNAMES_TO_ADD"; fi
+
+    - export USERNAMES_TO_REMOVE_FINAL=""
+    - if [ -n "$USERNAMES_TO_REMOVE" ]; then USERNAMES_TO_REMOVE_FINAL="--usernames-to-remove $USERNAMES_TO_REMOVE"; fi
+
+    - echo "Below are CI job arguments, missing key/values will use default Python values:"
+    - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
+               USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n\
+               USERNAMES_TO_REMOVE=$USERNAMES_TO_REMOVE_FINAL"
+  only:
+    refs:
+      - merge_requests
+  allow_failure: true
+
+snowflake_provisioning_snowflake_users:
+  <<: *snowflake_provisioning_automation
+  script:
+    # provision_users.py specific argument
+    - export IS_DEV_DB_FINAL=""
+    - if [ -n "$IS_DEV_DB" ]; then IS_DEV_DB_FINAL="--dev-db"; fi
+    - echo "IS_DEV_DB=$IS_DEV_DB_FINAL"
+
+    - python3 provision_users/provision_users.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $USERNAMES_TO_REMOVE_FINAL $IS_DEV_DB_FINAL
+  when: manual
+  allow_failure: true
 
 .permifrost: &permifrost
   stage: 🐍 Python
