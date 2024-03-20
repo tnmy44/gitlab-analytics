@@ -1748,6 +1748,28 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 {% enddocs %}
 
+{% docs fct_behavior_structured_event_redis_hll_counters %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events related to redis hll metrics.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+- This model only includes structured events implemented for redis hll metrics. 
+- Redis hll metric events are defined as any event that includes certain event actions (`event_action IN ('g_analytics_valuestream', 'action_active_users_project_repo' 'push_package', 'ci_templates_unique', 'p_terraform_state_api_unique_users', 'i_search_paid')`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser details
+
+{% enddocs %}
+
 {% docs fct_delta_arr_subscription_lineage_product_monthly %}
 
 Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.

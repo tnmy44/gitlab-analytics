@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "behavior_structured_event_pk"
+        unique_key = "behavior_structured_event_pk",
+        on_schema_change = "sync_all_columns"
 ) }}
 
 {{ 
@@ -72,5 +73,5 @@
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-01-25"
+    updated_date="2024-03-05"
 ) }}
