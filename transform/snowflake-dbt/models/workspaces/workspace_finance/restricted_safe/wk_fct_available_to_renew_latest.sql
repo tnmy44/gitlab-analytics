@@ -166,7 +166,7 @@
     FROM subscription_charges			
     LEFT JOIN dim_date			
      ON subscription_charges.ATR_term_end_date = dim_date.date_day				
-    WHERE fiscal_quarter_name_fy BETWEEN 'FY24-Q3' AND 'FY24-Q3'							
+    --WHERE fiscal_quarter_name_fy BETWEEN 'FY24-Q3' AND 'FY24-Q3'							
     GROUP BY 1,2,3,4,6
 
 )					
