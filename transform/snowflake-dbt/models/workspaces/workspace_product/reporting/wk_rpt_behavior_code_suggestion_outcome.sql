@@ -130,6 +130,7 @@ suggestion_level AS (
     requested.delivery_type,
     requested.prefix_length,
     requested.suffix_length,
+    requested.is_streaming,
     requested.extension_name,
     requested.extension_version,
     requested.ide_name,
@@ -197,8 +198,8 @@ suggestion_level AS (
 {{ dbt_audit(
     cte_ref="suggestion_level",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-10-20",
-    updated_date="2023-10-20"
+    updated_date="2024-03-08"
 ) }}
 
