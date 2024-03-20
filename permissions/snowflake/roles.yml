@@ -546,6 +546,7 @@ roles:
             - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_dev_sandbox
             - zuora_stitch_rest_api
         privileges:
             databases:
@@ -650,6 +651,7 @@ roles:
             - version_db
             - zuora
             - zuora_central_sandbox
+            - zuora_dev_sandbox
 
     - analyst_sales_sensitive:
         warehouses:
@@ -2973,6 +2975,19 @@ roles:
                     - prep.zuora_central_sandbox.*
                     - raw.zuora_central_sandbox_fivetran.*
 
+    - zuora_dev_sandbox:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_dev_sandbox_fivetran
+            tables:
+                read:
+                    - raw.zuora_dev_sandbox_fivetran.*
 
     - zuora_api_sandbox_stitch:
         warehouses:
@@ -6176,6 +6191,7 @@ roles:
             - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_dev_sandbox
             - zuora_order
             - zuora_query_api
             - zuora_revenue
