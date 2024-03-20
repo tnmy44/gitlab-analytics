@@ -5,6 +5,11 @@ Child modules access this utils file by running
 abs_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = abs_path[: abs_path.find("/update_roles_yaml")]
 sys.path.insert(1, parent_path)
+
+The `git diff` command could have been alternatively placed within
+the CI job, but `get_username_changes()` logic is a little bit tricky
+to do in bash.
+Furthermore, by doing it in python, the entrypoint can be either CI job/python script
 """
 
 import os
@@ -24,7 +29,7 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
     # If git diff has output, then grep for modified lines
     # https://stackoverflow.com/a/26622262
     grep_diff_command = f"""
-    if [[ $({git_diff_command}) ]]; then \
+    if [ -n "$({git_diff_command})" ]; then \
         {git_diff_command} \
     | grep '^[+-]' | grep -Ev '^(--- a/|\\+\\+\\+ b/|--- /dev/null)'
     else
@@ -46,7 +51,7 @@ def get_username_changes() -> Tuple[List[str], List[str]]:
     usernames_file_path = os.path.join(YAML_PATH, usernames_file_name)
 
     # Run the Git diff command
-    base_branch = "master"
+    base_branch = "origin/master"
     output = run_git_diff_command(usernames_file_path, base_branch)
 
     usernames_added = []
