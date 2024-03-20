@@ -2,8 +2,8 @@
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
-    updated_by="@jonglee1218",
-    created_date="2020-06-01",
-    updated_date="2024-02-16"
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2024-03-20",
+    updated_date="2024-03-20"
 ) }}
