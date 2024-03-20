@@ -55,8 +55,9 @@
 --Identifying Ramps from Zuora Module(implemented in 2023)
 ), zuora_ramps AS (
 
-    SELECT fct_charge.*,
-    IFF(zuora_ramp.order_id IS NOT NULL, TRUE, FALSE) AS is_ramp_deal
+    SELECT  
+      fct_charge.*,
+      IFF(zuora_ramp.order_id IS NOT NULL, TRUE, FALSE) AS is_ramp_deal
     FROM fct_charge    
     LEFT JOIN zuora_ramp
       ON fct_charge.dim_order_id = zuora_ramp.order_id
@@ -65,9 +66,7 @@
      AND fct_charge.arr != 0		
    -- INNER JOIN dim_subscription_last_term
    --   ON mart_charge_base.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
-   -- WHERE is_included_in_arr_calc = 'TRUE'
-   --   AND mart_charge_base.term_end_month = mart_charge_base.effective_end_month
-   --   AND arr != 0		
+	
 
 ), ramp_deals_ssp_id_multiyear_linkage AS (
 
@@ -75,17 +74,19 @@
       dim_crm_opportunity.dim_crm_opportunity_id,	
       CASE WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
            WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id		
-           WHEN is_ramp_deal = TRUE THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
+           WHEN is_ramp_deal = 'TRUE' THEN LEFT(zuora_ramps.dim_crm_opportunity_id, 15)
       END  AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
-    ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
+     ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
     LEFT JOIN ramp_deals					
-    ON ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id = 		
+     ON ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 	
     LEFT JOIN zuora_ramps
-    ON zuora_ramps.dim_crm_opportunity_d = dim_crm_opportunity.dim_crm_opportunity_id
+     ON zuora_ramps.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     WHERE ramp_ssp_id IS NOT NULL	
 
+
+--Getting Subscriptions for ramp deals
 ), subscriptions_with_ssp_id AS (
 
     SELECT 
@@ -94,8 +95,9 @@
     FROM dim_subscription			
     LEFT JOIN ramp_deals_ssp_id_multiyear_linkage				
     ON dim_subscription.dim_crm_opportunity_id = ramp_deals_ssp_id_multiyear_linkage.dim_crm_opportunity_id		
+    
 
-				  
+--Getting Last term version of the subscription				  
 ), dim_subscription_latest_version AS (
 
     SELECT 
@@ -103,7 +105,8 @@
       subscriptions_with_ssp_id.*				
     FROM subscriptions_with_ssp_id				
     Where subscription_status != 'Cancelled'				
-    QUALIFY last_term_version = 1				
+    QUALIFY last_term_version = 1		
+
 
 ), dim_subscription_cancelled AS (	
 
@@ -111,7 +114,8 @@
       subscription_name, 
       term_start_date 
     FROM dim_subscription			
-    Where subscription_status = 'Cancelled'				
+    Where subscription_status = 'Cancelled'	
+
 
 ), dim_subscription_base AS (			
 
@@ -128,8 +132,8 @@
 
     SELECT 
       ramp_ssp_id, 
-      min(term_start_date) AS min_term_start_date,  
-      max(term_end_date) AS max_term_end_date  
+      MIN(term_start_date) AS min_term_start_date,  
+      MAX(term_end_date) AS max_term_end_date  
     FROM dim_subscription_base			
     WHERE ramp_ssp_id IS NOT NULL				
     GROUP BY 1 HAVING COUNT(*) > 1				
@@ -185,8 +189,7 @@
       Quantity			
     FROM subscription_charges			
     LEFT JOIN dim_date			
-     ON subscription_charges.ATR_term_end_date = dim_date.date_day				
-    --WHERE fiscal_quarter_name_fy BETWEEN 'FY24-Q3' AND 'FY24-Q3'							
+     ON subscription_charges.ATR_term_end_date = dim_date.date_day										
     GROUP BY 1,2,3,4,6
 
 )					
