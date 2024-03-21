@@ -36,6 +36,7 @@ class TableauDependecyCheck:
         :param model_input:
         :return:
         """
+        has_dependency = False
         for line in model_ids:
             logging.info(
                 f"Checking for downstream dependencies in Tableau for the model {line.strip()}"
@@ -50,20 +51,35 @@ class TableauDependecyCheck:
                 response_downstream_node_dependencies = (
                     get_downstream_node_dependencies(source_table_mcon)
                 )
-                output_list = check_response_for_tableau_dependencies(
-                    response_downstream_node_dependencies
-                )
-
-                # if length of output_list > 0 then show the list of downstream dependencies
-                if len(output_list) > 0:
-                    # show each key value pair in output_list
+                if response_downstream_node_dependencies is None:
                     logging.info(
-                        f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                        f"No downstream dependencies returned for model {format(line)}"
                     )
-                    for item in output_list:
-                        for key, value in item.items():
-                            logging.info(f"\n{key}: {value}")
-                raise ValueError("Check these models before proceeding!")
+                else:
+                    output_list = check_response_for_tableau_dependencies(
+                        response_downstream_node_dependencies
+                    )
+
+                    # if length of output_list > 0 then show the list of downstream dependencies
+                    if len(output_list) > 0:
+                        # show each key value pair in output_list
+                        has_dependency = True
+                        logging.info(
+                            f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                        )
+                        for item in output_list:
+                            for key, value in item.items():
+                                logging.info(f"\n{key}: {value}")
+                    else:
+                        logging.info(
+                            f"No downstream dependencies found in Tableau for the model {line.strip()}"
+                        )
+        if has_dependency:
+            raise ValueError("Check these models before proceeding!")
+        else:
+            logging.info(
+                "No downstream dependencies found in Tableau for all the changed models"
+            )
 
 
 def get_response(payload: dict) -> dict:
