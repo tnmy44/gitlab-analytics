@@ -70,12 +70,11 @@
 
     SELECT 
       dim_crm_opportunity.dim_crm_opportunity_id,	
-     -- CASE 
-       -- WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
-       -- WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
-       -- WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
-     -- END  
-      COALESCE(LEFT(zuora_ramps.dim_crm_opportunity_id,15), ramp_deals.ssp_id,sheetload_map_ramp_deals."Overwrite_SSP_ID")
+      CASE 
+        WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"	
+        WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
+        WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)		
+      END  
       AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
