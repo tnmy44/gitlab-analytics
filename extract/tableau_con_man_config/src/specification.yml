@@ -6826,12 +6826,6 @@ users:
       - General SAFE Access
       - RSA SAFE Access
       - Sales Development SAFE Access
-  - user_name: makers
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mangell
     user_name_domain: gitlab.com
     site_role: Viewer
