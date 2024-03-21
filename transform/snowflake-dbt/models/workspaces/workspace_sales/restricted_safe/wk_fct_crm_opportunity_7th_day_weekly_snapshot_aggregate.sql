@@ -1,7 +1,13 @@
-WITH targets_actuals AS (
+WITH actuals AS (
 
   SELECT * 
-  FROM {{ ref('wk_fct_crm_opportunity_7th_day_weekly_snapshot') }}
+  FROM {{ ref('wk_fct_crm_opportunity_daily_snapshot') }}
+
+),
+
+day_7_list AS (
+
+  date_spine_7th_day(dim_date)
 
 ),
 
@@ -9,11 +15,20 @@ aggregate_data AS (
 
   SELECT
 
-    -- attributes
+    -- keys
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_order_type_live_id,
     dim_crm_user_hierarchy_sk,
+
+    -- attributes
+    order_type,
+    order_type_live,
+    order_type_grouped,
+    stage_name,
+    deal_path_name,
+    sales_type,
+    sales_qualified_source_name,
     crm_user_business_unit,
     crm_user_sales_segment,
     crm_user_geo,
@@ -89,7 +104,9 @@ aggregate_data AS (
     SUM(override_arr_basis_clari)                         AS override_arr_basis_clari,
     SUM(vsa_start_date_net_arr)                           AS vsa_start_date_net_arr,
     SUM(cycle_time_in_days_combined)                      AS cycle_time_in_days_combined
-  FROM targets_actuals
+  FROM actuals
+  INNER JOIN day_7_list
+    ON actuals.snapshot_date = day_7_list.day_7_current_week
   GROUP BY ALL
 
 )
