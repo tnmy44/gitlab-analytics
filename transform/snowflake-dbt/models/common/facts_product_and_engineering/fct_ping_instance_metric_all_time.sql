@@ -1,7 +1,8 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "ping_instance_metric_id"
+    unique_key = "ping_instance_metric_id",
+    on_schema_change="sync_all_columns"
 ) }}
 
 {{ simple_cte([
