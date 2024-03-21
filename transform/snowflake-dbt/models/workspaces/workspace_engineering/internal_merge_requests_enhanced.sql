@@ -103,6 +103,26 @@ milestones AS (
 
 ),
 
+first_commit AS (
+
+  SELECT
+    merge_request_id,
+    MIN(created_at) AS first_commit_created_at
+  FROM {{ ref('internal_merge_request_diffs') }}
+  GROUP BY 1
+
+),
+
+reviews_by_users AS (
+
+  SELECT
+    merge_request_id,
+    ARRAY_AGG(DISTINCT author_id) AS review_user_id
+  FROM {{ ref('wk_gitlab_dotcom_reviews') }}
+  GROUP BY 1
+
+),
+
 base AS (
 
   SELECT
@@ -171,7 +191,9 @@ base AS (
     'https://gitlab.com/' || ns.full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid                                                                                                                                                                    AS url,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                               AS is_infradev,
     ARRAY_CONTAINS('customer'::VARIANT, internal_merge_requests.labels)                                                                                                                                                                                                                                                 AS is_customer_related,
-    internal_merge_requests.is_part_of_product
+    internal_merge_requests.is_part_of_product,
+    ROUND(TIMESTAMPDIFF(HOURS, first_commit.first_commit_created_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                        AS days_from_first_commit_to_merge,
+    review_user_id
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON internal_merge_requests.target_project_id = projects.dim_project_id
@@ -181,6 +203,8 @@ base AS (
     ON projects.dim_namespace_id = ns.namespace_id
   LEFT JOIN milestones
     ON internal_merge_requests.milestone_id = milestones.milestone_id
+  LEFT JOIN first_commit ON internal_merge_requests.merge_request_id = first_commit.merge_request_id
+  LEFT JOIN reviews_by_users ON internal_merge_requests.merge_request_id = reviews_by_users.merge_request_id
 
 )
 
