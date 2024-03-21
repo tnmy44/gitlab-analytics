@@ -163,7 +163,6 @@ def check_response_for_tableau_dependencies(
     This will return all dependent downstream nodes for a given source table.
     """
     dependency_list = []
-    if 
     for node in response_downstream_dependencies["connectedNodes"]:
         output_dict = {}
         object_type = [
