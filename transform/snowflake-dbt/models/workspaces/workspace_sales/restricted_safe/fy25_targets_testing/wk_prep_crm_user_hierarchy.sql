@@ -396,7 +396,7 @@ SELECT
       MIN(UPPER(user_role_level_5))  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
-    {{ dbt_utils.group_by(n=10)}}
+    {{ dbt_utils.group_by(n=9)}}
 
 ), final_unioned AS (
 
