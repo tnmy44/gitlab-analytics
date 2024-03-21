@@ -86,10 +86,10 @@ This model is intended to be used as a reporting model for the Growth Section an
 
 {% docs mart_snowplow_events_service_ping_metrics %}
 
-This model is for analysing SaaS product usage data at the namespace level. Snowplow events that contain the Service Ping Context are joined with the brigde table containing metric name, redis event name, aggregate operator and attribute.
+This model is for analysing SaaS product usage data at the namespace level. Snowplow events that contain the Service Ping Context are joined with the bridge table containing metric name, redis event name, aggregate operator and attribute.
 It is limited to events carrying the `service_ping_context`, in addition to other filters.
 
-**Data Grain:** snowplow_events_service_ping_metrics_sk
+**Data Grain:** The combination of a Snowplow event containing a Service Ping event, and every Service Ping metric that Service Ping event joins to. (The relationship between Service Ping events and Service Ping metrics is many-to-many).
 
 This ID is generated using `behavior_structured_event_pk` from [fct_behavior_structured_event_service_ping](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.fct_behavior_structured_event_service_ping) and `metrics_path` from [bdg_metrics_redis_events](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_metrics_redis_events).
 
