@@ -1,8 +1,13 @@
 {% macro macro_mart_ping_instance_metric(model_name1) %}
 
+{% set filter_date = (run_started_at - modules.datetime.timedelta(days=31)).strftime('%Y-%m-%d') %}
+{% set filter_statemnet = "DBT_INTERNAL_DEST.uploaded_at > '" + filter_date + "'" %}
+
 {{ config(
     materialized = "incremental",
-    unique_key = "ping_instance_metric_id"
+    unique_key = "ping_instance_metric_id",
+    on_schema_change="sync_all_columns",
+    incremental_predicates = [filter_statemnet]
 ) }}
 
 {{ simple_cte([
@@ -22,14 +27,14 @@ updated_subscriptions AS (
   SELECT
     dim_subscription_id
   FROM subscriptions
-  QUALIFY MAX(subscription_updated_date) OVER (PARTITION BY dim_subscription_id_original) > (SELECT MAX(subscription_checked_at) FROM {{ this }} )
+  QUALIFY MAX(subscription_updated_date) OVER (PARTITION BY dim_subscription_id_original) > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
 ),
 
 updated_ping_instance AS (
   SELECT 
     dim_ping_instance_id
   FROM dim_ping_instance
-  WHERE last_ping_change_at > (SELECT MAX(subscription_checked_at) FROM {{ this }} )
+  WHERE previous_ping_at > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
 ),
 
 {% endif %}
@@ -162,7 +167,7 @@ joined AS (
     dim_location.country_name                                                                                  AS country_name,
     dim_location.iso_2_country_code                                                                            AS iso_2_country_code,
     fct_ping_instance_metric.uploaded_at,
-    CURRENT_TIMESTAMP() AS subscription_checked_at
+    CURRENT_TIMESTAMP() AS dimensions_checked_at
   FROM fct_ping_instance_metric
   LEFT JOIN dim_ping_metric
     ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
@@ -248,7 +253,6 @@ sorted AS (
     product_rate_plan_name_array,
     is_paid_subscription,
     is_program_subscription,
-    subscription_checked_at,
 
     -- account metadata
     crm_account_name,
@@ -263,7 +267,8 @@ sorted AS (
     ping_created_date_month,
     is_last_ping_of_month,
     ping_created_date_week,
-    is_last_ping_of_week
+    is_last_ping_of_week,
+    dimensions_checked_at
 
   FROM joined
   WHERE time_frame != 'none'
