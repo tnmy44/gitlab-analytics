@@ -3866,6 +3866,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - eboyd:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
+
     - eguo:
         member_of:
             - snowflake_analyst
@@ -6962,6 +6968,11 @@ users:
         can_login: yes
         member_of:
             - ebonet
+
+    - eboyd:
+        can_login: yes
+        member_of:
+            - eboyd
 
     - eguo:
         can_login: yes
