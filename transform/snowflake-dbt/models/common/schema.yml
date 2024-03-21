@@ -3010,6 +3010,8 @@ models:
         description: '{{ doc("ping_delivery_type") }}'
       - name: ping_deployment_type
         description: '{{ doc("ping_deployment_type") }}'
+      - name: previous_ping_at
+        description: '{{ doc("previous_ping_at") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '

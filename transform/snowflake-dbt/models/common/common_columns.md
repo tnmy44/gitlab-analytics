@@ -2652,3 +2652,16 @@ The date the milestone is set to end.
 A status indicating if the milestone is `Active` or `Closed`.
 
 {% enddocs %}
+
+{% docs previous_ping_at %}
+
+The date of the prevous ping for the uuid and the host id
+
+{% enddocs %}
+
+
+{% docs dimensions_checked_at %}
+
+A timestamp used for checking when the last time the dimensions for the record were updated. 
+
+{% enddocs %}
