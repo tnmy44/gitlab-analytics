@@ -13,15 +13,9 @@
  final AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['prep_crm_user.dim_crm_user_hierarchy_sk',
-                                 'dim_date.fiscal_year', 
-                                 'dim_date.first_day_of_month', 
-                                 'sales_qualified_source.dim_sales_qualified_source_id',
-                                 'order_type.dim_order_type_id',
-                                 'dim_date.date_day'
-                                 ]) }}                                                                                          AS actuals_targets_pk,
+    sfdc_opportunity.crm_opportunity_snapshot_id, 
     sfdc_opportunity.dim_crm_opportunity_id,
-    
+    sfdc_opportunity.snapshot_id,
 
     --Common dimension keys
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
@@ -183,6 +177,11 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
+
+    sfdc_opportunity.created_arr,
+    sfdc_opportunity.closed_won_opps,
+    sfdc_opportunity.total_closed_opps,
+    sfdc_opportunity.total_closed_net_arr,
     sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     sfdc_opportunity.calculated_from_ratio_net_arr,
     sfdc_opportunity.net_arr,
@@ -236,7 +235,8 @@
     dim_date.last_day_of_week,
     dim_date.last_day_of_month,
     dim_date.last_day_of_fiscal_quarter,
-    dim_date.last_day_of_fiscal_year
+    dim_date.last_day_of_fiscal_year,
+    is_current_snapshot_quarter
   FROM sfdc_opportunity
   INNER JOIN dim_date
     ON sfdc_opportunity.snapshot_date = dim_date.date_actual

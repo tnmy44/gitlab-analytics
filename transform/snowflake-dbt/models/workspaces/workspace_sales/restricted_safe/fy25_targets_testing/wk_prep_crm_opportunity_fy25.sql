@@ -1404,7 +1404,41 @@ LEFT JOIN cw_base
             THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
         WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_combined
+      END  
+                                                                                                                   AS cycle_time_in_days_combined,
+       -- ARR created (pipeline generated)
+      CASE
+          WHEN is_net_arr_pipeline_created_combined = 1
+            AND stage_1_discovery_date_id IS NOT NULL -- Excludes closed lost opps that could have gone from stage 0 straight to lost
+              THEN net_arr
+        ELSE 0
+      END AS created_arr,
+
+      -- Deals closed won
+      CASE
+        WHEN sfdc_opportunity_stage.is_won = TRUE AND sfdc_opportunity.is_closed = TRUE
+            AND is_win_rate_calc = 1
+              THEN calculated_deal_count
+        ELSE 0
+      END AS closed_won_opps,
+
+      -- All closed deals (won and lost)
+      CASE
+        WHEN sfdc_opportunity.is_closed = TRUE
+            AND is_win_rate_calc = 1
+              THEN calculated_deal_count
+        ELSE 0
+      END AS total_closed_opps,
+
+      -- Closed Net ARR
+      CASE
+        WHEN sfdc_opportunity.is_closed = TRUE
+            AND is_win_rate_calc = 1
+              THEN calculated_deal_count * net_arr
+        ELSE 0
+      END AS total_closed_net_arr,
+
+    IFF(sfdc_opportunity.snapshot_fiscal_quarter_date = close_date.current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
