@@ -14,7 +14,7 @@
 {% set link_click = ['elementId','elementClasses','elementTarget','targetUrl','elementContent'] %}
 {% set track_timing = ['category','variable','timing','label'] %}
 
- 
+
 WITH filtered_source as (
 
     SELECT

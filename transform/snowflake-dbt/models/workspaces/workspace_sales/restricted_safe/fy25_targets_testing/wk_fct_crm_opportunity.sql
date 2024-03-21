@@ -15,7 +15,7 @@
     ('prep_date', 'prep_date')
 
 ]) }}
- 
+
 , sfdc_opportunity AS (
 
     SELECT *

@@ -17,7 +17,7 @@ WITH source AS (
   ATTENTION: When a field is added to this snapshot model, add it to the SFDC_ACCOUNT_SOURCE model to keep the live and snapshot models in alignment.
 
 */
- 
+
 renamed AS (
 
   SELECT
