@@ -134,3 +134,27 @@ models:
       - name: min_start_date
       - name: is_max_record
       - name: is_max_hire_progress_step
+  - name: wk_talent_acquisition_application
+    columns: 
+      - name: application_id
+      - name: candidate_id
+      - name: job_id
+      - name: job_post_id
+      - name: applied_at
+      - name: application_status
+      - name: source_name
+      - name: source_type
+      - name: prospect
+      - name: sourcer_name
+      - name: referrer_name
+      - name: referrer_employee_id
+      - name: rejected_by
+      - name: rejected_by_employee_id
+      - name: rejection_reason_name
+      - name: rejection_reason_type
+      - name: rejected_at
+      - name: hired_at
+      - name: started_at
+      - name: external_start
+      - name: created_at
+      - name: last_updated_at
