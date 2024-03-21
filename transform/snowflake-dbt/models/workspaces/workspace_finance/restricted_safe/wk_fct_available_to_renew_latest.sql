@@ -70,11 +70,13 @@
 
     SELECT 
       dim_crm_opportunity.dim_crm_opportunity_id,	
-      CASE 
-        WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
-        WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
-        WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
-      END  AS ramp_ssp_id,
+     -- CASE 
+       -- WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
+       -- WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
+       -- WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
+     -- END  
+      COALESCE(LEFT(zuora_ramps.dim_crm_opportunity_id,15), ramp_deals.ssp_id,sheetload_map_ramp_deals."Overwrite_SSP_ID")
+      AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
      ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
@@ -156,6 +158,7 @@
      OR (dim_subscription_base.ramp_ssp_id IS NOT NULL 
      AND max_term_end_date != term_end_date)	
 
+
   --ARR from charges		
 ), subscription_charges AS (
 
@@ -173,7 +176,8 @@
       and fct_charge.effective_start_date_id != fct_charge.effective_end_date_id				
     LEFT JOIN dim_charge			
       ON dim_charge.dim_charge_id = fct_charge.dim_charge_id				
-    WHERE fct_charge.dim_product_detail_id IS NOT NULL  --Null for "Other Non-Recurring Amount"		
+    WHERE fct_charge.dim_product_detail_id IS NOT NULL  --Null for "Other Non-Recurring Amount"	
+
 
 --Final ATR 
 ), final AS (		
@@ -188,7 +192,7 @@
       --opp_id
       --geo segment
       --country
-      --opp term
+      --opp term --tricky for ramp deals chck old code
       --term start
       --term end 
       --renewed Subs ID --Take a look at the example
