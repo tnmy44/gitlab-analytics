@@ -4,12 +4,6 @@
   })
 }}
 
-{% set renewal_fiscal_years = dbt_utils.get_column_values(
-        table=ref('prep_renewal_fiscal_years'),
-        where="fiscal_year >= 2019",
-        column='fiscal_year',
-        order_by='fiscal_year' )%}
-
 {{ simple_cte([
     ('dim_date','dim_date'),
     ('dim_crm_account','dim_crm_account'),
@@ -24,7 +18,8 @@
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_product_detail', 'dim_product_detail'),
     ('dim_amendment', 'dim_amendment'),
-    ('zuora_ramps_source', 'zuora_query_api_ramps_source')
+    ('zuora_ramps_source', 'zuora_query_api_ramps_source'),
+    ('fct_quote_item', 'fct_quote_item')
 
 ]) }}
 
@@ -57,13 +52,14 @@
 
     SELECT  
       fct_charge.*,
+      fct_quote_item.dim_crm_opportunity_id,
       IFF(zuora_ramps_source.order_id IS NOT NULL, TRUE, FALSE) AS is_ramp_deal
     FROM fct_charge    
     LEFT JOIN zuora_ramps_source
-      ON fct_charge.dim_order_id = zuora_ramps_source.order_id
-    WHERE --fct_charge.is_included_in_arr_calc = 'TRUE'
-    -- AND fct_charge.term_end_month = fct_charge.effective_end_month
-      fct_charge.arr != 0		
+      ON fct_charge.dim_order_id = zuora_ramps_source.order_id     
+    LEFT JOIN fct_quote_item
+     ON fct_charge.dim_charge_id = fct_quote_item.rate_plan_charge_id
+    WHERE fct_charge.arr != 0		
    -- INNER JOIN dim_subscription_last_term
    --   ON mart_charge_base.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
 	
@@ -80,8 +76,8 @@
      ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
     LEFT JOIN ramp_deals					
      ON ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 	
- --   LEFT JOIN zuora_ramps
---    ON zuora_ramps.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+    LEFT JOIN zuora_ramps
+     ON zuora_ramps.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     WHERE ramp_ssp_id IS NOT NULL	
 
 
