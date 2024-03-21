@@ -61,9 +61,9 @@
     FROM fct_charge    
     LEFT JOIN zuora_ramp
       ON fct_charge.dim_order_id = zuora_ramp.order_id
-    WHERE fct_charge.is_included_in_arr_calc = 'TRUE'
-     AND fct_charge.term_end_month = fct_charge.effective_end_month
-     AND fct_charge.arr != 0		
+    WHERE --fct_charge.is_included_in_arr_calc = 'TRUE'
+    -- AND fct_charge.term_end_month = fct_charge.effective_end_month
+      fct_charge.arr != 0		
    -- INNER JOIN dim_subscription_last_term
    --   ON mart_charge_base.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
 	
@@ -74,7 +74,7 @@
       dim_crm_opportunity.dim_crm_opportunity_id,	
       CASE WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
            WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id		
-           WHEN is_ramp_deal = 'TRUE' THEN LEFT(zuora_ramps.dim_crm_opportunity_id, 15)
+           --WHEN zuora_ramps.is_ramp_deal = 'TRUE' THEN LEFT(zuora_ramps.dim_crm_opportunity_id, 15)
       END  AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
