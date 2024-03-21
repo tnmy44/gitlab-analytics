@@ -60,6 +60,8 @@
     LEFT JOIN fct_quote_item
      ON fct_charge.dim_charge_id = fct_quote_item.rate_plan_charge_id
     WHERE fct_charge.arr != 0		
+    --Check for primary quotes
+    --1 opp can have many quotes, filter on primary quote
    -- INNER JOIN dim_subscription_last_term
    --   ON mart_charge_base.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
 	
@@ -68,9 +70,10 @@
 
     SELECT 
       dim_crm_opportunity.dim_crm_opportunity_id,	
-      CASE WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
-           WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
-           WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
+      CASE 
+        WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN LEFT(zuora_ramps.dim_crm_opportunity_id,15)
+        WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id	
+        WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
       END  AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
@@ -182,6 +185,13 @@
       subscription_name,
       --charge_id
       --product_id
+      --opp_id
+      --geo segment
+      --country
+      --opp term
+      --term start
+      --term end 
+      --renewed Subs ID --Take a look at the example
       SUM(ARR) as ARR,
       Quantity			
     FROM subscription_charges			
