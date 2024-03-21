@@ -1874,7 +1874,7 @@ roles:
                     - raw.elasticsearch_billing.*
 
     - engineering_extracts:
-        warehouse:
+        warehouses:
             - dev_xs
         privileges:
             databases:
