@@ -3018,17 +3018,23 @@ models:
         tests:
           - not_null
           - unique
-        description: The unique ID of the dim_ping_metric model consisting of metrics_path, created using the dbt surrogate_key macro
+        description: ' {{ doc("ping_metric_id") }} '
       - name: metrics_path
         description: '{{ doc("metrics_path") }}'
       - name: sql_friendly_path
-        description: Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+        description: '{{ doc("sql_friendly_path") }}'
       - name: data_source
         description: '{{ doc("data_source_ping_metric") }}'
+      - name: data_category
+        description: '{{ doc("data_category_ping_metric") }}'
+      - name: distribution
+        description: '{{ doc("distribution_ping_metric") }}'
       - name: description
-        description: A description of the metric
+        description: '{{ doc("description_ping_metric") }}'
       - name: instrumentation_class
         description: '{{ doc("instrumentation_class_ping_metric") }}'
+      - name: performance_indicator_type
+        description: '{{ doc("performance_indicator_type_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -3038,15 +3044,15 @@ models:
       - name: milestone
         description: '{{ doc("milestone_ping_metric") }}'
       - name: skip_validation
-        description: This will always be NULL
+        description: '{{ doc("skip_validation_ping_metric") }}'
       - name: metrics_status
         description: '{{ doc("metrics_status_ping_metric") }}'
       - name: tier
-        description: The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium or ultimate (ex. `[   "free",   "premium",   "ultimate" ]`)
+        description: '{{ doc("tier_ping_metric") }}'
       - name: time_frame
         description: '{{ doc("time_frame") }}'
       - name: value_type
-        description: One of `string`, `number`, `boolean`, `object`
+        description: '{{ doc("value_type_ping_metric") }}'
       - name: is_gmau
         description: '{{ doc("is_gmau") }}'
       - name: is_paid_gmau
@@ -3058,11 +3064,11 @@ models:
       - name: is_health_score_metric
         description: '{{ doc("is_health_score_metric") }}'
       - name: snapshot_date
-        description: The date the data was extracted from metrics YAML files
+        description: '{{ doc("snapshot_date_ping_metric") }}'
       - name: uploaded_at
-        description: The time the data was extracted from metrics YAML files
+        description: '{{ doc("uploaded_at_ping_metric") }}'
       - name: data_by_row
-        description: JSON object with all fields from YAML file
+        description: '{{ doc("data_by_row_ping_metric") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3079,17 +3085,23 @@ models:
         tests:
           - not_null
           - unique
-        description: The unique composite ID of the dim_ping_metric_daily_snapshot model consisting of metrics_path and date_id
+        description: '{{ doc("ping_metric_hist_id") }}'
       - name: metrics_path
         description: '{{ doc("metrics_path") }}'
       - name: sql_friendly_path
-        description: Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+        description: '{{ doc("sql_friendly_path") }}'
       - name: data_source
         description: '{{ doc("data_source_ping_metric") }}'
+      - name: data_category
+        description: '{{ doc("data_category_ping_metric") }}'
+      - name: distribution
+        description: '{{ doc("distribution_ping_metric") }}'
       - name: description
-        description: A description of the metric
+        description: '{{ doc("description_ping_metric") }}'
       - name: instrumentation_class
         description: '{{ doc("instrumentation_class_ping_metric") }}'
+      - name: performance_indicator_type
+        description: '{{ doc("performance_indicator_type_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -3099,15 +3111,15 @@ models:
       - name: milestone
         description: '{{ doc("milestone_ping_metric") }}'
       - name: skip_validation
-        description: This will always be NULL
+        description: '{{ doc("skip_validation_ping_metric") }}'
       - name: metrics_status
         description: '{{ doc("metrics_status_ping_metric") }}'
       - name: tier
-        description: The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium, or ultimate
+        description: '{{ doc("tier_ping_metric") }}'
       - name: time_frame
         description: '{{ doc("time_frame") }}'
       - name: value_type
-        description: One of `string`, `number`, `boolean`, `object`
+        description: '{{ doc("value_type_ping_metric") }}'
       - name: is_gmau
         description: '{{ doc("is_gmau") }}'
       - name: is_paid_gmau
@@ -3117,7 +3129,7 @@ models:
       - name: is_umau
         description: '{{ doc("is_umau") }}'
       - name: uploaded_at
-        description: The time the data was extracted from metrics YAML files
+        description: '{{ doc("uploaded_at_ping_metric") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3127,9 +3139,9 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
       - name: valid_from
-        description: Timestamp of when this metric path mapping is valid from
+        description: '{{ doc("valid_from") }}'
       - name: valid_to
-        description: Timestamp of when this metric path mapping is valid until
+        description: '{{ doc("valid_to") }}'
 
 
   - name: fct_ping_instance_metric
