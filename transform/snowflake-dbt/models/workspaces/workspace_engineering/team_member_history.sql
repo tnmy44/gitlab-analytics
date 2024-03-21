@@ -45,7 +45,7 @@ member_source AS (
   WHERE is_currently_valid
     AND member_source_type = 'Namespace'
     AND {{ filter_out_blocked_users('members_source', 'user_id') }}
-    
+
 ),
 
 directory_mapping AS (
@@ -73,7 +73,8 @@ directory_mapping AS (
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.group_name, NULL))                                                                                          AS user_group,
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_display_name, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_display_name, NULL))) AS user_stage,
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_section, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_section, NULL)))           AS user_section,
-    ARRAY_AGG(DISTINCT e.source_id) WITHIN GROUP (ORDER BY e.source_id)                                                                                                 AS is_member_in_namespace
+    ARRAY_AGG(DISTINCT e.source_id) WITHIN GROUP (ORDER BY e.source_id)                                                                                                 AS is_member_in_namespace,
+    IFF(date_actual = MAX(date_actual) OVER (PARTITION BY 1), TRUE, FALSE)                                                                                              AS is_most_recent
   FROM dates AS a
   INNER JOIN {{ ref('mart_team_member_directory') }} AS b
     ON b.is_current_team_member
