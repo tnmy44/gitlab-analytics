@@ -5753,6 +5753,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - pthote:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
+
     - rakreddy:
         member_of:
             - analyst_people
@@ -7523,6 +7529,11 @@ users:
         can_login: yes
         member_of:
             - pleitzen
+
+    - pthote:
+        can_login: yes
+        member_of:
+            - pthote
 
     - rakreddy:
         can_login: yes
