@@ -4667,6 +4667,7 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+            - zuora_query_api
         warehouses:
             - dev_xs
         owns:
