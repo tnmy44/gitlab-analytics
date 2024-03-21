@@ -51,24 +51,29 @@ class TableauDependecyCheck:
                 response_downstream_node_dependencies = (
                     get_downstream_node_dependencies(source_table_mcon)
                 )
-                output_list = check_response_for_tableau_dependencies(
-                    response_downstream_node_dependencies
-                )
-
-                # if length of output_list > 0 then show the list of downstream dependencies
-                if len(output_list) > 0:
-                    # show each key value pair in output_list
-                    has_dependency = True
+                if response_downstream_node_dependencies is None:
                     logging.info(
-                        f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                        f"No downstream dependencies returned for model {format(line)}"
                     )
-                    for item in output_list:
-                        for key, value in item.items():
-                            logging.info(f"\n{key}: {value}")
                 else:
-                    logging.info(
-                        f"No downstream dependencies found in Tableau for the model {line.strip()}"
+                    output_list = check_response_for_tableau_dependencies(
+                        response_downstream_node_dependencies
                     )
+
+                    # if length of output_list > 0 then show the list of downstream dependencies
+                    if len(output_list) > 0:
+                        # show each key value pair in output_list
+                        has_dependency = True
+                        logging.info(
+                            f"\n\ndbt model: {line}\nFound {len(output_list)} downstream dependencies in Tableau for the model {line.strip()}\n"
+                        )
+                        for item in output_list:
+                            for key, value in item.items():
+                                logging.info(f"\n{key}: {value}")
+                    else:
+                        logging.info(
+                            f"No downstream dependencies found in Tableau for the model {line.strip()}"
+                        )
         if has_dependency:
             raise ValueError("Check these models before proceeding!")
         else:
@@ -158,6 +163,7 @@ def check_response_for_tableau_dependencies(
     This will return all dependent downstream nodes for a given source table.
     """
     dependency_list = []
+    if 
     for node in response_downstream_dependencies["connectedNodes"]:
         output_dict = {}
         object_type = [
