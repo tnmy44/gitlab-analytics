@@ -1,6 +1,6 @@
 {{ simple_cte([
     ('crm_account_dimensions', 'map_crm_account'),
-    ('prep_crm_account', 'prep_crm_account'),
+    ('prep_crm_account', 'wk_prep_crm_account'),
     ('order_type', 'prep_order_type'),
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('deal_path', 'prep_deal_path'),
