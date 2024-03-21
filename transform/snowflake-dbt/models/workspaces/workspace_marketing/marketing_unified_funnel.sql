@@ -121,6 +121,7 @@
         AND LOWER(ga360_session_hit.event_action) NOT LIKE 'in-line'
         AND (ga360_session_hit.custom_dimensions:"Click URL" LIKE '%about.gitlab.com/sales/%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trials/new%'
+            OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%/solutions/gitlab-duo-pro/sales%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trial_registrations/new%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%customers.gitlab.com/subscriptions/new?plan_id=2c92a01176f0d50a0176f3043c4d4a53%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%customers.gitlab.com/subscriptions/new?plan_id=2c92a00c76f0c6c20176f2f9328b33c9%'
@@ -156,6 +157,7 @@
         AND LOWER(ga360_session_hit.event_action) NOT LIKE 'in-line'
         AND (ga360_session_hit.custom_dimensions:"Click URL" LIKE '%about.gitlab.com/sales/%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trials/new%'
+            OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%/solutions/gitlab-duo-pro/sales%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%gitlab.com/-/trial_registrations/new%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%customers.gitlab.com/subscriptions/new?plan_id=2c92a01176f0d50a0176f3043c4d4a53%'
             OR ga360_session_hit.custom_dimensions:"Click URL" LIKE '%customers.gitlab.com/subscriptions/new?plan_id=2c92a00c76f0c6c20176f2f9328b33c9%'
@@ -622,5 +624,5 @@
     created_by ="@rkohnke",
     updated_by ="@rkohnke",
     created_date="2024-03-01",
-    updated_date="2024-03-01",
+    updated_date="2024-03-21",
   ) }}
