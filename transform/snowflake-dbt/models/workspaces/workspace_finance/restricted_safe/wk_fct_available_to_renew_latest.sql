@@ -20,11 +20,11 @@
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('dim_charge', 'dim_charge'),
     ('fct_charge', 'fct_charge'),
-    ('mart_charge','mart_charge')
+    ('mart_charge','mart_charge'),
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_product_detail', 'dim_product_detail'),
     ('dim_amendment', 'dim_amendment'),
-    ('zuora_ramp', 'zuora_query_api_ramps_source')
+    ('zuora_ramps_source', 'zuora_query_api_ramps_source')
 
 ]) }}
 
@@ -47,7 +47,7 @@
       dim_crm_opportunity.opportunity_term	
     FROM mart_crm_opportunity			
     INNER JOIN dim_crm_opportunity				
-      ON LEFT(dim_crm_opportunity.dim_crm_opportunity_id,15) = left(mart_crm_opportunity.ssp_id,15)				
+      ON LEFT(dim_crm_opportunity.dim_crm_opportunity_id,15) = LEFT(mart_crm_opportunity.ssp_id,15)				
     WHERE ssp_id IS NOT NULL 
       AND mart_crm_opportunity.opportunity_category LIKE '%Ramp Deal%'	
 
@@ -57,10 +57,10 @@
 
     SELECT  
       fct_charge.*,
-      IFF(zuora_ramp.order_id IS NOT NULL, TRUE, FALSE) AS is_ramp_deal
+      IFF(zuora_ramps_source.order_id IS NOT NULL, TRUE, FALSE) AS is_ramp_deal
     FROM fct_charge    
-    LEFT JOIN zuora_ramp
-      ON fct_charge.dim_order_id = zuora_ramp.order_id
+    LEFT JOIN zuora_ramps_source
+      ON fct_charge.dim_order_id = zuora_ramps_source.order_id
     WHERE --fct_charge.is_included_in_arr_calc = 'TRUE'
     -- AND fct_charge.term_end_month = fct_charge.effective_end_month
       fct_charge.arr != 0		
@@ -74,15 +74,14 @@
       dim_crm_opportunity.dim_crm_opportunity_id,	
       CASE WHEN sheetload_map_ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deals."Overwrite_SSP_ID"				
            WHEN dim_crm_opportunity.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id		
-           --WHEN zuora_ramps.is_ramp_deal = 'TRUE' THEN LEFT(zuora_ramps.dim_crm_opportunity_id, 15)
       END  AS ramp_ssp_id,
     FROM dim_crm_opportunity				
     LEFT JOIN sheetload_map_ramp_deals				
      ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
     LEFT JOIN ramp_deals					
      ON ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 	
-    LEFT JOIN zuora_ramps
-     ON zuora_ramps.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+ --   LEFT JOIN zuora_ramps
+--    ON zuora_ramps.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     WHERE ramp_ssp_id IS NOT NULL	
 
 
@@ -157,7 +156,7 @@
      OR (dim_subscription_base.ramp_ssp_id IS NOT NULL 
      AND max_term_end_date != term_end_date)	
 
-			
+  --ARR from charges		
 ), subscription_charges AS (
 
     SELECT 
@@ -174,8 +173,9 @@
       and fct_charge.effective_start_date_id != fct_charge.effective_end_date_id				
     LEFT JOIN dim_charge			
       ON dim_charge.dim_charge_id = fct_charge.dim_charge_id				
-    WHERE fct_charge.dim_product_detail_id IS NOT NULL  --Null for "Other Non-Recurring Amount"				
+    WHERE fct_charge.dim_product_detail_id IS NOT NULL  --Null for "Other Non-Recurring Amount"		
 
+--Final ATR 
 ), final AS (		
 				
     SELECT 
