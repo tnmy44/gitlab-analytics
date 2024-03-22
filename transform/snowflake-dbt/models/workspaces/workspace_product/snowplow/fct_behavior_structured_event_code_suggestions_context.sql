@@ -59,7 +59,7 @@ clicks AS (
         )                                                                           AS namespace_ids,
     flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS instance_id,
     flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name,
-    flat_contexts.value['data']['is_streaming']::VARCHAR                            AS is_streaming
+    flat_contexts.value['data']['is_streaming']::BOOLEAN                            AS is_streaming
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
@@ -264,5 +264,5 @@ clicks AS (
     created_by="@mdrussell",
     updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2024-02-29"
+    updated_date="2024-03-22"
 ) }}
