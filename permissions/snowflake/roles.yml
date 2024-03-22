@@ -4801,6 +4801,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - kniechajewicz:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - kkarthikeyan:
         member_of: []
         warehouses: []
@@ -7302,6 +7308,11 @@ users:
         can_login: yes
         member_of:
             - kmckern
+
+    - kniechajewicz:
+        can_login: yes
+        member_of:
+            - kniechajewicz
 
     - kkarthikeyan:
         can_login: no
