@@ -2,84 +2,81 @@ WITH greenhouse_candidates_source AS (
   SELECT *
   FROM {{ ref('greenhouse_candidates_source') }}
 ),
+
 greenhouse_candidate_custom_fields_source AS (
   SELECT *
   FROM {{ ref('greenhouse_candidate_custom_fields_source') }}
 ),
+
 candidates_raw AS (
   SELECT *
   FROM {{ source('greenhouse', 'candidates') }}
 ),
-candidate
-AS (
-	SELECT c1.CANDIDATE_ID
-		,c1.CANDIDATE_RECRUITER_ID
-		,c1.CANDIDATE_COORDINATOR_ID
-		,c1.CANDIDATE_RECRUITER
-		,c2.recruiter_id
-		,c2.coordinator_id
-		,c1.CANDIDATE_COORDINATOR
-		,c1.CANDIDATE_COMPANY
-		,c1.CANDIDATE_TITLE
-		,c1.CANDIDATE_CREATED_AT
-		,c1.CANDIDATE_UPDATED_AT
-		,c1.IS_CANDIDATE_MIGRATED
-		,c1.IS_CANDIDATE_PRIVATE
-		,c2.First_name
-		,c2.Last_name
-	FROM greenhouse_candidates_source c1
-	LEFT JOIN candidates_raw c2 ON c1.candidate_id = c2.id
-	)
-	,candidate_custom
-AS (
-	SELECT CANDIDATE_ID
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Country'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS Country
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Locality'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS Locality
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Relationship'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS Relationship
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Family Relationship'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS Family_Relationship
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Referral'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS referral
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Preferred First Name/Nickname'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS preferred_first
-		,max(CASE CANDIDATE_CUSTOM_FIELD
-				WHEN 'Referral Notes'
-					THEN CANDIDATE_CUSTOM_FIELD_DISPLAY_VALUE
-				ELSE NULL
-				END) AS referral_notes
-	FROM greenhouse_candidate_custom_fields_source
-	GROUP BY 1
-	)
-    
-    select candidate.*
-    ,cust.country
-    ,cust.locality
-    ,cust.relationship
-    ,cust.family_relationship
-    ,cust.referral
-    ,cust.preferred_first
-    ,cust.referral_notes
-    from candidate
-    left join candidate_custom cust on candidate.candidate_id = cust.candidate_id
 
+candidate AS (
+  SELECT
+    c1.candidate_id,
+    c1.candidate_recruiter_id,
+    c1.candidate_coordinator_id,
+    c1.candidate_recruiter,
+    c2.recruiter_id,
+    c2.coordinator_id,
+    c1.candidate_coordinator,
+    c1.candidate_company,
+    c1.candidate_title,
+    c1.candidate_created_at,
+    c1.candidate_updated_at,
+    c1.is_candidate_migrated,
+    c1.is_candidate_private,
+    c2.first_name,
+    c2.last_name
+  FROM greenhouse_candidates_source AS c1
+  LEFT JOIN candidates_raw AS c2 ON c1.candidate_id = c2.id
+),
+
+candidate_custom AS (
+  SELECT
+    candidate_id,
+    MAX(CASE candidate_custom_field
+      WHEN 'Country'
+        THEN candidate_custom_field_display_value
+    END) AS country,
+    MAX(CASE candidate_custom_field
+      WHEN 'Locality'
+        THEN candidate_custom_field_display_value
+    END) AS locality,
+    MAX(CASE candidate_custom_field
+      WHEN 'Relationship'
+        THEN candidate_custom_field_display_value
+    END) AS relationship,
+    MAX(CASE candidate_custom_field
+      WHEN 'Family Relationship'
+        THEN candidate_custom_field_display_value
+    END) AS family_relationship,
+    MAX(CASE candidate_custom_field
+      WHEN 'Referral'
+        THEN candidate_custom_field_display_value
+    END) AS referral,
+    MAX(CASE candidate_custom_field
+      WHEN 'Preferred First Name/Nickname'
+        THEN candidate_custom_field_display_value
+    END) AS preferred_first,
+    MAX(CASE candidate_custom_field
+      WHEN 'Referral Notes'
+        THEN candidate_custom_field_display_value
+    END) AS referral_notes
+  FROM greenhouse_candidate_custom_fields_source
+  GROUP BY 1
+)
+
+SELECT
+  candidate.*,
+  cust.country,
+  cust.locality,
+  cust.relationship,
+  cust.family_relationship,
+  cust.referral,
+  cust.preferred_first,
+  cust.referral_notes
+FROM candidate
+LEFT JOIN candidate_custom AS cust ON candidate.candidate_id = cust.candidate_id

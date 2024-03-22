@@ -112,7 +112,7 @@ stages_reject AS (
   SELECT
     xf.job_id,
     xf.application_id,
-    MAX(COALESCE(stage_exited_on, rejected_date)) AS reject_date
+    MAX(COALESCE(stg.stage_exited_on, xf.rejected_date)) AS reject_date
   FROM greenhouse_recruiting_xf AS xf
   LEFT JOIN greenhouse_application_stages_source AS stg ON xf.application_id = stg.application_id
   WHERE xf.job_id IS NOT NULL
@@ -129,8 +129,8 @@ stages_start AS (
     COALESCE(hires.hire_date_mod::TIMESTAMP, recruiting_xf.candidate_target_hire_date::TIMESTAMP) AS start_date
   FROM greenhouse_recruiting_xf AS recruiting_xf
   LEFT JOIN greenhouse_hires AS hires ON recruiting_xf.application_id = hires.application_id
-  WHERE offer_status = 'accepted'
-    AND application_status = 'hired'
+  WHERE recruiting_xf.offer_status = 'accepted'
+    AND recruiting_xf.application_status = 'hired'
 ),
 
 external_start AS (
@@ -141,7 +141,7 @@ external_start AS (
     1 AS external_hire
   FROM employee_directory_intermediate AS edi
   LEFT JOIN bamboohr_id_employee_number_mapping AS map ON edi.employee_id = map.employee_id
-  WHERE is_hire_date = 'True'
+  WHERE edi.is_hire_date = 'True'
 ),
 
 offer AS (
@@ -162,8 +162,8 @@ SELECT DISTINCT
   source.source_type,
   app.prospect,
   IFF(
-    source_type = 'Prospecting'
-    AND source_name NOT IN ('SocialReferral'), referrer.referrer_name, NULL
+    source.source_type = 'Prospecting'
+    AND source.source_name NOT IN ('SocialReferral'), referrer.referrer_name, NULL
   )                                                                 AS sourcer_name,
   referrer.referrer_name,
   u1.employee_id                                                    AS referrer_employee_id,
