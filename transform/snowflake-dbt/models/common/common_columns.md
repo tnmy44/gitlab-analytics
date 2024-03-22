@@ -1625,48 +1625,6 @@ Host/Domain information
 
 {% enddocs %}
 
-{% docs gsc_pseudonymized_user_id %}
-
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
-
-- The event occurred before `2021-09-29` (when the collection of this data started)
-- A user is not logged in
-- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
-- It is an unstructured event
-- The event is not associated with a user (some backend events)
-
-{% enddocs %}
-
-{% docs gsc_google_analytics_client_id %}
-
-Google Analytics ID, present when set from our marketing sites.
-
-{% enddocs %}
-
-{% docs gsc_extra %}
-
-Any additional data associated with the event, in the form of key-value pairs.
-
-{% enddocs %}
-
-{% docs gsc_plan %}
-
-Name of the plan for the namespace, such as free, premium, or ultimate. Automatically picked from the namespace.
-
-{% enddocs %}
-
-{% docs gsc_source %}
-
-Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
-
-{% enddocs %}
-
-{% docs gsc_is_gitlab_team_member %}
-
-Name of the property that allows to distinguish between Gitlab Employees and non-employees. When `gsc_is_gitlab_team_member = TRUE` THEN the event was triggered by a GitLab team member. When `gsc_is_gitlab_team_member = FALSE` THEN the event was not triggered by a GitLab team member.
-
-{% enddocs %}
-
 {% docs dim_behavior_operating_system_sk %}
 
 Surrogate key consisting of os_name and os_timezone, easily JOINed to dim_behavior_operating_system. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `os_name` and `os_timezone`.
@@ -2704,7 +2662,7 @@ Name of the source application/ event tracker, such as gitlab-rails or gitlab-ja
 
 {% docs gsc_is_gitlab_team_member %}
 
-Indicates if the Snowplow event was triggered by a GitLab team member
+Name of the property that allows to distinguish between Gitlab Employees and non-employees. When `gsc_is_gitlab_team_member = TRUE` THEN the event was triggered by a GitLab team member. When `gsc_is_gitlab_team_member = FALSE` THEN the event was not triggered by a GitLab team member.
 
 {% enddocs %}
 
