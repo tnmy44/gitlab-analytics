@@ -6102,6 +6102,12 @@ roles:
                     - schaturvedi_prep.*.*
                     - schaturvedi_prod.*.*
 
+    - sfigueroa:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - sgladchun:
         member_of:
             - analyst_finance
@@ -7625,6 +7631,11 @@ users:
         can_login: yes
         member_of:
             - securityadmin
+
+    - sfigueroa:
+        can_login: yes
+        member_of:
+            - sfigueroa
 
     - sgladchun:
         can_login: yes
