@@ -6,8 +6,8 @@ WITH actuals AS (
 ),
 
 day_7_list AS (
-
-  date_spine_7th_day(dim_date)
+  
+  {{ date_spine_7th_day() }}
 
 ),
 
@@ -20,6 +20,7 @@ aggregate_data AS (
     dim_order_type_id,
     dim_order_type_live_id,
     dim_crm_user_hierarchy_sk,
+    dim_crm_current_account_set_hierarchy_sk,
 
     -- attributes
     order_type,
@@ -29,6 +30,7 @@ aggregate_data AS (
     deal_path_name,
     sales_type,
     sales_qualified_source_name,
+    sales_qualified_source_grouped,
     crm_user_business_unit,
     crm_user_sales_segment,
     crm_user_geo,

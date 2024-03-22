@@ -23,6 +23,7 @@ final AS (
     fct_crm_opportunity.dim_order_type_id,
     fct_crm_opportunity.dim_order_type_live_id,
     fct_crm_opportunity.dim_crm_user_hierarchy_sk,
+    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
     fct_crm_opportunity.crm_user_business_unit,
     fct_crm_opportunity.crm_user_sales_segment,
     fct_crm_opportunity.crm_user_geo,

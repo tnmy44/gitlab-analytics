@@ -7,7 +7,7 @@ WITH actuals AS (
 
 day_7_list AS (
 
-  day_spine_7th_day(dim_date)
+  {{ date_spine_7th_day() }}
 
 ),
 

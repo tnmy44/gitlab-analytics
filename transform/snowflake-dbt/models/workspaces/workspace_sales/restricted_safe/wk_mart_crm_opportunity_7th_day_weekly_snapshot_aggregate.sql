@@ -19,6 +19,7 @@ final AS (
     fct_crm_opportunity.dim_order_type_id,
     fct_crm_opportunity.dim_order_type_live_id,
     fct_crm_opportunity.dim_crm_user_hierarchy_sk,
+    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
     fct_crm_opportunity.crm_user_business_unit,
     fct_crm_opportunity.crm_user_sales_segment,
     fct_crm_opportunity.crm_user_geo,
@@ -34,11 +35,13 @@ final AS (
     fct_crm_opportunity.crm_user_sales_segment_region_grouped,
 
     fct_crm_opportunity.sales_qualified_source_name,
+    fct_crm_opportunity.sales_qualified_source_grouped,
     fct_crm_opportunity.order_type,
     fct_crm_opportunity.order_type_grouped,
     fct_crm_opportunity.order_type_live,
-    fct_crm_opportunity.sales_qualified_source,
-    fct_crm_opportunity.sales_qualified_source_grouped,
+    fct_crm_opportunity.stage_name,
+    fct_crm_opportunity.deal_path_name,
+    fct_crm_opportunity.sales_type,
 
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
@@ -47,12 +50,6 @@ final AS (
     fct_crm_opportunity.snapshot_fiscal_quarter_date,
     fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
-
-    
-    fct_crm_opportunity.order_type_grouped,
-    fct_crm_opportunity.stage_name,
-    fct_crm_opportunity.deal_path_name,
-    fct_crm_opportunity.sales_type,
 
     -- Dates
     dim_date.current_date_actual,

@@ -5,7 +5,9 @@
     ('prep_crm_user', 'wk_prep_crm_user_daily_snapshot'),
     ('prep_crm_account', 'prep_crm_account_daily_snapshot'),
     ('sfdc_opportunity', 'wk_prep_crm_opportunity_fy25'),
-    ('deal_path', 'prep_deal_path')
+    ('deal_path', 'prep_deal_path'),
+    ('sales_rep', 'wk_prep_crm_user'),
+    ('prep_crm_user_hierarchy', 'wk_prep_crm_user_hierarchy')
 ]) }},
 
 
@@ -22,6 +24,28 @@
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
     {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                                  AS dim_order_type_live_id,
     {{ get_keyed_nulls('prep_crm_user.dim_crm_user_hierarchy_sk') }}                                                            AS dim_crm_user_hierarchy_sk,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_business_unit_stamped']) }}                            AS dim_crm_opp_owner_business_unit_stamped_id,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_sales_segment_stamped']) }}                            AS dim_crm_opp_owner_sales_segment_stamped_id,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_geo_stamped']) }}                                      AS dim_crm_opp_owner_geo_stamped_id,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_region_stamped']) }}                                   AS dim_crm_opp_owner_region_stamped_id,
+    {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_area_stamped']) }}                                     AS dim_crm_opp_owner_area_stamped_id,
+    {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_1_id') }}                                               AS dim_crm_user_role_level_1_id,
+    {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_2_id') }}                                               AS dim_crm_user_role_level_2_id,
+    {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_3_id') }}                                               AS dim_crm_user_role_level_3_id,
+    {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_4_id') }}                                               AS dim_crm_user_role_level_4_id,
+    {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_5_id') }}                                               AS dim_crm_user_role_level_5_id,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_hierarchy_sk') }}                                                                AS dim_crm_user_hierarchy_live_sk,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_business_unit_id') }}                                                            AS dim_crm_user_business_unit_id,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_sales_segment_id') }}                                                            AS dim_crm_user_sales_segment_id,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_geo_id') }}                                                                      AS dim_crm_user_geo_id,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_region_id') }}                                                                   AS dim_crm_user_region_id,
+    {{ get_keyed_nulls('sales_rep.dim_crm_user_area_id') }}                                                                     AS dim_crm_user_area_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                        AS dim_crm_user_hierarchy_account_user_sk,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_business_unit_id') }}                                                    AS dim_crm_account_user_business_unit_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_sales_segment_id') }}                                                    AS dim_crm_account_user_sales_segment_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                              AS dim_crm_account_user_geo_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                           AS dim_crm_account_user_region_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                             AS dim_crm_account_user_area_id,
     prep_crm_user.crm_user_business_unit,
     prep_crm_user.crm_user_sales_segment,
     prep_crm_user.crm_user_geo,
@@ -42,11 +66,21 @@
     sfdc_opportunity.sfdc_contact_id,
     sfdc_opportunity.record_type_id,
 
+
+    CASE
+      WHEN sfdc_opportunity.close_fiscal_year < dim_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 0
+        THEN dim_crm_user_hierarchy_account_user_sk  -- live account owner hierarchy
+      WHEN sfdc_opportunity.close_fiscal_year < dim_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
+        THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_hierarchy_sk') }} -- account hierarchy
+      ELSE sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk -- stamped account owner hierarchy
+    END                                                                                                                    AS dim_crm_current_account_set_hierarchy_sk,
+
     --attributes
     sfdc_opportunity.opportunity_name,
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
     prep_crm_user.user_name                                           AS opp_owner_name,
     sales_qualified_source.sales_qualified_source_name,
+    sfdc_opportunity.sales_qualified_source_grouped,
     order_type.order_type_name AS order_type,
     order_type_live.order_type_name AS order_type_live,
     sfdc_opportunity.order_type_grouped,
@@ -254,6 +288,14 @@
       AND sfdc_opportunity.snapshot_id = prep_crm_user.snapshot_id
   LEFT JOIN deal_path
     ON sfdc_opportunity.deal_path = deal_path.deal_path_name
+  LEFT JOIN sales_rep
+    ON sfdc_opportunity.dim_crm_user_id = sales_rep.dim_crm_user_id
+  LEFT JOIN sales_rep AS sales_rep_account
+      ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id
+  LEFT JOIN prep_crm_user_hierarchy
+    ON sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+  LEFT JOIN prep_crm_user_hierarchy AS account_hierarchy
+      ON prep_crm_account.dim_crm_parent_account_hierarchy_sk = account_hierarchy.dim_crm_user_hierarchy_sk
   WHERE is_live = 0
 
   {% if is_incremental() %}
