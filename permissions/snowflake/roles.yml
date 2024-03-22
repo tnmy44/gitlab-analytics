@@ -6292,6 +6292,7 @@ roles:
     - srehm:
         member_of:
             - analyst_growth
+            - snowflake_analyst
         warehouses:
             - dev_xs
         owns:
