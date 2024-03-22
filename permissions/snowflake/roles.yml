@@ -3806,6 +3806,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - dstull:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - dtang:
         member_of:
             - snowflake_analyst
@@ -6959,6 +6965,11 @@ users:
         can_login: yes
         member_of:
             - dsatcher
+
+    - dstull:
+        can_login: yes
+        member_of:
+            - dstull
 
     - dtang:
         can_login: yes
