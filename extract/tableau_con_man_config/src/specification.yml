@@ -8607,12 +8607,6 @@ users:
       - Customer Success All Access
       - General All Access
       - General SAFE Access
-  - user_name: rgulin
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: rhardarson
     user_name_domain: gitlab.com
     site_role: Viewer
