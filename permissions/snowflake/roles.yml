@@ -3806,6 +3806,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - dstull:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
+
     - dtang:
         member_of:
             - snowflake_analyst
@@ -3958,6 +3964,12 @@ roles:
     - fstein:
         warehouses:
             - admin
+
+    - gdoud:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
 
     - gitlab_ci:
         member_of:
@@ -4248,6 +4260,12 @@ roles:
             - snapshots
             - snowflake_analyst
             - zendesk
+        warehouses:
+            - dev_xs
+
+    - jhalloran:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -4780,6 +4798,12 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - kniechajewicz:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -5679,6 +5703,12 @@ roles:
                 write:
                     - parmstrong_prep.*.*
                     - parmstrong_prod.*.*
+
+    - pcordero:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - pempey:
         member_of:
@@ -6960,6 +6990,11 @@ users:
         member_of:
             - dsatcher
 
+    - dstull:
+        can_login: yes
+        member_of:
+            - dstull
+
     - dtang:
         can_login: yes
         member_of:
@@ -7027,6 +7062,12 @@ users:
         member_of:
             - gainsight_pump
 
+    - gdoud:
+        can_login: yes
+        member_of:
+            - gdoud
+
+
     - gitlab_ci:
         can_login: yes
         member_of:
@@ -7042,6 +7083,7 @@ users:
         can_login: yes
         member_of:
             - grafana
+
 
     - gweaver:
         can_login: yes
@@ -7130,6 +7172,11 @@ users:
         can_login: yes
         member_of:
             - jgarcia
+
+    - jhalloran:
+        can_login: yes
+        member_of:
+            - jhalloran           
 
     - jhope:
         can_login: yes
@@ -7261,6 +7308,11 @@ users:
         can_login: yes
         member_of:
             - kmckern
+
+    - kniechajewicz:
+        can_login: yes
+        member_of:
+            - kniechajewicz
 
     - kkarthikeyan:
         can_login: no
@@ -7519,6 +7571,11 @@ users:
         member_of:
             - parmstrong
             - accountadmin
+
+    - pcordero:
+        can_login: yes
+        member_of:
+            - pcordero
 
     - pempey:
         can_login: yes
