@@ -5698,6 +5698,12 @@ roles:
                     - parmstrong_prep.*.*
                     - parmstrong_prod.*.*
 
+    - pcordero:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - pempey:
         member_of:
             - analytics_engineer_core
@@ -7554,6 +7560,11 @@ users:
         member_of:
             - parmstrong
             - accountadmin
+
+    - pcordero:
+        can_login: yes
+        member_of:
+            - pcordero
 
     - pempey:
         can_login: yes
