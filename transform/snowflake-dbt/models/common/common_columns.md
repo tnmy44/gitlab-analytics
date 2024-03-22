@@ -310,6 +310,18 @@ Manually input ISO date of when model was updated
 
 {% enddocs %}
 
+{% docs valid_from %}
+
+Timestamp of when this metric path mapping is valid from
+
+{% enddocs %}
+
+{% docs valid_to %}
+
+Timestamp of when this metric path mapping is valid until
+
+{% enddocs %}
+
 {% docs event_count %}
 
 The count of events generated
@@ -1191,6 +1203,48 @@ The unique identifier of a license subscription. This value is synonymous with `
 
 {% enddocs %}
 
+{% docs ping_metric_id %}
+
+The unique ID of the dim_ping_metric model consisting of metrics_path, created using the dbt surrogate_key macro
+
+{% enddocs %}
+
+{% docs ping_metric_hist_id %}
+
+The unique composite ID of the dim_ping_metric_daily_snapshot model consisting of metrics_path and date_id
+
+{% enddocs %}
+
+{% docs sql_friendly_path %}
+
+Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+
+{% enddocs %}
+
+{% docs description_ping_metric %}
+
+A description of the metric
+
+{% enddocs %}
+
+{% docs skip_validation_ping_metric %}
+
+This will always be NULL
+
+{% enddocs %}
+
+{% docs tier_ping_metric %}
+
+The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium or ultimate (ex. `[   "free",   "premium",   "ultimate" ]`)
+
+{% enddocs %}
+
+{% docs value_type_ping_metric %}
+
+One of `string`, `number`, `boolean`, `object`
+
+{% enddocs %}
+
 {% docs milestone_ping_metric %}
 
 The milestone when the metric was introduced and when it was available to Self-Managed installations with the official GitLab release
@@ -1208,6 +1262,43 @@ The milestone when the metric was introduced and when it was available to Self-M
 The source of the metric. May be set to a value like `database`, `redis`, `redis_hll`, `prometheus`, `system`.
 
 {% enddocs %}
+
+{% docs data_category_ping_metric %}
+
+The category of the metric. May be set to a value like `operational`, `optional`, `subscription`, `standard`.
+
+{% enddocs %}
+
+{% docs distribution_ping_metric %}
+
+The distribution where the tracked feature is available, formatted as an array containing one or a combination of `ce, ee` or `ee` (ex. `["ce", "ee"]`)
+
+{% enddocs %}
+
+{% docs performance_indicator_type_ping_metric %}
+
+The performance indicator type of the metric. May be set to a value like `gmau`, `smau`, `paid_gmau`, `umau` or `customer_health_score`.
+
+{% enddocs %}
+
+{% docs snapshot_date_ping_metric %}
+
+The date the data was extracted from metrics YAML files
+
+{% enddocs %}
+
+{% docs uploaded_at_ping_metric %}
+
+The time the data was extracted from metrics YAML files
+
+{% enddocs %}
+
+{% docs data_by_row_ping_metric %}
+
+JSON object with all fields from YAML file
+
+{% enddocs %}
+
 
 {% docs dim_crm_task_sk %}
 
@@ -1531,6 +1622,48 @@ Scheme i.e. protocol. Example: 'https'.
 {% docs page_url_host %}
 
 Host/Domain information 
+
+{% enddocs %}
+
+{% docs gsc_pseudonymized_user_id %}
+
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+
+- The event occurred before `2021-09-29` (when the collection of this data started)
+- A user is not logged in
+- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
+- It is an unstructured event
+- The event is not associated with a user (some backend events)
+
+{% enddocs %}
+
+{% docs gsc_google_analytics_client_id %}
+
+Google Analytics ID, present when set from our marketing sites.
+
+{% enddocs %}
+
+{% docs gsc_extra %}
+
+Any additional data associated with the event, in the form of key-value pairs.
+
+{% enddocs %}
+
+{% docs gsc_plan %}
+
+Name of the plan for the namespace, such as free, premium, or ultimate. Automatically picked from the namespace.
+
+{% enddocs %}
+
+{% docs gsc_source %}
+
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
+
+{% enddocs %}
+
+{% docs gsc_is_gitlab_team_member %}
+
+Name of the property that allows to distinguish between Gitlab Employees and non-employees. When `gsc_is_gitlab_team_member = TRUE` THEN the event was triggered by a GitLab team member. When `gsc_is_gitlab_team_member = FALSE` THEN the event was not triggered by a GitLab team member.
 
 {% enddocs %}
 
