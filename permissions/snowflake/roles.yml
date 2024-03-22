@@ -3965,6 +3965,12 @@ roles:
         warehouses:
             - admin
 
+    - gdoud:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - gitlab_ci:
         member_of:
             - loader
@@ -7044,6 +7050,12 @@ users:
         member_of:
             - gainsight_pump
 
+    - gdoud:
+        can_login: yes
+        member_of:
+            - gdoud
+
+
     - gitlab_ci:
         can_login: yes
         member_of:
@@ -7059,6 +7071,7 @@ users:
         can_login: yes
         member_of:
             - grafana
+
 
     - gweaver:
         can_login: yes
