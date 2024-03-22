@@ -3808,7 +3808,7 @@ roles:
 
     - dstull:
         member_of:
-            - snowflake_analyst
+            - snowflake_analyst_safe
         warehouses:
             - dev_xs
 
@@ -3967,7 +3967,7 @@ roles:
 
     - gdoud:
         member_of:
-            - snowflake_analyst
+            - snowflake_analyst_analyst
         warehouses:
             - dev_xs
 
