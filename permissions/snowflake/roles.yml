@@ -4257,6 +4257,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jhalloran:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jhope:
         member_of:
             - snowflake_analyst
@@ -7141,6 +7147,11 @@ users:
         can_login: yes
         member_of:
             - jgarcia
+
+     - jhalloran:
+        can_login: yes
+        member_of:
+            - jhalloran           
 
     - jhope:
         can_login: yes
