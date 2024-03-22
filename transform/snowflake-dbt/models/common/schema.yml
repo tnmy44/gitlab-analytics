@@ -8336,3 +8336,11 @@ models:
         description: '{{ doc("milestone_due_date") }}'
       - name: milestone_status
         description: '{{ doc("milestone_status") }}'
+
+  - name: fct_latest_seat_link_installation
+    description: '{{ doc("fct_latest_seat_link_installation") }}'
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - host_name
+          - dim_instance_id

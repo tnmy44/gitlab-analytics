@@ -876,3 +876,9 @@ This model contains the logic for connecting product licenses and subscriptions 
 All milestones created within a namespace, with details including the start date, due date, description, and title.
 
 {% enddocs %}
+
+{% docs prep_latest_seat_link_installation %}
+
+Contains the latest Seat Link record for every installation in the source Seat Link model.
+
+{% enddocs %}
