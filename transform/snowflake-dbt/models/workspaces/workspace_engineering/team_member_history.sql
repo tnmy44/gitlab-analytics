@@ -81,7 +81,7 @@ directory_mapping AS (
       AND a.date_actual >= b.valid_from
       AND a.date_actual < b.valid_to
   INNER JOIN category AS c ON a.date_actual BETWEEN c.valid_from AND c.valid_to
-  LEFT JOIN gitlab_dotcom_users AS d ON LOWER(b.gitlab_username) = LOWER(d.user_name)
+  LEFT JOIN gitlab_dotcom_users AS d ON REPLACE(LOWER(b.gitlab_username),'@','') = LOWER(d.user_name)
   LEFT JOIN member_source AS e ON d.user_id = e.user_id AND a.date_actual >= DATE_TRUNC('day', e.invite_created_at)
   {{ dbt_utils.group_by(n=10) }}
 
