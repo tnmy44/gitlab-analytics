@@ -1438,7 +1438,7 @@ LEFT JOIN cw_base
         ELSE 0
       END AS total_closed_net_arr,
 
-    IFF(sfdc_opportunity.snapshot_fiscal_quarter_date = close_date.current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
+    IFF(sfdc_opportunity.snapshot_fiscal_quarter_date = dim_date.current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
@@ -1450,6 +1450,8 @@ LEFT JOIN cw_base
       ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
+    LEFT JOIN dim_date 
+      ON sfdc_opportunity.snapshot_date = close_date.date_actual
     LEFT JOIN dim_date AS close_date
       ON sfdc_opportunity.close_date = close_date.date_actual
     LEFT JOIN dim_date AS arr_created_date

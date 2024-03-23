@@ -7,7 +7,8 @@
     ('fct_crm_opportunity','wk_fct_crm_opportunity_7th_day_weekly_snapshot_aggregate'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
     ('dim_crm_user', 'wk_prep_crm_user_daily_snapshot'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('dim_crm_user_hierarchy','wk_dim_crm_user_hierarchy')
 ]) }},
 
 
@@ -20,19 +21,41 @@ final AS (
     fct_crm_opportunity.dim_order_type_live_id,
     fct_crm_opportunity.dim_crm_user_hierarchy_sk,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
-    fct_crm_opportunity.crm_user_business_unit,
-    fct_crm_opportunity.crm_user_sales_segment,
-    fct_crm_opportunity.crm_user_geo,
-    fct_crm_opportunity.crm_user_region,
-    fct_crm_opportunity.crm_user_area,
-    fct_crm_opportunity.crm_user_role_name,
-    fct_crm_opportunity.crm_user_role_level_1,
-    fct_crm_opportunity.crm_user_role_level_2,
-    fct_crm_opportunity.crm_user_role_level_3,
-    fct_crm_opportunity.crm_user_role_level_4,
-    fct_crm_opportunity.crm_user_role_level_5,
-    fct_crm_opportunity.crm_user_sales_segment_grouped,
-    fct_crm_opportunity.crm_user_sales_segment_region_grouped,
+
+    -- crm owner/sales rep live fields
+    opp_owner_live.crm_user_sales_segment,
+    opp_owner_live.crm_user_sales_segment_grouped,
+    opp_owner_live.crm_user_geo,
+    opp_owner_live.crm_user_region,
+    opp_owner_live.crm_user_area,
+    opp_owner_live.crm_user_business_unit,
+    {{ sales_segment_region_grouped('opp_owner_live.crm_user_sales_segment',
+        'opp_owner_live.crm_user_geo', 'opp_owner_live.crm_user_region') }}
+    AS crm_user_sales_segment_region_grouped,
+
+    -- crm opp owner/account owner fields stamped at SAO date
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
+    fct_crm_opportunity.sao_crm_opp_owner_geo_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_region_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_area_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+
+    -- crm opp owner/account owner stamped fields stamped at close date
+    fct_crm_opportunity.crm_opp_owner_stamped_name,
+    fct_crm_opportunity.crm_account_owner_stamped_name,
+    fct_crm_opportunity.user_segment_stamped AS crm_opp_owner_sales_segment_stamped,
+    fct_crm_opportunity.user_segment_stamped_grouped AS crm_opp_owner_sales_segment_stamped_grouped,
+    fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
+    fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
+    fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
+    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
+    {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
+        'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
+    AS crm_opp_owner_sales_segment_region_stamped_grouped,
+    fct_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
+    fct_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
     fct_crm_opportunity.sales_qualified_source_name,
     fct_crm_opportunity.sales_qualified_source_grouped,
@@ -104,15 +127,6 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    dim_date.current_date_actual                                    AS current_date_actual,
-    dim_date.current_fiscal_year                                    AS current_fiscal_year,
-    dim_date.current_first_day_of_fiscal_year                       AS current_first_day_of_fiscal_year,
-    dim_date.current_fiscal_quarter_name_fy                         AS current_fiscal_quarter_name_fy,
-    dim_date.current_first_day_of_month                             AS current_first_day_of_month,
-    dim_date.current_first_day_of_fiscal_quarter                    AS current_first_day_of_fiscal_quarter,
-    dim_date.current_day_of_month                                   AS current_day_of_month,
-    dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
-    dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
     
     fct_crm_opportunity.created_arr,
     fct_crm_opportunity.closed_won_opps,
@@ -166,6 +180,9 @@ final AS (
   FROM fct_crm_opportunity
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
+  LEFT JOIN dim_crm_user AS opp_owner_live
+    ON fct_crm_opportunity.dim_crm_user_id = opp_owner_live.dim_crm_user_id
+      AND fct_crm_opportunity.snapshot_id = opp_owner_live.snapshot_id
   {% if is_incremental() %}
   
   WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})

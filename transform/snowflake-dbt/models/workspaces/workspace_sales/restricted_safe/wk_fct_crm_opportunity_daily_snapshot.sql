@@ -20,6 +20,7 @@
     sfdc_opportunity.snapshot_id,
 
     --Common dimension keys
+    {{ get_keyed_nulls('sfdc_opportunity.dim_crm_user_id') }}                                                                   AS dim_crm_user_id,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
     {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                                  AS dim_order_type_live_id,
@@ -46,19 +47,6 @@
     {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                              AS dim_crm_account_user_geo_id,
     {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                           AS dim_crm_account_user_region_id,
     {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                             AS dim_crm_account_user_area_id,
-    prep_crm_user.crm_user_business_unit,
-    prep_crm_user.crm_user_sales_segment,
-    prep_crm_user.crm_user_geo,
-    prep_crm_user.crm_user_region,
-    prep_crm_user.crm_user_area,
-    prep_crm_user.crm_user_role_name,
-    prep_crm_user.crm_user_role_level_1,
-    prep_crm_user.crm_user_role_level_2,
-    prep_crm_user.crm_user_role_level_3,
-    prep_crm_user.crm_user_role_level_4,
-    prep_crm_user.crm_user_role_level_5,
-    prep_crm_user.crm_user_sales_segment_grouped,
-    prep_crm_user.crm_user_sales_segment_region_grouped,
     
     sfdc_opportunity.merged_opportunity_id                                                                              AS merged_crm_opportunity_id,
     sfdc_opportunity.dim_crm_account_id,
@@ -87,6 +75,27 @@
     sfdc_opportunity.stage_name,
     deal_path.deal_path_name,
     sfdc_opportunity.sales_type,
+
+    -- crm opp owner/account owner fields stamped at SAO date
+    sao_crm_opp_owner_sales_segment_stamped,
+    sao_crm_opp_owner_sales_segment_stamped_grouped,
+    sao_crm_opp_owner_geo_stamped,
+    sao_crm_opp_owner_region_stamped,
+    sao_crm_opp_owner_area_stamped,
+    sao_crm_opp_owner_segment_region_stamped_grouped,
+    sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+
+    -- crm opp owner/account owner stamped fields stamped at close date
+    crm_opp_owner_stamped_name,
+    crm_account_owner_stamped_name,
+    user_segment_stamped,
+    user_segment_stamped_grouped,
+    user_geo_stamped,
+    user_region_stamped,
+    user_area_stamped,
+    user_business_unit_stamped,
+    crm_opp_owner_sales_segment_geo_region_area_stamped,
+    crm_opp_owner_user_role_type_stamped,
 
     -- dates
     sfdc_opportunity.snapshot_date,

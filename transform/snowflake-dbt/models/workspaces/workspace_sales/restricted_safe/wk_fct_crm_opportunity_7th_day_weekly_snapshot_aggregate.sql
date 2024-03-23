@@ -21,6 +21,29 @@ aggregate_data AS (
     dim_order_type_live_id,
     dim_crm_user_hierarchy_sk,
     dim_crm_current_account_set_hierarchy_sk,
+    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_user_id,
+
+    -- crm opp owner/account owner fields stamped at SAO date
+    sao_crm_opp_owner_sales_segment_stamped,
+    sao_crm_opp_owner_sales_segment_stamped_grouped,
+    sao_crm_opp_owner_geo_stamped,
+    sao_crm_opp_owner_region_stamped,
+    sao_crm_opp_owner_area_stamped,
+    sao_crm_opp_owner_segment_region_stamped_grouped,
+    sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+
+    -- crm opp owner/account owner stamped fields stamped at close date
+    crm_opp_owner_stamped_name,
+    crm_account_owner_stamped_name,
+    user_segment_stamped,
+    user_segment_stamped_grouped,
+    user_geo_stamped,
+    user_region_stamped,
+    user_area_stamped,
+    user_business_unit_stamped,
+    crm_opp_owner_sales_segment_geo_region_area_stamped,
+    crm_opp_owner_user_role_type_stamped,
 
     -- attributes
     order_type,
@@ -31,19 +54,6 @@ aggregate_data AS (
     sales_type,
     sales_qualified_source_name,
     sales_qualified_source_grouped,
-    crm_user_business_unit,
-    crm_user_sales_segment,
-    crm_user_geo,
-    crm_user_region,
-    crm_user_area,
-    crm_user_role_name,
-    crm_user_role_level_1,
-    crm_user_role_level_2,
-    crm_user_role_level_3,
-    crm_user_role_level_4,
-    crm_user_role_level_5,
-    crm_user_sales_segment_grouped,
-    crm_user_sales_segment_region_grouped,
     
 
     --dates

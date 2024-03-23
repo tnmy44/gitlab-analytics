@@ -18,25 +18,14 @@ final AS (
 
     fct_crm_opportunity.crm_opportunity_snapshot_id,
     fct_crm_opportunity.dim_crm_opportunity_id,
+    fct_crm_opportunity.dim_crm_user_id,
     fct_crm_opportunity.snapshot_id,
     fct_crm_opportunity.dim_sales_qualified_source_id,
     fct_crm_opportunity.dim_order_type_id,
     fct_crm_opportunity.dim_order_type_live_id,
     fct_crm_opportunity.dim_crm_user_hierarchy_sk,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
-    fct_crm_opportunity.crm_user_business_unit,
-    fct_crm_opportunity.crm_user_sales_segment,
-    fct_crm_opportunity.crm_user_geo,
-    fct_crm_opportunity.crm_user_region,
-    fct_crm_opportunity.crm_user_area,
-    fct_crm_opportunity.crm_user_role_name,
-    fct_crm_opportunity.crm_user_role_level_1,
-    fct_crm_opportunity.crm_user_role_level_2,
-    fct_crm_opportunity.crm_user_role_level_3,
-    fct_crm_opportunity.crm_user_role_level_4,
-    fct_crm_opportunity.crm_user_role_level_5,
-    fct_crm_opportunity.crm_user_sales_segment_grouped,
-    fct_crm_opportunity.crm_user_sales_segment_region_grouped,
+
     fct_crm_opportunity.merged_crm_opportunity_id,
     fct_crm_opportunity.dim_crm_account_id,
     fct_crm_opportunity.dim_crm_person_id,
@@ -157,6 +146,7 @@ final AS (
     dim_crm_account.crm_account_focus_account,
     dim_crm_account.crm_account_zi_technologies,
     dim_crm_account.is_jihu_account,
+    
     -- crm owner/sales rep live fields
     opp_owner_live.crm_user_sales_segment,
     opp_owner_live.crm_user_sales_segment_grouped,
@@ -177,20 +167,6 @@ final AS (
     {{ sales_segment_region_grouped('account_owner_live.crm_user_sales_segment',
         'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
     AS crm_account_user_sales_segment_region_grouped,
-
-    
-    LOWER(
-      account_owner_live.crm_user_sales_segment
-    ) AS account_owner_user_segment,
-    LOWER(
-      account_owner_live.crm_user_geo
-    ) AS account_owner_user_geo,
-    LOWER(
-      account_owner_live.crm_user_region
-    ) AS account_owner_user_region,
-    LOWER(
-      account_owner_live.crm_user_area
-    ) AS account_owner_user_area,
 
     -- channel fields
     
@@ -357,15 +333,6 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    dim_date.current_date_actual                                    AS current_date_actual,
-    dim_date.current_fiscal_year                                    AS current_fiscal_year,
-    dim_date.current_first_day_of_fiscal_year                       AS current_first_day_of_fiscal_year,
-    dim_date.current_fiscal_quarter_name_fy                         AS current_fiscal_quarter_name_fy,
-    dim_date.current_first_day_of_month                             AS current_first_day_of_month,
-    dim_date.current_first_day_of_fiscal_quarter                    AS current_first_day_of_fiscal_quarter,
-    dim_date.current_day_of_month                                   AS current_day_of_month,
-    dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
-    dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
     fct_crm_opportunity.created_arr,
     fct_crm_opportunity.closed_won_opps,
     fct_crm_opportunity.total_closed_opps,
@@ -424,9 +391,7 @@ final AS (
     fct_crm_opportunity.last_day_of_month,
     fct_crm_opportunity.last_day_of_fiscal_quarter,
     fct_crm_opportunity.last_day_of_fiscal_year,
-    fct_crm_opportunity.is_current_snapshot_quarter,
-    source
-
+    fct_crm_opportunity.is_current_snapshot_quarter
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
     ON fct_crm_opportunity.dim_crm_account_id = dim_crm_account.dim_crm_account_id
@@ -440,43 +405,43 @@ final AS (
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN dim_date created_date
-    ON fct_crm_opportunity.created_date = created_date.date_actual
+    ON fct_crm_opportunity.created_date_id = created_date.date_id
   LEFT JOIN dim_date sales_accepted_date
-    ON fct_crm_opportunity.sales_accepted_date = sales_accepted_date.date_actual
+    ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
   LEFT JOIN dim_date close_date
-    ON fct_crm_opportunity.close_date = close_date.date_actual
+    ON fct_crm_opportunity.close_date_id = close_date.date_id
   LEFT JOIN dim_date stage_0_pending_acceptance_date
-    ON fct_crm_opportunity.stage_0_pending_acceptance_date = stage_0_pending_acceptance_date.date_actual
+    ON fct_crm_opportunity.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
   LEFT JOIN dim_date stage_1_discovery_date
-    ON fct_crm_opportunity.stage_1_discovery_date = stage_1_discovery_date.date_actual
+    ON fct_crm_opportunity.stage_1_discovery_date_id = stage_1_discovery_date.date_id
   LEFT JOIN dim_date stage_2_scoping_date
-    ON fct_crm_opportunity.stage_2_scoping_date = stage_2_scoping_date.date_actual
+    ON fct_crm_opportunity.stage_2_scoping_date_id = stage_2_scoping_date.date_id
   LEFT JOIN dim_date stage_3_technical_evaluation_date
-    ON fct_crm_opportunity.stage_3_technical_evaluation_date = stage_3_technical_evaluation_date.date_actual
+    ON fct_crm_opportunity.stage_3_technical_evaluation_date_id = stage_3_technical_evaluation_date.date_id
   LEFT JOIN dim_date stage_4_proposal_date
-    ON fct_crm_opportunity.stage_4_proposal_date = stage_4_proposal_date.date_actual
+    ON fct_crm_opportunity.stage_4_proposal_date_id = stage_4_proposal_date.date_id
   LEFT JOIN dim_date stage_5_negotiating_date
-    ON fct_crm_opportunity.stage_5_negotiating_date = stage_5_negotiating_date.date_actual
+    ON fct_crm_opportunity.stage_5_negotiating_date_id = stage_5_negotiating_date.date_id
   LEFT JOIN dim_date stage_6_awaiting_signature_date
       ON fct_crm_opportunity.stage_6_awaiting_signature_date_id = stage_6_awaiting_signature_date.date_id
   LEFT JOIN dim_date stage_6_closed_won_date
-    ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actual
+    ON fct_crm_opportunity.stage_6_closed_won_date_id = stage_6_closed_won_date.date_id
   LEFT JOIN dim_date stage_6_closed_lost_date
-    ON fct_crm_opportunity.stage_6_closed_lost_date = stage_6_closed_lost_date.date_actual
+    ON fct_crm_opportunity.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
   LEFT JOIN dim_date subscription_start_date
-    ON fct_crm_opportunity.subscription_start_date = subscription_start_date.date_actual
+    ON fct_crm_opportunity.subscription_start_date_id = subscription_start_date.date_id
   LEFT JOIN dim_date subscription_end_date
-    ON fct_crm_opportunity.subscription_end_date = subscription_end_date.date_actual
+    ON fct_crm_opportunity.subscription_end_date_id = subscription_end_date.date_id
   LEFT JOIN dim_date sales_qualified_date
-    ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
+    ON fct_crm_opportunity.sales_qualified_date_id = sales_qualified_date.date_id
   LEFT JOIN dim_date last_activity_date
-    ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
+    ON fct_crm_opportunity.last_activity_date_id = last_activity_date.date_id
   LEFT JOIN dim_date sales_last_activity_date
-    ON fct_crm_opportunity.sales_last_activity_date = sales_last_activity_date.date_actual
+    ON fct_crm_opportunity.sales_last_activity_date_id = sales_last_activity_date.date_id
   LEFT JOIN dim_date technical_evaluation_date
-    ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
+    ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
   LEFT JOIN dim_date arr_created_date 
-    ON fct_crm_opportunity.arr_created_date = arr_created_date.date_actual
+    ON fct_crm_opportunity.arr_created_date_id = arr_created_date.date_id
   LEFT JOIN dim_crm_account AS partner_account
     ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = partner_account.snapshot_id 
