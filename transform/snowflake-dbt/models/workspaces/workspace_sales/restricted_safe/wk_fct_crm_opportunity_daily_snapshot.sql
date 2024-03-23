@@ -278,8 +278,7 @@
     dim_date.last_day_of_week,
     dim_date.last_day_of_month,
     dim_date.last_day_of_fiscal_quarter,
-    dim_date.last_day_of_fiscal_year,
-    is_current_snapshot_quarter
+    dim_date.last_day_of_fiscal_year
   FROM sfdc_opportunity
   INNER JOIN dim_date
     ON sfdc_opportunity.snapshot_date = dim_date.date_actual

@@ -1321,8 +1321,8 @@ LEFT JOIN cw_base
             -- 20220128 Updated to remove webdirect SQS deals
             AND sfdc_opportunity_live.sales_qualified_source   != 'Web Direct Generated'
             AND sfdc_opportunity_live.is_jihu_account = 0
-          THEN 1
-          ELSE 0
+          THEN TRUE
+          ELSE FALSE
         END
       )                                                                                                                 AS is_net_arr_pipeline_created_combined,
       CASE
@@ -1381,7 +1381,7 @@ LEFT JOIN cw_base
       END                                                                                                               AS is_excluded_from_pipeline_created_combined,
       CASE
         WHEN arr_created_date.first_day_of_fiscal_quarter = close_date.first_day_of_fiscal_quarter
-          AND is_net_arr_pipeline_created_combined = 1
+          AND is_net_arr_pipeline_created_combined = TRUE
             THEN net_arr
         ELSE 0
       END                                                                                                               AS created_and_won_same_quarter_net_arr_combined,
@@ -1404,11 +1404,10 @@ LEFT JOIN cw_base
             THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
         WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END  
-                                                                                                                   AS cycle_time_in_days_combined,
+      END                                                                                                               AS cycle_time_in_days_combined,
        -- ARR created (pipeline generated)
       CASE
-          WHEN is_net_arr_pipeline_created_combined = 1
+          WHEN is_net_arr_pipeline_created_combined = TRUE
             AND stage_1_discovery_date_id IS NOT NULL -- Excludes closed lost opps that could have gone from stage 0 straight to lost
               THEN net_arr
         ELSE 0
@@ -1416,29 +1415,25 @@ LEFT JOIN cw_base
 
       -- Deals closed won
       CASE
-        WHEN sfdc_opportunity_stage.is_won = TRUE AND sfdc_opportunity.is_closed = TRUE
-            AND is_win_rate_calc = 1
+        WHEN is_closed_won = TRUE 
+            AND is_win_rate_calc = TRUE
               THEN calculated_deal_count
         ELSE 0
       END AS closed_won_opps,
 
       -- All closed deals (won and lost)
       CASE
-        WHEN sfdc_opportunity.is_closed = TRUE
-            AND is_win_rate_calc = 1
-              THEN calculated_deal_count
+        WHEN is_win_rate_calc = TRUE
+          THEN calculated_deal_count
         ELSE 0
       END AS total_closed_opps,
 
       -- Closed Net ARR
       CASE
-        WHEN sfdc_opportunity.is_closed = TRUE
-            AND is_win_rate_calc = 1
-              THEN calculated_deal_count * net_arr
+        WHEN is_win_rate_calc = TRUE
+          THEN calculated_deal_count * net_arr
         ELSE 0
-      END AS total_closed_net_arr,
-
-    IFF(sfdc_opportunity.snapshot_fiscal_quarter_date = dim_date.current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
+      END AS total_closed_net_arr
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
@@ -1450,8 +1445,6 @@ LEFT JOIN cw_base
       ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
-    LEFT JOIN dim_date 
-      ON sfdc_opportunity.snapshot_date = dim_date.date_actual
     LEFT JOIN dim_date AS close_date
       ON sfdc_opportunity.close_date = close_date.date_actual
     LEFT JOIN dim_date AS arr_created_date

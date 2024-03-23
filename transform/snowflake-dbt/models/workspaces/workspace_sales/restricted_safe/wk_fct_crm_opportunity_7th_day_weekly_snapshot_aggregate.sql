@@ -22,28 +22,6 @@ aggregate_data AS (
     dim_crm_user_hierarchy_sk,
     dim_crm_current_account_set_hierarchy_sk,
     dim_crm_opp_owner_stamped_hierarchy_sk,
-    dim_crm_user_id,
-
-    -- crm opp owner/account owner fields stamped at SAO date
-    sao_crm_opp_owner_sales_segment_stamped,
-    sao_crm_opp_owner_sales_segment_stamped_grouped,
-    sao_crm_opp_owner_geo_stamped,
-    sao_crm_opp_owner_region_stamped,
-    sao_crm_opp_owner_area_stamped,
-    sao_crm_opp_owner_segment_region_stamped_grouped,
-    sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
-
-    -- crm opp owner/account owner stamped fields stamped at close date
-    crm_opp_owner_stamped_name,
-    crm_account_owner_stamped_name,
-    user_segment_stamped,
-    user_segment_stamped_grouped,
-    user_geo_stamped,
-    user_region_stamped,
-    user_area_stamped,
-    user_business_unit_stamped,
-    crm_opp_owner_sales_segment_geo_region_area_stamped,
-    crm_opp_owner_user_role_type_stamped,
 
     -- attributes
     order_type,
@@ -65,7 +43,6 @@ aggregate_data AS (
     snapshot_fiscal_quarter_date,
     snapshot_day_of_fiscal_quarter_normalised,
     snapshot_day_of_fiscal_year_normalised,
-    is_current_snapshot_quarter,
 
     -- Additive fields
     
@@ -125,4 +102,3 @@ aggregate_data AS (
 
 SELECT * 
 FROM aggregate_data
-WHERE NOT is_current_snapshot_quarter
