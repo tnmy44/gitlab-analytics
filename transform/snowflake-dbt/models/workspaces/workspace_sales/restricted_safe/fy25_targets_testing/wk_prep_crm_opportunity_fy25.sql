@@ -1451,7 +1451,7 @@ LEFT JOIN cw_base
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN dim_date 
-      ON sfdc_opportunity.snapshot_date = close_date.date_actual
+      ON sfdc_opportunity.snapshot_date = dim_date.date_actual
     LEFT JOIN dim_date AS close_date
       ON sfdc_opportunity.close_date = close_date.date_actual
     LEFT JOIN dim_date AS arr_created_date
