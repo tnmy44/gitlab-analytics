@@ -1203,3 +1203,6 @@ models:
 
   - name: wk_mart_public_sector_ar_monthly
     description: Compare balances and count of PubSec vs. the total balances for all open invoices monthly
+
+  - name: wk_mart_invoices_in_preview_monthly
+    description: Show the count and amount of unbilled invoices monthly
