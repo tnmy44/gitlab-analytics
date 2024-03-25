@@ -417,6 +417,8 @@ unioned AS (
     NULL AS total_quarter_target
   FROM aggregate
   WHERE NOT is_current_snapshot_quarter
+    AND snapshot_date >= DATEADD(QUARTER, -6, current_first_day_of_fiscal_quarter) -- include only the last 6 quarters 
+
 
   UNION 
 

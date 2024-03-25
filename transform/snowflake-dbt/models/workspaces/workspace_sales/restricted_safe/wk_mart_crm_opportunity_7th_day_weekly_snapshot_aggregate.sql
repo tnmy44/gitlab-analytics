@@ -158,7 +158,7 @@ final AS (
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN dim_crm_user_hierarchy
-    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk
+    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk
 
 
 )
