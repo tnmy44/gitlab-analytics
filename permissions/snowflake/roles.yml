@@ -3815,6 +3815,7 @@ roles:
     - dtang:
         member_of:
             - snowflake_analyst
+            - snowplow
         warehouses:
             - dev_xs
 
