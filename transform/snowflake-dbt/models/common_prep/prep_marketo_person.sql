@@ -102,7 +102,11 @@ WITH final AS (
         do_not_contact_c AS is_do_not_contact,
         email_invalid AS is_invalid_email,
         high_priority_c AS is_high_priority,
-        unsubscribe_all_marketing AS is_unsubscribe_all_marketing    
+        unsubscribe_all_marketing AS is_unsubscribe_all_marketing,
+        compliance_segment_value,
+        region_c AS marketo_person_region,
+        region_c_account AS marketo_account_region,
+        preferred_language_c AS preferred_language   
     FROM {{ ref('marketo_lead_source') }}
 
 )
