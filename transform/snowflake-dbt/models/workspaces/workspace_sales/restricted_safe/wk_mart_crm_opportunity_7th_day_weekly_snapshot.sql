@@ -185,8 +185,6 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_4,
     dim_crm_user_hierarchy.crm_user_role_level_5,
 
-
-
     -- crm account owner/sales rep live fields
     account_owner_live.crm_user_sales_segment AS crm_account_user_sales_segment,
     account_owner_live.crm_user_sales_segment_grouped AS crm_account_user_sales_segment_grouped,
@@ -362,10 +360,17 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
+
+    --additive fields
+    fct_crm_opportunity.created_arr_in_snapshot_quarter,
+    fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
+    fct_crm_opportunity.closed_opps_in_snapshot_quarter,
+    fct_crm_opportunity.closed_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.booked_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.created_arr,
     fct_crm_opportunity.closed_won_opps,
-    fct_crm_opportunity.total_closed_opps,
-    fct_crm_opportunity.total_closed_net_arr,
+    fct_crm_opportunity.closed_opps,
+    fct_crm_opportunity.closed_net_arr,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
@@ -479,7 +484,7 @@ final AS (
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
   LEFT JOIN dim_crm_user_hierarchy
-    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk
+    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk
   
 
 

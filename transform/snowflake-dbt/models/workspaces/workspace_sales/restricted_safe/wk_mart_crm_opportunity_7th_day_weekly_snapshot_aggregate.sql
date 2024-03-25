@@ -105,10 +105,27 @@ final AS (
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
     
+    -- Total actuals quarter
+
+    fct_crm_opportunity.created_arr_quarter_total,
+    fct_crm_opportunity.closed_won_opps_quarter_total,
+    fct_crm_opportunity.closed_opps_quarter_total,
+    fct_crm_opportunity.closed_net_arr_quarter_total,
+    fct_crm_opportunity.net_arr_quarter_total,
+    fct_crm_opportunity.cycle_time_in_days_combined_quarter_total,
+    fct_crm_opportunity.booked_deal_count_quarter_total,
+    fct_crm_opportunity.booked_net_arr_quarter_total,
+
+    --additive fields
+    fct_crm_opportunity.created_arr_in_snapshot_quarter,
+    fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
+    fct_crm_opportunity.closed_opps_in_snapshot_quarter,
+    fct_crm_opportunity.closed_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.booked_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.created_arr,
     fct_crm_opportunity.closed_won_opps,
-    fct_crm_opportunity.total_closed_opps,
-    fct_crm_opportunity.total_closed_net_arr,
+    fct_crm_opportunity.closed_opps,
+    fct_crm_opportunity.closed_net_arr,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
@@ -153,7 +170,7 @@ final AS (
     fct_crm_opportunity.vsa_start_date_net_arr,
     fct_crm_opportunity.cycle_time_in_days_combined,
     'aggregate' AS source,
-    IFF(current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
+    IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM fct_crm_opportunity
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual

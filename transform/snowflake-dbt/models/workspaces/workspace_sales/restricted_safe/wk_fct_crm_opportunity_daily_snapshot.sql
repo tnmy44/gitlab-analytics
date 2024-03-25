@@ -220,11 +220,15 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
-
+    sfdc_opportunity.created_arr_in_snapshot_quarter,
+    sfdc_opportunity.closed_won_opps_in_snapshot_quarter,
+    sfdc_opportunity.closed_opps_in_snapshot_quarter,
+    sfdc_opportunity.closed_net_arr_in_snapshot_quarter,
+    sfdc_opportunity.booked_net_arr_in_snapshot_quarter,
     sfdc_opportunity.created_arr,
     sfdc_opportunity.closed_won_opps,
-    sfdc_opportunity.total_closed_opps,
-    sfdc_opportunity.total_closed_net_arr,
+    sfdc_opportunity.closed_opps,
+    sfdc_opportunity.closed_net_arr,
     sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     sfdc_opportunity.calculated_from_ratio_net_arr,
     sfdc_opportunity.net_arr,
