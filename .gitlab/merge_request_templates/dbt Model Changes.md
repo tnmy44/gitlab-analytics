@@ -15,11 +15,11 @@ Fill in the subsequent planning sections as part of the preparatory work for the
 <!--- Link the Issue this MR closes --->
 Closes #
 
-Describe the solution. Include links to any related MRs and/or issues.
+This step describes the changes that will be made. Details can be deferred to an issue or epic. Include links to any related MRs and/or issues.
 
 ### Tests
 
-Define the tests and the extent of testing and reviews.
+Define the tests to check if the changes have the intended impact and the extent of testing and reviews.
 
 ### Environment
 
