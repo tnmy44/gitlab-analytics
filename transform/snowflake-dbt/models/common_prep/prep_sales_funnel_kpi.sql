@@ -7,10 +7,9 @@ WITH prep_sales_funnel_target AS (
     SELECT kpi_name
     FROM {{ ref('prep_sales_funnel_target') }}
 
-), prep_sales_funnel_partner_alliance_target AS (
+), additional_kpi AS (
 
-    SELECT kpi_name
-    FROM {{ ref('prep_sales_funnel_partner_alliance_target') }}
+    SELECT 'Trials' AS kpi_name -- this is the one kpi_name not contained within the targets sheet so we manually include it here.
 
 ), unioned AS (
 
@@ -20,7 +19,7 @@ WITH prep_sales_funnel_target AS (
     UNION
 
     SELECT kpi_name
-    fROM prep_sales_funnel_partner_alliance_target
+    FROM additional_kpi
 
 )
 
