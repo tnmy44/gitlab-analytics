@@ -75,7 +75,7 @@ clicks AS (
 
   SELECT 
     code_suggestion_context.behavior_structured_event_pk,
-    flattened_namespace.value                                 AS namespace_id
+    flattened_namespace.value::VARCHAR                                 AS namespace_id
   FROM code_suggestion_context,
   LATERAL FLATTEN (input => TRY_PARSE_JSON(code_suggestion_context.namespace_ids)) AS flattened_namespace
   WHERE namespace_ids IS NOT NULL
@@ -264,5 +264,5 @@ clicks AS (
     created_by="@mdrussell",
     updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2024-03-22"
+    updated_date="2024-03-25"
 ) }}
