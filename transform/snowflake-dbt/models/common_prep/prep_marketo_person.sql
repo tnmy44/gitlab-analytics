@@ -106,7 +106,12 @@ WITH final AS (
         compliance_segment_value,
         region_c AS marketo_person_region,
         region_c_account AS marketo_account_region,
-        preferred_language_c AS preferred_language   
+        preferred_language_c AS preferred_language,
+        account_tier_c AS marketo_account_tier,
+        account_tier_notes_c AS marketo_account_tier_notes,
+        COALESCE(abm_tier_c,abm_tier_c_lead) AS marketo_abm_tier,
+        account_demographics_upa_country_c AS account_demographics_upa_country,
+        account_demographics_upa_country_name_c AS account_demographics_upa_country_name
     FROM {{ ref('marketo_lead_source') }}
 
 )
