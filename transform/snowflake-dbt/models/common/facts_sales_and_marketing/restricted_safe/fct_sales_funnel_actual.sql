@@ -2,8 +2,7 @@
     ('fct_crm_opportunity', 'fct_crm_opportunity'),
     ('fct_crm_person', 'fct_crm_person'),
     ('prep_date', 'prep_date'),
-    ('prep_order_type', 'prep_order_type'),
-    ('prep_sales_funnel_kpi', 'prep_sales_funnel_kpi')
+    ('prep_order_type', 'prep_order_type')
 ]) }}
 
 , first_order_key AS (
@@ -17,7 +16,7 @@
   SELECT
     close_date_id                               AS actual_date_id,
     close_date::DATE                            AS actual_date,
-    'Net ARR Company'                           AS sales_funnel_kpi_name,
+    'Net ARR'                                   AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -38,7 +37,7 @@
     net_arr
 
   FROM fct_crm_opportunity
-  WHERE is_net_arr_closed_deal = TRUE
+  WHERE fpa_master_bookings_flag = TRUE
 
 ), closed_deals AS (
 
@@ -66,7 +65,7 @@
     net_arr
 
   FROM fct_crm_opportunity
-  WHERE is_net_arr_closed_deal = TRUE
+  WHERE fpa_master_bookings_flag = TRUE
 
 ), new_logos AS (
 
@@ -252,8 +251,6 @@
 
 SELECT
   {{ dbt_utils.generate_surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
-  prep_sales_funnel_kpi.dim_sales_funnel_kpi_sk,
+  {{ dbt_utils.generate_surrogate_key(['metrics.sales_funnel_kpi_name'])}} AS dim_sales_funnel_kpi_sk,
   metrics.*
 FROM metrics
-LEFT JOIN prep_sales_funnel_kpi
-  ON prep_sales_funnel_kpi.sales_funnel_kpi_name = metrics.sales_funnel_kpi_name
