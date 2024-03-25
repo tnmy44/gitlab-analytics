@@ -12,16 +12,16 @@ renamed AS (
 
 
 
-id,
-release_id,
-catalog_resource_id,
-project_id,
-created_at,
-released_at,
-semver_major,
-semver_minor,
-semver_patch,
-semver_prerelease,
+    id,
+    release_id,
+    catalog_resource_id,
+    project_id,
+    created_at,
+    released_at,
+    semver_major,
+    semver_minor,
+    semver_patch,
+    semver_prerelease
   FROM source
 
 )
