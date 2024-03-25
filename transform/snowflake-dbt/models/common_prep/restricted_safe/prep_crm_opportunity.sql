@@ -22,7 +22,7 @@
     SELECT
       opportunity_id,                                                             -- opportunity_id
       contact_id                                                                  AS sfdc_contact_id,
-      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                               AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                      AS dim_crm_person_id,
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
 
@@ -1206,7 +1206,25 @@ LEFT JOIN cw_base
         'other'
       ) AS sales_team_asm_level,
       CASE
-        WHEN sfdc_opportunity.close_date < '2023-02-01'
+        WHEN
+          sfdc_opportunity.account_owner_team_stamped IN (
+            'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
+          )
+          THEN 'SMB'
+        WHEN
+          sfdc_opportunity.account_owner_team_stamped IN (
+            'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
+          )
+          THEN 'Large'
+        WHEN
+          sfdc_opportunity.account_owner_team_stamped IN (
+            'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
+          )
+          THEN 'Mid-Market'
+        ELSE 'SMB'
+      END AS account_owner_team_stamped_cro_level,
+      CASE
+        WHEN close_fiscal_year < 2024
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
                     '-',
@@ -1218,7 +1236,7 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
+        WHEN close_fiscal_year = 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
                     '-',
@@ -1232,7 +1250,7 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
+        WHEN close_fiscal_year = 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
                     '-',
@@ -1246,7 +1264,7 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-        WHEN sfdc_opportunity.close_date >= '2023-02-01'
+        WHEN close_fiscal_year = 2024
           AND (sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NOT NULL AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) NOT IN ('comm', 'entg')) -- some opps are closed by non-sales reps, so fill in their values completely
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
@@ -1261,7 +1279,7 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NULL -- done for data quality issues
+        WHEN close_fiscal_year = 2024 AND sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NULL -- done for data quality issues
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
                     '-',
@@ -1273,7 +1291,13 @@ LEFT JOIN cw_base
                     '-',
                     close_fiscal_year
                     )
-    END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
+        WHEN close_fiscal_year >= 2025
+          THEN CONCAT(
+                      UPPER(sfdc_opportunity.opportunity_owner_role),
+                      '-',
+                      close_fiscal_year
+                      ) 
+      END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
 
     CASE
         WHEN is_renewal = 1 AND sfdc_opportunity_stage.is_closed = 1
