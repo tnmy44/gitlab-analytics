@@ -1206,3 +1206,6 @@ models:
 
   - name: wk_mart_invoices_in_preview_monthly
     description: View of monthly invoice count and amount for future billing (pending invoices, invoices in preview, invoices related to ramps and multiyear orders)
+
+  - name: wk_mart_processed_refunds_monthly
+    description: View of refund amounts processed monthly
