@@ -8,15 +8,15 @@ models:
        tests:
          - not_null
          - unique
- - name: user_unsubscribed_channel_source
+ - name: user_unsubscribe_channel_source
    description: Base model for user_unsubscribed_channel
    columns:
      - name: channel_id
        tests:
          - not_null
          - unique
- - name: user_unsubscribe_message_type_source
-   description: Base model for user_unsubscribe_message_type
+ - name: user_unsubscribed_message_type_source
+   description: Base model for user_unsubscribed_message_type
    columns:
      - name: message_type_id
        tests:

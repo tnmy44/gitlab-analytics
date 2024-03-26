@@ -1,7 +1,7 @@
 WITH source AS (
   
    SELECT *
-   FROM {{ source('iterable','user_unsubscribe_message_type') }}
+   FROM {{ source('iterable','user_unsubscribed_message_type') }}
  
 ), final AS (
  
