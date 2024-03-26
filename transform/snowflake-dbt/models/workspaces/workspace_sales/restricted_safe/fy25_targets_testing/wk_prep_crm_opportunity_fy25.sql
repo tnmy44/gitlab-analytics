@@ -1485,6 +1485,28 @@ LEFT JOIN cw_base
           THEN calculated_deal_count 
         ELSE 0
       END                                                         AS created_deals_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_closed = 1
+            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_closed = 1
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_open = 1
+            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_open = 1
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+      END                                                                                                               AS cycle_time_in_days_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND (
+                sfdc_opportunity_stage.is_won = 1
+                OR (
+                    is_renewal = 1
+                      AND is_lost = 1
+                   )
+             )
+          THEN calculated_deal_count
+        ELSE 0
+      END                                               AS booked_deal_count_in_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label

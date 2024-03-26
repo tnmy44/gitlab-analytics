@@ -8,7 +8,7 @@
 
 date_spine AS (
 
-  date_spine_7th_day()
+    {{ date_spine_7th_day() }}
 
 ),
 

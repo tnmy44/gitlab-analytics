@@ -25,19 +25,19 @@ metrics_totals AS (
 
   SELECT  
     {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name']) }} AS unique_key,
-    SUM(created_arr)                  AS created_arr_quarter_total,
-    SUM(closed_won_opps)              AS closed_won_opps_quarter_total,
-    SUM(closed_opps)                  AS closed_opps_quarter_total,
-    SUM(closed_net_arr)               AS closed_net_arr_quarter_total,
-    SUM(net_arr)                      AS net_arr_quarter_total,
-    SUM(cycle_time_in_days_combined)  AS cycle_time_in_days_combined_quarter_total,
-    SUM(booked_deal_count)            AS booked_deal_count_quarter_total,
-    SUM(booked_net_arr)               AS booked_net_arr_quarter_total
+    created_arr_in_snapshot_quarter             AS created_arr_quarter_total,
+    closed_won_opps_in_snapshot_quarter         AS closed_won_opps_quarter_total,
+    closed_opps_in_snapshot_quarter             AS closed_opps_quarter_total,
+    closed_net_arr_in_snapshot_quarter          AS closed_net_arr_quarter_total,
+    booked_net_arr_in_snapshot_quarter          AS booked_net_arr_quarter_total,
+    created_deals_in_snapshot_quarter           AS created_deals_quarter_total,
+    cycle_time_in_days_in_snapshot_quarter      AS cycle_time_in_days_quarter_total,
+    booked_deal_count_in_snapshot_quarter       AS booked_deal_count_quarter_total,
   FROM actuals
   LEFT JOIN dim_date 
     ON actuals.snapshot_date = dim_date.date_actual
   WHERE actuals.snapshot_date = dim_date.last_day_of_fiscal_quarter
-  GROUP BY unique_key
+  GROUP BY ALL
 
 ),
 
