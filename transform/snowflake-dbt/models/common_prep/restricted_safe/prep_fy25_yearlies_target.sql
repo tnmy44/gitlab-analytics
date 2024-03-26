@@ -2,14 +2,14 @@
 
 WITH final AS (
 
-select
-   YEARLY_NAME,
-   YEARLY_DRI,
-   YEARLY_DESCRIPTION,
-   REPLACE(QUARTER_NAME, '_', '-') AS QUARTER,
-   TO_DECIMAL(TARGET, 18, 2) as TARGETS_RAW
-from
-   {{ ref('sheetload_fy25_yearlies_target_source') }} UNPIVOT(TARGET for QUARTER_NAME in 
+SELECT
+   yearly_name,
+   yearly_dri,
+   yearly_description,
+   REPLACE(quarter_name, '_', '-') AS quarter,
+   TO_DECIMAL(target, 18, 2) AS targets_raw
+FROM
+   {{ ref('sheetload_fy25_yearlies_target_source') }} UNPIVOT(target for quarter_name in 
    (
       "FY25_Q4",
       "FY25_Q3",
@@ -18,10 +18,5 @@ from
    )
 ))
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@jonglee1218",
-    updated_by="@jonglee1218",
-    created_date="2024-03-26",
-    updated_date="2024-03-26"
-) }}
+SELECT * 
+FROM final
