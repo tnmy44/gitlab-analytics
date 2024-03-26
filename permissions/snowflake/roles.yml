@@ -462,6 +462,7 @@ roles:
             - covid19
             - dbt_analytics
             - driveload
+            - engineering_extracts
             - gainsight
             - gcp_billing
             - gitlab_data_yaml
@@ -1871,6 +1872,20 @@ roles:
             tables:
                 read:
                     - raw.elasticsearch_billing.*
+
+    - engineering_extracts:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.engineering_extracts
+            tables:
+                read:
+                    - raw.engineering_extracts.*
 
     - entitlement:
         warehouses:
@@ -3815,6 +3830,7 @@ roles:
     - dtang:
         member_of:
             - snowflake_analyst
+            - snowplow
         warehouses:
             - dev_xs
 
@@ -4283,6 +4299,7 @@ roles:
 
     - jlongo:
         member_of:
+            - analyst_sales_sensitive
             - snowflake_analyst_safe
         warehouses:
             - dev_xs

@@ -776,27 +776,6 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_experiment_users_source
-    columns:
-      - name: created_at
-      - name: experiment_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: experiment_user_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: group_type
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: user_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_experiments_source
     columns:
       - name: experiment_id
