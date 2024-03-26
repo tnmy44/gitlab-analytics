@@ -26,4 +26,3 @@ WITH source AS (
 
 SELECT *
 FROM final
-QUALIFY ROW_NUMBER() OVER (PARTITION BY combined_composite_keys ORDER BY _uploaded_at DESC) = 1
