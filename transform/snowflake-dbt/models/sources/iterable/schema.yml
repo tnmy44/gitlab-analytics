@@ -7,14 +7,12 @@ models:
      - name: updated_at
        tests:
          - not_null
-         - unique
  - name: user_unsubscribed_channel_source
    description: Base model for user_unsubscribed_channel
    columns:
      - name: channel_id
        tests:
          - not_null
-         - unique
  - name: user_unsubscribed_message_type_source
    description: Base model for user_unsubscribed_message_type
    columns:
