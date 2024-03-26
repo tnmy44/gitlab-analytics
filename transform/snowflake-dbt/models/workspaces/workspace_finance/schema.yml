@@ -1209,3 +1209,6 @@ models:
 
   - name: wk_mart_processed_refunds_monthly
     description: View of refund amounts processed monthly
+
+  - name: wk_mart_payments_refunds_against_future_invoices
+    description: View of all payment totals received and applied to future dated invoices monthly
