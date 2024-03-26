@@ -163,17 +163,29 @@ models:
           - is_live
     columns: 
       - name: created_arr 
-        description: Created ARR associated with the opportunity. The opportunity needs to be eligible, so is_net_arr_pipeline_created needs to be true.
+        description: >
+          Created ARR associated with the opportunity. The opportunity needs to be eligible, so is_net_arr_pipeline_created needs to be true.
       - name: closed_won_opps
-        description: The closed_won_opps field counts opportunities marked as closed and won (is_closed_won = TRUE) and eligible for win rate calculations (is_win_rate_calc = TRUE), otherwise set to 0. It quantifies successful deal closures.
+        description: > 
+          The closed_won_opps field counts opportunities marked as closed and won (is_closed_won = TRUE) and 
+          eligible for win rate calculations (is_win_rate_calc = TRUE), otherwise set to 0. It quantifies successful deal closures.
       - name: closed_opps
-        description: The closed_opps field tallies all opportunities eligible for win rate calculations (is_win_rate_calc = TRUE), encompassing both won and lost deals, or sets to 0 if not eligible.
+        description: >
+          The closed_opps field tallies all opportunities eligible for win rate calculations (is_win_rate_calc = TRUE), 
+          encompassing both won and lost deals, or sets to 0 if not eligible.
       - name: closed_net_arr
-        description: The closed_net_arr field calculates the total Net Annual Recurring Revenue (ARR) for deals eligible for win rate calculations (is_win_rate_calc = TRUE), multiplying calculated_deal_count by net_arr, or sets to 0 if not eligible. It includes lost and won Net ARR.
+        description: >
+          The closed_net_arr field calculates the total Net Annual Recurring Revenue (ARR) for deals eligible for win rate calculations 
+          (is_win_rate_calc = TRUE), multiplying calculated_deal_count by net_arr, or sets to 0 if not eligible. It includes lost and won Net ARR.
       - name: created_arr_in_snapshot_quarter
-        description: This field computes the running sum of Net ARR for opportunities created within the same fiscal quarter as the snapshot, indicated by is_net_arr_pipeline_created = 1, or assigns 0 otherwise.
+        description: >
+          This field computes the running sum of Net ARR for opportunities created within the same fiscal quarter as the snapshot, 
+          indicated by is_net_arr_pipeline_created = 1, or assigns 0 otherwise.
       - name: closed_won_opps_in_snapshot_quarter
-        description: This field counts the number of opportunities that were closed as won (is_closed_won = TRUE) and are eligible for win rate calculation (is_win_rate_calc = TRUE) within the same fiscal quarter as the snapshot (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). If these conditions are not met, the value is set to 0. 
+        description: >
+         This field counts the number of opportunities that were closed as won (is_closed_won = TRUE) and are eligible for win rate
+          calculation (is_win_rate_calc = TRUE) within the same fiscal quarter as the snapshot (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). 
+          If these conditions are not met, the value is set to 0. 
       - name: closed_opps_in_snapshot_quarter
         description: This field tallies the number of opportunities that were closed (regardless of being won or lost) and are eligible for win rate calculation (is_win_rate_calc = TRUE) within the snapshot's fiscal quarter (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). 
       - name: closed_net_arr_in_snapshot_quarter
@@ -218,7 +230,3 @@ models:
       target for any specific target date provides the total net 
       ARR target for that quarter. It filters down the daily targets to 
       only include one target date every 7 days throughout each quarter.
-
-    
-      
-      
