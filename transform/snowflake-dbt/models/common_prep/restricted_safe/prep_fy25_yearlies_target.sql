@@ -6,6 +6,7 @@ SELECT
    yearly_name,
    yearly_dri,
    yearly_description,
+   is_mnpi,
    REPLACE(quarter_name, '_', '-') AS quarter,
    TO_DECIMAL(target, 18, 2) AS targets_raw
 FROM

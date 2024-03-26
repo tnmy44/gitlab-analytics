@@ -457,6 +457,7 @@ models:
         description: raw targets of the yearly item (includes mnpi)
       - name: quarter
         description: quarter of the yearly target
-
+      - name: is_mnpi
+        description: true or false whether the yearly item is mnpi or not
 
       
