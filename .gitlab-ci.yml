@@ -288,13 +288,9 @@ clone_stop:
     - export USERNAMES_TO_ADD_FINAL=""
     - if [ -n "$USERNAMES_TO_ADD" ]; then USERNAMES_TO_ADD_FINAL="--usernames-to-add $USERNAMES_TO_ADD"; fi
 
-    - export USERNAMES_TO_REMOVE_FINAL=""
-    - if [ -n "$USERNAMES_TO_REMOVE" ]; then USERNAMES_TO_REMOVE_FINAL="--usernames-to-remove $USERNAMES_TO_REMOVE"; fi
-
     - echo "Below are CI job arguments, missing key/values will use default Python values:"
     - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
-               USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n\
-               USERNAMES_TO_REMOVE=$USERNAMES_TO_REMOVE_FINAL"
+               USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n"
   only:
     refs:
       - merge_requests
@@ -308,7 +304,7 @@ snowflake_provisioning_snowflake_users:
     - if [ -n "$IS_DEV_DB" ]; then IS_DEV_DB_FINAL="--dev-db"; fi
     - echo "IS_DEV_DB=$IS_DEV_DB_FINAL"
 
-    - python3 provision_users/provision_users.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $USERNAMES_TO_REMOVE_FINAL $IS_DEV_DB_FINAL
+    - python3 provision_users/provision_users.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $IS_DEV_DB_FINAL
   when: manual
   allow_failure: true
 

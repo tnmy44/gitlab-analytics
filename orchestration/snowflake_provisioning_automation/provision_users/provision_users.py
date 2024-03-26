@@ -1,12 +1,13 @@
 """
 In Snowflake, create the user/roles/grants needed.
 
-There are 3 main things that need to be done:
+There are 2 main things that need to be done:
     - for users being added:
         - 1) create the user and role
         - 2) optionally, create their development databases
-    - for users being removed
-        - 3) remove the user from Snowflake
+
+Originally, there was also the option to remove users from Snowflake.
+However, this will be done in a separate process to eliminate any security risks/accidents.
 
 Each of these actions is done via reading in a templated sql script,
 rendering the script with the specified user,
@@ -37,7 +38,6 @@ def process_args() -> Tuple[list, list, bool, bool]:
     """returns command line args passed in by user"""
     args = parse_arguments()
     return (
-        args.usernames_to_remove,
         args.usernames_to_add,
         args.dev_db,
         args.test_run,
@@ -94,7 +94,10 @@ def provision_databases(connection: Engine, usernames: list):
 
 
 def deprovision_users(connection: Engine, usernames: list):
-    """deprovision users in Snowflake"""
+    """
+    Deprovision users in Snowflake
+    Currently unused, will do Snowflake deprovision in separate process
+    """
     template_filename = "deprovision_user.sql"
     sql_template = get_template(template_filename)
     logging.info("#### Deprovisioning users ####")
@@ -108,12 +111,11 @@ def provision_all():
         - provision databases
         - deprovision users
     """
-    usernames_to_remove, usernames_to_add, is_dev_db, is_test_run = process_args()
+    usernames_to_add, is_dev_db, is_test_run = process_args()
 
     logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
     time.sleep(5)  # give user a chance to abort
     logging.info(f"usernames_to_add: {usernames_to_add}")
-    logging.info(f"usernames_to_remove: {usernames_to_remove}\n")
 
     securityadmin_connection = get_securityadmin_connection(is_test_run)
     sysadmin_connection = get_sysadmin_connection(is_test_run)
@@ -121,7 +123,6 @@ def provision_all():
     provision_users(securityadmin_connection, usernames_to_add)
     if is_dev_db:
         provision_databases(sysadmin_connection, usernames_to_add)
-    deprovision_users(securityadmin_connection, usernames_to_remove)
 
 
 def main():
