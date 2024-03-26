@@ -452,6 +452,11 @@ LEFT JOIN cw_base
       arr_created_date.fiscal_quarter_name_fy                                                     AS arr_created_fiscal_quarter_name,
       arr_created_date.first_day_of_fiscal_quarter                                                AS arr_created_fiscal_quarter_date,
 
+      {{ get_date_id('sfdc_opportunity.created_date_id')}}                                        AS created_date_id,
+      sfdc_opportunity.created_date                                                               AS created_date,
+      arr_created_date.fiscal_quarter_name_fy                                                     AS created_fiscal_quarter_name,
+      arr_created_date.first_day_of_fiscal_quarter                                                AS created_fiscal_quarter_date,
+
       subscription_start_date.fiscal_quarter_name_fy                                              AS subscription_start_date_fiscal_quarter_name,
       subscription_start_date.first_day_of_fiscal_quarter                                         AS subscription_start_date_fiscal_quarter_date,
 
@@ -1476,7 +1481,12 @@ LEFT JOIN cw_base
              )
           THEN net_arr
         ELSE 0
-      END                                                         AS booked_net_arr_in_snapshot_quarter
+      END                                                         AS booked_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = created_fiscal_quarter_date
+          THEN calculated_deal_count 
+        ELSE 0
+      END                                                         AS created_deals_in_snapshot_quarter,
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
@@ -1490,6 +1500,8 @@ LEFT JOIN cw_base
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN dim_date AS close_date
       ON sfdc_opportunity.close_date = close_date.date_actual
+    LEFT JOIN dim_date AS created_date
+      ON sfdc_opportunity.created_date = created_date.date_actual
     LEFT JOIN dim_date AS arr_created_date
       ON sfdc_opportunity.iacv_created_date::DATE = arr_created_date.date_actual
     LEFT JOIN dim_date AS subscription_start_date

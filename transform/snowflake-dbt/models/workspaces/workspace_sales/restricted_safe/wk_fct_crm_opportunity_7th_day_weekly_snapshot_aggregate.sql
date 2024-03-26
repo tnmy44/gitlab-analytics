@@ -24,7 +24,7 @@ metrics_totals AS (
   -- Add the totals from previous quarters as attributes to aid with pipeline coverage and pacing calculations
 
   SELECT  
-    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','deal_path_name','sales_type']) }} AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name']) }} AS unique_key,
     SUM(created_arr)                  AS created_arr_quarter_total,
     SUM(closed_won_opps)              AS closed_won_opps_quarter_total,
     SUM(closed_opps)                  AS closed_opps_quarter_total,
@@ -44,7 +44,7 @@ metrics_totals AS (
 aggregate_data AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','deal_path_name','sales_type']) }} AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name']) }} AS unique_key,
     -- keys
     dim_sales_qualified_source_id,
     dim_order_type_id,
@@ -79,6 +79,7 @@ aggregate_data AS (
     SUM(closed_opps_in_snapshot_quarter)                               AS closed_opps_in_snapshot_quarter,
     SUM(closed_net_arr_in_snapshot_quarter)                            AS closed_net_arr_in_snapshot_quarter,
     SUM(booked_net_arr_in_snapshot_quarter)                            AS booked_net_arr_in_snapshot_quarter,
+    SUM(created_deals_in_snapshot_quarter)                             AS created_deals_in_snapshot_quarter,
 
     -- Additive fields
     

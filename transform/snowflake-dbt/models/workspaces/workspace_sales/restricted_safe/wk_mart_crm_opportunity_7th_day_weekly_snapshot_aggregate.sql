@@ -122,6 +122,7 @@ final AS (
     fct_crm_opportunity.closed_opps_in_snapshot_quarter,
     fct_crm_opportunity.closed_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.booked_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.created_deals_in_snapshot_quarter,
     fct_crm_opportunity.created_arr,
     fct_crm_opportunity.closed_won_opps,
     fct_crm_opportunity.closed_opps,
