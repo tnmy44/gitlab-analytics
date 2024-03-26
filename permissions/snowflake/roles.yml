@@ -2327,9 +2327,11 @@ roles:
             schemas:
                 read:
                     - raw.iterable
+                    - prep.iterable
             tables:
                 read:
                     - raw.iterable.*
+                    - prep.iterable.*
 
     - linkedin_ads:
         privileges:
