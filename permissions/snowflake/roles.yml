@@ -2324,6 +2324,7 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.iterable
