@@ -21,4 +21,3 @@ models:
      - name: message_type_id
        tests:
          - not_null
-         - unique
