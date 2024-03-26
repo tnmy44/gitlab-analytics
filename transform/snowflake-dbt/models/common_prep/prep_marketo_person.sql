@@ -111,7 +111,8 @@ WITH final AS (
         account_tier_notes_c AS marketo_account_tier_notes,
         COALESCE(abm_tier_c,abm_tier_c_lead) AS marketo_abm_tier,
         account_demographics_upa_country_c AS account_demographics_upa_country,
-        account_demographics_upa_country_name_c AS account_demographics_upa_country_name
+        account_demographics_upa_country_name_c AS account_demographics_upa_country_name,
+        product_category_c AS product_category
     FROM {{ ref('marketo_lead_source') }}
 
 )
