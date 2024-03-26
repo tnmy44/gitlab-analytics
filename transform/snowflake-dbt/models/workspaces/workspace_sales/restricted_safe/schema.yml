@@ -212,6 +212,13 @@ models:
       offering a comprehensive view across different timeframes.
   - name: wk_rpt_net_arr_targets_quarterly
     description: >
+      This report table includes just one target date every 7 days 
+      within each quarter. The total quarterly target as 
+      an attribute for each daily target. Summing the total quarter 
+      target for any specific target date provides the total net 
+      ARR target for that quarter. It filters down the daily targets to 
+      only include one target date every 7 days throughout each quarter.
+
     
       
       
