@@ -624,6 +624,10 @@ models:
           description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
         - name: touchpoint_offer_type_grouped
           description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
+        - name: xdr_net_arr_stage_1
+          description: The XDR influenced value of an Opportunity's Net ARR as of Stage 1 in SFDC.
+        - name: xdr_net_arr_stage_3
+          description: The XDR influenced value of an Opportunity's Net ARR as of Stage 3 in SFDC.
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
