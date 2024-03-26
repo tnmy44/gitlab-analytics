@@ -458,6 +458,6 @@ models:
       - name: quarter
         description: quarter of the yearly target
       - name: is_mnpi
-        description: true or false whether the yearly item is mnpi or not
+        description: boolean flag whether the yearly item is mnpi or not
 
       
