@@ -5913,6 +5913,7 @@ users:
       - General All Access
       - General SAFE Access
       - Team Member Project Lead
+      - Go To Market Project Lead
   - user_name: jshin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -7609,6 +7610,8 @@ users:
       - RSA SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
+      - Go To Market Project Lead
+      - Sales Project Lead
   - user_name: mwajda
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10803,6 +10806,8 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+      - Marketing Project Lead
+      - Go To Market Project Lead
   - user_name: ntarinda
     user_name_domain: gitlab.com
     site_role: Viewer
