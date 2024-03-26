@@ -12,7 +12,7 @@ And for all user removal types, requires one object only.
 
 import logging
 from typing import Union
-from update_roles_utils import DATABASES_KEY, ROLES_KEY, USERS_KEY
+from utils_update_roles import DATABASES_KEY, ROLES_KEY, USERS_KEY
 
 
 class RolesStruct:
@@ -22,12 +22,12 @@ class RolesStruct:
 
     def __init__(
         self,
-        roles_yaml: dict,
+        roles_data: dict,
         yaml_key: Union[str, None] = None,
         new_values: Union[list, None] = None,
         usernames_to_remove: Union[list, None] = None,
     ):
-        self.roles_yaml = roles_yaml
+        self.roles_data = roles_data
         self.yaml_key = yaml_key
         self.new_values = new_values
         self.usernames_to_remove = usernames_to_remove
@@ -54,9 +54,9 @@ class RolesStruct:
         Tracks if a key already exists, so not to re-insert the key again
         """
         if yaml_key:
-            existing_values = self.roles_yaml[yaml_key]
+            existing_values = self.roles_data[yaml_key]
         else:
-            existing_values = self.roles_yaml[self.yaml_key]
+            existing_values = self.roles_data[self.yaml_key]
         return RolesStruct.get_value_keys(existing_values)
 
     def _add_value(self, new_value: dict):
@@ -66,7 +66,7 @@ class RolesStruct:
             logging.info(f"{new_value_key} already exists in roles.yml, skipping")
         else:
             logging.info(f"Adding {self.yaml_key} {new_value_key}")
-            self.roles_yaml[self.yaml_key].append(new_value)
+            self.roles_data[self.yaml_key].append(new_value)
             self.existing_value_keys.append(new_value_key)
 
     def add_values(self):
@@ -79,14 +79,14 @@ class RolesStruct:
         From the yaml file, removes any entry that matches
         list `keys_to_remove`
         """
-        existing_values = self.roles_yaml[yaml_key]
+        existing_values = self.roles_data[yaml_key]
         # iterate backwards, popping any matching values slated for removal
         for i in range(len(existing_values) - 1, -1, -1):
             existing_value = existing_values[i]
             existing_value_key = list(existing_value.keys())[0]
             if existing_value_key in keys_to_remove:
                 logging.info(f"Removing {yaml_key} {existing_value_key}")
-                self.roles_yaml[yaml_key].pop(i)
+                self.roles_data[yaml_key].pop(i)
 
     def _remove_databases(self):
         """Creates a list of all databases to check for removal"""

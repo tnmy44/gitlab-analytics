@@ -150,6 +150,8 @@
       opp.is_sao,
       opp.new_logo_count,
       opp.net_arr,
+      opp.xdr_net_arr_stage_1,
+      opp.xdr_net_arr_stage_3,
       opp.is_net_arr_closed_deal,
       opp.is_net_arr_pipeline_created,
       opp.parent_crm_account_sales_segment,
@@ -365,7 +367,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=86)}}
+    {{dbt_utils.group_by(n=88)}}
     
 ), cohort_base_combined AS (
   
@@ -430,6 +432,8 @@
       is_sao,
       new_logo_count,
       net_arr,
+      xdr_net_arr_stage_1,
+      xdr_net_arr_stage_3,
       is_net_arr_closed_deal,
       is_net_arr_pipeline_created,
       is_eligible_age_analysis,
