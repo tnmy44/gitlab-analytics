@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: user_history
+    description: '{{ doc("user_history_docs") }}'
+  - name: user_unsubscribed_channel
+    description: '{{ doc("user_unsubscribed_channel_docs") }}'
+  - name: user_unsubscribed_message_type
+    description: '{{ doc("user_unsubscribed_message_type_docs") }}'
+    
