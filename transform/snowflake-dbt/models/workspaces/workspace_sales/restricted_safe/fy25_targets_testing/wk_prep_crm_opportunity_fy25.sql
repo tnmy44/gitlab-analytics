@@ -452,10 +452,8 @@ LEFT JOIN cw_base
       arr_created_date.fiscal_quarter_name_fy                                                     AS arr_created_fiscal_quarter_name,
       arr_created_date.first_day_of_fiscal_quarter                                                AS arr_created_fiscal_quarter_date,
 
-      {{ get_date_id('sfdc_opportunity.created_date_id')}}                                        AS created_date_id,
-      sfdc_opportunity.created_date                                                               AS created_date,
-      arr_created_date.fiscal_quarter_name_fy                                                     AS created_fiscal_quarter_name,
-      arr_created_date.first_day_of_fiscal_quarter                                                AS created_fiscal_quarter_date,
+      created_date.fiscal_quarter_name_fy                                                         AS created_fiscal_quarter_name,
+      created_date.first_day_of_fiscal_quarter                                                    AS created_fiscal_quarter_date,
 
       subscription_start_date.fiscal_quarter_name_fy                                              AS subscription_start_date_fiscal_quarter_name,
       subscription_start_date.first_day_of_fiscal_quarter                                         AS subscription_start_date_fiscal_quarter_date,
