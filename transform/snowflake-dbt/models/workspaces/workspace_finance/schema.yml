@@ -1215,3 +1215,10 @@ models:
 
   - name: wk_mart_booking_by_payment_schedule_opportunity_category_monthly
     description: View of all sales assisted opportunities compared to non-standard bookings (e.g. ramps, non-prepaid orders)
+
+  - name: wk_mart_booking_by_order_type_monthly
+    description: Booking amount and count by sales type
+
+  - name: wk_mart_historical_balance_by_payment_terms_bucket_monthly
+    description: View of historical balances with payment terms and aging bucket by month
+    
