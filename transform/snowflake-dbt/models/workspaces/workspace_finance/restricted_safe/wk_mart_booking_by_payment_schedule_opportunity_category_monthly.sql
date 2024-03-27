@@ -50,7 +50,7 @@ final AS
 /* Compare standard vs. all bookings to determine percentage of non-standard booking */
 
 SELECT
-s.first_day_of_month,
+all_bookings.booking_month,
 standard_booking.standard_booking_count,
 all_bookings.all_sales_assisted_booking_count,
 ROUND(((standard_booking.standard_booking_count / all_bookings.all_sales_assisted_booking_count) * 100),2) AS percentage_standard,
