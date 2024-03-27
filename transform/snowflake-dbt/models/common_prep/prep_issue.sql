@@ -7,13 +7,6 @@
     tags=["product"]
 ) }}
 
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_issue_sk",
-    "on_schema_change": "sync_all_columns"
-    })
-}}
-
 {{ simple_cte([
     ('prep_date', 'prep_date'),
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
