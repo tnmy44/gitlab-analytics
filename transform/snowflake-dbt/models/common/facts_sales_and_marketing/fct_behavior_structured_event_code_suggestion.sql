@@ -247,6 +247,6 @@ clicks AS (
     cte_ref="combined",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2024-03-04",
+    created_date="2024-03-25",
     updated_date="2024-03-25"
 ) }}

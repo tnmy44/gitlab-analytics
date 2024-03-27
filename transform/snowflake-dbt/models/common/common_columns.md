@@ -3290,3 +3290,17 @@ Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` eve
 Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event. This event is sent when the suggestion request leads to an error.
 
 {% enddocs %}
+
+{% docs code_suggestions_was_stream_started %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_started` event. This event is sent when the first chunk of the suggestion stream was returned from the network.
+
+{% enddocs %}
+
+{% docs code_suggestions_was_stream_completed %}
+
+Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_completed` event. This event is sent when the last chunk of the streamed suggestion was returned from the network.
+
+{% enddocs %}
+
+

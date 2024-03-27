@@ -75,6 +75,10 @@ models:
       description: '{{ doc("code_suggestions_was_not_provided")}} '
     - name: was_error
       description: '{{ doc("code_suggestions_was_error")}} '
+    - name: was_stream_started
+      description: '{{ doc("code_suggestions_was_stream_started") }}'
+    - name: was_stream_completed
+      description: '{{ doc("code_suggestions_was_stream_completed") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
