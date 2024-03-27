@@ -187,11 +187,18 @@ models:
           calculation (is_win_rate_calc = TRUE) within the same fiscal quarter as the snapshot (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). 
           If these conditions are not met, the value is set to 0. 
       - name: closed_opps_in_snapshot_quarter
-        description: This field tallies the number of opportunities that were closed (regardless of being won or lost) and are eligible for win rate calculation (is_win_rate_calc = TRUE) within the snapshot's fiscal quarter (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). 
+        description: >
+          This field tallies the number of opportunities that were closed (regardless of being won or lost) and are eligible for win rate calculation 
+          (is_win_rate_calc = TRUE) within the snapshot's fiscal quarter (snapshot_fiscal_quarter_date = close_fiscal_quarter_date). 
       - name: closed_net_arr_in_snapshot_quarter
-        description: Calculates the total Net ARR from deals eligible for win rate calculation (is_win_rate_calc = TRUE), using calculated_deal_count multiplied by net_arr. If not eligible, the value is 0. 
+        description: > 
+          Calculates the total Net ARR from deals eligible for win rate calculation (is_win_rate_calc = TRUE), 
+          using calculated_deal_count multiplied by net_arr. If not eligible, the value is 0. 
       - name: booked_net_arr_in_snapshot_quarter
-        description: This field computes the Net ARR for opportunities within the snapshot quarter (snapshot_fiscal_quarter_date = close_fiscal_quarter_date) that are either won (is_won = 1) or are renewals marked as lost (is_renewal = 1 AND is_lost = 1). It reflects the ARR booked through new wins and renewal scenarios within the quarter.
+        description: > 
+          This field computes the Net ARR for opportunities within the snapshot quarter (snapshot_fiscal_quarter_date = close_fiscal_quarter_date) 
+          that are either won (is_won = 1) or are renewals marked as lost (is_renewal = 1 AND is_lost = 1). 
+          It reflects the ARR booked through new wins and renewal scenarios within the quarter.
   - name: wk_fct_crm_opportunity_7th_day_weekly_snapshot
     description: >
       Derived fact table from `fct_crm_opportunity_daily_snapshot`.
@@ -214,6 +221,8 @@ models:
       This query aggregates key sales metrics and attributes from 
       the actuals table to the weekly grain and across multiple dimensions
       like sales source, order type, hierarchy, stage, deal path.
+      This table also computes quarterly totals and adds them as non additive
+      measures to each row, to facilitate pipeline velocity and coverage calculation in Tableau. 
   - name: wk_rpt_targets_actuals_multi_grain
     description: >
       This report table consolidates data:
@@ -221,7 +230,8 @@ models:
       - Aggregate data on a weekly basis for previous quarters 
       - Targets 
       It serves as a singular source for creating pipeline visualizations in Tableau, 
-      offering a comprehensive view across different timeframes.
+      offering a comprehensive view across different timeframes. This report is a multi
+      grain table, since the data is at 3 different levels of granularity.
   - name: wk_rpt_net_arr_targets_quarterly
     description: >
       This report table includes just one target date every 7 days 

@@ -28,11 +28,10 @@ unioned AS (
     NULL AS closed_won_opps_quarter_total,
     NULL AS closed_opps_quarter_total,
     NULL AS closed_net_arr_quarter_total,
-    NULL AS net_arr_quarter_total,
-    NULL AS cycle_time_in_days_combined_quarter_total,
+    NULL AS cycle_time_in_days_quarter_total,
     NULL AS booked_deal_count_quarter_total,
     NULL AS booked_net_arr_quarter_total,
-    NULL AS total_quarter_target
+    NULL AS created_deals_quarter_total,
   FROM granular
   WHERE is_current_snapshot_quarter
 
@@ -368,6 +367,8 @@ unioned AS (
     closed_net_arr_in_snapshot_quarter,
     booked_net_arr_in_snapshot_quarter,
     created_deals_in_snapshot_quarter,
+    cycle_time_in_days_in_snapshot_quarter,
+    booked_deal_count_in_snapshot_quarter,
     created_arr,
     closed_won_opps,
     closed_opps,
@@ -432,10 +433,10 @@ unioned AS (
     closed_won_opps_quarter_total,
     closed_opps_quarter_total,
     closed_net_arr_quarter_total,
-    net_arr_quarter_total,
-    cycle_time_in_days_combined_quarter_total,
+    cycle_time_in_days_quarter_total,
     booked_deal_count_quarter_total,
     booked_net_arr_quarter_total,
+    created_deals_quarter_total,
     NULL AS total_quarter_target
   FROM aggregate
   WHERE NOT is_current_snapshot_quarter
@@ -746,7 +747,7 @@ unioned AS (
     NULL AS snapshot_first_day_of_quarter,
     NULL AS snapshot_last_day_of_quarter,
     NULL AS snapshot_first_day_of_fiscal_quarter,
-    NULL AS snapshot_last_day_of_fiscal_quarter,
+    last_day_of_fiscal_quarter AS snapshot_last_day_of_fiscal_quarter,
     NULL AS snapshot_first_day_of_fiscal_year,
     NULL AS snapshot_last_day_of_fiscal_year,
     NULL AS snapshot_week_of_fiscal_year,
@@ -774,6 +775,8 @@ unioned AS (
     NULL AS closed_net_arr_in_snapshot_quarter,
     NULL AS booked_net_arr_in_snapshot_quarter,
     NULL AS created_deals_in_snapshot_quarter,
+    NULL AS cycle_time_in_days_in_snapshot_quarter,
+    NULL AS booked_deal_count_in_snapshot_quarter,
     NULL AS created_arr,
     NULL AS closed_won_opps,
     NULL AS closed_opps,
@@ -838,10 +841,10 @@ unioned AS (
     NULL AS closed_won_opps_quarter_total,
     NULL AS closed_opps_quarter_total,
     NULL AS closed_net_arr_quarter_total,
-    NULL AS net_arr_quarter_total,
-    NULL AS cycle_time_in_days_combined_quarter_total,
+    NULL AS cycle_time_in_days_quarter_total,
     NULL AS booked_deal_count_quarter_total,
     NULL AS booked_net_arr_quarter_total,
+    NULL AS created_deals_quarter_total,
     total_quarter_target
   FROM targets
 

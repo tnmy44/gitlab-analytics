@@ -7,6 +7,7 @@ WITH actuals AS (
 
 day_7_list AS (
 
+   -- Filter the data down to only one snapshot every 7 days throughout each quarter.
   {{ date_spine_7th_day() }}
 
 ),

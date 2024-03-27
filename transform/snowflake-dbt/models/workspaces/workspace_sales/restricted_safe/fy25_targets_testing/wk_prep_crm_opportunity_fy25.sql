@@ -133,6 +133,7 @@
       snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
       snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
       snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
+      snapshot_dates.last_day_of_fiscal_quarter                                                                     AS snapshot_last_day_of_fiscal_quarter,
       sfdc_account_snapshot.crm_account_owner_sales_segment,
       sfdc_account_snapshot.crm_account_owner_geo,
       sfdc_account_snapshot.crm_account_owner_region,
@@ -228,6 +229,7 @@
       live_date.first_day_of_fiscal_quarter                                                                 AS snapshot_fiscal_quarter_date,
       live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
+      live_date.last_day_of_fiscal_quarter                                                                  AS snapshot_last_day_of_fiscal_quarter,
       account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
       account_owner.user_geo                                                                                AS crm_account_owner_geo,
       account_owner.user_region                                                                             AS crm_account_owner_region,
@@ -1439,6 +1441,8 @@ LEFT JOIN cw_base
       END AS closed_net_arr,
 
       -- Running sum metrics quarter
+
+      -- This code calculates sales metrics for each snapshot quarter
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
           AND is_net_arr_pipeline_created = 1
@@ -1463,8 +1467,9 @@ LEFT JOIN cw_base
       END                                                         AS closed_opps_in_snapshot_quarter,
 
       CASE
-        WHEN is_win_rate_calc = TRUE
-          THEN calculated_deal_count * net_arr
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_win_rate_calc = TRUE
+            THEN calculated_deal_count * net_arr
         ELSE 0
       END                                                         AS closed_net_arr_in_snapshot_quarter,
 

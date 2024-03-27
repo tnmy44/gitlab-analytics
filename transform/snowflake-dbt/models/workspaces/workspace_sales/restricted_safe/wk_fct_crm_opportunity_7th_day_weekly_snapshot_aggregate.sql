@@ -5,46 +5,17 @@ WITH actuals AS (
 
 ),
 
-dim_date AS (
-
-  SELECT * 
-  FROM {{ ref('dim_date') }}
-
-
-),
-
 day_7_list AS (
   
+  -- Filter the data down to only one snapshot every 7 days throughout each quarter.
   {{ date_spine_7th_day() }}
-
-),
-
-metrics_totals AS (
-
-  -- Add the totals from previous quarters as attributes to aid with pipeline coverage and pacing calculations
-
-  SELECT  
-    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name']) }} AS unique_key,
-    created_arr_in_snapshot_quarter             AS created_arr_quarter_total,
-    closed_won_opps_in_snapshot_quarter         AS closed_won_opps_quarter_total,
-    closed_opps_in_snapshot_quarter             AS closed_opps_quarter_total,
-    closed_net_arr_in_snapshot_quarter          AS closed_net_arr_quarter_total,
-    booked_net_arr_in_snapshot_quarter          AS booked_net_arr_quarter_total,
-    created_deals_in_snapshot_quarter           AS created_deals_quarter_total,
-    cycle_time_in_days_in_snapshot_quarter      AS cycle_time_in_days_quarter_total,
-    booked_deal_count_in_snapshot_quarter       AS booked_deal_count_quarter_total,
-  FROM actuals
-  LEFT JOIN dim_date 
-    ON actuals.snapshot_date = dim_date.date_actual
-  WHERE actuals.snapshot_date = dim_date.last_day_of_fiscal_quarter
-  GROUP BY ALL
 
 ),
 
 aggregate_data AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['snapshot_fiscal_quarter_date', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name']) }} AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['snapshot_last_day_of_fiscal_quarter', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name','order_type', 'order_type_live', 'order_type_grouped', 'sales_qualified_source_name', 'sales_qualified_source_grouped']) }} AS unique_key,
     -- keys
     dim_sales_qualified_source_id,
     dim_order_type_id,
@@ -72,6 +43,7 @@ aggregate_data AS (
     snapshot_fiscal_quarter_date,
     snapshot_day_of_fiscal_quarter_normalised,
     snapshot_day_of_fiscal_year_normalised,
+    snapshot_last_day_of_fiscal_quarter,
 
     -- Running sum of metrics
     SUM(created_arr_in_snapshot_quarter)                               AS created_arr_in_snapshot_quarter,
@@ -80,6 +52,8 @@ aggregate_data AS (
     SUM(closed_net_arr_in_snapshot_quarter)                            AS closed_net_arr_in_snapshot_quarter,
     SUM(booked_net_arr_in_snapshot_quarter)                            AS booked_net_arr_in_snapshot_quarter,
     SUM(created_deals_in_snapshot_quarter)                             AS created_deals_in_snapshot_quarter,
+    SUM(cycle_time_in_days_in_snapshot_quarter)                        AS cycle_time_in_days_in_snapshot_quarter,
+    SUM(booked_deal_count_in_snapshot_quarter)                         AS booked_deal_count_in_snapshot_quarter,
 
     -- Additive fields
     
@@ -137,21 +111,41 @@ aggregate_data AS (
 
 ),
 
+quarterly_totals AS (
+
+  -- Add the totals to each row as attributes to aid with pipeline coverage and pacing calculations
+
+  SELECT 
+    snapshot_fiscal_quarter_name,
+    SUM(created_arr_in_snapshot_quarter)             AS created_arr_quarter_total,
+    SUM(closed_won_opps_in_snapshot_quarter)         AS closed_won_opps_quarter_total,
+    SUM(closed_opps_in_snapshot_quarter)             AS closed_opps_quarter_total,
+    SUM(closed_net_arr_in_snapshot_quarter)          AS closed_net_arr_quarter_total,
+    SUM(booked_net_arr_in_snapshot_quarter)          AS booked_net_arr_quarter_total,
+    SUM(created_deals_in_snapshot_quarter)           AS created_deals_quarter_total,
+    SUM(cycle_time_in_days_in_snapshot_quarter)      AS cycle_time_in_days_quarter_total,
+    SUM(booked_deal_count_in_snapshot_quarter)       AS booked_deal_count_quarter_total,
+  FROM aggregate_data
+  WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
+  GROUP BY snapshot_fiscal_quarter_name
+
+),
+
 combined AS (
 
   SELECT 
     aggregate_data.*,
-    created_arr_quarter_total,
-    closed_won_opps_quarter_total,
-    closed_opps_quarter_total,
-    closed_net_arr_quarter_total,
-    net_arr_quarter_total,
-    cycle_time_in_days_combined_quarter_total,
-    booked_deal_count_quarter_total,
-    booked_net_arr_quarter_total
+    quarterly_totals.created_arr_quarter_total,
+    quarterly_totals.closed_won_opps_quarter_total,
+    quarterly_totals.closed_opps_quarter_total,
+    quarterly_totals.closed_net_arr_quarter_total,
+    quarterly_totals.cycle_time_in_days_quarter_total,
+    quarterly_totals.booked_deal_count_quarter_total,
+    quarterly_totals.booked_net_arr_quarter_total,
+    quarterly_totals.created_deals_quarter_total
   FROM aggregate_data
-  LEFT JOIN metrics_totals
-    ON aggregate_data.unique_key = metrics_totals.unique_key
+  LEFT JOIN quarterly_totals 
+    ON aggregate_data.snapshot_fiscal_quarter_name = quarterly_totals.snapshot_fiscal_quarter_name
     
 )
 
