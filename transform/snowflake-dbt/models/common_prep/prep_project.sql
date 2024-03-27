@@ -1,4 +1,4 @@
-{% set sensitive_fields = ['project_description', 'project_import_source', 'project_issues_template', 'project_build_coverage_regex',
+{% set sensitive_fields = ['project_description', 'project_import_source', 'project_issues_template',
                            'project_name', 'project_path', 'project_import_url', 'project_merge_requests_template'] %}
 
 {{ simple_cte([
@@ -146,15 +146,15 @@
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=66) }}
+    {{ dbt_utils.group_by(n=65) }}
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2021-03-17",
-    updated_date="2023-09-27"
+    updated_date="2024-03-19"
 ) }}
 
