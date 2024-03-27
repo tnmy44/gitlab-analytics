@@ -265,7 +265,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@annapiaseczna",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-12-11"
+    updated_date="2024-03-27"
 ) }}
