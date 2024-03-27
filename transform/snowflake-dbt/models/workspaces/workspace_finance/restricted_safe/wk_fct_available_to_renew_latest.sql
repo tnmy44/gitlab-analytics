@@ -44,7 +44,7 @@
     INNER JOIN dim_crm_opportunity				
       ON LEFT(dim_crm_opportunity.dim_crm_opportunity_id,15) = LEFT(mart_crm_opportunity.ssp_id,15)				
     WHERE ssp_id IS NOT NULL 
-      AND mart_crm_opportunity.opportunity_category LIKE '%Ramp Deal%'	
+      AND mart_crm_opportunity.opportunity_category LIKE '%Ramp Deal%'	--Updated manually but over 90% accurate, what happens when a deal is booked as a ramp and then debooked.
 
 
 --Identifying Ramps from Zuora Module(implemented in 2023)
