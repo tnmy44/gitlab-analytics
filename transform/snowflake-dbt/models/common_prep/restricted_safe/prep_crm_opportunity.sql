@@ -395,14 +395,14 @@
 ), abm_tier_unioned AS (
   
 SELECT
-  abm_tier_id_final.dim_crm_opportunity_id,
+  abm_tier_id.dim_crm_opportunity_id,
   is_abm_tier_sao,
   is_abm_tier_closed_won
 FROM abm_tier_id
 LEFT JOIN sao_base
-  ON abm_tier_id_final.dim_crm_opportunity_id=sao_base.dim_crm_opportunity_id  
+  ON abm_tier_id.dim_crm_opportunity_id=sao_base.dim_crm_opportunity_id  
 LEFT JOIN cw_base
-  ON abm_tier_id_final.dim_crm_opportunity_id=cw_base.dim_crm_opportunity_id    
+  ON abm_tier_id.dim_crm_opportunity_id=cw_base.dim_crm_opportunity_id    
 
 ), final AS (
 
