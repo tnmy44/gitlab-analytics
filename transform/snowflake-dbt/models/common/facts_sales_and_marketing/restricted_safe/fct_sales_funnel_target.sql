@@ -14,7 +14,7 @@
                                  'prep_sales_funnel_target.fiscal_year', 
                                  'prep_sales_funnel_target.kpi_name', 
                                  'prep_sales_funnel_target.first_day_of_month', 
-                                 'prep_sales_funnel_target.opportunity_source',
+                                 'prep_sales_funnel_target.sales_qualified_source',
                                  'prep_sales_funnel_target.order_type',
                                  ]) }}                                                AS sales_funnel_target_id,
      prep_sales_funnel_target.kpi_name,
@@ -22,7 +22,7 @@
      prep_date.date_id                                                                AS target_month_id,
      prep_sales_funnel_target.first_day_of_month,
      prep_sales_funnel_target.fiscal_year,
-     prep_sales_funnel_target.opportunity_source                                      AS sales_qualified_source,
+     prep_sales_funnel_target.sales_qualified_source                                  AS sales_qualified_source,
      {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}    AS dim_sales_qualified_source_id,
      prep_sales_funnel_target.order_type,
      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                            AS dim_order_type_id,
@@ -44,7 +44,7 @@
      SUM(prep_sales_funnel_target.allocated_target)                                   AS allocated_target
     FROM prep_sales_funnel_target
     LEFT JOIN sales_qualified_source
-      ON {{ sales_funnel_text_slugify("prep_sales_funnel_target.opportunity_source") }} = {{ sales_funnel_text_slugify("sales_qualified_source.sales_qualified_source_name") }}
+      ON {{ sales_funnel_text_slugify("prep_sales_funnel_target.sales_qualified_source") }} = {{ sales_funnel_text_slugify("sales_qualified_source.sales_qualified_source_name") }}
     LEFT JOIN order_type
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_target.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
     LEFT JOIN prep_crm_user_hierarchy
@@ -61,7 +61,7 @@
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@michellecooper",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2023-02-07",
-    updated_date="2023-10-27"
+    updated_date="2024-03-27"
 ) }}
