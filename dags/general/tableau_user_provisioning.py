@@ -47,7 +47,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "tableau_user_provisioning_migrate",
+    "tableau_user_provisioning",
     default_args=default_args,
     schedule_interval="55 5,17 * * *",
     concurrency=1,
@@ -58,6 +58,9 @@ dag = DAG(
 # tableau Extract
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
+    pwd && 
+    cd ./ && 
+    pwd && 
     TableauConMan provision-settings --yaml_path='./tableau_con_man_config/src/provision_plan.yaml'
 """
 
@@ -80,6 +83,8 @@ tableau_provision_users = KubernetesPodOperator(
         TABLEAU_API_PUBLIC_TOKEN_SECRET,
         TABLEAU_API_PUBLIC_URL,
         TABLEAU_API_PUBLIC_SITE_NAME,
+        SNOWFLAKE_TABLEAU_PASSWORD,
+        SNOWFLAKE_TABLEAU_USERNAME,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity("extraction"),
