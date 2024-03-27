@@ -113,9 +113,9 @@ usage_data_w_date AS (
       WHEN last_ping_of_week_flag = TRUE                       THEN TRUE
       ELSE FALSE
     END                                                                                                           AS is_last_ping_of_week,
-    LAG(ping_created_at,1,ping_created_at) OVER (
+    LEAD(uploaded_at,1,uploaded_at) OVER (
       PARTITION BY prep_ping_instance.uuid, prep_ping_instance.host_id
-      ORDER BY ping_created_at DESC, prep_ping_instance.id DESC) AS previous_ping_at,
+      ORDER BY ping_created_at DESC, prep_ping_instance.id DESC) AS next_ping_uploaded_at,
     REPLACE(REPLACE(REPLACE(
                         LOWER((prep_ping_instance.raw_usage_data_payload['settings']['collected_data_categories']::VARCHAR)),
                         '"', ''), '[', ''), ']', '')                                                              AS collected_data_categories,

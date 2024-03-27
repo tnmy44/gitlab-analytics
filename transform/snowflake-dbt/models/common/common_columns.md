@@ -2653,9 +2653,9 @@ A status indicating if the milestone is `Active` or `Closed`.
 
 {% enddocs %}
 
-{% docs previous_ping_at %}
+{% docs next_ping_uploaded_at %}
 
-The date of the prevous ping for the uuid and the host id
+The date of the next ping for the uuid and the host id. Will be the current ping upload_at if it is the current ping.
 
 {% enddocs %}
 

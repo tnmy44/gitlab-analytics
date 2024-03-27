@@ -1,13 +1,13 @@
 {% macro macro_mart_ping_instance_metric(model_name1) %}
 
 {% set filter_date = (run_started_at - modules.datetime.timedelta(days=31)).strftime('%Y-%m-%d') %}
-{% set filter_statemnet = "DBT_INTERNAL_DEST.uploaded_at > '" + filter_date + "'" %}
+{% set filter_statement = "DBT_INTERNAL_DEST.uploaded_at > '" + filter_date + "'" %}
 
 {{ config(
     materialized = "incremental",
     unique_key = "ping_instance_metric_id",
     on_schema_change="sync_all_columns",
-    incremental_predicates = [filter_statemnet]
+    incremental_predicates = [filter_statement]
 ) }}
 
 {{ simple_cte([
@@ -34,7 +34,7 @@ updated_ping_instance AS (
   SELECT 
     dim_ping_instance_id
   FROM dim_ping_instance
-  WHERE previous_ping_at > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
+  WHERE next_ping_uploaded_at > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
 ),
 
 {% endif %}
@@ -76,8 +76,13 @@ fct_ping_instance_metric AS (
   FROM {{ ref(model_name1) }}
   WHERE IS_REAL(TO_VARIANT(metric_value))
   {% if is_incremental() %}
+  -- Filter added to match incremental_predicates filter to prevent inclusion of 
+  -- additional unmatched vales from being inserted even though they have the same primary key
+  AND uploaded_at > '{{ filter_date }}'
   AND (uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }})
-  OR dim_subscription_id IN (SELECT * FROM updated_subscriptions) 
+  -- Added to capture changes to the latest subscription
+  OR dim_subscription_id IN (SELECT * FROM updated_subscriptions)
+  -- Added to capture changes in the latest ping flags 
   OR dim_ping_instance_id  IN (SELECT * FROM updated_ping_instance)
   )
   {% endif %}
