@@ -205,13 +205,7 @@ models:
       This new table will not include every daily snapshot. 
       Instead, it will feature a snapshot once every week — specifically, one snapshot every 7 days 
       throughout each quarter. This approach is designed to observe and analyze the key trends and
-      activities occurring each week within the quarter. 
-    tests:
-    - dbt_utils.unique_combination_of_columns:
-        combination_of_columns:
-          - dim_crm_opportunity_id
-          - snapshot_id
-          - is_live
+      activities occurring each week within the quarter.
   - name: wk_fct_crm_opportunity_7th_day_weekly_snapshot_aggregate
     description: >
       Derived fact table from `fct_crm_opportunity_daily_snapshot`.

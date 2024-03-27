@@ -32,6 +32,7 @@ unioned AS (
     NULL AS booked_deal_count_quarter_total,
     NULL AS booked_net_arr_quarter_total,
     NULL AS created_deals_quarter_total,
+    NULL AS total_quarter_target
   FROM granular
   WHERE is_current_snapshot_quarter
 
