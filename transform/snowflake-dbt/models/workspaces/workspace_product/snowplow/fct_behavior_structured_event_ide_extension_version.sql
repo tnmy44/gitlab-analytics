@@ -14,6 +14,7 @@ WITH clicks AS (
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
     AND has_ide_extension_version_context = TRUE
+    AND is_staging_event = FALSE
 ),
 
 flattened AS (
@@ -40,7 +41,7 @@ flattened AS (
 {{ dbt_audit(
     cte_ref="flattened",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2023-09-19",
-    updated_date="2023-09-19"
+    updated_date="2024-03-21"
 ) }}

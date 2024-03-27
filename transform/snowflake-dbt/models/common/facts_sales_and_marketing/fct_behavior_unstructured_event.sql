@@ -44,6 +44,8 @@
       environment
     FROM events
     WHERE event = 'unstruct'
+    AND is_staging_event = FALSE
+
 
     {% if is_incremental() %}
 
@@ -97,5 +99,5 @@
     created_by="@chrissharp",
     updated_by="@utkarsh060",
     created_date="2022-09-27",
-    updated_date="2024-01-25"
+    updated_date="2024-03-27"
 ) }}

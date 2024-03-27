@@ -23,10 +23,11 @@
       event_property,
       MAX(behavior_at)   AS max_timestamp
     FROM events
+    WHERE is_staging_event = FALSE
 
     {% if is_incremental() %}
     
-    WHERE behavior_at > (SELECT MAX(max_timestamp) FROM {{this}})
+    AND behavior_at > (SELECT MAX(max_timestamp) FROM {{this}})
     
     {% endif %}
 
@@ -36,7 +37,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@utkarsh060",
     created_date="2022-09-20",
-    updated_date="2022-12-01"
+    updated_date="2024-03-26"
 ) }}

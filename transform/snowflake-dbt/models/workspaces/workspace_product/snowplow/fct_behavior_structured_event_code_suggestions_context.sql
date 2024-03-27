@@ -25,6 +25,7 @@ clicks AS (
     contexts
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
+    AND is_staging_event = FALSE
     AND has_code_suggestions_context = TRUE
 
 ), code_suggestion_context AS (
@@ -262,7 +263,7 @@ clicks AS (
 {{ dbt_audit(
     cte_ref="combined",
     created_by="@mdrussell",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2023-09-25",
-    updated_date="2024-02-29"
+    updated_date="2024-03-21"
 ) }}

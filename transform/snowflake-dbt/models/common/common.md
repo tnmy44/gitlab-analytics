@@ -1516,6 +1516,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - browser_language
 
 **Filters Applied to Model:**
+- Exclude staging events (`is_staging_event = FALSE`)
 - Include events where at least one of browser_name, browser_major_version, browser_minor_version, _OR_ browser_language is available (`browser_name IS NOT NULL OR browser_major_version IS NOT NULL OR browser_minor_version IS NOT NULL OR browser_language IS NOT NULL`)
 
 **Tips for use:**
@@ -1531,6 +1532,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
 
+**Filters Applied to Model:**
+- Exclude staging events (`is_staging_event = FALSE`)
+
 **Other Comments:**
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
 
@@ -1538,7 +1542,7 @@ This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 {% docs fct_behavior_structured_event %}
 
-**Description:** Fact table containing quantitative data for Snowplow Structured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
+**Description:** Fact table containing quantitative data for both staging and non-staging snowplow structured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1566,6 +1570,7 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - os_timezone
 
 **Filters Applied to Model:**
+- Exclude staging events (`is_staging_event = FALSE`)
 - Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
 
 **Tips for use:**
@@ -1583,6 +1588,7 @@ This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Filters Applied to Model:**
 - Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
+- Exclude staging events (`is_staging_event = FALSE`)
 
 {% enddocs %}
 
@@ -1615,6 +1621,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 **Filters Applied to Model:**
 - Include unstructured events (`event = 'unstruct'`) 
+- Exclude staging events (`is_staging_event = FALSE`)
 
 **Business Logic in this Model:**
 - A selection of key value pairs from Snowplow-authored events are parsed out into their own columns:
@@ -1659,7 +1666,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 {% docs fct_behavior_structured_event_experiment %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events related to experiments.
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events related to experiments.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1690,7 +1697,8 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-This model excludes assignment events (`event_action = 'assignment'`)
+- This model excludes assignment events (`event_action = 'assignment'`)
+- This model excludes staging events (`is_staging_event = FALSE`)
 
 **Tips for use:**
 
@@ -1714,6 +1722,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - This model only includes structured events for the last 190 days
 - This model excludes assignment events (`event_action = 'assignment'`)
+- `Inherited` - Excludes staging events
 
 **Tips for use:**
 
@@ -1737,6 +1746,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - This model only includes structured events for the last 400 days
 - This model excludes assignment events (`event_action = 'assignment'`)
+- `Inherited` - Excludes staging events
 
 **Tips for use:**
 
@@ -1758,7 +1768,8 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-- This model only includes structured events implemented for redis hll metrics. 
+- This model only includes structured events implemented for redis hll metrics.
+- This model excludes staging events (`is_staging_event = FALSE`)
 - Redis hll metric events are defined as any event that includes certain event actions (`event_action IN ('g_analytics_valuestream', 'action_active_users_project_repo' 'push_package', 'ci_templates_unique', 'p_terraform_state_api_unique_users', 'i_search_paid')`)
 
 **Tips for use:**

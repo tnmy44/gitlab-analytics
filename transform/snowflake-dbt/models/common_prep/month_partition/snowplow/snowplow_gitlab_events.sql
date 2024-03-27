@@ -354,11 +354,7 @@ WITH filtered_source as (
       base.v_tracker,
       base.uploaded_at,
       base.infra_source,
-      CASE
-        WHEN LOWER(page_url) LIKE 'https://staging.gitlab.com/%' THEN TRUE
-        WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
-        ELSE FALSE
-      END AS is_staging_url,
+      IFF(app_id = 'gitlab-staging', TRUE, FALSE) AS is_staging_event,
       events_with_flattened_context.web_page_context,
       events_with_flattened_context.has_web_page_context,
       events_with_flattened_context.web_page_id,

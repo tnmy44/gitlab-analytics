@@ -35,6 +35,7 @@
     INNER JOIN dim_behavior_event
       ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
     WHERE dim_behavior_event.event_action != 'assignment'
+      AND fct_behavior_structured_event.is_staging_event = FALSE
 
     {% if is_incremental() %}
 
@@ -53,7 +54,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-02-16"
+    updated_date="2024-03-22"
 ) }}

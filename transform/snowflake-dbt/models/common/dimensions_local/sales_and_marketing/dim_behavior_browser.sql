@@ -20,7 +20,7 @@ WITH browser_information AS (
     browser_language,
     MAX(behavior_at)            AS max_timestamp
   FROM {{ ref('prep_snowplow_unnested_events_all') }}
-  WHERE true
+  WHERE is_staging_event = FALSE
 
   {% if is_incremental() %}
     
@@ -36,7 +36,7 @@ WITH browser_information AS (
 {{ dbt_audit(
     cte_ref="browser_information",
     created_by="@michellecooper",
-    updated_by="@chrissharp",
+    updated_by="@utkarsh060",
     created_date="2022-09-20",
-    updated_date="2022-11-30"
+    updated_date="2024-03-26"
 ) }}
