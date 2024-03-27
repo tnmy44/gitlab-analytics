@@ -477,32 +477,6 @@ specify_dbt_parameters:
     - python3 macro_name_check.py
 
 # ======
-# Periscope Model Check
-# ======
-
-.periscope_check: &periscope_check
-  stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
-  tags:
-    - analytics
-  only:
-    changes:
-      - "transform/snowflake-dbt/models/**/*.sql"
-    refs:
-      - merge_request
-  allow_failure: true
-
-🔍periscope_query:
-  <<: *periscope_check
-  script:
-    - git clone -b periscope/master --single-branch https://gitlab-data-ci:$PERISCOPE_REPO_TOKEN@gitlab.com/gitlab-data/periscope.git --depth 1
-    - git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD --name-only | grep -iEo "(.*)\.sql" | sed -E 's/\.sql//' | awk -F '/' '{print tolower($NF)}' | sort | uniq > diff.txt
-    - touch comparison.txt
-    - python3 transform/periscope_check.py
-    - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these!" && cat comparison.txt && exit 1; else echo "All good" && exit 0; fi;
-
-
-# ======
 # Tableau Model Check
 # ======
 
