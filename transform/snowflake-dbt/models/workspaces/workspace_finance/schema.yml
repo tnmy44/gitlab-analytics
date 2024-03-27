@@ -1212,3 +1212,6 @@ models:
 
   - name: wk_mart_payments_refunds_against_future_invoices
     description: View of all payment totals received and applied to future dated invoices monthly
+
+  - name: wk_mart_booking_by_payment_schedule_opportunity_category_monthly
+    description: View of all sales assisted opportunities compared to non-standard bookings (e.g. ramps, non-prepaid orders)

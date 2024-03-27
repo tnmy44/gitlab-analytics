@@ -14,7 +14,7 @@ DATE(DATE_TRUNC('month', dim_invoice.invoice_date))   AS invoice_month,
 wk_finance_fct_invoice_payment.invoice_payment_amount AS applied_payment_amount,
 wk_finance_fct_invoice_payment.invoice_id,
 wk_finance_fct_invoice_payment.payment_id
-FROM prod.restricted_safe_workspace_finance.wk_finance_fct_invoice_payment
+FROM {{ ref('wk_finance_fct_invoice_payment') }}
 LEFT JOIN prod.restricted_safe_common.fct_invoice ON fct_invoice.dim_invoice_id = wk_finance_fct_invoice_payment.invoice_id
 LEFT JOIN prod.common.dim_invoice ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
 
@@ -30,7 +30,7 @@ SELECT
 DATE(DATE_TRUNC('month', wk_finance_fct_payment.payment_date)) AS payment_month,
 wk_finance_fct_payment.payment_amount                          AS payment_amount,
 wk_finance_fct_payment.payment_id 
-FROM prod.restricted_safe_workspace_finance.wk_finance_fct_payment
+FROM {{ ref('wk_finance_fct_payment') }}
 
 ),
 
