@@ -3006,6 +3006,7 @@ users:
       - General SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
+      - Customer Success Project Lead
   - user_name: bcaller
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4037,6 +4038,7 @@ users:
       - General SAFE Access
       - Marketing All Access
       - Go To Market Project Lead
+      - Marketing Project Lead
   - user_name: dfarnsworth
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5913,6 +5915,7 @@ users:
       - General All Access
       - General SAFE Access
       - Team Member Project Lead
+      - Go To Market Project Lead
   - user_name: jshin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -6820,6 +6823,7 @@ users:
       - General SAFE Access
       - RSA SAFE Access
       - Sales Development SAFE Access
+      - Sales Project Lead
   - user_name: mangell
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6855,6 +6859,7 @@ users:
       - General SAFE Access
       - RSA SAFE Access
       - Sales All Access
+      - Customer Success Project Lead
   - user_name: mbabin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -7609,6 +7614,8 @@ users:
       - RSA SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
+      - Go To Market Project Lead
+      - Sales Project Lead
   - user_name: mwajda
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7691,6 +7698,7 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
+      - Go To Market Project Lead
   - user_name: nbilgrami
     user_name_domain: gitlab.com
     site_role: Creator
@@ -9365,6 +9373,7 @@ users:
       - General SAFE Access
       - Production Project Lead
       - Resources Project Lead
+      - Data Team Project Lead
   - user_name: sozawa
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10803,6 +10812,8 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+      - Marketing Project Lead
+      - Go To Market Project Lead
   - user_name: ntarinda
     user_name_domain: gitlab.com
     site_role: Viewer
