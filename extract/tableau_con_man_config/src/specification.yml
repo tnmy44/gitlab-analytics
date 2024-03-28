@@ -7478,14 +7478,6 @@ users:
     groups:
       - ASM Restricted Access
       - General All Access
-  - user_name: mpreuss
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
-      - Marketing All Access
   - user_name: mramirez
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
