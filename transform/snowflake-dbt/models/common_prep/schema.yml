@@ -2545,6 +2545,9 @@ models:
     columns:
       - name: dim_marketo_person_id
         description: The Unique person ID from Marketo
+        tests:
+          - not_null
+          - unique
       - name: dim_crm_person_id
         description: The Unique person ID from Salesforce
       - name: email_hash
