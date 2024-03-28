@@ -55,7 +55,7 @@ WITH final AS (
         sign_up_date,
         opt_out_date,
         sec_project_names,
-        email_suspended,
+        email_suspended AS is_email_suspended,
         email_suspended_at AS email_suspended_date,
         email_suspended_cause,
         all_remote_function,
