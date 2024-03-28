@@ -6702,6 +6702,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - vnagy:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -7957,6 +7963,11 @@ users:
             - accountadmin
             - securityadmin
             - vprakash
+
+    - vnagy:
+        can_login: yes
+        member_of:
+            - vnagy
 
     - vtatarintev:
         can_login: yes
