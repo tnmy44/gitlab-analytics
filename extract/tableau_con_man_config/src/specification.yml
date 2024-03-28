@@ -11100,3 +11100,16 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: lcharles
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: jyanelli
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
