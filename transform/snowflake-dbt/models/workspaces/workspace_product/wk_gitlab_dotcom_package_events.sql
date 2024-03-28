@@ -64,6 +64,8 @@ WITH structured_events AS (
           WHEN page_url_path LIKE '%/groups%'
             AND page_url_path LIKE '%package%'
             THEN 'page_view_package_group'
+          WHEN page_url_path LIKE '%/google_cloud/artifact_registry'
+            THEN 'page_view_google_artifact_registry'
         END                                                 AS metric, 
         COUNT(DISTINCT fct_behavior_website_page_view_sk)   AS total_events
     FROM {{ ref('fct_behavior_website_page_view') }} as page_view
@@ -110,5 +112,5 @@ UNION ALL
     created_by="@nhervas",
     updated_by="@nhervas",
     created_date="2023-09-05",
-    updated_date="2024-02-27"
+    updated_date="2024-03-28"
 ) }}
