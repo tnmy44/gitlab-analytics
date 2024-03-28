@@ -57,6 +57,9 @@ aggregate_data AS (
     SUM(open_1plus_net_arr_in_snapshot_quarter)                        AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(open_3plus_net_arr_in_snapshot_quarter)                        AS open_3plus_net_arr_in_snapshot_quarter,
     SUM(open_4plus_net_arr_in_snapshot_quarter)                        AS open_4plus_net_arr_in_snapshot_quarter,
+    SUM(open_1plus_deal_count_in_snapshot_quarter)                     AS open_1plus_deal_count_in_snapshot_quarter,
+    SUM(open_3plus_deal_count_in_snapshot_quarter)                     AS open_3plus_deal_count_in_snapshot_quarter,
+    SUM(open_4plus_deal_count_in_snapshot_quarter)                     AS open_4plus_deal_count_in_snapshot_quarter,
 
     -- Additive fields
     

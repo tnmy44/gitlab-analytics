@@ -221,6 +221,12 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
+    sfdc_opportunity.open_1plus_net_arr_in_snapshot_quarter,
+    sfdc_opportunity.open_3plus_net_arr_in_snapshot_quarter,
+    sfdc_opportunity.open_4plus_net_arr_in_snapshot_quarter,
+    sfdc_opportunity.open_1plus_deal_count_in_snapshot_quarter,
+    sfdc_opportunity.open_3plus_deal_count_in_snapshot_quarter,
+    sfdc_opportunity.open_4plus_deal_count_in_snapshot_quarter,
     sfdc_opportunity.created_arr_in_snapshot_quarter,
     sfdc_opportunity.closed_won_opps_in_snapshot_quarter,
     sfdc_opportunity.closed_opps_in_snapshot_quarter,
@@ -229,9 +235,6 @@
     sfdc_opportunity.created_deals_in_snapshot_quarter,
     sfdc_opportunity.cycle_time_in_days_in_snapshot_quarter,
     sfdc_opportunity.booked_deal_count_in_snapshot_quarter,
-    sfdc_opportunity.open_1plus_net_arr_in_snapshot_quarter,
-    sfdc_opportunity.open_3plus_net_arr_in_snapshot_quarter,
-    sfdc_opportunity.open_4plus_net_arr_in_snapshot_quarter,
     sfdc_opportunity.created_arr,
     sfdc_opportunity.closed_won_opps,
     sfdc_opportunity.closed_opps,

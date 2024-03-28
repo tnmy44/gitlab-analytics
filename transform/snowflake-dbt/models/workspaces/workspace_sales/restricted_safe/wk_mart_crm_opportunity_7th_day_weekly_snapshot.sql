@@ -368,13 +368,13 @@ final AS (
     DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
 
-
-
-
     --additive fields
     fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_1plus_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.open_3plus_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.open_4plus_deal_count_in_snapshot_quarter,
     fct_crm_opportunity.created_arr_in_snapshot_quarter,
     fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
     fct_crm_opportunity.closed_opps_in_snapshot_quarter,

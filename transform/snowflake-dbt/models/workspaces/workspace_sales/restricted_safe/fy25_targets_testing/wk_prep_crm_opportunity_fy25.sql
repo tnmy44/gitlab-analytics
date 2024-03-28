@@ -1516,24 +1516,47 @@ LEFT JOIN cw_base
       END                                               AS booked_deal_count_in_snapshot_quarter,
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
-          AND is_eligible_open_pipeline = 1
+          AND is_eligible_open_pipeline_combined = 1
             THEN net_arr
         ELSE 0
       END                                                AS open_1plus_net_arr_in_snapshot_quarter,
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
-          AND is_eligible_open_pipeline = 1
+          AND is_eligible_open_pipeline_combined = 1
             AND is_stage_3_plus = 1
               THEN net_arr
         ELSE 0
       END                                                AS open_3plus_net_arr_in_snapshot_quarter,
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
-          AND is_eligible_open_pipeline = 1
+          AND is_eligible_open_pipeline_combined = 1
             AND is_stage_4_plus = 1
               THEN net_arr
         ELSE 0
-      END                                                AS open_4plus_net_arr_in_snapshot_quarter
+      END                                                AS open_4plus_net_arr_in_snapshot_quarter,
+      CASE 
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_1_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_1plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_3_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_4_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count_in_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
