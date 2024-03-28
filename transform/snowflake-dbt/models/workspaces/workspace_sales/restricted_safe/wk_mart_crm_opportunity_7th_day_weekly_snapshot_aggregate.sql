@@ -121,6 +121,9 @@ final AS (
     fct_crm_opportunity.booked_deal_count_quarter_total,
     fct_crm_opportunity.booked_net_arr_quarter_total,
     fct_crm_opportunity.created_deals_quarter_total,
+    fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
 
     --additive fields
     fct_crm_opportunity.created_arr_in_snapshot_quarter,

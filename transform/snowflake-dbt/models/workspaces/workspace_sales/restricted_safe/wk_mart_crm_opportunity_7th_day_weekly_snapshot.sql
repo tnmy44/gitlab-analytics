@@ -370,6 +370,9 @@ final AS (
 
 
     --additive fields
+    fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.created_arr_in_snapshot_quarter,
     fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
     fct_crm_opportunity.closed_opps_in_snapshot_quarter,

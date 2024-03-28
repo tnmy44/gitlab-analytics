@@ -54,6 +54,9 @@ aggregate_data AS (
     SUM(created_deals_in_snapshot_quarter)                             AS created_deals_in_snapshot_quarter,
     SUM(cycle_time_in_days_in_snapshot_quarter)                        AS cycle_time_in_days_in_snapshot_quarter,
     SUM(booked_deal_count_in_snapshot_quarter)                         AS booked_deal_count_in_snapshot_quarter,
+    SUM(open_1plus_net_arr_in_snapshot_quarter)                        AS open_1plus_net_arr_in_snapshot_quarter,
+    SUM(open_3plus_net_arr_in_snapshot_quarter)                        AS open_3plus_net_arr_in_snapshot_quarter,
+    SUM(open_4plus_net_arr_in_snapshot_quarter)                        AS open_4plus_net_arr_in_snapshot_quarter,
 
     -- Additive fields
     
