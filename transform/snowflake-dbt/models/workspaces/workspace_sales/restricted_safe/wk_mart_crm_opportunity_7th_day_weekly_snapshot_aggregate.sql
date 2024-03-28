@@ -66,6 +66,8 @@ final AS (
       ELSE DATEADD('day', -1, DATE_TRUNC('week', dim_date.current_date_actual)) END     AS current_first_day_of_week,--n--need to add this field to date_details
     FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7))                   
                                                                     AS current_week_of_fiscal_quarter_normalised,
+    DATEDIFF('week',dim_date.current_first_day_of_fiscal_quarter, current_date_actual) + 1     
+                                                                    AS current_week_of_fiscal_quarter,
     dim_date.date_day                                               AS snapshot_day,
     dim_date.day_name                                               AS snapshot_day_name, 
     dim_date.day_of_week                                            AS snapshot_day_of_week,
