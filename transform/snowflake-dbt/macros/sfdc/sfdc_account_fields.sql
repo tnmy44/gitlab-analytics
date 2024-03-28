@@ -27,7 +27,7 @@ WITH map_merged_crm_account AS (
     {%- if model_type == 'live' %}
         {{ ref('prep_crm_user') }}
     {%- elif model_type == 'snapshot' %}
-        {{ ref('dim_crm_user_daily_snapshot') }}
+        {{ ref('prep_crm_user_daily_snapshot') }}
     {% endif %}
 
 {%- if model_type == 'live' %}
