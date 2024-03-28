@@ -177,6 +177,7 @@
       END                                                                                                         AS opportunity_owner_user_area,
       sfdc_user_snapshot.user_role_name                                                                           AS opportunity_owner_role,
       sfdc_user_snapshot.title                                                                                    AS opportunity_owner_title,
+      sfdc_account_snapshot.crm_account_owner_role                                                                AS opportunity_account_owner_role,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED",
                                                                                "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", 
                                                                                "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", 
@@ -275,6 +276,7 @@
       END                                                                                                   AS opportunity_owner_user_area,
       opportunity_owner.user_role_name                                                                      AS opportunity_owner_role,
       opportunity_owner.title                                                                               AS opportunity_owner_title,
+      sfdc_account.account_owner_role                                                                       AS opportunity_account_owner_role,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
                                                                      "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
@@ -1285,7 +1287,7 @@ LEFT JOIN cw_base
                     )
         WHEN close_fiscal_year >= 2025
           THEN CONCAT(
-                      UPPER(sfdc_opportunity.opportunity_owner_role),
+                      UPPER(COALESCE(sfdc_opportunity.opportunity_owner_role, sfdc_opportunity.opportunity_account_owner_role)),
                       '-',
                       close_fiscal_year
                       ) 
