@@ -3415,6 +3415,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - btsang:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - bvandre:
         member_of: []
         warehouses: []
@@ -6936,6 +6942,11 @@ users:
         can_login: yes
         member_of:
             - bnguyen
+
+    - btsang:
+        can_login: yes
+        member_of:
+            - btsang
 
     - bvandre:
         can_login: no
