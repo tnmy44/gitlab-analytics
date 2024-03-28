@@ -5,7 +5,7 @@
 WITH account_dims_mapping AS (
 
   SELECT *
-  FROM {{ ref('map_crm_account') }} 
+  FROM {{ ref('map_crm_account') }}
 
 ), crm_person AS (
 
