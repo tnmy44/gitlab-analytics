@@ -583,7 +583,9 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity_stage.is_closed = TRUE
           AND sfdc_opportunity.amount >= 0
           AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
-          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_jihu_account = 0
+          AND sfdc_opportunity_live.sales_qualified_source <> 'Web Direct Generated'
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_win_rate_calc,
