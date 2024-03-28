@@ -241,7 +241,7 @@ SELECT
       prep_crm_user.user_role_level_4                                AS user_role_level_4,
       prep_crm_user.user_role_level_5                                AS user_role_level_5
     FROM prep_crm_opportunity
-    LEFT JOIN prep_crm_user
+    INNER JOIN prep_crm_user
       ON prep_crm_opportunity.opportunity_owner_role = prep_crm_user.user_role_name
     WHERE is_live = 1
     AND prep_crm_opportunity.close_fiscal_year >= 2025
