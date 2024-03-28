@@ -293,6 +293,11 @@ databases:
     - srehm_prep:
         shared: no
 
+    - syasonik_prod:
+        shared: no
+    - syasonik_prep:
+        shared: no
+
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -6410,6 +6415,46 @@ roles:
         warehouses:
             - dev_xs
 
+    - syasonik:
+        member_of:
+            - analyst_growth
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - syasonik_prep
+                - syasonik_prod
+            schemas:
+                - syasonik_prep.*
+                - syasonik_prod.*
+            tables:
+                - syasonik_prep.*.*
+                - syasonik_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - syasonik_prep
+                    - syasonik_prod
+                write:
+                    - syasonik_prep
+                    - syasonik_prod
+            schemas:
+                read:
+                    - syasonik_prep.*
+                    - syasonik_prod.*
+                write:
+                    - syasonik_prep.*
+                    - syasonik_prod.*
+            tables:
+                read:
+                    - syasonik_prep.*.*
+                    - syasonik_prod.*.*
+                write:
+                    - syasonik_prep.*.*
+                    - syasonik_prod.*.*
+
+
     - tableau:
         warehouses:
             - reporting
@@ -7781,7 +7826,6 @@ users:
         member_of:
             - sranasinghe
 
-
     - srehm:
         can_login: yes
         member_of:
@@ -7806,6 +7850,11 @@ users:
         can_login: yes
         member_of:
             - svistas
+
+    - syasonik:
+        can_login: yes
+        member_of:
+            - syasonik
 
     - tableau:
         can_login: yes
