@@ -11,7 +11,7 @@ WITH source AS (
       Name::VARCHAR                                AS registration_name,
       VARTOPIADRS__DEAL_NAME__C::VARCHAR           AS deal_registration_name,
       CAM_Approval_Status__c::VARCHAR              AS partner_manager_approval_status,
-      CAM_Denial_Reason::VARCHAR                   AS partner_manager_denial_reason,
+      CAM_Denial_Reason__c::VARCHAR                   AS partner_manager_denial_reason,
       VartopiaDRS__Approved_Date__c::VARCHAR       AS deal_registration_approval_date,
       VartopiaDRS__Picklist_1__c::VARCHAR          AS deal_registration_type,
       VartopiaDRS__MDF_Campaign__c::VARCHAR        AS gitlab_marketing_campaign,
