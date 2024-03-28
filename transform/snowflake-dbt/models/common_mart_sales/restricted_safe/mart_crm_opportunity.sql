@@ -90,7 +90,7 @@
       dim_crm_opportunity.opportunity_owner,
       dim_crm_opportunity.opportunity_owner_manager,
       dim_crm_opportunity.opportunity_owner_department,
-      dim_crm_opportunity.opportunity_owner_role,
+      dim_crm_opportunity.opportunity_owner_role,    
       dim_crm_opportunity.opportunity_owner_title,
       dim_crm_opportunity.solutions_to_be_replaced,
       dim_crm_opportunity.opportunity_health,
@@ -141,6 +141,7 @@
       dim_crm_account.parent_crm_account_upa_city,
       dim_crm_account.parent_crm_account_upa_street,
       dim_crm_account.parent_crm_account_upa_postal_code,
+      dim_crm_account.owner_role                                           AS account_user_role,
       dim_crm_account.crm_account_employee_count,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
@@ -210,6 +211,11 @@
                                                                                             AS crm_opp_owner_sales_segment_region_stamped_grouped,
       dim_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
+      dim_crm_user_hierarchy.crm_user_role_level_1                                          AS crm_opp_owner_role_level_1,
+      dim_crm_user_hierarchy.crm_user_role_level_2                                          AS crm_opp_owner_role_level_2,
+      dim_crm_user_hierarchy.crm_user_role_level_3                                          AS crm_opp_owner_role_level_3,
+      dim_crm_user_hierarchy.crm_user_role_level_4                                          AS crm_opp_owner_role_level_4,
+      dim_crm_user_hierarchy.crm_user_role_level_5                                          AS crm_opp_owner_role_level_5,
 
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live.crm_user_business_unit,
@@ -221,6 +227,11 @@
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live.crm_user_sales_segment',
         'dim_crm_user_hierarchy_live.crm_user_geo', 'dim_crm_user_hierarchy_live.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
+      dim_crm_user_hierarchy_live.crm_user_role_level_1,
+      dim_crm_user_hierarchy_live.crm_user_role_level_2,
+      dim_crm_user_hierarchy_live.crm_user_role_level_3,
+      dim_crm_user_hierarchy_live.crm_user_role_level_4,
+      dim_crm_user_hierarchy_live.crm_user_role_level_5,
 
       
        -- crm account owner/sales rep live fields
@@ -233,6 +244,12 @@
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_account_owner.crm_user_sales_segment',
         'dim_crm_user_hierarchy_account_owner.crm_user_geo', 'dim_crm_user_hierarchy_account_owner.crm_user_region') }}
                                                                                                                         AS crm_account_user_sales_segment_region_grouped,
+      dim_crm_user_hierarchy_account_owner.crm_user_role_level_1                                                        AS crm_account_user_role_level_1,
+      dim_crm_user_hierarchy_account_owner.crm_user_role_level_2                                                        AS crm_account_user_role_level_2,
+      dim_crm_user_hierarchy_account_owner.crm_user_role_level_3                                                        AS crm_account_user_role_level_3,
+      dim_crm_user_hierarchy_account_owner.crm_user_role_level_4                                                        AS crm_account_user_role_level_4,
+      dim_crm_user_hierarchy_account_owner.crm_user_role_level_5                                                        AS crm_account_user_role_level_5,
+
       -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
       dim_crm_opportunity.opportunity_owner_user_segment,
       dim_crm_opportunity.opportunity_owner_user_geo,
@@ -532,7 +549,7 @@
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
     LEFT JOIN dim_date AS close_date
       ON fct_crm_opportunity.close_date_id = close_date.date_id
-        LEFT JOIN dim_crm_user_hierarchy
+    LEFT JOIN dim_crm_user_hierarchy
       ON fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_crm_opportunity.dim_crm_user_hierarchy_live_sk = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
