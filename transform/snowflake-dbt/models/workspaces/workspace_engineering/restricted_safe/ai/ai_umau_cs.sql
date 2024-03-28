@@ -28,20 +28,18 @@ daily_usage AS (
 
 ),
 
-int AS (
-
+daily_agg AS (
   SELECT
-    DATE(behavior_at)                       AS day,
-    COUNT(DISTINCT source.instance_user_id) AS user_count
-  FROM source
-  LEFT JOIN daily_usage
-    ON source.instance_user_id = daily_usage.instance_user_id
+    behavior_date                    AS day,
+    COUNT(DISTINCT instance_user_id) AS user_count
+  FROM daily_usage
   GROUP BY 1
-  ORDER BY 1 DESC
 )
 
 SELECT
-  day,
-  SUM(user_count) OVER (ORDER BY day ROWS BETWEEN 27 PRECEDING AND CURRENT ROW) AS rolling_28_day_umau
-FROM int
-ORDER BY day DESC
+  a.day,
+  COUNT(DISTINCT b.instance_user_id) AS unique_28d_rolling_count
+FROM daily_agg AS a
+INNER JOIN daily_usage AS b ON b.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
+GROUP BY 1
+ORDER BY 1 DESC
