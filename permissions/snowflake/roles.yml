@@ -6599,6 +6599,7 @@ roles:
 
     - tscott:
         member_of:
+            - analyst_sales
             - data_team_analyst
             - reporter
             - restricted_safe
