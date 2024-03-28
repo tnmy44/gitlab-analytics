@@ -252,5 +252,21 @@
 SELECT
   {{ dbt_utils.generate_surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
   {{ dbt_utils.generate_surrogate_key(['metrics.sales_funnel_kpi_name'])}} AS dim_sales_funnel_kpi_sk,
-  metrics.*
+  metrics.actual_date_id,
+  metrics.actual_date,
+  metrics.sales_funnel_kpi_name,
+  metrics.dim_crm_opportunity_id,
+  metrics.dim_crm_account_id,
+  metrics.dim_crm_person_id,
+  metrics.dim_order_type_id,
+  metrics.dim_sales_qualified_source_id,
+  {{ get_keyed_nulls('metrics.dim_hierarchy_sk') }} AS dim_hierarchy_sk,
+  metrics.dim_business_unit_id,
+  metrics.dim_sales_segment_id,
+  metrics.dim_geo_id,
+  metrics.dim_region_id,
+  metrics.dim_area_id,
+  metrics.email_hash,
+  metrics.new_logo_count,
+  metrics.net_arr
 FROM metrics
