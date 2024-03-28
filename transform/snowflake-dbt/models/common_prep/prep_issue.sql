@@ -29,11 +29,6 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_issues_source')}}
-    {% if is_incremental() %}
-
-      WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
-
-    {% endif %}
 
 ), issue_metrics AS (
 
