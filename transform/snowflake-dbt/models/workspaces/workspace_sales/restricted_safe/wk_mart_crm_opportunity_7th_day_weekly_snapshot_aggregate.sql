@@ -52,6 +52,7 @@ final AS (
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
 
     -- Dates
+    DAYNAME(current_date_actual) AS current_day_name,  --need to add this field to date_details
     dim_date.current_date_actual,
     dim_date.current_fiscal_year,
     dim_date.current_first_day_of_fiscal_year,
@@ -61,6 +62,8 @@ final AS (
     dim_date.current_day_of_month,
     dim_date.current_day_of_fiscal_quarter,
     dim_date.current_day_of_fiscal_year,
+    CASE WHEN current_day_name = 'Sun' THEN current_date_actual
+      ELSE DATEADD('day', -1, DATE_TRUNC('week', current_date_actual)) END     AS current_first_day_of_week, --need to add this field to date_details
     FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7))                   
                                                                     AS current_week_of_fiscal_quarter_normalised,
     dim_date.date_day                                               AS snapshot_day,
@@ -104,6 +107,9 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
+    dim_date.first_day_of_week                                      AS snapshot_first_day_of_week,
+    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, snapshot_date) + 1     
+                                                                    AS snapshot_week_of_fiscal_quarter,
     
     -- Total actuals quarter
 
@@ -174,7 +180,8 @@ final AS (
     fct_crm_opportunity.vsa_start_date_net_arr,
     fct_crm_opportunity.cycle_time_in_days_combined,
     'aggregate' AS source,
-    IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
+    IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
+    IFF(current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
   FROM fct_crm_opportunity
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
