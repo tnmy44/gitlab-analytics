@@ -49,7 +49,6 @@
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_target.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
     LEFT JOIN prep_crm_user_hierarchy
       ON prep_sales_funnel_target.dim_crm_user_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-        AND prep_sales_funnel_target.fiscal_year = prep_crm_user_hierarchy.fiscal_year
     LEFT JOIN prep_sales_funnel_kpi
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_kpi.sales_funnel_kpi_name") }} = {{ sales_funnel_text_slugify("prep_sales_funnel_target.kpi_name") }}
     LEFT JOIN prep_date
