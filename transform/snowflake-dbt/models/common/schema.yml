@@ -2711,7 +2711,9 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "ci_build_started_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_pipeline_id

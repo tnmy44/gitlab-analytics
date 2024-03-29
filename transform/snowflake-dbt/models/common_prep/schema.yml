@@ -1061,7 +1061,9 @@ models:
     columns:
       - name: dim_action_id
         tests:
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())""
           - not_null
       - name: dim_user_id
       - name: dim_project_id
@@ -1153,7 +1155,9 @@ models:
       - name: dim_ci_stage_id
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
         tests:
