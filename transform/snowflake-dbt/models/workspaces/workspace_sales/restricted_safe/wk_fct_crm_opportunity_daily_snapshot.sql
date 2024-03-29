@@ -281,7 +281,6 @@
     sfdc_opportunity.forecasted_churn_for_clari,
     sfdc_opportunity.override_arr_basis_clari,
     sfdc_opportunity.vsa_start_date_net_arr,
-    sfdc_opportunity.cycle_time_in_days_combined,
     dim_date.day_of_week,
     dim_date.first_day_of_week,
     dim_date.date_id,

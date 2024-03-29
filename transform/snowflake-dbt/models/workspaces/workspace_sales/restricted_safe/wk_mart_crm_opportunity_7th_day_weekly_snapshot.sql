@@ -429,7 +429,6 @@ final AS (
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari,
     fct_crm_opportunity.vsa_start_date_net_arr,
-    fct_crm_opportunity.cycle_time_in_days_combined,
     fct_crm_opportunity.day_of_week,
     fct_crm_opportunity.first_day_of_week,
     fct_crm_opportunity.date_id,

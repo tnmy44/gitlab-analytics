@@ -108,8 +108,7 @@ aggregate_data AS (
     SUM(arr_basis_for_clari)                                           AS arr_basis_for_clari,
     SUM(forecasted_churn_for_clari)                                    AS forecasted_churn_for_clari,
     SUM(override_arr_basis_clari)                                      AS override_arr_basis_clari,
-    SUM(vsa_start_date_net_arr)                                        AS vsa_start_date_net_arr,
-    SUM(cycle_time_in_days_combined)                                   AS cycle_time_in_days_combined
+    SUM(vsa_start_date_net_arr)                                        AS vsa_start_date_net_arr
   FROM actuals
   INNER JOIN day_7_list
     ON actuals.snapshot_date = day_7_list.day_7

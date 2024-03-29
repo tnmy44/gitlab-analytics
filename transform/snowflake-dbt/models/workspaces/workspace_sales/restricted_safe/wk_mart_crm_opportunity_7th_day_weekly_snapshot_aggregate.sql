@@ -185,7 +185,6 @@ final AS (
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari,
     fct_crm_opportunity.vsa_start_date_net_arr,
-    fct_crm_opportunity.cycle_time_in_days_combined,
     'aggregate' AS source,
     IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
     IFF(current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
