@@ -1,7 +1,8 @@
 {{ config({
-        "materialized": "table",
+        "materialized": "incremental",
         "unique_key": "event_reporting_month_pk",
-        "tags": ["product", "mnpi_exception"]
+        "tags": ["product", "mnpi_exception"],
+        "on_schema_change":"sync_all_columns"
     })
 }}
 
@@ -42,6 +43,11 @@ WITH structured_events AS (
     WHERE metric IS NOT NULL
     --- filter out any internal namespaces
       AND (namespace_is_internal = FALSE OR ultimate_parent_namespace_id IS NULL)
+    {% if is_incremental() %}
+    
+      AND mart_behavior_structured_event.behavior_at >= (SELECT MAX(reporting_month) FROM {{this}})
+    
+    {% endif %}
   {{ dbt_utils.group_by(n=7) }}
 
 ), pageviews AS (
