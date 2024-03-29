@@ -36,7 +36,7 @@ SELECT
 COALESCE(increase_cba.cba_increase_date, decrease_cba.cba_decrease_date) AS cba_date,
 COALESCE(increase_cba.increase,0) AS increase,
 COALESCE(decrease_cba.decrease,0) AS decrease,
-SUM(increase_cba.increase - decrease_cba.decrease) OVER (ORDER BY cba_date) AS Credit_Balance_per_Month
+SUM(increase_cba.increase - decrease_cba.decrease) OVER (ORDER BY cba_date) AS credit_balance_per_month
 FROM increase_cba
 FULL OUTER JOIN decrease_cba ON decrease_cba.cba_decrease_date = increase_cba.cba_increase_date
 ORDER BY cba_date
