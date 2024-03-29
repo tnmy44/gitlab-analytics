@@ -11,10 +11,10 @@ WITH booking_billing AS
 
 SELECT
 wk_mart_booking_billing_ar_monthly.opportunity_invoice_payment_year_month,
-ROUND(wk_mart_booking_billing_ar_monthly.booking_amount,2)                                                                   AS booking_amount,
-ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_without_tax,2)                                                       AS invoice_amount_without_tax,
-ROUND(wk_mart_booking_billing_ar_monthly.invoice_tax_amount,2)                                                               AS invoice_tax_amount,
-ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_with_tax,2)                                                          AS invoice_amount_with_tax,
+ROUND(wk_mart_booking_billing_ar_monthly.booking_amount,2) AS booking_amount,
+ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_without_tax,2) AS invoice_amount_without_tax,
+ROUND(wk_mart_booking_billing_ar_monthly.invoice_tax_amount,2) AS invoice_tax_amount,
+ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_with_tax,2) AS invoice_amount_with_tax,
 ROUND((wk_mart_booking_billing_ar_monthly.booking_amount - wk_mart_booking_billing_ar_monthly.invoice_amount_without_tax),2) AS variance_booking_billing
 FROM {{ ref('wk_mart_booking_billing_ar_monthly') }}
 ORDER BY wk_mart_booking_billing_ar_monthly.opportunity_invoice_payment_year_month
