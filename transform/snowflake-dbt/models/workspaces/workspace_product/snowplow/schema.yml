@@ -35,17 +35,17 @@ models:
       - name: ide_extension_version_context
         description: '{{ doc("ide_extension_version_context") }}'
       - name: extension_name
-        description: '{{ doc("ide_extension_name") }}'
+        description: '{{ doc("extension_name") }}'
       - name: extension_version
-        description: '{{ doc("ide_extension_version") }}'
+        description: '{{ doc("extension_version") }}'
       - name: ide_name
-        description: '{{ doc("ide_extension_ide_name") }}'
+        description: '{{ doc("ide_name") }}'
       - name: ide_vendor
-        description: '{{ doc("ide_extension_ide_vendor") }}'
+        description: '{{ doc("ide_vendor") }}'
       - name: ide_version
-        description: '{{ doc("ide_extension_ide_version") }}'
+        description: '{{ doc("ide_version") }}'
       - name: language_server_version
-        description: '{{ doc("ide_extension_language_server_version") }}'
+        description: '{{ doc("language_server_version") }}'
 
   - name: fct_behavior_structured_event_code_suggestions_context
     description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
@@ -159,17 +159,17 @@ models:
       - name: api_status_code
         description: '{{ doc("code_suggestions_api_status_code") }}'
       - name: extension_name
-        description: '{{ doc("ide_extension_name") }}'
+        description: '{{ doc("extension_name") }}'
       - name: extension_version
-        description: '{{ doc("ide_extension_version") }}'
+        description: '{{ doc("extension_version") }}'
       - name: ide_name
-        description: '{{ doc("ide_extension_ide_name") }}'
+        description: '{{ doc("ide_name") }}'
       - name: ide_vendor
-        description: '{{ doc("ide_extension_ide_vendor") }}'
+        description: '{{ doc("ide_vendor") }}'
       - name: ide_version
-        description: '{{ doc("ide_extension_ide_version") }}'
+        description: '{{ doc("ide_version") }}'
       - name: language_server_version
-        description: '{{ doc("ide_extension_language_server_version") }}'
+        description: '{{ doc("language_server_version") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
       - name: code_suggestions_context
