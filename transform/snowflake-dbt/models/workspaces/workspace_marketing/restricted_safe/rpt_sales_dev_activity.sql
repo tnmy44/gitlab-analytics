@@ -440,7 +440,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@dmicovic",
     created_date="2023-09-06",
-    updated_date="2024-03-28",
+    updated_date="2024-03-29",
   ) }}
