@@ -1402,16 +1402,6 @@ LEFT JOIN cw_base
             THEN 1
           ELSE 0
       END                                                                                                               AS is_eligible_age_analysis_combined,
-      CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_combined,
        -- ARR created (pipeline generated)
       CASE
           WHEN is_net_arr_pipeline_created_combined = TRUE
