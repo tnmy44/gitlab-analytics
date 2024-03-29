@@ -82,6 +82,11 @@ WITH structured_events AS (
     WHERE metric IS NOT NULL
     --- filter out any namespaces that are internal and include any data from any records with no namespace
       AND (namespace_is_internal = FALSE OR ultimate_parent_namespace_id IS NULL)
+    {% if is_incremental() %}
+    
+      AND page_view.behavior_at >= (SELECT MAX(reporting_month) FROM {{this}})
+    
+    {% endif %}
   {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
