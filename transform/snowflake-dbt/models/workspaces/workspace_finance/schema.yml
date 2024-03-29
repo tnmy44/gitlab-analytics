@@ -1224,5 +1224,4 @@ models:
 
   - name: wk_rpt_booking_billing_collections_monthly
     description: View of monthly booking, billing and collection aggregated amounts and percentage
-
     
