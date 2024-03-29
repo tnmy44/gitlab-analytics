@@ -1063,7 +1063,7 @@ models:
         tests:
           - unique:
               config:
-                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())""
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
           - not_null
       - name: dim_user_id
       - name: dim_project_id
