@@ -70,7 +70,6 @@ WITH prep_project AS (
       project_description, 
       project_import_source,
       project_issues_template,
-      project_build_coverage_regex,
       project_name,
       project_path,
       project_import_url,
@@ -85,7 +84,7 @@ WITH prep_project AS (
 {{ dbt_audit(
     cte_ref="prep_project",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@utkarsh060",
     created_date="2021-05-19",
-    updated_date="2021-05-19"
+    updated_date="2024-03-19"
 ) }}
