@@ -10,7 +10,7 @@ WITH increase_cba AS
 SELECT
 DATE(DATE_TRUNC('month', wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_date)) AS cba_increase_date,
 SUM(wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_amount)                     AS increase
-FROM {{ ref('wk_finance_fct_credit_balance_adjustment') }}
+FROM prod.restricted_safe_workspace_finance.wk_finance_fct_credit_balance_adjustment
 WHERE wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_type = 'Increase'
 AND wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_status = 'Processed'
 GROUP BY cba_increase_date
@@ -25,7 +25,7 @@ decrease_cba AS
 SELECT
 DATE(DATE_TRUNC('month', wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_date)) AS cba_decrease_date,
 SUM(wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_amount)                     AS decrease
-FROM {{ ref('wk_finance_fct_credit_balance_adjustment') }}
+FROM prod.restricted_safe_workspace_finance.wk_finance_fct_credit_balance_adjustment
 WHERE wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_type = 'Decrease'
 AND wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_status = 'Processed'
 GROUP BY cba_decrease_date
