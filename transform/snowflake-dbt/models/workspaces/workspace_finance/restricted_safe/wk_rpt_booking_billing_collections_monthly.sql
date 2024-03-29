@@ -3,15 +3,11 @@
    tags=["mnpi"]
 ) }}
 
-
 WITH booking_billing AS
-
 
 (
 
-
 /* adding booking and billing aggregated amounts per month */
-
 
 SELECT
 wk_mart_booking_billing_ar_monthly.opportunity_invoice_payment_year_month,
@@ -23,18 +19,13 @@ ROUND((wk_mart_booking_billing_ar_monthly.booking_amount - wk_mart_booking_billi
 FROM {{ ref('wk_mart_booking_billing_ar_monthly') }}
 ORDER BY wk_mart_booking_billing_ar_monthly.opportunity_invoice_payment_year_month
 
-
 ),
-
 
 collections AS
 
-
 (
 
-
 /* adding payments collected for given invoice month */
-
 
 SELECT
 wk_mart_collections_monthly.billed_month,
@@ -43,18 +34,13 @@ FROM {{ ref('wk_mart_collections_monthly') }}
 GROUP BY wk_mart_collections_monthly.billed_month
 ORDER BY wk_mart_collections_monthly.billed_month
 
-
 ),
-
 
 final AS
 
-
 (
 
-
 /* adding booking, billing and AR data by month */
-
 
 SELECT
 booking_billing.opportunity_invoice_payment_year_month,
@@ -69,9 +55,7 @@ ROUND((100 - percentage_collected_in_period),2)                                 
 FROM booking_billing
 LEFT JOIN collections ON collections.billed_month = booking_billing.opportunity_invoice_payment_year_month
 
-
 )
-
 
 {{ dbt_audit(
 cte_ref="final",
