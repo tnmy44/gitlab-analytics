@@ -1398,20 +1398,10 @@ LEFT JOIN cw_base
           AND is_renewal = 0
           AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          AND sfdc_opportunity.is_web_portal_purchase = 0
+          AND sfdc_opportunity_live.is_web_portal_purchase = 0
             THEN 1
           ELSE 0
       END                                                                                                               AS is_eligible_age_analysis_combined,
-      CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_combined,
        -- ARR created (pipeline generated)
       CASE
           WHEN is_net_arr_pipeline_created_combined = TRUE
@@ -1496,12 +1486,7 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_closed = 1
             THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_in_snapshot_quarter,
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) AS cycle_time_in_days_in_snapshot_quarter, -- ensure only closed opps are used in the calculation
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
           AND (
