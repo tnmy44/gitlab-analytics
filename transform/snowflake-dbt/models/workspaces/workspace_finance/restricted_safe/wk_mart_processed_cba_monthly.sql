@@ -1,3 +1,8 @@
+{{ config(
+    materialized="table",
+    tags=["mnpi"]
+) }}
+
 WITH increase_cba AS
 
 (
