@@ -264,5 +264,5 @@ clicks AS (
     created_by="@mdrussell",
     updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2024-03-25"
+    updated_date="2024-03-29"
 ) }}
