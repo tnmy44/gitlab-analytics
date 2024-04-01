@@ -250,7 +250,7 @@ With dim_subscription_source AS (
     FROM subscription_charges 
     LEFT JOIN PROD.COMMON.DIM_DATE  
      ON subscription_charges.ATR_term_end_date = dim_date.date_day 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18
 )
 
 {{ dbt_audit(
