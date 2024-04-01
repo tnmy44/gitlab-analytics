@@ -2555,7 +2555,7 @@ models:
       - name: acquisition_program_id
         description:
       - name: gitlabdotcom_user_id
-        description:
+        description: The unique User ID for GitLab Users
       - name: dim_crm_account_id
         description: The Unique account ID from Salesforce
       - name: demandbase_sid
