@@ -359,8 +359,8 @@ SELECT
       UPPER(user_role_name)         AS user_role_name,
       UPPER(user_role_level_1)      AS user_role_level_1,
       UPPER(user_role_level_2)      AS user_role_level_2,
-      MIN(UPPER(user_role_level_3)) AS user_role_level_3,
-      MIN(UPPER(user_role_level_4)) AS user_role_level_4,
+      MIN(UPPER(user_role_level_3)) AS user_role_level_3, -- workaround linked to https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/5181
+      MIN(UPPER(user_role_level_4)) AS user_role_level_4, -- hopefully the MIN function can be removed before merging to production.
       MIN(UPPER(user_role_level_5)) AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
