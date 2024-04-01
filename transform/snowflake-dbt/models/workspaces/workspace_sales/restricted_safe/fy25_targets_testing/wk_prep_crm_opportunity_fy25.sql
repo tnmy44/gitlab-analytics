@@ -1005,23 +1005,22 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
-        WHEN fpa_master_bookings_flag
+        WHEN COALESCE(fpa_master_bookings_flag, is_booked_net_arr) -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
           THEN net_arr
         ELSE 0
       END                                                 AS booked_net_arr,
+
+      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.is_deleted = 0
-          AND (
-               sfdc_opportunity_stage.is_won = 1
+        WHEN sfdc_opportunity.is_jihu_account = 0 
+          AND (sfdc_opportunity_stage.is_won = 1
                 OR (
                     is_renewal = 1
                      AND is_lost = 1)
                    )
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
           ELSE 0
-      END                                                           AS is_booked_net_arr,
+      END                                                           AS is_booked_net_arr, 
       CASE
         WHEN sfdc_opportunity.deal_path = 'Partner'
           THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, sfdc_opportunity.partner_account_partner_track, sfdc_opportunity.fulfillment_partner_partner_track,'Open'),'select','Select')
@@ -1461,7 +1460,7 @@ LEFT JOIN cw_base
 
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND fpa_master_bookings_flag
+          AND COALESCE(fpa_master_bookings_flag, is_booked_net_arr) -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
             THEN net_arr
         ELSE 0
       END                                                         AS booked_net_arr_in_snapshot_quarter,
