@@ -39,7 +39,7 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Provision users in Snowflake options")
     parser.add_argument(
         "-ua",
-        "--usernames-to-add",
+        "--users-to-add",
         nargs="+",
         type=str,
         default=get_users_added(),
@@ -47,7 +47,7 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "-ur",
-        "--usernames-to-remove",
+        "--users-to-remove",
         nargs="+",
         type=str,
         default=get_users_removed(),

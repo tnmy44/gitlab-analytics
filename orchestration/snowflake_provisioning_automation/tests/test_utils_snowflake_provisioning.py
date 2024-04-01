@@ -7,7 +7,8 @@ from unittest.mock import patch
 from utils_snowflake_provisioning import (
     YAML_PATH,
     get_user_changes,
-    get_snowflake_username,
+    get_snowflake_usernames,
+    get_emails,
 )
 
 
@@ -29,45 +30,50 @@ def test_get_user_changes(mock_run_git_diff_command):
     removed_user = "removed_user"
     test_diff = f"+\n+--{added_user}\n---{removed_user}"
     mock_run_git_diff_command.return_value = test_diff
-    emails_added, usernames_added, emails_removed, usernames_removed = (
-        get_user_changes()
-    )
+    users_added, users_removed = get_user_changes()
 
-    assert emails_added[0] == f"{added_user}@gitlab.com"
-    assert usernames_added[0] == added_user
-    assert emails_removed[0] == f"{removed_user}@gitlab.com"
-    assert usernames_removed[0] == removed_user
+    assert users_added[0] == added_user
+    assert users_removed[0] == removed_user
 
 
-def test_get_snowflake_username():
+def test_get_snowflake_usernames():
     cleaned_username = "jdoe"
 
     # regular user
-    user = "jdoe"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    users = ["jdoe"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
 
     # external user
-    user = "jdoe-ext"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    users = ["jdoe-ext"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
 
-    # user with non \w char
-    user = "j-doe"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    # users with non \w char
+    users = ["j-doe"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
 
-    # user with non \w char, part 2
-    user = "j.doe"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    # users with non \w char, part 2
+    users = ["j.doe"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
 
-    # user with non \w char, part 2
-    user = "jdoe@gitlab.com"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    # users with non \w char, part 2
+    users = ["jdoe@gitlab.com"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
 
-    # user with non \w char, part 2
-    user = "j.doe-ext@gitlab.com"
-    username = get_snowflake_username(user)
-    assert username == cleaned_username
+    # users with non \w char, part 2
+    users = ["j.doe-ext@gitlab.com"]
+    usernames = get_snowflake_usernames(users)
+    assert usernames[0] == cleaned_username
+
+
+def test_get_emails():
+    """
+    From the user, i.e `jdoe-ext`, return the email
+    """
+    users = ["jdoe", "jdoe-ext", "jdoe@gitlab.com"]
+    emails = get_emails(users)
+    assert emails == ["jdoe@gitlab.com", "jdoe-ext@gitlab.com", "jdoe@gitlab.com"]

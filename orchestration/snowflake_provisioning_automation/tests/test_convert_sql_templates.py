@@ -29,7 +29,7 @@ def test_render_template_for_username():
     set username = (select upper('{username}'));
     DROP USER IF EXISTS identifier($username);
     """
-    rendered_template = render_template(template, username)
+    rendered_template = render_template(template, username, email=None)
     assert rendered_template == expected_rendered_template
 
 
@@ -43,7 +43,7 @@ def test_convert_to_sql_statements():
     template = Template(sql_str)
     username = "some_user1"
 
-    rendered_template = render_template(template, username)
+    rendered_template = render_template(template, username, email=None)
     sql_statements = convert_to_sql_statements(rendered_template)
 
     expected_sql_statement1 = f"""

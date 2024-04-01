@@ -13,6 +13,7 @@ rendering the script with the specified user,
 and running the sql script via sqlalchemy connection.
 """
 
+import sys
 import os
 import logging
 
@@ -81,7 +82,9 @@ def _provision(
     """
     for i in range(len(usernames)):
         logging.info(f"username: {usernames[i]}")
-        sql_statements = process_template(sql_template, usernames[i], emails[i] if emails else None)
+        sql_statements = process_template(
+            sql_template, usernames[i], emails[i] if emails else None
+        )
         connection.run_sql_statements(sql_statements)
 
 

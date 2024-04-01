@@ -41,7 +41,7 @@ def get_snowflake_usernames(users):
     """
     Return snowflake username, need to update the string by:
     - Remove '-ext'
-    - Remove non \w chars
+    - Remove non \\w chars
     """
     usernames = []
     for user in users:
@@ -54,6 +54,12 @@ def get_snowflake_usernames(users):
 
 
 def get_emails(users):
+    """
+    From the user, i.e `jdoe-ext`, return the email
+    """
+    # for safety, in case user had added domain name into user argument
+    users = [user.split("@")[0] for user in users]
+
     domain = "gitlab.com"
     emails = []
     for user in users:
