@@ -1,6 +1,6 @@
-{% docs rpt_delta_arr_parent_month_8th_calendar_day %}
+{% docs rpt_delta_arr_parent_month_5th_calendar_day %}
 
-This report provides the 8th calendar day snapshot for the mart_delta_arr_parent_month table. It uses the rpt_delta_arr_parent_month_8th_calendar_day to build the table.
+This report provides the 8th calendar day snapshot for the mart_delta_arr_parent_month table. It uses the rpt_delta_arr_parent_month_5th_calendar_day to build the table.
 
 Custom Business Logic:
 
@@ -10,9 +10,9 @@ Custom Business Logic:
 
 {% enddocs %}
 
-{% docs rpt_delta_arr_parent_product_month_8th_calendar_day %}
+{% docs rpt_delta_arr_parent_product_month_5th_calendar_day %}
 
-This report provides the 8th calendar day snapshot for the mart_delta_arr_parent_product_month table. It uses the rpt_delta_arr_parent_month_8th_calendar_day to build the table.
+This report provides the 8th calendar day snapshot for the mart_delta_arr_parent_product_month table. It uses the rpt_delta_arr_parent_month_5th_calendar_day to build the table.
 
 Custom Business Logic:
 
