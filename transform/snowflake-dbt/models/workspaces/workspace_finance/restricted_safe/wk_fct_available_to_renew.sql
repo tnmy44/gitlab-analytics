@@ -237,8 +237,8 @@ With dim_subscription_source AS (
       dim_billing_account_id,
       dim_charge_id,
       dim_product_detail_id,
-      term_start_date
-      term_end_date,
+      ATR_term_start_date,
+      ATR_term_end_date,
       dim_crm_user_id,
       user_name,
       crm_user_sales_segment,
