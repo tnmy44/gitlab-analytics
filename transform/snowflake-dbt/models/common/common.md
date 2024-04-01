@@ -1516,7 +1516,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - browser_language
 
 **Filters Applied to Model:**
-- Exclude staging events (`is_staging_event = FALSE`)
 - Include events where at least one of browser_name, browser_major_version, browser_minor_version, _OR_ browser_language is available (`browser_name IS NOT NULL OR browser_major_version IS NOT NULL OR browser_minor_version IS NOT NULL OR browser_language IS NOT NULL`)
 
 **Tips for use:**
@@ -1532,8 +1531,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
 
-**Filters Applied to Model:**
-- Exclude staging events (`is_staging_event = FALSE`)
 
 **Other Comments:**
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
@@ -1570,7 +1567,6 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - os_timezone
 
 **Filters Applied to Model:**
-- Exclude staging events (`is_staging_event = FALSE`)
 - Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
 
 **Tips for use:**
@@ -1588,7 +1584,6 @@ This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Filters Applied to Model:**
 - Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
-- Exclude staging events (`is_staging_event = FALSE`)
 
 {% enddocs %}
 

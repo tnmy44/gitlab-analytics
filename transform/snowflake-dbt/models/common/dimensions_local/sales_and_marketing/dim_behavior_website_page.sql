@@ -25,7 +25,6 @@
       MAX(behavior_at)                                                              AS max_event_timestamp
     FROM events
     WHERE event IN ('struct', 'page_view', 'unstruct')
-    AND is_staging_event = FALSE
     {% if is_incremental() %}
 
       AND behavior_at > (SELECT max(max_event_timestamp) FROM {{ this }})
@@ -259,7 +258,7 @@
 {{ dbt_audit(
     cte_ref="dim_with_sk",
     created_by="@chrissharp",
-    updated_by="@utkarsh060",
-    created_date="2022-07-22",
+    updated_by="@chrissharp",
+    created_date="2023-01-20",
     updated_date="2024-03-26"
 ) }}
