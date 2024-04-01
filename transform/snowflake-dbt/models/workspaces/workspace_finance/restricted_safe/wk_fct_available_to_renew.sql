@@ -223,6 +223,8 @@ With dim_subscription_source AS (
     LEFT JOIN PROD.COMMON.dim_crm_user dim_crm_user
       ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     WHERE fct_charge.dim_product_detail_id IS NOT NULL  
+    AND dim_crm_account.is_jihu_account != 'TRUE'
+    AND ARR != 0 AND is_included_in_arr_calc = 'TRUE'
 
     
 --Final ATR 
