@@ -93,7 +93,7 @@ WITH date_spine AS (
       IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, TRUE, FALSE)         AS is_first_day_of_last_month_of_fiscal_quarter,
       DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
       IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year,
-      DATEADD('day',4,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa,
+      DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa,
       DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings,
       COUNT(date_actual) OVER (PARTITION BY first_day_of_month)                               AS days_in_month_count,
       
