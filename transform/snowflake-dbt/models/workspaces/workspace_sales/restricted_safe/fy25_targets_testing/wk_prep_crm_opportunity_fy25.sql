@@ -1430,7 +1430,7 @@ LEFT JOIN cw_base
       -- This code calculates sales metrics for each snapshot quarter
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
-          AND is_net_arr_pipeline_created_combined = 1
+          AND is_net_arr_pipeline_created_combined = 1 -- use the flag that combines live and snapshot values instead of just snapshot 
             THEN net_arr
         ELSE 0
       END                                                         AS created_arr_in_snapshot_quarter,
