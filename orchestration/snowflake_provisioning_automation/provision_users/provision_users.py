@@ -25,6 +25,12 @@ from args_provision_users import parse_arguments
 from snowflake_connection import SnowflakeConnection
 from convert_sql_templates import get_template, process_template
 
+# needed to import shared utils module
+abs_path = os.path.dirname(os.path.realpath(__file__))
+parent_path = abs_path[: abs_path.find("/provision_users")]
+sys.path.insert(1, parent_path)
+from utils_snowflake_provisioning import get_snowflake_usernames, get_emails
+
 
 def configure_logging():
     """configure logger"""
@@ -37,8 +43,8 @@ def process_args() -> Tuple[list, list, bool, bool]:
     """returns command line args passed in by user"""
     args = parse_arguments()
     return (
-        args.usernames_to_remove,
-        args.usernames_to_add,
+        args.users_to_remove,
+        args.users_to_add,
         args.dev_db,
         args.test_run,
     )
@@ -62,7 +68,9 @@ def get_sysadmin_connection(is_test_run: bool):
     return _get_snowflake_connection(role, is_test_run)
 
 
-def _provision(connection: Engine, sql_template: Template, usernames: list):
+def _provision(
+    connection: Engine, sql_template: Template, usernames: list, emails: list = None
+):
     """
     All provision types (new users, new databases, deprovision users)
     run this base method.
@@ -71,18 +79,18 @@ def _provision(connection: Engine, sql_template: Template, usernames: list):
     for each passed in user.
     Each sql statement is then run in Snowflake.
     """
-    for username in usernames:
-        logging.info(f"username: {username}")
-        sql_statements = process_template(sql_template, username)
+    for i in range(len(usernames)):
+        logging.info(f"username: {usernames[i]}")
+        sql_statements = process_template(sql_template, usernames[i], emails[i] if emails else None)
         connection.run_sql_statements(sql_statements)
 
 
-def provision_users(connection: Engine, usernames: list):
+def provision_users(connection: Engine, usernames: list, emails: list):
     """provision user in Snowflake"""
     template_filename = "provision_user.sql"
     sql_template = get_template(template_filename)
     logging.info("#### Provisioning users ####")
-    _provision(connection, sql_template, usernames)
+    _provision(connection, sql_template, usernames, emails)
 
 
 def provision_databases(connection: Engine, usernames: list):
@@ -108,7 +116,9 @@ def provision_all():
         - provision databases
         - deprovision users
     """
-    usernames_to_remove, usernames_to_add, is_dev_db, is_test_run = process_args()
+    usernames_to_remove, users_to_add, is_dev_db, is_test_run = process_args()
+    emails_to_add = get_emails(users_to_add)
+    usernames_to_add = get_snowflake_usernames(users_to_add)
 
     logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
     time.sleep(5)  # give user a chance to abort
@@ -118,7 +128,7 @@ def provision_all():
     securityadmin_connection = get_securityadmin_connection(is_test_run)
     sysadmin_connection = get_sysadmin_connection(is_test_run)
 
-    provision_users(securityadmin_connection, usernames_to_add)
+    provision_users(securityadmin_connection, usernames_to_add, emails_to_add)
     if is_dev_db:
         provision_databases(sysadmin_connection, usernames_to_add)
     deprovision_users(securityadmin_connection, usernames_to_remove)

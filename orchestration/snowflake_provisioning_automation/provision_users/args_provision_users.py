@@ -15,12 +15,12 @@ from utils_snowflake_provisioning import (
 )
 
 
-def get_usernames_added() -> list:
+def get_users_added() -> list:
     """returns the usernames ADDED to the snowflake_users.yml file"""
     return get_user_changes()[0]
 
 
-def get_usernames_removed() -> list:
+def get_users_removed() -> list:
     """returns the usernames REMOVED from the snowflake_users.yml file"""
     return get_user_changes()[1]
 
@@ -42,7 +42,7 @@ def parse_arguments() -> argparse.Namespace:
         "--usernames-to-add",
         nargs="+",
         type=str,
-        default=get_usernames_added(),
+        default=get_users_added(),
         help="usernames to ADD to the roles.yml file",
     )
     parser.add_argument(
@@ -50,7 +50,7 @@ def parse_arguments() -> argparse.Namespace:
         "--usernames-to-remove",
         nargs="+",
         type=str,
-        default=get_usernames_removed(),
+        default=get_users_removed(),
         help="usernames to REMOVE from the roles.yml file",
     )
     # by default, only print snowflake queries, don't run in Snowflake
