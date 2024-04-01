@@ -9,6 +9,7 @@ sys.path.insert(1, parent_path)
 
 import os
 import subprocess
+import re
 from typing import Tuple, List
 
 
@@ -36,32 +37,63 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
     return diff_output
 
 
-def get_username_changes() -> Tuple[List[str], List[str]]:
+def get_snowflake_username(user):
+    """
+    Remove '-ext'
+    Remove non \w chars
+    """
+    user = user.replace("-ext", "")
+    user = user.split("@")[0]
+    # Replace all non-word characters with blanks
+    user = re.sub(r"\W+", "", user)
+    return user
+
+
+def get_email(user):
+    domain = "gitlab.com"
+    return f"{user}@{domain}"
+
+
+def get_user_changes() -> Tuple[List[str], List[str]]:
     """
     Based on git diff to the `snowflake_users.yml` file,
     returns user additions and removals
+
+    It's important to define user/email/username:
+        - user: This is the email address, but without the @domain.com.
+        Inputted in snowflake_users.yml.
+
+        - email: This is the email address
+
+        - username: This is the same as `user`, but removes any non
+        '\w' chars
     """
     # Get the directory of the Python script
-    usernames_file_name = "snowflake_users.yml"
-    usernames_file_path = os.path.join(YAML_PATH, usernames_file_name)
+    users_file_name = "snowflake_users.yml"
+    users_file_path = os.path.join(YAML_PATH, users_file_name)
 
     # Run the Git diff command
     base_branch = "master"
-    output = run_git_diff_command(usernames_file_path, base_branch)
+    output = run_git_diff_command(users_file_path, base_branch)
+
+    emails_added = []
+    emails_removed = []
 
     usernames_added = []
     usernames_removed = []
 
     for change in output.split("\n"):
         try:
-            username = change[3:]
+            user = change[3:]
         except IndexError:
             continue
 
-        # check that username isn't a blank line
-        if change.startswith("+") and username:
-            usernames_added.append(username)
-        elif change.startswith("-") and username:
-            usernames_removed.append(username)
+        # check that user isn't a blank line
+        if change.startswith("+") and user:
+            emails_added.append(get_email(user))
+            usernames_added.append(get_snowflake_username(user))
+        elif change.startswith("-") and user:
+            emails_removed.append(get_email(user))
+            usernames_removed.append(get_snowflake_username(user))
 
-    return usernames_added, usernames_removed
+    return emails_added, usernames_added, emails_removed, usernames_removed
