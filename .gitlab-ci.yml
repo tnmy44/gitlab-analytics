@@ -5,20 +5,17 @@
 variables:
   PYTHONPATH: "$CI_PROJECT_DIR/orchestration/:$CI_PROJECT_DIR/extract/:$CI_PROJECT_DIR/extract/shared_modules/:$PYTHONPATH"
   BRANCH_NAME: "$CI_COMMIT_REF_NAME"
-  DATA_PIPELINE_NAME: 'Pipeline for branch: $CI_COMMIT_BRANCH'
 
 # ======
 # Workflows
 # ======
+# Rules explaination: https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
 
 workflow:
-  name: '$DATA_PIPELINE_NAME'
   rules:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      variables:
-        DATA_PIPELINE_NAME: 'MR pipeline: $CI_MERGE_REQUEST_IID-$CI_COMMIT_MESSAGE'
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
