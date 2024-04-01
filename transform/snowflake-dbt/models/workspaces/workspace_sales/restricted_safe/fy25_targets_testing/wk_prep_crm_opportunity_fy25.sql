@@ -1005,13 +1005,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
-        WHEN (
-                sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                      AND is_lost = 1
-                   )
-             )
+        WHEN fpa_master_bookings_flag
           THEN net_arr
         ELSE 0
       END                                                 AS booked_net_arr,
@@ -1437,7 +1431,7 @@ LEFT JOIN cw_base
       -- This code calculates sales metrics for each snapshot quarter
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
-          AND is_net_arr_pipeline_created = 1
+          AND is_net_arr_pipeline_created_combined = 1
             THEN net_arr
         ELSE 0
       END                                                         AS created_arr_in_snapshot_quarter,
@@ -1467,14 +1461,8 @@ LEFT JOIN cw_base
 
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND (
-                sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                      AND is_lost = 1
-                   )
-             )
-          THEN net_arr
+          AND fpa_master_bookings_flag
+            THEN net_arr
         ELSE 0
       END                                                         AS booked_net_arr_in_snapshot_quarter,
       CASE
