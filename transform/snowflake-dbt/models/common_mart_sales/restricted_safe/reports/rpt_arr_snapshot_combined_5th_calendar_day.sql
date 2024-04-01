@@ -167,7 +167,7 @@
     WHERE arr_month <= '2021-06-01'
 
 ), snapshot_dates AS (
-    --Use the 8th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
+    --Use the 5th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
     SELECT DISTINCT
       first_day_of_month,
       snapshot_date_fpa

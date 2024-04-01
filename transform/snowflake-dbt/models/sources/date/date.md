@@ -169,7 +169,7 @@ Flag indicating date that is the first day of last month of fiscal year. E.g TRU
 {% enddocs %}
 
 {% docs date_snapshot_date_fpa %}
-8th calendar day of a month used for FP&A snapshots 
+5th calendar day of a month used for FP&A snapshots
 {% enddocs %}
 
 {% docs date_snapshot_date_billings %}
