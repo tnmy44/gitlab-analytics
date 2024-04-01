@@ -318,7 +318,7 @@ WITH map_merged_crm_account AS (
                       '-',
                       sfdc_account.snapshot_fiscal_year
                       )
-        WHEN sfdc_account.snapshot_fiscal_year > 2024
+        WHEN sfdc_account.snapshot_fiscal_year >= 2025
           THEN CONCAT(
                       UPPER(account_owner_role),
                       '-',
