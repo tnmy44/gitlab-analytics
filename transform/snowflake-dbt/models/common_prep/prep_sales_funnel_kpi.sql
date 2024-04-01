@@ -11,6 +11,22 @@ WITH prep_sales_funnel_target AS (
 
     SELECT 'Trials' AS kpi_name -- this is the one kpi_name not contained within the targets sheet so we manually include it here.
 
+    UNION -- the rest will be removed once partner targets have been integrated into the sales targets lineage
+
+    SELECT 'Partner Focus Net ARR Company'
+
+    UNION
+
+    SELECT 'Partner Target Net ARR Company'
+    
+    UNION
+    
+    SELECT 'Partner Target Net ARR'
+
+    UNION
+    
+    SELECT 'Partner Focus Net ARR'
+
 ), unioned AS (
 
     SELECT kpi_name
