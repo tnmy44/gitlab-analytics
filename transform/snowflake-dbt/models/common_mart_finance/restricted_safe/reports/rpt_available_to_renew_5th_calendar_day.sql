@@ -1,5 +1,5 @@
 WITH snapshot_dates AS (
-    --Use the 8th calendar day to snapshot ATR
+    --Use the 5th calendar day to snapshot ATR
     SELECT DISTINCT
       first_day_of_month,
       snapshot_date_fpa
