@@ -9,7 +9,7 @@ There are two main dimensions that the end_user needs to think about:
 For both of these dimensions, there are default options, and custom options.
 
 For users, the default option is based on any changes
-to `permissions/snowflake/snowflake_usernames.yml`.
+to `permissions/snowflake/snowflake_users.yml`.
 For custom options, the end_user can pass in a custom list of users.
 
 For user values (databases, roles, users)

@@ -7,12 +7,12 @@ from utils_update_roles import get_username_changes
 
 
 def get_usernames_added() -> list:
-    """returns the usernames ADDED to the snowflake_usernames.yml file"""
+    """returns the usernames ADDED to the snowflake_users.yml file"""
     return get_username_changes()[0]
 
 
 def get_usernames_removed() -> list:
-    """returns the usernames REMOVED from the snowflake_usernames.yml file"""
+    """returns the usernames REMOVED from the snowflake_users.yml file"""
     return get_username_changes()[1]
 
 

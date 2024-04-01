@@ -38,11 +38,11 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
 
 def get_username_changes() -> Tuple[List[str], List[str]]:
     """
-    Based on git diff to the `snowflake_usernames.yml` file,
+    Based on git diff to the `snowflake_users.yml` file,
     returns user additions and removals
     """
     # Get the directory of the Python script
-    usernames_file_name = "snowflake_usernames.yml"
+    usernames_file_name = "snowflake_users.yml"
     usernames_file_path = os.path.join(YAML_PATH, usernames_file_name)
 
     # Run the Git diff command
