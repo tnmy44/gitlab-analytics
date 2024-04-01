@@ -329,5 +329,10 @@
 
 )
 
-SELECT *
-FROM final_opportunities
+{{ dbt_audit(
+    cte_ref="final_opportunities",
+    created_by="@mcooperDD",
+    updated_by="@chrissharp",
+    created_date="2020-11-30",
+    updated_date="2024-04-01"
+) }}
