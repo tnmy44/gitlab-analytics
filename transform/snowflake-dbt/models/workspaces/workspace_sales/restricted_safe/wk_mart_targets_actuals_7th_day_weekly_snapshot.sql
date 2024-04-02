@@ -19,6 +19,20 @@ dim_crm_user_hierarchy AS (
 
 ),
 
+sales_qualified_source AS (
+
+  SELECT *
+  FROM {{ ref('dim_sales_qualified_source') }}
+
+),
+
+order_type AS (
+
+  SELECT *
+  FROM {{ ref('dim_order_type') }}
+
+),
+
 final AS (
 
   SELECT 
@@ -96,12 +110,20 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_2,
     dim_crm_user_hierarchy.crm_user_role_level_3,
     dim_crm_user_hierarchy.crm_user_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5
+    dim_crm_user_hierarchy.crm_user_role_level_5,
+    sales_qualified_source.sales_qualified_source_name,
+    sales_qualified_source.sales_qualified_source_grouped,
+    order_type.order_type_name,
+    order_type.order_type_grouped
   FROM targets_actuals
   LEFT JOIN dim_date 
     ON targets_actuals.date_actual = dim_date.date_actual
   LEFT JOIN dim_crm_user_hierarchy
     ON targets_actuals.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk 
+  LEFT JOIN sales_qualified_source
+    ON targets_actuals.dim_sales_qualified_source_id = sales_qualified_source.dim_sales_qualified_source_id 
+  LEFT JOIN order_type
+    ON targets_actuals.dim_order_type_id = order_type.dim_order_type_id 
 
 
 )
