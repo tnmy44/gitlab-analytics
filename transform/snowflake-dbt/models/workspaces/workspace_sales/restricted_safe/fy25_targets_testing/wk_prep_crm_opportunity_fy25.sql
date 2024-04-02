@@ -1473,7 +1473,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                         AS booked_net_arr_in_snapshot_quarter,
       CASE
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = created_fiscal_quarter_date
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
           AND is_net_arr_pipeline_created_combined = 1 
             THEN calculated_deal_count 
         ELSE 0
