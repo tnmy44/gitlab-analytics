@@ -19,16 +19,7 @@
     ('fct_ping_instance_metric', 'fct_ping_instance_metric')
 ]) }},
 
-clicks AS (
-  SELECT
-    behavior_structured_event_pk,
-    behavior_at,
-    contexts
-  FROM {{ ref('fct_behavior_structured_event') }}
-  WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
-    AND has_code_suggestions_context = TRUE
-
-), code_suggestion_context AS (
+code_suggestion_context AS (
 
   SELECT
     fct_behavior_structured_event.behavior_structured_event_pk,
@@ -46,7 +37,8 @@ clicks AS (
     fct_behavior_structured_event.host_name,
     fct_behavior_structured_event.is_streaming
   FROM fct_behavior_structured_event
-  WHERE has_code_suggestions_context = TRUE
+  WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
+    AND has_code_suggestions_context = TRUE
     {% if is_incremental() %}
     
         AND fct_behavior_structured_event.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
