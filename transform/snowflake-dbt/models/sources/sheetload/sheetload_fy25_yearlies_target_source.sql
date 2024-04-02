@@ -11,9 +11,9 @@ WITH source AS (
       yearly_description::VARCHAR              AS yearly_description,
       is_mnpi::VARCHAR                         AS is_mnpi,
       FY25_Q4::FLOAT                           AS FY25_Q4,
-      FY25_Q3::VARCHAR                         AS FY25_Q3,
+      FY25_Q3::FLOAT                           AS FY25_Q3,
       FY25_Q2::FLOAT                           AS FY25_Q2,
-      FY25_Q1::VARCHAR                         AS FY25_Q1
+      FY25_Q1::FLOAT                           AS FY25_Q1
     FROM source
 
 )
