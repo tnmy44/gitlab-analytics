@@ -1514,7 +1514,6 @@ LEFT JOIN cw_base
       CASE 
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
           AND is_eligible_open_pipeline_combined = 1
-          AND is_stage_1_plus = 1
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_1plus_deal_count_in_snapshot_quarter,
