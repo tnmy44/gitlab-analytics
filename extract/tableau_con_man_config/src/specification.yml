@@ -8331,12 +8331,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: pnewport
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: ppalanikumar
     user_name_domain: gitlab.com
     site_role: Viewer
