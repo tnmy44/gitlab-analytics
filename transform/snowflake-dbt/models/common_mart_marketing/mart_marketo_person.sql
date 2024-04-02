@@ -26,7 +26,6 @@
         prep_marketo_person.initial_start_date,
         prep_marketo_person.customer_health_score_date,
         prep_marketo_person.double_opt_in_date,
-        prep_marketo_person.path_factory_engagement_time,
 
     -- person information
         prep_marketo_person.title,
@@ -55,7 +54,6 @@
         prep_marketo_person.marketo_relative_urgency,
         prep_marketo_person.marketo_lead_source,
         prep_marketo_person.marketo_lead_status,
-        prep_marketo_person.marketo_sales_insight,
         prep_marketo_person.marketo_newsletter_segment,
         prep_marketo_person.email_suspended_cause,
         prep_marketo_person.products_purchased,
@@ -100,9 +98,6 @@
     -- additive fields
         prep_marketo_person.marketo_relative_person_score,
         prep_marketo_person.marketo_demographic_score,
-        prep_marketo_person.path_factory_engagement_score,
-        prep_marketo_person.path_factory_assets_viewed_count,
-        prep_marketo_person.path_factory_content_count,
         prep_marketo_person.marketo_behavior_score,
         prep_marketo_person.license_user_count,
         prep_marketo_person.marketo_health_score,

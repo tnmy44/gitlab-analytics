@@ -32,8 +32,6 @@ WITH final AS (
         mkto_acquisition_date AS marketo_acquisition_date,
         behavior_score AS marketo_behavior_score,
         opt_in_date AS marketo_opt_in_date,
-        mkto_si_sales_insight_c AS marketo_sales_insight,
-        demandbase_sid_c AS demandbase_sid,
         active_user_c AS is_active_user,
         created_date_time_c AS marketo_created_date_time,
         newsletter_segment_c_lead AS marketo_newsletter_segment,

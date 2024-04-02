@@ -812,8 +812,6 @@ models:
           description: The Date that the Marketo person record had their customer health score applied.
         - name: double_opt_in_date
           description: The Date that the Marketo person record double-opted in to communication.
-        - name: path_factory_engagement_time
-          description: The length of time the person record engaged with Pathfactory content.
         - name: title
           description: The Marketo person's title.
         - name: country
@@ -929,7 +927,7 @@ models:
         - name: is_marketing_comm_opt_out
           description: Boolean Flag - Whether or not the person is opted out from marketing communications.
         - name: is_using_ce
-          description: Boolean Flag - Whether or not the person is using CE
+          description: Boolean Flag - Whether or not the person is using CE.
         - name: is_do_not_contact
           description: Boolean Flag - Whether or not the person should not be contacted.
         - name: is_invalid_email
@@ -942,12 +940,6 @@ models:
           description: The Marketo person's relative person score.
         - name: marketo_demographic_score
           description: The Marketo person's demographic score.
-        - name: path_factory_engagement_score
-          description: The Marketo person's Pathfactory engagement score.
-        - name: path_factory_assets_viewed_count
-          description: The Marketo person's Pathfactory count of viewed assets.
-        - name: path_factory_content_count
-          description: The Marketo person's Pathfactory content count.
         - name: marketo_behavior_score
           description: The Marketo person's Behavior score.
         - name: license_user_count
