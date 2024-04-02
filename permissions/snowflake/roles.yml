@@ -6037,6 +6037,8 @@ roles:
     - rrendon:
         member_of:
             - analyst_engineering
+            - aws_billing
+            - elasticsearch_billing
         warehouses:
             - dev_xs
         privileges:
