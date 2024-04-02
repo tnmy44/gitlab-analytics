@@ -954,7 +954,6 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
-      
       CASE
         WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
