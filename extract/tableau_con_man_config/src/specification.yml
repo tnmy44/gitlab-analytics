@@ -5733,14 +5733,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: jokal
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - Finance All Access
-      - General All Access
-      - General SAFE Access
   - user_name: jonglee
     user_name_domain: gitlab.com
     site_role: Creator
@@ -8333,12 +8325,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: pnewport
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: ppalanikumar
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -8887,12 +8873,6 @@ users:
     groups:
       - General All Access
   - user_name: sabrams
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: sabreu
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
