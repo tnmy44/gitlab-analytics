@@ -582,7 +582,7 @@ LEFT JOIN cw_base
         END
         ) AS is_net_arr_pipeline_created,
       CASE
-        WHEN sfdc_opportunity.close_date < CURRENT_DATE()
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND sfdc_opportunity.is_closed = 'TRUE'
          AND sfdc_opportunity_live.is_edu_oss = 0
          AND sfdc_opportunity_live.is_jihu_account = 0
@@ -630,7 +630,7 @@ LEFT JOIN cw_base
           ELSE 0
       END                                                           AS is_eligible_asp_analysis,
       CASE
-        WHEN sfdc_opportunity.close_date < CURRENT_DATE()
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND sfdc_opportunity.is_closed = 'TRUE'
          AND sfdc_opportunity_live.is_edu_oss = 0
          AND sfdc_opportunity_live.is_jihu_account = 0
@@ -639,6 +639,7 @@ LEFT JOIN cw_base
          AND sfdc_opportunity_live.deal_path_name != 'Web Direct'
          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
+         AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
