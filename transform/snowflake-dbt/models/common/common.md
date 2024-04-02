@@ -1608,7 +1608,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 {% docs fct_behavior_unstructured_event %}
 
-**Description:** Fact table containing quantitative data for Snowplow unstructured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
+**Description:** Fact table containing quantitative data for both staging and non-staging snowplow unstructured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
 
 **Data Grain:** fct_behavior_unstructured_sk (generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all))
 - event_id
@@ -1616,7 +1616,6 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 **Filters Applied to Model:**
 - Include unstructured events (`event = 'unstruct'`) 
-- Exclude staging events (`is_staging_event = FALSE`)
 
 **Business Logic in this Model:**
 - A selection of key value pairs from Snowplow-authored events are parsed out into their own columns:
@@ -1684,7 +1683,7 @@ This model only includes structured events implemented for experiments. Experime
 
 {% docs fct_behavior_structured_event_without_assignment %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events **excluding assignment events**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1693,7 +1692,6 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 **Filters Applied to Model:**
 
 - This model excludes assignment events (`event_action = 'assignment'`)
-- This model excludes staging events (`is_staging_event = FALSE`)
 
 **Tips for use:**
 
@@ -1707,7 +1705,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 {% docs fct_behavior_structured_event_without_assignment_190 %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events **excluding assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1717,7 +1715,6 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - This model only includes structured events for the last 190 days
 - This model excludes assignment events (`event_action = 'assignment'`)
-- `Inherited` - Excludes staging events
 
 **Tips for use:**
 
@@ -1731,7 +1728,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 {% docs fct_behavior_structured_event_without_assignment_400 %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events **excluding assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1741,7 +1738,6 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - This model only includes structured events for the last 400 days
 - This model excludes assignment events (`event_action = 'assignment'`)
-- `Inherited` - Excludes staging events
 
 **Tips for use:**
 
@@ -1755,7 +1751,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 {% docs fct_behavior_structured_event_redis_hll_counters %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events related to redis hll metrics.
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events related to redis hll metrics.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1764,7 +1760,6 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 **Filters Applied to Model:**
 
 - This model only includes structured events implemented for redis hll metrics.
-- This model excludes staging events (`is_staging_event = FALSE`)
 - Redis hll metric events are defined as any event that includes certain event actions (`event_action IN ('g_analytics_valuestream', 'action_active_users_project_repo' 'push_package', 'ci_templates_unique', 'p_terraform_state_api_unique_users', 'i_search_paid')`)
 
 **Tips for use:**

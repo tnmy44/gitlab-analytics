@@ -10,17 +10,18 @@ WITH clicks AS (
   SELECT
     behavior_structured_event_pk,
     behavior_at,
+    is_staging_event,
     contexts
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
     AND has_ide_extension_version_context = TRUE
-    AND is_staging_event = FALSE
 ),
 
 flattened AS (
   SELECT
     clicks.behavior_structured_event_pk,
     clicks.behavior_at,
+    clicks.is_staging_event,
     flat_contexts.value                                             AS ide_extension_version_context,
     flat_contexts.value['data']['extension_name']::VARCHAR          AS extension_name,
     flat_contexts.value['data']['extension_version']::VARCHAR       AS extension_version,
@@ -43,5 +44,5 @@ flattened AS (
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2023-09-19",
-    updated_date="2024-03-21"
+    updated_date="2024-04-02"
 ) }}

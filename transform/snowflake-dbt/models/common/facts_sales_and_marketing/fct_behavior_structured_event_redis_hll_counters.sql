@@ -37,6 +37,7 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
+      fct_behavior_structured_event.is_staging_event,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       fct_behavior_structured_event.gsc_google_analytics_client_id,
@@ -50,8 +51,7 @@
     FROM fct_behavior_structured_event
     INNER JOIN dim_behavior_event
       ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
-    WHERE fct_behavior_structured_event.is_staging_event = FALSE
-      AND dim_behavior_event.event_action IN (
+    WHERE dim_behavior_event.event_action IN (
     'g_analytics_valuestream',
     'action_active_users_project_repo',
     'push_package',
@@ -74,5 +74,5 @@
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-03-22"
+    updated_date="2024-04-02"
 ) }}

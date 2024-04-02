@@ -35,7 +35,6 @@
     INNER JOIN dim_behavior_event
       ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
     WHERE dim_behavior_event.event_action != 'assignment'
-      AND fct_behavior_structured_event.is_staging_event = FALSE
 
     {% if is_incremental() %}
 

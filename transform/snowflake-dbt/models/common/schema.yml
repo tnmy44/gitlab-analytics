@@ -6873,6 +6873,8 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
 
   - name: fct_behavior_unstructured_event
     description: '{{ doc("fct_behavior_unstructured_event") }}'
@@ -6908,6 +6910,8 @@ models:
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
       - name: link_click_element_id

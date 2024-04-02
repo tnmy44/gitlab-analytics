@@ -10,16 +10,17 @@ WITH clicks AS (
   SELECT
     behavior_structured_event_pk,
     behavior_at,
+    is_staging_event,
     contexts
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2022-11-01' -- no events added to SP context before Nov 2022
-  AND is_staging_event = FALSE
 ),
 
 flattened AS (
   SELECT
     clicks.behavior_structured_event_pk,
     clicks.behavior_at,
+    clicks.is_staging_event,
     flat_contexts.value['data']['event_name']::VARCHAR AS redis_event_name,
     flat_contexts.value['data']['key_path']::VARCHAR AS key_path,
     flat_contexts.value['data']['data_source']::VARCHAR AS data_source
@@ -38,5 +39,5 @@ flattened AS (
     created_by="@mdrussell",
     updated_by="@utkarsh060",
     created_date="2022-12-21",
-    updated_date="2024-03-22"
+    updated_date="2024-04-02"
 ) }}
