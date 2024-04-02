@@ -111,7 +111,7 @@ aggregate_data AS (
     SUM(vsa_start_date_net_arr)                                        AS vsa_start_date_net_arr
   FROM actuals
   INNER JOIN day_7_list
-    ON actuals.snapshot_date = day_7_list.date_actual
+    ON actuals.snapshot_date = day_7_list.day_7
   GROUP BY ALL
 
 ),

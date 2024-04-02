@@ -26,55 +26,6 @@ spine AS (
 
 ),
 
-base AS (
-
-
-/*
-    The purpose of cross-joining all dimension tables (hierarchy, qualified source, order type) and
-    the date_ids table is to create a comprehensive set of all possible combinations of these dimensions and dates.
-    This exhaustive combination is essential for scenarios where we need to account for all possible configurations in our analysis,
-    ensuring that no combination is overlooked.
-
-    When we eventually join this comprehensive set of combinations with the quarterly actuals,
-    it ensures that even the newly introduced dimensions are accounted for.
-  */
-
-  SELECT
-    hierarchy.dim_crm_user_hierarchy_sk,
-    sqs.dim_sales_qualified_source_id,
-    order_type.dim_order_type_id,
-    spine.date_id,
-    spine.date_actual,
-    spine.fiscal_quarter_name_fy      AS fiscal_quarter_name,
-    spine.first_day_of_fiscal_quarter AS fiscal_quarter_date
-  FROM
-    (
-      SELECT DISTINCT dim_crm_user_hierarchy_sk FROM targets
-      UNION
-      SELECT DISTINCT dim_crm_current_account_set_hierarchy_sk AS dim_crm_user_hierarchy_sk FROM actuals
-    ) AS hierarchy
-  CROSS JOIN
-    (
-      SELECT DISTINCT dim_sales_qualified_source_id FROM targets
-      UNION
-      SELECT DISTINCT dim_sales_qualified_source_id FROM actuals
-    ) AS sqs
-  CROSS JOIN
-    (
-      SELECT DISTINCT dim_order_type_id FROM targets
-      UNION
-      SELECT DISTINCT dim_order_type_id FROM actuals
-    ) AS order_type
-  CROSS JOIN
-    (
-      SELECT DISTINCT target_date_id AS date_id FROM targets
-      UNION
-      SELECT DISTINCT snapshot_id AS date_id FROM actuals
-    ) AS dates
-  INNER JOIN spine
-    ON dates.date_id = spine.date_id
-),
-
 total_targets AS (
 
   SELECT
@@ -123,6 +74,64 @@ quarterly_actuals AS (
 
 ),
 
+combined_data AS ( 
+
+    SELECT 
+        dim_crm_user_hierarchy_sk,
+        dim_sales_qualified_source_id,
+        dim_order_type_id,
+        fiscal_quarter_name,
+        fiscal_quarter_date
+    FROM total_targets
+
+    UNION
+
+    SELECT 
+        dim_crm_user_hierarchy_sk,
+        dim_sales_qualified_source_id,
+        dim_order_type_id,
+        snapshot_fiscal_quarter_name,
+        snapshot_fiscal_quarter_date
+    FROM quarterly_actuals
+
+    UNION 
+
+    SELECT 
+        dim_crm_user_hierarchy_sk,
+        dim_sales_qualified_source_id,
+        dim_order_type_id,
+        snapshot_fiscal_quarter_name,
+        snapshot_fiscal_quarter_date
+    FROM daily_actuals
+
+),
+
+base AS (
+
+  /*
+    Cross join all dimensions (hierarchy, qualified source, order type) and
+    the dates to create a comprehensive set of all possible combinations of these dimensions and dates.
+    This exhaustive combination is essential for scenarios where we need to account for all possible configurations in our analysis,
+    ensuring that no combination is overlooked.
+
+    When we eventually join this comprehensive set of combinations with the quarterly actuals,
+    it ensures that even the newly introduced dimensions are accounted for.
+  */
+
+  SELECT   
+    combined_data.dim_crm_user_hierarchy_sk,
+    combined_data.dim_sales_qualified_source_id,
+    combined_data.dim_order_type_id, 
+    spine.date_id,
+    spine.day_7 as date_actual,
+    combined_data.fiscal_quarter_date,
+    combined_data.fiscal_quarter_name
+  FROM combined_data
+  INNER JOIN spine
+      ON combined_data.fiscal_quarter_name = spine.fiscal_quarter_name
+
+),
+
 final AS (
 
   SELECT
@@ -159,10 +168,3 @@ final AS (
 
 SELECT *
 FROM final
-WHERE
-  (
-    total_quarter_target IS NOT NULL
-    OR booked_net_arr_in_snapshot_quarter IS NOT NULL
-    OR open_1plus_net_arr_in_snapshot_quarter IS NOT NULL
-    OR total_booked_net_arr IS NOT NULL
-  )
