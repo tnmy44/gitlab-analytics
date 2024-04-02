@@ -14,7 +14,6 @@
         prep_marketo_person.acquisition_program_id,
         prep_marketo_person.gitlabdotcom_user_id,
         prep_marketo_person.dim_crm_account_id,
-        prep_marketo_person.demandbase_sid,
 
     -- important person dates
         prep_marketo_person.marketo_email_bounced_date,
@@ -33,10 +32,6 @@
         prep_marketo_person.title,
         prep_marketo_person.country,
         prep_marketo_person.sfdc_record_type,
-        prep_marketo_person.all_remote_function,
-        prep_marketo_person.all_remote_role,
-        prep_marketo_person.reason_for_all_remote,
-        prep_marketo_person.public_sector_partner,
         prep_marketo_person.original_source_type,
         prep_marketo_person.registration_source_type,
         prep_marketo_person.tech_stack,
@@ -61,22 +56,10 @@
         prep_marketo_person.marketo_lead_source,
         prep_marketo_person.marketo_lead_status,
         prep_marketo_person.marketo_sales_insight,
-        prep_marketo_person.marketo_add_to_marketo_campaign,
-        prep_marketo_person.previous_nurture_reason,
         prep_marketo_person.marketo_newsletter_segment,
-        prep_marketo_person.sec_project_names,
         prep_marketo_person.email_suspended_cause,
         prep_marketo_person.products_purchased,
-        prep_marketo_person.license_utilization,
         prep_marketo_person.marketo_rating_scale,                
-
-    -- pathfactory dimensions
-        prep_marketo_person.path_factory_query_string,
-        prep_marketo_person.path_factory_experience_name,
-        prep_marketo_person.path_factory_asset_type,
-        prep_marketo_person.path_factory_content_list,
-        prep_marketo_person.path_factory_funnel_state,
-        prep_marketo_person.path_factory_topic_list,
 
     -- person flags
         prep_marketo_person.is_email_bounced,
@@ -93,7 +76,6 @@
         prep_marketo_person.is_subscribed_live_events,
         prep_marketo_person.is_gdpr_compliant,
         prep_marketo_person.is_email_suspended,
-        prep_marketo_person.is_gs_plan_active,
         prep_marketo_person.has_requested_migration_services,
         prep_marketo_person.has_requested_implementation_services,
         prep_marketo_person.has_requested_specialized_trainings,
