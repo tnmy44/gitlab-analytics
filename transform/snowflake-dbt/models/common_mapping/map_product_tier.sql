@@ -198,21 +198,23 @@ WITH zuora_product AS (
       product_tier_historical,
       product_delivery_type_legacy,
       product_delivery_type_active,
-      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
-        THEN product_delivery_type_legacy
-      ELSE product_deployment_type_active END AS product_delivery_type,
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_delivery_type_legacy
+           WHEN product_tier_active LIKE '%None%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_delivery_type_legacy
+           WHEN (product_tier_active IS NULL or product_tier_active = '') AND  effective_end_date < CURRENT_TIMESTAMP THEN product_delivery_type_legacy
+      ELSE product_delivery_type_active END AS product_delivery_type,
       product_tier_legacy,
       product_tier_active,
-      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
-        THEN product_tier_legacy
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_tier_legacy
+           WHEN product_tier_active LIKE '%None%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_tier_legacy
+           WHEN (product_tier_active IS NULL or product_tier_active = '') AND  effective_end_date < CURRENT_TIMESTAMP THEN product_tier_legacy
       ELSE product_tier_active END AS product_tier,
       product_deployment_type_legacy,
       product_deployment_type_active,
-      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
-        THEN product_deployment_type_legacy
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_deployment_type_legacy
+           WHEN product_tier_active LIKE '%None%' AND effective_end_date < CURRENT_TIMESTAMP THEN product_deployment_type_legacy
+           WHEN (product_tier_active IS NULL or product_tier_active = '') AND  effective_end_date < CURRENT_TIMESTAMP THEN product_deployment_type_legacy
       ELSE product_deployment_type_active END AS product_deployment_type,
       guided_selling,
-      legacy_tier,
       product_category,
       product_ranking,
       effective_start_date,
