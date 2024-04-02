@@ -113,7 +113,7 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_5,
     sales_qualified_source.sales_qualified_source_name,
     sales_qualified_source.sales_qualified_source_grouped,
-    order_type.order_type_name,
+    order_type.order_type_name AS order_type,
     order_type.order_type_grouped
   FROM targets_actuals
   LEFT JOIN dim_date 
