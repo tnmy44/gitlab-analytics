@@ -40,11 +40,11 @@ base AS (
   */
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['dim_crm_user_hierarchy_sk', 'dim_sales_qualified_source_id', 'dim_order_type_id']) }}  AS primary_key,
     hierarchy.dim_crm_user_hierarchy_sk,
     sqs.dim_sales_qualified_source_id,
     order_type.dim_order_type_id,
     dates.date_id,
+    dates.day_7 AS date_actual,
     spine.fiscal_quarter_name_fy AS fiscal_quarter_name,
     spine.first_day_of_fiscal_quarter AS fiscal_quarter_date
   FROM
@@ -78,25 +78,23 @@ base AS (
 total_targets AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['dim_crm_user_hierarchy_sk', 'dim_sales_qualified_source_id', 'dim_order_type_id']) }}  AS primary_key,
     dim_date.fiscal_quarter_name_fy                           AS fiscal_quarter_name,
     dim_date.first_day_of_fiscal_quarter                      AS fiscal_quarter_date,
     targets.dim_crm_user_hierarchy_sk,
     targets.dim_sales_qualified_source_id,
     targets.dim_order_type_id,
-    SUM(daily_allocated_target)                               AS total_quarterly_target
+    SUM(daily_allocated_target)                               AS total_quarter_target
   FROM targets
   LEFT JOIN dim_date
     ON targets.target_date_id = dim_date.date_id
   WHERE kpi_name = 'Net ARR'
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=5) }}
 ),
 
 
 daily_actuals AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['dim_crm_current_account_set_hierarchy_sk', 'dim_sales_qualified_source_id', 'dim_order_type_id']) }}  AS primary_key,
     actuals.snapshot_fiscal_quarter_name,
     actuals.snapshot_fiscal_quarter_date,
     actuals.snapshot_date,
@@ -114,13 +112,12 @@ daily_actuals AS (
     SUM(booked_net_arr_in_snapshot_quarter)                   AS booked_net_arr_in_snapshot_quarter,
   SUM(open_1plus_net_arr_in_snapshot_quarter)                 AS open_1plus_net_arr_in_snapshot_quarter
   FROM actuals
-  {{ dbt_utils.group_by(n=13) }}
+  {{ dbt_utils.group_by(n=12) }}
 ),
 
 quarterly_actuals AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['dim_crm_current_account_set_hierarchy_sk', 'dim_sales_qualified_source_id', 'dim_order_type_id']) }}  AS primary_key,
     actuals.snapshot_fiscal_quarter_name,
     actuals.snapshot_fiscal_quarter_date,
     actuals.dim_crm_current_account_set_hierarchy_sk          AS dim_crm_user_hierarchy_sk,
@@ -136,7 +133,7 @@ quarterly_actuals AS (
     SUM(actuals.booked_net_arr_in_snapshot_quarter)           AS total_booked_net_arr
   FROM actuals
   WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
-  {{ dbt_utils.group_by(n=11) }}
+  {{ dbt_utils.group_by(n=10) }}
 
 ),
 
@@ -144,6 +141,7 @@ final AS (
 
   SELECT
     base.date_id,
+    base.date_actual,
     base.fiscal_quarter_name,
     base.fiscal_quarter_date,
     base.dim_crm_user_hierarchy_sk,
@@ -156,21 +154,27 @@ final AS (
     daily_actuals.order_type_grouped,
     daily_actuals.sales_qualified_source_name,
     daily_actuals.sales_qualified_source_grouped,
-    SUM(total_targets.total_quarterly_target)                   AS total_quarterly_target,
+    SUM(total_targets.total_quarter_target)                     AS total_quarter_target,
     SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)       AS booked_net_arr_in_snapshot_quarter,
     SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter)   AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(quarterly_actuals.total_booked_net_arr)                 AS total_booked_net_arr
   FROM base
   LEFT JOIN total_targets
     ON base.fiscal_quarter_name = total_targets.fiscal_quarter_name
-      AND base.primary_key = total_targets.primary_key
+      AND base.dim_sales_qualified_source_id = total_targets.dim_sales_qualified_source_id
+      AND base.dim_crm_user_hierarchy_sk = total_targets.dim_crm_user_hierarchy_sk
+      AND base.dim_order_type_id = total_targets.dim_order_type_id
   LEFT JOIN daily_actuals
     ON base.date_id = daily_actuals.snapshot_id
-      AND base.primary_key = total_targets.primary_key
+      AND base.dim_sales_qualified_source_id = daily_actuals.dim_sales_qualified_source_id
+      AND base.dim_crm_user_hierarchy_sk = daily_actuals.dim_crm_user_hierarchy_sk
+      AND base.dim_order_type_id = daily_actuals.dim_order_type_id
   LEFT JOIN quarterly_actuals
-    ON daily_actuals.snapshot_fiscal_quarter_name = quarterly_actuals.snapshot_fiscal_quarter_name
-      AND quarterly_actuals.primary_key = quarterly_actuals.primary_key
-  {{ dbt_utils.group_by(n=11) }}
+    ON base.fiscal_quarter_name = quarterly_actuals.snapshot_fiscal_quarter_name
+      AND base.dim_sales_qualified_source_id = quarterly_actuals.dim_sales_qualified_source_id
+      AND base.dim_crm_user_hierarchy_sk = quarterly_actuals.dim_crm_user_hierarchy_sk
+      AND base.dim_order_type_id = quarterly_actuals.dim_order_type_id
+  {{ dbt_utils.group_by(n=12) }}
 
 )
 

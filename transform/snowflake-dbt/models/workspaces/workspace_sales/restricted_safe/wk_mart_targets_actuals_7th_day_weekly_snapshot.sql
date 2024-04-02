@@ -80,7 +80,7 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) + 1     
+    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, targets_actuals.snapshot_date) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
     -- crm owner/sales rep live fields
     dim_crm_user_hierarchy.crm_user_sales_segment,
@@ -99,9 +99,9 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_5
   FROM targets_actuals
   LEFT JOIN dim_date 
-    ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
+    ON targets_actuals.date_actual = dim_date.date_actual
   LEFT JOIN dim_crm_user_hierarchy
-    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = targets_actuals.dim_crm_user_hierarchy_sk
+    ON targets_actuals.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk 
 
 
 )
