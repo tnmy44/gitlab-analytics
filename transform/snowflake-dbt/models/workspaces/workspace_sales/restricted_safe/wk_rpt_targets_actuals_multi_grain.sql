@@ -846,7 +846,7 @@ unioned AS (
     'targets_actuals' AS source,
     total_quarter_target,
     total_booked_net_arr
-  FROM targets
+  FROM targets_actuals
 
 )
 

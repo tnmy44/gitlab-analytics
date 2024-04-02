@@ -6,7 +6,7 @@
         THEN date_actual
       WHEN day_of_fiscal_quarter % 7 = 0 AND day_of_fiscal_quarter != 91
         THEN date_actual
-      END AS day_7,
+      END AS date_actual,
       date_id,
       first_day_of_fiscal_quarter,
       last_day_of_fiscal_quarter,

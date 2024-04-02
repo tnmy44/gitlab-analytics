@@ -19,7 +19,7 @@ final AS (
     actuals.*
   FROM actuals
   INNER JOIN day_7_list
-    ON actuals.snapshot_date = day_7_list.day_7
+    ON actuals.snapshot_date = day_7_list.date_actual
 
 )
 

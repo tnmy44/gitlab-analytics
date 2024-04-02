@@ -80,7 +80,7 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, targets_actuals.snapshot_date) + 1     
+    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, targets_actuals.date_actual) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
     -- crm owner/sales rep live fields
     dim_crm_user_hierarchy.crm_user_sales_segment,

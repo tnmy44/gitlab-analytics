@@ -43,8 +43,8 @@ base AS (
     hierarchy.dim_crm_user_hierarchy_sk,
     sqs.dim_sales_qualified_source_id,
     order_type.dim_order_type_id,
-    dates.date_id,
-    dates.day_7 AS date_actual,
+    spine.date_id,
+    spine.date_actual,
     spine.fiscal_quarter_name_fy AS fiscal_quarter_name,
     spine.first_day_of_fiscal_quarter AS fiscal_quarter_date
   FROM
