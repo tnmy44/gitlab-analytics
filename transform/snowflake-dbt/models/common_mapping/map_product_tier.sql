@@ -1,15 +1,16 @@
 WITH zuora_product AS (
 
     SELECT *
-    FROM {{ ref('zuora_product_source') }}
+    FROM SNALAMARU_PREP.zuora_central_sandbox.zuora_central_sandbox_product_source 
+    WHERE is_deleted = FALSE
 
 ), zuora_product_rate_plan AS (
 
     SELECT *
-    FROM {{ ref('zuora_product_rate_plan_source') }}
+    FROM SNALAMARU_PREP.zuora_central_sandbox.zuora_central_sandbox_product_rate_plan_source
     WHERE is_deleted = FALSE
 
-), final AS (
+), legacy_plans AS (
 
     SELECT
       zuora_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
@@ -131,7 +132,8 @@ WITH zuora_product AS (
         WHEN product_tier_historical = 'Not Applicable'
           THEN 'Not Applicable'
         ELSE NULL
-      END                                                           AS product_delivery_type,
+      END                                                           AS product_delivery_type_legacy,
+      zuora_product.product_delivery                                AS product_delivery_type_active,
       CASE
         WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
           THEN 'Self-Managed'
@@ -148,7 +150,8 @@ WITH zuora_product AS (
         WHEN product_tier_historical = 'Not Applicable'
           THEN 'Not Applicable'
         ELSE NULL
-      END                                                           AS product_deployment_type,
+      END                                                           AS product_deployment_type_legacy,
+      zuora_product.product_deployment                              AS product_deployment_type_active,
       CASE
         WHEN product_tier_historical IN (
                                           'SaaS - Gold'
@@ -176,17 +179,52 @@ WITH zuora_product AS (
         WHEN product_tier_historical = 'SaaS - Silver'
           THEN 'SaaS - Premium'
         ELSE product_tier_historical
-      END                                                           AS product_tier
+      END                                                           AS product_tier_legacy,
+      zuora_product.product_tier                                    AS product_tier_active,
+      zuora_product.category                                        AS product_category,
+      zuora_product_rate_plan.guided_selling                        AS guided_selling,
+      zuora_product_rate_plan.legacy_tier                           AS legacy_tier,
+      zuora_product_rate_plan.effective_start_date                  AS effective_start_date,
+      zuora_product_rate_plan.effective_end_date                    AS effective_end_date                                                        
     FROM zuora_product
     INNER JOIN zuora_product_rate_plan
       ON zuora_product.product_id = zuora_product_rate_plan.product_id
 
+), final AS (
+
+    SELECT DISTINCT
+      product_rate_plan_id,
+      product_rate_plan_name,
+      product_tier_historical,
+      product_delivery_type_legacy,
+      product_delivery_type_active,
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
+        THEN product_delivery_type_legacy
+      ELSE product_deployment_type_active END AS product_delivery_type,
+      product_tier_legacy,
+      product_tier_active,
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
+        THEN product_tier_legacy
+      ELSE product_tier_active END AS product_tier,
+      product_deployment_type_legacy,
+      product_deployment_type_active,
+      CASE WHEN product_tier_active LIKE '%Legacy%' AND effective_end_date < CURRENT_TIMESTAMP 
+        THEN product_deployment_type_legacy
+      ELSE product_deployment_type_active END AS product_deployment_type,
+      guided_selling,
+      legacy_tier,
+      product_category,
+      product_ranking,
+      effective_start_date,
+      effective_end_date
+   FROM legacy_plans
+  
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@snalamaru",
     created_date="2020-12-14",
-    updated_date="2023-05-25"
+    updated_date="2024-04-01"
 ) }}
