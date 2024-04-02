@@ -1493,7 +1493,6 @@ LEFT JOIN cw_base
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
           AND is_eligible_open_pipeline_combined = 1
-            AND is_stage_1_plus = 1
               THEN net_arr
         ELSE 0
       END                                                AS open_1plus_net_arr_in_snapshot_quarter,
