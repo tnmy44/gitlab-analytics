@@ -954,8 +954,9 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
+      
       CASE
-        WHEN sfdc_opportunity_stage.is_won = 1
+        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
@@ -1484,20 +1485,15 @@ LEFT JOIN cw_base
       END                                                         AS cycle_time_in_days_in_snapshot_quarter, -- ensure only closed opps are used in the calculation
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND (
-                sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                      AND is_lost = 1
-                   )
-             )
+          AND COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count_in_snapshot_quarter,
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
           AND is_eligible_open_pipeline_combined = 1
-            THEN net_arr
+            AND is_stage_1_plus = 1
+              THEN net_arr
         ELSE 0
       END                                                AS open_1plus_net_arr_in_snapshot_quarter,
       CASE
