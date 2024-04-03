@@ -1,5 +1,5 @@
 
-----All Subscriptions from Source that includes RampID and Legacy RampID
+----All Subscriptions from Source that include RampID and Legacy RampID
 With dim_subscription_source AS (
 
   SELECT distinct
@@ -104,7 +104,6 @@ With dim_subscription_source AS (
       zuora_ramps.opportunity_id as zuora_opp_id,
       sheetload_map_ramp_deals.dim_crm_opportunity_id as sheetload_opp_id,
       ramp_deals.dim_crm_opportunity_id as sf_ramp_deal_opp_id
-
     FROM PROD.RESTRICTED_SAFE_COMMON.DIM_CRM_OPPORTUNITY	dim_crm_opportunity	        
     LEFT JOIN sheetload_map_ramp_deals        
      ON sheetload_map_ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
@@ -122,7 +121,6 @@ With dim_subscription_source AS (
 
     SELECT 
       ramp_deals_ssp_id_multiyear_linkage.ramp_ssp_id,
-      ramp_deals_ssp_id_multiyear_linkage.dim_crm_opportunity_id as crm_opportunity_id,
       dim_subscription.*				
     FROM PROD.common.dim_subscription			
     LEFT JOIN ramp_deals_ssp_id_multiyear_linkage				
@@ -194,8 +192,10 @@ With dim_subscription_source AS (
     SELECT 
       subscriptions_for_ramp_deals.dim_subscription_id,
       fct_charge.dim_charge_id,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_name,
       dim_product_detail_id,
-      subscriptions_for_ramp_deals.crm_opportunity_id as dim_crm_opportunity_id,
+      subscriptions_for_ramp_deals.dim_crm_opportunity_id,
       fct_charge.dim_billing_account_id,
       dim_crm_user.crm_user_sales_segment,
       dim_crm_user.crm_user_geo,
@@ -203,12 +203,14 @@ With dim_subscription_source AS (
       dim_crm_user.crm_user_area,
       dim_crm_user.dim_crm_user_id,
       user_name,
+      
       subscriptions_for_ramp_deals.ATR_term_start_date,
       subscriptions_for_ramp_deals.ATR_term_end_date,
       subscriptions_for_ramp_deals.dim_crm_account_id, 
       subscriptions_for_ramp_deals.subscription_name,
       quantity, 
-      ARR     
+      ARR,
+      zuora_renewal_subscription_name AS renewal_subscription_name 
     FROM subscriptions_for_ramp_deals     
     LEFT JOIN  PROD.RESTRICTED_SAFE_COMMON.FCT_CHARGE   fct_charge   
       ON subscriptions_for_ramp_deals.dim_subscription_id = fct_charge.dim_subscription_id        
@@ -232,13 +234,16 @@ With dim_subscription_source AS (
 
     SELECT DISTINCT
       dim_date.fiscal_quarter_name_fy, 
+      dim_charge_id,
       dim_crm_account_id, 
       dim_crm_opportunity_id,
       dim_subscription_id, 
       subscription_name,
+      renewal_subscription_name,
       dim_billing_account_id,
-      dim_charge_id,
       dim_product_detail_id,
+      dim_parent_crm_account_id,
+      parent_crm_account_name,
       ATR_term_start_date,
       ATR_term_end_date,
       dim_crm_user_id,
@@ -252,7 +257,7 @@ With dim_subscription_source AS (
     FROM subscription_charges 
     LEFT JOIN PROD.COMMON.DIM_DATE  
      ON subscription_charges.ATR_term_end_date = dim_date.date_day 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21
 )
 
 {{ dbt_audit(
