@@ -50,15 +50,14 @@ structured_behavior AS (
     dim_behavior_browser_sk,
     dim_plan_sk
   FROM {{ ref('fct_behavior_structured_event') }}
-  WHERE is_staging_event = FALSE
   {% if is_incremental() %}
 
-      AND behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
+    WHERE behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
       AND behavior_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'behavior_at') }})) FROM {{ this }})
 
   {% else %}
   -- This will cover the first creation of the table or a full refresh and requires that the table be backfilled
-  AND behavior_at > DATEADD('day', -30 ,CURRENT_DATE())
+  WHERE behavior_at > DATEADD('day', -30 ,CURRENT_DATE())
 
   {% endif %}
 
@@ -128,5 +127,5 @@ report AS (
     created_by="@pempey",
     updated_by="@utkarsh060",
     created_date="2023-02-22",
-    updated_date="2024-03-21"
+    updated_date="2024-01-25"
 ) }}
