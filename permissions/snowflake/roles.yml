@@ -1358,10 +1358,12 @@ roles:
             schemas:
                 read:
                     - prod.common_mart_product
+                    - prod.pumps
             tables:
                 read:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
+                    - prod.pumps.pump_sfdc_seat_utilization
 
     - snowflake_analyst:
          warehouses:
@@ -4293,6 +4295,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - jhackamack:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - static_sensitive
+        warehouses:
+            - dev_xs
+
     - jhalloran:
         member_of:
             - snowflake_analyst
@@ -4434,14 +4444,6 @@ roles:
                 write:
                     - jng_prep.*.*
                     - jng_prod.*.*
-
-    - jokal:
-        member_of:
-            - reporter
-            - restricted_safe
-            - salesforce
-        warehouses:
-            - dev_xs
 
     - jpeguero:
         member_of:
@@ -5821,6 +5823,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - pskorupa:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - dev_xs
+
     - pthote:
         member_of:
             - snowflake_analyst_safe
@@ -6045,6 +6053,8 @@ roles:
     - rrendon:
         member_of:
             - analyst_engineering
+            - aws_billing
+            - elasticsearch_billing
         warehouses:
             - dev_xs
         privileges:
@@ -6243,6 +6253,12 @@ roles:
                     - skhan_prod.*.*
 
     - sliaquat:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - shinya:
         member_of:
             - snowflake_analyst
         warehouses:
@@ -7272,6 +7288,11 @@ users:
         member_of:
             - jgarcia
 
+    - jhackamack:
+        can_login: yes
+        member_of:
+            - jhackamack
+
     - jhalloran:
         can_login: yes
         member_of:
@@ -7311,11 +7332,6 @@ users:
         can_login: yes
         member_of:
             - jng
-
-    - jokal:
-        can_login: yes
-        member_of:
-            - jokal
 
     - jpeguero:
         can_login: yes
@@ -7704,6 +7720,11 @@ users:
         member_of:
             - pleitzen
 
+    - pskorupa:
+        can_login: yes
+        member_of:
+            - pskorupa
+
     - pthote:
         can_login: yes
         member_of:
@@ -7817,6 +7838,11 @@ users:
         can_login: yes
         member_of:
             - sliaquat
+
+    - shinya:
+        can_login: yes
+        member_of:
+            - shinya
 
     - smccormack:
         can_login: yes

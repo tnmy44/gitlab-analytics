@@ -376,7 +376,7 @@
 
 {% docs mart_behavior_structured_event %}
 
-**Description:** Enriched Snowplow table for the analysis of structured events. This is an enhanced version of `fct_behavior_structured_event`. 
+**Description:** Enriched Snowplow table for the analysis of structured events. This is an enhanced version of `fct_behavior_structured_event` containing only production events (staging events are excluded).
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -384,6 +384,7 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 **Filters Applied to Model:**
 - `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
+- Exclude staging events (`is_staging_event = FALSE`)
 
 **Tips for use:**
 - There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.

@@ -583,7 +583,9 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity_stage.is_closed = TRUE
           AND sfdc_opportunity.amount >= 0
           AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
-          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_jihu_account = 0
+          AND sfdc_opportunity_live.sales_qualified_source <> 'Web Direct Generated'
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_win_rate_calc,
@@ -1396,20 +1398,10 @@ LEFT JOIN cw_base
           AND is_renewal = 0
           AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          AND sfdc_opportunity.is_web_portal_purchase = 0
+          AND sfdc_opportunity_live.is_web_portal_purchase = 0
             THEN 1
           ELSE 0
       END                                                                                                               AS is_eligible_age_analysis_combined,
-      CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_combined,
        -- ARR created (pipeline generated)
       CASE
           WHEN is_net_arr_pipeline_created_combined = TRUE
@@ -1494,12 +1486,8 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_closed = 1
             THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date AND is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_in_snapshot_quarter,
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
+      END                                                         AS cycle_time_in_days_in_snapshot_quarter, -- ensure only closed opps are used in the calculation
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
           AND (
@@ -1511,7 +1499,50 @@ LEFT JOIN cw_base
              )
           THEN calculated_deal_count
         ELSE 0
-      END                                               AS booked_deal_count_in_snapshot_quarter
+      END                                               AS booked_deal_count_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+            THEN net_arr
+        ELSE 0
+      END                                                AS open_1plus_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+            AND is_stage_3_plus = 1
+              THEN net_arr
+        ELSE 0
+      END                                                AS open_3plus_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+            AND is_stage_4_plus = 1
+              THEN net_arr
+        ELSE 0
+      END                                                AS open_4plus_net_arr_in_snapshot_quarter,
+      CASE 
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_1_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_1plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_3_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_4_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count_in_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label

@@ -23,6 +23,7 @@ structured_event_renamed AS (
       tracker_version,
       dim_behavior_event_sk,
       event_value,
+      is_staging_event,
       contexts,
       dvce_created_tstamp,
       behavior_at,
@@ -178,6 +179,7 @@ structured_events_w_dim AS (
       events_with_plan.page_url_host,
       events_with_plan.page_url_fragment,
       events_with_plan.event_value,
+      events_with_plan.is_staging_event,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       events_with_plan.gitlab_standard_context,
@@ -281,5 +283,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-01-25"
+    updated_date="2024-03-21"
 ) }}

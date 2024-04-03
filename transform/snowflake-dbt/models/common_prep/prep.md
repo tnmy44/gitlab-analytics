@@ -793,6 +793,12 @@ The element id from the unstructured link click event
 
 {% enddocs %}
 
+{% docs is_staging_event %}
+
+Flag to indicate whether the event is staging or not. Staging events are defined as events where `app_id = 'gitlab-staging'` or the `page_url` indicates that the event comes from a staging environment.
+
+{% enddocs %}
+
 {% docs prep_user_trial %}
 
 Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
