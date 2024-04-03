@@ -89,7 +89,6 @@ geo_list AS (
   FROM sfdc_filtered
   WHERE crm_user_geo IS NOT NULL
     AND has_user_geo = TRUE
-
 ),
 
 geo_users AS (
