@@ -4295,6 +4295,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - jhackamack:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - static_sensitive
+        warehouses:
+            - dev_xs
+
     - jhalloran:
         member_of:
             - snowflake_analyst
@@ -7267,6 +7275,11 @@ users:
         can_login: yes
         member_of:
             - jgarcia
+
+    - jhackamack:
+        can_login: yes
+        member_of:
+            - jhackamack
 
     - jhalloran:
         can_login: yes
