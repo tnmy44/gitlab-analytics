@@ -5,7 +5,8 @@
 
 {{config({
     "materialized":"incremental",
-    "unique_key":"event_id"
+    "unique_key":"event_id",
+    "on_schema_change"="sync_all_columns"
   })
 }}
 

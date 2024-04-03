@@ -6,7 +6,8 @@
 {{config({
     "materialized":"incremental",
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp_date']
+    "cluster_by":['derived_tstamp_date'],
+    "on_schema_change"="sync_all_columns"
   })
 }}
 
