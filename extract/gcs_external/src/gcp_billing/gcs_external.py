@@ -15,7 +15,7 @@ def get_export(export_name: str) -> dict:
     retrieve export record attributes from gcs_external.yml
     """
 
-    with open("gcs_external/src/gcp_billing/gcs_external.yml", "r") as yaml_file:
+    with open("gcs_external/src/gcp_billing/gcs_external.yml", "r") as yaml_file: #param
         try:
             stream = safe_load(yaml_file)
         except YAMLError as exc:
@@ -67,7 +67,7 @@ def run_export(export_name: str):
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
-        project="billing-tools-277316",
+        project="billing-tools-277316", #param
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 
