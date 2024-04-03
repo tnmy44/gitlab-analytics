@@ -63,7 +63,7 @@ product_categories_yml_base AS (
 
   SELECT DISTINCT
     LOWER(group_name)                                                         AS group_name,
-    LOWER(stage_section)                                                      AS section_name,
+    REPLACE(LOWER(stage_section), '_', ' ')                                   AS section_name,
     LOWER(stage_display_name)                                                 AS stage_name,
     IFF(group_name LIKE '%::%', SPLIT_PART(LOWER(group_name), '::', 1), NULL) AS root_name
   FROM {{ ref('stages_groups_yaml_source') }}
