@@ -2,6 +2,15 @@ WITH final AS (
 
     SELECT
         marketo_lead_id AS dim_marketo_person_id,
+        md5(
+            cast(
+                coalesce(
+                    cast(sfdc_contact_id as TEXT),
+                    cast(sfdc_lead_id as TEXT),
+                    '_dbt_utils_surrogate_key_null_'
+                ) as TEXT
+            )
+        ) AS dim_crm_person_id,
         email_hash,
         sfdc_lead_id,
         sfdc_contact_id,
