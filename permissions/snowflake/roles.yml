@@ -5823,6 +5823,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - pskorupa:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - dev_xs
+
     - pthote:
         member_of:
             - snowflake_analyst_safe
@@ -7713,6 +7719,11 @@ users:
         can_login: yes
         member_of:
             - pleitzen
+
+    - pskorupa:
+        can_login: yes
+        member_of:
+            - pskorupa
 
     - pthote:
         can_login: yes
