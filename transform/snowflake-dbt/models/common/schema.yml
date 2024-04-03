@@ -6321,8 +6321,6 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6432,8 +6430,6 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6555,8 +6551,6 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6662,8 +6656,6 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6770,8 +6762,6 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6875,8 +6865,6 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
 
   - name: fct_behavior_unstructured_event
     description: '{{ doc("fct_behavior_unstructured_event") }}'
@@ -6912,8 +6900,6 @@ models:
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}'
-      - name: is_staging_event
-        description: '{{ doc("is_staging_event") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
       - name: link_click_element_id
