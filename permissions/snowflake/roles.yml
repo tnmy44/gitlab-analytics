@@ -1358,10 +1358,12 @@ roles:
             schemas:
                 read:
                     - prod.common_mart_product
+                    - prod.pumps
             tables:
                 read:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
+                    - prod.pumps.pump_sfdc_seat_utilization
 
     - snowflake_analyst:
          warehouses:
