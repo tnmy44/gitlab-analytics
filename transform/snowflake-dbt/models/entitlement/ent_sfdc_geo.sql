@@ -13,7 +13,8 @@ WITH target_geos AS (
     ('APAC'),
     ('JAPAN'),
     ('PUBSEC'),
-    ('SMB')
+    ('SMB'),
+    ('CHANNEL')
   ) AS geos (target_geos)
 ),
 
@@ -83,15 +84,6 @@ tableau_safe_users AS (
     AND group_luid = 'e926984d-06de-4536-b572-6d09075a21be' -- General SAFE Access
 ),
 
-channel AS (
-  -- This CTE adds CHANNEL as a GEO value that should be visible to every users
-SELECT *
-  FROM (
-    VALUES
-    ('CHANNEL')
-  ) AS channel (crm_user_geo)
-),
-
 geo_list AS (
   SELECT DISTINCT crm_user_geo
   FROM sfdc_filtered
@@ -100,8 +92,10 @@ geo_list AS (
 
     UNION
 
-SELECT *
-  FROM channel
+SELECT target_geos as crm_user_geo
+  FROM target_geos
+  WHERE target_geos = 'CHANNEL'
+
 ),
 
 geo_users AS (
@@ -118,12 +112,13 @@ geo_users AS (
   
   SELECT
     dim_crm_user_id,
-    channel.crm_user_geo AS crm_geo,
+    target_geos AS crm_geo,
     user_email,
     'sfdc_user_geo' AS entitlement_basis
   FROM sfdc_filtered
-  CROSS JOIN channel 
+  CROSS JOIN target_geos 
   WHERE has_user_geo
+  AND target_geos = 'CHANNEL'
 ),
 
 all_accounts AS (
