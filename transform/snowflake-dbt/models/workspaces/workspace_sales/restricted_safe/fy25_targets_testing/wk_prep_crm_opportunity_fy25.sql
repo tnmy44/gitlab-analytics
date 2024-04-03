@@ -1312,8 +1312,6 @@ LEFT JOIN cw_base
             AND  is_eligible_age_analysis = 1
               THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
       END                                                         AS cycle_time_in_days,
-      COALESCE(
-        sfdc_opportunity.is_pipeline_created_eligible,
         CASE
           WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
             AND sfdc_opportunity_live.is_edu_oss  = 0
@@ -1329,8 +1327,10 @@ LEFT JOIN cw_base
             AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
           THEN TRUE
           ELSE FALSE
-        END
-      )                                                                                                                 AS is_net_arr_pipeline_created_combined,
+        END                                                        AS is_net_arr_pipeline_created_combined, 
+        /* the SFDC flag currently doesn't include all the fields necessary to calculate
+        pipeline generated so we need to COALESCE is_pipeline_created_eligible and this value once this issue is 
+        closed https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/5331 */
       CASE
         WHEN LOWER(sfdc_opportunity_live.order_type_grouped) LIKE ANY ('%growth%', '%new%')
           AND sfdc_opportunity_live.is_edu_oss = 0
