@@ -954,6 +954,17 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
+      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
+      CASE
+        WHEN sfdc_opportunity.is_jihu_account = 0 
+          AND (sfdc_opportunity_stage.is_won = 1
+                OR (
+                    is_renewal = 1
+                     AND is_lost = 1)
+                   )
+            THEN 1
+          ELSE 0
+      END                                                 AS is_booked_net_arr, 
       CASE
         WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
@@ -1012,17 +1023,6 @@ LEFT JOIN cw_base
             THEN net_arr
         ELSE 0
       END                                                AS open_4plus_net_arr,
-      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-      CASE
-        WHEN sfdc_opportunity.is_jihu_account = 0 
-          AND (sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                     AND is_lost = 1)
-                   )
-            THEN 1
-          ELSE 0
-      END                                                 AS is_booked_net_arr, 
       CASE
         WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr)  = 1 -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
           THEN net_arr
