@@ -6252,6 +6252,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - smaeda:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - smccormack:
         member_of:
             - analyst_people
@@ -7821,6 +7827,11 @@ users:
         can_login: yes
         member_of:
             - sliaquat
+
+    - smaeda:
+        can_login: yes
+        member_of:
+            - smaeda
 
     - smccormack:
         can_login: yes
