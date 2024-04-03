@@ -165,6 +165,7 @@ WITH filtered_source as (
       AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
       AND derived_tstamp >= '{{ start_date }}'
       AND derived_tstamp < '{{ end_date }}'
+      AND uploaded_at < '{{ run_started_at }}'
       AND 
         (
           (
@@ -360,10 +361,11 @@ WITH filtered_source as (
       base.uploaded_at,
       base.infra_source,
       CASE
+        WHEN app_id = 'gitlab-staging' THEN TRUE
         WHEN LOWER(page_url) LIKE 'https://staging.gitlab.com/%' THEN TRUE
         WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
         ELSE FALSE
-      END AS is_staging_url,
+      END AS is_staging_event,
       events_with_flattened_context.web_page_context,
       events_with_flattened_context.has_web_page_context,
       events_with_flattened_context.web_page_id,

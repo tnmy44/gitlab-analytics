@@ -188,6 +188,10 @@ models:
         description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` event. This event is sent when no suggestion was provided that could be shown to the user. This can happen if the suggestion does not meet a rule designed to limit poor suggestions from being shown. For example, the suggestion is all whitespace characters.
       - name: was_error
         description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event. This event is sent when the suggestion request leads to an error.
+      - name: was_stream_started
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_started` event. This event is sent when the first chunk of the suggestion stream was returned from the network.
+      - name: was_stream_completed
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_completed` event. This event is sent when the last chunk of the streamed suggestion was returned from the network.
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by

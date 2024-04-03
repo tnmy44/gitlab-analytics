@@ -500,6 +500,14 @@ More information about [CI Pipelines here](https://docs.gitlab.com/ee/user/proje
 
 {% enddocs %}
 
+{% docs prep_member_accepted_invites %}
+
+Prep table used to capture user accepted invites to any namespace.
+An 'accept_invite' event is captured only when the user takes an action to accept the invite to a namespace, in this case the INVITE_ACCEPTED_AT IS NOT NULL.
+Existing users who're granted the access to a namespace are not included as they don't need to take an action to 'accept' the invite, In such cases, the INVITE_ACCEPTED_AT IS NULL.
+
+{% enddocs %}
+
 {% docs prep_ci_build %}
 
 Prep table used to build the `dim_ci_build` table.
@@ -815,6 +823,12 @@ The element id from the unstructured link click event
 
 {% enddocs %}
 
+{% docs is_staging_event %}
+
+Flag to indicate whether the event is staging or not. Staging events are defined as events where `app_id = 'gitlab-staging'` or the `page_url` indicates that the event comes from a staging environment.
+
+{% enddocs %}
+
 {% docs prep_user_trial %}
 
 Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
@@ -866,5 +880,11 @@ This model contains the logic for connecting product licenses and subscriptions 
 {% docs prep_milestone %}
 
 All milestones created within a namespace, with details including the start date, due date, description, and title.
+
+{% enddocs %}
+
+{% docs prep_latest_seat_link_installation %}
+
+Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}
