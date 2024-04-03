@@ -13,8 +13,7 @@ WITH target_geos AS (
     ('APAC'),
     ('JAPAN'),
     ('PUBSEC'),
-    ('SMB'),
-    ('CHANNEL')
+    ('SMB')
   ) AS geos (target_geos)
 ),
 
