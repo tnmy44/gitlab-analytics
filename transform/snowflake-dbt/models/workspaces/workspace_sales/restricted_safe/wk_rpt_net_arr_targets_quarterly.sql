@@ -6,20 +6,10 @@
       ('dim_date', 'dim_date')
 ])}},
 
-snapshot_date_list AS (
+date_spine AS (
 
-  SELECT 
-    CASE WHEN date_actual = last_day_of_fiscal_quarter 
-            THEN date_actual
-        WHEN day_of_fiscal_quarter % 7 = 0 AND day_of_fiscal_quarter != 91
-            THEN date_actual
-    END AS day_7_current_week,
-    day_of_fiscal_quarter,
-    fiscal_quarter_name,
-    LAG(day_7_current_week) OVER (ORDER BY day_7_current_week) + 1 AS day_8_previous_week
-  FROM dim_date
-  WHERE day_7_current_week IS NOT NULL 
-    AND date_actual >= DATEADD(YEAR, -2, current_first_day_of_fiscal_quarter) -- include only the last 8 quarters 
+     -- Filter the data down to only one snapshot every 7 days throughout each quarter.
+  {{ date_spine_7th_day() }}
 
 ),
 
@@ -32,14 +22,15 @@ quarterly_targets AS (
         fiscal_quarter_name,
         SUM(daily_allocated_target) AS total_quarter_target
     FROM daily_targets
-    WHERE kpi_name = 'Net ARR Company'
+    WHERE kpi_name = 'Net ARR'
     GROUP BY 1,2,3,4
 
 )
 
 SELECT 
     daily_targets.target_date,
-    snapshot_date_list.day_of_fiscal_quarter,
+    date_spine.day_of_fiscal_quarter,
+    date_spine.last_day_of_fiscal_quarter,
     daily_targets.dim_order_type_id,
     daily_targets.dim_sales_qualified_source_id,
     daily_targets.dim_crm_user_hierarchy_sk,
@@ -62,8 +53,8 @@ SELECT
     dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped,
     quarterly_targets.total_quarter_target
 FROM daily_targets
-INNER JOIN snapshot_date_list
-  ON snapshot_date_list.day_7_current_week = daily_targets.target_date
+INNER JOIN date_spine
+  ON date_spine.day_7 = daily_targets.target_date
 LEFT JOIN dim_sales_qualified_source
   ON daily_targets.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
 LEFT JOIN dim_order_type
@@ -75,4 +66,4 @@ LEFT JOIN quarterly_targets
     AND daily_targets.dim_order_type_id = quarterly_targets.dim_order_type_id
       AND daily_targets.dim_sales_qualified_source_id = quarterly_targets.dim_sales_qualified_source_id
         AND daily_targets.dim_crm_user_hierarchy_sk = quarterly_targets.dim_crm_user_hierarchy_sk
-WHERE kpi_name = 'Net ARR Company'
+WHERE kpi_name = 'Net ARR'

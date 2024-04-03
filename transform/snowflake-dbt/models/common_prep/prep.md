@@ -823,6 +823,12 @@ The element id from the unstructured link click event
 
 {% enddocs %}
 
+{% docs is_staging_event %}
+
+Flag to indicate whether the event is staging or not. Staging events are defined as events where `app_id = 'gitlab-staging'` or the `page_url` indicates that the event comes from a staging environment.
+
+{% enddocs %}
+
 {% docs prep_user_trial %}
 
 Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
@@ -874,5 +880,11 @@ This model contains the logic for connecting product licenses and subscriptions 
 {% docs prep_milestone %}
 
 All milestones created within a namespace, with details including the start date, due date, description, and title.
+
+{% enddocs %}
+
+{% docs prep_latest_seat_link_installation %}
+
+Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}

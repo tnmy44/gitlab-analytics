@@ -423,6 +423,9 @@ Below checklist of activities would be run once for quarter to validate security
     ```
 2. [ ] Clean up old log files, following [this runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/airflow_infrastructure/archival_pvc_volume/delete_pvc_volume.md). 
 
+## Monte Carlo
+1. [ ] Validate off-boarded employees have been removed from Monte Carlo access.
+1. [ ] Deprovision access if an account has not logged-in within the past 90 days from the moment of performing audit.
 
 ## Package version inventory
 
