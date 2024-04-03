@@ -588,7 +588,7 @@ LEFT JOIN cw_base
          AND sfdc_opportunity_live.is_jihu_account = 0
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
          AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
-         AND sfdc_opportunity_live.deal_path_name != 'Web Direct'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
             THEN TRUE
         ELSE FALSE
@@ -636,7 +636,7 @@ LEFT JOIN cw_base
          AND sfdc_opportunity_live.is_jihu_account = 0
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
          AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
-         AND sfdc_opportunity_live.deal_path_name != 'Web Direct'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
          AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
