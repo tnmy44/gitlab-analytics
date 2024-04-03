@@ -90,12 +90,6 @@ geo_list AS (
   WHERE crm_user_geo IS NOT NULL
     AND has_user_geo = TRUE
 
-    UNION
-
-SELECT target_geos as crm_user_geo
-  FROM target_geos
-  WHERE target_geos = 'CHANNEL'
-
 ),
 
 geo_users AS (
@@ -107,18 +101,6 @@ geo_users AS (
     'sfdc_user_geo' AS entitlement_basis
   FROM sfdc_filtered
   WHERE has_user_geo
-
-  UNION
-  
-  SELECT
-    dim_crm_user_id,
-    target_geos AS crm_geo,
-    user_email,
-    'sfdc_user_geo' AS entitlement_basis
-  FROM sfdc_filtered
-  CROSS JOIN target_geos 
-  WHERE has_user_geo
-  AND target_geos = 'CHANNEL'
 ),
 
 all_accounts AS (
@@ -158,6 +140,17 @@ non_pubsec AS (
     AND LOWER(geo_list.crm_user_geo) != LOWER('PUBSEC')
 ),
 
+channel_sfdc_users AS (
+  SELECT
+    sfdc_user_source.user_email,
+    target_geos.target_geos AS crm_geo,
+    'all_sfdc_users' AS entitlement_basis
+  FROM sfdc_user_source
+  LEFT JOIN target_geos
+    ON target_geos.target_geos = 'CHANNEL'
+  WHERE sfdc_user_source.is_active = TRUE 
+),
+
 combined AS (
   SELECT 
     crm_geo,
@@ -180,6 +173,14 @@ combined AS (
     geo_users.user_email,
     entitlement_basis
   FROM geo_users
+
+  UNION ALL
+
+  SELECT DISTINCT
+    channel_sfdc_users.crm_geo,
+    channel_sfdc_users.user_email,
+    entitlement_basis
+  FROM channel_sfdc_users
 )
 
 SELECT *
