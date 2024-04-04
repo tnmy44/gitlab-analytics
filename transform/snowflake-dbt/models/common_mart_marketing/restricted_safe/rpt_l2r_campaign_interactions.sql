@@ -150,6 +150,7 @@
     --IDs
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
+      opp.sfdc_record_id,
       dim_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
@@ -407,6 +408,7 @@
       dim_campaign_id,
       null AS dim_crm_opportunity_id,
       null AS opp_dim_crm_user_id,
+      null AS sfdc_opportunity_id,
       null AS duplicate_opportunity_id,
       null AS merged_crm_opportunity_id,
       null AS ssp_id,
@@ -619,6 +621,7 @@
       dim_crm_touchpoint_id,
       dim_campaign_id,
       dim_crm_opportunity_id,
+      sfdc_opportunity_id,
       opp_dim_crm_user_id,
       duplicate_opportunity_id,
       merged_crm_opportunity_id,
@@ -887,13 +890,14 @@
       
       -- campaign
       fct_campaign.start_date  AS campaign_start_date,
-      fct_campaign.region     AS sfdc_campaign_region,
+      fct_campaign.region      AS sfdc_campaign_region,
       fct_campaign.sub_region  AS sfdc_campaign_sub_region,
       dim_campaign.type        AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
       dim_campaign.is_a_channel_partner_involved,
-      campaign_owner.user_name AS campaign_owner,
+      campaign_owner.user_name          AS campaign_owner,
+      campaign_owner_manager.user_name  AS campaign_owner_manager,
       CASE  
         WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
           THEN TRUE
@@ -1003,6 +1007,8 @@
     ON user.manager_id = manager.dim_crm_user_id
   LEFT JOIN dim_crm_user campaign_owner
     ON fct_campaign.campaign_owner_id = campaign_owner.dim_crm_user_id
+  LEFT JOIN dim_crm_user campaign_owner_manager
+    ON campaign_owner.manager_id = campaign_owner_manager.dim_crm_user_id
   LEFT JOIN dim_crm_account
     ON cohort_base_combined.dim_crm_account_id=dim_crm_account.dim_crm_account_id
   LEFT JOIN dim_crm_user account_owner
