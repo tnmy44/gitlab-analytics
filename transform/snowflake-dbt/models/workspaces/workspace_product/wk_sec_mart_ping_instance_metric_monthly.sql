@@ -3,22 +3,17 @@
     "tags":["mnpi_exception","product"]
 }) }}
 
-{{ simple_cte([
-    ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('dim_ping_metric', 'dim_ping_metric')
-    ])
+WITH dim_ping_metric AS (
 
-}}, dim_ping_metric AS (
-
-  SELECT *
-  FROM dim_ping_metric
+  SELECT {{ dbt_utils.star(from=from=ref('dim_ping_metric'), except=['CREATED_BY','UPDATED_BY','MODEL_CREATED_DATE','MODEL_UPDATED_DATE','DBT_UPDATED_AT','DBT_CREATED_AT']) }}
+  FROM {{ ref('dim_ping_metric') }}
   WHERE (section_name = 'sec' OR is_umau = TRUE) --Only include Sec metrics or the UMAU metric (for event adoption calculations)
   ORDER BY metrics_path ASC
 
 ), sec_ping_metrics AS (
 
-  SELECT *
-  FROM mart_ping_instance_metric_monthly
+  SELECT {{ dbt_utils.star(from=from=ref('mart_ping_instance_metric_monthly'), except=['CREATED_BY','UPDATED_BY','MODEL_CREATED_DATE','MODEL_UPDATED_DATE','DBT_UPDATED_AT','DBT_CREATED_AT']) }}
+  FROM {{ ref('mart_ping_instance_metric_monthly') }}
   WHERE (section_name = 'sec' OR is_umau = TRUE) --Only include Sec metrics or the UMAU metric (for event adoption calculations)
     AND metric_value > 0 --Filter to exclude events that have never received usage from the installation.
   ORDER BY ping_created_date_month DESC
