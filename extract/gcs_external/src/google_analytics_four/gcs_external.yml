@@ -1,5 +1,5 @@
-project: billing-tools-277316
-credentials: GCP_BILLING_ACCOUNT_CREDENTIALS
+project: mktg-goog-analytics4-5e6dc7d6
+credentials: GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS
 
 exports:
   - name: detailed-gcp-billing

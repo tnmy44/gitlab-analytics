@@ -109,8 +109,12 @@ dag = DAG(
 #     dag=dag,
 # )
 
+spec_file = "gcs_external/src/google_analytics_four/gcs_external.yml"
+spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
+gcp_project = "mktg-goog-analytics4-5e6dc7d6"
+
 with open(
-    f"{REPO_BASE_PATH}/extract/gcs_external/src/gcp_billing/gcs_external.yml",
+    spec_path,
     "r",
 ) as yaml_file:
     try:
@@ -123,7 +127,7 @@ for export in stream["exports"]:
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcp_billing/gcs_external.py --export_name={export_name}
+    python gcs_external/src/gcs_external.py --export_name={export_name} --spec_file={spec_file} --gcp_project={gcp_project}
     """
 
     task_name = export["name"]
