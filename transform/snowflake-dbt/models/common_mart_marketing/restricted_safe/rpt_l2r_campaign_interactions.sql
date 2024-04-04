@@ -150,7 +150,6 @@
     --IDs
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
-      opp.sfdc_record_id,
       dim_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
@@ -408,7 +407,6 @@
       dim_campaign_id,
       null AS dim_crm_opportunity_id,
       null AS opp_dim_crm_user_id,
-      null AS sfdc_opportunity_id,
       null AS duplicate_opportunity_id,
       null AS merged_crm_opportunity_id,
       null AS ssp_id,
@@ -621,7 +619,6 @@
       dim_crm_touchpoint_id,
       dim_campaign_id,
       dim_crm_opportunity_id,
-      sfdc_opportunity_id,
       opp_dim_crm_user_id,
       duplicate_opportunity_id,
       merged_crm_opportunity_id,
