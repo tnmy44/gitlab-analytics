@@ -10,12 +10,12 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
-def get_export(export_name: str, spec_path: str) -> dict:
+def get_export(export_name: str, spec_file: str) -> dict:
     """
     retrieve export record attributes from spec file
     """
 
-    with open(spec_path, "r") as yaml_file:
+    with open(spec_file, "r") as yaml_file:
         try:
             stream = safe_load(yaml_file)
         except YAMLError as exc:
@@ -53,11 +53,11 @@ def get_billing_data_query(export: dict, export_date: str) -> str:
     """
 
 
-def run_export(export_name: str, spec_path: str, gcp_project:str):
+def run_export(export_name: str, spec_file: str, gcp_project:str):
     """
     run sql command in bigquery
     """
-    export = get_export(export_name, spec_path)
+    export = get_export(export_name, spec_file)
     export_date = config_dict["EXPORT_DATE"]
     sql_statement = get_billing_data_query(export, export_date)
 
