@@ -133,7 +133,7 @@ for export in stream["exports"]:
         image=DATA_IMAGE,
         task_id=export_name,
         name=export_name,
-        secrets=[GCP_BILLING_ACCOUNT_CREDENTIALS],
+        secrets=[GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS],
         env_vars={
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
@@ -144,4 +144,4 @@ for export in stream["exports"]:
         dag=dag,
     )
 
-    billing_operator >> dbt_external_table_run
+    # billing_operator >> dbt_external_table_run
