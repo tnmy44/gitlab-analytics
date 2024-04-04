@@ -391,11 +391,12 @@ SELECT
       UPPER(user_role_name)     AS user_role_name,
       UPPER(user_role_level_1)  AS user_role_level_1,
       UPPER(user_role_level_2)  AS user_role_level_2,
-      UPPER(user_role_level_3)  AS user_role_level_3,
-      UPPER(user_role_level_4)  AS user_role_level_4,
-      UPPER(user_role_level_5)  AS user_role_level_5
+      MIN(UPPER(user_role_level_3))  AS user_role_level_3,
+      MIN(UPPER(user_role_level_4))  AS user_role_level_4,
+      MIN(UPPER(user_role_level_5))  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
+    {{ dbt_utils.group_by(n=10)}}
 
 ), final_unioned AS (
 

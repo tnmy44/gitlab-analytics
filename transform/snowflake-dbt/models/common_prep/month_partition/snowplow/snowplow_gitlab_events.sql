@@ -164,6 +164,7 @@ WITH filtered_source as (
       AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
       AND derived_tstamp >= '{{ start_date }}'
       AND derived_tstamp < '{{ end_date }}'
+      AND uploaded_at < '{{ run_started_at }}'
       AND 
         (
           (

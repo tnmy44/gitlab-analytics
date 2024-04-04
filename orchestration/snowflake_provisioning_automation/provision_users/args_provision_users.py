@@ -11,13 +11,18 @@ abs_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = abs_path[: abs_path.find("/provision_users")]
 sys.path.insert(1, parent_path)
 from utils_snowflake_provisioning import (
-    get_username_changes,
+    get_user_changes,
 )
 
 
-def get_usernames_added() -> list:
-    """returns the usernames ADDED to the snowflake_usernames.yml file"""
-    return get_username_changes()[0]
+def get_users_added() -> list:
+    """returns the usernames ADDED to the snowflake_users.yml file"""
+    return get_user_changes()[0]
+
+
+def get_users_removed() -> list:
+    """returns the usernames REMOVED from the snowflake_users.yml file"""
+    return get_user_changes()[1]
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -33,11 +38,19 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Provision users in Snowflake options")
     parser.add_argument(
         "-ua",
-        "--usernames-to-add",
+        "--users-to-add",
         nargs="+",
         type=str,
-        default=get_usernames_added(),
+        default=get_users_added(),
         help="usernames to ADD to the roles.yml file",
+    )
+    parser.add_argument(
+        "-ur",
+        "--users-to-remove",
+        nargs="+",
+        type=str,
+        default=get_users_removed(),
+        help="usernames to REMOVE from the roles.yml file",
     )
     # by default, only print snowflake queries, don't run in Snowflake
     parser.add_argument(

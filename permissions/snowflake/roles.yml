@@ -293,6 +293,11 @@ databases:
     - srehm_prep:
         shared: no
 
+    - syasonik_prod:
+        shared: no
+    - syasonik_prep:
+        shared: no
+
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -462,6 +467,7 @@ roles:
             - covid19
             - dbt_analytics
             - driveload
+            - engineering_extracts
             - gainsight
             - gcp_billing
             - gitlab_data_yaml
@@ -1872,6 +1878,20 @@ roles:
                 read:
                     - raw.elasticsearch_billing.*
 
+    - engineering_extracts:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.engineering_extracts
+            tables:
+                read:
+                    - raw.engineering_extracts.*
+
     - entitlement:
         warehouses:
             - dev_xs
@@ -2288,7 +2308,7 @@ roles:
                     - prod.legacy.gitlab_dotcom_memberships
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
-    
+
     - influx_db:
         privileges:
             databases:
@@ -2309,12 +2329,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.iterable
+                    - prep.iterable
             tables:
                 read:
                     - raw.iterable.*
+                    - prep.iterable.*
 
     - linkedin_ads:
         privileges:
@@ -3392,6 +3415,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - btsang:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - bvandre:
         member_of: []
         warehouses: []
@@ -3806,9 +3835,16 @@ roles:
         warehouses:
             - dev_xs
 
+    - dstull:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
+
     - dtang:
         member_of:
             - snowflake_analyst
+            - snowplow
         warehouses:
             - dev_xs
 
@@ -3863,6 +3899,12 @@ roles:
     - ebonet:
         member_of:
             - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - eboyd:
+        member_of:
+            - snowflake_analyst_safe
         warehouses:
             - dev_xs
 
@@ -3952,6 +3994,12 @@ roles:
     - fstein:
         warehouses:
             - admin
+
+    - gdoud:
+        member_of:
+            - snowflake_analyst_safe
+        warehouses:
+            - dev_xs
 
     - gitlab_ci:
         member_of:
@@ -4245,6 +4293,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jhalloran:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jhope:
         member_of:
             - snowflake_analyst
@@ -4259,7 +4313,8 @@ roles:
 
     - jlongo:
         member_of:
-            - snowflake_analyst
+            - analyst_sales_sensitive
+            - snowflake_analyst_safe
         warehouses:
             - dev_xs
 
@@ -4667,6 +4722,7 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+            - zuora_query_api
         warehouses:
             - dev_xs
         owns:
@@ -4773,6 +4829,12 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - kniechajewicz:
+        member_of:
+            - snowflake_analyst
         warehouses:
             - dev_xs
 
@@ -5396,7 +5458,7 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of: 
+        member_of:
             - analyst_growth
             - snowflake_analyst
         warehouses:
@@ -5673,6 +5735,12 @@ roles:
                     - parmstrong_prep.*.*
                     - parmstrong_prod.*.*
 
+    - pcordero:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - pempey:
         member_of:
             - analytics_engineer_core
@@ -5750,6 +5818,12 @@ roles:
     - pleitzen:
         member_of:
             - snowflake_analyst
+        warehouses:
+            - dev_xs
+
+    - pthote:
+        member_of:
+            - snowflake_analyst_safe
         warehouses:
             - dev_xs
 
@@ -5947,6 +6021,21 @@ roles:
         warehouses:
             - dev_xs
 
+    - rohara:
+        member_of:
+            - snowflake_analyst
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+            - sales_analytics
+            - data_science_readonly
+            - marketo
+            - static_sensitive
+        warehouses:
+            - dev_xs
+
     - rpereira:
         member_of:
             - snowflake_analyst
@@ -6088,6 +6177,12 @@ roles:
                 write:
                     - schaturvedi_prep.*.*
                     - schaturvedi_prod.*.*
+
+    - sfigueroa:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - sgladchun:
         member_of:
@@ -6243,6 +6338,7 @@ roles:
     - srehm:
         member_of:
             - analyst_growth
+            - snowflake_analyst
         warehouses:
             - dev_xs
         owns:
@@ -6324,6 +6420,46 @@ roles:
             - snowflake_analyst
         warehouses:
             - dev_xs
+
+    - syasonik:
+        member_of:
+            - analyst_growth
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - syasonik_prep
+                - syasonik_prod
+            schemas:
+                - syasonik_prep.*
+                - syasonik_prod.*
+            tables:
+                - syasonik_prep.*.*
+                - syasonik_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - syasonik_prep
+                    - syasonik_prod
+                write:
+                    - syasonik_prep
+                    - syasonik_prod
+            schemas:
+                read:
+                    - syasonik_prep.*
+                    - syasonik_prod.*
+                write:
+                    - syasonik_prep.*
+                    - syasonik_prod.*
+            tables:
+                read:
+                    - syasonik_prep.*.*
+                    - syasonik_prod.*.*
+                write:
+                    - syasonik_prep.*.*
+                    - syasonik_prod.*.*
+
 
     - tableau:
         warehouses:
@@ -6469,6 +6605,7 @@ roles:
 
     - tscott:
         member_of:
+            - analyst_sales
             - data_team_analyst
             - reporter
             - restricted_safe
@@ -6572,6 +6709,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - vnagy:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -6641,10 +6784,8 @@ roles:
         warehouses: []
 
     - whaber:
-        member_of:
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - wleidheiser:
         member_of:
@@ -6802,6 +6943,11 @@ users:
         member_of:
             - bnguyen
 
+    - btsang:
+        can_login: yes
+        member_of:
+            - btsang
+
     - bvandre:
         can_login: no
         member_of: []
@@ -6891,7 +7037,7 @@ users:
 
     - dcroft:
         can_login: no
-        member_of: [] 
+        member_of: []
 
     - ddeng:
         can_login: yes
@@ -6943,6 +7089,11 @@ users:
         member_of:
             - dsatcher
 
+    - dstull:
+        can_login: yes
+        member_of:
+            - dstull
+
     - dtang:
         can_login: yes
         member_of:
@@ -6964,6 +7115,11 @@ users:
         can_login: yes
         member_of:
             - ebonet
+
+    - eboyd:
+        can_login: yes
+        member_of:
+            - eboyd
 
     - eguo:
         can_login: yes
@@ -7005,6 +7161,12 @@ users:
         member_of:
             - gainsight_pump
 
+    - gdoud:
+        can_login: yes
+        member_of:
+            - gdoud
+
+
     - gitlab_ci:
         can_login: yes
         member_of:
@@ -7020,6 +7182,7 @@ users:
         can_login: yes
         member_of:
             - grafana
+
 
     - gweaver:
         can_login: yes
@@ -7108,6 +7271,11 @@ users:
         can_login: yes
         member_of:
             - jgarcia
+
+    - jhalloran:
+        can_login: yes
+        member_of:
+            - jhalloran
 
     - jhope:
         can_login: yes
@@ -7239,6 +7407,11 @@ users:
         can_login: yes
         member_of:
             - kmckern
+
+    - kniechajewicz:
+        can_login: yes
+        member_of:
+            - kniechajewicz
 
     - kkarthikeyan:
         can_login: no
@@ -7498,6 +7671,11 @@ users:
             - parmstrong
             - accountadmin
 
+    - pcordero:
+        can_login: yes
+        member_of:
+            - pcordero
+
     - pempey:
         can_login: yes
         member_of:
@@ -7525,6 +7703,11 @@ users:
         can_login: yes
         member_of:
             - pleitzen
+
+    - pthote:
+        can_login: yes
+        member_of:
+            - pthote
 
     - rakreddy:
         can_login: yes
@@ -7562,6 +7745,11 @@ users:
         can_login: yes
         member_of:
             - rnienaber
+
+    - rohara:
+        can_login: yes
+        member_of:
+            - rohara
 
     - rpereira:
         can_login: yes
@@ -7604,6 +7792,11 @@ users:
         can_login: yes
         member_of:
             - securityadmin
+
+    - sfigueroa:
+        can_login: yes
+        member_of:
+            - sfigueroa
 
     - sgladchun:
         can_login: yes
@@ -7651,7 +7844,6 @@ users:
         member_of:
             - sranasinghe
 
-
     - srehm:
         can_login: yes
         member_of:
@@ -7676,6 +7868,11 @@ users:
         can_login: yes
         member_of:
             - svistas
+
+    - syasonik:
+        can_login: yes
+        member_of:
+            - syasonik
 
     - tableau:
         can_login: yes
@@ -7779,6 +7976,11 @@ users:
             - securityadmin
             - vprakash
 
+    - vnagy:
+        can_login: yes
+        member_of:
+            - vnagy
+
     - vtatarintev:
         can_login: yes
         member_of:
@@ -7799,9 +8001,8 @@ users:
         member_of: []
 
     - whaber:
-        can_login: yes
-        member_of:
-            - whaber
+        can_login: no
+        member_of: []
 
     - wleidheiser:
         can_login: yes

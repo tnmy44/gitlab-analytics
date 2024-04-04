@@ -14,6 +14,7 @@ Furthermore, by doing it in python, the entrypoint can be either CI job/python s
 
 import os
 import subprocess
+import re
 from typing import Tuple, List
 
 
@@ -41,32 +42,63 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
     return diff_output
 
 
-def get_username_changes() -> Tuple[List[str], List[str]]:
+def get_snowflake_usernames(users):
     """
-    Based on git diff to the `snowflake_usernames.yml` file,
+    Return snowflake username, need to update the string by:
+    - Remove '-ext'
+    - Remove non \\w chars
+    """
+    usernames = []
+    for user in users:
+        user = user.replace("-ext", "")
+        user = user.split("@")[0]
+        # Replace all non-word characters with blanks
+        user = re.sub(r"\W+", "", user)
+        usernames.append(user)
+    return usernames
+
+
+def get_emails(users):
+    """
+    From the user, i.e `jdoe-ext`, return the email
+    """
+    # for safety, in case user had added domain name into user argument
+    users = [user.split("@")[0] for user in users]
+
+    domain = "gitlab.com"
+    emails = []
+    for user in users:
+        email = f"{user}@{domain}"
+        emails.append(email)
+    return emails
+
+
+def get_user_changes() -> Tuple[List[str], List[str]]:
+    """
+    Based on git diff to the `snowflake_users.yml` file,
     returns user additions and removals
     """
     # Get the directory of the Python script
-    usernames_file_name = "snowflake_usernames.yml"
-    usernames_file_path = os.path.join(YAML_PATH, usernames_file_name)
+    users_file_name = "snowflake_users.yml"
+    users_file_path = os.path.join(YAML_PATH, users_file_name)
 
     # Run the Git diff command
     base_branch = "origin/master"
-    output = run_git_diff_command(usernames_file_path, base_branch)
+    output = run_git_diff_command(users_file_path, base_branch)
 
-    usernames_added = []
-    usernames_removed = []
+    users_added = []
+    users_removed = []
 
     for change in output.split("\n"):
         try:
-            username = change[3:]
+            user = change[3:]
         except IndexError:
             continue
 
-        # check that username isn't a blank line
-        if change.startswith("+") and username:
-            usernames_added.append(username)
-        elif change.startswith("-") and username:
-            usernames_removed.append(username)
+        # check that user isn't a blank line
+        if change.startswith("+") and user:
+            users_added.append(user)
+        elif change.startswith("-") and user:
+            users_removed.append(user)
 
-    return usernames_added, usernames_removed
+    return users_added, users_removed
