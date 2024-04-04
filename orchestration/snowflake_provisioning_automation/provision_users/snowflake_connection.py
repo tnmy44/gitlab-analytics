@@ -24,7 +24,7 @@ class SnowflakeConnection:
                     password=config_dict["SNOWFLAKE_PROVISIONER_PASSWORD"],
                     account=config_dict["SNOWFLAKE_PROVISIONER_ACCOUNT"],
                     role=role,  # needs to be passed in, can be securityadmin/sysadmin
-                    warehouse=["SNOWFLAKE_PROVISIONER_WAREHOUSE"],
+                    warehouse=config_dict["SNOWFLAKE_PROVISIONER_WAREHOUSE"],
                 )
             )
 
