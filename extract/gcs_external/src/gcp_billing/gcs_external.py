@@ -10,12 +10,12 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
-def get_export(export_name: str) -> dict:
+def get_export(export_name: str, spec_path: str) -> dict:
     """
-    retrieve export record attributes from gcs_external.yml
+    retrieve export record attributes from spec file
     """
 
-    with open("gcs_external/src/gcp_billing/gcs_external.yml", "r") as yaml_file: #param
+    with open(spec_path, "r") as yaml_file:
         try:
             stream = safe_load(yaml_file)
         except YAMLError as exc:
@@ -53,11 +53,11 @@ def get_billing_data_query(export: dict, export_date: str) -> str:
     """
 
 
-def run_export(export_name: str):
+def run_export(export_name: str, spec_path: str, gcp_project:str):
     """
     run sql command in bigquery
     """
-    export = get_export(export_name)
+    export = get_export(export_name, spec_path)
     export_date = config_dict["EXPORT_DATE"]
     sql_statement = get_billing_data_query(export, export_date)
 
@@ -67,7 +67,7 @@ def run_export(export_name: str):
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
-        project="billing-tools-277316", #param
+        project=gcp_project,
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 
