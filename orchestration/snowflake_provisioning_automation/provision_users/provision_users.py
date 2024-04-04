@@ -83,7 +83,10 @@ def _provision(
     sql_statements = convert_to_sql_statements(template_filename)
     for i in range(len(usernames)):
         logging.info(f"username: {usernames[i]}")
-        query_params = {"username": usernames[i], "email": emails[i] if emails else None}
+        query_params = {
+            "username": usernames[i],
+            "email": emails[i] if emails else None,
+        }
         connection.run_sql_statements(sql_statements, query_params)
 
 
@@ -124,7 +127,7 @@ def provision_all():
 
     logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
     logging.info(f"usernames_to_add: {usernames_to_add}")
-    logging.info(f'is_dev_db: {is_dev_db}')
+    logging.info(f"is_dev_db: {is_dev_db}")
     time.sleep(5)  # give user a chance to abort
 
     securityadmin_connection = get_securityadmin_connection(is_test_run)
