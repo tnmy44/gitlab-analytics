@@ -4892,12 +4892,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: hmorris
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: hmuralidhar
     user_name_domain: gitlab.com
     site_role: Viewer
