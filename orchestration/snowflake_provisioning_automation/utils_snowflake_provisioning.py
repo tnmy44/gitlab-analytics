@@ -15,6 +15,7 @@ Furthermore, by doing it in python, the entrypoint can be either CI job/python s
 import os
 import subprocess
 import re
+import logging
 from typing import Tuple, List
 
 
@@ -73,6 +74,22 @@ def get_emails(users):
     return emails
 
 
+def check_is_valid_user_format(user):
+    """
+    To prevent sql injection, make sure the `user` string
+    matches the following criteria
+    Characters must be: a-z, A-Z, 0-9, or '-'
+    """
+    pattern = re.compile(
+        "[^a-zA-Z0-9-]|-{2,}"
+    )  # Matches any character not a-z, A-Z, 0-9, or two or more consecutive hyphens
+
+    # Check if the pattern matches any part of the user variable
+    if pattern.search(user):
+        return False
+    return True
+
+
 def get_user_changes() -> Tuple[List[str], List[str]]:
     """
     Based on git diff to the `snowflake_users.yml` file,
@@ -96,9 +113,13 @@ def get_user_changes() -> Tuple[List[str], List[str]]:
             continue
 
         # check that user isn't a blank line
-        if change.startswith("+") and user:
-            users_added.append(user)
-        elif change.startswith("-") and user:
-            users_removed.append(user)
+        if (change.startswith("+") or change.startswith("-")) and user:
+            if not check_is_valid_user_format(user):
+                logging.info(f"Skipping user {user}, not a valid user")
+                continue
+            if change.startswith("-"):
+                users_added.append(user)
+            if change.startswith("-"):
+                users_removed.append(user)
 
     return users_added, users_removed

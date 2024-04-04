@@ -20,11 +20,6 @@ def get_users_added() -> list:
     return get_user_changes()[0]
 
 
-def get_users_removed() -> list:
-    """returns the usernames REMOVED from the snowflake_users.yml file"""
-    return get_user_changes()[1]
-
-
 def parse_arguments() -> argparse.Namespace:
     """
     The user can pass in the following arguemnts:
@@ -43,14 +38,6 @@ def parse_arguments() -> argparse.Namespace:
         type=str,
         default=get_users_added(),
         help="usernames to ADD to the roles.yml file",
-    )
-    parser.add_argument(
-        "-ur",
-        "--users-to-remove",
-        nargs="+",
-        type=str,
-        default=get_users_removed(),
-        help="usernames to REMOVE from the roles.yml file",
     )
     # by default, only print snowflake queries, don't run in Snowflake
     parser.add_argument(

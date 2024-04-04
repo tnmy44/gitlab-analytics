@@ -45,7 +45,6 @@ def process_args() -> Tuple[list, list, bool, bool]:
     """returns command line args passed in by user"""
     args = parse_arguments()
     return (
-        args.users_to_remove,
         args.users_to_add,
         args.dev_db,
         args.test_run,
@@ -123,15 +122,9 @@ def provision_all():
         - provision databases
         - deprovision users
     """
-<<<<<<< HEAD
-    usernames_to_add, is_dev_db, is_test_run = process_args()
-||||||| 89e0df49b6
-    usernames_to_remove, usernames_to_add, is_dev_db, is_test_run = process_args()
-=======
-    usernames_to_remove, users_to_add, is_dev_db, is_test_run = process_args()
+    users_to_add, is_dev_db, is_test_run = process_args()
     emails_to_add = get_emails(users_to_add)
     usernames_to_add = get_snowflake_usernames(users_to_add)
->>>>>>> @{-1}
 
     logging.info(f"provision users Snowflake, is_test_run: {is_test_run}\n")
     time.sleep(5)  # give user a chance to abort
