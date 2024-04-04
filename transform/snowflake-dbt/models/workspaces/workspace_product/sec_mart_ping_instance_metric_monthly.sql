@@ -7,7 +7,7 @@
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
-    
+
 }}, dim_ping_metric AS (
 
   SELECT *
