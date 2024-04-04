@@ -109,7 +109,8 @@ dbt_external_table_run = KubernetesPodOperator(
     dag=dag,
 )
 
-spec_path = f"{REPO_BASE_PATH}/extract/gcs_external/src/gcp_billing/gcs_external.yml"
+spec_file = "gcs_external/src/gcp_billing/gcs_external.yml"
+spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
 gcp_project = "billing-tools-277316"
 
 with open(
@@ -126,7 +127,7 @@ for export in stream["exports"]:
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcp_billing/gcs_external.py --export_name={export_name} --spec_path={spec_path} --gcp_project={gcp_project}
+    python gcs_external/src/gcp_billing/gcs_external.py --export_name={export_name} --spec_file={spec_file} --gcp_project={gcp_project}
     """
 
     task_name = export["name"]
