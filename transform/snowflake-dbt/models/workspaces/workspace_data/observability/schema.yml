@@ -19,8 +19,6 @@ models:
       description: "Monte Carlo exported table on dimension tracking monitors."
     - name: rca_query_change
       description: "Monte Carlo exported data of RCA query changes."
-    - name: table_read_write_stats
-      description: "Monte Carlo exported list of statistics on table reads and writes."
     - name: top_queries_per_executor
       description: "Monte Carlo exported list top queries."
     - name: monitor_recom_field_health
