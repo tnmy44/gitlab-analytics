@@ -6,7 +6,7 @@
 {{config({
     "materialized":"incremental",
     "unique_key":"event_id",
-    "on_schema_change"="sync_all_columns"
+    "on_schema_change":"sync_all_columns"
   })
 }}
 
@@ -203,7 +203,7 @@ WITH filtered_source as (
             , TRUE)
     {% if is_incremental() %}
 
-      AND derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{this}})
+      AND TRY_TO_TIMESTAMP(derived_tstamp) > (SELECT MAX(derived_tstamp) FROM {{this}})
 
     {% endif %}
 

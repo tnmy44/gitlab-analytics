@@ -5,9 +5,9 @@
 
 {{config({
     "materialized":"incremental",
-    "unique_key":"event_id",
+    "unique_key":['event_id', 'derived_tstamp_date'],
     "cluster_by":['derived_tstamp_date'],
-    "on_schema_change"="sync_all_columns"
+    "on_schema_change":"sync_all_columns"
   })
 }}
 
@@ -33,7 +33,7 @@ WITH filtered_source as (
       AND uploaded_at < '{{ run_started_at }}'
     {% if is_incremental() %}
 
-      AND derived_tstamp > (SELECT MAX(derived_tstamp_date) FROM {{this}})
+      AND TRY_TO_TIMESTAMP(derived_tstamp) > (SELECT MAX(derived_tstamp_date) FROM {{this}})
 
     {% endif %}
 )
