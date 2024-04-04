@@ -4288,6 +4288,7 @@ roles:
 
     - jgarcia:
         member_of:
+            - data_science
             - salesforce
             - snapshots
             - snowflake_analyst
