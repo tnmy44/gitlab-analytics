@@ -478,6 +478,8 @@
       fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
       fct_crm_opportunity.calculated_from_ratio_net_arr,
       fct_crm_opportunity.net_arr,
+      fct_crm_opportunity.xdr_net_arr_stage_1,
+      fct_crm_opportunity.xdr_net_arr_stage_3,
       fct_crm_opportunity.raw_net_arr,
       fct_crm_opportunity.created_and_won_same_quarter_net_arr,
       fct_crm_opportunity.new_logo_count,
@@ -585,9 +587,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@snalamaru",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-01-24"
+    updated_date="2024-03-05"
   ) }}
 
 

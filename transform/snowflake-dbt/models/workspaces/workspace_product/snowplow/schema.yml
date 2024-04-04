@@ -10,14 +10,6 @@ models:
           - not_null
           - unique
 
-  - name: fct_behavior_structured_event_redis_hll_counters
-    description: Derived fact table for structured events related to redis hll metrics.
-    columns:
-      - name: behavior_structured_event_pk
-        tests:
-          - not_null
-          - unique
-
   - name: fct_behavior_structured_event_ide_extension_version
     description: Derived fact table that parses out the [ide_extension_version context](https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/256#contexts) based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) which can optionally be sent with an event.
     columns:

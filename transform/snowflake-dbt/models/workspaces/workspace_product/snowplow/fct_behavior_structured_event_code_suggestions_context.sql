@@ -58,7 +58,8 @@ clicks AS (
         IFF(saas_namespace_ids = '[]', NULL, saas_namespace_ids)
         )                                                                           AS namespace_ids,
     flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS instance_id,
-    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name
+    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name,
+    flat_contexts.value['data']['is_streaming']::BOOLEAN                            AS is_streaming
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
@@ -74,7 +75,7 @@ clicks AS (
 
   SELECT 
     code_suggestion_context.behavior_structured_event_pk,
-    flattened_namespace.value                                 AS namespace_id
+    flattened_namespace.value::VARCHAR                                 AS namespace_id
   FROM code_suggestion_context,
   LATERAL FLATTEN (input => TRY_PARSE_JSON(code_suggestion_context.namespace_ids)) AS flattened_namespace
   WHERE namespace_ids IS NOT NULL
@@ -263,5 +264,5 @@ clicks AS (
     created_by="@mdrussell",
     updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2024-02-29"
+    updated_date="2024-03-25"
 ) }}

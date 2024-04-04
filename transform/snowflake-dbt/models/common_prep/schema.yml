@@ -132,6 +132,8 @@ models:
           - unique
       - name: campaign_partner_crm_id
         description: The partner associated with this campaign through Vartopia.
+      - name: mdf_request_id
+        description: The ID MDF Request that funded the campaign for MDF Campaigns.
 
   - name: prep_crm_person
     description: '{{ doc("prep_crm_person") }}'
@@ -810,6 +812,13 @@ models:
       - name: is_active_user_count_available
         description: Flags rows where `active_user_count` is NULL in source.
 
+  - name: prep_latest_seat_link_installation
+    description: '{{ doc("prep_latest_seat_link_installation") }}'
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - host_name
+          - dim_instance_id
 
   - name: prep_gainsight_source_model_counts
     description: '{{ doc("prep_gainsight_source_model_counts") }}'
@@ -1187,6 +1196,17 @@ models:
       - name: dim_merge_request_sk
         tests:
           - unique
+          - not_null
+
+  - name: prep_member_accepted_invites
+    description: '{{ doc("prep_member_accepted_invites") }}'
+    columns:
+      - name: dim_member_id
+        tests:
+          - unique
+          - not_null
+      - name: ultimate_parent_namespace_id
+        tests:
           - not_null
 
   - name: prep_epic
