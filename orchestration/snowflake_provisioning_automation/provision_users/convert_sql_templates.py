@@ -32,25 +32,3 @@ def convert_to_sql_statements(template_filename: str) -> list:
     sql_file_contents = get_template(template_filename)
     statements = sqlparse.split(sql_file_contents)
     return [str(statement) for statement in statements if statement.strip()]
-
-
-'''
-def render_template(template: Template, username: str, email: str) -> str:
-    """Render the jinja template with the Snowflake username"""
-    # Define variables to be used in the template
-    variables = {"username": username, "email": email}
-
-    # Render the template with variables
-    rendered_template = template.render(variables)
-    return rendered_template
-
-def process_template(template: Template, username: str, email: str = None) -> list:
-    """
-    Renders the sql file with Jinja templating
-    and converts the string to a list of sql statements
-    """
-    rendered_template = render_template(template, username, email)
-    sql_statements = convert_to_sql_statements(rendered_template)
-    return sql_statements
-
-'''
