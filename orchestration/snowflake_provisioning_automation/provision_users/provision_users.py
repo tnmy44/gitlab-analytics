@@ -25,7 +25,7 @@ from jinja2 import Template
 
 from args_provision_users import parse_arguments
 from snowflake_connection import SnowflakeConnection
-from convert_sql_templates import get_template, process_template
+from convert_sql_templates import convert_to_sql_statements
 
 # needed to import shared utils module
 abs_path = os.path.dirname(os.path.realpath(__file__))
@@ -70,7 +70,7 @@ def get_sysadmin_connection(is_test_run: bool):
 
 
 def _provision(
-    connection: Engine, sql_template: Template, usernames: list, emails: list = None
+    connection: Engine, template_filename: str, usernames: list, emails: list = None
 ):
     """
     All provision types (new users, new databases, deprovision users)
@@ -80,28 +80,25 @@ def _provision(
     for each passed in user.
     Each sql statement is then run in Snowflake.
     """
+    sql_statements = convert_to_sql_statements(template_filename)
     for i in range(len(usernames)):
         logging.info(f"username: {usernames[i]}")
-        sql_statements = process_template(
-            sql_template, usernames[i], emails[i] if emails else None
-        )
-        connection.run_sql_statements(sql_statements)
+        query_params = {"username": usernames[i], "email": emails[i] if emails else None}
+        connection.run_sql_statements(sql_statements, query_params)
 
 
 def provision_users(connection: Engine, usernames: list, emails: list):
     """provision user in Snowflake"""
     template_filename = "provision_user.sql"
-    sql_template = get_template(template_filename)
     logging.info("#### Provisioning users ####")
-    _provision(connection, sql_template, usernames, emails)
+    _provision(connection, template_filename, usernames, emails)
 
 
 def provision_databases(connection: Engine, usernames: list):
     """provision personal databases in Snowflake"""
     template_filename = "provision_database.sql"
-    sql_template = get_template(template_filename)
     logging.info("#### Provisioning user databases ####")
-    _provision(connection, sql_template, usernames)
+    _provision(connection, template_filename, usernames)
 
 
 def deprovision_users(connection: Engine, usernames: list):
@@ -110,9 +107,8 @@ def deprovision_users(connection: Engine, usernames: list):
     Currently unused, will do Snowflake deprovision in separate process
     """
     template_filename = "deprovision_user.sql"
-    sql_template = get_template(template_filename)
     logging.info("#### Deprovisioning users ####")
-    _provision(connection, sql_template, usernames)
+    _provision(connection, template_filename, usernames)
 
 
 def provision_all():
