@@ -1,8 +1,7 @@
 -- assumes securityadmin role and admin warehouse are being used
-SET username = (select upper(':username'));
-SET email = (select ':email');
+SET username = (select upper(:username));
+SET email = (select :email);
 
-/*
 CREATE USER
   identifier($username)
   EMAIL = $email
@@ -12,4 +11,3 @@ CREATE ROLE identifier($username);
 
 GRANT ROLE identifier($username) TO ROLE "SYSADMIN";
 GRANT ROLE identifier($username) TO USER identifier($username);
-*/
