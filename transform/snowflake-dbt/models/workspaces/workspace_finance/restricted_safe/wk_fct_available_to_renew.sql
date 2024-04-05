@@ -202,8 +202,7 @@ With dim_subscription_source AS (
       dim_crm_user.crm_user_region,
       dim_crm_user.crm_user_area,
       dim_crm_user.dim_crm_user_id,
-      user_name,
-      
+      dim_crm_user.user_name,
       subscriptions_for_ramp_deals.ATR_term_start_date,
       subscriptions_for_ramp_deals.ATR_term_end_date,
       subscriptions_for_ramp_deals.dim_crm_account_id, 
@@ -216,7 +215,7 @@ With dim_subscription_source AS (
       ON subscriptions_for_ramp_deals.dim_subscription_id = fct_charge.dim_subscription_id        
       AND subscriptions_for_ramp_deals.term_end_date = TO_VARCHAR(TO_DATE(TO_CHAR(effective_end_date_id),'yyyymmdd'), 'YYYY-MM-DD')       
       AND fct_charge.effective_start_date_id != fct_charge.effective_end_date_id        
-    LEFT JOIN PROD.RESTRICTED_SAFE_COMMON.DIM_CHARGE    dim_charge  
+    LEFT JOIN PROD.RESTRICTED_SAFE_COMMON.DIM_CHARGE dim_charge  
       ON dim_charge.dim_charge_id = fct_charge.dim_charge_id 
     INNER JOIN PROD.COMMON.dim_billing_account dim_billing_account
       ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
@@ -225,8 +224,9 @@ With dim_subscription_source AS (
     LEFT JOIN PROD.COMMON.dim_crm_user dim_crm_user
       ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     WHERE fct_charge.dim_product_detail_id IS NOT NULL  
-    AND dim_crm_account.is_jihu_account != 'TRUE'
-    AND ARR != 0 AND is_included_in_arr_calc = 'TRUE'
+      AND dim_crm_account.is_jihu_account != 'TRUE'
+      AND fct_charge.ARR != 0 
+      AND dim_charge.is_included_in_arr_calc = 'TRUE'
 
     
 --Final ATR 
@@ -239,6 +239,7 @@ With dim_subscription_source AS (
       dim_crm_opportunity_id,
       dim_subscription_id, 
       subscription_name,
+      lead(dim_subscription_id) over (partition by subscription_name order by atr_term_end_date) as renewal_subscription_id,
       renewal_subscription_name,
       dim_billing_account_id,
       dim_product_detail_id,
@@ -257,7 +258,7 @@ With dim_subscription_source AS (
     FROM subscription_charges 
     LEFT JOIN PROD.COMMON.DIM_DATE  
      ON subscription_charges.ATR_term_end_date = dim_date.date_day 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21
+    GROUP BY 1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,22
 )
 
 {{ dbt_audit(
