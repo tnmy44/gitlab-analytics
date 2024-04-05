@@ -16,14 +16,14 @@ from utils_snowflake_provisioning import (
 
 
 def get_users_added() -> list:
-    """returns the usernames ADDED to the snowflake_users.yml file"""
+    """returns the users ADDED to the snowflake_users.yml file"""
     return get_user_changes()[0]
 
 
 def parse_arguments() -> argparse.Namespace:
     """
     The user can pass in the following arguemnts:
-        --usernames-to-add
+        --users-to-add
         --test-run
         --dev-db
 
@@ -37,7 +37,7 @@ def parse_arguments() -> argparse.Namespace:
         nargs="+",
         type=str,
         default=get_users_added(),
-        help="usernames to ADD to the roles.yml file",
+        help="users to ADD to the roles.yml file",
     )
     # by default, only print snowflake queries, don't run in Snowflake
     parser.add_argument(
