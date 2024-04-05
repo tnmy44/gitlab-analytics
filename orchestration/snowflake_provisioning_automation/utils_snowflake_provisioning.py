@@ -117,7 +117,7 @@ def get_user_changes() -> Tuple[List[str], List[str]]:
             if not check_is_valid_user_format(user):
                 logging.info(f"Skipping user {user}, not a valid user")
                 continue
-            if change.startswith("-"):
+            if change.startswith("+"):
                 users_added.append(user)
             if change.startswith("-"):
                 users_removed.append(user)

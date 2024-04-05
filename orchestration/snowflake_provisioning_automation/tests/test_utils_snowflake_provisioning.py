@@ -27,8 +27,8 @@ def test_get_user_changes(mock_run_git_diff_command):
 
     Note that modified blank lines are ignored
     """
-    added_user = "added_user"
-    removed_user = "removed_user"
+    added_user = "addeduser"
+    removed_user = "removeduser"
     test_diff = f"+\n+--{added_user}\n---{removed_user}"
     mock_run_git_diff_command.return_value = test_diff
     users_added, users_removed = get_user_changes()
