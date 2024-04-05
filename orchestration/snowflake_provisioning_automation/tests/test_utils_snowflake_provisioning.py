@@ -9,6 +9,7 @@ from utils_snowflake_provisioning import (
     get_user_changes,
     get_snowflake_usernames,
     get_emails,
+    check_is_valid_user_format,
 )
 
 
@@ -20,7 +21,7 @@ def test_imports():
 @patch("utils_snowflake_provisioning.run_git_diff_command")
 def test_get_user_changes(mock_run_git_diff_command):
     """
-    Test that given a diff it returns the correct results.
+    Test that given a diff it returns the correct is_valid_userults.
     Specifically lines with a '+' belong to usernames_added
     and lines with a '-' belong to usernames_removed
 
@@ -77,3 +78,31 @@ def test_get_emails():
     users = ["jdoe", "jdoe-ext", "jdoe@gitlab.com"]
     emails = get_emails(users)
     assert emails == ["jdoe@gitlab.com", "jdoe-ext@gitlab.com", "jdoe@gitlab.com"]
+
+
+def test_check_is_valid_user_format():
+    """Test check_is_valid_user_format() logic"""
+    # regular user, should be true
+    user = "jdoe"
+    is_valid_user = check_is_valid_user_format(user)
+    assert is_valid_user is True
+
+    # another regular user, should be true
+    user = "jdoe-ext"
+    is_valid_user = check_is_valid_user_format(user)
+    assert is_valid_user is True
+
+    # two '-', should be false
+    user = "jdoe--ext"
+    is_valid_user = check_is_valid_user_format(user)
+    assert is_valid_user is False
+
+    # '.' is invalid char, should be False
+    user = "jdoe.ext"
+    is_valid_user = check_is_valid_user_format(user)
+    assert is_valid_user is False
+
+    # sql injection attempt, should be False
+    user = "jdoe; drop table some_table; -- some other query"
+    is_valid_user = check_is_valid_user_format(user)
+    assert is_valid_user is False
