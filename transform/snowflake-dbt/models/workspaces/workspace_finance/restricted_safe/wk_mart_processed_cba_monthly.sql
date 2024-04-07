@@ -43,7 +43,7 @@ SUM(wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_amount) A
 FROM prod.restricted_safe_workspace_finance.wk_finance_fct_credit_balance_adjustment
 WHERE wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_type = 'Increase'
 AND wk_finance_fct_credit_balance_adjustment.credit_balance_adjustment_status = 'Processed'
-AND wk_finance_fct_credit_balance_adjustment.INVOICE_ID = ''
+AND wk_finance_fct_credit_balance_adjustment.invoice_id = ''
 GROUP BY overpayment_date
 ORDER BY overpayment_date
 
