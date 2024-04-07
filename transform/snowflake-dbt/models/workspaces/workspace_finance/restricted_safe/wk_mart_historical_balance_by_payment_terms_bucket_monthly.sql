@@ -31,7 +31,7 @@ SELECT
     END AS aging_bucket
     FROM {{ ref('wk_finance_fct_invoice_aging_detail') }}
     LEFT JOIN {{ ref('dim_invoice') }} ON dim_invoice.dim_invoice_id = wk_finance_fct_invoice_aging_detail.invoice_id
-    LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = wk_finance_fct_invoice_aging_detail.accounting_period
+    LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = accounting_period
 
 )
 
