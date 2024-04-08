@@ -5,6 +5,8 @@
     ('dim_date', 'dim_date'),
     ('dim_crm_user_hierarchy','wk_dim_crm_user_hierarchy')
 ]) }},
+
+
 final AS (
 
 
