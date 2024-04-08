@@ -222,6 +222,71 @@ models:
       - name: job_stage_name_modified
       - name: job_stage_id
       - name: job_stage_milestone
-
-
-
+  - name: wk_talent_acquisition
+    columns: 
+      - name: id
+      - name: job_id
+      - name: job_opening_id
+      - name: candidate_id
+      - name: application_id
+      - name: offer_id
+      - name: start_datetime
+      - name: end_datetime
+      - name: start_date
+      - name: end_date
+      - name: id
+      - name: status
+      - name: status_id
+      - name: max_start_date
+      - name: max_end_date
+      - name: min_start_date
+      - name: is_max_record
+      - name: is_max_hire_progress_step
+  - name: wk_talent_acquisition_application
+    columns: 
+      - name: application_id
+      - name: candidate_id
+      - name: job_id
+      - name: job_post_id
+      - name: applied_at
+      - name: application_status
+      - name: source_name
+      - name: source_type
+      - name: prospect
+      - name: sourcer_name
+      - name: referrer_name
+      - name: referrer_employee_id
+      - name: rejected_by
+      - name: rejected_by_employee_id
+      - name: rejection_reason_name
+      - name: rejection_reason_type
+      - name: rejected_at
+      - name: hired_at
+      - name: started_at
+      - name: external_start
+      - name: created_at
+      - name: last_updated_at
+  - name: wk_talent_acquisition_candidate
+    columns: 
+      - name: candidate_id
+      - name: candidate_recruiter_id
+      - name: candidate_coordinator_id
+      - name: candidate_recruiter
+      - name: recruiter_id
+      - name: coordinator_id
+      - name: canddidate_coordinator
+      - name: candidate_company
+      - name: candidate_title
+      - name: candidate_created_at
+      - name: candidate_updated_at
+      - name: is_candidate_migrated
+      - name: is_candidate_private
+      - name: first_name
+      - name: last_name
+      - name: country
+      - name: locality
+      - name: relationship
+      - name: family_relationship
+      - name: referral
+      - name: preferred_first
+      - name: referral_notes
