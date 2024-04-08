@@ -8,12 +8,25 @@ from utils_update_roles import get_user_changes
 
 def get_users_added() -> list:
     """returns the users ADDED to the snowflake_users.yml file"""
-    return get_user_changes()[0]
+
+    try:
+        users_added = get_user_changes()[0]
+    except IndexError as e:
+        raise IndexError(
+            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+        )
+    return users_added
 
 
 def get_users_removed() -> list:
     """returns the users REMOVED from the snowflake_users.yml file"""
-    return get_user_changes()[1]
+    try:
+        users_removed = get_user_changes()[1]
+    except IndexError as e:
+        raise IndexError(
+            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+        )
+    return users_removed
 
 
 def get_default_databases_template() -> str:

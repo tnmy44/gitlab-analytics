@@ -17,7 +17,13 @@ from utils_snowflake_provisioning import (
 
 def get_users_added() -> list:
     """returns the users ADDED to the snowflake_users.yml file"""
-    return get_user_changes()[0]
+    try:
+        users_added = get_user_changes()[0]
+    except IndexError as e:
+        raise IndexError(
+            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+        )
+    return users_added
 
 
 def parse_arguments() -> argparse.Namespace:

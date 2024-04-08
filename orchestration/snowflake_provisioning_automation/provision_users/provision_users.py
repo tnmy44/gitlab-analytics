@@ -41,7 +41,7 @@ def configure_logging():
     )
 
 
-def process_args() -> Tuple[list, list, bool, bool]:
+def process_args() -> Tuple[list, bool, bool]:
     """returns command line args passed in by user"""
     args = parse_arguments()
     return (
