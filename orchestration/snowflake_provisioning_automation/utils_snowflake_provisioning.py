@@ -39,7 +39,13 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
     fi
     """
 
-    diff_output = subprocess.check_output(grep_diff_command, shell=True, text=True)
+    try:
+        result = subprocess.run(
+            grep_diff_command, capture_output=True, check=True, text=True, shell=True
+        )
+        diff_output = result.stdout
+    except subprocess.CalledProcessError as e:
+        raise e
     return diff_output
 
 
@@ -101,12 +107,12 @@ def get_user_changes() -> Tuple[List[str], List[str]]:
 
     # Run the Git diff command
     base_branch = "origin/master"
-    output = run_git_diff_command(users_file_path, base_branch)
+    diff_output = run_git_diff_command(users_file_path, base_branch)
 
     users_added = []
     users_removed = []
 
-    for change in output.split("\n"):
+    for change in diff_output.split("\n"):
         try:
             user = change[3:]
         except IndexError:
