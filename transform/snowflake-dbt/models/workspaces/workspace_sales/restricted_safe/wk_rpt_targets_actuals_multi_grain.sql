@@ -789,7 +789,7 @@ unioned AS (
     snapshot_is_first_day_of_fiscal_quarter_week,
     snapshot_days_until_last_day_of_month,
     snapshot_week_of_fiscal_quarter,
-    max_snapshot_week_of_fiscal_quarter,
+    NULL AS max_snapshot_week_of_fiscal_quarter,
     NULL AS open_1plus_net_arr_in_snapshot_quarter,
     NULL AS open_3plus_net_arr_in_snapshot_quarter,
     NULL AS open_4plus_net_arr_in_snapshot_quarter,
