@@ -328,6 +328,8 @@ models:
       - name: strategic_marketing_contribution
       - name: campaign_partner_crm_id
         description: The partner associated with this campaign through Vartopia.
+      - name: mdf_request_id
+        description: The ID MDF Request that funded the campaign for MDF Campaigns.
 
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
