@@ -9,6 +9,7 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 **Filters Applied to Model:**
 - Include events containing the `code_suggestions_context`
 - Include events from the following app_ids: `gitlab_ai_gateway`, `gitlab_ide_extension`
+- Exclude staging events (`is_staging_event = FALSE`)
 - Exclude IDE events from VS Code extension version 3.76.0. These are excluded by using both `ide_name` and `extension_version` values.
   - Note: The Gateway did not send duplicate events from that extension version, so it is okay to let those flow through
 - `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
