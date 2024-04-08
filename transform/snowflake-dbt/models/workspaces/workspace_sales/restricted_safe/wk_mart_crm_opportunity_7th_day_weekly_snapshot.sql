@@ -367,6 +367,7 @@ final AS (
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
     DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
+    MAX(snapshot_week_of_fiscal_quarter) OVER (ORDER BY snapshot_date DESC) AS max_snapshot_week_of_fiscal_quarter, -- field needed in Tableau 
 
     --additive fields
     fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,

@@ -96,6 +96,7 @@ final AS (
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
     DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, targets_actuals.date_actual) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
+    MAX(snapshot_week_of_fiscal_quarter) OVER (ORDER BY snapshot_date DESC) AS max_snapshot_week_of_fiscal_quarter, -- field needed in Tableau 
     -- crm owner/sales rep live fields
     dim_crm_user_hierarchy.crm_user_sales_segment,
     dim_crm_user_hierarchy.crm_user_geo,
@@ -104,7 +105,6 @@ final AS (
     dim_crm_user_hierarchy.crm_user_business_unit,
     dim_crm_user_hierarchy.crm_user_sales_segment_grouped,
     dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped,
-
     dim_crm_user_hierarchy.crm_user_role_name,
     dim_crm_user_hierarchy.crm_user_role_level_1,
     dim_crm_user_hierarchy.crm_user_role_level_2,
