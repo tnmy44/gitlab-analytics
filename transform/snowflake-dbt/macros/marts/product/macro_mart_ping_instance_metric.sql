@@ -30,11 +30,19 @@ updated_subscriptions AS (
   QUALIFY MAX(subscription_updated_date) OVER (PARTITION BY dim_subscription_id_original) > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
 ),
 
-updated_ping_instance AS (
-  SELECT 
-    dim_ping_instance_id
+ping_instance_list AS (
+  SELECT
+    ARRAY_AGG( dim_ping_instance_id) AS dim_ping_instance_id_array
   FROM dim_ping_instance
-  WHERE next_ping_uploaded_at > (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
+  GROUP BY dim_instance_id, dim_host_id, uploaded_group
+  HAVING MAX(next_ping_uploaded_at) >  (SELECT MAX(dimensions_checked_at) FROM {{ this }} )
+),
+
+updated_ping_instance AS (
+  SELECT
+    value::VARCHAR AS dim_ping_instance_id
+  FROM ping_instance_list
+  INNER JOIN LATERAL FLATTEN(INPUT => dim_ping_instance_id_array)
 ),
 
 {% endif %}
