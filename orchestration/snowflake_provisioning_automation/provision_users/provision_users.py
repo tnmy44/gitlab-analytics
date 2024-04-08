@@ -37,7 +37,7 @@ from utils_snowflake_provisioning import get_snowflake_usernames, get_emails
 def configure_logging():
     """configure logger"""
     logging.basicConfig(
-        level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
 
 
