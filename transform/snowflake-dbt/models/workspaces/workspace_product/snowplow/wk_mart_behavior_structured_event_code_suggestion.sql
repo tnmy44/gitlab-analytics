@@ -24,7 +24,6 @@
     "IDE_EXTENSION_VERSION_CONTEXT","EXTENSION_NAME","EXTENSION_VERSION","IDE_NAME","IDE_VENDOR","IDE_VERSION","LANGUAGE_SERVER_VERSION",
     "MODEL_ENGINE","MODEL_NAME","PREFIX_LENGTH","SUFFIX_LENGTH","LANGUAGE","USER_AGENT","DELIVERY_TYPE","API_STATUS_CODE","NAMESPACE_IDS","INSTANCE_ID","HOST_NAME"]) }}
   FROM fct_behavior
-  WHERE is_staging_event = FALSE
   
 
 ),
@@ -157,7 +156,7 @@ filtered_code_suggestion_events AS (
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
     created_by="@cbraza",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2023-10-09",
-    updated_date="2023-03-22"
+    updated_date="2024-03-08"
 ) }}

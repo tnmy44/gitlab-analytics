@@ -37,7 +37,6 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
-      fct_behavior_structured_event.is_staging_event,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       fct_behavior_structured_event.gsc_google_analytics_client_id,
@@ -74,5 +73,5 @@
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-04-02"
+    updated_date="2024-03-05"
 ) }}

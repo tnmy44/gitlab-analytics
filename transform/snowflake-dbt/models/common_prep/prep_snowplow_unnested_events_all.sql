@@ -8,7 +8,7 @@
 
 WITH unioned_view AS (
 
-{{ schema_union_limit('snowplow_', 'snowplow_unnested_events', 'derived_tstamp', 800, database_name=env_var('SNOWFLAKE_PREP_DATABASE')) }}
+{{ schema_union_limit('snowplow_', 'snowplow_unnested_events', 'derived_tstamp', 800, database_name=env_var('SNOWFLAKE_PREP_DATABASE'), boolean_filter_statement='is_staging_url = FALSE') }}
 
 )
 
@@ -32,7 +32,6 @@ SELECT
   se_label                                                                                                          AS event_label,
   se_property                                                                                                       AS event_property,
   se_value                                                                                                          AS event_value,
-  is_staging_event                                                                                                  AS is_staging_event,
   platform                                                                                                          AS platform,
   gsc_pseudonymized_user_id                                                                                         AS gsc_pseudonymized_user_id,
   page_urlhost                                                                                                      AS page_url_host,
