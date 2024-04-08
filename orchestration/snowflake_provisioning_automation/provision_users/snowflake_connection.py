@@ -33,13 +33,9 @@ class SnowflakeConnection:
         Execute DB queries safely.
         """
 
-        try:
-            connection = self.engine.connect()
+        with self.engine.connect() as connection:
             query_text = text(query)
             results = connection.execute(query_text, query_params).fetchall()
-        finally:
-            connection.close()
-            self.engine.dispose()
         return results
 
     def run_sql_statement(self, sql_statement: str, query_params: dict):
