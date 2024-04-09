@@ -6407,6 +6407,10 @@ models:
           values: ['Self-Managed', 'SaaS']
       - name: api_status_code
         description: ' {{ doc("code_suggestions_api_status_code") }} '
+      - name: duo_namespace_ids
+        description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+      - name: saas_namespace_ids
+        description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
       - name: instance_id
@@ -8502,6 +8506,10 @@ models:
         values: ['Self-Managed', 'SaaS']
     - name: api_status_code
       description: '{{ doc("code_suggestions_api_status_code") }}'
+    - name: duo_namespace_ids
+      description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+    - name: saas_namespace_ids
+      description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
     - name: namespace_ids
       description: '{{ doc("code_suggestions_namespace_ids") }}'
     - name: instance_id

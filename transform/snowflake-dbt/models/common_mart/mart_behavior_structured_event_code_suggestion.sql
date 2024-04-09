@@ -160,6 +160,6 @@ filtered_code_suggestion_events AS (
     cte_ref="filtered_code_suggestion_events",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2024-03-25",
-    updated_date="2024-03-25"
+    created_date="2024-04-09",
+    updated_date="2024-04-09"
 ) }}

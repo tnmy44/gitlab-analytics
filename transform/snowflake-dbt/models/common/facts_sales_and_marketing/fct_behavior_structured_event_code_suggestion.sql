@@ -32,6 +32,8 @@ code_suggestion_context AS (
     fct_behavior_structured_event.language,
     fct_behavior_structured_event.delivery_type,
     fct_behavior_structured_event.api_status_code,
+    fct_behavior_structured_event.duo_namespace_ids,
+    fct_behavior_structured_event.saas_namespace_ids,
     fct_behavior_structured_event.namespace_ids,
     fct_behavior_structured_event.instance_id,
     fct_behavior_structured_event.host_name,
@@ -239,6 +241,6 @@ code_suggestion_context AS (
     cte_ref="combined",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2024-03-25",
-    updated_date="2024-03-25"
+    created_date="2024-04-09",
+    updated_date="2024-04-09"
 ) }}

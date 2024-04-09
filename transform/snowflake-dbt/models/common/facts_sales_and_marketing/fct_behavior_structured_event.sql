@@ -91,6 +91,8 @@ structured_event_renamed AS (
       user_agent,
       delivery_type,
       api_status_code,
+      duo_namespace_ids,
+      saas_namespace_ids,
       namespace_ids,
       instance_id,
       host_name,
@@ -223,6 +225,8 @@ structured_events_w_dim AS (
       events_with_plan.user_agent,
       events_with_plan.delivery_type,
       events_with_plan.api_status_code,
+      events_with_plan.duo_namespace_ids,
+      events_with_plan.saas_namespace_ids,
       events_with_plan.namespace_ids,
       events_with_plan.instance_id,
       events_with_plan.host_name,
@@ -281,7 +285,7 @@ structured_events_w_dim AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-03-21"
+    updated_date="2024-04-09"
 ) }}

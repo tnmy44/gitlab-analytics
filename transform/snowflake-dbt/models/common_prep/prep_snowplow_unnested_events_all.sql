@@ -167,6 +167,8 @@ SELECT
   user_agent                                                                                                        AS user_agent,
   delivery_type                                                                                                     AS delivery_type,
   api_status_code                                                                                                   AS api_status_code,
+  duo_namespace_ids                                                                                                 AS duo_namespace_ids,
+  saas_namespace_ids                                                                                                AS saas_namespace_ids,
   namespace_ids                                                                                                     AS namespace_ids,
   instance_id                                                                                                       AS instance_id,
   host_name                                                                                                         AS host_name,
