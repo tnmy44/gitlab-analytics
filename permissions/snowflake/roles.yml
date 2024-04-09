@@ -637,6 +637,16 @@ roles:
             - zuora_central_sandbox
             - restricted_workspace_people
             - analyst_people_sensitive
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hmc
+            tables:
+                read:
+                    - raw.workday_hmc.*
 
     - analyst_sales:
         warehouses:
