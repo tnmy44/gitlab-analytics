@@ -27,7 +27,7 @@
     sub.status                       AS subscription_status,
     sub.termstartdate                AS term_start_date,
     sub.termenddate                  AS term_end_date,
-    rampid                           AS ramp_id, ---Identifies ramps from booked via current Ramp functionality
+    rampid                           AS ramp_id, ---Identifies ramps booked via current Ramp functionality
     CASE when sub.rampid <> '' OR sub.rampid IS NOT NULL THEN rampid
     ELSE 'Not a ramp' END            AS is_ramp,
     MULTIYEARDEALSUBSCRIPTIONLINKAGE__C AS myb_opportunity_id,---Equivalent to SSP ID in SF, deprecated now, used for identifying Legacy ramps
@@ -91,7 +91,7 @@
 
 
 --Identifying Ramp Deals from SF by using Opportunity_category
---Opportunity_category is manually updated, over 90% accurate
+--Opportunity_category is manually updated in SF, over 90% accuracy rate
 ), ramp_deals AS (
 
    SELECT 
@@ -105,6 +105,7 @@
       AND mart_crm_opportunity.opportunity_category LIKE '%Ramp Deal%'
 
 
+---Combining All Ramp deals from SF and Zuora sources
 ), ramp_deals_ssp_id_multiyear_linkage AS (
 
     SELECT 
@@ -164,6 +165,7 @@
     FROM dim_subscription	     
     Where subscription_status = 'Cancelled' 
 
+
 ---Subscriptions base
 ), dim_subscription_base AS (     
 
@@ -175,6 +177,7 @@
       AND dim_subscription_latest_version.term_start_date = dim_subscription_cancelled.term_start_date        
     WHERE dim_subscription_cancelled.subscription_name IS NULL  
 
+
 --Calculating min and max term dates for all ramps
 ), ramp_min_max_dates AS (
 
@@ -185,6 +188,7 @@
     FROM dim_subscription_base      
     WHERE ramp_ssp_id IS NOT NULL       
     GROUP BY 1 HAVING COUNT(*) > 1  
+
 
 ----Calculating ATR start term and End term dates from Subscripion base
 ), subscriptions_for_all AS (    
@@ -245,7 +249,7 @@
     --  AND dim_charge.is_included_in_arr_calc = 'TRUE'
 
     
---Final ATR Calculation for all Quarters
+--Final ATR Calculation for all Quarters along with Renewal Linkage Subscriptions
 ), final AS ( 
 
     SELECT DISTINCT
