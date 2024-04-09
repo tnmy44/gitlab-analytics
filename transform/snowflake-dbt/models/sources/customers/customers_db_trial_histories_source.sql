@@ -14,7 +14,8 @@ WITH source AS (
       updated_at::TIMESTAMP                     AS updated_at,
       glm_source::VARCHAR                       AS glm_source,
       glm_content::VARCHAR                      AS glm_content,
-      trial_entity::VARCHAR                     AS trial_entity
+      trial_entity::VARCHAR                     AS trial_entity,
+      trial_type::INTEGER                       AS trial_type
     FROM source
 
     
