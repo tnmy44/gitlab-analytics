@@ -21,6 +21,7 @@ from typing import Tuple, List
 
 abs_path = os.path.realpath(__file__)
 YAML_PATH = abs_path[: abs_path.find("/orchestration")] + "/permissions/snowflake/"
+config_dict = os.environ.copy()
 
 
 def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
@@ -72,7 +73,7 @@ def get_emails(users):
     # for safety, in case user had added domain name into user argument
     users = [user.split("@")[0] for user in users]
 
-    domain = "gitlab.com"
+    domain = config_dict["EMAIL_DOMAIN"]
     emails = []
     for user in users:
         email = f"{user}@{domain}"
