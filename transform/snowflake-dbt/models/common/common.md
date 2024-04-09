@@ -1964,3 +1964,15 @@ All milestones created within a namespace, with details including the start date
 Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}
+
+{% docs fct_behavior_structured_event_code_suggestion %}
+
+Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [Code Suggestions context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) and columns, which indicates they are Code Suggestions events.
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_ide_extension_version %}
+
+Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [IDE Extension Version context]https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) and columns, which indicates they are IDE Extension Version events.
+
+{% enddocs %}

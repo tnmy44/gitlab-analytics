@@ -2,7 +2,8 @@
   config(
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
-    tags=["mnpi_exception", "product"]
+    tags=["mnpi_exception", "product"],
+    alias='fct_behavior_structured_event_ide_extension_version'
   )
 }}
 
@@ -42,7 +43,7 @@ flattened AS (
 {{ dbt_audit(
     cte_ref="flattened",
     created_by="@michellecooper",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2023-09-19",
     updated_date="2024-04-02"
 ) }}

@@ -9,65 +9,41 @@
 
 
 {{ simple_cte([
+    ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
     ('bdg_namespace_order_subscription', 'bdg_namespace_order_subscription'),
-    ('dim_subscription', 'dim_subscription'),
+    ('prep_subscription', 'prep_subscription'),
     ('zuora_product_rate_plan_source', 'zuora_product_rate_plan_source'),
-    ('dim_namespace', 'dim_namespace'),
-    ('dim_crm_account', 'dim_crm_account'),
+    ('prep_namespace', 'prep_namespace'),
+    ('prep_crm_account', 'prep_crm_account'),
     ('dim_installation', 'dim_installation'),
     ('fct_ping_instance_metric', 'fct_ping_instance_metric')
 ]) }},
 
-clicks AS (
+code_suggestion_context AS (
+
   SELECT
-    behavior_structured_event_pk,
-    behavior_at,
-    is_staging_event,
-    contexts
-  FROM {{ ref('fct_behavior_structured_event') }}
+    fct_behavior_structured_event.behavior_structured_event_pk,
+    fct_behavior_structured_event.behavior_at,
+    fct_behavior_structured_event.code_suggestions_context,
+    fct_behavior_structured_event.model_engine,
+    fct_behavior_structured_event.model_name,
+    fct_behavior_structured_event.prefix_length,
+    fct_behavior_structured_event.suffix_length,
+    fct_behavior_structured_event.language,
+    fct_behavior_structured_event.delivery_type,
+    fct_behavior_structured_event.api_status_code,
+    fct_behavior_structured_event.duo_namespace_ids,
+    fct_behavior_structured_event.saas_namespace_ids,
+    fct_behavior_structured_event.namespace_ids,
+    fct_behavior_structured_event.instance_id,
+    fct_behavior_structured_event.host_name,
+    fct_behavior_structured_event.is_streaming
+  FROM fct_behavior_structured_event
   WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
     AND has_code_suggestions_context = TRUE
-
-), code_suggestion_context AS (
-
-  SELECT
-    clicks.behavior_structured_event_pk,
-    clicks.behavior_at,
-    clicks.is_staging_event,
-    flat_contexts.value                                                             AS code_suggestions_context,
-    flat_contexts.value['data']['model_engine']::VARCHAR                            AS model_engine,
-    flat_contexts.value['data']['model_name']::VARCHAR                              AS model_name,
-    flat_contexts.value['data']['prefix_length']::INT                               AS prefix_length,
-    flat_contexts.value['data']['suffix_length']::INT                               AS suffix_length,
-    flat_contexts.value['data']['language']::VARCHAR                                AS language,
-    CASE
-      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IN (
-        'SaaS',
-        'saas'
-      ) THEN 'SaaS'
-      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IN (
-        'Self-Managed',
-        'self-managed'
-      ) THEN 'Self-Managed'
-      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IS NULL THEN NULL
-      ELSE flat_contexts.value['data']['gitlab_realm']::VARCHAR
-    END                                                                             AS delivery_type,
-    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code,
-    flat_contexts.value['data']['gitlab_saas_namespace_ids']::VARCHAR               AS saas_namespace_ids,
-    flat_contexts.value['data']['gitlab_saas_duo_pro_namespace_ids']::VARCHAR       AS duo_namespace_ids,
-    COALESCE(
-        IFF(duo_namespace_ids = '[]', NULL, duo_namespace_ids),
-        IFF(saas_namespace_ids = '[]', NULL, saas_namespace_ids)
-        )                                                                           AS namespace_ids,
-    flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS instance_id,
-    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name,
-    flat_contexts.value['data']['is_streaming']::BOOLEAN                            AS is_streaming
-  FROM clicks,
-  LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
-  WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
     {% if is_incremental() %}
     
-        AND clicks.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
+        AND fct_behavior_structured_event.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
     
     {% endif %}
 
@@ -99,8 +75,8 @@ clicks AS (
     bdg_namespace_order_subscription.dim_billing_account_id,
     bdg_namespace_order_subscription.dim_namespace_id
   FROM bdg_namespace_order_subscription
-  INNER JOIN dim_subscription
-    ON bdg_namespace_order_subscription.dim_subscription_id = dim_subscription.dim_subscription_id
+  INNER JOIN prep_subscription
+    ON bdg_namespace_order_subscription.dim_subscription_id = prep_subscription.dim_subscription_id
   LEFT JOIN zuora_product_rate_plan_source AS order_product_rate_plan
     ON bdg_namespace_order_subscription.product_rate_plan_id_order = order_product_rate_plan.product_rate_plan_id
   LEFT JOIN zuora_product_rate_plan_source AS subscription_product_rate_plan
@@ -110,18 +86,18 @@ clicks AS (
   
 )
 
-, dim_namespace_w_bdg AS (
+, prep_namespace_w_bdg AS (
 
   SELECT
-    dim_namespace.dim_namespace_id,
-    dim_namespace.dim_product_tier_id   AS dim_latest_product_tier_id,
+    prep_namespace.dim_namespace_id,
+    prep_namespace.dim_product_tier_id   AS dim_latest_product_tier_id,
     deduped_namespace_bdg.dim_latest_subscription_id,
     deduped_namespace_bdg.dim_crm_account_id,
     deduped_namespace_bdg.dim_billing_account_id,
     deduped_namespace_bdg.latest_subscription_name
   FROM deduped_namespace_bdg
-  INNER JOIN dim_namespace
-    ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
+  INNER JOIN prep_namespace
+    ON prep_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
  
 )
 
@@ -129,21 +105,21 @@ clicks AS (
 
   SELECT
     flattened_namespaces.behavior_structured_event_pk,
-    flattened_namespaces.namespace_id                       AS namespace_id,
-    dim_namespace.ultimate_parent_namespace_id,
-    dim_namespace_w_bdg.latest_subscription_name            AS subscription_name,
-    dim_namespace.namespace_is_internal,
-    dim_crm_account.dim_crm_account_id                      AS dim_crm_account_id,
-    dim_crm_account.dim_parent_crm_account_id,
-    dim_crm_account.crm_account_name,
-    dim_crm_account.parent_crm_account_name
+    flattened_namespaces.namespace_id                         AS namespace_id,
+    prep_namespace.ultimate_parent_namespace_id,
+    prep_namespace_w_bdg.latest_subscription_name             AS subscription_name,
+    prep_namespace.namespace_is_internal,
+    prep_crm_account.dim_crm_account_id                       AS dim_crm_account_id,
+    prep_crm_account.dim_parent_crm_account_id,
+    prep_crm_account.crm_account_name,
+    prep_crm_account.parent_crm_account_name
   FROM flattened_namespaces
-  LEFT JOIN dim_namespace
-    ON flattened_namespaces.namespace_id = dim_namespace.namespace_id
-  LEFT JOIN dim_namespace_w_bdg
-    ON flattened_namespaces.namespace_id = dim_namespace_w_bdg.dim_namespace_id
-  LEFT JOIN dim_crm_account
-    ON dim_namespace_w_bdg.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+  LEFT JOIN prep_namespace
+    ON flattened_namespaces.namespace_id = prep_namespace.namespace_id
+  LEFT JOIN prep_namespace_w_bdg
+    ON flattened_namespaces.namespace_id = prep_namespace_w_bdg.dim_namespace_id
+  LEFT JOIN prep_crm_account
+    ON prep_namespace_w_bdg.dim_crm_account_id = prep_crm_account.dim_crm_account_id
 
 )
 
@@ -189,16 +165,16 @@ clicks AS (
   SELECT 
     fct_ping_instance_metric.dim_installation_id, 
     fct_ping_instance_metric.dim_subscription_id,
-    dim_subscription.subscription_name,
-    dim_subscription.dim_crm_account_id,
-    dim_crm_account.dim_parent_crm_account_id,
-    dim_crm_account.crm_account_name,
-    dim_crm_account.parent_crm_account_name
+    prep_subscription.subscription_name,
+    prep_subscription.dim_crm_account_id,
+    prep_crm_account.dim_parent_crm_account_id,
+    prep_crm_account.crm_account_name,
+    prep_crm_account.parent_crm_account_name
   FROM fct_ping_instance_metric
-  LEFT JOIN dim_subscription
-    ON fct_ping_instance_metric.dim_subscription_id = dim_subscription.dim_subscription_id
-  LEFT JOIN dim_crm_account
-    ON dim_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+  LEFT JOIN prep_subscription
+    ON fct_ping_instance_metric.dim_subscription_id = prep_subscription.dim_subscription_id
+  LEFT JOIN prep_crm_account
+    ON prep_subscription.dim_crm_account_id = prep_crm_account.dim_crm_account_id
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_installation_id ORDER BY dim_ping_date_id DESC) = 1
 
 )
@@ -263,8 +239,8 @@ clicks AS (
 
 {{ dbt_audit(
     cte_ref="combined",
-    created_by="@mdrussell",
+    created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2023-09-25",
-    updated_date="2024-04-02"
+    created_date="2024-04-09",
+    updated_date="2024-04-09"
 ) }}
