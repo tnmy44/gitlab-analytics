@@ -22,7 +22,7 @@
     SELECT
       opportunity_id,                                                             -- opportunity_id
       contact_id                                                                  AS sfdc_contact_id,
-      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                               AS dim_crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                      AS dim_crm_person_id,
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
 
@@ -134,6 +134,7 @@
       snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
       snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
       snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
+      sfdc_account_snapshot.parent_crm_account_geo,
       sfdc_account_snapshot.crm_account_owner_sales_segment,
       sfdc_account_snapshot.crm_account_owner_geo,
       sfdc_account_snapshot.crm_account_owner_region,
@@ -229,6 +230,7 @@
       live_date.first_day_of_fiscal_quarter                                                                 AS snapshot_fiscal_quarter_date,
       live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
+      sfdc_account.account_geo                                                                              AS parent_crm_account_geo,
       account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
       account_owner.user_geo                                                                                AS crm_account_owner_geo,
       account_owner.user_region                                                                             AS crm_account_owner_region,
@@ -526,14 +528,14 @@ LEFT JOIN cw_base
      -- flags
       CASE
         WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
-          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_edu_oss = 0
           AND sfdc_opportunity.stage_name != '10-Duplicate'
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_sao,
       CASE
         WHEN is_sao = TRUE
-          AND sfdc_opportunity.sales_qualified_source IN (
+          AND sfdc_opportunity_live.sales_qualified_source IN (
                                         'SDR Generated'
                                         , 'BDR Generated'
                                         )
@@ -545,7 +547,7 @@ LEFT JOIN cw_base
                (sfdc_opportunity.sales_type = 'Renewal' AND sfdc_opportunity.stage_name = '8-Closed Lost')
                  OR sfdc_opportunity.stage_name = 'Closed Won'
               )
-            AND sfdc_opportunity.is_jihu_account = FALSE
+            AND sfdc_opportunity_live.is_jihu_account = FALSE
           THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_net_arr_closed_deal,
@@ -553,46 +555,51 @@ LEFT JOIN cw_base
         WHEN (sfdc_opportunity.new_logo_count = 1
           OR sfdc_opportunity.new_logo_count = -1
           )
-          AND sfdc_opportunity.is_jihu_account = FALSE
+          AND sfdc_opportunity_live.is_jihu_account = FALSE
           THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_new_logo_first_order,
       COALESCE(
         sfdc_opportunity.is_pipeline_created_eligible,
         CASE
-         WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
-           AND sfdc_opportunity.is_edu_oss = 0
-           AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
-           AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
-           -- 20211222 Adjusted to remove the ommitted filter
-           AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
-           AND (net_arr > 0
-             OR sfdc_opportunity.opportunity_category = 'Credit')
-           -- 20220128 Updated to remove webdirect SQS deals
-           AND sfdc_opportunity.sales_qualified_source  != 'Web Direct Generated'
-           AND sfdc_opportunity.is_jihu_account = 0
+          WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+            AND sfdc_opportunity_live.is_edu_oss  = 0
+            AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
+            AND sfdc_opportunity_live.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset','Contract Reset/Ramp Deal')
+            -- 20211222 Adjusted to remove the ommitted filter
+            AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+            AND (net_arr > 0
+              OR sfdc_opportunity_live.opportunity_category  = 'Credit')
+            -- 20220128 Updated to remove webdirect SQS deals
+            AND sfdc_opportunity_live.sales_qualified_source   != 'Web Direct Generated'
+            AND sfdc_opportunity_live.is_jihu_account = 0
+            AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
           THEN 1
           ELSE 0
         END
         ) AS is_net_arr_pipeline_created,
       CASE
-        WHEN sfdc_opportunity_stage.is_closed = TRUE
-          AND sfdc_opportunity.amount >= 0
-          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
-          AND sfdc_opportunity.is_edu_oss = 0
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
+         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND sfdc_opportunity_live.is_edu_oss = 0
+         AND sfdc_opportunity_live.is_jihu_account = 0
+         AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+         AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
+         AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_win_rate_calc,
       CASE
         WHEN sfdc_opportunity_stage.is_won = 'TRUE'
           AND sfdc_opportunity.is_closed = 'TRUE'
-          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_edu_oss = 0
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_closed_won,
       CASE
-        WHEN LOWER(sfdc_opportunity.order_type_grouped) LIKE ANY ('%growth%', '%new%')
-          AND sfdc_opportunity.is_edu_oss = 0
+        WHEN LOWER(sfdc_opportunity_live.order_type_grouped) LIKE ANY ('%growth%', '%new%')
+          AND sfdc_opportunity_live.is_edu_oss = 0
           AND is_stage_1_plus = 1
           AND sfdc_opportunity.forecast_category_name != 'Omitted'
           AND sfdc_opportunity.is_open = 1
@@ -601,47 +608,51 @@ LEFT JOIN cw_base
       END                                                                                         AS is_eligible_open_pipeline,
       CASE
         WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
-          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity_live.is_edu_oss = 0
           AND sfdc_opportunity.is_deleted = 0
             THEN 1
         ELSE 0
       END                                                                                         AS is_eligible_sao,
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
+        WHEN sfdc_opportunity_live.is_edu_oss = 0
           AND sfdc_opportunity.is_deleted = 0
           -- For ASP we care mainly about add on, new business, excluding contraction / churn
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth')
+          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth')
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
-          AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
+          AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
           -- Exclude Deals with nARR < 0
           AND net_arr > 0
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis,
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.is_deleted = 0
-          AND is_renewal = 0
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-          AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          AND sfdc_opportunity.is_web_portal_purchase = 0
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
+         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND sfdc_opportunity_live.is_edu_oss = 0
+         AND sfdc_opportunity_live.is_jihu_account = 0
+         AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+         AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
+         AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+         AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
+         AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
+        WHEN sfdc_opportunity_live.is_edu_oss = 0
           AND sfdc_opportunity.is_deleted = 0
           AND (sfdc_opportunity_stage.is_won = 1
               OR (is_renewal = 1 AND is_lost = 1))
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_net_arr,
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
+        WHEN sfdc_opportunity_live.is_edu_oss = 0
           AND sfdc_opportunity.is_deleted = 0
-          AND sfdc_opportunity.order_type IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+          AND sfdc_opportunity_live.order_type IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_churn_contraction,
@@ -651,12 +662,12 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                                                         AS is_duplicate,
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Credit')
+        WHEN sfdc_opportunity_live.opportunity_category IN ('Credit')
           THEN 1
         ELSE 0
       END                                                                                         AS is_credit,
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Contract Reset')
+        WHEN sfdc_opportunity_live.opportunity_category IN ('Contract Reset')
           THEN 1
         ELSE 0
       END                                                                                         AS is_contract_reset,
@@ -920,6 +931,17 @@ LEFT JOIN cw_base
           THEN 0
         ELSE 1
       END                                               AS calculated_deal_count,
+      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
+      CASE
+        WHEN sfdc_opportunity_live.is_jihu_account = 0 
+          AND (sfdc_opportunity_stage.is_won = 1
+                OR (
+                    is_renewal = 1
+                     AND is_lost = 1)
+                   )
+            THEN 1
+          ELSE 0
+      END                                                 AS is_booked_net_arr, 
       CASE
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_1_plus = 1
@@ -941,7 +963,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                               AS open_4plus_deal_count,
       CASE
-        WHEN sfdc_opportunity_stage.is_won = 1
+        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
@@ -999,29 +1021,10 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
-        WHEN (
-                sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                      AND is_lost = 1
-                   )
-             )
+        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr)  = 1 -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
           THEN net_arr
         ELSE 0
       END                                                 AS booked_net_arr,
-      CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.is_deleted = 0
-          AND (
-               sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                     AND is_lost = 1)
-                   )
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-            THEN 1
-          ELSE 0
-      END                                                           AS is_booked_net_arr,
       CASE
         WHEN sfdc_opportunity.deal_path = 'Partner'
           THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, sfdc_opportunity.partner_account_partner_track, sfdc_opportunity.fulfillment_partner_partner_track,'Open'),'select','Select')
@@ -1065,7 +1068,7 @@ LEFT JOIN cw_base
             OR sfdc_opportunity.dim_crm_account_id IS NULL)
          THEN 1
        -- remove jihu accounts
-       WHEN sfdc_opportunity.is_jihu_account = 1
+       WHEN sfdc_opportunity_live.is_jihu_account = 1
          THEN 1
        -- remove deleted opps
         WHEN sfdc_opportunity.is_deleted = 1
@@ -1292,17 +1295,14 @@ LEFT JOIN cw_base
                     close_fiscal_year
                     )
     END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
-
-    CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity_stage.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date.date_actual, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity_stage.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-         WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date.date_actual, sfdc_opportunity.snapshot_date)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-    END                                                           AS cycle_time_in_days
+      CASE
+        WHEN is_renewal = 1 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+        WHEN is_renewal = 0 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
+      END                                                         AS cycle_time_in_days,
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -1326,6 +1326,8 @@ LEFT JOIN cw_base
         AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
     LEFT JOIN sfdc_record_type_source 
       ON sfdc_opportunity.record_type_id = sfdc_record_type_source.record_type_id
+    LEFT JOIN sfdc_opportunity_live
+    ON sfdc_opportunity_live.dim_crm_opportunity_id = sfdc_opportunity.dim_crm_opportunity_id
     LEFT JOIN abm_tier_unioned
       ON sfdc_opportunity.dim_crm_opportunity_id=abm_tier_unioned.dim_crm_opportunity_id
         AND sfdc_opportunity.is_live = 1
@@ -1335,7 +1337,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@rkohnke",
+    updated_by="@lisvinueza",
     created_date="2022-02-23",
-    updated_date="2024-03-18"
+    updated_date="2024-04-09"
 ) }}
