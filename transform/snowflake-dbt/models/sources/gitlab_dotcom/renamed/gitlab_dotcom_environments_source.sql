@@ -14,7 +14,7 @@ WITH source AS (
       updated_at::TIMESTAMP                            AS updated_at,
       environment_type::VARCHAR                        AS environment_type,
       state::VARCHAR                                   AS state,
-      tier::VARCHAR                                    AS tier
+      tier::NUMBER                                     AS tier
     FROM source
 
 )
