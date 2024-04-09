@@ -643,10 +643,10 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.workday_hmc
+                    - raw.workday_hcm
             tables:
                 read:
-                    - raw.workday_hmc.*
+                    - raw.workday_hcm.*
 
     - analyst_sales:
         warehouses:
