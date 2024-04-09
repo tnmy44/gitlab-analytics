@@ -637,6 +637,16 @@ roles:
             - zuora_central_sandbox
             - restricted_workspace_people
             - analyst_people_sensitive
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
 
     - analyst_sales:
         warehouses:
@@ -2310,6 +2320,9 @@ roles:
                     - prod.legacy.gitlab_dotcom_memberships
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
+                    - prod.workspace_marketing.user_history
+                    - prod.workspace_marketing.user_unsubscribed_channel
+                    - prod.workspace_marketing.user_unsubscribed_message_type
 
     - influx_db:
         privileges:
@@ -4288,6 +4301,7 @@ roles:
 
     - jgarcia:
         member_of:
+            - data_science
             - salesforce
             - snapshots
             - snowflake_analyst
