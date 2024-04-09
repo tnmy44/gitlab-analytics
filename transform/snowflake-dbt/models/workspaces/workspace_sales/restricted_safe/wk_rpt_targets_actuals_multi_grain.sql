@@ -24,7 +24,16 @@ unioned AS (
 
   SELECT 
     granular.*,
+    NULL AS yoy_geo,
+    NULL AS yoy_sales_segment,
+    NULL AS yoy_area,
+    NULL AS yoy_region,
+    NULL AS yoy_business_unit,
     NULL AS total_quarter_target,
+    NULL AS coverage_booked_net_arr,
+    NULL AS coverage_open_1plus_net_arr,
+    NULL AS coverage_open_3plus_net_arr,
+    NULL AS coverage_open_4plus_net_arr,
     NULL AS total_booked_net_arr
   FROM granular
   WHERE is_current_snapshot_quarter
@@ -433,7 +442,16 @@ unioned AS (
     NULL AS is_current_snapshot_quarter,
     NULL AS is_current_snapshot_week,
     source,
+    NULL AS yoy_geo,
+    NULL AS yoy_sales_segment,
+    NULL AS yoy_area,
+    NULL AS yoy_region,
+    NULL AS yoy_business_unit,
     NULL AS total_quarter_target,
+    NULL AS coverage_booked_net_arr,
+    NULL AS coverage_open_1plus_net_arr,
+    NULL AS coverage_open_3plus_net_arr,
+    NULL AS coverage_open_4plus_net_arr,
     NULL AS total_booked_net_arr
   FROM aggregate
   WHERE NOT is_current_snapshot_quarter
@@ -770,7 +788,7 @@ unioned AS (
     snapshot_is_first_day_of_fiscal_quarter_week,
     snapshot_days_until_last_day_of_month,
     snapshot_week_of_fiscal_quarter,
-    open_1plus_net_arr_in_snapshot_quarter,
+    NULL AS open_1plus_net_arr_in_snapshot_quarter,
     NULL AS open_3plus_net_arr_in_snapshot_quarter,
     NULL AS open_4plus_net_arr_in_snapshot_quarter,
     NULL AS open_1plus_deal_count_in_snapshot_quarter,
@@ -780,7 +798,7 @@ unioned AS (
     NULL AS closed_won_opps_in_snapshot_quarter,
     NULL AS closed_opps_in_snapshot_quarter,
     NULL AS closed_net_arr_in_snapshot_quarter,
-    booked_net_arr_in_snapshot_quarter,
+    NULL AS booked_net_arr_in_snapshot_quarter,
     NULL AS created_deals_in_snapshot_quarter,
     NULL AS cycle_time_in_days_in_snapshot_quarter,
     NULL AS booked_deal_count_in_snapshot_quarter,
@@ -844,7 +862,16 @@ unioned AS (
     NULL AS is_current_snapshot_quarter,
     NULL AS is_current_snapshot_week,
     'targets_actuals' AS source,
+    NULL AS yoy_geo,
+    NULL AS yoy_sales_segment,
+    NULL AS yoy_area,
+    NULL AS yoy_region,
+    NULL AS yoy_business_unit,
     total_quarter_target,
+    coverage_booked_net_arr,
+    coverage_open_1plus_net_arr,
+    coverage_open_3plus_net_arr,
+    coverage_open_4plus_net_arr,
     total_booked_net_arr
   FROM targets_actuals
 
