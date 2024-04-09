@@ -398,6 +398,8 @@ WITH filtered_source as (
       events_with_flattened_context.user_agent,
       events_with_flattened_context.delivery_type,
       events_with_flattened_context.api_status_code,
+      events_with_flattened_context.duo_namespace_ids,
+      events_with_flattened_context.saas_namespace_ids,
       events_with_flattened_context.namespace_ids,
       events_with_flattened_context.instance_id,
       events_with_flattened_context.host_name,
