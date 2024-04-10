@@ -933,16 +933,19 @@ LEFT JOIN cw_base
         ELSE 1
       END                                               AS calculated_deal_count,
       -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-      CASE
-        WHEN sfdc_opportunity_live.is_jihu_account = 0 
-          AND (sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                     AND is_lost = 1)
-                   )
-            THEN 1
-          ELSE 0
-      END                                                 AS is_booked_net_arr, 
+      -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
+      COALESCE(
+        fpa_master_bookings_flag, 
+        CASE
+          WHEN sfdc_opportunity_live.is_jihu_account = 0 
+            AND (sfdc_opportunity_stage.is_won = 1
+                  OR (
+                      is_renewal = 1
+                      AND is_lost = 1)
+                    )
+              THEN 1
+            ELSE 0
+        END)                                            AS is_booked_net_arr, 
       CASE
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_1_plus = 1
@@ -964,7 +967,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                               AS open_4plus_deal_count,
       CASE
-        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
+        WHEN is_booked_net_arr = 1 
           THEN calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
@@ -1022,7 +1025,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
-        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr)  = 1 -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
+        WHEN is_booked_net_arr = 1 
           THEN net_arr
         ELSE 0
       END                                                 AS booked_net_arr,
