@@ -270,6 +270,9 @@ models:
       influx_db:
         +schema: influx_db
 
+      iterable:
+        +schema: iterable
+
       level_up:
         +schema: level_up
 

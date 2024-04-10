@@ -328,6 +328,8 @@ models:
       - name: strategic_marketing_contribution
       - name: campaign_partner_crm_id
         description: The partner associated with this campaign through Vartopia.
+      - name: mdf_request_id
+        description: The ID MDF Request that funded the campaign for MDF Campaigns.
 
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
@@ -3018,17 +3020,23 @@ models:
         tests:
           - not_null
           - unique
-        description: The unique ID of the dim_ping_metric model consisting of metrics_path, created using the dbt surrogate_key macro
+        description: ' {{ doc("ping_metric_id") }} '
       - name: metrics_path
         description: '{{ doc("metrics_path") }}'
       - name: sql_friendly_path
-        description: Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+        description: '{{ doc("sql_friendly_path") }}'
       - name: data_source
         description: '{{ doc("data_source_ping_metric") }}'
+      - name: data_category
+        description: '{{ doc("data_category_ping_metric") }}'
+      - name: distribution
+        description: '{{ doc("distribution_ping_metric") }}'
       - name: description
-        description: A description of the metric
+        description: '{{ doc("description_ping_metric") }}'
       - name: instrumentation_class
         description: '{{ doc("instrumentation_class_ping_metric") }}'
+      - name: performance_indicator_type
+        description: '{{ doc("performance_indicator_type_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -3038,15 +3046,15 @@ models:
       - name: milestone
         description: '{{ doc("milestone_ping_metric") }}'
       - name: skip_validation
-        description: This will always be NULL
+        description: '{{ doc("skip_validation_ping_metric") }}'
       - name: metrics_status
         description: '{{ doc("metrics_status_ping_metric") }}'
       - name: tier
-        description: The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium or ultimate (ex. `[   "free",   "premium",   "ultimate" ]`)
+        description: '{{ doc("tier_ping_metric") }}'
       - name: time_frame
         description: '{{ doc("time_frame") }}'
       - name: value_type
-        description: One of `string`, `number`, `boolean`, `object`
+        description: '{{ doc("value_type_ping_metric") }}'
       - name: is_gmau
         description: '{{ doc("is_gmau") }}'
       - name: is_paid_gmau
@@ -3058,11 +3066,11 @@ models:
       - name: is_health_score_metric
         description: '{{ doc("is_health_score_metric") }}'
       - name: snapshot_date
-        description: The date the data was extracted from metrics YAML files
+        description: '{{ doc("snapshot_date_ping_metric") }}'
       - name: uploaded_at
-        description: The time the data was extracted from metrics YAML files
+        description: '{{ doc("uploaded_at_ping_metric") }}'
       - name: data_by_row
-        description: JSON object with all fields from YAML file
+        description: '{{ doc("data_by_row_ping_metric") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3079,17 +3087,23 @@ models:
         tests:
           - not_null
           - unique
-        description: The unique composite ID of the dim_ping_metric_daily_snapshot model consisting of metrics_path and date_id
+        description: '{{ doc("ping_metric_hist_id") }}'
       - name: metrics_path
         description: '{{ doc("metrics_path") }}'
       - name: sql_friendly_path
-        description: Reformatted metrics_path that reflects how the metrics_path would be filtered from the raw payload. The metrics are prepended with `raw_usage_data_payload`, and `.` are replaced with `[]`. (Ex. `usage_activity_by_stage_monthly.plan.assignee_lists` has the value `raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['assignee_lists']`)
+        description: '{{ doc("sql_friendly_path") }}'
       - name: data_source
         description: '{{ doc("data_source_ping_metric") }}'
+      - name: data_category
+        description: '{{ doc("data_category_ping_metric") }}'
+      - name: distribution
+        description: '{{ doc("distribution_ping_metric") }}'
       - name: description
-        description: A description of the metric
+        description: '{{ doc("description_ping_metric") }}'
       - name: instrumentation_class
         description: '{{ doc("instrumentation_class_ping_metric") }}'
+      - name: performance_indicator_type
+        description: '{{ doc("performance_indicator_type_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -3099,15 +3113,15 @@ models:
       - name: milestone
         description: '{{ doc("milestone_ping_metric") }}'
       - name: skip_validation
-        description: This will always be NULL
+        description: '{{ doc("skip_validation_ping_metric") }}'
       - name: metrics_status
         description: '{{ doc("metrics_status_ping_metric") }}'
       - name: tier
-        description: The tier(s) where the tracked feature is available, formatted as an array containing one or a combination of free, premium, or ultimate
+        description: '{{ doc("tier_ping_metric") }}'
       - name: time_frame
         description: '{{ doc("time_frame") }}'
       - name: value_type
-        description: One of `string`, `number`, `boolean`, `object`
+        description: '{{ doc("value_type_ping_metric") }}'
       - name: is_gmau
         description: '{{ doc("is_gmau") }}'
       - name: is_paid_gmau
@@ -3117,7 +3131,7 @@ models:
       - name: is_umau
         description: '{{ doc("is_umau") }}'
       - name: uploaded_at
-        description: The time the data was extracted from metrics YAML files
+        description: '{{ doc("uploaded_at_ping_metric") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3127,9 +3141,9 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
       - name: valid_from
-        description: Timestamp of when this metric path mapping is valid from
+        description: '{{ doc("valid_from") }}'
       - name: valid_to
-        description: Timestamp of when this metric path mapping is valid until
+        description: '{{ doc("valid_to") }}'
 
 
   - name: fct_ping_instance_metric
@@ -6194,6 +6208,8 @@ models:
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
       - name: page_url_path
         description: '{{ doc("page_url_path") }}'
       - name: referer_url_path
@@ -6305,6 +6321,8 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6316,7 +6334,9 @@ models:
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
       - name: gsc_environment
-        description: '{{ doc("environment_behavior_model") }}'  
+        description: '{{ doc("environment_behavior_model") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -6333,34 +6353,151 @@ models:
         description: '{{ doc("user_region") }}'
       - name: user_timezone_name
         description: '{{ doc("user_timezone_name") }}'
-      - name: has_performance_timing_context
-        description: '{{ doc("has_performance_timing_context") }}'
-      - name: has_web_page_context
-        description: '{{ doc("has_web_page_context") }}'
-      - name: has_ci_build_failed_context
-        description: '{{ doc("has_ci_build_failed_context") }}'
-      - name: has_wiki_page_context
-        description: '{{ doc("has_wiki_page_context") }}'
+      - name: gitlab_standard_context
+        description: ' {{ doc("gitlab_standard_context") }} '
+      - name: gitlab_standard_context_schema
+        description: ' {{ doc("gitlab_standard_context_schema") }} '
       - name: has_gitlab_standard_context
-        description: '{{ doc("has_gitlab_standard_context") }}'
-      - name: has_email_campaigns_context
-        description: '{{ doc("has_email_campaigns_context") }}'
-      - name: has_gitlab_service_ping_context
-        description: '{{ doc("has_gitlab_service_ping_context") }}'
-      - name: has_design_management_context
-        description: '{{ doc("has_design_management_context") }}'
-      - name: has_customer_standard_context
-        description: '{{ doc("has_customer_standard_context") }}'
-      - name: has_secure_scan_context
-        description: '{{ doc("has_secure_scan_context") }}'
+        description: ' {{ doc("has_gitlab_standard_context") }} '
+      - name: is_gitlab_team_member
+        description: ' {{ doc("gsc_is_gitlab_team_member") }} '
+      - name: web_page_context
+        description: ' {{ doc("web_page_context") }} '
+      - name: web_page_context_schema
+        description: ' {{ doc("web_page_context_schema") }} '
+      - name: has_web_page_context
+        description: ' {{ doc("has_web_page_context") }} '
+      - name: web_page_id
+        description: ' {{ doc("web_page_id") }} '
+      - name: gitlab_experiment_context
+        description: ' {{ doc("gitlab_experiment_context") }} '
+      - name: gitlab_experiment_context_schema
+        description: ' {{ doc("gitlab_experiment_context_schema") }} '
       - name: has_gitlab_experiment_context
-        description: '{{ doc("has_gitlab_experiment_context") }}'
-      - name: has_subscription_auto_renew_context
-        description: '{{ doc("has_subscription_auto_renew_context") }}'
+        description: ' {{ doc("has_gitlab_experiment_context") }} '
+      - name: experiment_name
+        description: ' {{ doc("experiment_name") }} '
+      - name: experiment_context_key
+        description: ' {{ doc("experiment_context_key") }} '
+      - name: experiment_variant
+        description: ' {{ doc("experiment_variant") }} '
+      - name: experiment_migration_keys
+        description: ' {{ doc("experiment_migration_keys") }} '
+      - name: code_suggestions_context
+        description: ' {{ doc("code_suggestions_context") }} '
+      - name: code_suggestions_context_schema
+        description: ' {{ doc("code_suggestions_context_schema") }} '
       - name: has_code_suggestions_context
-        description: '{{ doc("has_code_suggestions_context") }}'
+        description: ' {{ doc("has_code_suggestions_context") }} '
+      - name: model_engine
+        description: ' {{ doc("code_suggestions_model_engine") }} '
+      - name: model_name
+        description: ' {{ doc("code_suggestions_model_name") }} '
+      - name: prefix_length
+        description: ' {{ doc("code_suggestions_prefix_length") }} '
+      - name: suffix_length
+        description: ' {{ doc("code_suggestions_suffix_length") }} '
+      - name: language
+        description: ' {{ doc("code_suggestions_language") }} '
+      - name: user_agent
+        description: ' {{ doc("code_suggestions_user_agent") }} '
+      - name: delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+        accepted_values:
+          values: ['Self-Managed', 'SaaS']
+      - name: api_status_code
+        description: ' {{ doc("code_suggestions_api_status_code") }} '
+      - name: duo_namespace_ids
+        description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+      - name: saas_namespace_ids
+        description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
+      - name: namespace_ids
+        description: ' {{ doc("code_suggestions_namespace_ids") }} '
+      - name: instance_id
+        description: ' {{ doc("dim_instance_id") }} '
+      - name: host_name
+        description: ' {{ doc("host_name") }} '
+      - name: is_streaming
+        description: ' {{ doc("code_suggestions_is_streaming") }} '
+      - name: ide_extension_version_context
+        description: ' {{ doc("ide_extension_version_context") }} '
+      - name: ide_extension_version_context_schema
+        description: ' {{ doc("ide_extension_version_context_schema") }} '
       - name: has_ide_extension_version_context
-        description: '{{ doc("has_ide_extension_version_context") }}'
+        description: ' {{ doc("has_ide_extension_version_context") }} '
+      - name: extension_name
+        description: ' {{ doc("extension_name") }} '
+      - name: extension_version
+        description: ' {{ doc("extension_version") }} '
+      - name: ide_name
+        description: ' {{ doc("ide_name") }} '
+      - name: ide_vendor
+        description: ' {{ doc("ide_vendor") }} '
+      - name: ide_version
+        description: ' {{ doc("ide_version") }} '
+      - name: language_server_version
+        description: ' {{ doc("language_server_version") }} '
+      - name: gitlab_service_ping_context
+        description: ' {{ doc("gitlab_service_ping_context") }} '
+      - name: gitlab_service_ping_context_schema
+        description: ' {{ doc("gitlab_service_ping_context_schema") }} '
+      - name: has_gitlab_service_ping_context
+        description: ' {{ doc("has_gitlab_service_ping_context") }} '
+      - name: redis_event_name
+        description: ' {{ doc("redis_event_name") }} '
+      - name: key_path
+        description: ' {{ doc("service_ping_key_path") }} '
+      - name: data_source
+        description: ' {{ doc("service_ping_data_source") }} '
+      - name: performance_timing_context
+        description: ' {{ doc("performance_timing_context") }} '
+      - name: performance_timing_context_schema
+        description: ' {{ doc("performance_timing_context_schema") }} '
+      - name: has_performance_timing_context
+        description: ' {{ doc("has_performance_timing_context") }} '
+      - name: connect_end
+        description: ' {{ doc("connect_end") }} '
+      - name: connect_start
+        description: ' {{ doc("connect_start") }} '
+      - name: dom_complete
+        description: ' {{ doc("dom_complete") }} '
+      - name: dom_content_loaded_event_end
+        description: ' {{ doc("dom_content_loaded_event_end") }} '
+      - name: dom_content_loaded_event_start
+        description: ' {{ doc("dom_content_loaded_event_start") }} '
+      - name: dom_interactive
+        description: ' {{ doc("dom_interactive") }} '
+      - name: dom_loading
+        description: ' {{ doc("dom_loading") }} '
+      - name: domain_lookup_end
+        description: ' {{ doc("domain_lookup_end") }} '
+      - name: domain_lookup_start
+        description: ' {{ doc("domain_lookup_start") }} '
+      - name: fetch_start
+        description: ' {{ doc("fetch_start") }} '
+      - name: load_event_end
+        description: ' {{ doc("load_event_end") }} '
+      - name: load_event_start
+        description: ' {{ doc("load_event_start") }} '
+      - name: navigation_start
+        description: ' {{ doc("navigation_start") }} '
+      - name: redirect_end
+        description: ' {{ doc("redirect_end") }} '
+      - name: redirect_start
+        description: ' {{ doc("redirect_start") }} '
+      - name: request_start
+        description: ' {{ doc("request_start") }} '
+      - name: response_end
+        description: ' {{ doc("response_end") }} '
+      - name: response_start
+        description: ' {{ doc("response_start") }} '
+      - name: secure_connection_start
+        description: ' {{ doc("secure_connection_start") }} '
+      - name: unload_event_end
+        description: ' {{ doc("unload_event_end") }} '
+      - name: unload_event_start
+        description: ' {{ doc("unload_event_start") }} '
+
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
@@ -6412,6 +6549,8 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6476,8 +6615,8 @@ models:
               config:
                 error_if: ">5784"
         description: '{{ doc("experiment_variant") }}'
-      - name: context_key
-        description: '{{ doc("context_key") }}'
+      - name: experiment_context_key
+        description: '{{ doc("experiment_context_key") }}'
       - name: experiment_migration_keys
         description: '{{ doc("experiment_migration_keys") }}'
 
@@ -6533,6 +6672,8 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6638,6 +6779,8 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6744,6 +6887,8 @@ models:
         description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -6797,6 +6942,58 @@ models:
       - name: has_subscription_auto_renew_context
         description: '{{ doc("has_subscription_auto_renew_context") }}'  
 
+  - name: fct_behavior_structured_event_redis_hll_counters
+    description: '{{ doc("fct_behavior_structured_event_redis_hll_counters") }}'
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}' 
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
 
   - name: fct_behavior_unstructured_event
     description: '{{ doc("fct_behavior_unstructured_event") }}'
@@ -6828,8 +7025,12 @@ models:
         description: '{{ doc("behavior_at") }}' 
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
       - name: link_click_element_id
@@ -8268,3 +8469,111 @@ models:
         description: '{{ doc("milestone_due_date") }}'
       - name: milestone_status
         description: '{{ doc("milestone_status") }}'
+        
+  - name: fct_latest_seat_link_installation
+    description: '{{ doc("fct_latest_seat_link_installation") }}'
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - host_name
+          - dim_instance_id
+
+  - name: fct_behavior_structured_event_code_suggestion
+    description: '{{ doc("fct_behavior_structured_event_code_suggestion") }}'
+    columns:
+    - name: behavior_structured_event_pk
+      description: '{{ doc("behavior_structured_event_pk") }}'
+      tests:
+        - unique
+        - not_null
+    - name: behavior_at
+      description: '{{ doc("behavior_at") }}'
+    - name: code_suggestions_context
+      description: '{{ doc("code_suggestions_context") }}'
+    - name: model_engine
+      description: '{{ doc("code_suggestions_model_engine") }}'
+    - name: model_name
+      description: '{{ doc("code_suggestions_model_name") }}'
+    - name: prefix_length
+      description: '{{ doc("code_suggestions_prefix_length") }}'
+    - name: suffix_length
+      description: '{{ doc("code_suggestions_suffix_length") }}'
+    - name: language
+      description: '{{ doc("code_suggestions_language") }}'
+    - name: delivery_type
+      description: '{{ doc("product_delivery_type") }}'
+      accepted_values:
+        values: ['Self-Managed', 'SaaS']
+    - name: api_status_code
+      description: '{{ doc("code_suggestions_api_status_code") }}'
+    - name: duo_namespace_ids
+      description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+    - name: saas_namespace_ids
+      description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
+    - name: namespace_ids
+      description: '{{ doc("code_suggestions_namespace_ids") }}'
+    - name: instance_id
+      description: '{{ doc("dim_instance_id") }}'
+    - name: host_name
+      description: '{{ doc("host_name") }}'
+    - name: is_streaming
+      description: '{{ doc("code_suggestions_is_streaming") }}'
+    - name: ultimate_parent_namespace_ids
+      description: '{{ doc("code_suggestions_ultimate_parent_namespace_ids") }} '
+    - name: subscription_names
+      description: '{{ doc("code_suggestions_subscription_names") }}'
+    - name: dim_crm_account_ids
+      description: '{{ doc("code_suggestions_dim_crm_account_ids") }}'
+    - name: dim_parent_crm_account_ids
+      description: '{{ doc("code_suggestions_dim_parent_crm_account_ids") }}'
+    - name: crm_account_names
+      description: '{{ doc("code_suggestions_crm_account_names") }}'
+    - name: parent_crm_account_names
+      description: '{{ doc("code_suggestions_parent_crm_account_names") }}'
+    - name: dim_installation_ids
+      description: '{{ doc("code_suggestions_dim_installation_ids") }}'
+    - name: host_names
+      description: '{{ doc("code_suggestions_host_names") }}'
+    - name: dim_crm_account_id
+      description: '{{ doc("code_suggestions_dim_crm_account_id") }}'
+    - name: dim_parent_crm_account_id
+      description: '{{ doc("code_suggestions_dim_parent_crm_account_id") }}'
+    - name: subscription_name
+      description: '{{ doc("code_suggestions_subscription_name") }}'
+    - name: crm_account_name
+      description: '{{ doc("code_suggestions_crm_account_name") }}'
+    - name: parent_crm_account_name
+      description: ' {{ doc("code_suggestions_parent_crm_account_name") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("code_suggestions_ultimate_parent_namespace_id") }}'
+    - name: dim_installation_id
+      description: '{{ doc("code_suggestions_dim_installation_id") }}'
+    - name: installation_host_name
+      description: '{{ doc("code_suggestions_installation_host_name") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("code_suggestions_namespace_is_internal") }}'
+
+  - name: fct_behavior_structured_event_ide_extension_version
+    description: '{{ doc("fct_behavior_structured_event_ide_extension_version") }}'
+    columns:
+    - name: behavior_structured_event_pk
+      description: '{{ doc("behavior_structured_event_pk") }}'
+      tests:
+        - unique
+        - not_null
+    - name: behavior_at
+      description: '{{ doc("behavior_at") }}'
+    - name: ide_extension_version_context
+      description: ' {{ doc("ide_extension_version_context") }}'
+    - name: extension_name
+      description: ' {{ doc("extension_name") }}'
+    - name: extension_version
+      description: ' {{ doc("extension_version") }}'
+    - name: ide_name
+      description: ' {{ doc("ide_name") }}'
+    - name: ide_vendor
+      description: ' {{ doc("ide_vendor") }}'
+    - name: ide_version
+      description: ' {{ doc("ide_version") }}'
+    - name: language_server_version
+      description: ' {{ doc("language_server_version") }}'
