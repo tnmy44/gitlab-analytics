@@ -41,6 +41,7 @@ renamed AS (
     account_manager__c AS account_manager,
     account_owner_calc__c AS account_owner,
     account_owner_team__c AS account_owner_team,
+    account_owner_role__c AS account_owner_role,
     proposed_account_owner__c AS proposed_account_owner,
     business_development_rep__c AS business_development_rep,
     dedicated_service_engineer__c AS dedicated_service_engineer,

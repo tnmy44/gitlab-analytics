@@ -133,6 +133,8 @@
       snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
       snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
       snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
+      snapshot_dates.last_day_of_fiscal_quarter                                                                     AS snapshot_last_day_of_fiscal_quarter,
+      sfdc_account_snapshot.parent_crm_account_geo,
       sfdc_account_snapshot.crm_account_owner_sales_segment,
       sfdc_account_snapshot.crm_account_owner_geo,
       sfdc_account_snapshot.crm_account_owner_region,
@@ -219,7 +221,7 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}        AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       live_date.date_actual                                                                                 AS snapshot_date,
       live_date.first_day_of_month                                                                          AS snapshot_month,
@@ -228,6 +230,8 @@
       live_date.first_day_of_fiscal_quarter                                                                 AS snapshot_fiscal_quarter_date,
       live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
+      live_date.last_day_of_fiscal_quarter                                                                  AS snapshot_last_day_of_fiscal_quarter,
+      sfdc_account.account_geo                                                                              AS parent_crm_account_geo,
       account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
       account_owner.user_geo                                                                                AS crm_account_owner_geo,
       account_owner.user_region                                                                             AS crm_account_owner_region,
@@ -452,6 +456,9 @@ LEFT JOIN cw_base
       arr_created_date.fiscal_quarter_name_fy                                                     AS arr_created_fiscal_quarter_name,
       arr_created_date.first_day_of_fiscal_quarter                                                AS arr_created_fiscal_quarter_date,
 
+      created_date.fiscal_quarter_name_fy                                                         AS created_fiscal_quarter_name,
+      created_date.first_day_of_fiscal_quarter                                                    AS created_fiscal_quarter_date,
+
       subscription_start_date.fiscal_quarter_name_fy                                              AS subscription_start_date_fiscal_quarter_name,
       subscription_start_date.first_day_of_fiscal_quarter                                         AS subscription_start_date_fiscal_quarter_date,
 
@@ -575,10 +582,14 @@ LEFT JOIN cw_base
         END
         ) AS is_net_arr_pipeline_created,
       CASE
-        WHEN sfdc_opportunity_stage.is_closed = TRUE
-          AND sfdc_opportunity.amount >= 0
-          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
-          AND sfdc_opportunity.is_edu_oss = 0
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
+         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND sfdc_opportunity_live.is_edu_oss = 0
+         AND sfdc_opportunity_live.is_jihu_account = 0
+         AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+         AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
+         AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_win_rate_calc,
@@ -619,12 +630,16 @@ LEFT JOIN cw_base
           ELSE 0
       END                                                           AS is_eligible_asp_analysis,
       CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.is_deleted = 0
-          AND is_renewal = 0
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-          AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          AND sfdc_opportunity.is_web_portal_purchase = 0
+        WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
+         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND sfdc_opportunity_live.is_edu_oss = 0
+         AND sfdc_opportunity_live.is_jihu_account = 0
+         AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+         AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
+         AND sfdc_opportunity_live.deal_path != 'Web Direct'
+         AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+         AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
+         AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
@@ -939,8 +954,19 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
+      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
       CASE
-        WHEN sfdc_opportunity_stage.is_won = 1
+        WHEN sfdc_opportunity.is_jihu_account = 0 
+          AND (sfdc_opportunity_stage.is_won = 1
+                OR (
+                    is_renewal = 1
+                     AND is_lost = 1)
+                   )
+            THEN 1
+          ELSE 0
+      END                                                 AS is_booked_net_arr, 
+      CASE
+        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
           THEN calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
@@ -998,29 +1024,10 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
-        WHEN (
-                sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                      AND is_lost = 1
-                   )
-             )
+        WHEN COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr)  = 1 -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
           THEN net_arr
         ELSE 0
       END                                                 AS booked_net_arr,
-      CASE
-        WHEN sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.is_deleted = 0
-          AND (
-               sfdc_opportunity_stage.is_won = 1
-                OR (
-                    is_renewal = 1
-                     AND is_lost = 1)
-                   )
-          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-            THEN 1
-          ELSE 0
-      END                                                           AS is_booked_net_arr,
       CASE
         WHEN sfdc_opportunity.deal_path = 'Partner'
           THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, sfdc_opportunity.partner_account_partner_track, sfdc_opportunity.fulfillment_partner_partner_track,'Open'),'select','Select')
@@ -1298,22 +1305,18 @@ LEFT JOIN cw_base
                       ) 
       END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
       CASE
-          WHEN is_renewal = 1 AND sfdc_opportunity_stage.is_closed = 1
-              THEN DATEDIFF(day, arr_created_date.date_actual, close_date.date_actual)
-          WHEN is_renewal = 0 AND sfdc_opportunity_stage.is_closed = 1
-              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-              THEN DATEDIFF(day, arr_created_date.date_actual, sfdc_opportunity.snapshot_date)
-          WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-              THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                           AS cycle_time_in_days,
-      COALESCE(
-        sfdc_opportunity.is_pipeline_created_eligible,
+        WHEN is_renewal = 1 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+        WHEN is_renewal = 0 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
+      END                                                         AS cycle_time_in_days,
         CASE
           WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
             AND sfdc_opportunity_live.is_edu_oss  = 0
             AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
-            AND sfdc_opportunity_live.opportunity_category  IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
+            AND sfdc_opportunity_live.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset','Contract Reset/Ramp Deal')
             -- 20211222 Adjusted to remove the ommitted filter
             AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             AND (net_arr > 0
@@ -1321,17 +1324,21 @@ LEFT JOIN cw_base
             -- 20220128 Updated to remove webdirect SQS deals
             AND sfdc_opportunity_live.sales_qualified_source   != 'Web Direct Generated'
             AND sfdc_opportunity_live.is_jihu_account = 0
-          THEN 1
-          ELSE 0
-        END
-      )                                                                                                                 AS is_net_arr_pipeline_created_combined,
+            AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
+          THEN TRUE
+          ELSE FALSE
+        END                                                        AS is_net_arr_pipeline_created_combined, 
+        /* the SFDC flag currently doesn't include all the fields necessary to calculate
+        pipeline generated so we need to COALESCE is_pipeline_created_eligible and this value once this issue is 
+        closed https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/5331 */
       CASE
         WHEN LOWER(sfdc_opportunity_live.order_type_grouped) LIKE ANY ('%growth%', '%new%')
           AND sfdc_opportunity_live.is_edu_oss = 0
           AND is_stage_1_plus = 1
           AND sfdc_opportunity.forecast_category_name != 'Omitted'
           AND sfdc_opportunity.is_open = 1
-          THEN 1
+          AND sfdc_opportunity_live.is_jihu_account = 0
+            THEN 1
           ELSE 0
       END                                                                                                               AS is_eligible_open_pipeline_combined,
       CASE
@@ -1380,8 +1387,8 @@ LEFT JOIN cw_base
             ELSE 0
       END                                                                                                               AS is_excluded_from_pipeline_created_combined,
       CASE
-        WHEN arr_created_date.first_day_of_fiscal_quarter = close_date.first_day_of_fiscal_quarter
-          AND is_net_arr_pipeline_created_combined = 1
+        WHEN arr_created_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_net_arr_pipeline_created_combined = TRUE
             THEN net_arr
         ELSE 0
       END                                                                                                               AS created_and_won_same_quarter_net_arr_combined,
@@ -1391,20 +1398,143 @@ LEFT JOIN cw_base
           AND is_renewal = 0
           AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          AND sfdc_opportunity.is_web_portal_purchase = 0
+          AND sfdc_opportunity_live.is_web_portal_purchase = 0
             THEN 1
           ELSE 0
       END                                                                                                               AS is_eligible_age_analysis_combined,
+       -- ARR created (pipeline generated)
       CASE
-        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
-          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date, sfdc_opportunity.snapshot_date)
-        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-      END                                                                                                               AS cycle_time_in_days_combined
+          WHEN is_net_arr_pipeline_created_combined = TRUE
+            AND stage_1_discovery_date_id IS NOT NULL -- Excludes closed lost opps that could have gone from stage 0 straight to lost
+              THEN net_arr
+        ELSE 0
+      END AS created_arr,
+
+      -- Deals closed won
+      CASE
+        WHEN is_closed_won = TRUE 
+            AND is_win_rate_calc = TRUE
+              THEN calculated_deal_count
+        ELSE 0
+      END AS closed_won_opps,
+
+      -- All closed deals (won and lost)
+      CASE
+        WHEN is_win_rate_calc = TRUE
+          THEN calculated_deal_count
+        ELSE 0
+      END AS closed_opps,
+
+      -- Closed Net ARR
+      CASE
+        WHEN is_win_rate_calc = TRUE
+          THEN calculated_deal_count * net_arr
+        ELSE 0
+      END AS closed_net_arr,
+
+      -- Running sum metrics quarter
+
+      -- This code calculates sales metrics for each snapshot quarter
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
+          AND is_net_arr_pipeline_created_combined = 1 -- use the flag that combines live and snapshot values instead of just snapshot 
+            THEN net_arr
+        ELSE 0
+      END                                                         AS created_arr_in_snapshot_quarter,
+
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_closed_won = TRUE 
+            AND is_win_rate_calc = TRUE
+              THEN calculated_deal_count
+        ELSE 0
+      END                                                         AS closed_won_opps_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_win_rate_calc = TRUE
+            THEN calculated_deal_count
+        ELSE 0
+      END                                                         AS closed_opps_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_win_rate_calc = TRUE
+            THEN calculated_deal_count * net_arr
+        ELSE 0
+      END                                                         AS closed_net_arr_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
+            THEN net_arr
+        ELSE 0
+      END                                                         AS booked_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = arr_created_fiscal_quarter_date
+          AND is_net_arr_pipeline_created_combined = 1 
+            THEN calculated_deal_count 
+        ELSE 0
+      END                                                         AS created_deals_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_renewal = 1 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_renewal = 0 
+            AND  is_eligible_age_analysis = 1
+              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
+      END                                                         AS cycle_time_in_days_in_snapshot_quarter, -- ensure only closed opps are used in the calculation
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+          AND COALESCE(sfdc_opportunity.fpa_master_bookings_flag, is_booked_net_arr) = 1 
+          THEN calculated_deal_count
+        ELSE 0
+      END                                               AS booked_deal_count_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+              THEN net_arr
+        ELSE 0
+      END                                                AS open_1plus_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+            AND is_stage_3_plus = 1
+              THEN net_arr
+        ELSE 0
+      END                                                AS open_3plus_net_arr_in_snapshot_quarter,
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date 
+          AND is_eligible_open_pipeline_combined = 1
+            AND is_stage_4_plus = 1
+              THEN net_arr
+        ELSE 0
+      END                                                AS open_4plus_net_arr_in_snapshot_quarter,
+      CASE 
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_1plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_3_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count_in_snapshot_quarter,
+
+      CASE
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date  
+          AND is_eligible_open_pipeline_combined = 1
+          AND is_stage_4_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count_in_snapshot_quarter
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
@@ -1418,6 +1548,8 @@ LEFT JOIN cw_base
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN dim_date AS close_date
       ON sfdc_opportunity.close_date = close_date.date_actual
+    LEFT JOIN dim_date AS created_date
+      ON sfdc_opportunity.created_date = created_date.date_actual
     LEFT JOIN dim_date AS arr_created_date
       ON sfdc_opportunity.iacv_created_date::DATE = arr_created_date.date_actual
     LEFT JOIN dim_date AS subscription_start_date
