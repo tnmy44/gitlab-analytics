@@ -20,6 +20,7 @@ WITH redis_clicks AS (
     data_source
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE has_gitlab_service_ping_context = TRUE
+  AND is_staging_event = FALSE
   AND behavior_at >= '2022-11-01' -- no events added to SP context before Nov 2022
 
   {% if is_incremental() %}
@@ -54,8 +55,8 @@ final AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@utkarsh060",
+    created_by="@mdrussell",
     updated_by="@utkarsh060",
-    created_date="2024-03-12",
-    updated_date="2024-03-12"
+    created_date="2023-02-17",
+    updated_date="2024-03-22"
 ) }}
