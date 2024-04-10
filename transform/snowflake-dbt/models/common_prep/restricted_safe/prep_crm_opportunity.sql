@@ -603,6 +603,7 @@ LEFT JOIN cw_base
           AND is_stage_1_plus = 1
           AND sfdc_opportunity.forecast_category_name != 'Omitted'
           AND sfdc_opportunity.is_open = 1
+          AND sfdc_opportunity_live.is_jihu_account = 0
          THEN 1
          ELSE 0
       END                                                                                         AS is_eligible_open_pipeline,
