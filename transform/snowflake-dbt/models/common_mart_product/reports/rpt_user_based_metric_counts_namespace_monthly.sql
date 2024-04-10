@@ -38,8 +38,8 @@ final AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@utkarsh060",
+    created_by="@mdrussell",
     updated_by="@utkarsh060",
-    created_date="2024-03-13",
+    created_date="2022-12-21",
     updated_date="2024-03-13"
 ) }}
