@@ -58,6 +58,8 @@ models:
       - name: namespace_was_trial
       - name: saas_trial_start_date
       - name: saas_trial_expired_on
+      - name: saas_trial_type
+        description: '{{ doc("trial_type") }}'
       - name: customer_id
       - name: dim_product_tier_id_with_trial
       - name: product_tier_name_with_trial
@@ -99,6 +101,8 @@ models:
       - name: namespace_was_trial
       - name: saas_trial_start_date
       - name: saas_trial_expired_on
+      - name: saas_trial_type
+        description: '{{ doc("trial_type") }}'
       - name: customer_id
       - name: dim_product_tier_id_with_trial
       - name: product_tier_name_with_trial

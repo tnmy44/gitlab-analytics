@@ -1549,6 +1549,8 @@ models:
       description: Creator invite accepted at timestamp within 2min of creating the ultimate parent namespace. This can be used to filter out namespaces that may have lower intent to purchase.
     - name: trial_start_date
       description: First trial start date associated with the ultimate parent namespace from customers_db_trial_histories.
+    - name: trial_type
+      description: '{{ doc("trial_type") }}'
     - name: days_since_namespace_creation_at_trial
       description: Date difference in days between ultimate parent namespace creation and trial start.
     - name: first_paid_subscription_start_date
