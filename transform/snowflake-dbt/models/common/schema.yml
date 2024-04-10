@@ -1128,6 +1128,8 @@ models:
         description: ID of the user who created the project
       - name: member_count
         description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
+      - name: has_merge_trains_enabled
+        description: '{{ doc("has_merge_trains_enabled") }}'   
 
   - name: dim_revenue_contract
     description: '{{ doc("dim_revenue_contract") }}'
