@@ -87,7 +87,8 @@ init-airflow:
 	@"$(DOCKER_RUN)" airflow_scheduler airflow users create --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
 	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-ops-pool 2 "Airflow pool for ops database extract"
 	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set customers-pool 2 "Airflow pool for customer database full extract"
-	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-com-pool 8 "Airflow pool for gitlab  database incremental extract"
+	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-com-pool 8 "Airflow pool for gitlab database incremental extract"
+	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-cells-com-pool 8 "Airflow pool for gitlab cells database incremental extract"
 	@"$(DOCKER_DOWN)"
 
 ########################################################################################################################
@@ -104,7 +105,7 @@ data-image:
 
 update-containers:
 	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
-	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:modify_dag_timeout
 	@docker pull registry.gitlab.com/gitlab-data/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/dbt-image:latest

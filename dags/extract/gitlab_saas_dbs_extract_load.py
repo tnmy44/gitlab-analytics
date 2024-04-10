@@ -81,6 +81,7 @@ config_dict: Dict[Any, Any] = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_customers_scd",
+        "database_type": "customers",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "45 5 * * *",
         "secrets": [
@@ -96,6 +97,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_com": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_gitlab_com",
+        "database_type": "main",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
         "incremental_backfill_interval": "30 2,15 * * *",
@@ -120,6 +122,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_com_ci": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_gitlab_com_ci",
+        "database_type": "ci",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
         "incremental_backfill_interval": "30 2,15 * * *",
@@ -144,6 +147,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_com_scd": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_gitlab_com_scd",
+        "database_type": "main",
         "env_vars": {},
         "extract_schedule_interval": "30 3,15 */1 * *",
         "secrets": [
@@ -160,6 +164,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_com_ci_scd": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_gitlab_com_ci_scd",
+        "database_type": "ci",
         "env_vars": {},
         "extract_schedule_interval": "00 4,16 */1 * *",
         "secrets": [
@@ -176,6 +181,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "el_saas_gitlab_ops",
+        "database_type": "ops",
         "env_vars": {"HOURS": "48"},
         "extract_schedule_interval": "0 */6 * * *",
         "incremental_backfill_interval": "0 3 * * *",
@@ -201,6 +207,7 @@ config_dict: Dict[Any, Any] = {
     "el_gitlab_ops_scd": {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "el_saas_gitlab_ops_scd",
+        "database_type": "ops",
         "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 2 */1 * *",
         "secrets": [
@@ -214,6 +221,58 @@ config_dict: Dict[Any, Any] = {
         "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-ops",
         "description": "This DAG does Full extract & load of Operational database (Postgres) to snowflake",
+    },
+    "el_cells_gitlab_com": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_saas_cells_gitlab_com",
+        "database_type": "cells-main",
+        "env_vars": {"HOURS": "96"},
+        "extract_schedule_interval": "30 2,15 */1 * *",
+        "incremental_backfill_interval": "30 2,15 * * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
+            GITLAB_METADATA_DB_NAME,
+            GITLAB_METADATA_DB_HOST,
+            GITLAB_METADATA_DB_PASS,
+            GITLAB_METADATA_PG_PORT,
+            GITLAB_METADATA_DB_USER,
+            GITLAB_METADATA_SCHEMA,
+        ],
+        "start_date": datetime(2023, 10, 3),
+        "task_name": "gitlab-com",
+        "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
+    },
+    "el_cells_gitlab_com_scd": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_saas_cells_gitlab_com_scd",
+        "database_type": "cells-ci",
+        "env_vars": {},
+        "extract_schedule_interval": "00 4,16 */1 * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
+        ],
+        "start_date": datetime(2023, 10, 3),
+        "task_name": "gitlab-com-scd",
+        "description": "This DAG does Full extract & load of gitlab.com database CI* (Postgres) to snowflake",
     },
 }
 
@@ -243,7 +302,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
             python ../extract/gitlab_saas_postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/gitlab_saas_postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation}
+            ../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest_db_manifest.yaml {operation}
         "
     """
 
@@ -269,7 +328,7 @@ def generate_cmd(dag_name, operation, cloudsql_instance_name):
         return f"""
             {clone_repo_cmd} &&
             cd analytics/extract/gitlab_saas_postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+            python main.py tap ../manifests/el_saas_gitlab_dotcom_consolidated_manifest_db_manifest.yaml {operation}
         """
 
     return use_cloudsql_proxy(dag_name, operation, cloudsql_instance_name)
@@ -285,6 +344,26 @@ def extract_manifest(manifest_file_path):
 def extract_table_list_from_manifest(manifest_contents):
     """Extract table from the manifest file for which extraction needs to be done"""
     return manifest_contents["tables"] if manifest_contents.get("tables") else []
+
+
+def extract_list_based_on_database_type(table_list, database_type):
+    """Extract the list of tables based on the database type"""
+    return_dict = {}
+    if database_type == "ci":
+        for table_key, table_values in table_list.items():
+            if table_values["database_type"] == "ci":
+                output_dict = {table_key: table_values}
+                return_dict.update(output_dict)
+    elif database_type == "main":
+        for table_key, table_values in table_list.items():
+            if table_values["database_type"] == "main":
+                output_dict = {table_key: table_values}
+                return_dict.update(output_dict)
+    elif database_type == "cells-main" or database_type == "cells-ci":
+        for table_key, table_values in table_list.items():
+            output_dict = {table_key: table_values}
+            return_dict.update(output_dict)
+    return return_dict
 
 
 # Sync DAG
@@ -342,6 +421,16 @@ def get_check_replica_snapshot_command(dag_name):
         print("Checking gitlab_dotcom_incremental DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
+            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+        )
+    elif (
+        dag_name == "el_saas_cells_gitlab_com"
+        or dag_name == "el_saas_cells_gitlab_com_scd"
+    ):
+        print("Checking cells gitlab_dotcom DAG...")
+        check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && "
+            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd && "
             f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
         )
     return check_replica_snapshot_command
@@ -406,9 +495,12 @@ for source_name, config in config_dict.items():
             )
         with extract_dag:
             # Actual PGP extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
+            table_list_unfiltered = extract_table_list_from_manifest(manifest)
+            table_list = extract_list_based_on_database_type(
+                table_list_unfiltered, config["database_type"]
+            )
             incremental_extracts = []
             deletes_extracts = []
 
@@ -493,9 +585,12 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
+            table_list_unfiltered = extract_table_list_from_manifest(manifest)
+            table_list = extract_list_based_on_database_type(
+                table_list_unfiltered, config["database_type"]
+            )
             if has_replica_snapshot:
                 check_replica_snapshot_backfill = get_check_replica_snapshot_task(
                     config["dag_name"], incremental_backfill_dag
@@ -550,9 +645,12 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_scd_consolidated_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
+            table_list_unfiltered = extract_table_list_from_manifest(manifest)
+            table_list = extract_list_based_on_database_type(
+                table_list_unfiltered, config["database_type"]
+            )
             if has_replica_snapshot:
                 check_replica_snapshot_scd = get_check_replica_snapshot_task(
                     config["dag_name"], sync_dag
