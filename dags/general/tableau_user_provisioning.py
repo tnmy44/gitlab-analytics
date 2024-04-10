@@ -24,6 +24,8 @@ from kube_secrets import (
     TABLEAU_API_PUBLIC_TOKEN_SECRET,
     TABLEAU_API_PUBLIC_URL,
     TABLEAU_API_PUBLIC_SITE_NAME,
+    TABLEAU_USER_ARCHIVE_PROJECT,
+    TABLEAU_DEFAULT_WORKBOOK_OWNER,
     SNOWFLAKE_TABLEAU_PASSWORD,
     SNOWFLAKE_TABLEAU_USERNAME,
 )
@@ -59,9 +61,7 @@ dag = DAG(
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     pwd && 
-    cd ./ && 
-    pwd && 
-    TableauConMan provision-settings --yaml_path='analytics/extract/tableau_con_man_config/src/provision_plan.yaml'
+    TableauConMan provision-settings --yaml_path='./tableau_con_man_config/src/provision_plan.yaml'
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
@@ -83,6 +83,8 @@ tableau_provision_users = KubernetesPodOperator(
         TABLEAU_API_PUBLIC_TOKEN_SECRET,
         TABLEAU_API_PUBLIC_URL,
         TABLEAU_API_PUBLIC_SITE_NAME,
+        TABLEAU_USER_ARCHIVE_PROJECT,
+        TABLEAU_DEFAULT_WORKBOOK_OWNER,
         SNOWFLAKE_TABLEAU_PASSWORD,
         SNOWFLAKE_TABLEAU_USERNAME,
     ],
