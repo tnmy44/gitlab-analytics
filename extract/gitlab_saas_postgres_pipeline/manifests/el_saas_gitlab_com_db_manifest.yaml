@@ -1051,7 +1051,7 @@ tables:
       , read_code
       , read_vulnerability
       , admin_vulnerability
-      , read_dependency,
+      , read_dependency
       , name
       , description
       , admin_merge_request
