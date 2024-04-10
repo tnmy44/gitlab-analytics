@@ -78,11 +78,11 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     # Only has data from March 2018
-    "start_date": datetime(2022, 12, 1),
+    "start_date": datetime(2024, 4, 5),
 }
 
 dag = DAG(
-    "google_analytics_four",
+    "el_google_analytics_four",
     default_args=default_args,
     schedule_interval="0 8 * * *",
     concurrency=1,
