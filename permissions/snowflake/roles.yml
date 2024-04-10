@@ -2885,6 +2885,19 @@ roles:
                     - prep.workday.*
                     - raw.workday.*
 
+    - workday_hcm:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
     - xactly:
         warehouses:
             - dev_xs
