@@ -3986,13 +3986,17 @@ roles:
             schemas:
                 read:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
                 write:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
             tables:
                 read:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
                 write:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
 
     - fpitino:
         member_of:
