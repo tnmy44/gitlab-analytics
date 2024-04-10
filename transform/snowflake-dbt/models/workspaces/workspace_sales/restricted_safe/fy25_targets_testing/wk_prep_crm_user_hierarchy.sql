@@ -88,19 +88,19 @@ SELECT
       NULL                                                            AS user_area,
       NULL                                                            AS user_business_unit,
       prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
-      prep_crm_user_daily_snapshot.crm_user_role_name, 
-      prep_crm_user_daily_snapshot.crm_user_role_level_1, 
-      prep_crm_user_daily_snapshot.crm_user_role_level_2, 
-      prep_crm_user_daily_snapshot.crm_user_role_level_3, 
-      prep_crm_user_daily_snapshot.crm_user_role_level_4, 
-      prep_crm_user_daily_snapshot.crm_user_role_level_5
+      prep_crm_user_daily_snapshot.user_role_name, 
+      prep_crm_user_daily_snapshot.user_role_level_1, 
+      prep_crm_user_daily_snapshot.user_role_level_2, 
+      prep_crm_user_daily_snapshot.user_role_level_3, 
+      prep_crm_user_daily_snapshot.user_role_level_4, 
+      prep_crm_user_daily_snapshot.user_role_level_5
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE crm_user_role_level_1 IS NOT NULL
+    WHERE user_role_level_1 IS NOT NULL
     AND dim_date.fiscal_year >= 2025
     AND is_active = TRUE
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY crm_user_role_name ORDER BY snapshot_id DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_role_name ORDER BY snapshot_id DESC) = 1
 
 ), user_role_hierarchy_live_source AS (
     SELECT DISTINCT
@@ -111,15 +111,15 @@ SELECT
       NULL                                                            AS user_area,
       NULL                                                            AS user_business_unit,
       prep_crm_user.dim_crm_user_hierarchy_sk,
-      prep_crm_user.crm_user_role_name, 
-      prep_crm_user.crm_user_role_level_1, 
-      prep_crm_user.crm_user_role_level_2, 
-      prep_crm_user.crm_user_role_level_3, 
-      prep_crm_user.crm_user_role_level_4, 
-      prep_crm_user.crm_user_role_level_5
+      prep_crm_user.user_role_name, 
+      prep_crm_user.user_role_level_1, 
+      prep_crm_user.user_role_level_2, 
+      prep_crm_user.user_role_level_3, 
+      prep_crm_user.user_role_level_4, 
+      prep_crm_user.user_role_level_5
     FROM prep_crm_user
     LEFT JOIN current_fiscal_year
-    WHERE crm_user_role_level_1 IS NOT NULL
+    WHERE user_role_level_1 IS NOT NULL
     AND is_active = TRUE
 
 ), account_hierarchy_snapshot_source AS (
@@ -262,14 +262,14 @@ SELECT
       NULL                                                           AS user_business_unit,
       prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk,
       prep_crm_opportunity.opportunity_owner_role                    AS user_role_name,
-      prep_crm_user.crm_user_role_level_1                            AS user_role_level_1,
-      prep_crm_user.crm_user_role_level_2                            AS user_role_level_2,
-      prep_crm_user.crm_user_role_level_3                            AS user_role_level_3,
-      prep_crm_user.crm_user_role_level_4                            AS user_role_level_4,
-      prep_crm_user.crm_user_role_level_5                            AS user_role_level_5
+      prep_crm_user.user_role_level_1                                AS user_role_level_1,
+      prep_crm_user.user_role_level_2                                AS user_role_level_2,
+      prep_crm_user.user_role_level_3                                AS user_role_level_3,
+      prep_crm_user.user_role_level_4                                AS user_role_level_4,
+      prep_crm_user.user_role_level_5                                AS user_role_level_5
     FROM prep_crm_opportunity
     LEFT JOIN prep_crm_user
-      ON prep_crm_opportunity.opportunity_owner_role = prep_crm_user.crm_user_role_name
+      ON prep_crm_opportunity.opportunity_owner_role = prep_crm_user.user_role_name
     WHERE is_live = 1
     AND prep_crm_opportunity.close_fiscal_year >= 2025
   
@@ -391,12 +391,11 @@ SELECT
       UPPER(user_role_name)     AS user_role_name,
       UPPER(user_role_level_1)  AS user_role_level_1,
       UPPER(user_role_level_2)  AS user_role_level_2,
-      MIN(UPPER(user_role_level_3))  AS user_role_level_3,
-      MIN(UPPER(user_role_level_4))  AS user_role_level_4,
-      MIN(UPPER(user_role_level_5))  AS user_role_level_5
+      UPPER(user_role_level_3)  AS user_role_level_3,
+      UPPER(user_role_level_4)  AS user_role_level_4,
+      UPPER(user_role_level_5)  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
-    {{ dbt_utils.group_by(n=10)}}
 
 ), final_unioned AS (
 
