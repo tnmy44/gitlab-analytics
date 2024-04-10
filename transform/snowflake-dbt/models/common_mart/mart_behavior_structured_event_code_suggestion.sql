@@ -10,9 +10,9 @@
 }}
 
 {{ simple_cte([
-    ('fct_behavior_structured_event_code_suggestions_context', 'fct_behavior_structured_event_code_suggestions_context'),
-    ('fct_behavior_structured_event_ide_extension_version', 'wk_fct_behavior_structured_event_ide_extension_version'),
-    ('fct_behavior', 'fct_behavior_structured_event'),
+    ('fct_behavior_structured_event_code_suggestion', 'fct_behavior_structured_event_code_suggestion'),
+    ('fct_behavior_structured_event_ide_extension_version', 'fct_behavior_structured_event_ide_extension_version'),
+    ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
     ('dim_behavior_event', 'dim_behavior_event')
 ]) }}
 
@@ -23,8 +23,7 @@
     "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT",
     "IDE_EXTENSION_VERSION_CONTEXT","EXTENSION_NAME","EXTENSION_VERSION","IDE_NAME","IDE_VENDOR","IDE_VERSION","LANGUAGE_SERVER_VERSION",
     "MODEL_ENGINE","MODEL_NAME","PREFIX_LENGTH","SUFFIX_LENGTH","LANGUAGE","USER_AGENT","DELIVERY_TYPE","API_STATUS_CODE","NAMESPACE_IDS","INSTANCE_ID","HOST_NAME"]) }}
-  FROM fct_behavior
-  WHERE is_staging_event = FALSE
+  FROM fct_behavior_structured_event
   
 
 ),
@@ -32,9 +31,10 @@
 code_suggestions_context AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('fct_behavior_structured_event_code_suggestions_context'), except=["CREATED_BY", 
+    {{ dbt_utils.star(from=ref('fct_behavior_structured_event_code_suggestion'), except=["CREATED_BY", 
     "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
-  FROM fct_behavior_structured_event_code_suggestions_context
+  FROM fct_behavior_structured_event_code_suggestion
+
 ),
 
 ide_extension_version_context AS (
@@ -86,7 +86,9 @@ code_suggestions_joined_to_fact_and_dim AS (
     dim_behavior_event.event_label,
     dim_behavior_event.event_property,
     CASE
-      WHEN joined_code_suggestions_contexts.ide_name = 'Visual Studio Code' AND joined_code_suggestions_contexts.extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
+      WHEN joined_code_suggestions_contexts.ide_name = 'Visual Studio Code' 
+        AND joined_code_suggestions_contexts.extension_version = '3.76.0' 
+        THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
       ELSE FALSE
     END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
@@ -156,8 +158,8 @@ filtered_code_suggestion_events AS (
 
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
-    created_by="@cbraza",
-    updated_by="@utkarsh060",
-    created_date="2023-10-09",
-    updated_date="2023-03-22"
+    created_by="@michellecooper",
+    updated_by="@michellecooper",
+    created_date="2024-04-09",
+    updated_date="2024-04-09"
 ) }}

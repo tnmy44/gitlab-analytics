@@ -54,7 +54,10 @@ daily_actuals AS (
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
     SUM(booked_net_arr_in_snapshot_quarter)          AS booked_net_arr_in_snapshot_quarter,
-    SUM(open_1plus_net_arr_in_snapshot_quarter)      AS open_1plus_net_arr_in_snapshot_quarter
+    SUM(open_1plus_net_arr_in_snapshot_quarter)      AS open_1plus_net_arr_in_snapshot_quarter,
+    SUM(open_3plus_net_arr_in_snapshot_quarter)      AS open_3plus_net_arr_in_snapshot_quarter,
+    SUM(open_4plus_net_arr_in_snapshot_quarter)      AS open_4plus_net_arr_in_snapshot_quarter
+
   FROM actuals
   {{ dbt_utils.group_by(n=7) }}
 ),
@@ -143,8 +146,10 @@ final AS (
     base.dim_order_type_id,
     base.dim_sales_qualified_source_id,
     SUM(total_targets.total_quarter_target)                   AS total_quarter_target,
-    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)     AS booked_net_arr_in_snapshot_quarter,
-    SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter) AS open_1plus_net_arr_in_snapshot_quarter,
+    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)     AS coverage_booked_net_arr,
+    SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter) AS coverage_open_1plus_net_arr,
+    SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter) AS coverage_open_3plus_net_arr,
+    SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter) AS coverage_open_4plus_net_arr,
     SUM(quarterly_actuals.total_booked_net_arr)               AS total_booked_net_arr
   FROM base
   LEFT JOIN total_targets

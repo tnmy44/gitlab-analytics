@@ -637,6 +637,16 @@ roles:
             - zuora_central_sandbox
             - restricted_workspace_people
             - analyst_people_sensitive
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
 
     - analyst_sales:
         warehouses:
@@ -4513,6 +4523,12 @@ roles:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
 
+    - jpereira:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jpetr:
         member_of:
             - analyst_sales
@@ -7341,6 +7357,11 @@ users:
         can_login: yes
         member_of:
             - jpeguero
+
+    - jpereira:
+        can_login: yes
+        member_of:
+            - jpereira
 
     - jpetr:
         can_login: yes

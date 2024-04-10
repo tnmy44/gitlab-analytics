@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
         unique_key = "behavior_structured_event_pk",
+        tags=['product'],
         on_schema_change = "sync_all_columns"
 ) }}
 
@@ -39,6 +40,7 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
+      fct_behavior_structured_event.is_staging_event,
       dim_behavior_event.event_action,
 
 
