@@ -60,7 +60,6 @@ dag = DAG(
 # tableau Extract
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    pwd && 
     TableauConMan provision-settings --yaml_path='/TableauConMan/analytics/extract/tableau_con_man_config/src/provision_plan.yaml'
 """
 
