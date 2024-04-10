@@ -701,6 +701,8 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
+      - name: product_category
+        description: Categorizes Zuora Products as either Add On Services or Base Products
 
   - name: prep_license
     description: '{{ doc("prep_license") }}'
