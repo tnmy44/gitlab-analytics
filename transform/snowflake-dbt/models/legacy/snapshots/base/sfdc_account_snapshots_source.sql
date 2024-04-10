@@ -117,7 +117,8 @@ renamed AS (
     -- account demographics fields
 
     -- Add sales_segment_cleaning macro to avoid duplication in downstream models
-    {{sales_segment_cleaning('old_segment__c')}} AS account_sales_segment,
+    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS account_sales_segment,
+    {{sales_segment_cleaning('old_segment__c')}} AS account_sales_segment_legacy,
     account_demographics_geo__c AS account_geo,
     account_demographics_region__c AS account_region,
     account_demographics_area__c AS account_area,
@@ -172,7 +173,7 @@ renamed AS (
     trending_onsite_engagement__c AS demandbase_trending_onsite_engagement,
 
     -- sales segment fields
-    old_segment__c AS ultimate_parent_sales_segment,
+    account_demographics_sales_segment__c AS ultimate_parent_sales_segment,
     sales_segmentation_new__c AS division_sales_segment,
     account_owner_user_segment__c AS account_owner_user_segment,
     -- ************************************
@@ -180,7 +181,6 @@ renamed AS (
     -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
-    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS ultimate_parent_sales_segment_new,
 
       -- ************************************
       -- NF: 2020-12-17
