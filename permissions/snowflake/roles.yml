@@ -5786,6 +5786,7 @@ roles:
             - restricted_safe
             - snowflake
             - workday
+            - workday_hcm
             - zengrc
         warehouses:
             - dev_xs
