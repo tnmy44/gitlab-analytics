@@ -19,7 +19,7 @@ target:
 reference:
   name: gitlab
   type: spec
-  file_path: "analytics/extract/tableau_con_man_config/src/specification.yaml"
+  file_path: "/TableauConMan/analytics/extract/tableau_con_man_config/src/specification.yaml"
 assets:
   projects:
     options:
