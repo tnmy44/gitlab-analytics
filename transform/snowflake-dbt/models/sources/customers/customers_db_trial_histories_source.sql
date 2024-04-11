@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('customers', 'customers_db_trial_histories') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY gl_namespace_id ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY gl_namespace_id, trial_type ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
 
@@ -18,7 +18,7 @@ WITH source AS (
       trial_type::INTEGER                       AS trial_type
     FROM source
 
-    
+
 )
 
 SELECT *

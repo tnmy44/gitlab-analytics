@@ -1511,12 +1511,16 @@ models:
 
 - name: rpt_namespace_onboarding
   description: '{{ doc("rpt_namespace_onboarding") }}'
+  tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ultimate_parent_namespace_id
+            - trial_type
   columns:
     - name: ultimate_parent_namespace_id
       description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
       tests:
         - not_null
-        - unique
     - name: namespace_created_at
       description: '{{ doc("namespace_created_at") }}'
     - name: namespace_created_date
