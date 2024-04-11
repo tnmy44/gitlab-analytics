@@ -331,6 +331,7 @@ clone_stop:
   only:
     refs:
       - merge_requests
+  when: manual
   allow_failure: true
 
 snowflake_provisioning_snowflake_users:
@@ -346,8 +347,6 @@ snowflake_provisioning_snowflake_users:
                IS_DEV_DB=$IS_DEV_DB_FINAL"
 
     - python3 provision_users/provision_users.py $IS_TEST_RUN_FINAL $USERS_TO_ADD_FINAL $IS_DEV_DB_FINAL
-  when: manual
-  allow_failure: true
 
 snowflake_provisioning_roles_yaml:
   <<: *snowflake_provisioning_automation
@@ -375,13 +374,17 @@ snowflake_provisioning_roles_yaml:
 
     - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $USERNAMES_TO_REMOVE_FINAL $DATABASES_TEMPLATE_FINAL $ROLES_TEMPLATE_FINAL $USERS_TEMPLATE_FINAL
 
-    # Push roles.yml changes back to the repo
-    - git config user.email "analyticsapi@gitlab.com"
-    - git config user.name "snowflake_provisioning_automation"
-    - git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
-    - git add .
-    - git commit -m "pushed from `snowflake_provisioning_roles_yaml` job"
-    - git push gitlab_origin HEAD:$BRANCH_NAME
+    # If there are changes to roles.yml, then commit/push back to repo
+    - if [[ -n $(git status --porcelain) ]]; then
+      git config user.email "analyticsapi@gitlab.com"
+      git config user.name "snowflake_provisioning_automation"
+      git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
+      git add .
+      git commit -m "pushed from `snowflake_provisioning_roles_yaml` job"
+      git push gitlab_origin HEAD:$BRANCH_NAME
+      else
+        echo "Nothing to commit. Check if 'snowflake_users.yml' was updated. Aborting."
+      fi
 
 # ======
 # dbt docs to GitLab Pages
