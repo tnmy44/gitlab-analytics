@@ -111,26 +111,18 @@ final AS (
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
     DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, snapshot_date) + 1     
                                                                     AS snapshot_week_of_fiscal_quarter,
-    
-    -- Total actuals quarter
 
-    
-    fct_crm_opportunity.created_arr_quarter_total,
-    fct_crm_opportunity.closed_won_opps_quarter_total,
-    fct_crm_opportunity.closed_opps_quarter_total,
-    fct_crm_opportunity.closed_net_arr_quarter_total,
-    fct_crm_opportunity.cycle_time_in_days_quarter_total,
-    fct_crm_opportunity.booked_deal_count_quarter_total,
-    fct_crm_opportunity.booked_net_arr_quarter_total,
-    fct_crm_opportunity.created_deals_quarter_total,
+    --additive fields
     fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_1plus_deal_count_in_snapshot_quarter,
     fct_crm_opportunity.open_3plus_deal_count_in_snapshot_quarter,
     fct_crm_opportunity.open_4plus_deal_count_in_snapshot_quarter,
-
-    --additive fields
+    fct_crm_opportunity.positive_booked_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_booked_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.created_arr_in_snapshot_quarter,
     fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
     fct_crm_opportunity.closed_opps_in_snapshot_quarter,

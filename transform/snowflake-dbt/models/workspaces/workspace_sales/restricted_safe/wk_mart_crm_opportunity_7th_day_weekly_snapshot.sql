@@ -369,6 +369,10 @@ final AS (
                                                                     AS snapshot_week_of_fiscal_quarter,
 
     --additive fields
+    fct_crm_opportunity.positive_booked_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_booked_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
     fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,

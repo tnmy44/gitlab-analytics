@@ -221,6 +221,10 @@
     sfdc_opportunity.comp_channel_neutral,
 
     -- additive fields
+    sfdc_opportunity.positive_booked_deal_count_in_snapshot_quarter,
+    sfdc_opportunity.positive_booked_net_arr_in_snapshot_quarter,
+    sfdc_opportunity.positive_open_deal_count_in_snapshot_quarter,
+    sfdc_opportunity.positive_open_net_arr_in_snapshot_quarter,
     sfdc_opportunity.open_1plus_net_arr_in_snapshot_quarter,
     sfdc_opportunity.open_3plus_net_arr_in_snapshot_quarter,
     sfdc_opportunity.open_4plus_net_arr_in_snapshot_quarter,
