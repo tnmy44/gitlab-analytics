@@ -5096,7 +5096,7 @@ users:
       - General SAFE Access
       - Marketing All Access
       - Marketing Project Lead
-  - user_name: jaime
+  - user_name: jmartinez
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
     auth_setting: SAML
