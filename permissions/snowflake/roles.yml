@@ -637,16 +637,6 @@ roles:
             - zuora_central_sandbox
             - restricted_workspace_people
             - analyst_people_sensitive
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.workday_hcm
-            tables:
-                read:
-                    - raw.workday_hcm.*
 
     - analyst_sales:
         warehouses:
@@ -2885,6 +2875,19 @@ roles:
                     - prep.workday.*
                     - raw.workday.*
 
+    - workday_hcm:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
     - xactly:
         warehouses:
             - dev_xs
@@ -3986,13 +3989,17 @@ roles:
             schemas:
                 read:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
                 write:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
             tables:
                 read:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
                 write:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
 
     - fpitino:
         member_of:
@@ -5779,6 +5786,7 @@ roles:
             - restricted_safe
             - snowflake
             - workday
+            - workday_hcm
             - zengrc
         warehouses:
             - dev_xs
