@@ -80,11 +80,25 @@ class RolesStruct:
         list `keys_to_remove`
         """
         existing_values = self.roles_data[yaml_key]
+        existing_keys = [
+            list(existing_value.keys())[0] for existing_value in existing_values
+        ]
+        keys_to_remove_filtered = []
+
+        # check and print out keys_to_remove that don't exist in roles.yml
+        for key_to_remove in keys_to_remove:
+            if key_to_remove not in existing_keys:
+                logging.info(
+                    f"The key {key_to_remove} is not in roles.yml, will not be removed"
+                )
+            else:
+                keys_to_remove_filtered.append(key_to_remove)
+
         # iterate backwards, popping any matching values slated for removal
         for i in range(len(existing_values) - 1, -1, -1):
             existing_value = existing_values[i]
             existing_value_key = list(existing_value.keys())[0]
-            if existing_value_key in keys_to_remove:
+            if existing_value_key in keys_to_remove_filtered:
                 logging.info(f"Removing {yaml_key} {existing_value_key}")
                 self.roles_data[yaml_key].pop(i)
 
