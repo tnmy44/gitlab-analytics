@@ -376,14 +376,14 @@ snowflake_provisioning_roles_yaml:
 
     # If there are changes to roles.yml, then commit/push back to repo
     - if [[ -n $(git status --porcelain) ]]; then
-      git config user.email "analyticsapi@gitlab.com"
-      git config user.name "snowflake_provisioning_automation"
-      git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git
-      git add .
-      git commit -m "pushed from `snowflake_provisioning_roles_yaml` job"
-      git push gitlab_origin HEAD:$BRANCH_NAME
+      git config user.email "analyticsapi@gitlab.com";
+      git config user.name "snowflake_provisioning_automation";
+      git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git;
+      git add .;
+      git commit -m "pushed from `snowflake_provisioning_roles_yaml` job";
+      git push gitlab_origin HEAD:$BRANCH_NAME;
       else
-        echo "Nothing to commit. Check if 'snowflake_users.yml' was updated. Aborting."
+        echo "Nothing to commit. Check if 'snowflake_users.yml' was updated. Aborting.";
       fi
 
 # ======
