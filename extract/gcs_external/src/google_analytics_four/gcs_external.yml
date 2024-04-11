@@ -3,10 +3,8 @@ credentials: GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS
 
 exports:
   - name: events
-    table: mktg-goog-analytics4-5e6dc7d6.analytics_267713722.events_*
+    table: mktg-goog-analytics4-5e6dc7d6.analytics_267713722.events_20240404
     bucket_path: gs://marketing-ga4/test_events
     partition_column: event_date
     partition_date_part: d
-    selected_columns:
-      - "*"
-      - 1
+    selected_columns: "*"
