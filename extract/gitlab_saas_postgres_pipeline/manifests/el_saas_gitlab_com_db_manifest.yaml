@@ -1049,6 +1049,20 @@ tables:
       , updated_at
       , base_access_level
       , read_code
+      , read_vulnerability
+      , admin_vulnerability
+      , read_dependency
+      , admin_merge_request
+      , admin_group_member
+      , manage_project_access_tokens
+      , archive_project
+      , manage_group_access_tokens
+      , remove_project
+      , admin_terraform_state
+      , admin_cicd_variables
+      , remove_group
+      , occupies_seat
+      , permissions
       FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
