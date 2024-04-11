@@ -10,8 +10,7 @@ WITH product_tier_mapping AS (
       product_tier,
       product_delivery_type,
       product_deployment_type,
-      product_ranking,
-      product_category        
+      product_ranking      
     FROM product_tier_mapping
     
     UNION ALL
@@ -21,8 +20,7 @@ WITH product_tier_mapping AS (
       'SaaS - Free'                                                 AS product_tier,
       'SaaS'                                                        AS product_delivery_type,
       'GitLab.com'                                                  AS product_deployment_type,
-      0                                                             AS product_ranking,
-      NULL                                                          AS product_category
+      0                                                             AS product_ranking
     
     UNION ALL
     
@@ -31,8 +29,7 @@ WITH product_tier_mapping AS (
       'Self-Managed - Free'                                         AS product_tier,
       'Self-Managed'                                                AS product_delivery_type,
       'Self-Managed'                                                AS product_deployment_type,
-      0                                                             AS product_ranking,
-      NULL                                                          AS product_category
+      0                                                             AS product_ranking
   
     UNION ALL
     
@@ -41,8 +38,7 @@ WITH product_tier_mapping AS (
       'SaaS - Trial: Ultimate'                                      AS product_tier,
       'SaaS'                                                        AS product_delivery_type,
       'GitLab.com'                                                  AS product_deployment_type,
-      0                                                             AS product_ranking,
-      NULL                                                          AS product_category
+      0                                                             AS product_ranking
 
   
     UNION ALL
@@ -52,8 +48,7 @@ WITH product_tier_mapping AS (
       'Self-Managed - Trial: Ultimate'                              AS product_tier,
       'Self-Managed'                                                AS product_delivery_type,
       'Self-Managed'                                                AS product_deployment_type,
-      0                                                             AS product_ranking,
-      NULL                                                          AS product_category
+      0                                                             AS product_ranking
 
 ), final AS (
 
@@ -65,8 +60,7 @@ WITH product_tier_mapping AS (
     SPLIT_PART(product_tier, ' - ', -1)                             AS product_tier_name_short,
     product_delivery_type,
     product_deployment_type,
-    product_ranking,
-    product_category
+    product_ranking
   FROM mapping
   
   UNION ALL
@@ -79,8 +73,7 @@ WITH product_tier_mapping AS (
     '(Unknown Tier Name)'                                           AS product_tier_name_short,
     '(Unknown Delivery Type)'                                       AS product_delivery_type,
     '(Unknown Deployment Type)'                                     AS product_deployment_type,
-    -1                                                              AS product_ranking,
-    NULL                                                            AS product_category
+    -1                                                              AS product_ranking
 
 )
 
