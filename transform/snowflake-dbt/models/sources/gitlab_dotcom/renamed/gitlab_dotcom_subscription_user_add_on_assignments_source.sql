@@ -12,7 +12,7 @@ WITH source AS (
       user_id::NUMBER                           AS user_id,
       created_at::TIMESTAMP                     AS created_at,
       updated_at::TIMESTAMP                     AS updated_at,
-      pgp_is_deleted::TIMESTAMP                 AS pgp_is_deleted,
+      pgp_is_deleted::BOOLEAN                   AS pgp_is_deleted,
       pgp_is_deleted_updated_at::TIMESTAMP      AS pgp_is_deleted_updated_at
 
     FROM source
