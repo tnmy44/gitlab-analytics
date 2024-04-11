@@ -10,7 +10,9 @@ class DefaultBlankTemplateAction(argparse.Action):
     """
     Custom action to handle when blank templates are passed in.
     If blank, use the default template instead
+
     This is necessary for the CI job `snowflake_provisioning_roles_yaml`
+    passes in blank "" arguments
     """
 
     def __call__(self, parser, namespace, values, option_string=None):
@@ -96,12 +98,14 @@ def parse_arguments() -> argparse.Namespace:
         "-d",
         "--databases-template",
         default=None,
+        action=DefaultBlankTemplateAction,
         help="Database values template- pass in a JSON string object",
     )
     parser.add_argument(
         "-r",
         "--roles-template",
         default=get_default_roles_template(),
+        action=DefaultBlankTemplateAction,
         help="Role values template- pass in a JSON string object",
     )
     parser.add_argument(
