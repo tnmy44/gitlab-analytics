@@ -8600,3 +8600,9 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: redis_event_name
+        description: ' {{ doc("redis_event_name") }} '
+      - name: key_path
+        description: ' {{ doc("service_ping_key_path") }} '
+      - name: data_source
+        description: ' {{ doc("service_ping_data_source") }} '

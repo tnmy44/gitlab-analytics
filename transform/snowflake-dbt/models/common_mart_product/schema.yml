@@ -628,8 +628,8 @@ models:
             - dim_subscription_id_original
             - dim_namespace_id
   
-  - name: mart_snowplow_events_service_ping_metrics
-    description: '{{ doc("mart_snowplow_events_service_ping_metrics") }}'
+  - name: mart_behavior_structured_event_service_ping_metrics
+    description: '{{ doc("mart_behavior_structured_event_service_ping_metrics") }}'
     columns:
       - name: snowplow_events_service_ping_metrics_sk
         tests:
@@ -650,6 +650,8 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: redis_event_name
+        description: ' {{ doc("redis_event_name") }} '
       - name: metrics_path
         description: '{{ doc("metrics_path") }}'
       - name: metrics_status

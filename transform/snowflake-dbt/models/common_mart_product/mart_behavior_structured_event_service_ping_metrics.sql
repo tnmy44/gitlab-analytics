@@ -3,7 +3,7 @@
     materialized='incremental',
     unique_key = "snowplow_events_service_ping_metrics_sk",
     on_schema_change = "sync_all_columns",
-    tags=["mnpi_exception"]
+    tags=["product", "mnpi_exception"]
   )
 }}
 
