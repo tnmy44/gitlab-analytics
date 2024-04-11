@@ -2332,7 +2332,6 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   subscription_user_add_on_assignments:
     dbt_source_model: true
-    deletes_exempt: True
     export_schema: 'gitlab_com'
     export_table: 'subscription_user_add_on_assignments'
     export_table_primary_key: id
