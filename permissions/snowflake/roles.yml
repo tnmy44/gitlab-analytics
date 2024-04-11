@@ -2875,6 +2875,19 @@ roles:
                     - prep.workday.*
                     - raw.workday.*
 
+    - workday_hcm:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
     - xactly:
         warehouses:
             - dev_xs
@@ -3976,13 +3989,17 @@ roles:
             schemas:
                 read:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
                 write:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
             tables:
                 read:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
                 write:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
 
     - fpitino:
         member_of:
@@ -4512,6 +4529,12 @@ roles:
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+
+    - jpereira:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - jpetr:
         member_of:
@@ -5763,6 +5786,7 @@ roles:
             - restricted_safe
             - snowflake
             - workday
+            - workday_hcm
             - zengrc
         warehouses:
             - dev_xs
@@ -5803,13 +5827,6 @@ roles:
                 write:
                     - pempey_prep.*.*
                     - pempey_prod.*.*
-
-    - periscope:
-        warehouses:
-            - reporting
-
-    - periscope_sensitive:
-        warehouses: []
 
     - permission_bot:
         warehouses:
@@ -6209,13 +6226,6 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-
-    - sisense_restricted_safe:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - reporting
 
     - skhan:
         member_of:
@@ -7342,6 +7352,11 @@ users:
         member_of:
             - jpeguero
 
+    - jpereira:
+        can_login: yes
+        member_of:
+            - jpereira
+
     - jpetr:
         can_login: yes
         member_of:
@@ -7701,12 +7716,6 @@ users:
         member_of:
             - pempey
 
-    - periscope:
-        can_login: yes
-        member_of:
-            - periscope
-            - reporter
-
     - permission_bot:
         can_login: yes
         member_of:
@@ -7827,11 +7836,6 @@ users:
         can_login: yes
         member_of:
             - sgladchun
-
-    - sisense_restricted_safe:
-        can_login: yes
-        member_of:
-            - sisense_restricted_safe
 
     - skhan:
         can_login: yes
