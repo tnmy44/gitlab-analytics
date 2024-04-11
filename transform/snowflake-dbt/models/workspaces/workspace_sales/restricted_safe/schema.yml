@@ -118,6 +118,13 @@ models:
       - name: dim_sales_funnel_kpi_sk
         tests:
           - not_null
+  - name: wk_fct_sales_funnel_actual
+    description: '{{ doc("fct_sales_funnel_actual") }}'
+    columns:
+      - name: sales_funnel_actual_sk
+        tests:
+          - not_null
+          - unique
   - name: wk_rpt_crm_opportunity_reduced
     description: a table with reduced column list from mart_crm_opportunity that is used for testing entitlement tables for Tableau
     columns:
