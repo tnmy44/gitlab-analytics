@@ -3014,6 +3014,8 @@ models:
         description: '{{ doc("ping_delivery_type") }}'
       - name: ping_deployment_type
         description: '{{ doc("ping_deployment_type") }}'
+      - name: next_ping_uploaded_at
+        description: '{{ doc("next_ping_uploaded_at") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '

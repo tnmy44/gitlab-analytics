@@ -2582,6 +2582,12 @@ A status indicating if the milestone is `Active` or `Closed`.
 
 {% enddocs %}
 
+{% docs next_ping_uploaded_at %}
+
+The date of the next ping for the uuid and the host id. Will be the current ping upload_at if it is the current ping.
+
+{% enddocs %}
+
 {% docs gitlab_standard_context %}
 
 Standard fields added to Snowplow events by GitLab as defined in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_standard/jsonschema)
@@ -3303,6 +3309,11 @@ Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_completed`
 
 {% enddocs %}
 
+{% docs dimensions_checked_at %}
+
+A timestamp used for checking when the last time the dimensions for the record were updated. 
+
+{% enddocs %}
 
 {% docs has_merge_trains_enabled %}
  

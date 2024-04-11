@@ -2186,7 +2186,7 @@ users:
       - General SAFE Access
   - user_name: abhaskar
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Creator
     auth_setting: SAML
     groups:
       - Finance All Access
@@ -2285,6 +2285,12 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: aadesanya
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access 
   - user_name: adelvecchio
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -2410,6 +2416,12 @@ users:
     groups:
       - General All Access
   - user_name: ajensen
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: ajuozaponyte-ext
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -2895,12 +2907,6 @@ users:
     groups:
       - General All Access
       - Internal Audit Restricted Access
-  - user_name: atorres
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: avolpe
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5090,6 +5096,12 @@ users:
       - General SAFE Access
       - Marketing All Access
       - Marketing Project Lead
+  - user_name: jmartinez
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access 
   - user_name: jallen
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9316,6 +9328,12 @@ users:
       - Production Project Lead
       - Resources Project Lead
       - Data Team Project Lead
+  - user_name: spouliquen
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: sozawa
     user_name_domain: gitlab.com
     site_role: Viewer
