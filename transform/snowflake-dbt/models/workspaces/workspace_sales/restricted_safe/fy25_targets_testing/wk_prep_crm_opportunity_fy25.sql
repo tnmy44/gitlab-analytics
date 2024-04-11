@@ -101,8 +101,7 @@
 ), sfdc_user AS (
 
     SELECT *
-    FROM {{ ref('sfdc_users_source') }}
-    WHERE user_id IS NOT NULL
+    FROM {{ ref('wk_prep_crm_user') }}
 
 ), sfdc_opportunity_snapshot AS (
 
@@ -178,8 +177,9 @@
           THEN sfdc_account_snapshot.crm_account_owner_area
         ELSE sfdc_opportunity_snapshots_source.user_area_stamped
       END                                                                                                         AS opportunity_owner_user_area,
-      sfdc_account_snapshot.crm_account_owner_role                                                                AS opportunity_owner_role,
-      sfdc_account_snapshot.crm_account_owner_title                                                               AS opportunity_owner_title,
+      sfdc_user_snapshot.user_role_name                                                                           AS opportunity_owner_role,
+      sfdc_user_snapshot.title                                                                                    AS opportunity_owner_title,
+      sfdc_account_snapshot.crm_account_owner_role                                                                AS opportunity_account_owner_role,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED",
                                                                                "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", 
                                                                                "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", 
@@ -198,6 +198,9 @@
     LEFT JOIN sfdc_account_snapshot
       ON sfdc_opportunity_snapshots_source.account_id = sfdc_account_snapshot.dim_crm_account_id
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
+    LEFT JOIN sfdc_user_snapshot
+      ON sfdc_opportunity_snapshots_source.owner_id = sfdc_user_snapshot.dim_crm_user_id
+        AND snapshot_dates.date_id = sfdc_user_snapshot.snapshot_id
     WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
       AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
 
@@ -232,11 +235,11 @@
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
       live_date.last_day_of_fiscal_quarter                                                                  AS snapshot_last_day_of_fiscal_quarter,
       sfdc_account.account_geo                                                                              AS parent_crm_account_geo,
-      account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
-      account_owner.user_geo                                                                                AS crm_account_owner_geo,
-      account_owner.user_region                                                                             AS crm_account_owner_region,
-      account_owner.user_area                                                                               AS crm_account_owner_area,
-      account_owner.user_segment_geo_region_area                                                            AS crm_account_owner_sales_segment_geo_region_area,
+      account_owner.crm_user_sales_segment                                                                  AS crm_account_owner_sales_segment,
+      account_owner.crm_user_geo                                                                            AS crm_account_owner_geo,
+      account_owner.crm_user_region                                                                         AS crm_account_owner_region,
+      account_owner.crm_user_area                                                                           AS crm_account_owner_area,
+      account_owner.crm_user_sales_segment_geo_region_area                                                  AS crm_account_owner_sales_segment_geo_region_area,
       fulfillment_partner.account_name                                                                      AS fulfillment_partner_account_name,
       fulfillment_partner.partner_track                                                                     AS fulfillment_partner_partner_track,
       partner_account.account_name                                                                          AS partner_account_account_name,
@@ -252,31 +255,32 @@
       CASE
         WHEN sfdc_opportunity_source.user_segment_stamped IS NULL
           OR is_open = 1
-          THEN account_owner.user_segment
+          THEN account_owner.crm_user_sales_segment
         ELSE sfdc_opportunity_source.user_segment_stamped
       END                                                                                                   AS opportunity_owner_user_segment,
       CASE
         WHEN sfdc_opportunity_source.user_geo_stamped IS NULL
           OR is_open = 1
-        THEN account_owner.user_geo
+        THEN account_owner.crm_user_geo
       ELSE sfdc_opportunity_source.user_geo_stamped
       END                                                                                                   AS opportunity_owner_user_geo,
 
       CASE
         WHEN sfdc_opportunity_source.user_region_stamped IS NULL
              OR is_open = 1
-          THEN account_owner.user_region
+          THEN account_owner.crm_user_region
           ELSE sfdc_opportunity_source.user_region_stamped
       END                                                                                                   AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_source.user_area_stamped IS NULL
              OR is_open = 1
-          THEN account_owner.user_area
+          THEN account_owner.crm_user_area
         ELSE sfdc_opportunity_source.user_area_stamped
       END                                                                                                   AS opportunity_owner_user_area,
-      sfdc_user_roles_source.name                                                                           AS opportunity_owner_role,
-      account_owner.title                                                                                   AS opportunity_owner_title,
+      opportunity_owner.user_role_name                                                                      AS opportunity_owner_role,
+      opportunity_owner.title                                                                               AS opportunity_owner_title,
+      sfdc_account.account_owner_role                                                                       AS opportunity_account_owner_role,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
                                                                      "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
@@ -294,9 +298,9 @@
     LEFT JOIN sfdc_account
       ON sfdc_opportunity_source.account_id= sfdc_account.account_id
     LEFT JOIN sfdc_user AS account_owner
-      ON sfdc_account.owner_id = account_owner.user_id
-    LEFT JOIN sfdc_user_roles_source
-      ON account_owner.user_role_id = sfdc_user_roles_source.id
+      ON sfdc_account.owner_id = account_owner.dim_crm_user_id
+    LEFT JOIN sfdc_user AS opportunity_owner
+      ON sfdc_opportunity_source.owner_id = opportunity_owner.dim_crm_user_id
     WHERE sfdc_opportunity_source.account_id IS NOT NULL
       AND sfdc_opportunity_source.is_deleted = FALSE
 
@@ -1572,5 +1576,5 @@ LEFT JOIN cw_base
     created_by="@michellecooper",
     updated_by="@chrisharp",
     created_date="2022-02-23",
-    updated_date="2023-12-06"
+    updated_date="2024-03-10"
 ) }}
