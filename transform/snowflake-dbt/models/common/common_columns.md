@@ -3309,9 +3309,14 @@ Boolean flag set to `TRUE` if the suggestion had a `suggestion_stream_completed`
 
 {% enddocs %}
 
-
 {% docs dimensions_checked_at %}
 
 A timestamp used for checking when the last time the dimensions for the record were updated. 
+
+{% enddocs %}
+
+{% docs has_merge_trains_enabled %}
+ 
+Flag to indicate a project has turned on the [Merge Trains](https://docs.gitlab.com/ee/ci/pipelines/merge_trains.html) feature
 
 {% enddocs %}
