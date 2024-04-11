@@ -5820,13 +5820,6 @@ roles:
                     - pempey_prep.*.*
                     - pempey_prod.*.*
 
-    - periscope:
-        warehouses:
-            - reporting
-
-    - periscope_sensitive:
-        warehouses: []
-
     - permission_bot:
         warehouses:
             - admin
@@ -6225,13 +6218,6 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-
-    - sisense_restricted_safe:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - reporting
 
     - skhan:
         member_of:
@@ -7722,12 +7708,6 @@ users:
         member_of:
             - pempey
 
-    - periscope:
-        can_login: yes
-        member_of:
-            - periscope
-            - reporter
-
     - permission_bot:
         can_login: yes
         member_of:
@@ -7848,11 +7828,6 @@ users:
         can_login: yes
         member_of:
             - sgladchun
-
-    - sisense_restricted_safe:
-        can_login: yes
-        member_of:
-            - sisense_restricted_safe
 
     - skhan:
         can_login: yes
