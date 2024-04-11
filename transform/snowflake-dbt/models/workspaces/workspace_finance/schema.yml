@@ -133,8 +133,6 @@ models:
         tests:
           - not_null:
               severity: warn
-      - name: product_category
-        description: Categorizes Zuora Products as either Add On Services or Base Products
   - name: prep_product_tier_api_sandbox
     columns:
       - name: dim_product_tier_id
@@ -166,8 +164,6 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
-      - name: product_category
-        description: Categorizes Zuora Products as either Add On Services or Base Products
   - name: dim_billing_account_api_sandbox
     columns:
       - name: dim_billing_account_id
