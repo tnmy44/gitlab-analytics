@@ -9,6 +9,7 @@ from yaml import safe_load, YAMLError
 
 config_dict = env.copy()
 
+
 def get_billing_data_query(export: dict, export_date: str) -> str:
     """
     sql to run in bigquery for daily partition

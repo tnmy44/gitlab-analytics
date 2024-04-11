@@ -127,7 +127,13 @@ for export in stream["exports"]:
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcs_external.py --export={export} --gcp_project={gcp_project}
+    python gcs_external/src/gcs_external.py \
+        --partition_date_part={export['partition_date_part']} \
+        --selected_columns={export['selected_columns']} \
+        --gcp_project={gcp_project} \
+        --bucket_path={export['bucket_path']} \
+        --table={export['table']} \
+        --partition_column={export['partition_column']} 
     """
 
     task_name = export["name"]
