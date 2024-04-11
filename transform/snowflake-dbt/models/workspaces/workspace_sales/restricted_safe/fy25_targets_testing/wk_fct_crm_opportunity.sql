@@ -125,7 +125,7 @@
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_user_hierarchy_account_user_sk  -- live account owner hierarchy
-        ELSE {{ get_keyed_nulls('sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk') }} -- stamped account owner hierarchy
+        ELSE {{ get_keyed_nulls('sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk') }} -- stamped opp owner hierarchy
       END                                                                                                                         AS dim_crm_current_account_set_hierarchy_sk,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year

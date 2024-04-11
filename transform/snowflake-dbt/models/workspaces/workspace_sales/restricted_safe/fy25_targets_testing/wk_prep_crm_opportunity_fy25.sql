@@ -235,7 +235,7 @@
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
       live_date.last_day_of_fiscal_quarter                                                                  AS snapshot_last_day_of_fiscal_quarter,
       sfdc_account.account_geo                                                                              AS parent_crm_account_geo,
-      account_owner.crm_user_sales_segment                                                                  AS crm_account_owner_sales_segment_segment,
+      account_owner.crm_user_sales_segment                                                                  AS crm_account_owner_sales_segment,
       account_owner.crm_user_geo                                                                            AS crm_account_owner_geo,
       account_owner.crm_user_region                                                                         AS crm_account_owner_region,
       account_owner.crm_user_area                                                                           AS crm_account_owner_area,
