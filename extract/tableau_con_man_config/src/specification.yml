@@ -5090,6 +5090,12 @@ users:
       - General SAFE Access
       - Marketing All Access
       - Marketing Project Lead
+  - user_name: jaime
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access 
   - user_name: jallen
     user_name_domain: gitlab.com
     site_role: Viewer
