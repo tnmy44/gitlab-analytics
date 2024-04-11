@@ -89,7 +89,7 @@ class RolesStruct:
         for key_to_remove in keys_to_remove:
             if key_to_remove not in existing_keys:
                 logging.info(
-                    f"The key {key_to_remove} is not in roles.yml, will not be removed"
+                    f"Skipping (key does not exist): Removing {yaml_key} {key_to_remove}"
                 )
             else:
                 keys_to_remove_filtered.append(key_to_remove)
