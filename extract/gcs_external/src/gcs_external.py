@@ -63,7 +63,7 @@ def run_export(
 
     logging.info(sql_statement)
 
-    credentials = json.loads(config_dict["GCP_BILLING_ACCOUNT_CREDENTIALS"])
+    credentials = json.loads(config_dict["GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS"])
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
