@@ -379,6 +379,7 @@ snowflake_provisioning_roles_yaml:
       git config user.email "analyticsapi@gitlab.com";
       git config user.name "snowflake_provisioning_automation";
       git remote add gitlab_origin https://oauth2:$SNOWFLAKE_PROVISIONING_AUTOMATION_PROJECT_ACCESS_TOKEN@gitlab.com/gitlab-data/analytics.git;
+      cd $(git rev-parse --show-toplevel);
       git add .;
       git commit -m "pushed from `snowflake_provisioning_roles_yaml` job";
       git push gitlab_origin HEAD:$BRANCH_NAME;
