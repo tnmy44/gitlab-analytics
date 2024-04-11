@@ -10,35 +10,56 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
-def get_billing_data_query(export: dict, export_date: str) -> str:
+def get_billing_data_query(
+    partition_date_part: str,
+    selected_columns: str,
+    bucket_path: str,
+    table: str,
+    partition_column: str,
+    export_date: str,
+) -> str:
     """
     sql to run in bigquery for daily partition
     """
-    if export["partition_date_part"] == "d":
+    if partition_date_part == "d":
         partition = export_date[0:10]
-    elif export["partition_date_part"] == "m":
+    elif partition_date_part == "m":
         partition = export_date[0:7]
 
-    select_string = ", ".join(export["selected_columns"])
+    select_string = ", ".join(selected_columns)
 
     return f"""
         EXPORT DATA OPTIONS(
-          uri='{export['bucket_path']}/{partition}/*.parquet',
+          uri='{bucket_path}/{partition}/*.parquet',
           format='PARQUET',
           overwrite=true
           ) AS
             SELECT {select_string}
-            FROM `{export['table']}`
-            WHERE {export['partition_column']} = '{partition}'
+            FROM `{table}`
+            WHERE {partition_column} = '{partition}'
     """
 
 
-def run_export(export: dict, gcp_project: str):
+def run_export(
+    partition_date_part: str,
+    selected_columns: str,
+    gcp_project: str,
+    bucket_path: str,
+    table: str,
+    partition_column: str,
+):
     """
     run sql command in bigquery
     """
     export_date = config_dict["EXPORT_DATE"]
-    sql_statement = get_billing_data_query(export, export_date)
+    sql_statement = get_billing_data_query(
+        partition_date_part,
+        selected_columns,
+        bucket_path,
+        table,
+        partition_column,
+        export_date,
+    )
 
     logging.info(sql_statement)
 
