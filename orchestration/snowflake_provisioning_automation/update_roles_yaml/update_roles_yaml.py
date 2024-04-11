@@ -123,6 +123,9 @@ def main():
     time.sleep(5)  # give user a chance to abort
     logging.info(f"usernames_to_add: {usernames_to_add}")
     logging.info(f"usernames_to_remove: {usernames_to_remove}\n")
+    logging.info(f'databases_template: {databases_template}')
+    logging.info(f'roles_template: {roles_template}')
+    logging.info(f'users_template: {users_template}')
 
     if usernames_to_add:
         add_usernames(

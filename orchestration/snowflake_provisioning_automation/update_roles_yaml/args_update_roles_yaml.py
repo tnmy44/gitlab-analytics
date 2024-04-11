@@ -91,7 +91,10 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "-u",
         "--users-template",
+        type=str,
+        nargs='?',
         default=get_default_users_template(),
+        const=get_default_users_template(),
         help="User values template- pass in a JSON string object",
     )
     # by default, only print what would happen to roles.yml, but don't overwrite it
