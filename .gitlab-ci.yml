@@ -356,13 +356,13 @@ snowflake_provisioning_roles_yaml:
     - if [ -n "$USERS_TO_REMOVE" ]; then USERS_TO_REMOVE_FINAL="--users-to-remove $USERS_TO_REMOVE"; fi
 
     - export DATABASES_TEMPLATE_FINAL=""
-    - if [ -n "$DATABASES_TEMPLATE" ]; then DATABASES_TEMPLATE_FINAL="--databases-template $DATABASES_TEMPLATE"; fi
+    - if [ -n "$DATABASES_TEMPLATE" ]; then DATABASES_TEMPLATE_FINAL="$DATABASES_TEMPLATE"; fi
 
     - export ROLES_TEMPLATE_FINAL=""
-    - if [ -n "$ROLES_TEMPLATE" ]; then ROLES_TEMPLATE_FINAL="--roles-template $ROLES_TEMPLATE"; fi
+    - if [ -n "$ROLES_TEMPLATE" ]; then ROLES_TEMPLATE_FINAL="$ROLES_TEMPLATE"; fi
 
     - export USERS_TEMPLATE_FINAL=""
-    - if [ -n "$USERS_TEMPLATE" ]; then USERS_TEMPLATE_FINAL="--users-template $USERS_TEMPLATE"; fi
+    - if [ -n "$USERS_TEMPLATE" ]; then USERS_TEMPLATE_FINAL="$USERS_TEMPLATE"; fi
 
     - echo "Below are CI job arguments, missing key/values will use default Python values:"
     - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
@@ -372,7 +372,7 @@ snowflake_provisioning_roles_yaml:
       ROLES_TEMPLATE=$ROLES_TEMPLATE_FINAL\n\
       USERS_TEMPLATE=$USERS_TEMPLATE_FINAL"
 
-    - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERS_TO_ADD_FINAL $USERS_TO_REMOVE_FINAL $DATABASES_TEMPLATE_FINAL $ROLES_TEMPLATE_FINAL $USERS_TEMPLATE_FINAL
+    - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERS_TO_ADD_FINAL $USERS_TO_REMOVE_FINAL --databases-template "$DATABASES_TEMPLATE_FINAL" --roles-template "$ROLES_TEMPLATE_FINAL" --users-template "$USERS_TEMPLATE_FINAL"
 
     # If there are changes to roles.yml, then commit/push back to repo
     - if [[ -n $(git status --porcelain) ]]; then

@@ -6,6 +6,22 @@ import argparse
 from utils_update_roles import get_user_changes
 
 
+class DefaultBlankTemplateAction(argparse.Action):
+    """
+    Custom action to handle when blank templates are passed in.
+    If blank, use the default template instead
+    This is necessary for the CI job `snowflake_provisioning_roles_yaml`
+    """
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not values:
+            # If the value is 'x', substitute it with the default value
+            setattr(namespace, self.dest, self.default)
+        else:
+            # Otherwise, set the value as usual
+            setattr(namespace, self.dest, values)
+
+
 def get_users_added() -> list:
     """returns the users ADDED to the snowflake_users.yml file"""
 
@@ -92,11 +108,11 @@ def parse_arguments() -> argparse.Namespace:
         "-u",
         "--users-template",
         type=str,
-        nargs='?',
         default=get_default_users_template(),
-        const=get_default_users_template(),
+        action=DefaultBlankTemplateAction,
         help="User values template- pass in a JSON string object",
     )
+
     # by default, only print what would happen to roles.yml, but don't overwrite it
     parser.add_argument(
         "-t",
