@@ -538,6 +538,7 @@ tables:
       , updated_at
       , NULL AS environment_type
       , state
+      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
