@@ -9328,7 +9328,7 @@ users:
       - Production Project Lead
       - Resources Project Lead
       - Data Team Project Lead
-  - user_name: sophie
+  - user_name: spouliquen
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
