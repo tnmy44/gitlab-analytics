@@ -14,6 +14,7 @@ sys.path.insert(1, parent_path)
 from utils_snowflake_provisioning import (
     get_user_changes,
     YAML_PATH,  # used by downstream modules
+    get_valid_users,
     get_snowflake_usernames,
 )
 

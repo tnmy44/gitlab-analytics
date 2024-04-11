@@ -97,6 +97,16 @@ def check_is_valid_user_format(user):
     return True
 
 
+def get_valid_users(users):
+    valid_users = []
+    for user in users:
+        if check_is_valid_user_format(user):
+            valid_users.append(user)
+        else:
+            logging.info(f"Skipping user {user}, not a valid user")
+    return valid_users
+
+
 def get_user_changes() -> Tuple[List[str], List[str]]:
     """
     Based on git diff to the `snowflake_users.yml` file,
@@ -120,10 +130,7 @@ def get_user_changes() -> Tuple[List[str], List[str]]:
             continue
 
         # check that user isn't a blank line
-        if (change.startswith("+") or change.startswith("-")) and user:
-            if not check_is_valid_user_format(user):
-                logging.info(f"Skipping user {user}, not a valid user")
-                continue
+        if user:
             if change.startswith("+"):
                 users_added.append(user)
             if change.startswith("-"):
