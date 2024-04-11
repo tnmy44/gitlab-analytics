@@ -366,13 +366,13 @@ snowflake_provisioning_roles_yaml:
 
     - echo "Below are CI job arguments, missing key/values will use default Python values:"
     - echo -e "IS_TEST_RUN=$IS_TEST_RUN_FINAL\n\
-      USERNAMES_TO_ADD=$USERNAMES_TO_ADD_FINAL\n\
-      USERNAMES_TO_REMOVE=$USERNAMES_TO_REMOVE_FINAL\n\
+      USERS_TO_ADD=$USERS_TO_ADD_FINAL\n\
+      USERS_TO_REMOVE=$USERS_TO_REMOVE_FINAL\n\
       DATABASES_TEMPLATE=$DATABASES_TEMPLATE_FINAL\n\
       ROLES_TEMPLATE=$ROLES_TEMPLATE_FINAL\n\
       USERS_TEMPLATE=$USERS_TEMPLATE_FINAL"
 
-    - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERNAMES_TO_ADD_FINAL $USERNAMES_TO_REMOVE_FINAL $DATABASES_TEMPLATE_FINAL $ROLES_TEMPLATE_FINAL $USERS_TEMPLATE_FINAL
+    - python3 update_roles_yaml/update_roles_yaml.py $IS_TEST_RUN_FINAL $USERS_TO_ADD_FINAL $USERS_TO_REMOVE_FINAL $DATABASES_TEMPLATE_FINAL $ROLES_TEMPLATE_FINAL $USERS_TEMPLATE_FINAL
 
     # If there are changes to roles.yml, then commit/push back to repo
     - if [[ -n $(git status --porcelain) ]]; then
