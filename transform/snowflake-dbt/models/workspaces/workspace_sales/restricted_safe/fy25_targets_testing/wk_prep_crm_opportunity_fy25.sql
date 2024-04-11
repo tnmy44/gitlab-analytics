@@ -1539,14 +1539,14 @@ LEFT JOIN cw_base
 
       -- Fields to calculate average deal size. Net arr in the numerator / deal count in the denominator
       CASE
-        WHEN snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
           AND is_booked_net_arr = 1 
 	          AND net_arr > 0
           THEN 1
         ELSE 0
       END                                               AS positive_booked_deal_count_in_snapshot_quarter,
       CASE
-        WHEN snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
           AND is_booked_net_arr = 1 
 	          AND net_arr > 0
           THEN net_arr
