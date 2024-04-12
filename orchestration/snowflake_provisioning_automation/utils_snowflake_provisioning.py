@@ -53,7 +53,8 @@ def run_git_diff_command(file_path: str, base_branch: str = "master") -> str:
 
 def get_snowflake_usernames(users: List[str]):
     """
-    Return snowflake username, need to update the string by:
+    Given a gitlab user,
+    return snowflake username, need to update the string by:
     - Remove '-ext'
     - Remove non \\w chars
     """
@@ -99,6 +100,11 @@ def check_is_valid_user_format(user: str):
 
 
 def get_valid_users(users: List[str]):
+    """
+    Given a list of users, return a list of valid users.
+    That is, users that match the valid format constraints defined
+    within `check_is_valid_user_format()`
+    """
     valid_users = []
     for user in users:
         if check_is_valid_user_format(user):
