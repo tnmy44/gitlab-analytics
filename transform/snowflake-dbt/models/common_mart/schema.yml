@@ -1351,6 +1351,8 @@ models:
       description: '{{ doc("gsc_source") }}'
     - name: gsc_is_gitlab_team_member
       description: '{{ doc("gsc_is_gitlab_team_member") }}'
+    - name: gsc_feature_enabled_by_namespace_ids
+      description: '{{ doc("gsc_feature_enabled_by_namespace_ids") }}'
     - name: event_value
       description: '{{ doc("event_value") }}'
     - name: event_action
@@ -1476,6 +1478,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: is_streaming
       description: '{{ doc("code_suggestions_is_streaming") }}'
+    - name: gitlab_global_user_id
+      description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
     - name: namespace_ids
       description: '{{ doc("code_suggestions_namespace_ids") }}'
     - name: ultimate_parent_namespace_ids

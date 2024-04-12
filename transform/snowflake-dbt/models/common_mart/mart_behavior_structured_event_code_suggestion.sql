@@ -133,6 +133,7 @@ filtered_code_suggestion_events AS (
     instance_id,
     host_name,
     is_streaming,
+    gitlab_global_user_id,
     namespace_ids,
     ultimate_parent_namespace_ids,
     dim_installation_ids,
@@ -161,5 +162,5 @@ filtered_code_suggestion_events AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-04-09"
+    updated_date="2024-04-12"
 ) }}

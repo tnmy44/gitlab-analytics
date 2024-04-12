@@ -52,6 +52,7 @@ structured_event_renamed AS (
       gsc_pseudonymized_user_id,
       gsc_source,
       gsc_is_gitlab_team_member,
+      gsc_feature_enabled_by_namespace_ids,
       user_city, 
       user_country,
       user_region,
@@ -97,6 +98,7 @@ structured_event_renamed AS (
       instance_id,
       host_name,
       is_streaming,
+      gitlab_global_user_id,
       gitlab_service_ping_context,
       redis_event_name,
       key_path,
@@ -192,6 +194,7 @@ structured_events_w_dim AS (
       events_with_plan.gsc_plan,
       events_with_plan.gsc_source,
       events_with_plan.gsc_is_gitlab_team_member,
+      events_with_plan.gsc_feature_enabled_by_namespace_ids,
 
       -- Degenerate Dimensions (IDE Extension Version Context Attributes)
       events_with_plan.ide_extension_version_context,
@@ -231,6 +234,7 @@ structured_events_w_dim AS (
       events_with_plan.instance_id,
       events_with_plan.host_name,
       events_with_plan.is_streaming,
+      events_with_plan.gitlab_global_user_id,
 
       -- Degenerate Dimensions (Service Ping)
       events_with_plan.gitlab_service_ping_context,
@@ -287,5 +291,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-04-09"
+    updated_date="2024-04-12"
 ) }}
