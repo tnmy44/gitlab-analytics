@@ -505,4 +505,36 @@ and `suggestion_rejected` events. The explanation is in [this issue comment](htt
 can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md)
 
 {% enddocs %}
+{% docs rpt_user_based_metric_counts_namespace_monthly %}
+
+This model aggregates the SaaS-equivalent User-based Redis counters at the namespace level.
+
+**Data Grain:**
+- date_month
+- ultimate_parent_namespace_id
+- metrics_path
+
+**Filters Applied to Model:**
+- Include events containing the `service_ping_context`
+- Include redis_hll metrics with 28d time frame, which limits to user-based metrics
+- `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
+
+{% enddocs %}
+
+{% docs rpt_event_based_metric_counts_namespace_all_time %}
+
+This model aggregates the SaaS-equivalent Event-based Redis counters at the namespace level.
+
+**Data Grain:**
+
+- date_month
+- ultimate_parent_namespace_id
+- metrics_path
+
+**Filters Applied to Model:**
+- Include events containing the `service_ping_context`
+- Include redis_hll metrics with all-time time frame, which limits to event-based metrics
+- `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
+
+{% enddocs %}
 

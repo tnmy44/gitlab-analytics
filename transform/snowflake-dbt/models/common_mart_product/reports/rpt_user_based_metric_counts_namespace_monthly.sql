@@ -1,14 +1,14 @@
 {{
   config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["product", "mnpi_exception"]
   )
 }}
 
 WITH events AS (
   SELECT
     *
-  FROM {{ ref('wk_mart_snowplow_events_service_ping_metrics') }}
+  FROM {{ ref('mart_behavior_structured_event_service_ping_metrics') }}
   -- only include redis_hll metrics with 28d time frame, which limits to user-based metrics
   -- more details here: https://gitlab.com/gitlab-org/gitlab/-/issues/411607#note_1392956155
   WHERE data_source IN (
@@ -39,7 +39,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@utkarsh060",
     created_date="2022-12-21",
-    updated_date="2023-12-14"
+    updated_date="2024-03-13"
 ) }}

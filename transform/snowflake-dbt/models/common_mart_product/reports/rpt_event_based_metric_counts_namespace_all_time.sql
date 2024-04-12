@@ -1,13 +1,13 @@
 {{
   config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["product", "mnpi_exception"]
   )
 }}
 
 WITH events_old AS (
   SELECT *
-  FROM {{ ref('wk_fct_snowplow_events_service_ping') }}
+  FROM {{ ref('fct_behavior_structured_event_service_ping') }}
   /*
   Only include events where `key_path` is not null. When `key_path` is not null,
   this indicates that there is a one-to-one relationship between a metric and a Redis
@@ -21,7 +21,7 @@ WITH events_old AS (
 
 events_new AS (
   SELECT *
-  FROM {{ ref('wk_mart_snowplow_events_service_ping_metrics') }}
+  FROM {{ ref('mart_behavior_structured_event_service_ping_metrics') }}
   /* 
   Only include redis metrics with all-time time frame, which limits to event-based metrics.
   More details here: https://gitlab.com/gitlab-org/gitlab/-/issues/411607#note_1392956155
@@ -76,7 +76,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@utkarsh060",
     created_date="2023-01-30",
-    updated_date="2023-12-14"
+    updated_date="2024-03-13"
 ) }}

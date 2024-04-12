@@ -1973,6 +1973,12 @@ Fact derived from `fct_behavior_structured_event`, limited to only Snowplow even
 
 {% docs fct_behavior_structured_event_ide_extension_version %}
 
-Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [IDE Extension Version context]https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) and columns, which indicates they are IDE Extension Version events.
+Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [IDE Extension Version context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) and columns, which indicates they are IDE Extension Version events.
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_service_ping %}
+
+Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [Service Ping context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema) and columns, which indicates they are Service Ping events.
 
 {% enddocs %}
