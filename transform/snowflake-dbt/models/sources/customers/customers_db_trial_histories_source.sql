@@ -15,7 +15,12 @@ WITH source AS (
       glm_source::VARCHAR                       AS glm_source,
       glm_content::VARCHAR                      AS glm_content,
       trial_entity::VARCHAR                     AS trial_entity,
-      trial_type::INTEGER                       AS trial_type
+      trial_type::INTEGER                       AS trial_type,
+      CASE
+        WHEN trial_type::INTEGER = 1 THEN 'Ultimate/Premium'
+        WHEN trial_type::INTEGER = 2 THEN 'DuoPro'
+        ELSE NULL
+      END AS trial_type_name
     FROM source
 
 

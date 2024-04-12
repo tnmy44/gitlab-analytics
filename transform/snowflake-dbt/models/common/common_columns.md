@@ -2293,7 +2293,13 @@ The surrogate key of `prep_namespace_order_trial` model. Currently identified by
 
 {% docs trial_type %}
 
-The type of trial offering. E.g. Premium/Ultimate subscription or GitLab Duo Pro add-on. This is set to 1 (default) for both premium and ultimate trials and 2 for GitLab Duo trials.
+Indicates the type of trial offering, such as Premium/Ultimate subscription or GitLab Duo Pro add-on. The default value is 1 for both Premium and Ultimate trials, and 2 for GitLab DuoPro trials.
+
+{% enddocs %}
+
+{% docs trial_type_name %}
+
+Specifies the name of the trial offering type. The value 1 corresponds to Premium/Ultimate trials, while 2 corresponds to GitLab Duo Pro trials.
 
 {% enddocs %}
 

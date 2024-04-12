@@ -60,6 +60,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       namespaces.ultimate_parent_namespace_id,
       trials.order_start_date::DATE                                      AS trial_start_date, 
       trials.trial_type,
+      trials.trial_type_name,
       DATEDIFF('days', namespace_created_date, trial_start_date)         AS days_since_namespace_creation_at_trial
     FROM namespaces
     INNER JOIN prep_namespace_order_trial AS trials
@@ -303,6 +304,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
                                                                           AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
       trials.trial_start_date,
       trials.trial_type,
+      trials.trial_type_name,
       trials.days_since_namespace_creation_at_trial,
       charges.first_paid_subscription_start_date,
       charges.days_since_namespace_creation_at_first_paid_subscription,
@@ -380,5 +382,5 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     created_by="@snalamaru",
     updated_by="@utkarsh060",
     created_date="2023-11-10",
-    updated_date="2024-04-08"
+    updated_date="2024-04-12"
 ) }}

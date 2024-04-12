@@ -64,6 +64,7 @@
       trials.order_start_date                                           AS saas_trial_start_date,
       trials.order_end_date                                             AS saas_trial_expired_on,
       trials.trial_type                                                 AS saas_trial_type,
+      trials.trial_type_name                                            AS saas_trial_type_name,
       IFF(trials.dim_namespace_id IS NOT NULL
             OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
                 AND product_tier_name_namespace = 'SaaS - Trial: Ultimate'),
@@ -149,6 +150,7 @@
       namespace_list.saas_trial_start_date,
       namespace_list.saas_trial_expired_on,
       namespace_list.saas_trial_type,
+      namespace_list.saas_trial_type_name,
       order_list.customer_id,
       order_list.product_rate_plan_id_order,
       order_list.dim_product_tier_id_order,
@@ -225,5 +227,5 @@
     created_by="@ischweickartDD",
     updated_by="@utkarsh060",
     created_date="2021-01-14",
-    updated_date="2024-04-08"
+    updated_date="2024-04-12"
 ) }}

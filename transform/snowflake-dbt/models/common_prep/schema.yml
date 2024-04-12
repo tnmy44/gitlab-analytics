@@ -2380,6 +2380,8 @@ models:
         description: Can contain values of company or individial
       - name: trial_type
         description: '{{ doc("trial_type") }}'
+      - name: trial_type_name
+        description: '{{ doc("trial_type_name") }}'
       - name: record_source
         decsription: Identifies the source of the record - values include trial_histories or orders
       - name: created_by

@@ -16,6 +16,7 @@ WITH trial_histories AS (
     glm_content,
     trial_entity,
     trial_type,
+    trial_type_name,
     'trial_histories'                                      AS record_source
 
   FROM {{ ref('customers_db_trial_histories_source') }} 
@@ -62,6 +63,7 @@ WITH trial_histories AS (
       trial_histories.glm_content,
       trial_histories.trial_entity,
       trial_histories.trial_type,
+      trial_histories.trial_type_name,
       COALESCE(trial_histories.record_source, trial_orders.record_source)                                            AS record_source
 
 
@@ -76,5 +78,5 @@ WITH trial_histories AS (
     created_by="@snalamaru",
     updated_by="@utkarsh060",
     created_date="2023-06-19",
-    updated_date="2024-04-08"
+    updated_date="2024-04-12"
 ) }}
