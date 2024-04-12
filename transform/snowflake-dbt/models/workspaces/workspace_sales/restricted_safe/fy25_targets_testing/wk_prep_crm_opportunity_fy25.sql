@@ -959,16 +959,18 @@ LEFT JOIN cw_base
         ELSE 0
       END                                               AS open_4plus_deal_count,
       -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-      CASE
-        WHEN sfdc_opportunity_live.is_jihu_account = FALSE
-          AND (sfdc_opportunity_stage.is_won = TRUE
-                OR (
-                  is_renewal = TRUE 
-                  AND is_lost = TRUE)
-              )
-          THEN TRUE
-        ELSE FALSE
-      END                                               AS is_booked_net_arr, 
+      COALESCE(
+        sfdc_opportunity.fpa_master_bookings_flag,
+        CASE
+          WHEN sfdc_opportunity_live.is_jihu_account = FALSE
+            AND (sfdc_opportunity_stage.is_won = TRUE
+                  OR (
+                    is_renewal = TRUE 
+                    AND is_lost = TRUE)
+                )
+            THEN TRUE
+          ELSE FALSE
+        END)                                               AS is_booked_net_arr, 
       CASE
         WHEN is_booked_net_arr = TRUE 
           THEN calculated_deal_count
