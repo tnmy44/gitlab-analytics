@@ -7404,13 +7404,6 @@ users:
       - General All Access
       - General SAFE Access
       - Marketing All Access
-  - user_name: moliver
-    user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: moskarsen
     user_name_domain: gitlab.com
     site_role: Viewer
