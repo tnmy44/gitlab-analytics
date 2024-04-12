@@ -3,7 +3,7 @@ This module args.py parses the command line arguments provided by the user.
 """
 
 import argparse
-from utils_update_roles import get_user_changes
+from utils_update_roles import get_file_changes, YAML_PATH, USERS_FILE_NAME
 
 
 class DefaultBlankTemplateAction(argparse.Action):
@@ -28,10 +28,10 @@ def get_users_added() -> list:
     """returns the users ADDED to the snowflake_users.yml file"""
 
     try:
-        users_added = get_user_changes()[0]
+        users_added = get_file_changes(YAML_PATH, USERS_FILE_NAME)[0]
     except IndexError as e:
         raise IndexError(
-            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+            f"Check that utils_snowflake_provisionin.get_file_changes() returns 2 lists, error: {e}"
         )
     return users_added
 
@@ -39,10 +39,10 @@ def get_users_added() -> list:
 def get_users_removed() -> list:
     """returns the users REMOVED from the snowflake_users.yml file"""
     try:
-        users_removed = get_user_changes()[1]
+        users_removed = get_file_changes(YAML_PATH, USERS_FILE_NAME)[1]
     except IndexError as e:
         raise IndexError(
-            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+            f"Check that utils_snowflake_provisionin.get_file_changes() returns 2 lists, error: {e}"
         )
     return users_removed
 

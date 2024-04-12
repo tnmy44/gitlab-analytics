@@ -6,7 +6,8 @@ that the correct usernames are returned based off the git diff.
 from unittest.mock import patch
 from utils_snowflake_provisioning import (
     YAML_PATH,
-    get_user_changes,
+    USERS_FILE_NAME,
+    get_file_changes,
     get_snowflake_usernames,
     get_emails,
     check_is_valid_user_format,
@@ -19,7 +20,7 @@ def test_imports():
 
 
 @patch("utils_snowflake_provisioning.run_git_diff_command")
-def test_get_user_changes(mock_run_git_diff_command):
+def test_get_file_changes(mock_run_git_diff_command):
     """
     Test that given a diff it returns the correct is_valid_userults.
     Specifically lines with a '+' belong to usernames_added
@@ -31,7 +32,7 @@ def test_get_user_changes(mock_run_git_diff_command):
     removed_user = "removeduser"
     test_diff = f"+\n+--{added_user}\n---{removed_user}"
     mock_run_git_diff_command.return_value = test_diff
-    users_added, users_removed = get_user_changes()
+    users_added, users_removed = get_file_changes(YAML_PATH, USERS_FILE_NAME)
 
     assert users_added[0] == added_user
     assert users_removed[0] == removed_user

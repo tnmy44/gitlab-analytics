@@ -11,17 +11,19 @@ abs_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = abs_path[: abs_path.find("/provision_users")]
 sys.path.insert(1, parent_path)
 from utils_snowflake_provisioning import (
-    get_user_changes,
+    get_file_changes,
+    YAML_PATH,
+    USERS_FILE_NAME
 )
 
 
 def get_users_added() -> list:
     """returns the users ADDED to the snowflake_users.yml file"""
     try:
-        users_added = get_user_changes()[0]
+        users_added = get_file_changes(YAML_PATH, USERS_FILE_NAME)[0]
     except IndexError as e:
         raise IndexError(
-            f"Check that utils_snowflake_provisionin.get_user_changes() returns 2 lists, error: {e}"
+            f"Check that utils_snowflake_provisionin.get_file_changes() returns 2 lists, error: {e}"
         )
     return users_added
 
