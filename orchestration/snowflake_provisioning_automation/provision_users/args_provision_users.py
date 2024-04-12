@@ -55,6 +55,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "-db",
         "--dev-db",
+        default=False,
         action=argparse.BooleanOptionalAction,
         help="If selected, create development databases for each user",
     )
