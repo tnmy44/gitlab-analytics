@@ -445,6 +445,12 @@ LEFT JOIN cw_base
       {{ get_date_id('sfdc_opportunity.subscription_start_date') }}                               AS subscription_start_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
+      sfdc_opportunity_live.crm_opp_owner_sales_segment_stamped                                   AS crm_opp_owner_sales_segment_stamped_live,
+      sfdc_opportunity_live.crm_opp_owner_geo_stamped                                             AS crm_opp_owner_geo_stamped_live,
+      sfdc_opportunity_live.crm_opp_owner_region_stamped                                          AS crm_opp_owner_region_stamped_live,
+      sfdc_opportunity_live.crm_opp_owner_area_stamped                                            AS crm_opp_owner_area_stamped_live,
+      sfdc_opportunity_live.crm_opp_owner_sales_segment_geo_region_area_stamped                   AS crm_opp_owner_sales_segment_geo_region_area_stamped_live,
+      sfdc_opportunity_live.crm_opp_owner_business_unit_stamped                                   AS crm_opp_owner_business_unit_stamped_live,
 
       close_date.first_day_of_fiscal_quarter                                                      AS close_fiscal_quarter_date,
       90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date.last_day_of_fiscal_quarter)   AS close_day_of_fiscal_quarter_normalised,

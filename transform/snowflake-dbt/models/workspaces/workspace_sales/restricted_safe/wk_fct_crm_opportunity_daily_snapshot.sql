@@ -158,7 +158,35 @@ final AS (
         THEN sales_rep_account.user_role_level_5
       ELSE sales_rep.user_role_level_5
     END                                                                                                                         AS crm_current_account_set_role_level_5,
+    CASE
+      WHEN close_fiscal_year < close_date.current_fiscal_year
+        THEN sales_rep_account.crm_user_sales_segment
+      ELSE sfdc_opportunity.crm_opp_owner_sales_segment_stamped_live
+    END                                                                                                                         AS crm_current_account_set_sales_segment_live,
 
+    CASE
+      WHEN close_fiscal_year < close_date.current_fiscal_year
+        THEN sales_rep_account.crm_user_geo
+      ELSE  sfdc_opportunity.crm_opp_owner_geo_stamped_live
+    END                                                                                                                         AS crm_current_account_set_geo_live,
+
+    CASE
+      WHEN close_fiscal_year < close_date.current_fiscal_year
+        THEN sales_rep_account.crm_user_region
+      ELSE sfdc_opportunity.crm_opp_owner_region_stamped_live
+    END                                                                                                                         AS crm_current_account_set_region_live,
+
+    CASE
+      WHEN close_fiscal_year < close_date.current_fiscal_year
+        THEN sales_rep_account.crm_user_area
+      ELSE sfdc_opportunity.crm_opp_owner_area_stamped_live
+    END                                                                                                                         AS crm_current_account_set_area_live,
+
+    CASE
+      WHEN close_fiscal_year < close_date.current_fiscal_year
+        THEN sales_rep_account.crm_user_business_unit
+      ELSE sfdc_opportunity.crm_opp_owner_business_unit_stamped_live
+    END                                                                                                                         AS crm_current_account_set_business_unit_live,
     --attributes
     sfdc_opportunity.opportunity_name,
     sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
