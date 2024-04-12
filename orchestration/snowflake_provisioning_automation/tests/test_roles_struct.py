@@ -129,7 +129,9 @@ def test_filter_keys_to_remove(my_roles_struct):
     """
     yaml_key = "roles"
     keys_to_remove = ["user1", "user_not_exist"]
-    keys_to_remove_filtered = my_roles_struct._filter_keys_to_remove(yaml_key, keys_to_remove)
+    keys_to_remove_filtered = my_roles_struct._filter_keys_to_remove(
+        yaml_key, keys_to_remove
+    )
     assert keys_to_remove_filtered == ["user1"]
 
 

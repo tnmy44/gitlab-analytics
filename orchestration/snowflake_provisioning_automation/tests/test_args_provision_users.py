@@ -28,7 +28,7 @@ def test_parse_arguments_with_users_to_add():
 
 
 def test_parse_arguments_test_run_true():
-    """ Test --test-run """
+    """Test --test-run"""
     args_list = ["--test-run"]
     with patch("sys.argv", ["some_test_script"] + args_list):
         args = parse_arguments()
@@ -36,7 +36,7 @@ def test_parse_arguments_test_run_true():
 
 
 def test_parse_arguments_no_test_run():
-    """ Test --no-test-run """
+    """Test --no-test-run"""
     args_list = ["--no-test-run"]
     with patch("sys.argv", ["some_test_script"] + args_list):
         args = parse_arguments()
@@ -44,7 +44,7 @@ def test_parse_arguments_no_test_run():
 
 
 def test_parse_arguments_dev_db():
-    """ Test --dev-db """
+    """Test --dev-db"""
     args_list = ["--dev-db"]
     with patch("sys.argv", ["some_test_script"] + args_list):
         args = parse_arguments()
@@ -52,7 +52,7 @@ def test_parse_arguments_dev_db():
 
 
 def test_parse_arguments_no_dev_db():
-    """ Test --no-dev-db """
+    """Test --no-dev-db"""
     args_list = ["--no-dev-db"]
     with patch("sys.argv", ["some_test_script"] + args_list):
         args = parse_arguments()
