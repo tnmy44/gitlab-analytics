@@ -19,9 +19,24 @@ final AS (
     fct_crm_opportunity.dim_sales_qualified_source_id,
     fct_crm_opportunity.dim_order_type_id,
     fct_crm_opportunity.dim_order_type_live_id,
-    fct_crm_opportunity.dim_crm_user_hierarchy_sk,
+    
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
-    fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
+    fct_crm_opportunity.dim_crm_current_account_set_sales_segment_id,
+    fct_crm_opportunity.crm_current_account_set_sales_segment,
+    fct_crm_opportunity.dim_crm_current_account_set_geo_id,
+    fct_crm_opportunity.crm_current_account_set_geo,
+    fct_crm_opportunity.dim_crm_current_account_set_region_id,
+    fct_crm_opportunity.crm_current_account_set_region,
+    fct_crm_opportunity.dim_crm_current_account_set_area_id,
+    fct_crm_opportunity.crm_current_account_set_area,
+    fct_crm_opportunity.dim_crm_current_account_set_business_unit_id,
+    fct_crm_opportunity.crm_current_account_set_business_unit,
+    fct_crm_opportunity.crm_current_account_set_role_name,
+    fct_crm_opportunity.crm_current_account_set_role_level_1,
+    fct_crm_opportunity.crm_current_account_set_role_level_2,
+    fct_crm_opportunity.crm_current_account_set_role_level_3,
+    fct_crm_opportunity.crm_current_account_set_role_level_4,
+    fct_crm_opportunity.crm_current_account_set_role_level_5,
 
     fct_crm_opportunity.merged_crm_opportunity_id,
     fct_crm_opportunity.dim_crm_account_id,
@@ -144,56 +159,6 @@ final AS (
     dim_crm_account.crm_account_focus_account,
     dim_crm_account.crm_account_zi_technologies,
     dim_crm_account.is_jihu_account,
-
-    -- crm opp owner/account owner fields stamped at SAO date
-    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
-    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
-    fct_crm_opportunity.sao_crm_opp_owner_geo_stamped,
-    fct_crm_opportunity.sao_crm_opp_owner_region_stamped,
-    fct_crm_opportunity.sao_crm_opp_owner_area_stamped,
-    fct_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
-    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
-
-    -- crm opp owner/account owner stamped fields stamped at close date
-    fct_crm_opportunity.crm_opp_owner_stamped_name,
-    fct_crm_opportunity.crm_account_owner_stamped_name,
-    fct_crm_opportunity.user_segment_stamped AS crm_opp_owner_sales_segment_stamped,
-    fct_crm_opportunity.user_segment_stamped_grouped AS crm_opp_owner_sales_segment_stamped_grouped,
-    fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
-    fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
-    fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
-    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
-    {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
-        'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
-    AS crm_opp_owner_sales_segment_region_stamped_grouped,
-    fct_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
-    fct_crm_opportunity.crm_opp_owner_user_role_type_stamped,
-
-    -- crm owner/sales rep live fields
-    dim_crm_user_hierarchy.crm_user_sales_segment,
-    dim_crm_user_hierarchy.crm_user_geo,
-    dim_crm_user_hierarchy.crm_user_region,
-    dim_crm_user_hierarchy.crm_user_area,
-    dim_crm_user_hierarchy.crm_user_business_unit,
-    dim_crm_user_hierarchy.crm_user_sales_segment_grouped,
-    dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped,
-
-    dim_crm_user_hierarchy.crm_user_role_name,
-    dim_crm_user_hierarchy.crm_user_role_level_1,
-    dim_crm_user_hierarchy.crm_user_role_level_2,
-    dim_crm_user_hierarchy.crm_user_role_level_3,
-    dim_crm_user_hierarchy.crm_user_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5,
-
-    -- crm account owner/sales rep live fields
-    account_owner_live.crm_user_sales_segment AS crm_account_user_sales_segment,
-    account_owner_live.crm_user_sales_segment_grouped AS crm_account_user_sales_segment_grouped,
-    account_owner_live.crm_user_geo AS crm_account_user_geo,
-    account_owner_live.crm_user_region AS crm_account_user_region,
-    account_owner_live.crm_user_area AS crm_account_user_area,
-    {{ sales_segment_region_grouped('account_owner_live.crm_user_sales_segment',
-        'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
-    AS crm_account_user_sales_segment_region_grouped,
 
     -- channel fields
     

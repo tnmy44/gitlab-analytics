@@ -15,16 +15,27 @@ day_7_list AS (
 final AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['snapshot_last_day_of_fiscal_quarter', 'dim_sales_qualified_source_id', 'dim_crm_user_hierarchy_sk', 'dim_order_type_id','dim_order_type_live_id','dim_crm_current_account_set_hierarchy_sk','dim_crm_opp_owner_stamped_hierarchy_sk', 'deal_path_name','sales_type', 'stage_name','order_type', 'order_type_live', 'order_type_grouped', 'sales_qualified_source_name', 'sales_qualified_source_grouped']) }} AS unique_key,
-    -- keys
+    -- keys and attributes
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_order_type_live_id,
-    dim_crm_user_hierarchy_sk,
     dim_crm_current_account_set_hierarchy_sk,
-    dim_crm_opp_owner_stamped_hierarchy_sk,
-
-    -- attributes
+    dim_crm_current_account_set_sales_segment_id,
+    crm_current_account_set_sales_segment,
+    dim_crm_current_account_set_geo_id,
+    crm_current_account_set_geo,
+    dim_crm_current_account_set_region_id,
+    crm_current_account_set_region,
+    dim_crm_current_account_set_area_id,
+    crm_current_account_set_area,
+    dim_crm_current_account_set_business_unit_id,
+    crm_current_account_set_business_unit,
+    crm_current_account_set_role_name,
+    crm_current_account_set_role_level_1,
+    crm_current_account_set_role_level_2,
+    crm_current_account_set_role_level_3,
+    crm_current_account_set_role_level_4,
+    crm_current_account_set_role_level_5,
     order_type,
     order_type_live,
     order_type_grouped,
