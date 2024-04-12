@@ -50,12 +50,12 @@ def configure_logging():
 def process_args() -> Tuple[list, list, str, str, str]:
     """returns command line args passed in by user"""
     args = parse_arguments()
-    valid_users_to_remove = get_valid_users(args.users_to_remove)
     valid_users_to_add = get_valid_users(args.users_to_add)
+    valid_users_to_remove = get_valid_users(args.users_to_remove)
 
     parsed_args = (
-        valid_users_to_remove,
         valid_users_to_add,
+        valid_users_to_remove,
         args.databases_template,
         args.roles_template,
         args.users_template,
@@ -113,8 +113,8 @@ def main():
     configure_logging()
     roles_data = get_roles_from_yaml()
     (
-        users_to_remove,
         users_to_add,
+        users_to_remove,
         databases_template,
         roles_template,
         users_template,
