@@ -16,11 +16,11 @@ class DefaultBlankTemplateAction(argparse.Action):
     """
 
     def __call__(self, parser, namespace, values, option_string=None):
+        # if values is null, i.e blank string, then use the default value instead
         if not values:
-            # If the value is 'x', substitute it with the default value
             setattr(namespace, self.dest, self.default)
+        # Otherwise, set the value as usual
         else:
-            # Otherwise, set the value as usual
             setattr(namespace, self.dest, values)
 
 
