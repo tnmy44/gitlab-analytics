@@ -2,7 +2,7 @@ WITH final AS (
 
     SELECT
         marketo_lead_id AS dim_marketo_person_id,
-        {{ dbt_utils.generate_surrogate_key(['sfdc_contact_id', 'sfdc_lead_id)']) }} AS dim_crm_person_id,
+        {{ dbt_utils.generate_surrogate_key(['sfdc_contact_id', 'sfdc_lead_id']) }} AS dim_crm_person_id,
         email_hash,
         sfdc_lead_id,
         sfdc_contact_id,
