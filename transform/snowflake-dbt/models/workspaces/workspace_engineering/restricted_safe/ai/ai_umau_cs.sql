@@ -28,21 +28,45 @@ daily_usage AS (
 
 ),
 
-daily_agg AS (
+dau AS (
   SELECT
     behavior_date                    AS day,
     COUNT(DISTINCT instance_user_id) AS user_count
   FROM daily_usage
   GROUP BY 1
+),
+
+wau AS (
+
+  SELECT
+    a.day,
+    COUNT(DISTINCT c.instance_user_id) AS unique_7d_rolling_count
+  FROM dau AS a
+  INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -7, a.day) AND a.day
+  GROUP BY 1
+  ORDER BY 1 DESC
+
+),
+
+mau AS (
+
+  SELECT
+    a.day,
+    COUNT(DISTINCT c.instance_user_id) AS unique_28d_rolling_count
+  FROM dau AS a
+  INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
+  GROUP BY 1
+  ORDER BY 1 DESC
+
 )
 
 SELECT
-  a.day,
-  sum(user_count) AS dau,
-  COUNT(DISTINCT c.instance_user_id) AS unique_7d_rolling_count,
-  COUNT(DISTINCT b.instance_user_id) AS unique_28d_rolling_count
-FROM daily_agg AS a
-INNER JOIN daily_usage AS b ON b.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
-INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -7, a.day) AND a.day
-GROUP BY 1
-ORDER BY 1 DESC
+  dau.day,
+  dau.user_count AS unique_daily_count,
+  wau.unique_7d_rolling_count,
+  mau.unique_28d_rolling_count
+FROM dau
+LEFT JOIN wau
+  ON dau.day = wau.day
+LEFT JOIN mau
+  ON dau.day = mau.day
