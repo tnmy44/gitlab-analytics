@@ -1,5 +1,6 @@
 level_0,level_1,level_2,level_3,level_4,GCP_PROJECT_ID,FULL_PATH,FROM_MAPPING,INFRA_LABEL
 GitLab Infrastructure,Gitaly,Repository Storage,,,,gitlab.com/Infrastructure/Environments/Production,repo_storage_pl_daily,gitaly
+GitLab Infrastructure,Gitaly,Repository Storage,,,,gitlab.com/Infrastructure/Environments/Production/Production Gitaly,repo_storage_pl_daily,gitaly
 GitLab Infrastructure,Gitaly,LFS,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,git_lfs
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging,folder_pl,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging,t2d_cud_lookback,gitaly
