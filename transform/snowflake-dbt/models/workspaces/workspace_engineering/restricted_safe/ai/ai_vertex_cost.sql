@@ -25,6 +25,7 @@ daily_costs AS (
 SELECT
   d.date_day,
   d.net_cost                                                                           AS daily_net_cost,
+  SUM(d.net_cost) OVER (ORDER BY d.date_day ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS rolling_7d_net_cost,
   SUM(d.net_cost) OVER (ORDER BY d.date_day ROWS BETWEEN 27 PRECEDING AND CURRENT ROW) AS rolling_28d_net_cost
 FROM daily_costs d
 ORDER BY d.date_day DESC
