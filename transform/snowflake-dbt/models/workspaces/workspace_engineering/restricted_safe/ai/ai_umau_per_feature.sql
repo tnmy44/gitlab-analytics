@@ -15,6 +15,18 @@ WITH daily_usage AS (
     1 DESC
 ),
 
+cs AS (
+
+  SELECT
+    cs.day,
+    'code_suggestions' AS feature,
+    cs.dau,
+    cs.unique_7d_rolling_count,
+    cs.unique_28d_rolling_count
+  FROM {{ ref('ai_umau_cs') }} AS cs
+
+),
+
 daily_agg AS (
   SELECT
     behavior_date           AS day,
@@ -27,6 +39,8 @@ daily_agg AS (
 SELECT
   a.day,
   a.feature,
+  COUNT(DISTINCT b.user_id) AS unique_daily_rolling_count,
+  COUNT(DISTINCT c.user_id) AS unique_7d_rolling_count,
   COUNT(DISTINCT b.user_id) AS unique_28d_rolling_count
 FROM daily_agg AS a
 INNER JOIN
@@ -34,5 +48,11 @@ INNER JOIN
     AS b
   ON b.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
     AND a.feature = b.event_label
+INNER JOIN
+  daily_usage
+    AS c
+  ON c.behavior_date BETWEEN DATEADD('day', -7, a.day) AND a.day
+    AND a.feature = c.event_label
 GROUP BY 1, 2
-ORDER BY 1 DESC
+UNION ALL
+SELECT * FROM cs

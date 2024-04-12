@@ -38,8 +38,11 @@ daily_agg AS (
 
 SELECT
   a.day,
+  sum(user_count) AS dau,
+  COUNT(DISTINCT c.instance_user_id) AS unique_7d_rolling_count,
   COUNT(DISTINCT b.instance_user_id) AS unique_28d_rolling_count
 FROM daily_agg AS a
 INNER JOIN daily_usage AS b ON b.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
+INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -7, a.day) AND a.day
 GROUP BY 1
 ORDER BY 1 DESC
