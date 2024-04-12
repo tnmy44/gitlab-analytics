@@ -118,6 +118,7 @@ renamed AS (
 
     -- Add sales_segment_cleaning macro to avoid duplication in downstream models
     {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS account_sales_segment,
+    -- Add legacy field to support public company metrics reporting: https://gitlab.com/gitlab-data/analytics/-/issues/20290
     {{sales_segment_cleaning('old_segment__c')}} AS account_sales_segment_legacy,
     account_demographics_geo__c AS account_geo,
     account_demographics_region__c AS account_region,
