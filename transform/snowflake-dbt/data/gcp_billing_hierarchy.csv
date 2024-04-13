@@ -3,11 +3,12 @@ GitLab Infrastructure,Gitaly,Repository Storage,,,,gitlab.com/Infrastructure/Env
 GitLab Infrastructure,Gitaly,Repository Storage,,,gitlab-gitaly-gprd-%,,repo_storage_pl_daily,gitaly
 GitLab Infrastructure,Gitaly,LFS,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,git_lfs
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging%,,gitaly
+GitLab Infrastructure,Gitaly,Staging,,,gitlab-staging-%,,,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging%,t2d_cud_lookback,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging/Staging Gitaly,t2d_cud_lookback,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,,gitlab.com/Infrastructure/Environments/Staging Gitaly,t2d_cud_lookback,gitaly
 GitLab Infrastructure,Gitaly,wip,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,gitaly
-GitLab Infrastructure,Gitaly,DR Testing,,,,gitlab.com/Infrastructure/Environments/DR Testing/DR Testing Gitaly%,folder_pl,
+GitLab Infrastructure,Gitaly,DR Testing,,,,gitlab.com/Infrastructure/Environments/DR Testing/DR Testing Gitaly%,,
 GitLab Infrastructure,CI/CD,Runners,SaaS,linux small ,,gitlab.com/Infrastructure,ci_runner_pl_daily - 2,
 GitLab Infrastructure,CI/CD,Runners,SaaS,linux medium,,gitlab.com/Infrastructure,ci_runner_pl_daily - 3,
 GitLab Infrastructure,CI/CD,Runners,SaaS,linux medium gpu,,gitlab.com/Infrastructure,ci_runner_pl_daily - 8,
