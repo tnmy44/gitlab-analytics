@@ -53,6 +53,10 @@ sources:
         identifier: gitlab_db_board_assignees
       - name: board_labels
         identifier: gitlab_db_board_labels
+      - name: catalog_resource_versions
+        identifier: gitlab_db_catalog_resource_versions
+      - name: catalog_resources
+        identifier: gitlab_db_catalog_resources
       - name: boards
         identifier: gitlab_db_boards
       - name: ci_build_trace_chunks

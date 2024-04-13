@@ -27,14 +27,15 @@ experiment_events AS
       event_details.event_category,
       experiment.behavior_structured_event_pk                   AS event_id,
       experiment.gsc_pseudonymized_user_id,
-      experiment.user_snowplow_domain_id,       
-      experiment.dim_namespace_id,             
-      experiment.experiment_context_key,                   
-      experiment.behavior_at           
+      experiment.user_snowplow_domain_id,
+      experiment.dim_namespace_id,
+      experiment.experiment_context_key,
+      experiment.behavior_at
     FROM fct_behavior_structured_event_experiment AS experiment
     INNER JOIN dim_behavior_event AS event_details
       ON event_details.dim_behavior_event_sk = experiment.dim_behavior_event_sk
       AND experiment.behavior_at::DATE BETWEEN DATEADD(YEAR,-1,CURRENT_DATE()) and CURRENT_DATE() -- events triggered in the past 1 year for query efficiency
+    WHERE experiment.is_staging_event = FALSE
     
 
     UNION ALL
@@ -50,14 +51,14 @@ experiment_events AS
       stag.event_property,
       stag.event_label,
       stag.event_category,
-      stag.event_id,
+      stag.behavior_structured_event_pk                        AS event_id,
       stag.gsc_pseudonymized_user_id,
       stag.user_snowplow_domain_id,
       stag.gsc_namespace_id,
       stag.experiment_context_key,
       stag.behavior_at
-    FROM snowplow_unnested_events_all_staging AS stag 
-    WHERE stag.has_gitlab_experiment_context = TRUE 
+    FROM snowplow_unnested_events_all_staging AS stag
+    WHERE stag.has_gitlab_experiment_context = TRUE
       AND stag.event = 'struct'
       AND stag.event_name = 'event'
       AND stag.behavior_at::DATE BETWEEN DATEADD(YEAR,-1,CURRENT_DATE()) and CURRENT_DATE() -- events triggered in the past 1 year for query efficiency
@@ -70,7 +71,7 @@ experiment_events AS
       behavior_at::DATE                       AS behavior_date,
       dim_namespace.ultimate_parent_namespace_id,
       experiment_events.dim_namespace_id,
-      COALESCE(experiment_events.dim_namespace_id::VARCHAR, experiment_context_key::VARCHAR)   
+      COALESCE(experiment_events.dim_namespace_id::VARCHAR, experiment_context_key::VARCHAR)
                                               AS entity_id, --context_key if namespace id is not present
       IFF(experiment_events.dim_namespace_id IS NULL, 'context_key', 'namespace')
                                               AS entity_category,
@@ -82,7 +83,7 @@ experiment_events AS
       event_label,
       event_property,
       event_category,
-      COUNT(DISTINCT gsc_pseudonymized_user_id) 
+      COUNT(DISTINCT gsc_pseudonymized_user_id)
 	                                            AS count_daily_gsc_pseudonymized_user_id,
       COUNT(DISTINCT user_snowplow_domain_id) AS count_daily_user_snowplow_domain_id,
       COUNT(DISTINCT event_id)                AS count_daily_events
@@ -98,5 +99,5 @@ experiment_events AS
     created_by="@eneuberger",
     updated_by="@utkarsh060",
     created_date="2023-10-23",
-    updated_date="2024-03-04"
+    updated_date="2024-03-25"
 ) }}
