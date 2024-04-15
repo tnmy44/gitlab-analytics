@@ -345,7 +345,7 @@ snowflake_provisioning_snowflake_users:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
-  when: manual
+  when: on_success
   allow_failure: true
 
 # ======
