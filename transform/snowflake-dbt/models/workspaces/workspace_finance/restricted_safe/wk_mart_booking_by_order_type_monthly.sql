@@ -20,7 +20,7 @@ FROM {{ ref('fct_crm_opportunity') }}
 LEFT JOIN {{ ref('dim_crm_opportunity') }} ON dim_crm_opportunity.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
 LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = booking_month
 WHERE dim_crm_opportunity.is_won = TRUE
-GROUP BY booking_month, dim_crm_opportunity.sales_type
+GROUP BY fiscal_year, fiscal_quarter, booking_month, dim_crm_opportunity.sales_type
 ORDER BY booking_month, dim_crm_opportunity.sales_type
 
 )
