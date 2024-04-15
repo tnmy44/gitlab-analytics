@@ -296,7 +296,6 @@ clone_stop:
     - cd orchestration/snowflake_provisioning_automation/
 
     # shared arguments
-    - echo -e "IS_TEST_RUN=== $IS_TEST_RUN"
     - export IS_TEST_RUN_FINAL="--no-test-run"
     - if [ -n $IS_TEST_RUN ]; then IS_TEST_RUN_FINAL="--test-run"; fi
 
