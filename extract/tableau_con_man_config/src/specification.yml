@@ -4028,6 +4028,12 @@ users:
       - General All Access
       - General SAFE Access
       - RSA SAFE Access
+  - user_name: dmakovey
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: dmarcum
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5155,6 +5161,12 @@ users:
       - General All Access
       - People All Access
   - user_name: jdoveston
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: jdowney
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
