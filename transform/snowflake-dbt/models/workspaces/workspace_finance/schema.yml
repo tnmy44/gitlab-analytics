@@ -1233,3 +1233,6 @@ models:
 
   - name: wk_rpt_accounting_period_balance_monthly 
     description: Billing accounting period balances monthly
+
+  - name: wk_rpt_dso_cei_monthly 
+    description: Days Sales Outstanding and Collections Effectiveness Index metrics
