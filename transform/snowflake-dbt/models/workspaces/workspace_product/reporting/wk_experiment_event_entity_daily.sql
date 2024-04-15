@@ -6,7 +6,6 @@
 {{ simple_cte([
     ('fct_behavior_structured_event_experiment','fct_behavior_structured_event_experiment'),
     ('dim_behavior_event', 'dim_behavior_event'),
-    ('snowplow_unnested_events_all_staging', 'snowplow_unnested_events_all_staging'),
     ('dim_namespace', 'dim_namespace')
     ])
 }},
@@ -17,8 +16,7 @@ experiment_events AS
   
     SELECT
       experiment.experiment_name,
-      IFF(experiment.app_id IN ('gitlab','gitlab_customers'), 'production', 'staging')                     
-                                                                AS dev_environment,
+      IFF(experiment.is_staging_event, 'staging', 'production') AS dev_environment,
       experiment.app_id,
       experiment.experiment_variant,
       event_details.event_action,
@@ -35,33 +33,6 @@ experiment_events AS
     INNER JOIN dim_behavior_event AS event_details
       ON event_details.dim_behavior_event_sk = experiment.dim_behavior_event_sk
       AND experiment.behavior_at::DATE BETWEEN DATEADD(YEAR,-1,CURRENT_DATE()) and CURRENT_DATE() -- events triggered in the past 1 year for query efficiency
-    WHERE experiment.is_staging_event = FALSE
-    
-
-    UNION ALL
-
-    
-    SELECT -- Staging events
-      stag.experiment_name,
-      IFF(stag.app_id IN ('gitlab','gitlab_customers'), 'production', 'staging')                     
-                                                               AS dev_environment,
-      stag.app_id,
-      stag.experiment_variant,
-      stag.event_action,
-      stag.event_property,
-      stag.event_label,
-      stag.event_category,
-      stag.behavior_structured_event_pk                        AS event_id,
-      stag.gsc_pseudonymized_user_id,
-      stag.user_snowplow_domain_id,
-      stag.gsc_namespace_id,
-      stag.experiment_context_key,
-      stag.behavior_at
-    FROM snowplow_unnested_events_all_staging AS stag
-    WHERE stag.has_gitlab_experiment_context = TRUE
-      AND stag.event = 'struct'
-      AND stag.event_name = 'event'
-      AND stag.behavior_at::DATE BETWEEN DATEADD(YEAR,-1,CURRENT_DATE()) and CURRENT_DATE() -- events triggered in the past 1 year for query efficiency
 
     ),
 
@@ -99,5 +70,5 @@ experiment_events AS
     created_by="@eneuberger",
     updated_by="@utkarsh060",
     created_date="2023-10-23",
-    updated_date="2024-03-25"
+    updated_date="2024-04-12"
 ) }}
