@@ -30,9 +30,9 @@ databases:
     - abright_prep:
         shared: no
 
-    - airbyte_poc_prod:
+    - airbyteevaluation_prod:
         shared: no
-    - airbyte_poc_prep:
+    - airbyteevaluation_prep:
         shared: no
 
     - akapungu_prod:
@@ -3137,43 +3137,43 @@ roles:
         warehouses:
             - dev_xs
 
-    - airbyte_poc:
+    - airbyteevaluation:
         warehouses:
             - dev_xs
             - dev_l
             - dev_xl
         owns:
             databases:
-                - airbyte_poc_prep
-                - airbyte_poc_prod
+                - airbyteevaluation_prep
+                - airbyteevaluation_prod
             schemas:
-                - airbyte_poc_prep.*
-                - airbyte_poc_prod.*
+                - airbyteevaluation_prep.*
+                - airbyteevaluation_prod.*
             tables:
-                - airbyte_poc_prep.*.*
-                - airbyte_poc_prod.*.*
+                - airbyteevaluation_prep.*.*
+                - airbyteevaluation_prod.*.*
         privileges:
             databases:
                 read:
-                    - airbyte_poc_prep
-                    - airbyte_poc_prod
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
                 write:
-                    - airbyte_poc_prep
-                    - airbyte_poc_prod
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
             schemas:
                 read:
-                    - airbyte_poc_prep.*
-                    - airbyte_poc_prod.*
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
                 write:
-                    - airbyte_poc_prep.*
-                    - airbyte_poc_prod.*
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
             tables:
                 read:
-                    - airbyte_poc_prep.*.*
-                    - airbyte_poc_prod.*.*
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
                 write:
-                    - airbyte_poc_prep.*.*
-                    - airbyte_poc_prod.*.*
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
 
     - airflow:
         warehouses:
@@ -6900,10 +6900,10 @@ users:
         member_of:
             - aarts
 
-    - airbyte_poc:
+    - airbyteevaluation:
         can_login: yes
         member_of:
-            - airbyte_poc
+            - airbyteevaluation
 
     - airflow:
         can_login: yes
