@@ -34,21 +34,24 @@ GROUP BY accounting_period_end_date
 
 ),
 
-Final AS (
+final AS (
 
 /* Compare balances and count per SSP channel vs. the total balances for all open invoices monthly */
 
 SELECT
 balance_per_ssp_channel.accounting_period_month,
+dim_date.fiscal_year                                                                               AS fiscal_year,
+dim_date.fiscal_quarter_name_fy                                                                    AS fiscal_quarter,
 balance_per_ssp_channel.ssp_channel,
 balance_per_ssp_channel.total_balance_per_channel,
-ROUND((balance_per_ssp_channel.total_balance_per_channel / total.total_all_balance) * 100,2) AS percentage_of_open_balance_per_path,
+ROUND((balance_per_ssp_channel.total_balance_per_channel / total.total_all_balance) * 100,2)       AS percentage_of_open_balance_per_path,
 total.total_all_balance,
 balance_per_ssp_channel.invoice_count_per_channel,
 ROUND((balance_per_ssp_channel.invoice_count_per_channel / total.count_all_open_invoices) * 100,2) AS percentage_of_open_invoices_count_per_path,
 total.count_all_open_invoices
 FROM balance_per_ssp_channel
 LEFT JOIN total ON total.accounting_period_month = balance_per_ssp_channel.accounting_period_month
+LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = total.accounting_period_month
 ORDER BY balance_per_ssp_channel.accounting_period_month, balance_per_ssp_channel.ssp_channel
 
 )
@@ -59,6 +62,6 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-03-08",
-updated_date="2024-03-08"
+updated_date="2024-04-15"
 ) }}
 
