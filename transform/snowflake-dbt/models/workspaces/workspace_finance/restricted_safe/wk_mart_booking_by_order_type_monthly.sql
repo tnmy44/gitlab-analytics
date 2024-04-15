@@ -3,7 +3,7 @@
     tags=["mnpi"]
 ) }}
 
-WITH basis AS
+WITH final AS
 
 (
 
@@ -20,20 +20,6 @@ WHERE dim_crm_opportunity.is_won = TRUE
 GROUP BY booking_month, dim_crm_opportunity.sales_type
 ORDER BY booking_month, dim_crm_opportunity.sales_type
 
-),
-
-final AS
-
-(
-
-/* Adding fiscal year and quarter */
-
-SELECT *,
-dim_date.fiscal_year                                     AS fiscal_year,
-dim_date.fiscal_quarter_name_fy                          AS fiscal_quarter
-FROM basis
-LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = booking_month
-
 )
 
 {{ dbt_audit(
@@ -41,6 +27,6 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-03-27",
-updated_date="2024-04-15"
+updated_date="2024-03-27"
 ) }}
 
