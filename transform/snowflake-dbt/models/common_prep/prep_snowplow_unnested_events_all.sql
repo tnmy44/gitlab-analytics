@@ -84,7 +84,7 @@ SELECT
   gsc_project_id                                                                                                    AS gsc_project_id,
   gsc_source                                                                                                        AS gsc_source,
   gsc_is_gitlab_team_member                                                                                         AS gsc_is_gitlab_team_member,
-  gsc_feature_enabled_by_namespace_ids                                                                              AS feature_enabled_by_namespace_ids,
+  gsc_feature_enabled_by_namespace_ids                                                                              AS gsc_feature_enabled_by_namespace_ids,
   os_name                                                                                                           AS os_name,
   os_timezone                                                                                                       AS os_timezone,
   os_family                                                                                                         AS os,
