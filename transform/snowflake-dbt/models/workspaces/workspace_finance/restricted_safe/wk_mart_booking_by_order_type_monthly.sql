@@ -28,10 +28,9 @@ final AS
 
 /* Adding fiscal year and quarter */
 
-SELECT
+SELECT *,
 dim_date.fiscal_year                                     AS fiscal_year,
-dim_date.fiscal_quarter_name_fy                          AS fiscal_quarter,
-*
+dim_date.fiscal_quarter_name_fy                          AS fiscal_quarter
 FROM basis
 LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = booking_month
 
