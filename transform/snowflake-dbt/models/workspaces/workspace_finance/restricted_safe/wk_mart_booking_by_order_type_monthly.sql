@@ -3,7 +3,7 @@
     tags=["mnpi"]
 ) }}
 
-WITH final AS
+WITH basis AS
 
 (
 
@@ -11,17 +11,29 @@ WITH final AS
 
 SELECT
 DATE(DATE_TRUNC('month',fct_crm_opportunity.close_date)) AS booking_month,
-dim_date.fiscal_year                                     AS fiscal_year,
-dim_date.fiscal_quarter_name_fy                          AS fiscal_quarter,
 dim_crm_opportunity.sales_type                           AS sales_type,
 SUM(fct_crm_opportunity.amount)                          AS opportunity_amount,
 COUNT(fct_crm_opportunity.amount)                        AS opportunity_count
 FROM {{ ref('fct_crm_opportunity') }}
 LEFT JOIN {{ ref('dim_crm_opportunity') }} ON dim_crm_opportunity.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
-LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = booking_month
 WHERE dim_crm_opportunity.is_won = TRUE
-GROUP BY fiscal_year, fiscal_quarter, booking_month, dim_crm_opportunity.sales_type
+GROUP BY booking_month, dim_crm_opportunity.sales_type
 ORDER BY booking_month, dim_crm_opportunity.sales_type
+
+),
+
+final AS
+
+(
+
+/* Adding fiscal year and quarter */
+
+SELECT
+dim_date.fiscal_year                                     AS fiscal_year,
+dim_date.fiscal_quarter_name_fy                          AS fiscal_quarter,
+*
+FROM basis
+LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = booking_month
 
 )
 
