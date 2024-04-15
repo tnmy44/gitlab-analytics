@@ -7330,11 +7330,13 @@ users:
 
     - jlongo:
         can_login: yes
-        member_of:
+        member_of: 
+            - jlongo
 
     - jmartinez:
         can_login: yes
         member_of:
+            - jmartinez
 
     - jmccure:
         can_login: yes
