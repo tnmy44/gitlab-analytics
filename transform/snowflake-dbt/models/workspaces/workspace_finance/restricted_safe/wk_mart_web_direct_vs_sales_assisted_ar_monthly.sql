@@ -43,11 +43,11 @@ total AS (
 /* Determine the total balances for all open invoices monthly */
 
 SELECT
-accounting_period_end_date,
+accounting_period_end_date AS accounting_period,
 SUM(account_balance_impact) AS total_all_balance,
 COUNT(account_balance_impact) AS count_all_open_invoices
 FROM {{ ref('wk_finance_fct_invoice_aging_detail') }}
-GROUP BY accounting_period_end_date
+GROUP BY accounting_period
 
 ),
 
@@ -65,8 +65,8 @@ balance_per_purchase_path.total_balance_per_path,
 ROUND((balance_per_purchase_path.invoice_count_per_path / total.count_all_open_invoices) * 100,2) AS percentage_of_open_invoices_count_per_path,
 balance_per_purchase_path.invoice_count_per_path
 FROM balance_per_purchase_path
-LEFT JOIN total ON total.accounting_period_end_date = balance_per_purchase_path.accounting_period_end_date
-LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = accounting_period_end_date
+LEFT JOIN total ON total.accounting_period = balance_per_purchase_path.accounting_period_end_date
+LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = balance_per_purchase_path.accounting_period_end_date
 
 )
 
