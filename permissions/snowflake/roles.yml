@@ -30,6 +30,11 @@ databases:
     - abright_prep:
         shared: no
 
+    - airbyte_poc_prod:
+        shared: no
+    - airbyte_poc_prep:
+        shared: no
+
     - akapungu_prod:
         shared: no
     - akapungu_prep:
@@ -3137,22 +3142,38 @@ roles:
             - dev_xs
             - dev_l
             - dev_xl
+        owns:
+            databases:
+                - airbyte_poc_prep
+                - airbyte_poc_prod
+            schemas:
+                - airbyte_poc_prep.*
+                - airbyte_poc_prod.*
+            tables:
+                - airbyte_poc_prep.*.*
+                - airbyte_poc_prod.*.*
         privileges:
             databases:
                 read:
-                    - rbacovic_prep
+                    - airbyte_poc_prep
+                    - airbyte_poc_prod
                 write:
-                    - rbacovic_prep
+                    - airbyte_poc_prep
+                    - airbyte_poc_prod
             schemas:
                 read:
-                    - rbacovic_prep.*
+                    - airbyte_poc_prep.*
+                    - airbyte_poc_prod.*
                 write:
-                    - rbacovic_prep.*
+                    - airbyte_poc_prep.*
+                    - airbyte_poc_prod.*
             tables:
                 read:
-                    - rbacovic_prep.*.*
+                    - airbyte_poc_prep.*.*
+                    - airbyte_poc_prod.*.*
                 write:
-                    - rbacovic_prep.*.*
+                    - airbyte_poc_prep.*.*
+                    - airbyte_poc_prod.*.*
 
     - airflow:
         warehouses:
