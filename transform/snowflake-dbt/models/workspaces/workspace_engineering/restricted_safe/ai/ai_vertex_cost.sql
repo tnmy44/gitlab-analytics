@@ -18,7 +18,7 @@ daily_costs AS (
   LEFT JOIN credits AS cr ON xf.source_primary_key = cr.source_primary_key
   WHERE DATE_TRUNC('month', DATE(usage_start_time)) >= '2023-11-01'
     AND xf.project_id IN ('unreview-poc-390200e5')
-    AND service.description = 'Vertex AI'
+    AND service_description = 'Vertex AI'
   GROUP BY 1
   ORDER BY 1 DESC
 )
