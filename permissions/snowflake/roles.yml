@@ -3132,6 +3132,28 @@ roles:
         warehouses:
             - dev_xs
 
+    - airbyte_poc:
+        warehouses:
+            - dev_xs
+            - dev_l
+            - dev_xl
+        privileges:
+            databases:
+                read:
+                    - rbacovic_prep
+                write:
+                    - rbacovic_prep
+            schemas:
+                read:
+                    - rbacovic_prep.*
+                write:
+                    - rbacovic_prep.*
+            tables:
+                read:
+                    - rbacovic_prep.*.*
+                write:
+                    - rbacovic_prep.*.*
+
     - airflow:
         warehouses:
             - dev_l
@@ -6856,6 +6878,11 @@ users:
         can_login: yes
         member_of:
             - aarts
+
+    - airbyte_poc:
+        can_login: yes
+        member_of:
+            - airbyte_poc
 
     - airflow:
         can_login: yes
