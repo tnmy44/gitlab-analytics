@@ -2868,12 +2868,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: astanke
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: astarczewski
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -3531,13 +3525,6 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
-  - user_name: ckatanda
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: ckirkham
     user_name_domain: gitlab.com
     site_role: Viewer
