@@ -124,7 +124,7 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
-
+    export_date_str = "{{ yesterday_ds_nodash }}"
     if GIT_BRANCH != "master":
         export['bucket_path'] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
@@ -136,7 +136,7 @@ for export in stream["exports"]:
         --gcp_project={gcp_project} \
         --bucket_path={export['bucket_path']} \
         --table={export['table']}_{{ yesterday_ds_nodash }} \
-        --partition_column={{ yesterday_ds_nodash }}
+        --partition_column={export['partition_column']}
     """
 
     task_name = export["name"]
