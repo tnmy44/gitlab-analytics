@@ -71,7 +71,7 @@ WITH date_details AS (
        ON h.date_actual = dd2.date_actual
      WHERE dd2.day_of_fiscal_quarter = 1
        AND d.quarter_number - dd2.quarter_number = 0
-     {{ dbt_utils.group_by(n=12) }}
+     {{ dbt_utils.group_by(n=11) }}
 
 ), ENDING AS (
 
@@ -123,7 +123,7 @@ WITH date_details AS (
       ON h.date_actual = dd2.date_actual
     WHERE dd2.day_of_fiscal_quarter = 1
       AND d.quarter_number - dd2.quarter_number = -1
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=11) }}
 
 ), combined AS (
 
@@ -157,7 +157,7 @@ WITH date_details AS (
     FROM beginning b
     FULL OUTER JOIN ending e
       ON b.opportunity_id || b.close_qtr = e.opportunity_id || e.close_qtr
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=18) }}
 
 ), waterfall AS (
 
