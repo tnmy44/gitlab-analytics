@@ -8318,6 +8318,13 @@ users:
     groups:
       - Finance All Access
       - General All Access
+  - user_name: rfalkowski
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General SAFE Access
+      - General All Access      
   - user_name: rfenoyanthony
     user_name_domain: gitlab.com
     site_role: Viewer
