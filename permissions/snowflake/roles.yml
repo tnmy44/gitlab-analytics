@@ -3140,7 +3140,6 @@ roles:
     - airbyteevaluation:
         warehouses:
             - loading
-            - dev_xl
         owns:
             databases:
                 - airbyteevaluation_prep
