@@ -935,7 +935,7 @@ LEFT JOIN cw_base
       -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
       -- coalesce both flags so we don't have NULL values for records before the fpa_master_bookings_flag was created
       COALESCE(
-        fpa_master_bookings_flag, 
+        sfdc_opportunity.fpa_master_bookings_flag, 
         CASE
           WHEN sfdc_opportunity_live.is_jihu_account = 0 
             AND (sfdc_opportunity_stage.is_won = 1
