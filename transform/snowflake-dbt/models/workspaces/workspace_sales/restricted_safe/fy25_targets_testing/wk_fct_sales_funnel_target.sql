@@ -16,6 +16,7 @@
                                  'prep_sales_funnel_target.first_day_of_month', 
                                  'prep_sales_funnel_target.sales_qualified_source',
                                  'prep_sales_funnel_target.order_type',
+                                 'prep_sales_funnel_target.user_geo',
                                  ]) }}                                                AS sales_funnel_target_id,
      prep_sales_funnel_target.kpi_name,
      prep_sales_funnel_kpi.dim_sales_funnel_kpi_sk,
