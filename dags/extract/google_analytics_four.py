@@ -135,7 +135,7 @@ for export in stream["exports"]:
         --selected_columns={export['selected_columns']} \
         --gcp_project={gcp_project} \
         --bucket_path={export['bucket_path']} \
-        --table={export['table']}_{{ yesterday_ds_nodash }} \
+        --table={export['table']}_{export_date_str} \
         --partition_column={export['partition_column']}
     """
 
