@@ -18,16 +18,18 @@ WITH source AS (
     AND
     e.behavior_date > '2024-01-01'
     AND
-    e.app_id = 'gitlab')
+    e.app_id = 'gitlab'
+)
 
-    SELECT date_trunc('day', behavior_date),
-        CASE WHEN model LIKE '%Anthropic%' OR LOWER(model) LIKE '%aigateway%' THEN 'Anthropic'
-      ELSE 'Google'
-    END                                     AS provider,
-    model as model,
-    feature as feature,
-    event_action as prompt_answer,
-    sum(token_amount) as tokens_tracked,
-    sum(token_amount) * 4 as characters_tracked
-    FROM source
-    group by 1,2,3,4,5
+SELECT
+  DATE_TRUNC('day', behavior_date) AS day,
+  CASE WHEN model LIKE '%Anthropic%' OR LOWER(model) LIKE '%aigateway%' THEN 'Anthropic'
+    ELSE 'Google'
+  END                              AS provider,
+  model                            AS model,
+  feature                          AS feature,
+  event_action                     AS prompt_answer,
+  SUM(token_amount)                AS tokens_tracked,
+  SUM(token_amount) * 4            AS characters_tracked
+FROM source
+GROUP BY 1, 2, 3, 4, 5
