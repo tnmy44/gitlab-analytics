@@ -1224,24 +1224,6 @@ LEFT JOIN cw_base
         'other'
       ) AS sales_team_asm_level,
       CASE
-        WHEN
-          sfdc_opportunity.account_owner_team_stamped IN (
-            'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
-          )
-          THEN 'SMB'
-        WHEN
-          sfdc_opportunity.account_owner_team_stamped IN (
-            'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
-          )
-          THEN 'Large'
-        WHEN
-          sfdc_opportunity.account_owner_team_stamped IN (
-            'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
-          )
-          THEN 'Mid-Market'
-        ELSE 'SMB'
-      END AS account_owner_team_stamped_cro_level,
-      CASE
         WHEN close_fiscal_year < 2024
           THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),

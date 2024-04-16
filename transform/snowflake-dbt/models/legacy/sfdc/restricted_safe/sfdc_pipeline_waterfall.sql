@@ -50,16 +50,6 @@ WITH date_details AS (
          ELSE 'Other'
          END                                  AS stage_name_4plus,
          h.opportunity_id,
-       CASE
-         WHEN o.account_owner_team_stamped = 'US East'                                                                                       THEN 'US East'
-         WHEN o.account_owner_team_stamped = 'US West'                                                                                       THEN 'US West'
-         WHEN o.account_owner_team_stamped = 'EMEA'                                                                                          THEN 'EMEA'
-         WHEN o.account_owner_team_stamped = 'APAC'                                                                                          THEN 'APAC'
-         WHEN o.account_owner_team_stamped = 'Public Sector'                                                                                 THEN 'Public Sector'
-         WHEN o.account_owner_team_stamped IN ('Commercial', 'Commercial - MM', 'MM - East', 'MM - West', 'MM-EMEA', 'MM - EMEA', 'MM-APAC') THEN 'MM'
-         WHEN o.account_owner_team_stamped IN ('SMB', 'SMB - US', 'SMB - International', 'Commercial - SMB')                                 THEN 'SMB'
-         ELSE 'Other'
-       END                                  AS account_owner_team_stamped,
        DATE(h.created_date)                 AS created_date,
        DATE(h.close_date)                   AS close_date,
        COUNT(DISTINCT h.opportunity_id)     AS opps,
@@ -112,16 +102,6 @@ WITH date_details AS (
         ELSE 'Other'
       END                                       AS stage_name_4plus,
       h.opportunity_id,
-      CASE
-        WHEN o.account_owner_team_stamped = 'US East'                                                                                       THEN 'US East'
-        WHEN o.account_owner_team_stamped = 'US West'                                                                                       THEN 'US West'
-        WHEN o.account_owner_team_stamped = 'EMEA'                                                                                          THEN 'EMEA'
-        WHEN o.account_owner_team_stamped = 'APAC'                                                                                          THEN 'APAC'
-        WHEN o.account_owner_team_stamped = 'Public Sector'                                                                                 THEN 'Public Sector'
-        WHEN o.account_owner_team_stamped IN ('Commercial', 'Commercial - MM', 'MM - East', 'MM - West', 'MM-EMEA', 'MM - EMEA', 'MM-APAC') THEN 'MM'
-        WHEN o.account_owner_team_stamped IN ('SMB', 'SMB - US', 'SMB - International', 'Commercial - SMB')                                 THEN 'SMB'
-        ELSE 'Other'
-      END                                       AS account_owner_team_stamped,
       DATE(h.created_date)                      AS created_date,
       DATE(h.close_date)                        AS close_date,
       COUNT(DISTINCT h.opportunity_id)          AS opps,
@@ -156,8 +136,6 @@ WITH date_details AS (
       e.order_type                                                              AS order_type_ending,
       b.sales_segment,
       e.sales_segment                                                           AS sales_segment_ending,
-      b.account_owner_team_stamped,
-      e.account_owner_team_stamped                                              AS account_owner_team_ending,
       b.stage_name,
       e.stage_name                                                              AS stage_name_ending,
       b.stage_name_3plus,
@@ -226,7 +204,6 @@ WITH date_details AS (
       order_type_ending,
       sales_segment,
       sales_segment_ending,
-      account_owner_team_stamped,
       account_owner_team_ending,
       stage_name,
       stage_name_ending,
