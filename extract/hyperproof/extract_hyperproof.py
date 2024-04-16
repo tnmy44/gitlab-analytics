@@ -98,8 +98,13 @@ if __name__ == "__main__":
     client_id = env(["HYPERPROOF_CLIENT_ID"])
     client_secret = env(["HYPERPROOF_CLIENT_SECRET"])
 
+    client = HyperproofAPIClient(client_id, client_secret)
     # Get data from all available endpoints
     all_data = client.get_data_from_all_endpoints()
+
+    config_dict = env.copy()
+    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
     if all_data:
         logger.info("Retrieved data from all endpoints:")
         for endpoint, data in all_data.items():
