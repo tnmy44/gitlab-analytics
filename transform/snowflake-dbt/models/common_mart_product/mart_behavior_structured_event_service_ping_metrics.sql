@@ -2,14 +2,15 @@
   config(
     materialized='incremental',
     unique_key = "snowplow_events_service_ping_metrics_sk",
-    tags=["mnpi_exception"]
+    on_schema_change = "sync_all_columns",
+    tags=["product", "mnpi_exception"]
   )
 }}
 
 WITH service_ping_events AS (
   SELECT
     *
-  FROM {{ ref('wk_fct_snowplow_events_service_ping') }}
+  FROM {{ ref('fct_behavior_structured_event_service_ping') }}
 
    {% if is_incremental() %}
   
@@ -54,7 +55,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@utkarsh060",
     created_date="2022-12-21",
-    updated_date="2023-12-14"
+    updated_date="2024-03-13"
 ) }}

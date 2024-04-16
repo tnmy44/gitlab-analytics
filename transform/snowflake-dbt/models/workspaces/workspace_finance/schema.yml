@@ -1230,3 +1230,6 @@ models:
 
   - name: wk_mart_processed_cba_monthly
     description: View of credit balance adjustments aggregated monthly
+
+  - name: wk_rpt_accounting_period_balance_monthly 
+    description: Billing accounting period balances monthly
