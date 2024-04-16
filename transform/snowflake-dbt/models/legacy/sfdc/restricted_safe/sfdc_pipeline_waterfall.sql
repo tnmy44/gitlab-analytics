@@ -204,7 +204,6 @@ WITH date_details AS (
       order_type_ending,
       sales_segment,
       sales_segment_ending,
-      account_owner_team_ending,
       stage_name,
       stage_name_ending,
       stage_name_3plus,
