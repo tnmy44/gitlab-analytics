@@ -5,6 +5,6 @@ exports:
   - name: events
     table: mktg-goog-analytics4-5e6dc7d6.analytics_267713722.events_20240404
     bucket_path: gs://marketing-ga4/events
-    partition_column: event_date
-    partition_date_part: d
+    partition_column:
+    partition_date_part:
     selected_columns: "*"
