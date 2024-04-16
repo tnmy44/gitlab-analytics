@@ -23,7 +23,7 @@ class HyperproofAPIClient:
         payload = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,
-            "client_secret": self.client_secret
+            "client_secret": self.client_secret,
         }
         response = requests.post(auth_url, data=payload)
         if response.status_code == 200:
@@ -75,20 +75,22 @@ class HyperproofAPIClient:
 
         headers = {
             "Authorization": f"Bearer {self.access_token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
         url = f"https://api.hyperproof.app/v1/{endpoint}"
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             return response.json()
         else:
-            logger.error(f"Failed to retrieve data from {endpoint}. Status code: {response.status_code}")
+            logger.error(
+                f"Failed to retrieve data from {endpoint}. Status code: {response.status_code}"
+            )
             return None
 
 
 if __name__ == "__main__":
-    client_id = env(['HYPERPROOF_CLIENT_ID'])
-    client_secret = env(['HYPERPROOF_CLIENT_SECRET'])
+    client_id = env(["HYPERPROOF_CLIENT_ID"])
+    client_secret = env(["HYPERPROOF_CLIENT_SECRET"])
 
     # Get data from all available endpoints
     all_data = client.get_data_from_all_endpoints()
@@ -109,4 +111,3 @@ if __name__ == "__main__":
                 )
             else:
                 logger.warning(f"No data available for {endpoint}")
-
