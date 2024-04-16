@@ -11,7 +11,8 @@
 
 ##### Reviewer Steps
 1. [ ] check if MR is in line with linked Access Request.
-1. [ ] add email(s) to the [Snowflake Okta Google Group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members?pli=1).
+1. [ ] Merge MR
+1. [ ] Add or remove email(s) in the [Snowflake Okta Google Group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members?pli=1).
 
 ##### Runbook
 Refer to the [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/snowflake_provisioning_automation/snowflake_provisioning_automation.md) for more details
