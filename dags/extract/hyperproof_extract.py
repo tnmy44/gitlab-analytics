@@ -51,7 +51,8 @@ dag = DAG(
 
 
 extract_command = f"""
-    {clone_and_setup_extraction_cmd} &&
+    {clone_and_setup_extraction_cmd} && 
+    python3 hyperproof/extract_hyperproof.py
 """
 
 
