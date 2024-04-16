@@ -463,7 +463,7 @@ LEFT JOIN cw_base
       -- net arr
       CASE
         WHEN sfdc_opportunity_stage.is_won = 1 -- only consider won deals
-          AND sfdc_opportunity.opportunity_category <> 'Contract Reset' -- contract resets have a special way of calculating net iacv
+          AND sfdc_opportunity_live.opportunity_category <> 'Contract Reset' -- contract resets have a special way of calculating net iacv
           AND COALESCE(sfdc_opportunity.raw_net_arr,0) <> 0
           AND COALESCE(sfdc_opportunity.net_incremental_acv,0) <> 0
             THEN COALESCE(sfdc_opportunity.raw_net_arr / sfdc_opportunity.net_incremental_acv,0)
@@ -523,7 +523,7 @@ LEFT JOIN cw_base
       IFF(sfdc_opportunity.stage_name IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing'), 1, 0) AS is_stage_4_plus,
       IFF(sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost'), 1, 0) AS is_lost,
       IFF(LOWER(sfdc_opportunity.sales_type) like '%renewal%', 1, 0) AS is_renewal,
-      IFF(sfdc_opportunity.opportunity_category IN ('Decommission'), 1, 0) AS is_decommissed,
+      IFF(sfdc_opportunity_live.opportunity_category IN ('Decommission'), 1, 0) AS is_decommissed,
 
      -- flags
       CASE
@@ -675,11 +675,11 @@ LEFT JOIN cw_base
 
       -- alliance type fields
 
-      {{ alliance_partner_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_current,
-      {{ alliance_partner_short_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short_current,
+      {{ alliance_partner_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity_live.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_current,
+      {{ alliance_partner_short_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity_live.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short_current,
 
-      {{ alliance_partner('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type,
-      {{ alliance_partner_short('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short,
+      {{ alliance_partner('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity_live.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type,
+      {{ alliance_partner_short('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity_live.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short,
 
       sfdc_opportunity.fulfillment_partner_account_name AS resale_partner_name,
 
@@ -752,20 +752,20 @@ LEFT JOIN cw_base
         ELSE 'N/A'
       END                                                                                         AS stage_category,
       CASE
-       WHEN sfdc_opportunity.order_type = '1. New - First Order'
+       WHEN sfdc_opportunity_live.order_type = '1. New - First Order'
          THEN '1. New'
-       WHEN sfdc_opportunity.order_type IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction')
+       WHEN sfdc_opportunity_live.order_type IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction')
          THEN '2. Growth'
        ELSE '3. Other'
      END                                                                   AS deal_group,
      CASE
-       WHEN sfdc_opportunity.order_type = '1. New - First Order'
+       WHEN sfdc_opportunity_live.order_type = '1. New - First Order'
          THEN '1. New'
-       WHEN sfdc_opportunity.order_type IN ('2. New - Connected', '3. Growth')
+       WHEN sfdc_opportunity_live.order_type IN ('2. New - Connected', '3. Growth')
          THEN '2. Growth'
-       WHEN sfdc_opportunity.order_type IN ('4. Contraction')
+       WHEN sfdc_opportunity_live.order_type IN ('4. Contraction')
          THEN '3. Contraction'
-       WHEN sfdc_opportunity.order_type IN ('5. Churn - Partial','6. Churn - Final')
+       WHEN sfdc_opportunity_live.order_type IN ('5. Churn - Partial','6. Churn - Final')
          THEN '4. Churn'
        ELSE '5. Other'
       END                                                                                       AS deal_category,
@@ -797,7 +797,7 @@ LEFT JOIN cw_base
                )
                 OR sfdc_opportunity_stage.is_won = 1
               )
-               AND sfdc_opportunity.order_type IN ('4. Contraction','5. Churn - Partial')
+               AND sfdc_opportunity_live.order_type IN ('4. Contraction','5. Churn - Partial')
           THEN 'Contraction'
                WHEN (
               (
@@ -806,7 +806,7 @@ LEFT JOIN cw_base
                )
                 OR sfdc_opportunity_stage.is_won = 1
               )
-               AND sfdc_opportunity.order_type = '6. Churn - Final'
+               AND sfdc_opportunity_live.order_type = '6. Churn - Final'
           THEN 'Churn'
         ELSE NULL
      END                                                                                        AS churn_contraction_type,
@@ -831,15 +831,15 @@ LEFT JOIN cw_base
           THEN '5. 100k+'
       END                                                                                       AS churned_contraction_net_arr_bucket,
       CASE
-        WHEN sfdc_opportunity.deal_path = 'Direct'
+        WHEN sfdc_opportunity_live.deal_path = 'Direct'
           THEN 'Direct'
-        WHEN sfdc_opportunity.deal_path = 'Web Direct'
+        WHEN sfdc_opportunity_live.deal_path = 'Web Direct'
           THEN 'Web Direct'
-        WHEN sfdc_opportunity.deal_path = 'Partner'
-            AND sfdc_opportunity.sales_qualified_source = 'Partner Generated'
+        WHEN sfdc_opportunity_live.deal_path = 'Partner'
+            AND sfdc_opportunity_live.sales_qualified_source = 'Partner Generated'
           THEN 'Partner Sourced'
-        WHEN sfdc_opportunity.deal_path = 'Partner'
-            AND sfdc_opportunity.sales_qualified_source != 'Partner Generated'
+        WHEN sfdc_opportunity_live.deal_path = 'Partner'
+            AND sfdc_opportunity_live.sales_qualified_source != 'Partner Generated'
           THEN 'Partner Co-Sell'
       END                                                                                       AS deal_path_engagement,
       CASE
@@ -1030,7 +1030,7 @@ LEFT JOIN cw_base
         ELSE 0
       END                                                 AS booked_net_arr,
       CASE
-        WHEN sfdc_opportunity.deal_path = 'Partner'
+        WHEN sfdc_opportunity_live.deal_path = 'Partner'
           THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, sfdc_opportunity.partner_account_partner_track, sfdc_opportunity.fulfillment_partner_partner_track,'Open'),'select','Select')
         ELSE 'Direct'
       END                                                                                           AS calculated_partner_track,
@@ -1132,10 +1132,10 @@ LEFT JOIN cw_base
           report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area
         )
       ) AS report_user_segment_geo_region_area,
-      COALESCE(sfdc_opportunity.sales_qualified_source, 'Missing sales_qualified_source_name') AS key_sqs,
+      COALESCE(sfdc_opportunity_live.sales_qualified_source, 'Missing sales_qualified_source_name') AS key_sqs,
       LOWER(
         CONCAT(
-          report_user_segment_geo_region_area,'-',key_sqs,'-',COALESCE(sfdc_opportunity.order_type, 'Missing order_type_name')
+          report_user_segment_geo_region_area,'-',key_sqs,'-',COALESCE(sfdc_opportunity_live.order_type, 'Missing order_type_name')
         )
       ) AS report_user_segment_geo_region_area_sqs_ot,
       COALESCE(report_opportunity_user_segment, 'other') AS key_segment,
