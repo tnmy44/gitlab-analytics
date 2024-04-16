@@ -32,12 +32,10 @@
       fct_sales_funnel_target_daily.dim_crm_user_hierarchy_sk, 
       fct_sales_funnel_target_daily.dim_order_type_id,
       fct_sales_funnel_target_daily.dim_sales_qualified_source_id,
-      dim_crm_user_hierarchy.crm_user_geo, 
-      dim_crm_user_hierarchy.crm_user_region, 
-      dim_crm_user_hierarchy.crm_user_area
+      fct_sales_funnel_target_daily.geo_name, 
+      fct_sales_funnel_target_daily.region_name, 
+      fct_sales_funnel_target_daily.area_name
     FROM fct_sales_funnel_target_daily
-    LEFT JOIN dim_crm_user_hierarchy
-      ON fct_sales_funnel_target_daily.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
     LEFT JOIN dim_sales_funnel_kpi
       ON fct_sales_funnel_target_daily.kpi_name = dim_sales_funnel_kpi.sales_funnel_kpi_name
 )
