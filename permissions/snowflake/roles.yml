@@ -30,6 +30,11 @@ databases:
     - abright_prep:
         shared: no
 
+    - airbyteevaluation_prod:
+        shared: no
+    - airbyteevaluation_prep:
+        shared: no
+
     - akapungu_prod:
         shared: no
     - akapungu_prep:
@@ -2875,6 +2880,19 @@ roles:
                     - prep.workday.*
                     - raw.workday.*
 
+    - workday_hcm:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.workday_hcm
+            tables:
+                read:
+                    - raw.workday_hcm.*
     - xactly:
         warehouses:
             - dev_xs
@@ -3118,6 +3136,42 @@ roles:
             - xactly
         warehouses:
             - dev_xs
+
+    - airbyteevaluation:
+        warehouses:
+            - loading
+        owns:
+            databases:
+                - airbyteevaluation_prep
+                - airbyteevaluation_prod
+            schemas:
+                - airbyteevaluation_prep.*
+                - airbyteevaluation_prod.*
+            tables:
+                - airbyteevaluation_prep.*.*
+                - airbyteevaluation_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
+                write:
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
+            schemas:
+                read:
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
+                write:
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
+            tables:
+                read:
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
+                write:
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
 
     - airflow:
         warehouses:
@@ -3976,13 +4030,17 @@ roles:
             schemas:
                 read:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
                 write:
                     - raw.netsuite_fivetran
+                    - raw.workday_hcm
             tables:
                 read:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
                 write:
                     - raw.netsuite_fivetran.*
+                    - raw.workday_hcm.*
 
     - fpitino:
         member_of:
@@ -4332,6 +4390,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jmartinez:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
+
     - jmccure:
         member_of:
             - snowflake_analyst
@@ -4512,6 +4576,12 @@ roles:
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+
+    - jpereira:
+        member_of:
+            - snowflake_analyst
+        warehouses:
+            - dev_xs
 
     - jpetr:
         member_of:
@@ -5763,6 +5833,7 @@ roles:
             - restricted_safe
             - snowflake
             - workday
+            - workday_hcm
             - zengrc
         warehouses:
             - dev_xs
@@ -5803,13 +5874,6 @@ roles:
                 write:
                     - pempey_prep.*.*
                     - pempey_prod.*.*
-
-    - periscope:
-        warehouses:
-            - reporting
-
-    - periscope_sensitive:
-        warehouses: []
 
     - permission_bot:
         warehouses:
@@ -6209,13 +6273,6 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-
-    - sisense_restricted_safe:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - reporting
 
     - skhan:
         member_of:
@@ -6841,6 +6898,11 @@ users:
         member_of:
             - aarts
 
+    - airbyteevaluation:
+        can_login: yes
+        member_of:
+            - airbyteevaluation
+
     - airflow:
         can_login: yes
         member_of:
@@ -7314,8 +7376,13 @@ users:
 
     - jlongo:
         can_login: yes
-        member_of:
+        member_of: 
             - jlongo
+
+    - jmartinez:
+        can_login: yes
+        member_of:
+            - jmartinez
 
     - jmccure:
         can_login: yes
@@ -7341,6 +7408,11 @@ users:
         can_login: yes
         member_of:
             - jpeguero
+
+    - jpereira:
+        can_login: yes
+        member_of:
+            - jpereira
 
     - jpetr:
         can_login: yes
@@ -7701,12 +7773,6 @@ users:
         member_of:
             - pempey
 
-    - periscope:
-        can_login: yes
-        member_of:
-            - periscope
-            - reporter
-
     - permission_bot:
         can_login: yes
         member_of:
@@ -7827,11 +7893,6 @@ users:
         can_login: yes
         member_of:
             - sgladchun
-
-    - sisense_restricted_safe:
-        can_login: yes
-        member_of:
-            - sisense_restricted_safe
 
     - skhan:
         can_login: yes
