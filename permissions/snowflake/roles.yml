@@ -3139,7 +3139,7 @@ roles:
 
     - airbyteevaluation:
         warehouses:
-            - dev_xs
+- loader
             - dev_l
             - dev_xl
         owns:
