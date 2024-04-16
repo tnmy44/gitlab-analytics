@@ -30,6 +30,11 @@ databases:
     - abright_prep:
         shared: no
 
+    - airbyteevaluation_prod:
+        shared: no
+    - airbyteevaluation_prep:
+        shared: no
+
     - akapungu_prod:
         shared: no
     - akapungu_prep:
@@ -3131,6 +3136,42 @@ roles:
             - xactly
         warehouses:
             - dev_xs
+
+    - airbyteevaluation:
+        warehouses:
+            - loading
+        owns:
+            databases:
+                - airbyteevaluation_prep
+                - airbyteevaluation_prod
+            schemas:
+                - airbyteevaluation_prep.*
+                - airbyteevaluation_prod.*
+            tables:
+                - airbyteevaluation_prep.*.*
+                - airbyteevaluation_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
+                write:
+                    - airbyteevaluation_prep
+                    - airbyteevaluation_prod
+            schemas:
+                read:
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
+                write:
+                    - airbyteevaluation_prep.*
+                    - airbyteevaluation_prod.*
+            tables:
+                read:
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
+                write:
+                    - airbyteevaluation_prep.*.*
+                    - airbyteevaluation_prod.*.*
 
     - airflow:
         warehouses:
@@ -6856,6 +6897,11 @@ users:
         can_login: yes
         member_of:
             - aarts
+
+    - airbyteevaluation:
+        can_login: yes
+        member_of:
+            - airbyteevaluation
 
     - airflow:
         can_login: yes
