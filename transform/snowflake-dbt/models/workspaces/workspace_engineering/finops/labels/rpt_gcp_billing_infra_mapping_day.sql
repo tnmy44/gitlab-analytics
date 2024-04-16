@@ -10,7 +10,7 @@ WITH credits AS ( --excluding migration credit between march 7th and March 27th:
 
   SELECT
     cr.source_primary_key,
-    SUM(cr.credit_amount) AS total_credit
+    SUM(coalesce(cr.credit_amount, 0)) AS total_credit
   FROM {{ ref('gcp_billing_export_credits') }} AS cr
   WHERE LOWER(cr.credit_description) NOT LIKE '%1709765302259%'
   GROUP BY cr.source_primary_key
@@ -21,7 +21,7 @@ export AS (
 
   SELECT xf.*, cr.total_credit FROM {{ ref('gcp_billing_export_xf') }} xf
   LEFT JOIN credits cr ON cr.source_primary_key = xf.source_primary_key
-  WHERE invoice_month >= '2022-01-01'
+  WHERE invoice_month >= '2024-01-01'
 
 ),
 
@@ -135,7 +135,7 @@ billing_base AS (
     SUM(export.usage_amount)                                   AS usage_amount,
     SUM(export.usage_amount_in_pricing_units)                  AS usage_amount_in_pricing_units,
     SUM(export.cost_before_credits)                            AS cost_before_credits,
-    SUM(export.cost_before_credits) + SUM(export.total_credit) AS net_cost
+    SUM(export.cost_before_credits + coalesce(export.total_credit, 0))      AS net_cost
   FROM
     export
   LEFT JOIN
