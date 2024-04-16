@@ -12,7 +12,7 @@ WITH credits AS ( --excluding migration credit between march 7th and March 27th:
     cr.source_primary_key,
     SUM(coalesce(cr.credit_amount, 0)) AS total_credit
   FROM {{ ref('gcp_billing_export_credits') }} AS cr
-  WHERE LOWER(cr.credit_description) NOT LIKE '%1709765302259%'
+  WHERE LOWER(cr.credit_description) != 'migration-credit-1-1709765302259'
   GROUP BY cr.source_primary_key
 
 ),
@@ -21,7 +21,7 @@ export AS (
 
   SELECT xf.*, cr.total_credit FROM {{ ref('gcp_billing_export_xf') }} xf
   LEFT JOIN credits cr ON cr.source_primary_key = xf.source_primary_key
-  WHERE invoice_month >= '2024-01-01'
+  WHERE invoice_month >= '2023-01-01'
 
 ),
 
