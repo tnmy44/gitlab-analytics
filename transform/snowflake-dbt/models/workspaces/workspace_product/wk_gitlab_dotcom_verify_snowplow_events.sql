@@ -53,6 +53,7 @@ WITH page_views AS (
           AND event_category = 'InternalEventTracking'
           THEN 'users_visiting_ci_catalog'
       END                                               AS metric,
+      COUNT(DISTINCT gsc_pseudonymized_user_id)         AS total_users,
       COUNT(DISTINCT behavior_structured_event_pk)      AS total_events
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
@@ -91,5 +92,5 @@ WITH page_views AS (
     created_by="@nhervas",
     updated_by="@nhervas",
     created_date="2024-02-15",
-    updated_date="2024-03-26"
+    updated_date="2024-04-16"
 ) }}
