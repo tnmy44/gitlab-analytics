@@ -60,8 +60,8 @@ extract_command = f"""
 hyperproof_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=task_identifier,
-    name=task_identifier,
+    task_id="hyperproof_extract",
+    name="hyperproof_extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_PASSWORD,
