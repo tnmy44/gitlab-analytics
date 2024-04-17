@@ -15,7 +15,8 @@ WITH page_views AS (
         WHEN page_url_path LIKE '%ci/editor%' 
           THEN 'pipeline_editor_pageview'
       END                                               AS metric, 
-      COUNT(DISTINCT fct_behavior_website_page_view_sk) AS total_events
+      COUNT(DISTINCT fct_behavior_website_page_view_sk) AS total_events,
+      COUNT(DISTINCT gsc_pseudonymized_user_id) as total_users
     FROM {{ ref('fct_behavior_website_page_view') }}
     LEFT JOIN {{ ref('dim_plan') }}
       ON dim_plan.plan_name = fct_behavior_website_page_view.gsc_plan
