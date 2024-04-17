@@ -11,20 +11,15 @@ config_dict = env.copy()
 
 
 def get_billing_data_query(
-    partition_date_part: str,
     selected_columns: str,
     bucket_path: str,
     table: str,
     partition_column: str,
-    export_date: str,
+    partition: str,
 ) -> str:
     """
     sql to run in bigquery for daily partition
     """
-    if partition_date_part == "d":
-        partition = export_date[0:10]
-    elif partition_date_part == "m":
-        partition = export_date[0:7]
 
     select_string = ", ".join(selected_columns)
 
@@ -41,24 +36,23 @@ def get_billing_data_query(
 
 
 def run_export(
-    partition_date_part: str,
     selected_columns: str,
     gcp_project: str,
     bucket_path: str,
     table: str,
     partition_column: str,
+    partition: str,
 ):
     """
     run sql command in bigquery
     """
     export_date = config_dict["EXPORT_DATE"]
     sql_statement = get_billing_data_query(
-        partition_date_part,
         selected_columns,
         bucket_path,
         table,
         partition_column,
-        export_date,
+        partition,
     )
 
     logging.info(sql_statement)

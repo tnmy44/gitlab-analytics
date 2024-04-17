@@ -124,10 +124,25 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
+    export_date = "{{ yesterday_ds }}"
+
+    if GIT_BRANCH != "master":
+        export['bucket_path'] = f"{export['bucket_path']}/{GIT_BRANCH}"
+
+    if export["partition_date_part"] == "d": # move this logic to DAG and pass partition to this file
+        partition = export_date[0:10]
+    elif export["partition_date_part"] == "m":
+        partition = export_date[0:7]
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcs_external.py --export={export} --gcp_project={gcp_project}
+    python gcs_external/src/gcs_external.py \
+        --selected_columns={export['selected_columns']} \
+        --gcp_project={gcp_project} \
+        --bucket_path={export['bucket_path']} \
+        --table={export['table']} \
+        --partition_column={export['partition_column']} \
+        --partition={partition}
     """
 
     task_name = export["name"]
