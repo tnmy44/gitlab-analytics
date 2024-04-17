@@ -42,9 +42,9 @@ WITH prep_ci_runner AS (
       --- SaaS Linux Runners
       WHEN ci_runner_description ILIKE '%.shared.runners-manager.%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64.runners-manager.gitlab.com%'
+      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64.runners-manager%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%green-4.saas-linux-medium-amd64.runners-manager%'
+      WHEN ci_runner_description ILIKE '%.saas-linux-medium-amd64.runners-manager%'
         THEN 'SaaS Runner Linux - Medium'
       WHEN ci_runner_description ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
         THEN 'SaaS GPU-Enabled Runners'
