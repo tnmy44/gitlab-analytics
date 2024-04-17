@@ -42,9 +42,9 @@ WITH prep_ci_runner AS (
       --- SaaS Linux Runners
       WHEN ci_runner_description ILIKE '%.shared.runners-manager.%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64.runners-manager%'
+      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64%'
         THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%.saas-linux-medium-amd64.runners-manager%'
+      WHEN ci_runner_description ILIKE '%.saas-linux-medium-amd64r%'
         THEN 'SaaS Runner Linux - Medium'
       WHEN ci_runner_description ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
         THEN 'SaaS GPU-Enabled Runners'
@@ -89,5 +89,5 @@ WITH prep_ci_runner AS (
     created_by="@snalamaru",
     updated_by="@nhervas",
     created_date="2021-06-23",
-    updated_date="2024-02-12"
+    updated_date="2024-04-17"
 ) }}
