@@ -19,6 +19,8 @@
     fct_sales_funnel_actual.geo_name,
     fct_sales_funnel_actual.region_name,
     fct_sales_funnel_actual.area_name,
+    fct_sales_funnel_actual.sales_segment_name,
+    fct_sales_funnel_actual.business_unit_name
     FROM fct_sales_funnel_actual
     LEFT JOIN dim_sales_funnel_kpi
       ON dim_sales_funnel_kpi.sales_funnel_kpi_name = fct_sales_funnel_actual.sales_funnel_kpi_name
@@ -33,7 +35,9 @@
     fct_sales_funnel_target_daily.dim_sales_qualified_source_id,
     fct_sales_funnel_target_daily.geo_name, 
     fct_sales_funnel_target_daily.region_name, 
-    fct_sales_funnel_target_daily.area_name
+    fct_sales_funnel_target_daily.area_name,
+    fct_sales_funnel_target_daily.sales_segment_name,
+    fct_sales_funnel_target_daily.business_unit_name
     FROM fct_sales_funnel_target_daily
     LEFT JOIN dim_sales_funnel_kpi
       ON dim_sales_funnel_kpi.sales_funnel_kpi_name = fct_sales_funnel_target_daily.kpi_name

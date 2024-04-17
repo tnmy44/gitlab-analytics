@@ -639,9 +639,22 @@ LEFT JOIN cw_base
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis,
+      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
+      COALESCE(
+        sfdc_opportunity.fpa_master_bookings_flag,
+        CASE
+          WHEN sfdc_opportunity_live.is_jihu_account = FALSE
+            AND (sfdc_opportunity_stage.is_won = TRUE
+                  OR (
+                    is_renewal = TRUE 
+                    AND is_lost = TRUE)
+                )
+            THEN TRUE
+          ELSE FALSE
+        END)                                               AS is_booked_net_arr, 
       CASE
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
-         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND is_booked_net_arr = TRUE
          AND sfdc_opportunity_live.is_edu_oss = 0
          AND sfdc_opportunity_live.is_jihu_account = 0
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
@@ -649,7 +662,7 @@ LEFT JOIN cw_base
          AND sfdc_opportunity_live.deal_path != 'Web Direct'
          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
-         AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
+         AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal')
             THEN 1
           ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
@@ -964,19 +977,6 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
-      -- align is_booked_net_arr with fpa_master_bookings_flag definition from salesforce: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-      COALESCE(
-        sfdc_opportunity.fpa_master_bookings_flag,
-        CASE
-          WHEN sfdc_opportunity_live.is_jihu_account = FALSE
-            AND (sfdc_opportunity_stage.is_won = TRUE
-                  OR (
-                    is_renewal = TRUE 
-                    AND is_lost = TRUE)
-                )
-            THEN TRUE
-          ELSE FALSE
-        END)                                               AS is_booked_net_arr, 
       CASE
         WHEN is_booked_net_arr = TRUE 
           THEN calculated_deal_count
