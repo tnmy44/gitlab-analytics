@@ -103,12 +103,12 @@
       crm_account_dimensions.dim_account_location_region_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_hierarchy_id') }}                                                  AS dim_crm_opp_owner_user_hierarchy_id,
       sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_business_unit_id') }}                                              AS dim_crm_opp_owner_business_unit_stamped_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_sales_segment_id') }}                                              AS dim_crm_opp_owner_sales_segment_stamped_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_geo_id') }}                                                        AS dim_crm_opp_owner_geo_stamped_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_region_id') }}                                                     AS dim_crm_opp_owner_region_stamped_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_area_id') }}                                                       AS dim_crm_opp_owner_area_stamped_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_name_id') }}                                                  AS dim_crm_user_role_name_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_business_unit_stamped']) }}                            AS dim_crm_opp_owner_business_unit_stamped_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_sales_segment_stamped']) }}                            AS dim_crm_opp_owner_sales_segment_stamped_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_geo_stamped']) }}                                      AS dim_crm_opp_owner_geo_stamped_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_region_stamped']) }}                                   AS dim_crm_opp_owner_region_stamped_id,
+      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_area_stamped']) }}                                     AS dim_crm_opp_owner_area_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_name_id') }}                                                  AS dim_crm_opp_owner_role_name_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_1_id') }}                                               AS dim_crm_opp_owner_role_level_1_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_2_id') }}                                               AS dim_crm_opp_owner_role_level_2_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_3_id') }}                                               AS dim_crm_opp_owner_role_level_3_id,
@@ -126,7 +126,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                              AS dim_crm_account_user_geo_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                           AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                             AS dim_crm_account_user_area_id,
-CASE
+      CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_user_hierarchy_account_user_sk  -- live account owner hierarchy
         ELSE {{ get_keyed_nulls('sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk') }} -- stamped opp owner hierarchy
