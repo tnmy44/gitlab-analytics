@@ -1,5 +1,5 @@
 import requests
-from loguru import logger
+from logging import error, info, basicConfig, getLogger, warning
 import pandas as pd
 from os import environ as env
 
@@ -34,9 +34,9 @@ class HyperproofAPIClient:
         response = requests.post(auth_url, data=payload)
         if response.status_code == 200:
             self.access_token = response.json().get("access_token")
-            logger.info("Authentication successful")
+            info("Authentication successful")
         else:
-            logger.error(f"Failed to authenticate. Status code: {response.status_code}")
+            error(f"Failed to authenticate. Status code: {response.status_code}")
 
     def get_data_from_all_endpoints(self):
         """
@@ -88,7 +88,7 @@ class HyperproofAPIClient:
         if response.status_code == 200:
             return response.json()
         else:
-            logger.error(
+            error(
                 f"Failed to retrieve data from {endpoint}. Status code: {response.status_code}"
             )
             return None
@@ -107,13 +107,13 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     if all_data:
-        logger.info("Retrieved data from all endpoints:")
+        info("Retrieved data from all endpoints:")
         for endpoint, data in all_data.items():
             if data and len(data) > 0:
                 df = pd.DataFrame([data])
                 df.to_json(f"{endpoint}.json", index=False)
 
-                logger.info(f"Uploading {endpoint}.json to Snowflake stage.")
+                info(f"Uploading {endpoint}.json to Snowflake stage.")
 
                 snowflake_stage_load_copy_remove(
                     f"{endpoint}.json",
@@ -122,4 +122,4 @@ if __name__ == "__main__":
                     snowflake_engine,
                 )
             else:
-                logger.warning(f"No data available for {endpoint}")
+                warning(f"No data available for {endpoint}")
