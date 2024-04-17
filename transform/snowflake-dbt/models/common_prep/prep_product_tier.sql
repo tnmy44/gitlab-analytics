@@ -10,7 +10,7 @@ WITH product_tier_mapping AS (
       product_tier,
       product_delivery_type,
       product_deployment_type,
-      product_ranking      
+      product_ranking 
     FROM product_tier_mapping
     
     UNION ALL
@@ -52,7 +52,7 @@ WITH product_tier_mapping AS (
 ), final AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['product_tier_historical']) }}      AS dim_product_tier_id,
+    {{ dbt_utils.generate_surrogate_key(['product_tier_historical']) }} AS dim_product_tier_id,
     product_tier_historical,
     SPLIT_PART(product_tier_historical, ' - ', -1)                  AS product_tier_historical_short,
     product_tier                                                    AS product_tier_name,
@@ -80,7 +80,7 @@ WITH product_tier_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@jpeguero",
     created_date="2020-12-29",
-    updated_date="2024-04-09"
+    updated_date="2023-05-25"
 ) }}
