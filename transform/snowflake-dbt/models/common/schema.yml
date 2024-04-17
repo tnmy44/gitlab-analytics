@@ -1078,6 +1078,8 @@ models:
         description: Flag to identify licensed users. It works by excluding `Storage` product_tier.
       - name: is_arpu
         description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan.
+      - name: product_category
+        description: Categorizes Zuora Products as either Add On Services or Base Products
 
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
