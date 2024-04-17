@@ -16,7 +16,8 @@ parsed as (
     resources.value['price']::varchar as cost,
     resources.value['name']::varchar as resource_name,
     resources.value['price_per_hour']::float as price_per_hour,
-    resources.value['sku']::varchar as sku
+    resources.value['sku']::varchar as sku,
+    to_timestamp(_uploaded_at::int) as _uploaded_at
   FROM source
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(payload), outer => TRUE) AS dims
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(dims.value), outer => TRUE, mode => 'ARRAY') AS resources

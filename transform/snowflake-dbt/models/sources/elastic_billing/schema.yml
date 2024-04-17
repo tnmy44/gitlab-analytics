@@ -54,14 +54,21 @@ models:
         description: Charge type
 
   - name: elastic_billing_data_transfer_by_deployment_source
-    description: ""
+    description: Reports on a cummulative daily cost basis the detailed ElasticSearch billing data, per deployment
+      per resource, per month for data transfer 
     columns:
       - name: deployment_id
         description: The id assigned for each deployment in Elastic
+        tests:
+          - not_null
       - name: extraction_start_date
-        description: First day of the billing period. Each billing period is a month.
+        description: First day of the billing period. Each billing period is a month
+        tests:
+          - not_null
       - name: extraction_end_date
-        description: Last day of the billing period. Last day of every month.
+        description: Last day of the billing period. Last day of every month
+        tests:
+          - not_null
       - name: charge_type
         description: Type of the charge
       - name: cost
@@ -80,19 +87,25 @@ models:
         description: SKU name for the charge
       - name: type
         description: Charge type
-      
-      
-
+      - name: _uploaded_at
+        description: Name of the SKU
 
   - name: elastic_billing_resources_by_deployment_source
-    description: ""
+    description: Reports on a cummulative daily cost basis the detailed ElasticSearch billing data, per deployment
+      per resource, per month
     columns:
       - name: deployment_id
         description: The id assigned for each deployment in Elastic
+        tests:
+          - not_null
       - name: extraction_start_date
-        description: First day of the billing period. Each billing period is a month.
+        description: First day of the billing period. Each billing period is a month
+        tests:
+          - not_null
       - name: extraction_end_date
-        description: Last day of the billing period. Each billing period is a month.
+        description: Last day of the billing period. Each billing period is a month
+        tests:
+          - not_null
       - name: resource_start_date
         description: When the usage of the resource started
       - name: resource_end_date
@@ -111,3 +124,5 @@ models:
         description: Cost per hour for the group of instances
       - name: sku
         description: Name of the SKU
+      - name: _uploaded_at
+        description: When the source model was updated
