@@ -53,6 +53,9 @@ dag = DAG(
 
 
 extract_command = f"""
+    printenv
+    echo $HYPERPROOF_CLIENT_ID
+    echo $HYPERPROOF_CLIENT_SECRET
     {clone_and_setup_extraction_cmd} && 
     python3 hyperproof/extract_hyperproof.py
 """
@@ -70,6 +73,8 @@ hyperproof_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
+        HYPERPROOF_CLIENT_ID,
+        HYPERPROOF_CLIENT_SECRET,
     ],
     env_vars={
         **pod_env_vars,
