@@ -97,8 +97,8 @@ class HyperproofAPIClient:
 if __name__ == "__main__":
     config_dict = env.copy()
 
-    client_id = env.get(["HYPERPROOF_CLIENT_ID"])
-    client_secret = env.get(["HYPERPROOF_CLIENT_SECRET"])
+    client_id = env["HYPERPROOF_CLIENT_ID"]
+    client_secret = env["HYPERPROOF_CLIENT_SECRET"]
 
     client = HyperproofAPIClient(client_id, client_secret)
     # Get data from all available endpoints
