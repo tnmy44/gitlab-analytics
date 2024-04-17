@@ -111,7 +111,7 @@ dbt_external_table_run = KubernetesPodOperator(
 
 spec_file = "gcs_external/src/gcp_billing/gcs_external.yml"
 spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
-gcp_project = "billing-tools-277316"
+gcp_project = "billing-tools-277316" #get from yaml below
 
 with open(
     spec_path,
@@ -124,7 +124,7 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
-    export_date = "{{ yesterday_ds }}"
+    export_date = {{ yesterday_ds }}
 
     if GIT_BRANCH != "master":
         export['bucket_path'] = f"{export['bucket_path']}/{GIT_BRANCH}"
