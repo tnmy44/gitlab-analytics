@@ -88,7 +88,7 @@ models:
       - name: type
         description: Charge type
       - name: _uploaded_at
-        description: Name of the SKU
+        description: When the source model was updated
 
   - name: elastic_billing_resources_by_deployment_source
     description: Reports on a cummulative daily cost basis the detailed ElasticSearch billing data, per deployment

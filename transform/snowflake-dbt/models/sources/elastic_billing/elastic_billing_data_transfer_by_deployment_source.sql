@@ -23,7 +23,7 @@ parsed as (
     storage_and_transfer.value['rate']['formatted_value']::VARCHAR AS formated_rate_value,
     storage_and_transfer.value['sku']::VARCHAR AS sku,
     storage_and_transfer.value['type']::VARCHAR AS type,
-    to_timestamp(_uploaded_at::int) as _uploaded_at
+    to_timestamp(source._uploaded_at::int) as _uploaded_at
   FROM source
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(payload), outer => TRUE) AS dims
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(dims.value), outer => TRUE, mode => 'ARRAY') AS storage_and_transfer
