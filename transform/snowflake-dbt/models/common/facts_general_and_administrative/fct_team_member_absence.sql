@@ -1,20 +1,49 @@
-WITH directory AS (
-  SELECT *
-  FROM {{ ref('employee_directory_intermediate') }}
-),
- pto_source AS (
+WITH team_status_dup AS (
   SELECT 
     *
-  FROM {{ref('gitlab_pto_source')}}
+  FROM {{ref('fct_team_status')}}
+),
+WITH pto AS (
+  SELECT 
+    *
+  FROM {{ref('gitlab_pto')}}
 ),
 map AS (
-
   SELECT *
   FROM {{ ref('map_employee_id') }}
 ),
+team_status AS (
+  SELECT 
+    dim_team_member_sk,
+    dim_team_sk,
+    employee_id,
+    team_id,
+    job_code,
+    position,
+    job_family,
+    job_specialty_single,
+    job_specialty_multi,
+    management_level,
+    job_grade,
+    entity,
+    is_position_active
+    FROM team_status_dup
+),
 combined_sources AS (
   SELECT 
-    d.employee_id AS hire_id,
+    team_status.dim_team_member_sk,
+    team_status.dim_team_sk,
+    team_status.employee_id,
+    team_status.team_id,
+    team_status.job_code,
+    team_status.position,
+    team_status.job_family,
+    team_status.job_specialty_single,
+    team_status.job_specialty_multi,
+    team_status.management_level,
+    team_status.job_grade,
+    team_status.entity,
+    team_status.is_position_active
     pto.start_date AS absence_start,
     pto.end_date AS absense_end,
     pto.is_pto AS is_pto,
@@ -23,26 +52,18 @@ combined_sources AS (
      IFF(
       pto.pto_type_name = 'Out Sick'
       AND DATEDIFF('day', pto.start_date, pto.end_date) > 4, 'Out Sick-Extended', pto.pto_type_name
-    ) AS pto_type_name,
-    
-    
-  FROM pto_source pto
-  INNER JOIN map ON pto.hr_employee_id=map.bhr_employee_id
-  INNER JOIN directory d on map.wk_employee_id=d.employee_id
+    ) AS absence_status,
+    pto.employee_day_length
+
+  FROM team_status
+  INNER JOIN pto ON pto.hr_employee_id=team_status.employee_id
 ),
 /* 
 Skipping hire date and term date
 */
 final AS (
 
-  SELECT
-
-    -- Primary key
-    {{ dbt_utils.generate_surrogate_key(['hire_id', 'start_date'])}}    AS team_member_absence_pk,
-    -- Surrogate key                                                                                                     
-    {{ dbt_utils.generate_surrogate_key(['hire_id'])}}                  AS dim_team_member_sk,
-
-    -- Team member status attributes
+  SELECT *
 
   FROM combined_sources
 
