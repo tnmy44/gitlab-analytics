@@ -20,6 +20,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    HYPERPROOF_CLIENT_ID,
+    HYPERPROOF_CLIENT_SECRET,
 )
 
 # Load the env vars into a dict and set Secrets
