@@ -198,7 +198,7 @@
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
     LEFT JOIN sfdc_user_snapshot
       ON sfdc_opportunity_snapshots_source.owner_id = sfdc_user_snapshot.dim_crm_user_id
-      AND snapshot_dates.date_id = sfdc_user_snapshot.snapshot_id
+        AND snapshot_dates.date_id = sfdc_user_snapshot.snapshot_id
     WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
       AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
 
@@ -1335,7 +1335,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@snalamaru",
+    updated_by="@chrissharp",
     created_date="2022-02-23",
-    updated_date="2024-04-16"
+    updated_date="2024-04-17"
 ) }}
