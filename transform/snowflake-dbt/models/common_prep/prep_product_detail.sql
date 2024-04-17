@@ -94,7 +94,7 @@ WITH zuora_product AS (
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
       AND zuora_product_rate_plan_charge_tier.active = TRUE
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=21) }}
     ORDER BY 1, 3
 
 ), final AS (--add annualized billing list price
