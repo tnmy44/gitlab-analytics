@@ -10,7 +10,7 @@ WITH product_tier_mapping AS (
       product_tier,
       product_delivery_type,
       product_deployment_type,
-      product_ranking
+      product_ranking        
     FROM product_tier_mapping
     
     UNION ALL
