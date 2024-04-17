@@ -44,7 +44,7 @@ total_targets AS (
   LEFT JOIN dim_date
     ON targets.target_date_id = dim_date.date_id
   WHERE kpi_name = 'Net ARR'
-  {{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=10) }}
 ),
 
 
@@ -58,18 +58,18 @@ daily_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk AS dim_crm_user_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
-    crm_current_account_set_sales_segment,
-    crm_current_account_set_geo,
-    crm_current_account_set_region,
-    crm_current_account_set_area,
-    crm_current_account_set_business_unit,
+    crm_current_account_set_sales_segment_live AS crm_current_account_set_sales_segment,
+    crm_current_account_set_geo_live AS crm_current_account_set_geo,
+    crm_current_account_set_region_live AS crm_current_account_set_region,
+    crm_current_account_set_area_live AS crm_current_account_set_area,
+    crm_current_account_set_business_unit_live AS crm_current_account_set_business_unit,
     SUM(booked_net_arr_in_snapshot_quarter)          AS booked_net_arr_in_snapshot_quarter,
     SUM(open_1plus_net_arr_in_snapshot_quarter)      AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(open_3plus_net_arr_in_snapshot_quarter)      AS open_3plus_net_arr_in_snapshot_quarter,
     SUM(open_4plus_net_arr_in_snapshot_quarter)      AS open_4plus_net_arr_in_snapshot_quarter
 
   FROM actuals
-  {{ dbt_utils.group_by(n=7) }}
+  {{ dbt_utils.group_by(n=12) }}
 ),
 
 quarterly_actuals AS (
@@ -80,15 +80,15 @@ quarterly_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk AS dim_crm_user_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
-    crm_current_account_set_sales_segment,
-    crm_current_account_set_geo,
-    crm_current_account_set_region,
-    crm_current_account_set_area,
-    crm_current_account_set_business_unit,
+    crm_current_account_set_sales_segment_live AS crm_current_account_set_sales_segment,
+    crm_current_account_set_geo_live AS crm_current_account_set_geo,
+    crm_current_account_set_region_live AS crm_current_account_set_region,
+    crm_current_account_set_area_live AS crm_current_account_set_area,
+    crm_current_account_set_business_unit_live AS crm_current_account_set_business_unit,
     SUM(actuals.booked_net_arr_in_snapshot_quarter)  AS total_booked_net_arr
   FROM actuals
   WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
-  {{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=10) }}
 
 ),
 
@@ -197,11 +197,11 @@ final AS (
       AND base.dim_sales_qualified_source_id = total_targets.dim_sales_qualified_source_id
       AND base.dim_crm_user_hierarchy_sk = total_targets.dim_crm_user_hierarchy_sk
       AND base.dim_order_type_id = total_targets.dim_order_type_id
-      AND base.crm_current_account_set_sales_segment = total_targets.crm_current_account_set_sales_segment
-      AND base.crm_current_account_set_geo = total_targets.crm_current_account_set_geo
-      AND base.crm_current_account_set_region = total_targets.crm_current_account_set_region
-      AND base.crm_current_account_set_business_unit = total_targets.crm_current_account_set_business_unit
-      AND base.crm_current_account_set_area = total_targets.crm_current_account_set_area
+      AND base.crm_current_account_set_sales_segment = total_targets.sales_segment_name
+      AND base.crm_current_account_set_geo = total_targets.geo_name
+      AND base.crm_current_account_set_region = total_targets.region_name
+      AND base.crm_current_account_set_business_unit = total_targets.business_unit_name
+      AND base.crm_current_account_set_area = total_targets.area_name
   LEFT JOIN daily_actuals
     ON base.date_id = daily_actuals.snapshot_id
       AND base.dim_sales_qualified_source_id = daily_actuals.dim_sales_qualified_source_id
@@ -222,7 +222,7 @@ final AS (
       AND base.crm_current_account_set_region = quarterly_actuals.crm_current_account_set_region
       AND base.crm_current_account_set_business_unit = quarterly_actuals.crm_current_account_set_business_unit
       AND base.crm_current_account_set_area = quarterly_actuals.crm_current_account_set_area
-  {{ dbt_utils.group_by(n=7) }}
+  {{ dbt_utils.group_by(n=12) }}
 
 )
 
