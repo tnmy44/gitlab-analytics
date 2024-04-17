@@ -34,6 +34,11 @@ total_targets AS (
     targets.dim_crm_user_hierarchy_sk,
     targets.dim_sales_qualified_source_id,
     targets.dim_order_type_id,
+    targets.geo_name,
+    targets.region_name,
+    targets.area_name,
+    targets.sales_segment_name,
+    targets.business_unit_name,
     SUM(daily_allocated_target)          AS total_quarter_target
   FROM targets
   LEFT JOIN dim_date
@@ -53,6 +58,11 @@ daily_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk AS dim_crm_user_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
+    crm_current_account_set_sales_segment,
+    crm_current_account_set_geo,
+    crm_current_account_set_region,
+    crm_current_account_set_area,
+    crm_current_account_set_business_unit,
     SUM(booked_net_arr_in_snapshot_quarter)          AS booked_net_arr_in_snapshot_quarter,
     SUM(open_1plus_net_arr_in_snapshot_quarter)      AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(open_3plus_net_arr_in_snapshot_quarter)      AS open_3plus_net_arr_in_snapshot_quarter,
@@ -70,6 +80,11 @@ quarterly_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk AS dim_crm_user_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
+    crm_current_account_set_sales_segment,
+    crm_current_account_set_geo,
+    crm_current_account_set_region,
+    crm_current_account_set_area,
+    crm_current_account_set_business_unit,
     SUM(actuals.booked_net_arr_in_snapshot_quarter)  AS total_booked_net_arr
   FROM actuals
   WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
@@ -83,6 +98,11 @@ combined_data AS (
         dim_crm_user_hierarchy_sk,
         dim_sales_qualified_source_id,
         dim_order_type_id,
+        sales_segment_name  AS crm_current_account_set_sales_segment,
+        geo_name            AS crm_current_account_set_geo,
+        region_name         AS crm_current_account_set_region,
+        area_name           AS crm_current_account_set_area,
+        business_unit_name  AS crm_current_account_set_business_unit,
         fiscal_quarter_name,
         fiscal_quarter_date
     FROM total_targets
@@ -93,6 +113,11 @@ combined_data AS (
         dim_crm_user_hierarchy_sk,
         dim_sales_qualified_source_id,
         dim_order_type_id,
+        crm_current_account_set_sales_segment,
+        crm_current_account_set_geo,
+        crm_current_account_set_region,
+        crm_current_account_set_area,
+        crm_current_account_set_business_unit,
         snapshot_fiscal_quarter_name,
         snapshot_fiscal_quarter_date
     FROM quarterly_actuals
@@ -103,6 +128,11 @@ combined_data AS (
         dim_crm_user_hierarchy_sk,
         dim_sales_qualified_source_id,
         dim_order_type_id,
+        crm_current_account_set_sales_segment,
+        crm_current_account_set_geo,
+        crm_current_account_set_region,
+        crm_current_account_set_area,
+        crm_current_account_set_business_unit,
         snapshot_fiscal_quarter_name,
         snapshot_fiscal_quarter_date
     FROM daily_actuals
@@ -124,7 +154,12 @@ base AS (
   SELECT   
     combined_data.dim_crm_user_hierarchy_sk,
     combined_data.dim_sales_qualified_source_id,
-    combined_data.dim_order_type_id, 
+    combined_data.dim_order_type_id,     
+    combined_data.crm_current_account_set_sales_segment,    
+    combined_data.crm_current_account_set_geo,    
+    combined_data.crm_current_account_set_region,    
+    combined_data.crm_current_account_set_area,    
+    combined_data.crm_current_account_set_business_unit,
     spine.date_id,
     spine.day_7 as date_actual,
     combined_data.fiscal_quarter_date,
@@ -145,6 +180,11 @@ final AS (
     base.dim_crm_user_hierarchy_sk,
     base.dim_order_type_id,
     base.dim_sales_qualified_source_id,
+    base.crm_current_account_set_sales_segment,    
+    base.crm_current_account_set_geo,    
+    base.crm_current_account_set_region,    
+    base.crm_current_account_set_area,    
+    base.crm_current_account_set_business_unit,
     SUM(total_targets.total_quarter_target)                   AS total_quarter_target,
     SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)     AS coverage_booked_net_arr,
     SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter) AS coverage_open_1plus_net_arr,
@@ -157,16 +197,31 @@ final AS (
       AND base.dim_sales_qualified_source_id = total_targets.dim_sales_qualified_source_id
       AND base.dim_crm_user_hierarchy_sk = total_targets.dim_crm_user_hierarchy_sk
       AND base.dim_order_type_id = total_targets.dim_order_type_id
+      AND base.crm_current_account_set_sales_segment = total_targets.crm_current_account_set_sales_segment
+      AND base.crm_current_account_set_geo = total_targets.crm_current_account_set_geo
+      AND base.crm_current_account_set_region = total_targets.crm_current_account_set_region
+      AND base.crm_current_account_set_business_unit = total_targets.crm_current_account_set_business_unit
+      AND base.crm_current_account_set_area = total_targets.crm_current_account_set_area
   LEFT JOIN daily_actuals
     ON base.date_id = daily_actuals.snapshot_id
       AND base.dim_sales_qualified_source_id = daily_actuals.dim_sales_qualified_source_id
       AND base.dim_crm_user_hierarchy_sk = daily_actuals.dim_crm_user_hierarchy_sk
       AND base.dim_order_type_id = daily_actuals.dim_order_type_id
+      AND base.crm_current_account_set_sales_segment = daily_actuals.crm_current_account_set_sales_segment
+      AND base.crm_current_account_set_geo = daily_actuals.crm_current_account_set_geo
+      AND base.crm_current_account_set_region = daily_actuals.crm_current_account_set_region
+      AND base.crm_current_account_set_business_unit = daily_actuals.crm_current_account_set_business_unit
+      AND base.crm_current_account_set_area = daily_actuals.crm_current_account_set_area
   LEFT JOIN quarterly_actuals
     ON base.fiscal_quarter_name = quarterly_actuals.snapshot_fiscal_quarter_name
       AND base.dim_sales_qualified_source_id = quarterly_actuals.dim_sales_qualified_source_id
       AND base.dim_crm_user_hierarchy_sk = quarterly_actuals.dim_crm_user_hierarchy_sk
       AND base.dim_order_type_id = quarterly_actuals.dim_order_type_id
+      AND base.crm_current_account_set_sales_segment = quarterly_actuals.crm_current_account_set_sales_segment
+      AND base.crm_current_account_set_geo = quarterly_actuals.crm_current_account_set_geo
+      AND base.crm_current_account_set_region = quarterly_actuals.crm_current_account_set_region
+      AND base.crm_current_account_set_business_unit = quarterly_actuals.crm_current_account_set_business_unit
+      AND base.crm_current_account_set_area = quarterly_actuals.crm_current_account_set_area
   {{ dbt_utils.group_by(n=7) }}
 
 )
