@@ -73,6 +73,10 @@ models:
         description: Flag to identify licensed users. It works by excluding `Storage` product_tier
       - name: is_arpu
         description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan.
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
+      - name: product_category
+        description: Categorizes Zuora products as either Add On Services or Base Products
 
   - name: mart_arr_jihu
     description: '{{ doc("mart_arr_jihu") }}'
@@ -316,6 +320,10 @@ models:
       - name: delta_quantity
       - name: delta_tcv
       - name: estimated_total_future_billings
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other)
+      - name: product_category
+        description: Categorizes Zuora products as either Add On Services or Base Products
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
@@ -841,4 +849,8 @@ models:
         description: Flag to identify licensed users. It works by excluding `Storage` product_tier
       - name: is_arpu
         description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan.
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
+      - name: product_category
+        description: Categorizes Zuora products as either Add On Services or Base Products
 
