@@ -102,7 +102,7 @@ COUNT(account_balance_impact) AS count_all_open_invoices
 FROM {{ ref('wk_finance_fct_invoice_aging_detail') }}
 GROUP BY accounting_period_end_date
 
-)
+),
 
 final AS (
 
