@@ -70,7 +70,8 @@ WITH page_views AS (
       ultimate_parent_namespace_id, 
       gsc_project_id,
       metric,
-      total_events
+      total_events,
+      total_users
     FROM page_views
 
     UNION ALL 
@@ -82,7 +83,8 @@ WITH page_views AS (
       ultimate_parent_namespace_id, 
       gsc_project_id,
       metric,
-      total_events
+      total_events,
+      total_users
     FROM structured_events
 
 )
@@ -92,5 +94,5 @@ WITH page_views AS (
     created_by="@nhervas",
     updated_by="@nhervas",
     created_date="2024-02-15",
-    updated_date="2024-04-16"
+    updated_date="2024-04-17"
 ) }}
