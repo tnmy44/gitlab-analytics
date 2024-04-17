@@ -124,7 +124,7 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
-    export_date = "{{ yesterday_ds }}"
+    export_date = f"{ yesterday_ds }"
 
     if GIT_BRANCH != "master":
         export['bucket_path'] = f"{export['bucket_path']}/{GIT_BRANCH}"
