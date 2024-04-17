@@ -72,7 +72,6 @@ hyperproof_extract = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-        "task_id": task_identifier,
         "START_TIME": "{{ logical_date }}",
     },
     affinity=get_affinity("extraction"),
