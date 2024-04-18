@@ -6424,7 +6424,7 @@ roles:
         - xactly
       warehouses:
         - dev_xs
-  - asluis:
+  - aluis:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7407,10 +7407,10 @@ users:
       can_login: true
       member_of:
         - workato
-  - asluis:
+  - aluis:
       can_login: true
       member_of:
-        - asluis
+        - aluis
 warehouses:
   - admin:
       size: x-small
