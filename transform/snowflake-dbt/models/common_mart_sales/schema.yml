@@ -179,7 +179,7 @@ models:
   - name: rpt_scaffold_sales_funnel
     description: Scaffold table that provides a foundational structure between fct_sales_funnel_actual and fct_sales_funnel_target_daily to support the visualization layer. Link to handbook documentation on [scaffold tables](https://about.gitlab.com/handbook/business-technology/data-team/platform/edw/#scaffold-tables)
     columns:
-      - name: CONCAT(date_id, dim_sales_funnel_kpi_sk, dim_hierarchy_sk, dim_order_type_id, dim_sales_qualified_source_id)
+      - name: CONCAT(date_id, dim_sales_funnel_kpi_sk, dim_hierarchy_sk, dim_order_type_id, dim_sales_qualified_source_id, geo_name, region_name, area_name, sales_segment_name, business_unit_name)
         tests:
           - not_null
           - unique
