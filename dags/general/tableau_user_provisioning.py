@@ -58,7 +58,41 @@ dag = DAG(
 
 
 # tableau Extract
-tableau_workbook_migrate_cmd = f"""
+tableau_provision_settings_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    TableauConMan provision-settings --yaml_path='/TableauConMan/analytics/extract/tableau_con_man_config/src/provision_plan.yaml'
+"""
+
+# having both xcom flag flavors since we're in an airflow version where one is being deprecated
+tableau_provision_settings = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=TABLEAU_CONFIG_IMAGE,
+    task_id="tableau-provision-settings",
+    name="tableau-provision-settings",
+    secrets=[
+        TABLEAU_API_SANDBOX_SITE_NAME,
+        TABLEAU_API_SANDBOX_TOKEN_NAME,
+        TABLEAU_API_SANDBOX_TOKEN_SECRET,
+        TABLEAU_API_SANDBOX_URL,
+        TABLEAU_API_TOKEN_NAME,
+        TABLEAU_API_TOKEN_SECRET,
+        TABLEAU_API_URL,
+        TABLEAU_API_SITE_NAME,
+        TABLEAU_API_PUBLIC_TOKEN_NAME,
+        TABLEAU_API_PUBLIC_TOKEN_SECRET,
+        TABLEAU_API_PUBLIC_URL,
+        TABLEAU_API_PUBLIC_SITE_NAME,
+    ],
+    env_vars=pod_env_vars,
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    arguments=[tableau_provision_settings_cmd],
+    do_xcom_push=True,
+    dag=dag,
+)
+
+# tableau Extract
+tableau_provision_users_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     TableauConMan provision-users --yaml_path='/TableauConMan/analytics/extract/tableau_con_man_config/src/provision_plan.yaml'
 """
@@ -90,7 +124,10 @@ tableau_provision_users = KubernetesPodOperator(
     env_vars=pod_env_vars,
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[tableau_workbook_migrate_cmd],
+    arguments=[tableau_provision_users_cmd],
     do_xcom_push=True,
     dag=dag,
 )
+
+
+tableau_user_provision_settings >> tableau_provision_users
