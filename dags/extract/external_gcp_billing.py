@@ -135,7 +135,7 @@ for export in stream["exports"]:
         --selected_columns={export['selected_columns']} \
         --gcp_project={gcp_project} \
         --bucket_path={export['bucket_path']} \
-        --table={export['table']}} \
+        --table={export['table']} \
         --partition_column={export['partition_column']}
     """
 
