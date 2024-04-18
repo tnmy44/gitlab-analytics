@@ -22,7 +22,8 @@ SELECT
   resources_and_transfer.value['rate']['value']::FLOAT AS rate_value,
   resources_and_transfer.value['rate']['formatted_value']::VARCHAR AS formated_rate_value,
   resources_and_transfer.value['sku']::VARCHAR AS sku,
-  resources_and_transfer.value['type']::VARCHAR AS type
+  resources_and_transfer.value['type']::VARCHAR AS type,
+  to_timestamp(source._uploaded_at::int) AS _uploaded_at
 FROM source
     INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(payload), outer => TRUE) AS dims
     INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(dims.value), outer => TRUE, mode => 'ARRAY') AS resources_and_transfer

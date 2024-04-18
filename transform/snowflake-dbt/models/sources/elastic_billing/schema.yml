@@ -26,6 +26,8 @@ models:
         description: Cost per hour for the group of instances
       - name: sku
         description: Name of the SKU
+      - name: _uploaded_at
+        description: When the source model was updated
 
   - name: elastic_billing_data_transfer_source
     description: ""
@@ -52,6 +54,8 @@ models:
         description: SKU name for the charge
       - name: type
         description: Charge type
+      - name: _uploaded_at
+        description: When the source model was updated
 
   - name: elastic_billing_data_transfer_by_deployment_source
     description: Reports on a cummulative daily cost basis the detailed ElasticSearch billing data, per deployment
