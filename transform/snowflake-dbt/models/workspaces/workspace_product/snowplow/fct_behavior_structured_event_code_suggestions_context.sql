@@ -15,7 +15,8 @@
     ('dim_namespace', 'dim_namespace'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_installation', 'dim_installation'),
-    ('fct_ping_instance_metric', 'fct_ping_instance_metric')
+    ('fct_ping_instance_metric', 'fct_ping_instance_metric'),
+    ('map_behavior_structured_event_namespace_id', 'map_behavior_structured_event_namespace_id')
 ]) }},
 
 clicks AS (
@@ -78,11 +79,10 @@ clicks AS (
 
   SELECT 
     code_suggestion_context.behavior_structured_event_pk,
-    flattened_namespace.value::VARCHAR                                 AS namespace_id
-  FROM code_suggestion_context,
-  LATERAL FLATTEN (input => TRY_PARSE_JSON(code_suggestion_context.namespace_ids)) AS flattened_namespace
-  WHERE namespace_ids IS NOT NULL
-    AND namespace_ids != '[]'
+    map_behavior_structured_event_namespace_id.namespace_id
+  FROM map_behavior_structured_event_namespace_id
+  INNER JOIN code_suggestion_context
+    ON map_behavior_structured_event_namespace_id.behavior_structured_event_pk = code_suggestion_context.behavior_structured_event_pk
 
 )
 
