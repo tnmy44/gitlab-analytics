@@ -17,3 +17,7 @@
 
 ##### Runbook
 Refer to the [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/snowflake_provisioning_automation/snowflake_provisioning_automation.md) for more details
+
+
+
+/label ~"Priority::1-Ops" ~"Team::Data Platform"  ~Snowflake ~Provisioning 
