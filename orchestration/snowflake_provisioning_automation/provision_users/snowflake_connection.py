@@ -38,7 +38,7 @@ class SnowflakeConnection:
             results = connection.execute(query_text, query_params).fetchall()
         return results
 
-    def run_sql_statement(self, sql_statement: str, query_params: dict):
+    def run_sql_statement(self, sql_statement: str, query_params: dict = {}):
         """run individual sql statement"""
         info(f"Running sql_statement: {sql_statement}")
         if self.is_test_run:
@@ -48,6 +48,7 @@ class SnowflakeConnection:
             self.engine, sql_statement, query_params
         )
         info(f"query_result: {query_result}")
+        return query_result
 
     def run_sql_statements(self, sql_statements: list, query_params: dict):
         """process all sql statements"""
