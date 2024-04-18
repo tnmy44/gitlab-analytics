@@ -10811,13 +10811,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: kgeorgeson
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: mdunleavy
     user_name_domain: gitlab.com
     site_role: Viewer
