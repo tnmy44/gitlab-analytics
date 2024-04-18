@@ -6,7 +6,7 @@
 WITH final AS (
 
     SELECT
-      latest_seat_link_installation_sk
+      latest_seat_link_installation_sk,
       dim_subscription_id,
       subscription_name,
       host_name,
