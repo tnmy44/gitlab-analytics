@@ -68,10 +68,6 @@ sheets:
     owner: '@joshua'
     tabs:
       - registry_transfer_namespaces
-  - name: ta_goals_internal
-    owner: '@rakhireddy'
-    tabs:
-      - TA_Team_Assignment
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:

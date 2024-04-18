@@ -192,7 +192,6 @@ we can delete this connection and use the mart table directly.
       sfdc_opportunity_xf.stage_6_closed_lost_date,
       sfdc_opportunity_xf.cp_champion,
       sfdc_opportunity_xf.cp_close_plan,
-      sfdc_opportunity_xf.cp_competition,
       sfdc_opportunity_xf.cp_decision_criteria,
       sfdc_opportunity_xf.cp_decision_process,
       sfdc_opportunity_xf.cp_economic_buyer,

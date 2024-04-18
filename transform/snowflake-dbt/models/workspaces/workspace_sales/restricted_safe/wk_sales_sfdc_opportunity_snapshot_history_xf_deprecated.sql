@@ -238,7 +238,6 @@ WITH date_details AS (
       
       sfdc_opportunity_snapshot_history.cp_champion,
       sfdc_opportunity_snapshot_history.cp_close_plan,
-      sfdc_opportunity_snapshot_history.cp_competition,
       sfdc_opportunity_snapshot_history.cp_decision_criteria,
       sfdc_opportunity_snapshot_history.cp_decision_process,
       sfdc_opportunity_snapshot_history.cp_economic_buyer,

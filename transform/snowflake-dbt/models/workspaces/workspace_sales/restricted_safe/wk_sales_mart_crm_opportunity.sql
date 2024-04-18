@@ -283,7 +283,6 @@ WITH sfdc_users_xf AS (
        cp_review_notes,
        cp_champion,
        cp_close_plan,
-       cp_competition,
        cp_decision_criteria,
        cp_decision_process,
        cp_economic_buyer,

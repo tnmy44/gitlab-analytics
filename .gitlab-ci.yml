@@ -310,7 +310,7 @@ clone_stop:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
-  when: on_success
+  when: manual
   allow_failure: true
 
 .snowflake_provisioning_automation: &snowflake_provisioning_automation
@@ -328,14 +328,17 @@ clone_stop:
     - export USERS_TO_ADD_FINAL=""
     - if [ -n "$USERS_TO_ADD" ]; then USERS_TO_ADD_FINAL="--users-to-add $USERS_TO_ADD"; fi
 
-  only:
-    refs:
-      - merge_requests
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   when: manual
   allow_failure: true
 
 snowflake_provisioning_snowflake_users:
   <<: *snowflake_provisioning_automation
+  rules:
+    # only allow trigger if MR approved
+    - if: '$CI_MERGE_REQUEST_APPROVED == "true"'
+      when: manual
   script:
     # provision_users.py specific argument
     - export IS_DEV_DB_FINAL=""
