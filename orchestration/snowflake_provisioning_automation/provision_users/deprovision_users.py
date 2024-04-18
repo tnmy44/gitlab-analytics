@@ -40,10 +40,6 @@ def process_args() -> Tuple[list, list, str, str, str]:
     args = parse_arguments()
     return (
         args.usernames_to_remove,
-        args.usernames_to_add,
-        args.databases_template,
-        args.roles_template,
-        args.users_template,
         args.test_run,
     )
 
@@ -60,9 +56,10 @@ def get_existing_roles_roles_yaml(roles_struct):
 
 def get_existing_users_snowflake(snowflake_engine):
     query = """
-    SELECT name
-    FROM SNOWFLAKE.ACCOUNT_USAGE.ROLES
+    SELECT lower(name) as name
+    FROM SNOWFLAKE.ACCOUNT_USAGE.USERS
     WHERE role_type = 'ROLE'
+    and created_on >= DATEADD(WEEK, -1, CURRENT_TIMESTAMP);
     """
     users = query_executor(snowflake_engine, query)
     return users
