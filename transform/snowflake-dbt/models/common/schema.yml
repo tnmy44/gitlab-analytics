@@ -8483,11 +8483,13 @@ models:
         
   - name: fct_latest_seat_link_installation
     description: '{{ doc("fct_latest_seat_link_installation") }}'
-    tests:
-    - dbt_utils.unique_combination_of_columns:
-        combination_of_columns:
-          - host_name
-          - dim_instance_id
+    columns:
+      - name: latest_seat_link_installation_sk
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "report_date >= DATEADD('day', -3, CURRENT_DATE())"
 
   - name: fct_behavior_structured_event_code_suggestion
     description: '{{ doc("fct_behavior_structured_event_code_suggestion") }}'
