@@ -157,7 +157,6 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.cp_use_cases,
       prep_crm_opportunity.cp_champion,
       prep_crm_opportunity.cp_close_plan,
-      prep_crm_opportunity.cp_competition,
       prep_crm_opportunity.cp_decision_criteria,
       prep_crm_opportunity.cp_decision_process,
       prep_crm_opportunity.cp_economic_buyer,

@@ -206,7 +206,6 @@ WITH date_details AS (
       
       edm_snapshot_opty.cp_champion,
       edm_snapshot_opty.cp_close_plan,
-      edm_snapshot_opty.cp_competition,
       edm_snapshot_opty.cp_decision_criteria,
       edm_snapshot_opty.cp_decision_process,
       edm_snapshot_opty.cp_economic_buyer,

@@ -295,7 +295,6 @@ final AS (
     fct_crm_opportunity.cp_review_notes,
     fct_crm_opportunity.cp_champion,
     fct_crm_opportunity.cp_close_plan,
-    fct_crm_opportunity.cp_competition,
     fct_crm_opportunity.cp_decision_criteria,
     fct_crm_opportunity.cp_decision_process,
     fct_crm_opportunity.cp_economic_buyer,

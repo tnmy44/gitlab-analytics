@@ -174,7 +174,6 @@ WITH sfdc_opportunity AS (
       -- command plan fields
       sfdc_opportunity.cp_champion,
       sfdc_opportunity.cp_close_plan,
-      sfdc_opportunity.cp_competition,
       sfdc_opportunity.cp_decision_criteria,
       sfdc_opportunity.cp_decision_process,
       sfdc_opportunity.cp_economic_buyer,

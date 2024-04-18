@@ -394,7 +394,6 @@
       dim_crm_opportunity.cp_review_notes,
       dim_crm_opportunity.cp_champion,
       dim_crm_opportunity.cp_close_plan,
-      dim_crm_opportunity.cp_competition,
       dim_crm_opportunity.cp_decision_criteria,
       dim_crm_opportunity.cp_decision_process,
       dim_crm_opportunity.cp_economic_buyer,
