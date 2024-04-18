@@ -7177,7 +7177,10 @@ users:
     site_role: Viewer
     auth_setting: SAML
     groups:
+      - Customer Success All Access
       - General All Access
+      - General SAFE Access
+      - Sales All Access
   - user_name: mnuzzo
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -10825,13 +10828,10 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: mnunes
+  - user_name: stachoires
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - Customer Success All Access
       - General All Access
       - General SAFE Access
-      - Sales All Access
-
