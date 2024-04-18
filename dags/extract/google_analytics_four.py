@@ -126,7 +126,7 @@ for export in stream["exports"]:
     export_name = export["name"]
     export_date_str = "{{ yesterday_ds_nodash }}"
     if GIT_BRANCH != "master":
-        export['bucket_path'] = f"{export['bucket_path']}/{GIT_BRANCH}"
+        export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
