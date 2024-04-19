@@ -6728,13 +6728,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: mcarter
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - People All Access
   - user_name: mchauhan
     user_name_domain: gitlab.com
     site_role: Viewer
