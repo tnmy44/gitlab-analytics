@@ -113,7 +113,8 @@ if __name__ == "__main__":
         for endpoint, data in all_data.items():
             if data and len(data) > 0:
                 df = pd.DataFrame([data])
-                df.to_json(f"{endpoint}.json", index=False)
+                info(df.head())
+                df.to_json(f"{endpoint}.json")
 
                 info(f"Uploading {endpoint}.json to Snowflake stage.")
 
