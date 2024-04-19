@@ -30,6 +30,7 @@ from kube_secrets import (
     GCP_REGION,
     GCP_SERVICE_CREDS,
     GITLAB_BACKFILL_BUCKET,
+    GITLAB_BACKFILL_BUCKET_CELLS,
     GITLAB_COM_DB_HOST,
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
@@ -73,6 +74,7 @@ standard_secrets = [
     SNOWFLAKE_LOAD_WAREHOUSE_MEDIUM,
     SNOWFLAKE_LOAD_ROLE,
     GITLAB_BACKFILL_BUCKET,
+    GITLAB_BACKFILL_BUCKET_CELLS,
 ]
 
 
@@ -246,6 +248,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_PG_PORT,
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
+            GITLAB_BACKFILL_BUCKET_CELLS,
         ],
         "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com",
@@ -269,6 +272,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_COM_CI_DB_PASS,
             GITLAB_COM_CI_DB_PORT,
             GITLAB_COM_CI_DB_USER,
+            GITLAB_BACKFILL_BUCKET_CELLS,
         ],
         "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com-scd",

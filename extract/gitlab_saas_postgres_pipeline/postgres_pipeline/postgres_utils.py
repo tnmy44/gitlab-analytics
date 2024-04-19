@@ -34,7 +34,8 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
-
+BUCKET_NAME_CELLS= os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
+database_type = os.environ.get("DATABASE_TYPE")
 TARGET_EXTRACT_SCHEMA = "tap_postgres"
 TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
 
@@ -43,7 +44,6 @@ INCREMENTAL_METADATA_TABLE = "incremental_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
 INCREMENTAL_LOAD_TYPE_BY_ID = "load_by_id"
-
 
 def get_gcs_scoped_credentials():
     """Get scoped credential"""
@@ -60,7 +60,10 @@ def get_gcs_bucket() -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
     scoped_credentials = get_gcs_scoped_credentials()
     storage_client = storage.Client(credentials=scoped_credentials)
-    return storage_client.get_bucket(BUCKET_NAME)
+    if database_type == "cells":
+        return storage_client.get_bucket(BUCKET_NAME_CELLS)
+    else:
+        return storage_client.get_bucket(BUCKET_NAME)
 
 
 def upload_to_gcs(
