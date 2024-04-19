@@ -6519,10 +6519,14 @@ users:
       can_login: true
       member_of:
         - ccontreras
+  - cdeleon:
+      can_login: true
+      member_of:
+        - cdeleon
   - cdewit:
       can_login: true
       member_of:
-        - aarts
+        - cdewit
   - cdu:
       can_login: true
       member_of:
