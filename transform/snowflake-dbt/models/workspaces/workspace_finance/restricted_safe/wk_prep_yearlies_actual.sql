@@ -128,7 +128,7 @@ churn_contraction_2 AS (
 churn_contraction_final AS (
 
 SELECT
-   '3.4 Churn AND Contraction' AS yearly_name,
+   '3.4 Churn and Contraction' AS yearly_name,
    'PROD.RESTRICTED_SAFE_COMMON_SALES.MART_CRM_OPPORTUNITY, PROD.COMMON.DIM_SUBSCRIPTION' AS source_table,
    CLOSE_FISCAL_QUARTER_NAME AS quarter,
    renewal_net_arr_loss / atr* - 1 AS actuals_raw
