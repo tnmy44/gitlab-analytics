@@ -208,7 +208,7 @@ WITH zuora_product AS (
                                           ) 
           THEN product_tier_legacy
         WHEN effective_end_date < CURRENT_TIMESTAMP 
-           HEN product_tier_legacy
+          THEN product_tier_legacy
         ELSE product_tier_active 
       END AS product_tier,
       CASE 
