@@ -17,7 +17,6 @@ import sys
 import logging
 import time
 from typing import Tuple
-from sqlalchemy.engine.base import Engine
 
 from snowflake_connection import SnowflakeConnection
 from provision_users import _provision
@@ -29,20 +28,10 @@ roles_yaml_path = os.path.join(
 )
 sys.path.insert(1, roles_yaml_path)
 from args_deprovision_users import parse_arguments
-from utils_update_roles import (
-    USERS_KEY,
-    get_roles_from_url,
-)
+from utils_update_roles import USERS_KEY, get_roles_from_url, configure_logging
 from roles_struct import RolesStruct
 
 config_dict = os.environ.copy()
-
-
-def configure_logging():
-    """configure logger"""
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-    )
 
 
 def process_args() -> Tuple[list, list, str, str, str]:
@@ -54,19 +43,51 @@ def process_args() -> Tuple[list, list, str, str, str]:
     )
 
 
-def get_users_from_roles_yaml():
+def flatten_list_of_tuples(tuple_list: list) -> list:
+    """
+    Converts a list of tuples into a list
+    Only gets the first element of each tuple
+    tuple_list example: [(user1, ), (user2, )]
+    """
+    try:
+        flattened_list = [t[0] for t in tuple_list]
+    except IndexError:
+        logging.info("No records returned from Snowflake users query")
+        raise
+    return flattened_list
+
+
+def compare_users(users_roles_yaml: list, users_snowflake: list) -> list:
+    """
+    Return the users that are in users_snowflake list
+    that are missing in users_roles_yaml list
+    """
+    missing_users_in_roles = [
+        user for user in users_snowflake if user not in users_roles_yaml
+    ]
+    return missing_users_in_roles
+
+
+def get_users_from_roles_yaml() -> list:
+    """
+    Make request to roles.yml within master branch
+    Obtain the existing users within that file
+    """
     roles_data = get_roles_from_url()
     roles_struct = RolesStruct(roles_data)
     users_roles_yaml = roles_struct.get_existing_value_keys(USERS_KEY)
     return users_roles_yaml
 
 
-def flatten_list_of_tuples(tuple_list):
-    return [tuple[0] for tuple in tuple_list]
-
-
-def get_users_snowflake(sysadmin_connection):
-    # return ["juwong", 'some_user_to_remove']
+def get_users_snowflake(connection: SnowflakeConnection) -> list:
+    """
+    Get users from Snowflake by querying `Users` table
+    The query has the following conditions:
+        - does not have a password- indicates not a service account
+        - the user was created more than a week ago
+            - don't want to remove users that were added to snowflake
+            but roles.yml MR not merged yet
+    """
     query = """
     SELECT lower(name) as name
     FROM SNOWFLAKE.ACCOUNT_USAGE.USERS
@@ -76,29 +97,26 @@ def get_users_snowflake(sysadmin_connection):
     and created_on < DATEADD(WEEK, -1, CURRENT_TIMESTAMP)
     ORDER BY name;
     """
-    # users_tuple_list example: [(user1, ), (user2, )]
-    users_tuple_list = sysadmin_connection.run_sql_statement(query)
+    users_tuple_list = connection.run_sql_statement(query)
     users_snowflake = flatten_list_of_tuples(users_tuple_list)
     return users_snowflake
 
 
-def compare_users(users_roles_yaml, users_snowflake):
-    missing_users = [user for user in users_snowflake if user not in users_roles_yaml]
-    return missing_users
-
-
-def get_users_to_remove(sysadmin_connection):
+def get_users_to_remove(connection: SnowflakeConnection) -> list:
+    """
+    Obtain list of all users from roles.yml and Snowflake
+    Drop any users in Snowflake that are no longer in roles.yml
+    """
     users_roles_yaml = get_users_from_roles_yaml()
-    users_snowflake = get_users_snowflake(sysadmin_connection)
+    users_snowflake = get_users_snowflake(connection)
 
     missing_users = compare_users(users_roles_yaml, users_snowflake)
     return missing_users
 
 
-def deprovision_users(connection: Engine, usernames: list):
+def deprovision_users(connection: SnowflakeConnection, usernames: list):
     """
-    Deprovision users in Snowflake
-    Currently unused, will do Snowflake deprovision in separate process
+    Deprovision users in Snowflake by running DROP users and roles
     """
     template_filename = "deprovision_user.sql"
     logging.info("#### Deprovisioning users ####")
@@ -130,7 +148,6 @@ def main():
 
     sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
     # deprovision_users(sysadmin_connection, users_to_remove)
-
     sysadmin_connection.dispose_engine()
 
 

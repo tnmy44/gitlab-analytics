@@ -18,6 +18,7 @@ from utils_snowflake_provisioning import (
     USERS_FILE_NAME,
     get_valid_users,
     get_snowflake_usernames,
+    configure_logging,
 )
 
 # imported by other modules
