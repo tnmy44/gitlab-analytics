@@ -193,16 +193,50 @@ WITH zuora_central_sandbox_product AS (
       product_rate_plan_id,
       product_rate_plan_name,
       product_tier_historical,
-      CASE WHEN product_tier_historical LIKE ANY('%Self-Managed - Starter%','%Self-Managed - Premium%','%Self-Managed - Ultimate%') THEN product_tier_legacy
-           WHEN product_tier_active LIKE ANY ('%Legacy%','%None%',NULL,'') THEN product_tier_legacy
-           WHEN effective_end_date < CURRENT_TIMESTAMP THEN product_tier_legacy
-      ELSE product_tier_active END AS product_tier,
-      CASE WHEN product_tier_active LIKE ANY ('%Legacy%','%None%',NULL,'') THEN product_delivery_type_legacy
-           WHEN effective_end_date < CURRENT_TIMESTAMP THEN product_delivery_type_legacy
-      ELSE product_delivery_type_active END AS product_delivery_type,
-      CASE WHEN product_tier_active LIKE ANY ('%Legacy%','%None%',NULL,'') THEN product_deployment_type_legacy
-           WHEN effective_end_date < CURRENT_TIMESTAMP THEN product_deployment_type_legacy
-      ELSE product_deployment_type_active END AS product_deployment_type,
+      CASE 
+        WHEN product_tier_historical LIKE ANY (
+                                                '%Self-Managed - Starter%',
+                                                '%Self-Managed - Premium%',
+                                                '%Self-Managed - Ultimate%'
+                                              ) 
+          THEN product_tier_legacy
+        WHEN product_tier_active LIKE ANY (
+                                            '%Legacy%',
+                                            NULL,
+                                            '',
+                                            '%None%'
+                                          ) 
+          THEN product_tier_legacy
+        WHEN effective_end_date < CURRENT_TIMESTAMP 
+          THEN product_tier_legacy
+        ELSE product_tier_active 
+      END AS product_tier,
+      CASE 
+        WHEN product_tier_active LIKE ANY (
+                                            '%Legacy%',
+                                            NULL,
+                                            ''
+                                          ) 
+          THEN product_delivery_type_legacy
+        WHEN product_tier_historical LIKE '%Not Applicable%' AND  product_delivery_type_active LIKE '%None%' 
+          THEN product_delivery_type_legacy
+        WHEN effective_end_date < CURRENT_TIMESTAMP 
+          THEN product_delivery_type_legacy
+        ELSE product_delivery_type_active 
+      END AS product_delivery_type,
+      CASE 
+        WHEN product_tier_active LIKE ANY (
+                                            '%Legacy%',
+                                            NULL,
+                                            ''
+                                          ) 
+          THEN product_deployment_type_legacy
+        WHEN product_tier_historical LIKE '%Not Applicable%' AND  product_deployment_type_active LIKE '%None%' 
+          THEN product_deployment_type_legacy
+        WHEN effective_end_date < CURRENT_TIMESTAMP 
+          THEN product_deployment_type_legacy
+        ELSE product_deployment_type_active 
+      END AS product_deployment_type,
       product_category,
       product_ranking,
       effective_start_date,

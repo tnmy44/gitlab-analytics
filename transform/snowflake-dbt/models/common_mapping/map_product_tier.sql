@@ -215,9 +215,10 @@ WITH zuora_product AS (
         WHEN product_tier_active LIKE ANY (
                                             '%Legacy%',
                                             NULL,
-                                            '',
-                                            '%None%'
+                                            ''
                                           ) 
+          THEN product_delivery_type_legacy
+        WHEN product_tier_historical LIKE '%Not Applicable%' AND  product_delivery_type_active LIKE '%None%' 
           THEN product_delivery_type_legacy
         WHEN effective_end_date < CURRENT_TIMESTAMP 
           THEN product_delivery_type_legacy
@@ -227,9 +228,10 @@ WITH zuora_product AS (
         WHEN product_tier_active LIKE ANY (
                                             '%Legacy%',
                                             NULL,
-                                            '',
-                                            'None%'
+                                            ''
                                           ) 
+          THEN product_deployment_type_legacy
+        WHEN product_tier_historical LIKE '%Not Applicable%' AND  product_deployment_type_active LIKE '%None%' 
           THEN product_deployment_type_legacy
         WHEN effective_end_date < CURRENT_TIMESTAMP 
           THEN product_deployment_type_legacy
