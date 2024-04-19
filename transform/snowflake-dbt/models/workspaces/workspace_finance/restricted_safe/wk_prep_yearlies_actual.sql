@@ -50,9 +50,7 @@ churn_contraction_second as (
       base 
    group by
       1 
-),
-
-churn_contraction_final as (
+)
 
 select
    '3.4 Churn and Contraction' as yearly_name,
@@ -63,10 +61,8 @@ select
    CLOSE_FISCAL_QUARTER_NAME as quarter,
    renewal_net_arr_loss / atr* - 1 as actuals_raw
 from
-   final 
+   churn_contraction_second 
 where quarter like 'FY25%'
  
 order by
    1 desc
-
-),
