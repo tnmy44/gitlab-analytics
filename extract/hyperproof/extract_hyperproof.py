@@ -9,6 +9,12 @@ from gitlabdata.orchestration_utils import (
 )
 
 
+
+client_id = env["HYPERPROOF_CLIENT_ID"]
+client_secret = env["HYPERPROOF_CLIENT_SECRET"]
+info(f"Client ID: {client_id}")
+info(f"Client Secret: {client_secret}")
+
 class HyperproofAPIClient:
     def __init__(self, client_id: str, client_secret: str) -> None:
         """
