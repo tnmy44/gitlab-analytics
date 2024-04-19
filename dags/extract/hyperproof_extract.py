@@ -53,11 +53,8 @@ dag = DAG(
 
 
 extract_command = f"""
-    printenv
-    echo $HYPERPROOF_CLIENT_ID
-    echo $HYPERPROOF_CLIENT_SECRET
     {clone_and_setup_extraction_cmd} && 
-    python3 hyperproof/extract_hyperproof.py
+    python hyperproof/extract_hyperproof.py
 """
 
 
