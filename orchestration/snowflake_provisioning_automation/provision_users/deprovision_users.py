@@ -9,7 +9,6 @@ and also because deleting users is more sensitive, it will be an
 automatic job.
 
 The entrypoint of this job will be from an Airflow task.
-Ideally, this is run after the snowflake_permissions DAG finishes
 provisioning new users.
 """
 
@@ -29,7 +28,7 @@ roles_yaml_path = os.path.join(
     abs_path[: abs_path.find("/provision_users")], "update_roles_yaml/"
 )
 sys.path.insert(1, roles_yaml_path)
-from args_update_roles_yaml import parse_arguments
+from args_deprovision_users import parse_arguments
 from utils_update_roles import (
     USERS_KEY,
     get_roles_from_url,
@@ -59,7 +58,6 @@ def get_users_from_roles_yaml():
     roles_data = get_roles_from_url()
     roles_struct = RolesStruct(roles_data)
     users_roles_yaml = roles_struct.get_existing_value_keys(USERS_KEY)
-    print(f"\nusers_roles_yaml: {users_roles_yaml}")
     return users_roles_yaml
 
 
@@ -90,11 +88,10 @@ def compare_users(users_roles_yaml, users_snowflake):
 
 
 def get_users_to_remove(sysadmin_connection):
-    users_roles_yaml = get_users_from_roles_yaml(sysadmin_connection)
-    users_snowflake = get_users_snowflake()
+    users_roles_yaml = get_users_from_roles_yaml()
+    users_snowflake = get_users_snowflake(sysadmin_connection)
 
     missing_users = compare_users(users_roles_yaml, users_snowflake)
-    print(f"\nmissing_users: {missing_users}")
     return missing_users
 
 
@@ -116,18 +113,25 @@ def main():
     logging.info(f"is_test_run: {is_test_run}")
     time.sleep(5)  # give user a chance to abort
 
-    sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
-
-    if not users_to_remove_arg:
-        users_to_remove = get_users_to_remove(sysadmin_connection)
-    else:
+    # if users are passed in to remove, remove those users
+    if users_to_remove_arg:
         users_to_remove = users_to_remove_arg
-    logging.info(f'users_to_remove: {users_to_remove}')
 
+    # else if users were NOT passed in to remove
+    # then check if any snowflake_users are missing in roles.yml
+    else:
+        account_usage_connection = SnowflakeConnection(
+            config_dict, "SYSADMIN", is_test_run=False
+        )
+        users_to_remove = get_users_to_remove(account_usage_connection)
+        account_usage_connection.dispose_engine()
+    #
+    logging.info(f"users_to_remove: {users_to_remove}")
+
+    sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
     # deprovision_users(sysadmin_connection, users_to_remove)
 
-    # TODO, figure out how to drop the missing users. Ideally, we use the sql template, maybe we can move one of the sql templates over.
-    # We can test all of this using a DAG, `snowflake_cleanup`
+    sysadmin_connection.dispose_engine()
 
 
 if __name__ == "__main__":
