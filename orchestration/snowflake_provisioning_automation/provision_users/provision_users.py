@@ -110,16 +110,6 @@ def provision_databases(connection: Engine, usernames: list):
     _provision(connection, template_filename, usernames)
 
 
-def deprovision_users(connection: Engine, usernames: list):
-    """
-    Deprovision users in Snowflake
-    Currently unused, will do Snowflake deprovision in separate process
-    """
-    template_filename = "deprovision_user.sql"
-    logging.info("#### Deprovisioning users ####")
-    _provision(connection, template_filename, usernames)
-
-
 def provision_all():
     """
     Performs the following actions:

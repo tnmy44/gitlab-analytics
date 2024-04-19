@@ -18,12 +18,12 @@ import sys
 import logging
 import time
 from typing import Tuple
+from sqlalchemy.engine.base import Engine
 
-# from gitlabdata.orchestration_utils import query_executor, snowflake_engine_factory
 from snowflake_connection import SnowflakeConnection
+from provision_users import _provision
 
-
-# needed to import update_roles_yaml/
+# need to import update_roles_yaml module
 abs_path = os.path.dirname(os.path.realpath(__file__))
 roles_yaml_path = os.path.join(
     abs_path[: abs_path.find("/provision_users")], "update_roles_yaml/"
@@ -50,7 +50,7 @@ def process_args() -> Tuple[list, list, str, str, str]:
     """returns command line args passed in by user"""
     args = parse_arguments()
     return (
-        args.usernames_to_remove,
+        args.users_to_remove,
         args.test_run,
     )
 
@@ -63,9 +63,12 @@ def get_users_from_roles_yaml():
     return users_roles_yaml
 
 
-def get_users_snowflake(is_test_run=False):
+def flatten_list_of_tuples(tuple_list):
+    return [tuple[0] for tuple in tuple_list]
+
+
+def get_users_snowflake(sysadmin_connection):
     # return ["juwong", 'some_user_to_remove']
-    sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
     query = """
     SELECT lower(name) as name
     FROM SNOWFLAKE.ACCOUNT_USAGE.USERS
@@ -75,9 +78,9 @@ def get_users_snowflake(is_test_run=False):
     and created_on < DATEADD(WEEK, -1, CURRENT_TIMESTAMP)
     ORDER BY name;
     """
-    # returns [(user1, ), (user2, )]
+    # users_tuple_list example: [(user1, ), (user2, )]
     users_tuple_list = sysadmin_connection.run_sql_statement(query)
-    users_snowflake = [users_tuple[0] for users_tuple in users_tuple_list]
+    users_snowflake = flatten_list_of_tuples(users_tuple_list)
     return users_snowflake
 
 
@@ -86,18 +89,42 @@ def compare_users(users_roles_yaml, users_snowflake):
     return missing_users
 
 
-def main():
-    """entrypoint function"""
-    configure_logging()
-    # is_test_run = process_args()
-    # logging.info(f"clean_snowflake_users_roles: {is_test_run}")
-    # time.sleep(5)  # give user a chance to abort
-
-    users_roles_yaml = get_users_from_roles_yaml()
+def get_users_to_remove(sysadmin_connection):
+    users_roles_yaml = get_users_from_roles_yaml(sysadmin_connection)
     users_snowflake = get_users_snowflake()
 
     missing_users = compare_users(users_roles_yaml, users_snowflake)
     print(f"\nmissing_users: {missing_users}")
+    return missing_users
+
+
+def deprovision_users(connection: Engine, usernames: list):
+    """
+    Deprovision users in Snowflake
+    Currently unused, will do Snowflake deprovision in separate process
+    """
+    template_filename = "deprovision_user.sql"
+    logging.info("#### Deprovisioning users ####")
+    _provision(connection, template_filename, usernames)
+
+
+def main():
+    """entrypoint function"""
+    configure_logging()
+
+    users_to_remove_arg, is_test_run = process_args()
+    logging.info(f"is_test_run: {is_test_run}")
+    time.sleep(5)  # give user a chance to abort
+
+    sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
+
+    if not users_to_remove_arg:
+        users_to_remove = get_users_to_remove(sysadmin_connection)
+    else:
+        users_to_remove = users_to_remove_arg
+    logging.info(f'users_to_remove: {users_to_remove}')
+
+    # deprovision_users(sysadmin_connection, users_to_remove)
 
     # TODO, figure out how to drop the missing users. Ideally, we use the sql template, maybe we can move one of the sql templates over.
     # We can test all of this using a DAG, `snowflake_cleanup`
