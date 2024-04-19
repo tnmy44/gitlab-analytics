@@ -7,7 +7,7 @@
     ('mart_crm_opportunity', 'mart_crm_opportunity')
 ]) }},
 
-churn_contraction_first as (
+churn_contraction_1 as (
 
    SELECT
       mart_crm_opportunity.CLOSE_FISCAL_QUARTER_NAME,
@@ -40,14 +40,14 @@ churn_contraction_first as (
       AND mart_crm_opportunity.CLOSE_MONTH BETWEEN '2022-02-01' AND date_trunc('month', current_date) 
 ),
 
-churn_contraction_second as (
+churn_contraction_2 as (
 
    SELECT
       CLOSE_FISCAL_QUARTER_NAME,
       sum(case when order_type in ('4. Contraction','5. Churn - Partial','6. Churn - Final') then renewal_net_arr end) as renewal_net_arr_loss,     
       sum(arr_basis_for_clari) as atr 
    FROM
-      base 
+      churn_contraction_first 
    group by
       1 
 )
@@ -61,7 +61,7 @@ select
    CLOSE_FISCAL_QUARTER_NAME as quarter,
    renewal_net_arr_loss / atr* - 1 as actuals_raw
 from
-   churn_contraction_second 
+   churn_contraction_2
 where quarter like 'FY25%'
  
 order by
