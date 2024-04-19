@@ -44,7 +44,10 @@ adoption_metrics_1 AS (
   SELECT
     *
   FROM rpt_product_usage_health_score
-  WHERE is_primary_instance_subscription = true
+  WHERE INSTANCE_TYPE = 'Production'
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY SNAPSHOT_MONTH, DIM_SUBSCRIPTION_ID_ORIGINAL
+  ORDER BY BILLABLE_USER_COUNT desc nulls last, PING_CREATED_AT desc nulls last) = 1
+
 
 ),
 adoption_metrics_2 AS (
