@@ -1,12 +1,14 @@
 import requests
-from logging import error, info, basicConfig, getLogger, warning
+#from logging import logger.error, logger.info, basicConfig, getLogger, warning
 import pandas as pd
 from os import environ as env
 
+from loguru import logger
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
+
 
 
 class HyperproofAPIClient:
@@ -19,8 +21,8 @@ class HyperproofAPIClient:
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = None
-        info(f"Client ID: {client_id}")
-        info(f"Client Secret: {client_secret}")
+        logger.info(f"Client ID: {client_id}")
+        logger.info(f"Client Secret: {client_secret}")
 
     def authenticate(self):
         """
@@ -36,11 +38,11 @@ class HyperproofAPIClient:
         response = requests.post(auth_url, data=payload)
         if response.status_code == 200:
             self.access_token = response.json().get("access_token")
-            info("Authentication successful")
+            logger.info("Authentication successful")
         else:
-            error(f"Failed to authenticate. Status code: {response.status_code}")
-            info(f"Client ID: {client_id}")
-            info(f"Client Secret: {client_secret}")
+            logger.error(f"Failed to authenticate. Status code: {response.status_code}")
+            logger.info(f"Client ID: {client_id}")
+            logger.info(f"Client Secret: {client_secret}")
 
     def get_data_from_all_endpoints(self):
         """
@@ -92,7 +94,7 @@ class HyperproofAPIClient:
         if response.status_code == 200:
             return response.json()
         else:
-            error(
+            logger.error(
                 f"Failed to retrieve data from {endpoint}. Status code: {response.status_code}"
             )
             return None
@@ -103,9 +105,9 @@ if __name__ == "__main__":
 
     client_id = env["HYPERPROOF_CLIENT_ID"]
     client_secret = env["HYPERPROOF_CLIENT_SECRET"]
-    info("ABC")
-    info(f"Client ID: {client_id}")
-    info(f"Client Secret: {client_secret}")
+    logger.info("ABC")
+    logger.info(f"Client ID: {client_id}")
+    logger.info(f"Client Secret: {client_secret}")
     client = HyperproofAPIClient(client_id, client_secret)
     # Get data from all available endpoints
     all_data = client.get_data_from_all_endpoints()
@@ -113,13 +115,13 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     if all_data:
-        info("Retrieved data from all endpoints:")
+        logger.info("Retrieved data from all endpoints:")
         for endpoint, data in all_data.items():
             if data and len(data) > 0:
                 df = pd.DataFrame([data])
                 df.to_json(f"{endpoint}.json", index=False)
 
-                info(f"Uploading {endpoint}.json to Snowflake stage.")
+                logger.info(f"Uploading {endpoint}.json to Snowflake stage.")
 
                 snowflake_stage_load_copy_remove(
                     f"{endpoint}.json",
