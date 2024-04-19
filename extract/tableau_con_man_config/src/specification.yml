@@ -6728,13 +6728,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: mcarter
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - People All Access
   - user_name: mchauhan
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9532,20 +9525,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: tnguyen
-    user_name_domain: gitlab.com
-    site_role: SiteAdministratorCreator
-    auth_setting: SAML
-    groups:
-      - Ad-hoc Project Lead
-      - Data Team All Access
-      - Data Team Project Lead
-      - Data Team Restricted Access
-      - Development Project Lead
-      - General All Access
-      - General SAFE Access
-      - Production Project Lead
-      - Resources Project Lead
   - user_name: tokonogi
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10787,13 +10766,6 @@ users:
     groups:
       - General All Access
   - user_name: jyanelli
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
-  - user_name: hrowe
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
