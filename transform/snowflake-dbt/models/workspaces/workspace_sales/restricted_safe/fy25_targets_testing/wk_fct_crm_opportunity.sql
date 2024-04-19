@@ -140,9 +140,7 @@
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_geo_id
-        WHEN close_fiscal_year < prep_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
-          THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_geo_id') }}
-        ELSE dim_crm_opp_owner_geo_stamped_id
+        ELSE  dim_crm_opp_owner_geo_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_geo_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
@@ -152,8 +150,6 @@
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_region_id
-        WHEN close_fiscal_year < prep_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
-          THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_region_id') }}
         ELSE dim_crm_opp_owner_region_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_region_id,
       CASE
@@ -164,8 +160,6 @@
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_area_id
-        WHEN close_fiscal_year < prep_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
-          THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_area_id') }}
         ELSE dim_crm_opp_owner_area_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_area_id,
       CASE
@@ -176,8 +170,6 @@
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_business_unit_id
-        WHEN close_fiscal_year < prep_date.current_fiscal_year AND sales_rep_account.is_hybrid_user = 1
-          THEN {{ get_keyed_nulls('account_hierarchy.dim_crm_user_business_unit_id') }}
         ELSE dim_crm_opp_owner_business_unit_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_business_unit_id,
       CASE
