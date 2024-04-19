@@ -6429,6 +6429,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - rchanila:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7411,6 +7416,10 @@ users:
       can_login: true
       member_of:
         - aluis
+  - rchanila:
+      can_login: true
+      member_of:
+        - rchanila
 warehouses:
   - admin:
       size: x-small
