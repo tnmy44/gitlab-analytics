@@ -1,6 +1,21 @@
 {{ config(materialized='view') }}
 
-WITH final AS (
+WITH prep as (
+  
+ SELECT 
+  yearly_name,
+  yearly_dri,
+  yearly_description,
+  is_mnpi,
+  ifnull(FY25_Q4,-1) as FY25_Q4,
+  ifnull(FY25_Q3,-1) as FY25_Q3,
+  ifnull(FY25_Q2,-1) as FY25_Q2,
+  ifnull(FY25_Q1,-1) as FY25_Q1
+
+FROM
+  {{ ref('sheetload_fy25_yearlies_target_source') }}
+),
+final AS (
 
 SELECT
    yearly_name,
@@ -8,9 +23,9 @@ SELECT
    yearly_description,
    is_mnpi,
    REPLACE(quarter_name, '_', '-') AS quarter,
-   TO_DECIMAL(target, 18, 4) AS targets_raw
+   case when target = -1 then null else target end AS targets_raw
 FROM
-   {{ ref('sheetload_fy25_yearlies_target_source') }} UNPIVOT(target FOR quarter_name IN 
+   prep UNPIVOT(target FOR quarter_name IN 
    (
       "FY25_Q4",
       "FY25_Q3",
