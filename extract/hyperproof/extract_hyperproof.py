@@ -35,6 +35,7 @@ class HyperproofAPIClient:
             "client_id": self.client_id,
             "client_secret": self.client_secret,
         }
+        logger.info(f"Payload: {payload}")
         response = requests.post(auth_url, data=payload)
         if response.status_code == 200:
             self.access_token = response.json().get("access_token")
