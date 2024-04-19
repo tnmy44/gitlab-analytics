@@ -207,11 +207,6 @@ WITH zuora_product AS (
                                             '%None%'
                                           ) 
           THEN product_tier_legacy
-        WHEN product_tier_active LIKE ANY (
-                                            '%Legacy%',
-                                            NULL,''
-                                          ) 
-          THEN product_tier_legacy
         WHEN effective_end_date < CURRENT_TIMESTAMP 
            HEN product_tier_legacy
         ELSE product_tier_active 
