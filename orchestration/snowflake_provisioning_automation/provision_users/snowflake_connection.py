@@ -54,3 +54,7 @@ class SnowflakeConnection:
         """process all sql statements"""
         for sql_statement in sql_statements:
             self.run_sql_statement(sql_statement, query_params)
+
+    def dispose_engine(self):
+        if not self.is_test_run:
+            self.engine.dispose()
