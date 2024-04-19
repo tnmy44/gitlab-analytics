@@ -43,7 +43,7 @@ sheets:
   - name: level_up_sqs_completion
     owner: '@jngCES'
     tabs:
-      - SQS-2024-04-18
+      - SQS_2024_04_18
   - name: low_touch_targets_fy23
     owner: '@mfleisher'
     tabs:
