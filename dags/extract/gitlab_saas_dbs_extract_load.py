@@ -227,7 +227,7 @@ config_dict: Dict[Any, Any] = {
     "el_cells_gitlab_com": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_cells_gitlab_com",
-        "database_type": "cells-main",
+        "database_type": "cells",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
         "incremental_backfill_interval": "30 2,15 * * *",
@@ -258,7 +258,7 @@ config_dict: Dict[Any, Any] = {
     "el_cells_gitlab_com_scd": {
         "cloudsql_instance_name": None,
         "dag_name": "el_saas_cells_gitlab_com_scd",
-        "database_type": "cells-ci",
+        "database_type": "cells",
         "env_vars": {},
         "extract_schedule_interval": "00 4,16 */1 * *",
         "secrets": [
@@ -363,7 +363,7 @@ def extract_list_based_on_database_type(table_list, database_type):
             if table_values["database_type"] == "main":
                 output_dict = {table_key: table_values}
                 return_dict.update(output_dict)
-    elif database_type == "cells-main" or database_type == "cells-ci":
+    elif database_type == "cells":
         for table_key, table_values in table_list.items():
             output_dict = {table_key: table_values}
             return_dict.update(output_dict)
