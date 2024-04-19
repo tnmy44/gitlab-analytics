@@ -1667,10 +1667,6 @@ models:
         description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: coverage_fuzzing_pipeline_usage_28_days_event
-        description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: environments_all_time_event
         description: '{{ doc("environments_all_time_event_desc") }}'
         tests:
@@ -7172,18 +7168,12 @@ models:
         description: Monthly count of deployments
       - name: packages_28_days_event
         description: Monthly count of Packages
-      - name: sast_jobs_all_time_event
-        description: Count of SAST CI jobs. Job names ending in '-sast'
       - name: dast_jobs_all_time_event
         description: Count of DAST jobs
-      - name: dependency_scanning_jobs_all_time_event
-        description: Count of Dependency Scanning jobs run
       - name: user_license_management_jobs_all_time_event
         description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
       - name: secret_detection_jobs_all_time_event
         description: Count of ‘secret-detection’ CI jobs.
-      - name: container_scanning_jobs_all_time_event
-        description: Count of Container Scanning jobs run
       - name: projects_jenkins_active_all_time_event
         description: Count of projects with active integrations for Jenkins
       - name: projects_bamboo_active_all_time_event
@@ -7196,8 +7186,6 @@ models:
         description: Count of Issues imported from Jira per month. This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: Count of projects with active integrations for GitHub
-      - name: projects_jira_server_active_all_time_event
-        description: Count of active integrations with Jira Software (server)
       - name: projects_jira_dvcs_cloud_active_all_time_event
         description: Count of active integrations with Jira Cloud (DVCS Connector)
       - name: projects_with_repositories_enabled_all_time_event
@@ -7222,25 +7210,21 @@ models:
       - name: auto_devops_enabled
       - name: gitaly_clusters_instance
       - name: epics_deepest_relationship_level_instance
-      - name: clusters_applications_cilium_all_time_event
       - name: network_policy_forwards_all_time_event
       - name: network_policy_drops_all_time_event
       - name: requirements_with_test_report_all_time_event
       - name: requirement_test_reports_ci_all_time_event
       - name: projects_imported_from_github_all_time_event
-      - name: projects_jira_cloud_active_all_time_event
       - name: projects_jira_dvcs_server_active_all_time_event
       - name: service_desk_issues_all_time_event
       - name: ci_pipelines_all_time_user
       - name: service_desk_issues_28_days_user
       - name: projects_jira_active_28_days_user
-      - name: projects_jira_dvcs_cloud_active_28_days_user
       - name: projects_jira_dvcs_server_active_28_days_user
       - name: merge_requests_with_required_code_owners_28_days_user
       - name: analytics_value_stream_28_days_event
       - name: code_review_user_approve_mr_28_days_user
       - name: epics_usage_28_days_user
-      - name: ci_templates_usage_28_days_event
       - name: project_management_issue_milestone_changed_28_days_user
       - name: project_management_issue_iteration_changed_28_days_user
       - name: installation_creation_date
