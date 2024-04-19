@@ -103,6 +103,7 @@ if __name__ == "__main__":
 
     client_id = env["HYPERPROOF_CLIENT_ID"]
     client_secret = env["HYPERPROOF_CLIENT_SECRET"]
+    info("ABC")
     info(f"Client ID: {client_id}")
     info(f"Client Secret: {client_secret}")
     client = HyperproofAPIClient(client_id, client_secret)
