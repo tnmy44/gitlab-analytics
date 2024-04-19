@@ -104,8 +104,8 @@ class HyperproofAPIClient:
 if __name__ == "__main__":
     config_dict = env.copy()
 
-    client_id = env["HYPERPROOF_CLIENT_ID"]
-    client_secret = env["HYPERPROOF_CLIENT_SECRET"]
+    client_id = env["HYPERPROOF_CLIENT_ID"].trim()
+    client_secret = env["HYPERPROOF_CLIENT_SECRET"].trim()
     logger.info("ABC")
     logger.info(f"Client ID: {client_id}")
     logger.info(f"Client Secret: {client_secret}")
