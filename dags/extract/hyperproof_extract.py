@@ -54,8 +54,7 @@ dag = DAG(
 
 extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    pip install loguru 
-    python hyperproof/extract_hyperproof.py
+    python hyperproof/extract_hyperproof.py 
 """
 
 
