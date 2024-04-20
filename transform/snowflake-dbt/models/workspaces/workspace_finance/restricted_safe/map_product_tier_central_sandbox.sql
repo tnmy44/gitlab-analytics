@@ -197,7 +197,10 @@ WITH zuora_central_sandbox_product AS (
         WHEN product_tier_historical LIKE ANY (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
-                                                '%Self-Managed - Ultimate%'
+                                                '%Self-Managed - Ultimate%',
+                                                '%SaaS - Ultimate%',
+                                                '%SaaS - Premium%'
+                                                '%Dedicated - Ultimate%'
                                               ) 
           THEN product_tier_legacy
         WHEN product_tier_active LIKE ANY (
