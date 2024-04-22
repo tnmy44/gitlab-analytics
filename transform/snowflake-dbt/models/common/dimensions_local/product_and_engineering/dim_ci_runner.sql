@@ -93,5 +93,5 @@ WITH prep_ci_runner AS (
     created_by="@snalamaru",
     updated_by="@nhervas",
     created_date="2021-06-23",
-    updated_date="2024-04-17"
+    updated_date="2024-04-22"
 ) }}
