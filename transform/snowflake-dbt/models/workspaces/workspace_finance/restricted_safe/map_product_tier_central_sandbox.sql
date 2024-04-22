@@ -199,7 +199,7 @@ WITH zuora_central_sandbox_product AS (
                                                 '%Self-Managed - Premium%',
                                                 '%Self-Managed - Ultimate%'
                                                 '%SaaS - Ultimate%',
-                                                '%SaaS - Premium%'
+                                                '%SaaS - Premium%',
                                                 '%Dedicated - Ultimate%'
                                               )
           THEN product_tier_legacy
