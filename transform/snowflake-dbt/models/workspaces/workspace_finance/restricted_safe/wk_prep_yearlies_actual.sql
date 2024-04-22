@@ -25,7 +25,6 @@ SELECT
 ),
 
 duo_final AS (
-
   SELECT 
     '2.1 Duo' AS yearly_name,
     'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
@@ -48,8 +47,8 @@ adoption_metrics_1 AS (
   QUALIFY ROW_NUMBER() OVER (PARTITION BY SNAPSHOT_MONTH, DIM_SUBSCRIPTION_ID_ORIGINAL
   ORDER BY BILLABLE_USER_COUNT desc nulls last, PING_CREATED_AT desc nulls last) = 1
 
-
 ),
+
 adoption_metrics_2 AS (
   SELECT
     '3.1 Adoption Metrics' AS yearly_name,
@@ -70,8 +69,8 @@ adoption_metrics_2 AS (
   GROUP BY 1,2,3,4,5
 
 ),
-adoption_metrics_final AS (
 
+adoption_metrics_final AS (
   SELECT 
     yearly_name,
     source_table,
@@ -82,8 +81,8 @@ adoption_metrics_final AS (
   WHERE fiscal_quarter_name_fy like 'FY25%'
   AND usage_data_sent = true
 ),
-churn_contraction_1 AS (
 
+churn_contraction_1 AS (
    SELECT
       mart_crm_opportunity.CLOSE_FISCAL_QUARTER_NAME,
       mart_crm_opportunity.ARR_BASIS_FOR_CLARI,
@@ -114,8 +113,8 @@ churn_contraction_1 AS (
       )
       AND mart_crm_opportunity.CLOSE_MONTH BETWEEN '2022-02-01' AND date_trunc('month', current_date) 
 ),
-churn_contraction_2 AS (
 
+churn_contraction_2 AS (
    SELECT
       CLOSE_FISCAL_QUARTER_NAME,
       SUM(CASE WHEN order_type in ('4. Contraction','5. Churn - Partial','6. Churn - Final') then renewal_net_arr end) AS renewal_net_arr_loss,     
@@ -125,8 +124,8 @@ churn_contraction_2 AS (
    GROUP BY
       1 
 ),
-churn_contraction_final AS (
 
+churn_contraction_final AS (
 SELECT
    '3.4 Churn and Contraction' AS yearly_name,
    'PROD.RESTRICTED_SAFE_COMMON_SALES.MART_CRM_OPPORTUNITY, PROD.COMMON.DIM_SUBSCRIPTION' AS source_table,
@@ -136,6 +135,7 @@ FROM
    churn_contraction_2
 WHERE quarter like 'FY25%'
 ),
+
 ultimate_arr_final AS (
 SELECT 
     '4.2 Ultimate ARR' AS yearly_name,
@@ -151,6 +151,7 @@ SELECT
 
     GROUP BY 1,2,3
 ),
+
 dedicated_arr_final AS (
   SELECT 
     '4.3 Dedicated ARR' AS yearly_name,
@@ -166,6 +167,7 @@ dedicated_arr_final AS (
     GROUP BY 1,2,3
 
 ),
+
 plan_arr_final AS (
   SELECT 
     '4.4 Plan' AS yearly_name,
@@ -181,31 +183,32 @@ plan_arr_final AS (
     GROUP BY 1,2,3
 
 ),
+
 final AS (
 
 SELECT * FROM total_arr_final 
 
-UNION 
+UNION ALL
 
 SELECT * FROM duo_final
 
-UNION
+UNION ALL
 
 SELECT * FROM adoption_metrics_final
 
-UNION
+UNION ALL
 
 SELECT * FROM churn_contraction_final
 
-UNION 
+UNION ALL
 
 SELECT * FROM ultimate_arr_final
 
-UNION 
+UNION ALL
 
 SELECT * FROM dedicated_arr_final
 
-UNION
+UNION ALL
 
 SELECT * FROM plan_arr_final
 )
