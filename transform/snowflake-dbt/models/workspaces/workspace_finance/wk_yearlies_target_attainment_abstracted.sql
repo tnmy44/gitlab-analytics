@@ -1,4 +1,8 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=["mnpi_exception"]
+    ) 
+}}
 
 SELECT
   yearly_name,
