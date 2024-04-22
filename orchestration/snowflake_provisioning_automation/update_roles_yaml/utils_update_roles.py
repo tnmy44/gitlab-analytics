@@ -12,8 +12,11 @@ abs_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = abs_path[: abs_path.find("/update_roles_yaml")]
 sys.path.insert(1, parent_path)
 from utils_snowflake_provisioning import (
-    get_username_changes,
+    get_file_changes,
     YAML_PATH,  # used by downstream modules
+    USERS_FILE_NAME,
+    get_valid_users,
+    get_snowflake_usernames,
 )
 
 # imported by other modules
