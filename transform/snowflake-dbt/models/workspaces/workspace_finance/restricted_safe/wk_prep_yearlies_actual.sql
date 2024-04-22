@@ -20,7 +20,7 @@ SELECT
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
     AND close_fiscal_quarter_name like '%FY25%'
-
+    AND close_month <= date_trunc('month',current_date)
     GROUP BY 1,2,3
 ),
 
@@ -34,8 +34,8 @@ duo_final AS (
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
     AND close_fiscal_quarter_name like '%FY25%'
+    AND close_month <= date_trunc('month',current_date)
     AND product_category like '%Duo%'
-
     GROUP BY 1,2,3
 ),
 
@@ -46,7 +46,6 @@ adoption_metrics_1 AS (
   WHERE INSTANCE_TYPE = 'Production'
   QUALIFY ROW_NUMBER() OVER (PARTITION BY SNAPSHOT_MONTH, DIM_SUBSCRIPTION_ID_ORIGINAL
   ORDER BY BILLABLE_USER_COUNT desc nulls last, PING_CREATED_AT desc nulls last) = 1
-
 ),
 
 adoption_metrics_2 AS (
@@ -67,7 +66,6 @@ adoption_metrics_2 AS (
       AND mart_arr_all.product_delivery_type = adoption_metrics_1.delivery_type
 
   GROUP BY 1,2,3,4,5
-
 ),
 
 adoption_metrics_final AS (
@@ -111,7 +109,7 @@ churn_contraction_1 AS (
          '5. Churn - Partial',
          '6. Churn - Final'
       )
-      AND mart_crm_opportunity.CLOSE_MONTH BETWEEN '2022-02-01' AND date_trunc('month', current_date) 
+      AND mart_crm_opportunity.CLOSE_MONTH <= date_trunc('month', current_date) 
 ),
 
 churn_contraction_2 AS (
@@ -146,9 +144,9 @@ SELECT
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
     AND close_fiscal_quarter_name like '%FY25%'
+    AND close_month <= date_trunc('month',current_date)
     AND product_category like '%Ultimate%'
     AND product_category not like '%Dedicated%'
-
     GROUP BY 1,2,3
 ),
 
@@ -162,10 +160,9 @@ dedicated_arr_final AS (
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
     AND close_fiscal_quarter_name like '%FY25%'
+    AND close_month <= date_trunc('month',current_date)
     AND product_category like '%Dedicated%'
-
     GROUP BY 1,2,3
-
 ),
 
 plan_arr_final AS (
@@ -178,10 +175,9 @@ plan_arr_final AS (
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
     AND close_fiscal_quarter_name like '%FY25%'
+    AND close_month <= date_trunc('month',current_date)
     AND product_category like '%Agile%'
-
     GROUP BY 1,2,3
-
 ),
 
 final AS (
