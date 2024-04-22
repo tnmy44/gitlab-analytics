@@ -197,10 +197,7 @@ WITH zuora_central_sandbox_product AS (
         WHEN product_tier_historical LIKE ANY (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
-                                                '%Self-Managed - Ultimate%',
-                                                '%SaaS - Ultimate%',
-                                                '%SaaS - Premium%'
-                                                '%Dedicated - Ultimate%'
+                                                '%Self-Managed - Ultimate%'
                                               ) 
           THEN product_tier_legacy
         WHEN product_tier_active LIKE ANY (
@@ -245,6 +242,7 @@ WITH zuora_central_sandbox_product AS (
       effective_start_date,
       effective_end_date
    FROM legacy_plans
+  
 )
 
 {{ dbt_audit(
