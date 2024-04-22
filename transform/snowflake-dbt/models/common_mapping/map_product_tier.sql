@@ -198,7 +198,11 @@ WITH zuora_product AS (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
                                                 '%Self-Managed - Ultimate%'
-                                              ) 
+                                                '%Self-Managed - Ultimate%',
+                                                '%SaaS - Ultimate%',
+                                                '%SaaS - Premium%'
+                                                '%Dedicated - Ultimate%'
+                                              )
           THEN product_tier_legacy
         WHEN product_tier_active LIKE ANY (
                                             '%Legacy%',
@@ -242,8 +246,8 @@ WITH zuora_product AS (
       effective_start_date,
       effective_end_date
    FROM legacy_plans
-  
 )
+
 
 {{ dbt_audit(
     cte_ref="final",
