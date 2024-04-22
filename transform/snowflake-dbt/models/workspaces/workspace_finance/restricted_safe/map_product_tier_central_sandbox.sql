@@ -214,7 +214,14 @@ WITH zuora_central_sandbox_product AS (
           THEN product_tier_legacy
         ELSE product_tier_active 
       END AS product_tier,
+
       CASE 
+        WHEN product_tier_historical LIKE ANY (
+                                                '%Self-Managed - Starter%',
+                                                '%Self-Managed - Premium%',
+                                                '%Self-Managed - Ultimate%'
+                                              )
+        THEN product_delivery_type_legacy
         WHEN product_tier_active LIKE ANY (
                                             '%Legacy%',
                                             NULL,
@@ -227,7 +234,14 @@ WITH zuora_central_sandbox_product AS (
           THEN product_delivery_type_legacy
         ELSE product_delivery_type_active 
       END AS product_delivery_type,
+
       CASE 
+        WHEN product_tier_historical LIKE ANY (
+                                                '%Self-Managed - Starter%',
+                                                '%Self-Managed - Premium%',
+                                                '%Self-Managed - Ultimate%'
+                                              )
+        THEN product_deployment_type_legacy
         WHEN product_tier_active LIKE ANY (
                                             '%Legacy%',
                                             NULL,
