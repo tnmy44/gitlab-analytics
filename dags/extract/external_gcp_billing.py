@@ -132,7 +132,7 @@ for export in stream["exports"]:
     {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcs_external.py \
         --partition_date_part={export['partition_date_part']} \
-        --selected_columns={export['selected_columns']} \
+        --selected_columns='*' \
         --gcp_project={gcp_project} \
         --bucket_path={export['bucket_path']} \
         --table={export['table']} \
