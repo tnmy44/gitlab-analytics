@@ -23,7 +23,7 @@ SELECT
    yearly_description,
    is_mnpi,
    REPLACE(quarter_name, '_', '-') AS quarter,
-   case when target = -1 then null else target end AS targets_raw
+   IFF(target = -1, NULL, target) AS targets_raw
 FROM
    prep UNPIVOT(target FOR quarter_name IN 
    (
