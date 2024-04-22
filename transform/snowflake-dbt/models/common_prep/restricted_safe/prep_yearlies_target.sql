@@ -7,10 +7,10 @@ WITH prep as (
   yearly_dri,
   yearly_description,
   is_mnpi,
-  ifnull(FY25_Q4,-1) as FY25_Q4,
-  ifnull(FY25_Q3,-1) as FY25_Q3,
-  ifnull(FY25_Q2,-1) as FY25_Q2,
-  ifnull(FY25_Q1,-1) as FY25_Q1
+  IFNULL(FY25_Q4,-1) AS FY25_Q4,
+  IFNULL(FY25_Q3,-1) AS FY25_Q3,
+  IFNULL(FY25_Q2,-1) AS FY25_Q2,
+  IFNULL(FY25_Q1,-1) AS FY25_Q1
 
 FROM
   {{ ref('sheetload_fy25_yearlies_target_source') }}
