@@ -6384,7 +6384,12 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - rchanila:
+  - lionel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - dbernardi:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7371,10 +7376,14 @@ users:
       can_login: true
       member_of:
         - aluis
-  - rchanila:
+  - lionel:
       can_login: true
       member_of:
-        - rchanila
+        - lionel
+  - dbernardi:
+      can_login: true
+      member_of:
+        - dbernardi
 warehouses:
   - admin:
       size: x-small
