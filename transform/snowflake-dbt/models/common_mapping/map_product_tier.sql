@@ -198,7 +198,6 @@ WITH zuora_product AS (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
                                                 '%Self-Managed - Ultimate%'
-                                                '%Self-Managed - Ultimate%',
                                                 '%SaaS - Ultimate%',
                                                 '%SaaS - Premium%'
                                                 '%Dedicated - Ultimate%'
