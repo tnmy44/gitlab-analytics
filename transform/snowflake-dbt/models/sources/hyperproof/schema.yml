@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: hyperproof_controls
+    description: '{{ doc("hyperproof_controls_docs") }}'
+  - name: hyperproof_programs
+  - name: hyperproof_roles
+  - name: hyperproof_task_statuses
+  - name: hyperproof_users
+
+
