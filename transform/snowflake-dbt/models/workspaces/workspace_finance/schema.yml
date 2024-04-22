@@ -1233,3 +1233,6 @@ models:
 
   - name: wk_fct_available_to_renew
     description: A new workspace model to capture the ATR for all Subsriptions.
+
+  - name: wk_fct_available_to_renew_subscription_linkage
+    description: A new workspace model with ATR for all Subsriptions and renewal subscription linkage IDs.
