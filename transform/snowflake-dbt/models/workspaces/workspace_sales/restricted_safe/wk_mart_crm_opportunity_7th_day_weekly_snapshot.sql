@@ -156,6 +156,45 @@ final AS (
     dim_crm_account.crm_account_zi_technologies,
     dim_crm_account.is_jihu_account,
 
+    -- fields to be removed after a bug is fixed in Tableau
+    NULL AS sao_crm_opp_owner_sales_segment_stamped,
+    NULL AS sao_crm_opp_owner_sales_segment_stamped_grouped,
+    NULL AS sao_crm_opp_owner_geo_stamped,
+    NULL AS sao_crm_opp_owner_region_stamped,
+    NULL AS sao_crm_opp_owner_area_stamped,
+    NULL AS sao_crm_opp_owner_segment_region_stamped_grouped,
+    NULL AS sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+    NULL AS crm_opp_owner_stamped_name,
+    NULL AS crm_account_owner_stamped_name,
+    NULL AS crm_opp_owner_sales_segment_stamped,
+    NULL AS crm_opp_owner_sales_segment_stamped_grouped,
+    NULL AS crm_opp_owner_geo_stamped,
+    NULL AS crm_opp_owner_region_stamped,
+    NULL AS crm_opp_owner_area_stamped,
+    NULL AS crm_opp_owner_business_unit_stamped,
+    NULL AS crm_opp_owner_sales_segment_region_stamped_grouped,
+    NULL AS crm_opp_owner_sales_segment_geo_region_area_stamped,
+    NULL AS crm_opp_owner_user_role_type_stamped,
+    NULL AS crm_user_sales_segment,
+    NULL AS crm_user_geo,
+    NULL AS crm_user_region,
+    NULL AS crm_user_area,
+    NULL AS crm_user_business_unit,
+    NULL AS crm_user_sales_segment_grouped,
+    NULL AS crm_user_sales_segment_region_grouped,
+    NULL AS crm_user_role_name,
+    NULL AS crm_user_role_level_1,
+    NULL AS crm_user_role_level_2,
+    NULL AS crm_user_role_level_3,
+    NULL AS crm_user_role_level_4,
+    NULL AS crm_user_role_level_5,
+    NULL AS crm_account_user_sales_segment,
+    NULL AS crm_account_user_sales_segment_grouped,
+    NULL AS crm_account_user_geo,
+    NULL AS crm_account_user_region,
+    NULL AS crm_account_user_area,
+    NULL AS crm_account_user_sales_segment_region_grouped,
+
     -- channel fields
     
     partner_account.crm_account_name AS partner_account_name,
@@ -174,10 +213,11 @@ final AS (
     dim_date.current_day_of_fiscal_quarter,
     dim_date.current_day_of_fiscal_year,
     CASE WHEN current_day_name = 'Sun' THEN dim_date.current_date_actual
-      ELSE DATEADD('day', -1, DATE_TRUNC('week', dim_date.current_date_actual)) END     AS current_first_day_of_week,--need to add this field to date_details
+      ELSE DATEADD('day', -1, DATE_TRUNC('week', dim_date.current_date_actual)) END     
+                                                                    AS current_first_day_of_week,
     FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7))                   
                                                                     AS current_week_of_fiscal_quarter_normalised,
-    DATEDIFF('week',dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) + 1     
+    FLOOR((DATEDIFF(day, dim_date.current_first_day_of_fiscal_quarter, dim_date.current_date_actual) / 7)) 
                                                                     AS current_week_of_fiscal_quarter,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
@@ -326,7 +366,7 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    DATEDIFF('week',dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) + 1     
+    FLOOR((DATEDIFF(day, dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) / 7)) 
                                                                     AS snapshot_week_of_fiscal_quarter,
 
     --additive fields
