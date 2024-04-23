@@ -1,6 +1,7 @@
 import requests
-from logging import error, info, basicConfig, getLogger, warning
+import sys
 import pandas as pd
+from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
 
 from gitlabdata.orchestration_utils import (
