@@ -13,7 +13,7 @@
     -- Example: if last date snapshot = 2023-08-04, then we need to add 2023-07-01 (as we are not yet on 2023-08-05) and also 2023-08-01 (current_month) to the table
     SELECT
       first_day_of_month,
-      snapshot_date_fifth,
+      snapshot_date_fpa_fifth,
       date_actual,
       (SELECT MAX(snapshot_date) FROM mart_arr_snapshot_model) AS max_snapshot_date
     FROM dim_date
@@ -71,7 +71,7 @@
 
     SELECT
       FALSE AS is_arr_month_finalized,
-      dim_date_actual.snapshot_date_fifth                                                       AS snapshot_date,
+      dim_date_actual.snapshot_date_fpa_fifth                                                   AS snapshot_date,
       arr_month,
       fiscal_quarter_name_fy,
       fiscal_year,
