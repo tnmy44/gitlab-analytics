@@ -395,6 +395,16 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Ce
 
 {% enddocs %}
 
+{% docs fct_invoice_item_adjustment %}
+
+Fact table providing invoice item adjustment details. One invoice may have several invoice items. The grain is the item adjustment.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Billing/Bill_your_customers/Adjust_invoice_amounts/Invoice_Item_Adjustments/AA_Overview_of_Invoice_Item_Adjustments).
+
+{% enddocs %}
+
 {% docs fct_payment %}
 
 Fact table providing payment details at the single grain of a payment received for a single invoice or multiple invoices.
