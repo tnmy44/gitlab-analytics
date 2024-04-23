@@ -47,7 +47,7 @@ dag = DAG(
     "hyperproof_extract",
     default_args=default_args,
     concurrency=2,
-    schedule_interval="25 */12 * * *",
+    schedule_interval="25 22 * * *",
     catchup=False,
 )
 
