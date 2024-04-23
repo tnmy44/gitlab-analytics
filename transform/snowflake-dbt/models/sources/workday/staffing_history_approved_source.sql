@@ -40,6 +40,7 @@ renamed AS (
     d.value['SUPORG_PROPOSED']::VARCHAR               AS suporg_current,
     d.value['TEAM_ID_CURRENT']::VARCHAR               AS team_id_past,
     d.value['TEAM_ID_PROPOSED']::VARCHAR              AS team_id_current,
+    d.value['JOB_WORKDAY_ID_CURRENT']::VARCHAR       AS job_workday_id_past,    
     d.value['JOB_WORKDAY_ID_PROPOSED']::VARCHAR       AS job_workday_id_current,
     d.value['JOB_TITLE_CURRENT']::VARCHAR             AS job_title_past,
     d.value['JOB_TITLE_PROPOSED']::VARCHAR            AS job_title_current,
