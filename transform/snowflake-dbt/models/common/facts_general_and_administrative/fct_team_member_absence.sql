@@ -45,7 +45,7 @@ combined_sources AS (
     team_status.entity,
     team_status.is_position_active
     pto.start_date AS absence_start,
-    pto.end_date AS absense_end,
+    pto.end_date AS absence_end,
     pto.is_pto AS is_pto,
     pto.total_hours AS total_hours,
     pto.recorded_hours AS recorded_hours,
