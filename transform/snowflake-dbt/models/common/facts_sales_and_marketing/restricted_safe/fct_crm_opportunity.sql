@@ -183,33 +183,33 @@
       END                                                                                                                         AS crm_current_account_set_business_unit,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_name
-        ELSE sales_rep.user_role_name
+          THEN prep_crm_user_hierarchy.crm_user_role_name
+        ELSE account_hierarchy.crm_user_role_name
       END                                                                                                                         AS crm_current_account_set_role_name,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_level_1
-        ELSE sales_rep.user_role_level_1
+          THEN prep_crm_user_hierarchy.crm_user_role_level_1
+        ELSE account_hierarchy.crm_user_role_level_1
       END                                                                                                                         AS crm_current_account_set_role_level_1,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_level_2
-        ELSE sales_rep.user_role_level_2
+          THEN prep_crm_user_hierarchy.crm_user_role_level_2
+        ELSE account_hierarchy.crm_user_role_level_2
       END                                                                                                                         AS crm_current_account_set_role_level_2,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_level_3
-        ELSE sales_rep.user_role_level_3
+          THEN prep_crm_user_hierarchy.crm_user_role_level_3
+        ELSE account_hierarchy.crm_user_role_level_3
       END                                                                                                                         AS crm_current_account_set_role_level_3,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_level_4
-        ELSE sales_rep.user_role_level_4
+          THEN prep_crm_user_hierarchy.crm_user_role_level_4
+        ELSE account_hierarchy.crm_user_role_level_4
       END                                                                                                                         AS crm_current_account_set_role_level_4,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.user_role_level_5
-        ELSE sales_rep.user_role_level_5
+          THEN prep_crm_user_hierarchy.crm_user_role_level_5
+        ELSE account_hierarchy.crm_user_role_level_5
       END                                                                                                                         AS crm_current_account_set_role_level_5,
 
       sfdc_opportunity.ssp_id,
