@@ -74,29 +74,6 @@ SELECT
         AND dim_date.fiscal_year < 2025 -- stop geo hierarchy after 2024
         AND prep_crm_user_daily_snapshot.is_active = TRUE
 
-), user_role_hierarchy_snapshot_source AS (
-    SELECT DISTINCT
-      dim_date.fiscal_year,
-      NULL                                                            AS user_segment,
-      NULL                                                            AS user_geo,
-      NULL                                                            AS user_region,
-      NULL                                                            AS user_area,
-      NULL                                                            AS user_business_unit,
-      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
-      prep_crm_user_daily_snapshot.user_role_name, 
-      prep_crm_user_daily_snapshot.user_role_level_1, 
-      prep_crm_user_daily_snapshot.user_role_level_2, 
-      prep_crm_user_daily_snapshot.user_role_level_3, 
-      prep_crm_user_daily_snapshot.user_role_level_4, 
-      prep_crm_user_daily_snapshot.user_role_level_5
-    FROM prep_crm_user_daily_snapshot
-    INNER JOIN dim_date 
-      ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE user_role_level_1 IS NOT NULL
-        AND dim_date.fiscal_year >= 2025
-        AND prep_crm_user_daily_snapshot.is_active = TRUE
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY prep_crm_user_daily_snapshot.user_role_name, dim_date.fiscal_year ORDER BY snapshot_id DESC) = 1
-
 ), user_role_hierarchy_live_source AS (
     SELECT DISTINCT
       current_fiscal_year.fiscal_year,
@@ -252,11 +229,6 @@ SELECT
 
     SELECT *
     FROM user_geo_hierarchy_source
-
-    UNION
-
-    SELECT *
-    FROM user_role_hierarchy_snapshot_source
 
     UNION
 
