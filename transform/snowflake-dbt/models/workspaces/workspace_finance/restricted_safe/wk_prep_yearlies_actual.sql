@@ -74,10 +74,12 @@ adoption_metrics_final AS (
   SELECT
     yearly_name,
     source_table,
-    arr_month AS month,
+    dim_date.fiscal_quarter_name_fy as quarter,
     percent_of_total AS actuals_raw
   FROM
     adoption_metrics_2
+  LEFT JOIN dim_date
+  ON arr_month = date_actual
   WHERE arr_month = dateadd(month, -1, date_trunc(month, current_date))
   AND usage_data_sent = true
 ),
