@@ -39,5 +39,10 @@ WITH source AS (
 
 )
 
-SELECT *
-FROM source
+{{ dbt_audit(
+    cte_ref="source",
+    created_by="@mcooperDD",
+    updated_by="@chrissharp",
+    created_date="2021-01-05",
+    updated_date="2024-04-23"
+) }}
