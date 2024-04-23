@@ -77,7 +77,6 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    # Only has data from March 2018
     "start_date": datetime(2023, 8, 24),
 }
 
@@ -129,7 +128,6 @@ for export in stream["exports"]:
         export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
     billing_extract_command = f"""
-    {clone_and_setup_extraction_cmd} &&
     {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcs_external.py \
         --selected_columns={export['selected_columns']} \
