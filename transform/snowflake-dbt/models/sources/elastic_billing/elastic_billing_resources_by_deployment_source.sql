@@ -22,8 +22,12 @@ parsed as (
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(payload), outer => TRUE) AS dims
       INNER JOIN LATERAL FLATTEN(input => PARSE_JSON(dims.value), outer => TRUE, mode => 'ARRAY') AS resources
   WHERE dims.path = 'resources'    
+  QUALIFY 
+    ROW_NUMBER () OVER (
+        PARTITION BY source.extraction_end_date, source.deployment_id, resources.value['sku']::varchar
+            ORDER BY to_timestamp(source._uploaded_at::int) DESC
+    ) = 1
 )
-
 
 SELECT * 
 FROM parsed
