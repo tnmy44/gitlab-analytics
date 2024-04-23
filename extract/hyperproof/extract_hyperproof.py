@@ -20,8 +20,6 @@ class HyperproofAPIClient:
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = None
-        info(f"Client ID: {client_id}")
-        info(f"Client Secret: {client_secret}")
 
     def authenticate(self):
         """
@@ -112,7 +110,7 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     if all_data:
-        info("Retrieved data from all endpoints:")
+        info("Retrieved data from all endpoints")
         for endpoint, data in all_data.items():
             if data and len(data) > 0:
                 info(f"Uploading {endpoint}.json to Snowflake stage.")
