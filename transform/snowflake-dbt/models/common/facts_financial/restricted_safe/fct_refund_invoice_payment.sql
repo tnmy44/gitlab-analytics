@@ -50,7 +50,7 @@ INNER JOIN zuora_account
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-02-28",
-updated_date="2024-02-28"
+created_date="2024-04-23",
+updated_date="2024-04-23"
 ) }}
 

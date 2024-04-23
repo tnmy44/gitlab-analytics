@@ -387,7 +387,7 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Pa
 
 {% docs fct_credit_balance_adjustment %}
 
-Fact table providing refund details made on an invoice or billing account.
+Fact table providing credit balance adjustment details made on an invoice or billing account.
 
 The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
 
