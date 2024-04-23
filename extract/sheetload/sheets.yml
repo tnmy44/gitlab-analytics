@@ -359,3 +359,7 @@ sheets:
     owner: '@rakhireddy'
     tabs: 
       - ta_team_assignment
+  - name: job_profiles_historical
+    owner: '@rakhireddy'
+    tabs: 
+      - job_profiles_historical
