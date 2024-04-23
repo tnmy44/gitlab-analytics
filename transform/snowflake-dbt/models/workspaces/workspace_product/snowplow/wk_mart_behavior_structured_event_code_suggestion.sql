@@ -160,5 +160,5 @@ filtered_code_suggestion_events AS (
     created_by="@cbraza",
     updated_by="@michellecooper",
     created_date="2023-10-09",
-    updated_date="2023-04-12"
+    updated_date="2023-04-23"
 ) }}
