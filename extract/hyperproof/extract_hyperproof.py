@@ -111,10 +111,10 @@ if __name__ == "__main__":
         info("Retrieved data from all endpoints:")
         for endpoint, data in all_data.items():
             if data and len(data) > 0:
+                info(f"Uploading {endpoint}.json to Snowflake stage.")
+
                 df = pd.DataFrame(data)
                 df.to_json(f"{endpoint}.json", orient="records")
-
-                info(f"Uploading {endpoint}.json to Snowflake stage.")
 
                 snowflake_stage_load_copy_remove(
                     f"{endpoint}.json",
