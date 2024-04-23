@@ -14,6 +14,3 @@ FROM
   LEFT JOIN {{ ref('wk_prep_yearlies_actual') }} AS yearlies_actual
   ON yearlies_target.quarter = yearlies_actual.quarter
   AND yearlies_target.yearly_name = yearlies_actual.yearly_name
-
-
-
