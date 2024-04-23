@@ -2830,7 +2830,7 @@ Code suggestions can be returned to the user in a single response or as a stream
 
 {% docs code_suggestions_gitlab_global_user_id %}
 
-Psudonymised user id sent in Code Suggestions events.
+Pseudonymised combination of instance id and user id sent in Code Suggestions events.
 
 {% enddocs %}
 
