@@ -95,7 +95,7 @@ SELECT
     WHERE user_role_level_1 IS NOT NULL
         AND dim_date.fiscal_year >= 2025
         AND prep_crm_user_daily_snapshot.is_active = TRUE
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_role_name ORDER BY snapshot_id DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY prep_crm_user_daily_snapshot.user_role_name, dim_date.fiscal_year ORDER BY snapshot_id DESC) = 1
 
 ), user_role_hierarchy_live_source AS (
     SELECT DISTINCT
