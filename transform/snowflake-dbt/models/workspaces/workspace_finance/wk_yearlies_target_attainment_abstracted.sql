@@ -15,3 +15,4 @@ SELECT
        ELSE actuals_raw END AS actuals_abstracted
 FROM
   {{ ref('wk_yearlies_target_attainment_mnpi') }} AS yearlies_mnpi
+  
