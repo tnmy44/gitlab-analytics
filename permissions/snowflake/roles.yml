@@ -6388,7 +6388,7 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - dbernardi:
+  - bleducmills:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7379,10 +7379,10 @@ users:
       can_login: true
       member_of:
         - lionel
-  - dbernardi:
+  - bleducmills:
       can_login: true
       member_of:
-        - dbernardi
+        - bleducmills
 warehouses:
   - admin:
       size: x-small
