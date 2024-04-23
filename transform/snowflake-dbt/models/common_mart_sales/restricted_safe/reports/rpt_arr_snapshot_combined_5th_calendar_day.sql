@@ -9,16 +9,16 @@
 , dim_date_actual AS (
   
     -- This CTE controls which months will be added from `mart_arr_current` to this table
-    -- If the last date in the snapshot table is below 7 we have to add two dates. The max month of the snapshot and the month before it
-    -- Example: if last date snapshot = 2023-08-07, then we need to add 2023-07-01 (as we are not yet on 2023-08-08) and also 2023-08-01 (current_month) to the table
+    -- If the last date in the snapshot table is below 5 we have to add two dates. The max month of the snapshot and the month before it
+    -- Example: if last date snapshot = 2023-08-04, then we need to add 2023-07-01 (as we are not yet on 2023-08-05) and also 2023-08-01 (current_month) to the table
     SELECT
       first_day_of_month,
-      snapshot_date_fpa,
+      snapshot_date_fpa_fifth,
       date_actual,
       (SELECT MAX(snapshot_date) FROM mart_arr_snapshot_model) AS max_snapshot_date
     FROM dim_date
     WHERE CASE
-        WHEN DAY(max_snapshot_date) <= 7
+        WHEN DAY(max_snapshot_date) <= 4
           THEN date_actual = max_snapshot_date
             OR date_actual = DATEADD('month', -1, max_snapshot_date)
         ELSE date_actual = max_snapshot_date
@@ -71,7 +71,7 @@
 
     SELECT
       FALSE AS is_arr_month_finalized,
-      dim_date_actual.snapshot_date_fpa                                                         AS snapshot_date,
+      dim_date_actual.snapshot_date_fpa_fifth                                                   AS snapshot_date,
       arr_month,
       fiscal_quarter_name_fy,
       fiscal_year,
@@ -171,10 +171,10 @@
     WHERE arr_month <= '2021-06-01'
 
 ), snapshot_dates AS (
-    --Use the 8th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
+    --Use the 5th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
     SELECT DISTINCT
       first_day_of_month,
-      snapshot_date_fpa
+      snapshot_date_fpa_fifth
     FROM dim_date
     ORDER BY 1 DESC
 
@@ -257,7 +257,7 @@
     FROM mart_arr_snapshot_model_combined
     INNER JOIN snapshot_dates
       ON mart_arr_snapshot_model_combined.arr_month = snapshot_dates.first_day_of_month
-      AND mart_arr_snapshot_model_combined.snapshot_date = snapshot_dates.snapshot_date_fpa
+      AND mart_arr_snapshot_model_combined.snapshot_date = snapshot_dates.snapshot_date_fpa_fifth
     --calculate parent cohort month based on correct cohort logic
     LEFT JOIN parent_cohort_month_snapshot
       ON mart_arr_snapshot_model_combined.dim_parent_crm_account_id = parent_cohort_month_snapshot.dim_parent_crm_account_id
@@ -372,13 +372,14 @@
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
+    WHERE combined.arr_month >= '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@iweeks",
-    updated_by="@jpeguero",
-    created_date="2021-08-16",
-    updated_date="2023-09-13"
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2024-04-22",
+    updated_date="2024-04-22"
 ) }}
