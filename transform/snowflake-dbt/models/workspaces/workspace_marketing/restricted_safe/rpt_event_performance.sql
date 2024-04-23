@@ -18,7 +18,7 @@
   ]) 
 }}
 
-WITH event_channel_campaigns AS (
+, event_channel_campaigns AS (
   SELECT DISTINCT bizible_salesforce_campaign AS dim_campaign_id
   FROM
     dim_crm_touchpoint
@@ -152,7 +152,7 @@ account_open_pipeline_live AS (
     SUM(COALESCE(net_arr, 0)) AS open_pipeline_live
   FROM mart_crm_opportunity_stamped_hierarchy_hist
   WHERE is_net_arr_pipeline_created = TRUE AND is_eligible_open_pipeline = 1 AND is_open = 1
-  GROUP BY 1
+  {{dbt_utils.group_by(n=1)}}
 
 ),
 
@@ -171,7 +171,7 @@ account_summary AS (
   LEFT JOIN
     account_open_pipeline_live
     ON campaign_members.person_account_id = account_open_pipeline_live.dim_crm_account_id
-  GROUP BY 1, 2, 3, 4, 5
+  {{dbt_utils.group_by(n=5)}}
 ),
 
 
@@ -300,7 +300,7 @@ account_pipeline AS (
     ON account_summary.dim_crm_account_id = opportunity_snapshot_base.dim_crm_account_id
       AND snapshot_dates.date_day = opportunity_snapshot_base.opportunity_snapshot_date
  
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
+  {{dbt_utils.group_by(n=8)}}
 ),
 
 
@@ -430,7 +430,7 @@ aggregated_account_influenced_performance AS (
     SUM(CASE WHEN is_net_arr_pipeline_created THEN influenced_net_arr END) AS influenced_pipeline
   FROM
     combined_models
-  GROUP BY ALL
+  {{dbt_utils.group_by(n=4)}}
 
 ),
 
