@@ -31,7 +31,7 @@ WITH prep_ci_runner AS (
       WHEN ci_runner_description ILIKE '%.shared-gitlab-org.runners-manager.%'
         THEN 'shared-gitlab-org-runner-mgr'
       --- macOS Runners
-      WHEN ci_runner_description ILIKE '%macOS%'
+      WHEN LOWER(ci_runner_description) ILIKE '%macos%'
         THEN 'macos-runner-mgr'
       --- Other
       ELSE 'Other'
@@ -40,29 +40,29 @@ WITH prep_ci_runner AS (
     --- CI Runner Machine Type Mapping
     CASE
       --- SaaS Linux Runners
-      WHEN ci_runner_description ILIKE '%.shared.runners-manager.%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.shared.runners-manager.%'
         THEN 'Hosted Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%.saas-linux-small-amd64%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-small-amd64%'
         THEN 'Hosted Runner Linux - Small'
-      WHEN ci_runner_description ILIKE '%.saas-linux-medium-amd64%'
-        AND ci_runner_description NOT ILIKE '%gpu-standard%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-amd64%'
+        AND LOWER(ci_runner_description) NOT ILIKE '%gpu-standard%'
         THEN 'Hosted Runner Linux - Medium - amd64'
-      WHEN ci_runner_description ILIKE '%.saas-linux-medium-arm64%'
-        AND ci_runner_description NOT ILIKE '%gpu-standard%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-arm64%'
+        AND LOWER(ci_runner_description) NOT ILIKE '%gpu-standard%'
         THEN 'Hosted Runner Linux - Medium - arm64'
-      WHEN ci_runner_description ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
+      WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
         THEN 'Hosted GPU-Enabled Runners'
-      WHEN ci_runner_description ILIKE '%saas-linux-large-amd64%'
+      WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-large-amd64%'
         THEN 'Hosted Runner Linux - Large'
-      WHEN ci_runner_description ILIKE '%saas-linux-xlarge-amd64%'
+      WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-xlarge-amd64%'
         THEN 'Hosted Runner Linux - XLarge'
-      WHEN ci_runner_description ILIKE '%saas-linux-2xlarge-amd64%'
+      WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-2xlarge-amd64%'
         THEN 'Hosted Runner Linux - 2XLarge'
       --- MacOS Runners
-      WHEN ci_runner_description ILIKE '%macos%'
+      WHEN LOWER(ci_runner_description) ILIKE '%macos-medium-m1%'
         THEN 'Hosted Runners macOS - Medium - amd64'
       --- Window Runners 
-      WHEN ci_runner_description ILIKE '_.saas-windows-%'
+      WHEN LOWER(ci_runner_description) ILIKE '_.saas-windows-%'
         THEN 'Hosted Runners Windows - Medium'
       ELSE 'Other'
     END         AS ci_runner_machine_type,
