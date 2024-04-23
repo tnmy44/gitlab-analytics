@@ -1,11 +1,15 @@
 version: 2
 
 models:
-  - name: hyperproof_controls
+  - name: hyperproof_controls_source
     description: '{{ doc("hyperproof_controls_docs") }}'
-  - name: hyperproof_programs
-  - name: hyperproof_roles
-  - name: hyperproof_task_statuses
-  - name: hyperproof_users
+  - name: hyperproof_programs_source
+  - name: hyperproof_roles_source
+  - name: hyperproof_task_statuses_source
+  - name: hyperproof_users_source
+    columns:
+      - name: email
+        meta:
+          sensitive: true
 
 
