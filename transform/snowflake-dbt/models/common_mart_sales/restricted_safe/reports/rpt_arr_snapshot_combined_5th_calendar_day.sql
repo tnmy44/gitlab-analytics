@@ -174,7 +174,7 @@
     --Use the 5th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
     SELECT DISTINCT
       first_day_of_month,
-      snapshot_date_fifth
+      snapshot_date_fpa_fifth
     FROM dim_date
     ORDER BY 1 DESC
 
@@ -257,7 +257,7 @@
     FROM mart_arr_snapshot_model_combined
     INNER JOIN snapshot_dates
       ON mart_arr_snapshot_model_combined.arr_month = snapshot_dates.first_day_of_month
-      AND mart_arr_snapshot_model_combined.snapshot_date = snapshot_dates.snapshot_date_fifth
+      AND mart_arr_snapshot_model_combined.snapshot_date = snapshot_dates.snapshot_date_fpa_fifth
     --calculate parent cohort month based on correct cohort logic
     LEFT JOIN parent_cohort_month_snapshot
       ON mart_arr_snapshot_model_combined.dim_parent_crm_account_id = parent_cohort_month_snapshot.dim_parent_crm_account_id
