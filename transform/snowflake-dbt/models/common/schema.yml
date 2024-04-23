@@ -5557,6 +5557,16 @@ models:
           - not_null
           - unique
 
+  - name: fct_invoice_payment
+    description: '{{ doc("fct_invoice_payment") }}'
+    columns:
+      - name: invoice_payment_id
+        description: Zuora invoice payment transaction - grain is one payment applied to the invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: fct_manual_journal_entry_line
     description: '{{ doc("fct_manual_journal_entry_line") }}'
     columns:

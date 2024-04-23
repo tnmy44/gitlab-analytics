@@ -355,6 +355,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_invoice_payment %}
+
+Fact table providing invoice payment details at the single grain of a payment applied to an invoice.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/InvoicePayment).
+
+{% enddocs %}
+
 {% docs fct_charge %}
 Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription.
 
