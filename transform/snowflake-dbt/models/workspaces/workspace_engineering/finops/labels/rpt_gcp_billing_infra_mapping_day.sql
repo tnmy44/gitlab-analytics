@@ -4,21 +4,24 @@
 }}
 
 
-WITH export AS (
 
-  SELECT * FROM {{ ref('gcp_billing_export_xf') }}
-  WHERE invoice_month >= '2022-01-01'
 
-),
-
-credits AS ( --excluding migration credit between march 7th and March 27th: https://gitlab.com/gitlab-org/quality/engineering-analytics/finops/finops-analysis/-/issues/142
+WITH credits AS ( --excluding migration credit between march 7th and March 27th: https://gitlab.com/gitlab-org/quality/engineering-analytics/finops/finops-analysis/-/issues/142
 
   SELECT
     cr.source_primary_key,
-    SUM(cr.credit_amount) AS total_credit
+    SUM(coalesce(cr.credit_amount, 0)) AS total_credit
   FROM {{ ref('gcp_billing_export_credits') }} AS cr
-  WHERE LOWER(cr.credit_description) NOT LIKE '%1709765302259%'
+  WHERE LOWER(cr.credit_description) != 'migration-credit-1-1709765302259'
   GROUP BY cr.source_primary_key
+
+),
+
+export AS (
+
+  SELECT xf.*, cr.total_credit FROM {{ ref('gcp_billing_export_xf') }} xf
+  LEFT JOIN credits cr ON cr.source_primary_key = xf.source_primary_key
+  WHERE invoice_month >= '2023-01-01'
 
 ),
 
@@ -115,6 +118,7 @@ folder_labels AS (
 
 ),
 
+
 billing_base AS (
 
   SELECT
@@ -131,7 +135,7 @@ billing_base AS (
     SUM(export.usage_amount)                                   AS usage_amount,
     SUM(export.usage_amount_in_pricing_units)                  AS usage_amount_in_pricing_units,
     SUM(export.cost_before_credits)                            AS cost_before_credits,
-    SUM(export.cost_before_credits) + SUM(cr.total_credit)     AS net_cost
+    SUM(export.cost_before_credits + coalesce(export.total_credit, 0))      AS net_cost
   FROM
     export
   LEFT JOIN
@@ -148,8 +152,6 @@ billing_base AS (
       export.source_primary_key = runner_labels.source_primary_key
   LEFT JOIN
     folder_labels ON export.source_primary_key = folder_labels.source_primary_key
-  LEFT JOIN
-    credits cr ON cr.source_primary_key = export.source_primary_key
   {{ dbt_utils.group_by(n=10) }}
 
 )
