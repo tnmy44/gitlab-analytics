@@ -44,39 +44,41 @@ adoption_metrics_1 AS (
     *
   FROM rpt_product_usage_health_score
   WHERE INSTANCE_TYPE = 'Production'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY SNAPSHOT_MONTH, DIM_SUBSCRIPTION_ID_ORIGINAL
-  ORDER BY BILLABLE_USER_COUNT desc nulls last, PING_CREATED_AT desc nulls last) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type
+  ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
 ),
 
 adoption_metrics_2 AS (
   SELECT
     '3.1 Adoption Metrics' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR, PROD.COMMON_MART_PRODUCT.RPT_PRODUCT_USAGE_HEALTH_SCORE' AS source_table,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL, PROD.COMMON_MART_PRODUCT.RPT_PRODUCT_USAGE_HEALTH_SCORE' AS source_table,
     fiscal_quarter_name_fy,
     arr_month,
-    CASE WHEN adoption_metrics_1.dim_subscription_id_original is not null then true else false end AS usage_data_sent,
+    IFF(adoption_metrics_1.ping_created_at is not null, true, false) AS usage_data_sent,
     SUM(arr) AS arr,
     SUM(arr)/SUM(SUM(arr)) OVER (partition by arr_month) AS percent_of_total
   FROM
    mart_arr_all
-   left join 
+   left join
       adoption_metrics_1
       on arr_month = snapshot_month
       AND mart_arr_all.dim_subscription_id_original = adoption_metrics_1.dim_subscription_id_original
       AND mart_arr_all.product_delivery_type = adoption_metrics_1.delivery_type
-
+   WHERE product_tier_name <> 'Storage'
+		AND product_tier_name <> 'Not Applicable'
+  
   GROUP BY 1,2,3,4,5
 ),
 
 adoption_metrics_final AS (
-  SELECT 
+  SELECT
     yearly_name,
     source_table,
-    fiscal_quarter_name_fy AS quarter,
+    arr_month AS month,
     percent_of_total AS actuals_raw
   FROM
-    adoption_metrics_2 
-  WHERE fiscal_quarter_name_fy like 'FY25%'
+    adoption_metrics_2
+  WHERE arr_month = dateadd(month, -1, date_trunc(month, current_date))
   AND usage_data_sent = true
 ),
 
