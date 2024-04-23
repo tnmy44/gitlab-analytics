@@ -8,6 +8,8 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
 )
 
+basicConfig(stream=sys.stdout, level=20)
+getLogger("snowflake.connector.cursor").disabled = True
 
 class HyperproofAPIClient:
     def __init__(self, client_id: str, client_secret: str) -> None:
