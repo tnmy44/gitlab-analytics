@@ -385,6 +385,16 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Pa
 
 {% enddocs %}
 
+{% docs fct_credit_balance_adjustment %}
+
+Fact table providing refund details made on an invoice or billing account.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/CreditBalanceAdjustment).
+
+{% enddocs %}
+
 {% docs fct_payment %}
 
 Fact table providing payment details at the single grain of a payment received for a single invoice or multiple invoices.

@@ -5488,6 +5488,16 @@ models:
           - unique
         tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
 
+  - name: fct_credit_balance_adjustment
+    description: '{{ doc("fct_credit_balance_adjustment") }}'
+    columns:
+      - name: credit_balance_adjustment_id
+        description: Zuora credit balance adjustment - grain is one adjustment per invoice or account
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: fct_invoice
     description: '{{ doc("fct_invoice") }}'
     columns:
@@ -5709,7 +5719,7 @@ models:
         tags: ["tdf", "common", "invoice"]
 
   - name: fct_refund
-    description: Zuora refund transaction - grain is one refund either from invoice or account
+    description: '{{ doc("fct_refund") }}'
     columns:
       - name: refund_id
         description: Zuora refund transaction - grain is a refund made on the invoice or account
