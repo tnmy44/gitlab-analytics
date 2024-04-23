@@ -16,7 +16,4 @@ exports:
     bucket_path: gs://gl_gcp_billing_export/summary
     partition_column: CAST(DATE(_partitiontime) AS STRING FORMAT 'YYYY-MM')
     partition_date_part: m
-    selected_columns:
-      - "*"
-      - DATE(_PARTITIONTIME) as _partition_date
-      - current_timestamp() as gcs_export_time
+    selected_columns: "*"
