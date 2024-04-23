@@ -5498,6 +5498,16 @@ models:
           - unique
         tags: ["tdf", "common", "invoice"]
 
+  - name: fct_invoice_aging_detail
+    description: '{{ doc("fct_invoice_aging_detail") }}'
+    columns:
+      - name: invoice_aging_detail_id
+        description: The unique identifier of a transaction
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: fct_invoice_item
     description: '{{ doc("fct_invoice_item") }}'
     columns:
