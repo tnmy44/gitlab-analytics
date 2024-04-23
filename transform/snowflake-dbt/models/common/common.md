@@ -375,6 +375,16 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Ce
 
 {% enddocs %}
 
+{% docs fct_refund %}
+
+Fact table providing refund details made on an invoice or billing account.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Payment_Operations/CC_Refunds).
+
+{% enddocs %}
+
 {% docs fct_payment %}
 
 Fact table providing payment details at the single grain of a payment received for a single invoice or multiple invoices.

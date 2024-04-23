@@ -5708,6 +5708,16 @@ models:
           - unique
         tags: ["tdf", "common", "invoice"]
 
+  - name: fct_refund
+    description: Zuora refund transaction - grain is one refund either from invoice or account
+    columns:
+      - name: refund_id
+        description: Zuora refund transaction - grain is a refund made on the invoice or account
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: fct_refund_invoice_payment
     description: '{{ doc("fct_refund_invoice_payment") }}'
     columns:
