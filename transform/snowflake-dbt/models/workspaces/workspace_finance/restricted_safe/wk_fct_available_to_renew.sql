@@ -250,8 +250,7 @@
     FROM subscriptions_for_all    
     LEFT JOIN fct_charge   
       ON subscriptions_for_all.dim_subscription_id = fct_charge.dim_subscription_id        
-      AND subscriptions_for_all.term_end_date = TO_VARCHAR(TO_DATE(TO_CHAR(effective_end_date_id),'yyyymmdd'), 'YYYY-MM-DD')       
-      AND fct_charge.effective_start_date_id != fct_charge.effective_end_date_id        
+      AND subscriptions_for_all.term_end_date = TO_VARCHAR(TO_DATE(TO_CHAR(effective_end_date_id),'yyyymmdd'), 'YYYY-MM-DD')             
     INNER JOIN dim_billing_account
       ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN PROD.RESTRICTED_SAFE_COMMON.DIM_CHARGE dim_charge  
