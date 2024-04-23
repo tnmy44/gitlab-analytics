@@ -2,7 +2,7 @@
  ('dim_date', 'dim_date'),
  ('dim_crm_account_daily_snapshot', 'dim_crm_account_daily_snapshot'),
  ('dim_crm_account', 'dim_crm_account'),
- ('rpt_arr', 'rpt_arr_snapshot_combined_8th_calendar_day')
+ ('rpt_arr', 'rpt_arr_snapshot_combined')
 ]) }},
 
 dim_crm_account_live AS (
