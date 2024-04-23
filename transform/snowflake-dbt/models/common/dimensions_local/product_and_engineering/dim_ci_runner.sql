@@ -62,7 +62,7 @@ WITH prep_ci_runner AS (
       WHEN ci_runner_description ILIKE '%macos%'
         THEN 'Hosted Runners macOS - Medium - amd64'
       --- Window Runners 
-      WHEN ci_runner_description ILIKE 'windows-shared-runners-manager%'
+      WHEN ci_runner_description ILIKE '_.saas-windows-%'
         THEN 'Hosted Runners Windows - Medium'
       ELSE 'Other'
     END         AS ci_runner_machine_type,
