@@ -368,7 +368,7 @@
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
-    WHERE combined.arr_month >= '2024-03-01'
+    WHERE combined.arr_month >= '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
 
