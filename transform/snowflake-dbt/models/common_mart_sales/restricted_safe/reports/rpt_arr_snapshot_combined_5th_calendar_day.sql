@@ -64,7 +64,6 @@
       parent_crm_account_employee_count_band,
       is_jihu_account
     FROM mart_arr_snapshot_model
-    WHERE snapshot_date >= '2024-03-01'
 
     UNION ALL
 
@@ -369,13 +368,14 @@
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
+    WHERE combined.arr_month >= '2024-03-01'
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@iweeks",
-    updated_by="@jpeguero",
-    created_date="2021-08-16",
-    updated_date="2023-09-13"
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2024-04-22",
+    updated_date="2024-04-22"
 ) }}
