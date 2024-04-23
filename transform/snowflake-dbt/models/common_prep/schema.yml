@@ -148,6 +148,10 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
+      - name: lead_score_classification
+        description: The Salesforce grade of the lead score for a lead/contact. 
+      - name: is_defaulted_trial
+        description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'

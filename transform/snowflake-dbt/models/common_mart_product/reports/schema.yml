@@ -1612,6 +1612,10 @@ models:
       description: First date any team activation event was triggered.
     - name: dbt_updated_at
     - name: dbt_created_at
+    - name: lead_score_classification
+      description: The Salesforce grade of the lead score for a lead/contact. 
+    - name: is_defaulted_trial
+      description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
 - name: rpt_product_usage_health_score
   description: '{{ doc("rpt_product_usage_health_score") }}'
