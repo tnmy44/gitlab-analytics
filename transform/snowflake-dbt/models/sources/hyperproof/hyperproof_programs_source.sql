@@ -9,7 +9,7 @@ WITH source AS (
       data_by_row.value['baselineEnabled']::VARCHAR                 AS baseline_enabled,
       data_by_row.value['clonedProgramId']::VARCHAR                 AS cloned_program_id,
       data_by_row.value['createdBy']::VARCHAR                       AS created_by,
-      data_by_row.value['createdOn']::VARCHAR                       AS created_on,
+      data_by_row.value['createdOn']::TIMESTAMP                     AS created_on,
       data_by_row.value['description']::VARCHAR                     AS description,
       data_by_row.value['frameworkLicenseNotice']::VARCHAR          AS framework_license_notice,
       data_by_row.value['id']::VARCHAR                              AS id,
@@ -26,7 +26,7 @@ WITH source AS (
       data_by_row.value['sourceTemplateId']::VARCHAR                AS source_template_id,
       data_by_row.value['status']::VARCHAR                          AS status,
       data_by_row.value['updatedBy']::VARCHAR                       AS updated_by,
-      data_by_row.value['updatedOn']::VARCHAR                       AS updated_on,
+      data_by_row.value['updatedOn']::TIMESTAMP                     AS updated_on,
       data_by_row.value['workStatus']::VARCHAR                      AS work_status,
       uploaded_at
     FROM source,
