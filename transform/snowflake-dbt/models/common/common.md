@@ -365,6 +365,16 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Pa
 
 {% enddocs %}
 
+{% docs fct_refund_invoice_payment %}
+
+Fact table providing refund invoice payment details at the single grain of a refund made on an invoice.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/Reporting/D_Data_Sources_and_Exports/C_Data_Source_Reference/Refund_Invoice_Payment_Data_Source).
+
+{% enddocs %}
+
 {% docs fct_payment %}
 
 Fact table providing payment details at the single grain of a payment received for a single invoice or multiple invoices.
