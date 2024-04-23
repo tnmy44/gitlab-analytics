@@ -508,7 +508,6 @@ SELECT DISTINCT
     account_pipeline.attended_leads,
     account_pipeline.sourced_pipeline_post_event,
     account_pipeline.sourced_opps_post_event,
-    account_pipeline.open_pipeline_live,
     account_pipeline.open_pipeline,
     account_pipeline.open_pipeline_opps,
     aggregated_account_influenced_performance.influenced_pipeline
