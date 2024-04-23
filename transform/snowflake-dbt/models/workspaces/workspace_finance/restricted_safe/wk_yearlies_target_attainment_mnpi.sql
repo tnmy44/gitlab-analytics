@@ -6,6 +6,7 @@ SELECT
   yearlies_target.yearly_description,
   yearlies_target.is_mnpi,
   yearlies_target.quarter,
+  yearlies_actual.source_table,
   yearlies_target.targets_raw,
   yearlies_actual.actuals_raw,
   DIV0NULL(yearlies_actual.actuals_raw,yearlies_target.targets_raw) AS target_attainment
