@@ -158,14 +158,19 @@ account_open_pipeline_live AS (
 
 
 account_summary AS (
-  SELECT DISTINCT
+  SELECT 
     dim_campaign_id,
     person_account_id                                                                         AS dim_crm_account_id,
     true_event_date,
     campaign_name,
     open_pipeline_live,
     COUNT(DISTINCT dim_crm_person_id)                                                         AS registered_leads,
-    COUNT(DISTINCT CASE WHEN campaign_member_has_responded = TRUE THEN dim_crm_person_id END) AS attended_leads
+    COUNT(
+      DISTINCT 
+      CASE 
+      WHEN campaign_member_has_responded = TRUE 
+      THEN dim_crm_person_id 
+      END) AS attended_leads
   FROM
     campaign_members
   LEFT JOIN
@@ -180,34 +185,45 @@ account_summary AS (
 --SNAPSHOT MODELS
 
 snapshot_dates AS (
-  SELECT DISTINCT
+  SELECT 
     dim_campaign_id,
     true_event_date AS date_day,
     'Event Date'    AS event_snapshot_type
-  FROM campaigns
+  FROM 
+  campaigns
   UNION
-  SELECT DISTINCT
+  SELECT 
     dim_campaign_id,
     DATEADD(DAY, 14, true_event_date) AS date_day,
     '14 Days Post Event'              AS event_snapshot_type
-  FROM campaigns
+  FROM 
+  campaigns
   UNION
-  SELECT DISTINCT
+  SELECT 
     dim_campaign_id,
     DATEADD(DAY, 30, true_event_date) AS date_day,
     '30 Days Post Event'              AS event_snapshot_type
-  FROM campaigns
+  FROM 
+  campaigns
   UNION
-  SELECT DISTINCT
+  SELECT 
     dim_campaign_id,
     DATEADD(DAY, 90, true_event_date) AS date_day,
     '90 Days Post Event'              AS event_snapshot_type
-  FROM campaigns
+  FROM 
+  campaigns
+),
+
+snapshot_opportunity_dates AS (
+  SELECT DISTINCT 
+  date_day 
+  FROM 
+  snapshot_dates
 ),
 
 
 opportunity_snapshot_base AS (
-  SELECT DISTINCT
+  SELECT 
     snapshot.dim_crm_opportunity_id,
     snapshot.dim_crm_account_id,
     account.crm_account_name                  AS account_name,
@@ -263,8 +279,8 @@ opportunity_snapshot_base AS (
 
   FROM
     mart_crm_opportunity_daily_snapshot AS snapshot
-  INNER JOIN snapshot_dates
-    ON snapshot.snapshot_date = snapshot_dates.date_day
+  INNER JOIN snapshot_opportunity_dates
+    ON snapshot.snapshot_date = snapshot_opportunity_dates.date_day
   LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist AS live
     ON snapshot.dim_crm_opportunity_id = live.dim_crm_opportunity_id
   LEFT JOIN mart_crm_account AS account
@@ -286,10 +302,31 @@ account_pipeline AS (
     account_summary.registered_leads,
     account_summary.attended_leads,
     account_summary.open_pipeline_live,
-    SUM(CASE WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND opportunity_snapshot_base.is_net_arr_pipeline_created THEN opp_net_arr END)                                                 AS sourced_pipeline_post_event,
-    COUNT(DISTINCT CASE WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND opportunity_snapshot_base.is_net_arr_pipeline_created THEN opportunity_snapshot_base.dim_crm_opportunity_id END) AS sourced_opps_post_event,
-    SUM(CASE WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 THEN opp_net_arr END)                                                                                                            AS open_pipeline,
-    COUNT(DISTINCT CASE WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 AND opportunity_snapshot_base.is_net_arr_pipeline_created THEN opportunity_snapshot_base.dim_crm_opportunity_id END)  AS open_pipeline_opps
+    SUM(
+      CASE 
+      WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND 
+      opportunity_snapshot_base.is_net_arr_pipeline_created 
+      THEN opp_net_arr 
+      END) AS sourced_pipeline_post_event,
+    COUNT(
+      DISTINCT 
+      CASE 
+      WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND 
+      opportunity_snapshot_base.is_net_arr_pipeline_created 
+      THEN opportunity_snapshot_base.dim_crm_opportunity_id 
+      END) AS sourced_opps_post_event,
+    SUM(
+      CASE 
+      WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 
+      THEN opp_net_arr 
+      END) AS open_pipeline,
+    COUNT(
+      DISTINCT 
+      CASE 
+      WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 AND 
+      opportunity_snapshot_base.is_net_arr_pipeline_created 
+      THEN opportunity_snapshot_base.dim_crm_opportunity_id 
+      END)  AS open_pipeline_opps
   FROM
     account_summary
   LEFT JOIN
@@ -305,7 +342,7 @@ account_pipeline AS (
 
 
 attribution_touchpoint_snapshot_base AS (
-  SELECT DISTINCT
+  SELECT 
     snapshot_dates.date_day                                                                AS touchpoint_snapshot_date,
     snapshot_dates.dim_campaign_id,
     snapshot_dates.event_snapshot_type,
@@ -325,7 +362,7 @@ attribution_touchpoint_snapshot_base AS (
 -- TOUCHPOINT GRAIN COMBINED MODEL WITH OPP INFORMATION
 
 combined_models AS (
-  SELECT DISTINCT
+  SELECT 
   --IDs
     opportunity_snapshot_base.dim_crm_opportunity_id,
     opportunity_snapshot_base.dim_crm_account_id,
@@ -436,7 +473,7 @@ aggregated_account_influenced_performance AS (
 
 final AS (
 
-SELECT DISTINCT
+SELECT 
     --IDs
     account_pipeline.dim_crm_account_id,
     mart_crm_account.dim_parent_crm_account_id,
