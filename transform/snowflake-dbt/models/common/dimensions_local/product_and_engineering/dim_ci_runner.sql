@@ -42,7 +42,7 @@ WITH prep_ci_runner AS (
       --- SaaS Linux Runners
       WHEN LOWER(ci_runner_description) ILIKE '%.shared.runners-manager.%'
         THEN 'Hosted Runner Linux - Small'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-small-amd64%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-small-amd64.%'
         THEN 'Hosted Runner Linux - Small'
       WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-amd64%'
         AND LOWER(ci_runner_description) NOT ILIKE '%gpu-standard%'
