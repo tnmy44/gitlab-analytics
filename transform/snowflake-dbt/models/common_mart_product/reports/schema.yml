@@ -144,6 +144,8 @@ models:
       description: '{{ doc("dim_installation_id") }}'
     - name: latest_subscription_id
       description: '{{ doc("latest_subscription_id") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
     - name: ping_deployment_type
