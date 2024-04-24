@@ -58,7 +58,7 @@ WITH prep_ci_runner AS (
       WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-2xlarge-amd64.%'
         THEN 'Hosted Runner Linux - 2XLarge'
       --- MacOS Runners
-      WHEN LOWER(ci_runner_description) ILIKE '%macos-medium-m1%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-macos-medium-m1.%'
         THEN 'Hosted Runners macOS - Medium - amd64'
       --- Window Runners 
       WHEN LOWER(ci_runner_description) ILIKE '_.saas-windows-%'
