@@ -244,7 +244,7 @@ sheets:
   - name: sales_dev_targets_fy25
     owner: '@dmicovic'
     tabs:
-      - targets
+      - sales_dev_targets_fy25
   - name: sales_training_completion_dates
     owner: '@paul_armstrong'
     tabs:
