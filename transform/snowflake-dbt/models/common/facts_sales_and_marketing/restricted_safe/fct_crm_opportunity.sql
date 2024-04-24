@@ -103,11 +103,11 @@
       crm_account_dimensions.dim_account_location_region_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_hierarchy_id') }}                                                  AS dim_crm_opp_owner_user_hierarchy_id,
       sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_business_unit_stamped']) }}                            AS dim_crm_opp_owner_business_unit_stamped_id,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_sales_segment_stamped']) }}                            AS dim_crm_opp_owner_sales_segment_stamped_id,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_geo_stamped']) }}                                      AS dim_crm_opp_owner_geo_stamped_id,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_region_stamped']) }}                                   AS dim_crm_opp_owner_region_stamped_id,
-      {{ dbt_utils.generate_surrogate_key(['sfdc_opportunity.crm_opp_owner_area_stamped']) }}                                     AS dim_crm_opp_owner_area_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_business_unit_id') }}                                              AS dim_crm_opp_owner_business_unit_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_sales_segment_id') }}                                              AS dim_crm_opp_owner_sales_segment_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_geo_id') }}                                                        AS dim_crm_opp_owner_geo_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_region_id') }}                                                     AS dim_crm_opp_owner_region_stamped_id,
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_area_id') }}                                                       AS dim_crm_opp_owner_area_stamped_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_name_id') }}                                                  AS dim_crm_opp_owner_role_name_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_1_id') }}                                               AS dim_crm_opp_owner_role_level_1_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_role_level_2_id') }}                                               AS dim_crm_opp_owner_role_level_2_id,
@@ -126,6 +126,12 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                              AS dim_crm_account_user_geo_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                           AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                             AS dim_crm_account_user_area_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_name_id') }}                                                        AS dim_crm_account_user_role_name_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_level_1_id') }}                                                     AS dim_crm_account_user_role_level_1_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_level_2_id') }}                                                     AS dim_crm_account_user_role_level_2_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_level_3_id') }}                                                     AS dim_crm_account_user_role_level_3_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_level_4_id') }}                                                     AS dim_crm_account_user_role_level_4_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_role_level_5_id') }}                                                     AS dim_crm_account_user_role_level_5_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_user_hierarchy_account_user_sk  -- live account owner hierarchy
@@ -138,19 +144,9 @@
       END                                                                                                                         AS dim_crm_current_account_set_sales_segment_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.crm_user_sales_segment
-        ELSE sfdc_opportunity.crm_opp_owner_sales_segment_stamped
-      END                                                                                                                         AS crm_current_account_set_sales_segment,
-      CASE
-        WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_geo_id
         ELSE  dim_crm_opp_owner_geo_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_geo_id,
-      CASE
-        WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.crm_user_geo
-        ELSE  sfdc_opportunity.crm_opp_owner_geo_stamped
-      END                                                                                                                         AS crm_current_account_set_geo,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_region_id
@@ -158,19 +154,9 @@
       END                                                                                                                         AS dim_crm_current_account_set_region_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.crm_user_region
-        ELSE sfdc_opportunity.crm_opp_owner_region_stamped
-      END                                                                                                                         AS crm_current_account_set_region,
-      CASE
-        WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_area_id
         ELSE dim_crm_opp_owner_area_stamped_id
       END                                                                                                                         AS dim_crm_current_account_set_area_id,
-      CASE
-        WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.crm_user_area
-        ELSE sfdc_opportunity.crm_opp_owner_area_stamped
-      END                                                                                                                         AS crm_current_account_set_area,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
           THEN dim_crm_account_user_business_unit_id
@@ -178,39 +164,34 @@
       END                                                                                                                         AS dim_crm_current_account_set_business_unit_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN sales_rep_account.crm_user_business_unit
-        ELSE sfdc_opportunity.crm_opp_owner_business_unit_stamped
-      END                                                                                                                         AS crm_current_account_set_business_unit,
+          THEN dim_crm_account_user_role_name_id
+        ELSE dim_crm_opp_owner_role_name_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_name_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_name
-        ELSE account_hierarchy.crm_user_role_name
-      END                                                                                                                         AS crm_current_account_set_role_name,
+          THEN dim_crm_account_user_role_level_1_id
+        ELSE dim_crm_opp_owner_role_level_1_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_level_1_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_level_1
-        ELSE account_hierarchy.crm_user_role_level_1
-      END                                                                                                                         AS crm_current_account_set_role_level_1,
+          THEN dim_crm_account_user_role_level_2_id
+        ELSE dim_crm_opp_owner_role_level_2_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_level_2_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_level_2
-        ELSE account_hierarchy.crm_user_role_level_2
-      END                                                                                                                         AS crm_current_account_set_role_level_2,
+          THEN dim_crm_account_user_role_level_3_id
+        ELSE dim_crm_opp_owner_role_level_3_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_level_3_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_level_3
-        ELSE account_hierarchy.crm_user_role_level_3
-      END                                                                                                                         AS crm_current_account_set_role_level_3,
+          THEN dim_crm_account_user_role_level_4_id
+        ELSE dim_crm_opp_owner_role_level_4_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_level_4_id,
       CASE
         WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_level_4
-        ELSE account_hierarchy.crm_user_role_level_4
-      END                                                                                                                         AS crm_current_account_set_role_level_4,
-      CASE
-        WHEN close_fiscal_year < prep_date.current_fiscal_year
-          THEN prep_crm_user_hierarchy.crm_user_role_level_5
-        ELSE account_hierarchy.crm_user_role_level_5
-      END                                                                                                                         AS crm_current_account_set_role_level_5,
+          THEN dim_crm_account_user_role_level_5_id
+        ELSE dim_crm_opp_owner_role_level_5_id
+      END                                                                                                                         AS dim_crm_current_account_set_role_level_5_id,
 
       sfdc_opportunity.ssp_id,
       sfdc_opportunity.ga_client_id,
