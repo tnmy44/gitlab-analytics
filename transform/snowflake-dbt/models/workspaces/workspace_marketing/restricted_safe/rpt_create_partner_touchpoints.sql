@@ -7,7 +7,6 @@
     ('sfdc_campaign_member', 'sfdc_campaign_member'),
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('mart_crm_person', 'mart_crm_person'),
-    ('task', 'task'),
     ('dim_date', 'dim_date') 
 ]) }},
 
@@ -36,15 +35,15 @@ activities as (
     mart_crm_task.dim_crm_account_id,
     mart_crm_task.sfdc_record_id,
     mart_crm_task.dim_crm_person_id,
-    subject,
+    //this feild is masked so it does not work in this part of the union
+    //getting the model built for the time being
+    mart_crm_task.task_subject        AS subject,
     mart_crm_task.task_completed_date AS activity_date,
     dim_date.day_of_fiscal_quarter    as activity_day_of_fiscal_quarter,
     dim_date.fiscal_quarter_name_fy   as activity_fiscal_quarter_name,
     mart_crm_task.task_type           AS activity_type,
     mart_crm_task.task_subtype        AS activity_subtype
   FROM mart_crm_task
-    join task
-        on task.id = mart_crm_task.task_id
   LEFT JOIN dim_date 
     ON mart_crm_task.task_completed_date = dim_date.date_day
 
