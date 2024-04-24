@@ -6388,11 +6388,16 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - bleducmills:
+  - dbernardi:
       member_of:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - bleducmills:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs        
 users:
   - aadesanya:
       can_login: true
@@ -7379,6 +7384,10 @@ users:
       can_login: true
       member_of:
         - lionel
+  - dbernardi:
+      can_login: true
+      member_of:
+        - dbernardi
   - bleducmills:
       can_login: true
       member_of:
