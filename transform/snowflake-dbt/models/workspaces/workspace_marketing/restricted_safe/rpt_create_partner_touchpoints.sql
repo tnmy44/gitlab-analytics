@@ -71,7 +71,6 @@ activities as (
     lead_or_contact_id as person_sfdc_record_id,
     -- dim_crm_person_id,
     mart_crm_person.dim_crm_account_id,
-    campaign_member_created_date,
     crm_account_type
     from
     sfdc_campaign_member
