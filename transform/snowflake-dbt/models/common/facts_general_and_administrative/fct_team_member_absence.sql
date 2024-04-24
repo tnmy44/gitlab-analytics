@@ -3,15 +3,12 @@ WITH team_status_dup AS (
     *
   FROM {{ref('fct_team_status')}}
 ),
-WITH pto AS (
+pto AS (
   SELECT 
     *
   FROM {{ref('gitlab_pto')}}
 ),
-map AS (
-  SELECT *
-  FROM {{ ref('map_employee_id') }}
-),
+
 team_status AS (
   SELECT 
     dim_team_member_sk,
@@ -47,6 +44,7 @@ combined_sources AS (
     pto.start_date AS absence_start,
     pto.end_date AS absense_end,
     pto.is_pto AS is_pto,
+    pto.is_holiday AS is_holiday,
     pto.total_hours AS total_hours,
     pto.recorded_hours AS recorded_hours,
      IFF(

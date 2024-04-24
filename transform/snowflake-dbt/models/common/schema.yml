@@ -8610,3 +8610,66 @@ models:
         description: ' {{ doc("service_ping_key_path") }} '
       - name: data_source
         description: ' {{ doc("service_ping_data_source") }} '
+
+  - name: fct_team_member_absence
+    description: '{{ doc("fct_team_member_absence") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - dim_team_member_sk
+              - absence_start
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique ID of the team.
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: absence_start
+        description: The team member's absence start date
+        tests: 
+          - not_null
+      - name: absense_end
+        description: The team member's absence end date
+      - name: is_pto
+        description: If this absence day overlaps with a PTO.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: is_holiday
+        description: If this absence day overlaps with a holiday.
+      - name: total_hours
+        description: How long the user was OOO for. This is different from recorded_hours in that it is unaware of holidays and weekends.
+      - name: recorded_hours
+        description: How many hours were recorded as OOO for this event.
+      - name: absence_status
+        description: The team member's absence status.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: employee_day_length
+        description: How long this User's "day" is in hours

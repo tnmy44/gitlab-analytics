@@ -1982,3 +1982,10 @@ Fact derived from `fct_behavior_structured_event`, limited to only Snowplow even
 Fact derived from `fct_behavior_structured_event`, limited to only Snowplow events with the [Service Ping context](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema) and columns, which indicates they are Service Ping events.
 
 {% enddocs %}
+
+{% docs fct_team_member_absence %}
+
+This table is a derived fact from fct_team_status and gitlab_pto. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake.
+The grain of this table is one row per employee_id and valid_from combination
+
+{% enddocs %}
