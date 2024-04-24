@@ -50,7 +50,7 @@ WITH prep_ci_runner AS (
       WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-arm64%'
         AND LOWER(ci_runner_description) NOT ILIKE '%gpu-standard%'
         THEN 'Hosted Runner Linux - Medium - arm64'
-      WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-medium-amd64-gpu-standard.runners-manager%'
+      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-amd64-gpu-standard.%'
         THEN 'Hosted GPU-Enabled Runners'
       WHEN LOWER(ci_runner_description) ILIKE '%saas-linux-large-amd64%'
         THEN 'Hosted Runner Linux - Large'
