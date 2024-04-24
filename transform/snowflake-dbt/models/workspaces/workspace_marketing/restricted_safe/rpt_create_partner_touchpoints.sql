@@ -96,8 +96,13 @@ activities as (
 
 ), match_to_campaign as (
     select
-    get_members_of_partner_camapgin.*,
-    find_deal_reg_of_partners.*,
+    get_members_of_partner_camapgin.campaign_member_created_date,
+    get_members_of_partner_camapgin.person_sfdc_record_id,
+    get_members_of_partner_camapgin.dim_crm_account_id,
+    get_members_of_partner_camapgin.crm_account_type,
+    find_deal_reg_of_partners.partner_account,
+    find_deal_reg_of_partners.partner_account_name,
+    find_deal_reg_of_partners.crm_account_name,
     coalesce(partner_account_name, '')           as utm_source,
     'partner'                                    as utm_medium,
     concat('https://injected-touchpoint.gitlab.com?utm_source=', lower(utm_source), '&utm_medium=partner') as touchpoint_url
