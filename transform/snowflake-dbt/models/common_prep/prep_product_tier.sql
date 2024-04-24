@@ -1,7 +1,27 @@
 WITH product_tier_mapping AS (
-
-    SELECT *
+    
+    SELECT DISTINCT 
+      product_tier_historical,
+      product_tier,
+      product_delivery_type,
+      product_deployment_type,
+      product_ranking        
     FROM {{ ref('map_product_tier') }}
+     WHERE product_tier_historical NOT LIKE '%Not Applicable%'
+
+     UNION ALL 
+
+----Logic for handling Not Applicable Tier IDs
+    SELECT DISTINCT 
+      product_tier_historical,
+      product_tier,
+      LISTAGG(DISTINCT product_delivery_type,', ') AS product_delivery_type_na,
+      LISTAGG(DISTINCT product_deployment_type,', ') AS product_deployment_type_na,
+      product_ranking        
+    FROM {{ ref('map_product_tier') }}
+     WHERE product_tier_historical LIKE '%Not Applicable%'
+    GROUP BY product_tier_historical, product_tier, product_ranking
+    
 
 ), mapping AS (
 
@@ -80,7 +100,7 @@ WITH product_tier_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@snalamaru",
     created_date="2020-12-29",
-    updated_date="2023-05-25"
+    updated_date="2024-04-24"
 ) }}

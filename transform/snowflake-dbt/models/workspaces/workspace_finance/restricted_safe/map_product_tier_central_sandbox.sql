@@ -219,7 +219,9 @@ WITH zuora_central_sandbox_product AS (
         WHEN product_tier_historical LIKE ANY (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
-                                                '%Self-Managed - Ultimate%'
+                                                '%Self-Managed - Ultimate%',
+                                                '%Other%',
+                                                '%Support%'
                                               )
         THEN product_delivery_type_legacy
         WHEN product_tier_active LIKE ANY (
@@ -239,7 +241,9 @@ WITH zuora_central_sandbox_product AS (
         WHEN product_tier_historical LIKE ANY (
                                                 '%Self-Managed - Starter%',
                                                 '%Self-Managed - Premium%',
-                                                '%Self-Managed - Ultimate%'
+                                                '%Self-Managed - Ultimate%',
+                                                '%Other%',
+                                                '%Support%'
                                               )
         THEN product_deployment_type_legacy
         WHEN product_tier_active LIKE ANY (
@@ -260,6 +264,7 @@ WITH zuora_central_sandbox_product AS (
       effective_end_date
    FROM legacy_plans
 )
+
 
 
 {{ dbt_audit(
