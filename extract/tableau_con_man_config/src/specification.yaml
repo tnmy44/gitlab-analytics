@@ -4868,7 +4868,7 @@ users:
     groups:
       - Engineering All Access
       - General All Access
-  - user_name: Ikosenko
+  - user_name: ikosenko
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
     auth_setting: SAML
@@ -8903,7 +8903,7 @@ users:
       - Product All Access
   - user_name: skhan
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Creator
     auth_setting: SAML
     groups:
       - ASM Restricted Access
@@ -9076,12 +9076,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: spouliquen
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: spowell
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9324,7 +9318,7 @@ users:
       - General All Access
   - user_name: syao
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
