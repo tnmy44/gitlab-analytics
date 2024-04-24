@@ -6,7 +6,8 @@
     ('mart_crm_account', 'mart_crm_account'),
     ('sfdc_campaign_member', 'sfdc_campaign_member'),
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
-    ('mart_crm_person', 'mart_crm_person')
+    ('mart_crm_person', 'mart_crm_person'),
+    ('task', 'task')
     ('dim_date', 'dim_date') 
 ]) }},
 
@@ -42,7 +43,7 @@ activities as (
     mart_crm_task.task_type           AS activity_type,
     mart_crm_task.task_subtype        AS activity_subtype
   FROM mart_crm_task
-    join RAW.salesforce_v2_stitch.task
+    join task
         on task.id = mart_crm_task.task_id
   LEFT JOIN dim_date 
     ON mart_crm_task.task_completed_date = dim_date.date_day
@@ -74,7 +75,7 @@ activities as (
     campaign_member_created_date,
     crm_account_type
     from
-    PROD.legacy.sfdc_campaign_member
+    sfdc_campaign_member
         join mart_crm_person
             on sfdc_campaign_member.lead_or_contact_id = mart_crm_person.sfdc_record_id
         left join mart_crm_account
