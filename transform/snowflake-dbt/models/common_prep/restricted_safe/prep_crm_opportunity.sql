@@ -559,8 +559,15 @@ LEFT JOIN cw_base
           THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_new_logo_first_order,
-      COALESCE(
-        sfdc_opportunity.is_pipeline_created_eligible,
+    
+      /* 
+        Stop coalescing is_pipeline_created_eligible and is_net_arr_pipeline_created 
+      Definition changed for is_pipeline_created_eligible and if we coalesce both, the values will be inaccurate for 
+      snapshots before the definition changed in SFDC: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/5331
+      Use is_net_arr_pipeline_created as the SSOT 
+      */
+
+      sfdc_opportunity.is_pipeline_created_eligible,
         CASE
           WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
             AND sfdc_opportunity_live.is_edu_oss  = 0
@@ -576,8 +583,7 @@ LEFT JOIN cw_base
             AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
           THEN 1
           ELSE 0
-        END
-        ) AS is_net_arr_pipeline_created,
+        END                                                                                      AS is_net_arr_pipeline_created,
       CASE
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND sfdc_opportunity.is_closed = 'TRUE'
@@ -629,7 +635,7 @@ LEFT JOIN cw_base
       END                                                           AS is_eligible_asp_analysis,
       CASE
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
-         AND sfdc_opportunity.is_closed = 'TRUE'
+         AND is_booked_net_arr = TRUE
          AND sfdc_opportunity_live.is_edu_oss = 0
          AND sfdc_opportunity_live.is_jihu_account = 0
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
@@ -1299,14 +1305,14 @@ LEFT JOIN cw_base
                     close_fiscal_year
                     )
     END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
-      CASE
-        WHEN is_renewal = 1 
-            AND is_eligible_age_analysis = 1
-              THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
-        WHEN is_renewal = 0 
-            AND is_eligible_age_analysis = 1
-              THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
-      END                                                         AS cycle_time_in_days,
+    CASE
+      WHEN is_renewal = 1 
+          AND is_eligible_age_analysis = 1
+            THEN DATEDIFF(day, arr_created_date, close_date.date_actual)
+      WHEN is_renewal = 0 
+          AND is_eligible_age_analysis = 1
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
+    END                                                         AS cycle_time_in_days
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
