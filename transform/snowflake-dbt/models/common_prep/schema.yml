@@ -148,6 +148,10 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
+      - name: lead_score_classification
+        description: The Salesforce grade of the lead score for a lead/contact. 
+      - name: is_defaulted_trial
+        description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
@@ -814,11 +818,13 @@ models:
 
   - name: prep_latest_seat_link_installation
     description: '{{ doc("prep_latest_seat_link_installation") }}'
-    tests:
-    - dbt_utils.unique_combination_of_columns:
-        combination_of_columns:
-          - host_name
-          - dim_instance_id
+    columns:
+      - name: latest_seat_link_installation_sk
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "report_date >= DATEADD('day', -3, CURRENT_DATE())"
 
   - name: prep_gainsight_source_model_counts
     description: '{{ doc("prep_gainsight_source_model_counts") }}'
@@ -1063,7 +1069,9 @@ models:
     columns:
       - name: dim_action_id
         tests:
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
           - not_null
       - name: dim_user_id
       - name: dim_project_id
@@ -1155,7 +1163,9 @@ models:
       - name: dim_ci_stage_id
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
         tests:

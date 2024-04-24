@@ -10790,3 +10790,15 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: jrushford
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: collen
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
