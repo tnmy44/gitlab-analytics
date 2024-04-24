@@ -7,7 +7,7 @@
     ('sfdc_campaign_member', 'sfdc_campaign_member'),
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('mart_crm_person', 'mart_crm_person'),
-    ('task', 'task')
+    ('task', 'task'),
     ('dim_date', 'dim_date') 
 ]) }},
 
