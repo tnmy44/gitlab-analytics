@@ -4888,12 +4888,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: iouhab
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: ipadgotra
     user_name_domain: gitlab.com
     site_role: Viewer
