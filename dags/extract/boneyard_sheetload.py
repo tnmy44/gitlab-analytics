@@ -63,7 +63,7 @@ for sheet in sheets:
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
         cd sheetload/ &&
-        python3 sheetload.py sheets --sheet_file sheets.yml --table_name {sheet} --schema boneyard --database PROD
+        python3 sheetload.py sheets --sheet_file boneyard/sheets.yml --table_name {sheet} --schema boneyard --database PROD
     """
 
     cleaned_sheet_name = sheet.replace("_", "-")
