@@ -25,9 +25,9 @@ WITH source AS (
 
    -- additive fields
       zuora_invoice_aging_detail.accountbalanceimpact                      	 AS account_balance_impact,
-      zuora_invoice_aging_detail.daysoverdue                     	           AS days_overdue
+      zuora_invoice_aging_detail.daysoverdue                     	           AS days_overdue,
     
-    
+
       -- ext1, ext2, ext3, ... ext9
 
       -- metadata
