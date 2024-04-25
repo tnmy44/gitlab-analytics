@@ -1503,6 +1503,20 @@ Note:
 
 {% enddocs %}
 
+{% enddocs %}
+
+{% docs clean_event_label %}
+
+An optional string which identifies the specific object being actioned. Example: `invite_email`, `content_editor` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
+- It includes [REGEX logic](https://docs.snowflake.com/en/sql-reference/functions/regexp_like) to standardize the namespace identifiers in this field. 
+Example: If `REGEXP_LIKE(event_label, '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')` THEN `identifier_containing_numbers` ELSE `event_label`.
+
+{% enddocs %}
+
 {% docs event_property %}
 
 An optional string describing the object or the action performed on it. Example: There are four different possible merge request actions: “create”, “merge”, “comment”, and “close”. Each of these would be a possible property value. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
