@@ -573,12 +573,10 @@ LEFT JOIN cw_base
             AND sfdc_opportunity_live.is_edu_oss  = 0
             AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
             AND sfdc_opportunity_live.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset','Contract Reset/Ramp Deal')
-            -- 20211222 Adjusted to remove the ommitted filter
             AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             AND (net_arr > 0
-              OR sfdc_opportunity_live.opportunity_category  = 'Credit')
-            -- 20220128 Updated to remove webdirect SQS deals
-            AND sfdc_opportunity_live.sales_qualified_source   != 'Web Direct Generated'
+              OR sfdc_opportunity_live.opportunity_category = 'Credit')
+            AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
             AND sfdc_opportunity_live.is_jihu_account = 0
             AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
           THEN 1
