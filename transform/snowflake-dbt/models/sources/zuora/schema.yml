@@ -24,6 +24,8 @@ models:
           - unique
   - name: zuora_contact_source
     description: Source layer for Zuora Contacts for cleaning and renaming
+  - name: zuora_credit_balance_adjustment_source
+    description: Source layer for Zuora Contacts for renaming
   - name: zuora_discount_applied_metrics_source
     description: Source layer for Zuora Discount Applied Metrics  for cleaning and renaming
   - name: zuora_invoice_source
