@@ -645,7 +645,7 @@ LEFT JOIN cw_base
             /* Include only first year ramp deals. The ssp_id should be either equal to the SFDC id (18)
             or equal to the SFDC id (15) for first year ramp deals */
             sfdc_opportunity_live.opportunity_category = 'Ramp Deal' AND 
-            LEFT(sfdc_opportunity.dim_crm_opportunity_id, LENGTH(sfdc_opportunity.ssp_id)) = sfdc_opportunity.ssp_id)
+            LEFT(sfdc_opportunity.dim_crm_opportunity_id, LENGTH(sfdc_opportunity.ssp_id)) = sfdc_opportunity.ssp_id))
             THEN 1
         ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
