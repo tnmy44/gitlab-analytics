@@ -2,7 +2,7 @@
 
     {{
         config(
-          unique_key='job_code',
+          unique_key='job_workday_id',
           strategy='check',
           check_cols=[
             'job_code',
@@ -11,6 +11,7 @@
             'job_family',
             'management_level',
             'job_level',
+            'job_workday_id',
             '_fivetran_deleted']
         )
     }}
