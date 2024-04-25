@@ -351,11 +351,11 @@ tables:
         , created_at
         , updated_at
       FROM trials
-  trials_account:
+  trial_accounts:
     advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'trials_account'
+    export_table: 'trial_accounts'
     export_table_primary_key: id
     import_db: CUSTOMERS_DB
     import_query: |-
@@ -366,7 +366,7 @@ tables:
         , email
         , created_at
         , updated_at
-      FROM trials_account
+      FROM trial_accounts
   version_associations:
     export_db: EXPORT_DB
     export_schema: 'customers'
