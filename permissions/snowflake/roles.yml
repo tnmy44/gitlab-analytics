@@ -6415,7 +6415,12 @@ roles:
       member_of:
         - snowflake_analyst
       warehouses:
-        - dev_xs        
+        - dev_xs
+  - aregnery:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7410,6 +7415,10 @@ users:
       can_login: true
       member_of:
         - bleducmills
+  - aregnery:
+      can_login: true
+      member_of:
+        - aregnery
 warehouses:
   - admin:
       size: x-small
