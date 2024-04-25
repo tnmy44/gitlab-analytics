@@ -28,6 +28,8 @@ models:
     description: Source layer for Zuora Discount Applied Metrics  for cleaning and renaming
   - name: zuora_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming
+  - name: zuora_invoice_aging_detail_source
+    description: Source layer for Zuora Invoice Items for cleaning and renaming
   - name: zuora_invoice_item_source
     description: Source layer for Zuora Invoice Items for cleaning and renaming
   - name: zuora_invoice_payment_source
