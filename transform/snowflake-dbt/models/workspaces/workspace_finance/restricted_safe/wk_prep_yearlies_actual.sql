@@ -7,21 +7,25 @@
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('rpt_product_usage_health_score', 'rpt_product_usage_health_score'),
     ('mart_arr_all', 'mart_arr_with_zero_dollar_charges'),
+    ('wk_fct_sales_funnel_actual', 'wk_fct_sales_funnel_actual'),
     ('dim_date','dim_date')
 ]) }},
 
-total_arr_final AS (
+total_bookings_final AS (
 SELECT 
-    '1.1 Total ARR' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
-     close_fiscal_quarter_name AS quarter,
-     SUM(booked_net_arr) AS actuals_raw
+    '1.1 Total Bookings' AS yearly_name,
+    'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
+     fiscal_quarter_name_fy as quarter,
+     SUM(net_arr) AS actuals_raw
     
-    FROM mart_crm_opportunity
-    WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name like '%FY25%'
-    AND close_month <= date_trunc('month',current_date)
+    FROM wk_fct_sales_funnel_actual
+    left join dim_date 
+    on date_actual = actual_date
+    where actual_date <= current_date 
+    and sales_funnel_kpi_name = 'Net ARR'
+    and fiscal_quarter_name_fy like '%FY25%'
     GROUP BY 1,2,3
+    order by 3 desc
 ),
 
 duo_final AS (
@@ -138,9 +142,9 @@ FROM
 WHERE quarter like 'FY25%'
 ),
 
-ultimate_arr_final AS (
+ultimate_bookings_final AS (
 SELECT 
-    '4.2 Ultimate ARR' AS yearly_name,
+    '4.2 Ultimate Bookings' AS yearly_name,
     'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
      close_fiscal_quarter_name AS quarter,
      SUM(booked_net_arr) AS actuals_raw
@@ -154,9 +158,9 @@ SELECT
     GROUP BY 1,2,3
 ),
 
-dedicated_arr_final AS (
+dedicated_bookings_final AS (
   SELECT 
-    '4.3 Dedicated ARR' AS yearly_name,
+    '4.3 Dedicated Bookings' AS yearly_name,
     'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
      close_fiscal_quarter_name AS quarter,
      SUM(booked_net_arr) AS actuals_raw
@@ -169,7 +173,7 @@ dedicated_arr_final AS (
     GROUP BY 1,2,3
 ),
 
-plan_arr_final AS (
+plan_bookings_final AS (
   SELECT 
     '4.4 Plan' AS yearly_name,
     'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
@@ -186,7 +190,7 @@ plan_arr_final AS (
 
 final AS (
 
-SELECT * FROM total_arr_final 
+SELECT * FROM total_bookings_final 
 
 UNION ALL
 
@@ -202,15 +206,15 @@ SELECT * FROM churn_contraction_final
 
 UNION ALL
 
-SELECT * FROM ultimate_arr_final
+SELECT * FROM ultimate_bookings_final
 
 UNION ALL
 
-SELECT * FROM dedicated_arr_final
+SELECT * FROM dedicated_bookings_final
 
 UNION ALL
 
-SELECT * FROM plan_arr_final
+SELECT * FROM plan_bookings_final
 )
 
 SELECT 
