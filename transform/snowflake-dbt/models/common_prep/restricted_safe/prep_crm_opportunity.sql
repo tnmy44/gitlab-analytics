@@ -632,7 +632,7 @@ LEFT JOIN cw_base
           AND net_arr > 0
             THEN 1
           ELSE 0
-      END                                                           AS is_eligible_asp_analysis,
+      END                                                                                         AS is_eligible_asp_analysis,
       CASE
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND is_booked_net_arr = TRUE
@@ -643,9 +643,13 @@ LEFT JOIN cw_base
          AND sfdc_opportunity_live.deal_path != 'Web Direct'
          AND sfdc_opportunity_live.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
-         AND sfdc_opportunity_live.opportunity_category IN ('Standard')
+         AND (sfdc_opportunity_live.opportunity_category IN ('Standard') OR (
+            /* Include only first year ramp deals. The ssp_id should be either equal to the SFDC id (18)
+            or equal to the SFDC id (15) for first year ramp deals */
+            sfdc_opportunity_live.opportunity_category = 'Ramp Deal' AND 
+            LEFT(sfdc_opportunity.dim_crm_opportunity_id, LENGTH(sfdc_opportunity.ssp_id)) = sfdc_opportunity.ssp_id)
             THEN 1
-          ELSE 0
+        ELSE 0
       END                                                                                         AS is_eligible_age_analysis,
       CASE
         WHEN sfdc_opportunity_live.is_edu_oss = 0
