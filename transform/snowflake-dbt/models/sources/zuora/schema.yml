@@ -52,6 +52,8 @@ models:
         tests:
           - not_null
           - unique
+  - name: zuora_payment_source
+    description: Source layer for Zuora Payment for renaming
   - name: zuora_product_rate_plan_charge_source
     description: Source layer for Zuora Product Rate Plan Charges
   - name: zuora_product_rate_plan_charge_tier_source
