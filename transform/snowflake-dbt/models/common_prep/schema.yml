@@ -2090,6 +2090,10 @@ models:
         description: '{{ doc("link_click_element_id") }}'
       - name: is_staging_event
         description: '{{ doc("is_staging_event") }}'
+      - name: gitlab_global_user_id
+        description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
+      - name: gsc_feature_enabled_by_namespace_ids
+        description: '{{ doc("gsc_feature_enabled_by_namespace_ids") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.

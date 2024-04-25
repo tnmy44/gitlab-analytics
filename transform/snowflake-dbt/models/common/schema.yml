@@ -6340,6 +6340,8 @@ models:
         description: '{{ doc("environment_behavior_model") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: gsc_feature_enabled_by_namespace_ids
+        description: ' {{ doc("gsc_feature_enabled_by_namespace_ids") }} '
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -6422,6 +6424,8 @@ models:
         description: ' {{ doc("host_name") }} '
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
+      - name: gitlab_global_user_id
+        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -8455,6 +8459,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: is_streaming
       description: '{{ doc("code_suggestions_is_streaming") }}'
+    - name: gitlab_global_user_id
+      description: ' doc("code_suggestions_gitlab_global_user_id") '
     - name: ultimate_parent_namespace_ids
       description: '{{ doc("code_suggestions_ultimate_parent_namespace_ids") }} '
     - name: subscription_names
