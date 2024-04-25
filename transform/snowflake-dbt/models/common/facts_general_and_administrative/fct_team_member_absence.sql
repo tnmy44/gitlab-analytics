@@ -23,8 +23,10 @@ team_status AS (
     management_level,
     job_grade,
     entity,
-    is_position_active
+    is_position_active,
+    is_current
     FROM team_status_dup
+    WHERE is_current=TRUE
 ),
 combined_sources AS (
   SELECT 
@@ -40,11 +42,15 @@ combined_sources AS (
     team_status.management_level,
     team_status.job_grade,
     team_status.entity,
-    team_status.is_position_active,
+    team_status.is_position_active,  
+    team_status.is_current,
     pto.start_date AS absence_start,
     pto.end_date AS absence_end,
+    pto.pto_date AS absence_date,
     pto.is_pto AS is_pto,
     pto.is_holiday AS is_holiday,
+    pto.pto_status AS pto_status,
+    pto.pto_status_name AS pto_status_name,
     pto.total_hours AS total_hours,
     pto.recorded_hours AS recorded_hours,
      IFF(
