@@ -75,7 +75,7 @@ WITH filtered_source as (
             {'field':'user_id', 'alias':'pseudonymized_user_id'},
             {'field':'source'},
             {'field':'is_gitlab_team_member',},
-            {'field':'feature_enabled_by_namespace_ids','data_type':'array'}
+            {'field':'feature_enabled_by_namespace_ids'}
             ]
         )
       }},
