@@ -1568,6 +1568,22 @@ roles:
         tables:
           read:
             - raw.container_registry.*
+  - hyperproof:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - prep
+            - raw
+        schemas:
+          read:
+            - prep.hyperproof
+            - raw.hyperproof
+        tables:
+          read:
+            - prep.hyperproof.*
+            - raw.hyperproof.*
   - date:
       privileges:
         databases:
@@ -3530,6 +3546,7 @@ roles:
   - dfelton:
       member_of:
         - analyst_sales_sensitive
+        - hyperproof
         - reporter
         - restricted_safe
       warehouses:
@@ -4067,6 +4084,7 @@ roles:
   - jlongo:
       member_of:
         - analyst_sales_sensitive
+        - hyperproof
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
