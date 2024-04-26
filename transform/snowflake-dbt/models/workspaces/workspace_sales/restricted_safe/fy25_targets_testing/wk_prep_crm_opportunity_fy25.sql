@@ -1553,13 +1553,13 @@ LEFT JOIN cw_base
       END                                               AS positive_open_net_arr_in_snapshot_quarter,
       CASE 
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND is_closed = 1 
+          AND sfdc_opportunity.is_closed = 'TRUE' 
             THEN calculated_deal_count 
           ELSE NULL
       END                                               AS closed_deals_in_snapshot_quarter,
       CASE 
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND is_closed = 1 
+          AND sfdc_opportunity.is_closed = 'TRUE' 
             THEN net_arr 
         ELSE NULL
       END                                               AS closed_net_arr_in_snapshot_quarter
