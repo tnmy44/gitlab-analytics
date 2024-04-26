@@ -1,11 +1,9 @@
-{{ config(
-    materialized='table',
-    tags=["mnpi_exception"]
-) }}
+{{ config(materialized='table') }}
 
 {{ simple_cte([
     ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
     ('dim_crm_user','dim_crm_user'),
+    ('dim_crm_user_daily_snapshot','dim_crm_user_daily_snapshot'),
     ('mart_crm_person','mart_crm_person'),
     ('sfdc_lead','sfdc_lead'),
     ('mart_crm_event','mart_crm_event'),
@@ -26,9 +24,14 @@
     sales_accepted_date AS sales_accepted_date,
     sales_accepted_fiscal_quarter_name,
     dim_date.day_of_fiscal_quarter AS sao_day_of_fiscal_quarter,
+    stage_0_pending_acceptance_date,
+    stage_1_discovery_date,
+    stage_2_scoping_date,
+    stage_3_technical_evaluation_date,
     days_in_1_discovery,
     days_in_sao,
     days_since_last_activity,
+    sales_qualified_source_name,
     report_opportunity_user_segment,
     report_opportunity_user_geo,
     report_opportunity_user_region,
@@ -44,6 +47,11 @@
     close_date,
     pipeline_created_date,
     order_type,
+    stage_name,
+    product_category,
+    product_details,
+    products_purchased,
+    crm_account_focus_account, 
     crm_opp_owner_sales_segment_stamped,
     crm_opp_owner_business_unit_stamped,
     crm_opp_owner_geo_stamped,
@@ -66,15 +74,19 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist
     LEFT JOIN dim_date 
       ON mart_crm_opportunity_stamped_hierarchy_hist.sales_accepted_date = dim_date.date_day
-    WHERE sales_qualified_source_name = 'SDR Generated' 
-      AND sales_accepted_date >= '2022-02-01' 
+    WHERE sales_dev_bdr_or_sdr IS NOT NULL 
+      AND stage_0_pending_acceptance_date >= '2023-02-01' 
 
-), sales_dev_hierarchy AS (
+), 
+
+
+sales_dev_hierarchy_prep AS (
   
   SELECT
   --Sales Dev Data
     sales_dev_rep.dim_crm_user_id AS sales_dev_rep_user_id, 
     sales_dev_rep.user_role_name AS sales_dev_rep_role_name,
+    sales_dev_rep.user_email AS sales_dev_rep_email,
     sales_dev_rep.user_name AS sales_dev_rep_user_name,
     sales_dev_rep.title AS sales_dev_rep_title,
     sales_dev_rep.department AS sales_dev_rep_department,
@@ -86,17 +98,73 @@
     sales_dev_rep.crm_user_geo,
     sales_dev_rep.crm_user_region,
     sales_dev_rep.crm_user_area,
-    sales_dev_rep.crm_user_business_unit,
-  
-  --Manager Data
-    manager.user_role_name AS sales_dev_rep_manager_role_name,
-    manager.manager_id AS sales_dev_rep_manager_id,
-    manager.manager_name AS sales_dev_rep_manager_name
-  FROM dim_crm_user sales_dev_rep
-  INNER JOIN sales_dev_opps 
+    sales_dev_rep.employee_number AS sales_dev_rep_employee_number,
+    sales_dev_rep.snapshot_date,
+    manager.department AS sales_dev_manager_department,
+    manager.user_role_name AS sales_dev_manager_user_role_name,
+    manager.team AS sales_dev_manager_team,
+    manager.employee_number AS sales_dev_manager_employee_number,
+    manager.user_email AS sales_dev_manager_email,
+    leader.department AS sales_dev_leader_department,
+    leader.dim_crm_user_id AS sales_dev_leader_id,
+    leader.user_name AS sales_dev_leader_name,
+    leader.user_role_name AS sales_dev_leader_user_role_name,
+    leader.team AS sales_dev_leader_team,
+    leader.employee_number AS sales_dev_leader_employee_number,
+    leader.user_email AS sales_dev_leader_email
+
+  FROM
+  dim_crm_user_daily_snapshot AS sales_dev_rep
+  INNER JOIN sales_dev_opps
     ON sales_dev_rep.dim_crm_user_id = sales_dev_opps.sdr_bdr_user_id
-  LEFT JOIN dim_crm_user manager 
-    ON sales_dev_rep.manager_id = manager.dim_crm_user_id  
+    AND sales_dev_rep.snapshot_date = sales_dev_opps.stage_1_discovery_date
+  LEFT JOIN dim_crm_user_daily_snapshot AS manager
+    ON sales_dev_rep.manager_id = manager.dim_crm_user_id AND sales_dev_rep.snapshot_date = manager.snapshot_date
+  LEFT JOIN dim_crm_user_daily_snapshot AS leader
+    ON manager.manager_id = leader.dim_crm_user_id AND manager.snapshot_date = leader.snapshot_date
+),
+
+
+sales_dev_hierarchy AS (
+  SELECT DISTINCT 
+    sales_dev_hierarchy_prep.sales_dev_rep_user_id, 
+    sales_dev_hierarchy_prep.sales_dev_rep_role_name,
+    sales_dev_hierarchy_prep.sales_dev_rep_email,
+    COALESCE(rep.full_name, sales_dev_hierarchy_prep.sales_dev_rep_user_name)               AS sales_dev_rep_full_name,
+    sales_dev_hierarchy_prep.sales_dev_rep_title,
+    sales_dev_hierarchy_prep.sales_dev_rep_department,
+    sales_dev_hierarchy_prep.sales_dev_rep_team,
+    sales_dev_hierarchy_prep.sales_dev_rep_is_active,
+    sales_dev_hierarchy_prep.crm_user_sales_segment,
+    sales_dev_hierarchy_prep.crm_user_geo,
+    sales_dev_hierarchy_prep.crm_user_region,
+    sales_dev_hierarchy_prep.crm_user_area,
+    sales_dev_hierarchy_prep.sales_dev_rep_employee_number,
+    sales_dev_hierarchy_prep.snapshot_date,
+    sales_dev_hierarchy_prep.sales_dev_rep_direct_manager_id,
+    COALESCE(manager.full_name, sales_dev_rep_direct_manager_name) AS sales_dev_manager_full_name,
+    sales_dev_hierarchy_prep.sales_dev_manager_email,
+    sales_dev_hierarchy_prep.sales_dev_manager_employee_number,
+    sales_dev_hierarchy_prep.sales_dev_manager_user_role_name,
+    sales_dev_hierarchy_prep.sales_dev_leader_id,
+    sales_dev_hierarchy_prep.sales_dev_leader_user_role_name,
+    COALESCE(leader.full_name, sales_dev_hierarchy_prep.sales_dev_leader_name)              AS sales_dev_leader_full_name,
+    sales_dev_hierarchy_prep.sales_dev_leader_employee_number,
+    sales_dev_hierarchy_prep.sales_dev_leader_email,
+
+    CASE
+      WHEN sales_dev_leader_full_name = 'Meaghan Leonard' THEN 'Meaghan Thatcher'
+      WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Brian Tabbert' THEN 'Brian Tabbert'
+      WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Elsje Smart' THEN 'Elsje Smart'
+      WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Robin Falkowski' THEN 'Robin Falkowski'
+      ELSE sales_dev_leader_full_name
+    END                                                            AS sales_dev_leader
+  FROM sales_dev_hierarchy_prep
+  LEFT JOIN mart_team_member_directory AS rep ON sales_dev_rep_email = rep.work_email
+  LEFT JOIN mart_team_member_directory AS manager ON sales_dev_manager_email = manager.work_email
+  LEFT JOIN mart_team_member_directory AS leader ON sales_dev_leader_email = leader.work_email
+  --where sales_dev_rep_direct_manager_name is not null
+
 
 ), merged_person_base AS (
 
@@ -150,8 +218,9 @@
     LEFT JOIN dim_date 
     ON mart_crm_event.event_date = dim_date.date_day
   INNER JOIN sales_dev_hierarchy 
-    ON mart_crm_event.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
-      OR booked_by_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
+    ON (mart_crm_event.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
+      OR booked_by_user_id = sales_dev_hierarchy.sales_dev_rep_user_id)
+    AND mart_crm_event.event_date = sales_dev_hierarchy.snapshot_date 
   WHERE activity_date >= '2022-01-01'
   UNION
   SELECT 
@@ -170,6 +239,7 @@
   FROM mart_crm_task
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_task.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
+    AND mart_crm_task.task_completed_date = sales_dev_hierarchy.snapshot_date 
   LEFT JOIN dim_date 
     ON mart_crm_task.task_completed_date = dim_date.date_day
   WHERE activity_date >= '2022-01-01'
@@ -217,7 +287,7 @@
     contacts_on_opps.dim_crm_person_id AS contact_person_id,
     activity_summarised.dim_crm_person_id AS activity_person_id,
     COALESCE(merged_person_base.dim_crm_person_id,contacts_on_opps.dim_crm_person_id,activity_summarised.dim_crm_person_id) AS waterfall_person_id,
-    COALESCE(DATEDIFF(DAY,activity_date,sales_dev_opps.sales_accepted_date),0) AS activity_to_sao_days
+    COALESCE(DATEDIFF(DAY,activity_date,sales_dev_opps.stage_1_discovery_date),0) AS activity_to_sao_days
   FROM sales_dev_opps
   LEFT JOIN merged_person_base 
     ON sales_dev_opps.dim_crm_opportunity_id = merged_person_base.dim_crm_opportunity_id
@@ -285,9 +355,14 @@
     opp_to_lead.sales_accepted_date,
     opp_to_lead.sales_accepted_fiscal_quarter_name,
     opp_to_lead.sao_day_of_fiscal_quarter,
+    opp_to_lead.stage_0_pending_acceptance_date,
+    opp_to_lead.stage_1_discovery_date,
+    opp_to_lead.stage_2_scoping_date,
+    opp_to_lead.stage_3_technical_evaluation_date,
     opp_to_lead.days_in_1_discovery,
     opp_to_lead.days_in_sao,
     opp_to_lead.days_since_last_activity,
+    opp_to_lead.sales_qualified_source_name,
     opp_to_lead.report_opportunity_user_segment,
     opp_to_lead.report_opportunity_user_geo,
     opp_to_lead.report_opportunity_user_region,
@@ -302,8 +377,13 @@
     opp_to_lead.opp_created_date,
     opp_to_lead.close_date,
     opp_to_lead.pipeline_created_date,
-    Opp_to_lead.activity_to_SAO_days,
+    opp_to_lead.activity_to_SAO_days,
     opp_to_lead.order_type,
+    opp_to_lead.stage_name,
+    opp_to_lead.product_category,
+    opp_to_lead.product_details,
+    opp_to_lead.products_purchased,
+    opp_to_lead.crm_account_focus_account, 
     opp_to_lead.sales_dev_bdr_or_sdr,
     opp_to_lead.opportunity_sales_development_representative,
     opp_to_lead.opportunity_business_development_representative,
@@ -317,34 +397,43 @@
     opp_to_lead.is_net_arr_pipeline_created,
     opp_to_lead.is_eligible_age_analysis,
     opp_to_lead.is_eligible_open_pipeline,
-    sales_dev_hierarchy.sales_dev_rep_user_id,
+    sales_dev_hierarchy.sales_dev_rep_user_id, 
     sales_dev_hierarchy.sales_dev_rep_role_name,
-    sales_dev_hierarchy.sales_dev_rep_user_name,
+    sales_dev_hierarchy.sales_dev_rep_email,
+    sales_dev_hierarchy.sales_dev_rep_full_name,
     sales_dev_hierarchy.sales_dev_rep_title,
     sales_dev_hierarchy.sales_dev_rep_department,
     sales_dev_hierarchy.sales_dev_rep_team,
-    sales_dev_hierarchy.sales_dev_rep_direct_manager_id,
-    sales_dev_hierarchy.sales_dev_rep_direct_manager_name,
     sales_dev_hierarchy.sales_dev_rep_is_active,
     sales_dev_hierarchy.crm_user_sales_segment,
     sales_dev_hierarchy.crm_user_geo,
     sales_dev_hierarchy.crm_user_region,
     sales_dev_hierarchy.crm_user_area,
-    sales_dev_hierarchy.crm_user_business_unit,
-    sales_dev_hierarchy.sales_dev_rep_manager_role_name,
-    sales_dev_hierarchy.sales_dev_rep_manager_id,
-    sales_dev_hierarchy.sales_dev_rep_manager_name
+    sales_dev_hierarchy.sales_dev_rep_employee_number,
+    sales_dev_hierarchy.snapshot_date,
+    sales_dev_hierarchy.sales_dev_rep_direct_manager_id,
+    sales_dev_hierarchy.sales_dev_manager_full_name,
+    sales_dev_hierarchy.sales_dev_manager_email,
+    sales_dev_hierarchy.sales_dev_manager_employee_number,
+    sales_dev_hierarchy.sales_dev_manager_user_role_name,
+    sales_dev_hierarchy.sales_dev_leader_id,
+    sales_dev_hierarchy.sales_dev_leader_user_role_name,
+    sales_dev_hierarchy.sales_dev_leader_full_name,
+    sales_dev_hierarchy.sales_dev_leader_employee_number,
+    sales_dev_hierarchy.sales_dev_leader_email,
+    sales_dev_hierarchy.sales_dev_leader
   FROM mart_crm_person
   LEFT JOIN dim_date dim_mql_date
-   ON mart_crm_person.mql_date_latest = dim_mql_date.date_day 
+    ON mart_crm_person.mql_date_latest = dim_mql_date.date_day 
   LEFT JOIN dim_date dim_inquiry_date
-   ON mart_crm_person.true_inquiry_date = dim_inquiry_date.date_day 
+    ON mart_crm_person.true_inquiry_date = dim_inquiry_date.date_day 
   LEFT JOIN activity_summarised
     ON mart_crm_person.dim_crm_person_id = activity_summarised.dim_crm_person_id 
   LEFT JOIN opp_to_lead 
     ON mart_crm_person.dim_crm_person_id = opp_to_lead.waterfall_person_id
   LEFT JOIN sales_dev_hierarchy 
-  ON COALESCE(opp_to_lead.sdr_bdr_user_id,activity_summarised.dim_crm_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
+    ON COALESCE(activity_summarised.dim_crm_user_id,opp_to_lead.sdr_bdr_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
+    AND COALESCE(activity_summarised.activity_date,opp_to_lead.stage_1_discovery_date) = sales_dev_hierarchy.snapshot_date 
   WHERE activity_to_sao_days <= 90 OR activity_to_sao_days IS NULL 
   UNION 
   SELECT DISTINCT -- distinct is necessary in order to not duplicate rows as addition of the rule above of activity_to_sao_days >90 might create multiple rows if there are multiple leads that satisfy the condition per opp which is not ideal. 
@@ -384,9 +473,14 @@
     opps_missing_link.sales_accepted_date,
     opps_missing_link.sales_accepted_fiscal_quarter_name,
     opps_missing_link.sao_day_of_fiscal_quarter,
+    opps_missing_link.stage_0_pending_acceptance_date,
+    opps_missing_link.stage_1_discovery_date,
+    opps_missing_link.stage_2_scoping_date,
+    opps_missing_link.stage_3_technical_evaluation_date,
     opps_missing_link.days_in_1_discovery,
     opps_missing_link.days_in_sao,
     opps_missing_link.days_since_last_activity,
+    opps_missing_link.sales_qualified_source_name,
     opps_missing_link.report_opportunity_user_segment,
     opps_missing_link.report_opportunity_user_geo,
     opps_missing_link.report_opportunity_user_region,
@@ -403,6 +497,11 @@
     opps_missing_link.pipeline_created_date,
     opps_missing_link.activity_to_SAO_days,
     opps_missing_link.order_type,
+    opps_missing_link.stage_name,
+    opps_missing_link.product_category,
+    opps_missing_link.product_details,
+    opps_missing_link.products_purchased,
+    opps_missing_link.crm_account_focus_account, 
     opps_missing_link.sales_dev_bdr_or_sdr,
     opps_missing_link.opportunity_sales_development_representative,
     opps_missing_link.opportunity_business_development_representative,
@@ -416,26 +515,35 @@
     opps_missing_link.is_net_arr_pipeline_created,
     opps_missing_link.is_eligible_age_analysis,
     opps_missing_link.is_eligible_open_pipeline,
-    sales_dev_hierarchy.sales_dev_rep_user_id,
+    sales_dev_hierarchy.sales_dev_rep_user_id, 
     sales_dev_hierarchy.sales_dev_rep_role_name,
-    sales_dev_hierarchy.sales_dev_rep_user_name,
+    sales_dev_hierarchy.sales_dev_rep_email,
+    sales_dev_hierarchy.sales_dev_rep_full_name,
     sales_dev_hierarchy.sales_dev_rep_title,
     sales_dev_hierarchy.sales_dev_rep_department,
     sales_dev_hierarchy.sales_dev_rep_team,
-    sales_dev_hierarchy.sales_dev_rep_direct_manager_id,
-    sales_dev_hierarchy.sales_dev_rep_direct_manager_name,
     sales_dev_hierarchy.sales_dev_rep_is_active,
     sales_dev_hierarchy.crm_user_sales_segment,
     sales_dev_hierarchy.crm_user_geo,
     sales_dev_hierarchy.crm_user_region,
     sales_dev_hierarchy.crm_user_area,
-    sales_dev_hierarchy.crm_user_business_unit,
-    sales_dev_hierarchy.sales_dev_rep_manager_role_name,
-    sales_dev_hierarchy.sales_dev_rep_manager_id,
-    sales_dev_hierarchy.sales_dev_rep_manager_name
+    sales_dev_hierarchy.sales_dev_rep_employee_number,
+    sales_dev_hierarchy.snapshot_date,
+    sales_dev_hierarchy.sales_dev_rep_direct_manager_id,
+    sales_dev_hierarchy.sales_dev_manager_full_name,
+    sales_dev_hierarchy.sales_dev_manager_email,
+    sales_dev_hierarchy.sales_dev_manager_employee_number,
+    sales_dev_hierarchy.sales_dev_manager_user_role_name,
+    sales_dev_hierarchy.sales_dev_leader_id,
+    sales_dev_hierarchy.sales_dev_leader_user_role_name,
+    sales_dev_hierarchy.sales_dev_leader_full_name,
+    sales_dev_hierarchy.sales_dev_leader_employee_number,
+    sales_dev_hierarchy.sales_dev_leader_email,
+    sales_dev_hierarchy.sales_dev_leader
   FROM opps_missing_link
   LEFT JOIN sales_dev_hierarchy 
     ON opps_missing_link.sdr_bdr_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
+    AND opps_missing_link.stage_1_discovery_date = sales_dev_hierarchy.snapshot_date
 
 )
 
@@ -444,5 +552,5 @@
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-09-06",
-    updated_date="2024-03-29",
+    updated_date="2024-04-26",
   ) }}
