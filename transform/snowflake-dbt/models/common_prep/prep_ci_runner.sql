@@ -30,14 +30,14 @@
       runner_id AS dim_ci_runner_id, 
       
       -- FOREIGN KEYS
-      dim_date.date_id                                            AS created_date_id,         
+      dim_date.date_id                                                                          AS created_date_id,         
 
       gitlab_dotcom_ci_runners_source.created_at,
       gitlab_dotcom_ci_runners_source.updated_at,
-      gitlab_dotcom_ci_runners_source.description                 AS ci_runner_description,
+      gitlab_dotcom_ci_runners_source.description                                               AS ci_runner_description,
       gitlab_dotcom_ci_runners_source.contacted_at,
       gitlab_dotcom_ci_runners_source.is_active,
-      gitlab_dotcom_ci_runners_source.version                     AS ci_runner_version,
+      gitlab_dotcom_ci_runners_source.version                                                   AS ci_runner_version,
       gitlab_dotcom_ci_runners_source.revision,
       gitlab_dotcom_ci_runners_source.platform,
       gitlab_dotcom_ci_runners_source.is_untagged,
@@ -47,8 +47,7 @@
       gitlab_dotcom_ci_runners_source.runner_type,
       gitlab_dotcom_ci_runners_source.public_projects_minutes_cost_factor,
       gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor,
-      sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping,
-      sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type
+      COALESCE(sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type, 'Other') AS ci_runner_machine_type
 
     FROM gitlab_dotcom_ci_runners_source
     LEFT JOIN dim_date 
