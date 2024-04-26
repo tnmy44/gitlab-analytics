@@ -432,8 +432,8 @@ sales_dev_hierarchy AS (
   LEFT JOIN opp_to_lead 
     ON mart_crm_person.dim_crm_person_id = opp_to_lead.waterfall_person_id
   LEFT JOIN sales_dev_hierarchy 
-    ON COALESCE(activity_summarised.dim_crm_user_id,opp_to_lead.sdr_bdr_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
-    AND COALESCE(activity_summarised.activity_date,opp_to_lead.stage_1_discovery_date) = sales_dev_hierarchy.snapshot_date 
+    ON COALESCE(opp_to_lead.sdr_bdr_user_id,activity_summarised.dim_crm_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
+    AND COALESCE(opp_to_lead.stage_1_discovery_date,activity_summarised.activity_date) = sales_dev_hierarchy.snapshot_date 
   WHERE activity_to_sao_days <= 90 OR activity_to_sao_days IS NULL 
   UNION 
   SELECT DISTINCT -- distinct is necessary in order to not duplicate rows as addition of the rule above of activity_to_sao_days >90 might create multiple rows if there are multiple leads that satisfy the condition per opp which is not ideal. 
