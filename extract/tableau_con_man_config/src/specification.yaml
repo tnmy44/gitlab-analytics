@@ -10796,6 +10796,21 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access      
+  - user_name: rcallam
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: ksarmento
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
   - user_name: ikhor
     user_name_domain: gitlab.com
     site_role: Viewer
