@@ -6421,6 +6421,26 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ateclemariam:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - mmagoma:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jblevins:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kshirazi:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7419,6 +7439,22 @@ users:
       can_login: true
       member_of:
         - aregnery
+  - ateclemariam:
+      can_login: true
+      member_of:
+        - ateclemariam
+  - mmagoma:
+      can_login: true
+      member_of:
+        - mmagoma
+  - jblevins:
+      can_login: true
+      member_of:
+        - jblevins
+  - kshirazi:
+      can_login: true
+      member_of:
+        - kshirazi
 warehouses:
   - admin:
       size: x-small
