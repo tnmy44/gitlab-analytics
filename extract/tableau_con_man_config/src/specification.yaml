@@ -10869,3 +10869,10 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: ateclemariam
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
