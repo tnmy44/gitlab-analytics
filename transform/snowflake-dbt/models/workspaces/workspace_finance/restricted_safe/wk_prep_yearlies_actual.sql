@@ -15,17 +15,17 @@ total_bookings_final AS (
 SELECT 
     '1.1 Total Bookings' AS yearly_name,
     'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
-     fiscal_quarter_name_fy as quarter,
+     fiscal_quarter_name_fy AS quarter,
      SUM(net_arr) AS actuals_raw
     
     FROM wk_fct_sales_funnel_actual
-    left join dim_date 
-    on date_actual = actual_date
-    where actual_date <= current_date 
-    and sales_funnel_kpi_name = 'Net ARR'
-    and fiscal_quarter_name_fy like '%FY25%'
+    LEFT JOIN dim_date 
+    ON date_actual = actual_date
+    WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
+    AND sales_funnel_kpi_name = 'Net ARR'
+    AND fiscal_quarter_name_fy LIKE '%FY25%'
     GROUP BY 1,2,3
-    order by 3 desc
+    ORDER BY 3 DESC
 ),
 
 duo_final AS (
@@ -37,9 +37,9 @@ duo_final AS (
     
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name like '%FY25%'
+    AND close_fiscal_quarter_name LIKE '%FY25%'
     AND close_month <= date_trunc('month',current_date)
-    AND product_category like '%Duo%'
+    AND (product_details ILIKE '%duo%' or product_details ILIKE '%code suggestions%')
     GROUP BY 1,2,3
 ),
 
@@ -139,7 +139,7 @@ SELECT
    renewal_net_arr_loss / atr* - 1 AS actuals_raw
 FROM
    churn_contraction_2
-WHERE quarter like 'FY25%'
+WHERE quarter LIKE 'FY25%'
 ),
 
 ultimate_bookings_final AS (
@@ -151,10 +151,9 @@ SELECT
     
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name like '%FY25%'
+    AND close_fiscal_quarter_name LIKE '%FY25%'
     AND close_month <= date_trunc('month',current_date)
-    AND product_category like '%Ultimate%'
-    AND product_category not like '%Dedicated%'
+    AND product_category LIKE '%Ultimate%'
     GROUP BY 1,2,3
 ),
 
@@ -167,9 +166,9 @@ dedicated_bookings_final AS (
     
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name like '%FY25%'
+    AND close_fiscal_quarter_name LIKE '%FY25%'
     AND close_month <= date_trunc('month',current_date)
-    AND product_category like '%Dedicated%'
+    AND product_details ILIKE '%dedicated%'
     GROUP BY 1,2,3
 ),
 
@@ -182,9 +181,9 @@ plan_bookings_final AS (
     
     FROM mart_crm_opportunity
     WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name like '%FY25%'
+    AND close_fiscal_quarter_name LIKE '%FY25%'
     AND close_month <= date_trunc('month',current_date)
-    AND product_category like '%Agile%'
+    AND product_details ILIKE '%enterprise agile planning%'
     GROUP BY 1,2,3
 ),
 
