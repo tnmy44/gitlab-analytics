@@ -53,7 +53,7 @@
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_ci_runners_source.created_at) = dim_date.date_day
     LEFT JOIN sheetload_ci_runner_machine_type_mapping_source
-      ON gitlab_dotcom_ci_runners_source.ci_runner_description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
+      ON gitlab_dotcom_ci_runners_source.description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
 
 )
 
