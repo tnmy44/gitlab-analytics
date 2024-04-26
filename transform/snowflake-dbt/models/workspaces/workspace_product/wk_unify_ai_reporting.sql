@@ -16,7 +16,7 @@ SELECT
     DATE_TRUNC(MONTH,e.behavior_date) AS current_month,
     DATE_TRUNC(MONTH,DATEADD(MONTH,1,e.behavior_date)) AS next_month
   FROM {{ ref('mart_behavior_structured_event') }} e
-      INNER JOIN {{ ref('prep_gitlab_dotcom_plan plan') }} p
+      INNER JOIN {{ ref('prep_gitlab_dotcom_plan') }} p
       ON e.plan_name = p.PLAN_NAME
   WHERE 
     behavior_at BETWEEN '2023-04-21' AND CURRENT_DATE 
