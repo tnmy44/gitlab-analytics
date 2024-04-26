@@ -29,11 +29,6 @@
      prep_sales_funnel_target.order_type,
      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                            AS dim_order_type_id,
      prep_sales_funnel_target.area                                                    AS crm_user_sales_segment_geo_region_area,
-     prep_sales_funnel_target.user_geo                                                AS geo_name,
-     prep_sales_funnel_target.user_region                                             AS region_name,
-     prep_sales_funnel_target.user_area                                               AS area_name,
-     prep_sales_funnel_target.user_segment                                            AS sales_segment_name,
-     prep_sales_funnel_target.user_business_unit                                      AS business_unit_name,
      prep_crm_user_hierarchy.dim_crm_user_hierarchy_id                                AS dim_crm_user_hierarchy_live_id,
      prep_crm_user_hierarchy.dim_crm_user_business_unit_id,
      prep_crm_user_hierarchy.dim_crm_user_sales_segment_id,
@@ -48,6 +43,12 @@
      prep_crm_user_hierarchy.dim_crm_user_geo_id                                      AS dim_crm_opp_owner_geo_stamped_id,
      prep_crm_user_hierarchy.dim_crm_user_region_id                                   AS dim_crm_opp_owner_region_stamped_id,
      prep_crm_user_hierarchy.dim_crm_user_area_id                                     AS dim_crm_opp_owner_area_stamped_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_name_id                                AS dim_crm_opp_owner_role_name_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_level_1_id                             AS dim_crm_opp_owner_role_level_1_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_level_2_id                             AS dim_crm_opp_owner_role_level_2_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_level_3_id                             AS dim_crm_opp_owner_role_level_3_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_level_4_id                             AS dim_crm_opp_owner_role_level_4_id,
+     prep_crm_user_hierarchy.dim_crm_user_role_level_5_id                             AS dim_crm_opp_owner_role_level_5_id,
      SUM(prep_sales_funnel_target.allocated_target)                                   AS allocated_target
     FROM prep_sales_funnel_target
     LEFT JOIN sales_qualified_source
@@ -61,7 +62,7 @@
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_kpi.sales_funnel_kpi_name") }} = {{ sales_funnel_text_slugify("prep_sales_funnel_target.kpi_name") }}
     LEFT JOIN prep_date
       ON prep_date.date_actual = prep_sales_funnel_target.first_day_of_month
-    {{ dbt_utils.group_by(n=29)}}
+    {{ dbt_utils.group_by(n=31)}}
 
 )
 
