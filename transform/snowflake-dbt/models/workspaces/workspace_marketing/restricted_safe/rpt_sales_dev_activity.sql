@@ -8,6 +8,7 @@
     ('sfdc_lead','sfdc_lead'),
     ('mart_crm_event','mart_crm_event'),
     ('mart_crm_task','mart_crm_task'),
+    ('mart_team_member_directory','mart_team_member_directory'),
     ('bdg_crm_opportunity_contact_role','bdg_crm_opportunity_contact_role'),
     ('dim_date', 'dim_date')
   ]) 
