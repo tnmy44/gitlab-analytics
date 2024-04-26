@@ -43,25 +43,29 @@ renamed AS (
 
 transformed AS (
   SELECT
-    extraction_end_date                        AS day,
+    extraction_end_date AS day,
     deployment_id,
     charge_type,
     sku,
     usage_unit,
-    LAG(cost, 1) OVER (PARTITION BY
-      extraction_start_date,
-      deployment_id,
-      charge_type,
-      sku,
-      usage_unit
-    ORDER BY extraction_end_date DESC) - cost  AS daily_cost,
-    LAG(usage, 1) OVER (PARTITION BY
-      extraction_start_date,
-      deployment_id,
-      charge_type,
-      sku,
-      usage_unit
-    ORDER BY extraction_end_date DESC) - usage AS daily_usage,
+    CASE WHEN day = DATE_TRUNC('month', DAY) THEN cost ELSE -- handle first day of the month where cost and usage would be null without case statement
+        cost - LAG(cost, 1) OVER (PARTITION BY
+          DATE_TRUNC('month', extraction_end_date),
+          deployment_id,
+          charge_type,
+          sku,
+          usage_unit
+        ORDER BY extraction_end_date)
+    END                 AS daily_cost,
+    CASE WHEN day = DATE_TRUNC('month', DAY) THEN usage ELSE -- handle first day of the month where cost and usage would be null without case statement
+        usage - LAG(usage, 1) OVER (PARTITION BY
+          DATE_TRUNC('month', extraction_end_date),
+          deployment_id,
+          charge_type,
+          sku,
+          usage_unit
+        ORDER BY extraction_end_date)
+    END                 AS daily_usage,
     cost,
     usage,
     details
@@ -75,9 +79,9 @@ SELECT
   sku,
   usage_unit,
   daily_cost,
-  cost,
+  cost  AS monthly_accumulated_cost,
   daily_usage,
-  usage,
+  usage AS monthly_accumulated_usage,
   details
 FROM transformed
 WHERE daily_usage IS NOT NULL

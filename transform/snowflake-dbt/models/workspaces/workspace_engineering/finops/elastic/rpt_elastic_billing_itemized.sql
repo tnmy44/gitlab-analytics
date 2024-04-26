@@ -40,22 +40,26 @@ renamed AS (
 
 transformed AS (
   SELECT
-    extraction_end_date                        AS day,
+    extraction_end_date AS day,
     charge_type,
     sku,
     usage_unit,
-    LAG(cost, 1) OVER (PARTITION BY
-      extraction_start_date,
-      charge_type,
-      sku,
-      usage_unit
-    ORDER BY extraction_end_date DESC) - cost  AS daily_cost,
-    LAG(usage, 1) OVER (PARTITION BY
-      extraction_start_date,
-      charge_type,
-      sku,
-      usage_unit
-    ORDER BY extraction_end_date DESC) - usage AS daily_usage,
+    CASE WHEN day = DATE_TRUNC('month', DAY) THEN cost ELSE -- handle first day of the month where cost and usage would be null without case statement
+        cost - LAG(cost, 1) OVER (PARTITION BY
+          DATE_TRUNC('month', extraction_end_date),
+          charge_type,
+          sku,
+          usage_unit
+        ORDER BY extraction_end_date)
+    END                 AS daily_cost,
+    CASE WHEN day = DATE_TRUNC('month', DAY) THEN usage ELSE -- handle first day of the month where cost and usage would be null without case statement
+        usage - LAG(usage, 1) OVER (PARTITION BY
+          DATE_TRUNC('month', extraction_end_date),
+          charge_type,
+          sku,
+          usage_unit
+        ORDER BY extraction_end_date)
+    END                 AS daily_usage,
     cost,
     usage,
     details
