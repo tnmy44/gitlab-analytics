@@ -47,6 +47,7 @@
       gitlab_dotcom_ci_runners_source.runner_type,
       gitlab_dotcom_ci_runners_source.public_projects_minutes_cost_factor,
       gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor,
+      sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping,
       sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type
 
     FROM gitlab_dotcom_ci_runners_source
