@@ -40,6 +40,10 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - gitlab_product_mrs_size
+  - name: level_up_sqs_completion
+    owner: '@jngCES'
+    tabs:
+      - SQS_2024_04_18
   - name: low_touch_targets_fy23
     owner: '@mfleisher'
     tabs:

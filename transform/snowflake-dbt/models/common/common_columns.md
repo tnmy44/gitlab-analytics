@@ -2698,6 +2698,12 @@ Name of the property that allows to distinguish between Gitlab Employees and non
 
 {% enddocs %}
 
+{% docs gsc_feature_enabled_by_namespace_ids %}
+
+List of namespaces that allow the user to use the tracked feature. This list does not have to be 1:1 with the event and does not necessarily correspond to where the event took place.
+
+{% enddocs %}
+
 {% docs web_page_context %}
 
 Web page fields added to Snowplow as defined in the [schema](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0)
@@ -2845,6 +2851,12 @@ Coalesced list of namespace ids from `duo_namespace_ids` and `saas_namespace_ids
 {% docs code_suggestions_is_streaming %}
 
 Code suggestions can be returned to the user in a single response or as a stream (in chunks). This boolean field distinguishes between the streamed and non-streamed responses.
+
+{% enddocs %}
+
+{% docs code_suggestions_gitlab_global_user_id %}
+
+Pseudonymised combination of instance id and user id sent in Code Suggestions events.
 
 {% enddocs %}
 
