@@ -232,7 +232,7 @@ sales_dev_hierarchy AS (
     mart_crm_task.sfdc_record_id,
     mart_crm_task.dim_crm_person_id,
     NULL AS booked_by_user_id,
-    TO_DATE(mart_crm_task.task_completed_date) AS activity_date,
+    mart_crm_task.task_completed_date::DATE AS activity_date,
     dim_date.day_of_fiscal_quarter as activity_day_of_fiscal_quarter,
     dim_date.fiscal_quarter_name_fy as activity_fiscal_quarter_name,
     mart_crm_task.task_type AS activity_type,
@@ -240,9 +240,9 @@ sales_dev_hierarchy AS (
   FROM mart_crm_task
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_task.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
-    AND mart_crm_task.task_completed_date = sales_dev_hierarchy.snapshot_date 
+    AND mart_crm_task.task_completed_date::DATE = sales_dev_hierarchy.snapshot_date 
   LEFT JOIN dim_date 
-    ON TO_DATE(mart_crm_task.task_completed_date) = dim_date.date_day
+    ON mart_crm_task.task_completed_date::DATE = dim_date.date_day
   WHERE activity_date >= '2022-01-01'
 
 ), activity_final AS (
