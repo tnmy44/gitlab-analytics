@@ -97,9 +97,10 @@ SELECT
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE user_role_level_1 IS NOT NULL
-        AND dim_date.fiscal_year >= 2025
-        AND prep_crm_user_daily_snapshot.is_active = TRUE
+    WHERE dim_date.fiscal_year >= 2025 
+        AND dim_date.fiscal_year < dim_date.current_fiscal_year -- we don't need historic mappings from the snapshot until they are no longer provided in the live source.
+        AND prep_crm_user_daily_snapshot.is_active = TRUE     
+        AND prep_crm_user_daily_snapshot.user_role_level_1 IS NOT NULL       
     QUALIFY ROW_NUMBER() OVER (PARTITION BY prep_crm_user_daily_snapshot.user_role_name, dim_date.fiscal_year ORDER BY snapshot_id DESC) = 1
 
 ), user_role_hierarchy_live_source AS (
