@@ -359,3 +359,7 @@ sheets:
     owner: '@rakhireddy'
     tabs: 
       - ta_team_assignment
+  - name: ci_runner_machine_type_mapping
+    owner: '@nhervas'
+    tabs: 
+      - ci_runner_machine_type_mapping

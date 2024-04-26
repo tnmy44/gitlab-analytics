@@ -659,3 +659,5 @@ models:
     - name: FY25-Q1
 - name: sheetload_ta_team_assignment_source
   description: The list of department, team and recruiter data 
+- name: sheetload_ci_runner_machine_type_mapping_source
+  description: Mapping of CI Runner descriptions to CI runner machine types

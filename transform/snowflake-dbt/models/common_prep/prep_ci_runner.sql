@@ -10,6 +10,7 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
+    ('sheetload_ci_runner_machine_type_mapping_source', 'sheetload_ci_runner_machine_type_mapping_source')
 
 ]) }}
 
@@ -45,18 +46,21 @@
       gitlab_dotcom_ci_runners_source.maximum_timeout,
       gitlab_dotcom_ci_runners_source.runner_type,
       gitlab_dotcom_ci_runners_source.public_projects_minutes_cost_factor,
-      gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor
+      gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor,
+      sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type
 
     FROM gitlab_dotcom_ci_runners_source
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_ci_runners_source.created_at) = dim_date.date_day
+    LEFT JOIN sheetload_ci_runner_machine_type_mapping_source
+      ON gitlab_dotcom_ci_runners_source.ci_runner_description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-06-23",
-    updated_date="2023-07-21"
+    updated_date="2024-04-26"
 ) }}

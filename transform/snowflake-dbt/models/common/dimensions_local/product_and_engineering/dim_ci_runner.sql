@@ -38,33 +38,7 @@ WITH prep_ci_runner AS (
     END         AS ci_runner_manager,
 
     --- CI Runner Machine Type Mapping
-    CASE
-      --- SaaS Linux Runners
-      WHEN LOWER(ci_runner_description) ILIKE '%.shared.runners-manager.%'
-        THEN 'Hosted Runner Linux - Small'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-small-amd64.%'
-        THEN 'Hosted Runner Linux - Small'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-amd64%'
-        AND LOWER(ci_runner_description) NOT ILIKE '%gpu-standard%'
-        THEN 'Hosted Runner Linux - Medium - amd64'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-arm64.%'
-        THEN 'Hosted Runner Linux - Medium - arm64'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-medium-amd64-gpu-standard.%'
-        THEN 'Hosted GPU-Enabled Runners'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-large-amd64.%'
-        THEN 'Hosted Runner Linux - Large'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-xlarge-amd64.%'
-        THEN 'Hosted Runner Linux - XLarge'
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-linux-2xlarge-amd64.%'
-        THEN 'Hosted Runner Linux - 2XLarge'
-      --- MacOS Runners
-      WHEN LOWER(ci_runner_description) ILIKE '%.saas-macos-medium-m1.%'
-        THEN 'Hosted Runners macOS - Medium - amd64'
-      --- Window Runners 
-      WHEN LOWER(ci_runner_description) ILIKE '_.saas-windows-%'
-        THEN 'Hosted Runners Windows - Medium'
-      ELSE 'Other'
-    END         AS ci_runner_machine_type,
+    ci_runner_machine_type,
     contacted_at,
     is_active,
     ci_runner_version,
@@ -90,7 +64,7 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@nhervas",
+    updated_by="@michellecooper",
     created_date="2021-06-23",
-    updated_date="2024-04-22"
+    updated_date="2024-04-26"
 ) }}
