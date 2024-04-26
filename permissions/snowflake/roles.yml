@@ -6431,7 +6431,7 @@ roles:
         - dev_xs
   - mmagoma:
       member_of:
-        - gitlab_dotcom 
+        - gitlab_dotcom
         - snowflake_analyst
         - zendesk
       warehouses:
