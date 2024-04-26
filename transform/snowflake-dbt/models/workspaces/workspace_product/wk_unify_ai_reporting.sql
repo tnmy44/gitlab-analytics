@@ -7,7 +7,7 @@ WITH prep AS
 (
 SELECT
     e.event_label,
-    e.plan_name,
+    p.plan_title AS plan_name,
     CASE WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') THEN 'External' ELSE 'Internal' END AS internal_or_external,
     e.behavior_date,
     e.gsc_pseudonymized_user_id,
@@ -16,6 +16,8 @@ SELECT
     DATE_TRUNC(MONTH,e.behavior_date) AS current_month,
     DATE_TRUNC(MONTH,DATEADD(MONTH,1,e.behavior_date)) AS next_month
   FROM {{ ref('mart_behavior_structured_event') }} e
+      INNER JOIN {{ ref('prep_gitlab_dotcom_plan plan') }} p
+      ON e.plan_name = p.PLAN_NAME
   WHERE 
     behavior_at BETWEEN '2023-04-21' AND CURRENT_DATE 
     AND   
