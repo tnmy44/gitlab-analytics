@@ -3,12 +3,36 @@ WITH team_status_dup AS (
     *
   FROM {{ref('fct_team_status')}}
 ),
-pto AS (
+pto_source AS (
   SELECT 
     *
   FROM {{ref('gitlab_pto')}}
 ),
-
+pto AS (
+  SELECT
+    *,
+    DATEDIFF(DAY, start_date, end_date) + 1                AS pto_days_requested,
+    DAYOFWEEK(pto_date)                                    AS pto_day_of_week,
+    NOT COALESCE(total_hours < employee_day_length, FALSE) AS is_full_day,
+    ROW_NUMBER() OVER (
+      PARTITION BY
+        hr_employee_id,
+        pto_date
+      ORDER BY
+        end_date DESC,
+        pto_uuid DESC
+    )                                                      AS pto_rank,
+    'Y'                                                    AS is_pto_date
+  FROM pto_source
+  WHERE pto_status = 'AP'
+    AND pto_date <= CURRENT_DATE
+    AND pto_day_of_week BETWEEN 1
+    AND 5
+    AND pto_days_requested <= 25
+    AND COALESCE(pto_group_type, '') != 'EXL'
+    AND NOT COALESCE(pto_type_name, '') IN ('CEO Shadow Program', 'Conference', 'Customer Visit')
+  QUALIFY pto_rank = 1
+),
 team_status AS (
   SELECT 
     dim_team_member_sk,
@@ -43,12 +67,14 @@ combined_sources AS (
     team_status.job_grade,
     team_status.entity,
     team_status.is_position_active,  
-    team_status.is_current,
+    team_status.is_current AS is_current_team_member_position,
     pto.start_date AS absence_start,
     pto.end_date AS absence_end,
     pto.pto_date AS absence_date,
     pto.is_pto AS is_pto,
     pto.is_holiday AS is_holiday,
+    pto.pto_uuid AS pto_uuid,
+    pto.pto_type_uuid AS pto_type_uuid,
     pto.pto_status AS pto_status,
     pto.pto_status_name AS pto_status_name,
     pto.total_hours AS total_hours,
