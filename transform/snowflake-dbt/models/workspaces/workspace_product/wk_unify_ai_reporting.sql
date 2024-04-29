@@ -235,7 +235,7 @@ e.current_week,
 e.event_label,
 e.plan_name,
 e.internal_or_external,
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -252,7 +252,7 @@ e.current_month,
 e.event_label,
 e.plan_name,
 e.internal_or_external,
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -269,7 +269,7 @@ e.current_week,
 e.event_label,
 'All',
 e.internal_or_external,
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -286,7 +286,7 @@ e.current_month,
 e.event_label,
 'All',
 e.internal_or_external,
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -304,7 +304,7 @@ e.current_week,
 e.event_label,
 e.plan_name,
 'All',
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -321,7 +321,7 @@ e.current_month,
 e.event_label,
 e.plan_name,
 'All',
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -338,7 +338,7 @@ e.current_week,
 e.event_label,
 'All',
 'All',
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
@@ -355,7 +355,7 @@ e.current_month,
 e.event_label,
 'All',
 'All',
-100*(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
+(COUNT(DISTINCT e2.gsc_pseudonymized_user_id)/COUNT(DISTINCT e.gsc_pseudonymized_user_id)) AS retention_rate
 FROM
 prep e
 LEFT JOIN 
