@@ -19,13 +19,11 @@ SELECT
       INNER JOIN {{ ref('prep_gitlab_dotcom_plan') }} p
       ON e.plan_name = p.PLAN_NAME
   WHERE 
-    behavior_at BETWEEN '2023-04-21' AND CURRENT_DATE 
-    AND   
-    (
-        event_category = 'Llm::ExecuteMethodService' --tracking for all but Code Suggestions
-        AND 
-        event_action = 'execute_llm_method'
-    ) 
+    event_action = 'execute_llm_method'
+    AND
+    behavior_date BETWEEN '2023-04-21' AND CURRENT_DATE 
+    AND
+    event_category = 'Llm::ExecuteMethodService'
     AND 
     event_label != 'code_suggestions'
          
