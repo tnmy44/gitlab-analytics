@@ -237,6 +237,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_week = e.next_week
+WHERE
+e.next_week < DATE_TRUNC(WEEK,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -252,6 +254,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_month = e.next_month
+WHERE
+e.next_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -267,6 +271,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_week = e.next_week
+WHERE
+e.next_week < DATE_TRUNC(WEEK,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -282,6 +288,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_month = e.next_month
+WHERE
+e.next_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -298,6 +306,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_week = e.next_week
+WHERE
+e.next_week < DATE_TRUNC(WEEK,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -313,6 +323,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_month = e.next_month
+WHERE
+e.next_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -328,6 +340,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_week = e.next_week
+WHERE
+e.next_week < DATE_TRUNC(WEEK,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -343,6 +357,8 @@ FROM
 prep e
 LEFT JOIN 
 prep e2 ON e2.event_label = e.event_label AND e2.gsc_pseudonymized_user_id = e.gsc_pseudonymized_user_id AND e2.current_month = e.next_month
+WHERE
+e.next_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 GROUP BY ALL
 HAVING 
 COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
@@ -351,49 +367,49 @@ COUNT(DISTINCT e.gsc_pseudonymized_user_id) > 0
 (
 SELECT
 *,
-'Weekly Retention'
+'Weekly Retention' AS metric
 FROM
 weekly_retention_grouped
 UNION ALL 
 SELECT
 *,
-'Monthly Retention'
+'Monthly Retention' AS metric
 FROM
 monthly_retention_grouped
 UNION ALL 
 SELECT
 *,
-'Weekly Retention'
+'Weekly Retention' AS metric
 FROM
 weekly_retention_no_plan
 UNION ALL 
 SELECT
 *,
-'Monthly Retention'
+'Monthly Retention' AS metric
 FROM
 monthly_retention_no_plan
 UNION ALL 
 SELECT
 *,
-'Weekly Retention'
+'Weekly Retention' AS metric
 FROM
 weekly_retention_no_intext
 UNION ALL 
 SELECT
 *,
-'Monthly Retention'
+'Monthly Retention' AS metric
 FROM
 monthly_retention_no_intext
 UNION ALL 
 SELECT
 *,
-'Weekly Retention'
+'Weekly Retention' AS metric
 FROM
 weekly_retention_all
 UNION ALL 
 SELECT
 *,
-'Monthly Retention'
+'Monthly Retention' AS metric
 FROM
 monthly_retention_all
 
@@ -445,8 +461,8 @@ SELECT
 FROM
 unify u 
    {% if is_incremental() %}
-
-            AND
-            u.date_day > (SELECT MAX(date_day) FROM {{ this }})
-
-        {% endif %}
+        WHERE
+        u.date_day > (SELECT MAX(date_day) FROM {{ this }})
+        AND 
+        u.date_day < CURRENT_DATE()
+    {% endif %}
