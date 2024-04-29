@@ -20,6 +20,7 @@ from typing import Tuple
 
 from snowflake_connection import SnowflakeConnection
 from provision_users import _provision
+from args_deprovision_users import parse_arguments
 
 # need to import update_roles_yaml module
 abs_path = os.path.dirname(os.path.realpath(__file__))
@@ -27,7 +28,6 @@ roles_yaml_path = os.path.join(
     abs_path[: abs_path.find("/provision_users")], "update_roles_yaml/"
 )
 sys.path.insert(1, roles_yaml_path)
-from args_deprovision_users import parse_arguments
 from utils_update_roles import USERS_KEY, get_roles_from_url, configure_logging
 from roles_struct import RolesStruct
 
