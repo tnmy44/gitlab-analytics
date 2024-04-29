@@ -2522,6 +2522,8 @@ models:
         description: '{{ doc("license_company_name") }}'
       - name: license_expire_date
         description: '{{ doc("license_expire_date") }}'
+      - name: subscription_name
+        description: '{{ doc("subscription_name") }}'
       - name: original_subscription_name_slugify
         description: '{{ doc("original_subscription_name_slugify") }}'
       - name: dim_subscription_id

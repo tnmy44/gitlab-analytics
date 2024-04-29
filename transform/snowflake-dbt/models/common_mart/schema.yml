@@ -368,6 +368,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -501,6 +503,8 @@ models:
       description: '{{ doc("iso_2_country_code_ping_model") }}'
     - name: installation_type
       description: '{{ doc("installation_type") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -631,6 +635,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -763,6 +769,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -903,6 +911,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -1043,6 +1053,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
@@ -1183,6 +1195,8 @@ models:
       description: '{{ doc("time_frame") }}'
     - name: instance_user_count
       description: '{{ doc("instance_user_count") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month

@@ -624,6 +624,12 @@ The number of active users existing in the installation. In this case "active" i
 
 {% enddocs %}
 
+{% docs subscription_name %}
+
+If a subscription is linked to the license, name of the subscription, easily joined to `dim_subscription`, etc
+
+{% enddocs %}
+
 {% docs original_subscription_name_slugify %}
 
 If a subscription is linked to the license, slugified name of the subscription, easily joined to `dim_subscription`, etc
