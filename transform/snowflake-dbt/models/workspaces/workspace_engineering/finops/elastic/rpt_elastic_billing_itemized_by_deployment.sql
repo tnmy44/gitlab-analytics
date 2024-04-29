@@ -1,18 +1,21 @@
 WITH data_transfer_source AS (
 
-  SELECT * FROM {{ ref ('elastic_billing_data_transfer_source') }}
+  SELECT *
+  FROM {{ ref ('elastic_billing_data_transfer_by_deployment_source') }}
 
 ),
 
 resource_source AS (
 
-  SELECT * FROM {{ ref ('elastic_billing_resources_source') }}
+  SELECT *
+  FROM {{ ref ('elastic_billing_resources_by_deployment_source') }}
 
 ),
 
 renamed AS (
 
   SELECT
+    deployment_id,
     extraction_start_date,
     extraction_end_date,
     'data_transfer'                      AS charge_type,
@@ -26,6 +29,7 @@ renamed AS (
   FROM data_transfer_source
   UNION ALL
   SELECT
+    deployment_id,
     extraction_start_date,
     extraction_end_date,
     'capacity' AS charge_type,
@@ -33,20 +37,21 @@ renamed AS (
     cost,
     hours      AS usage,
     'hours'    AS usage_unit,
-    ARRAY_CONSTRUCT(resource_start_date, resource_end_date, instance_count, price_per_hour, name)
+    ARRAY_CONSTRUCT(resource_start_date, resource_end_date, instance_count, price_per_hour, resource_name)
   FROM resource_source
 ),
-
 
 transformed AS (
   SELECT
     extraction_end_date AS day,
+    deployment_id,
     charge_type,
     sku,
     usage_unit,
     CASE WHEN day = DATE_TRUNC('month', DAY) THEN cost ELSE -- handle first day of the month where cost and usage would be null without case statement
         cost - LAG(cost, 1) OVER (PARTITION BY
           DATE_TRUNC('month', extraction_end_date),
+          deployment_id,
           charge_type,
           sku,
           usage_unit
@@ -55,6 +60,7 @@ transformed AS (
     CASE WHEN day = DATE_TRUNC('month', DAY) THEN usage ELSE -- handle first day of the month where cost and usage would be null without case statement
         usage - LAG(usage, 1) OVER (PARTITION BY
           DATE_TRUNC('month', extraction_end_date),
+          deployment_id,
           charge_type,
           sku,
           usage_unit
@@ -68,13 +74,14 @@ transformed AS (
 
 SELECT
   day,
+  deployment_id,
   charge_type,
   sku,
   usage_unit,
   daily_cost,
-  cost,
+  cost  AS monthly_accumulated_cost,
   daily_usage,
-  usage,
+  usage AS monthly_accumulated_usage,
   details
 FROM transformed
 WHERE daily_usage IS NOT NULL
