@@ -7,6 +7,7 @@
     ('dim_crm_opportunity','dim_crm_opportunity'),
     ('sheetload_map_ramp_deals','sheetload_map_ramp_deals'),
     ('dim_subscription', 'dim_subscription'),
+    ('dim_charge', 'dim_charge'),
     ('fct_charge','fct_charge'),
     ('dim_billing_account','dim_billing_account'),
     ('dim_crm_account','dim_crm_account'),
@@ -254,7 +255,7 @@
       AND fct_charge.effective_start_date_id != fct_charge.effective_end_date_id            
     INNER JOIN dim_billing_account
       ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
-    LEFT JOIN PROD.RESTRICTED_SAFE_COMMON.DIM_CHARGE dim_charge  
+    LEFT JOIN dim_charge  
       ON dim_charge.dim_charge_id = fct_charge.dim_charge_id 
     LEFT JOIN dim_crm_account
       ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
