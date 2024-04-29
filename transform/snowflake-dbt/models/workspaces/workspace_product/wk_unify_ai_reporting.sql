@@ -7,7 +7,7 @@ WITH prep AS
 (
 SELECT
     e.event_label,
-    p.plan_title AS plan_name,
+    IFNULL(p.plan_title, e.plan_name) AS plan_name,
     CASE 
     WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') THEN 'External' 
     WHEN gsc_is_gitlab_team_member IN ('true','5616b37fa230003bc8510af409bf3f5970e6d5027cc282b0ab3080700d92e7ad') THEN 'Internal'
@@ -19,7 +19,7 @@ SELECT
     DATE_TRUNC(MONTH,e.behavior_date) AS current_month,
     DATE_TRUNC(MONTH,DATEADD(MONTH,1,e.behavior_date)) AS next_month
   FROM {{ ref('mart_behavior_structured_event') }} e
-      INNER JOIN {{ ref('prep_gitlab_dotcom_plan') }} p
+      LEFT JOIN {{ ref('prep_gitlab_dotcom_plan') }} p
       ON e.plan_name = p.PLAN_NAME
   WHERE 
     event_action = 'execute_llm_method'
