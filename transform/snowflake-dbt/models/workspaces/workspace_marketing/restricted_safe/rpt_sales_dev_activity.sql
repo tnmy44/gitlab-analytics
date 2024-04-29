@@ -208,7 +208,7 @@ sales_dev_hierarchy AS (
     mart_crm_event.sfdc_record_id,
     mart_crm_event.dim_crm_person_id,
     dim_crm_user.dim_crm_user_id AS booked_by_user_id,
-    mart_crm_event.event_date AS activity_date,
+    mart_crm_event.event_date::DATE AS activity_date,
     dim_date.day_of_fiscal_quarter as activity_day_of_fiscal_quarter,
     dim_date.fiscal_quarter_name_fy as activity_fiscal_quarter_name,
     'Event' AS activity_type,
@@ -217,11 +217,11 @@ sales_dev_hierarchy AS (
   LEFT JOIN dim_crm_user 
     ON booked_by_employee_number = dim_crm_user.employee_number 
     LEFT JOIN dim_date 
-    ON mart_crm_event.event_date = dim_date.date_day
+    ON mart_crm_event.event_date::DATE = dim_date.date_day
   INNER JOIN sales_dev_hierarchy 
     ON (mart_crm_event.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
       OR booked_by_user_id = sales_dev_hierarchy.sales_dev_rep_user_id)
-    AND mart_crm_event.event_date = sales_dev_hierarchy.snapshot_date 
+    AND mart_crm_event.event_date::DATE = sales_dev_hierarchy.snapshot_date 
   WHERE activity_date >= '2022-01-01'
   UNION
   SELECT 
