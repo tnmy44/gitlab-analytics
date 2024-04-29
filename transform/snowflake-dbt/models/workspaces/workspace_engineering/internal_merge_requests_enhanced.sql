@@ -257,9 +257,8 @@ base AS (
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                               AS is_infradev,
     ARRAY_CONTAINS('customer'::VARIANT, internal_merge_requests.labels)                                                                                                                                                                                                                                                 AS is_customer_related,
     internal_merge_requests.is_part_of_product,
-    first_commit.first_commit_created_at,
     ROUND(TIMESTAMPDIFF(HOURS, first_commit.first_commit_created_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                        AS days_from_first_commit_to_merge,
-    ROUND(TIMESTAMPDIFF(HOURS, internal_merge_requests.created_at, first_review_date.first_review_date) / 24, 2) as days_from_creation_to_first_review_date
+    ROUND(TIMESTAMPDIFF(HOURS, internal_merge_requests.created_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                        AS days_from_creation_to_first_review_date
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON internal_merge_requests.target_project_id = projects.dim_project_id
@@ -270,7 +269,7 @@ base AS (
   LEFT JOIN milestones
     ON internal_merge_requests.milestone_id = milestones.milestone_id
   LEFT JOIN first_commit ON internal_merge_requests.merge_request_id = first_commit.merge_request_id
-  left join first_review_date on internal_merge_requests.merge_request_id = first_review_date.merge_request_id
+  LEFT JOIN first_review_date ON internal_merge_requests.merge_request_id = first_review_date.merge_request_id
 
 )
 
