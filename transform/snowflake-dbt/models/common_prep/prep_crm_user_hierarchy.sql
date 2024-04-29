@@ -110,9 +110,7 @@ SELECT
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
     WHERE dim_date.fiscal_year >= 2025 
-        AND dim_date.fiscal_year < dim_date.current_fiscal_year -- we don't need the FY25 mappings from the snapshot until they are no longer provided in the live source.
-        AND prep_crm_user_daily_snapshot.is_active = TRUE     
-        AND prep_crm_user_daily_snapshot.user_role_level_1 IS NOT NULL       
+        AND prep_crm_user_daily_snapshot.is_active = TRUE          
     QUALIFY ROW_NUMBER() OVER (PARTITION BY prep_crm_user_daily_snapshot.user_role_name, dim_date.fiscal_year ORDER BY snapshot_id DESC) = 1
 
 ), user_role_hierarchy_live_source AS (
@@ -262,7 +260,6 @@ SELECT
     INNER JOIN prep_crm_user_roles
       ON prep_crm_opportunity.opportunity_owner_role = prep_crm_user_roles.user_role_name 
     WHERE is_live = 1
-      AND prep_crm_opportunity.close_fiscal_year IS NOT NULL
       AND prep_crm_user_roles.user_role_level_1 IS NOT NULL
       AND prep_crm_opportunity.close_fiscal_year >= 2025
   
@@ -278,6 +275,7 @@ SELECT
 
     SELECT *
     FROM user_role_hierarchy_snapshot_source
+    WHERE user_role_level_1 IS NOT NULL       
 
     UNION
 
