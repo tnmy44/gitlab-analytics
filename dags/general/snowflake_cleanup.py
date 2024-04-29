@@ -15,7 +15,7 @@ from kube_secrets import (
     SNOWFLAKE_PROVISIONER_WAREHOUSE,
 )
 
-from kubernetes_helpers import get_affinity, get_toleration
+from kubernetes_helpers import get_affinity, get_toleration, is_local_test
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -92,9 +92,11 @@ purge_dev_schemas = KubernetesPodOperator(
 )
 
 # Task 3: deprovision stale users in Snowflake
+test_run_arg = "--test-run" if is_local_test() else "--no-test-run"
+
 deprovision_users_cmd = f"""
     {clone_repo_cmd} &&
-    python3 analytics/orchestration/snowflake_provisioning_automation/provision_users/deprovision_users.py --test-run
+    python3 analytics/orchestration/snowflake_provisioning_automation/provision_users/deprovision_users.py {test_run_arg}
 """
 purge_dev_schemas = KubernetesPodOperator(
     **gitlab_defaults,
