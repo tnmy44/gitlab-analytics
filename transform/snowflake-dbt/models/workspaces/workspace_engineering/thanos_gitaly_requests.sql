@@ -9,7 +9,7 @@ transformed AS (
 
   SELECT
     DATE_TRUNC('day', metric_created_at) AS day,
-    SUM(metric_value) * 3600             AS requests
+    SUM(metric_value) * 3600 * 24        AS requests
   FROM source
   GROUP BY 1
 ),

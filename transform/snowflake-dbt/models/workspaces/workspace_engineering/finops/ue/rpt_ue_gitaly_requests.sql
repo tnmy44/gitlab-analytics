@@ -59,7 +59,7 @@ haproxy AS (
       FROM haproxy_source
       GROUP BY DATE(metric_created_at)
     )
-  GROUP BY 1, 2, 3, metric_value
+  GROUP BY 1, 2, 3
 
 
 ),
