@@ -18,7 +18,7 @@ rps AS (
 
   SELECT *
   FROM {{ ref ('thanos_gitaly_requests') }}
-  WHERE day >= '2023-10-01'
+  WHERE day >= '2024-01-16'
 
 ),
 
@@ -34,8 +34,7 @@ inter_zone AS (
   FROM {{ ref ('rpt_gcp_billing_pl_day_ext') }}
   WHERE gcp_project_id LIKE 'gitlab-gitaly-gprd-%'
     AND gcp_sku_description = 'Network Inter Zone Data Transfer Out'
-    AND date_day >= '2023-10-01'
-
+    AND date_day >= '2024-01-16'
   GROUP BY 1, 2, 3
   ORDER BY 1 DESC
 
@@ -59,6 +58,7 @@ haproxy AS (
       FROM haproxy_source
       GROUP BY DATE(metric_created_at)
     )
+    AND DATE(metric_created_at) >= '2024-01-16'
   GROUP BY 1, 2, 3
 
 
