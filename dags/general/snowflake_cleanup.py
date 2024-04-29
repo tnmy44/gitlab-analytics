@@ -10,6 +10,9 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
+    SNOWFLAKE_PROVISIONER_USER,
+    SNOWFLAKE_PROVISIONER_PASSWORD,
+    SNOWFLAKE_PROVISIONER_WAREHOUSE,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -83,6 +86,29 @@ purge_dev_schemas = KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[drop_dev_cmd],
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    dag=dag,
+)
+
+# Task 3: deprovision stale users in Snowflake
+deprovision_users_cmd = f"""
+    {clone_repo_cmd} &&
+    python3 analytics/orchestration/snowflake_provisioning_automation/provision_users/deprovision_users.py --test-run
+"""
+purge_dev_schemas = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="deprovision_users",
+    name="deprovision_users",
+    secrets=[
+        SNOWFLAKE_PROVISIONER_USER,
+        SNOWFLAKE_PROVISIONER_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_PROVISIONER_WAREHOUSE,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[deprovision_users_cmd],
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
     dag=dag,
