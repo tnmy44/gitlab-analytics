@@ -265,7 +265,6 @@ SELECT
     INNER JOIN prep_crm_user_roles
       ON prep_crm_opportunity.opportunity_owner_role = prep_crm_user_roles.user_role_name 
     WHERE is_live = 1
-      AND prep_crm_opportunity.close_fiscal_year IS NOT NULL
       AND prep_crm_user_roles.user_role_level_1 IS NOT NULL
       AND prep_crm_opportunity.close_fiscal_year >= 2025
   
