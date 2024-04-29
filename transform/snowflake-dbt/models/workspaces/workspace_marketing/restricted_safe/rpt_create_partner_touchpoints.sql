@@ -71,6 +71,7 @@ activities as (
     lead_or_contact_id as person_sfdc_record_id,
     -- dim_crm_person_id,
     mart_crm_person.dim_crm_account_id,
+    mart_crm_person.marketo_lead_id,
     crm_account_type
     from
     sfdc_campaign_member
@@ -98,6 +99,7 @@ activities as (
     select
     get_members_of_partner_camapgin.campaign_member_created_date,
     get_members_of_partner_camapgin.person_sfdc_record_id,
+    get_members_of_partner_camapgin.marketo_lead_id,
     get_members_of_partner_camapgin.dim_crm_account_id,
     get_members_of_partner_camapgin.crm_account_type,
     find_deal_reg_of_partners.partner_account,
