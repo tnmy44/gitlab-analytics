@@ -3,7 +3,6 @@
 {{ simple_cte([
     ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
     ('dim_crm_user','dim_crm_user'),
-    ('dim_crm_user_daily_snapshot','dim_crm_user_daily_snapshot'),
     ('mart_crm_person','mart_crm_person'),
     ('sfdc_lead','sfdc_lead'),
     ('mart_crm_event','mart_crm_event'),
