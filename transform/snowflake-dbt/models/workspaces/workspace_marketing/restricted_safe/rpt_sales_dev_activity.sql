@@ -14,7 +14,7 @@
   ]) 
 }}
 
-sales_dev_opps AS (
+, sales_dev_opps AS (
 
   SELECT 
     dim_crm_account_id,
@@ -142,7 +142,7 @@ sales_dev_opps AS (
     ON mart_crm_person.sfdc_record_id = sfdc_lead.converted_contact_id  
   LEFT JOIN sales_dev_opps 
     ON converted_opportunity_id = dim_crm_opportunity_id 
-  WHERE converted_contact_id IS NOT null 
+  WHERE converted_contact_id IS NOT NULL 
 
 ), contacts_on_opps AS (
 
