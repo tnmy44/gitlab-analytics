@@ -8,7 +8,10 @@ WITH prep AS
 SELECT
     e.event_label,
     p.plan_title AS plan_name,
-    CASE WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') THEN 'External' ELSE 'Internal' END AS internal_or_external,
+    CASE 
+    WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') THEN 'External' 
+    WHEN gsc_is_gitlab_team_member IN ('true','5616b37fa230003bc8510af409bf3f5970e6d5027cc282b0ab3080700d92e7ad') THEN 'Internal'
+    ELSE 'Unknown' END AS internal_or_external,
     e.behavior_date,
     e.gsc_pseudonymized_user_id,
     DATE_TRUNC(WEEK,e.behavior_date) AS current_week,
