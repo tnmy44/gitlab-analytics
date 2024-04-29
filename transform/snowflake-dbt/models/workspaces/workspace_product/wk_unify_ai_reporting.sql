@@ -463,9 +463,10 @@ SELECT
 *
 FROM
 unify u 
-   {% if is_incremental() %}
-        WHERE
-        u.date_day > (SELECT MAX(date_day) FROM {{ this }})
-        AND 
+WHERE
         u.date_day < CURRENT_DATE()
+   {% if is_incremental() %}
+        AND
+        u.date_day > (SELECT MAX(date_day) FROM {{ this }})
+
     {% endif %}
