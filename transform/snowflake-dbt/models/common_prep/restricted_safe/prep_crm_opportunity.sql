@@ -579,8 +579,6 @@ LEFT JOIN cw_base
       snapshots before the definition changed in SFDC: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/5331
       Use is_net_arr_pipeline_created as the SSOT 
       */
-
-      sfdc_opportunity.is_pipeline_created_eligible,
         CASE
           WHEN sfdc_opportunity_live.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
             AND sfdc_opportunity_live.is_edu_oss  = 0
