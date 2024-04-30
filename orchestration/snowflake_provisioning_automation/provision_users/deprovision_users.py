@@ -28,7 +28,12 @@ roles_yaml_path = os.path.join(
     abs_path[: abs_path.find("/provision_users")], "update_roles_yaml/"
 )
 sys.path.insert(1, roles_yaml_path)
-from utils_update_roles import USERS_KEY, get_roles_from_url, configure_logging
+from utils_update_roles import (
+    USERS_KEY,
+    ROLES_KEY,
+    get_roles_from_url,
+    configure_logging,
+)
 from roles_struct import RolesStruct
 
 config_dict = os.environ.copy()
@@ -71,12 +76,17 @@ def compare_users(users_roles_yaml: list, users_snowflake: list) -> list:
 def get_users_from_roles_yaml() -> list:
     """
     Make request to roles.yml within master branch
-    Obtain the existing users within that file
+    Obtain the existing users and roles within that file
+    Return the combined users and roles.
+    Combining users and roles ensures that no Snowflake objects
+    are incorrectly dropped.
     """
     roles_data = get_roles_from_url()
     roles_struct = RolesStruct(roles_data)
     users_roles_yaml = roles_struct.get_existing_value_keys(USERS_KEY)
-    return users_roles_yaml
+    roles_roles_yaml = roles_struct.get_existing_value_keys(ROLES_KEY)
+    users_and_roles = list(set(users_roles_yaml + roles_roles_yaml))
+    return users_and_roles
 
 
 def get_users_snowflake(connection: SnowflakeConnection) -> list:
