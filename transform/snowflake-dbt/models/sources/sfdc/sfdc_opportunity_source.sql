@@ -255,6 +255,7 @@ WITH source AS (
         calculated_discount__c                          AS calculated_discount,
         partner_discount__c                             AS partner_discount,
         partner_discount_calc__c                        AS partner_discount_calc,
+        partner_margin__c                               AS partner_margin_percentage,
         NULL                                            AS comp_channel_neutral,
 
         -- command plan fields
