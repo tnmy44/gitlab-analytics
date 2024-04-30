@@ -148,6 +148,10 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
+      - name: lead_score_classification
+        description: The Salesforce grade of the lead score for a lead/contact. 
+      - name: is_defaulted_trial
+        description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
@@ -2086,6 +2090,10 @@ models:
         description: '{{ doc("link_click_element_id") }}'
       - name: is_staging_event
         description: '{{ doc("is_staging_event") }}'
+      - name: gitlab_global_user_id
+        description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
+      - name: gsc_feature_enabled_by_namespace_ids
+        description: '{{ doc("gsc_feature_enabled_by_namespace_ids") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
@@ -2514,6 +2522,8 @@ models:
         description: '{{ doc("license_company_name") }}'
       - name: license_expire_date
         description: '{{ doc("license_expire_date") }}'
+      - name: subscription_name
+        description: '{{ doc("subscription_name") }}'
       - name: original_subscription_name_slugify
         description: '{{ doc("original_subscription_name_slugify") }}'
       - name: dim_subscription_id
