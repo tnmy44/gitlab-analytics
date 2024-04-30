@@ -1455,7 +1455,7 @@ Daily [snapshot](https://about.gitlab.com/handbook/business-technology/data-team
 {% docs bdg_metrics_redis_events %}
 ## Overview
 This model records the many-to-many relationship between Service Ping Metrics and Redis events. It pulls from the metrics dictionary yml files via `dim_ping_metric`, and contains the
-metric name, the Redis event name, and the attribute. It will be joined to Snowplow events that contain the Service Ping Context to get SaaS product usage data at the namespace level.
+metric name, and the Redis event name. It will be joined to Snowplow events that contain the Service Ping Context to get SaaS product usage data at the namespace level.
 
 ## Aggregation Strategies
 [This thread](https://gitlab.com/gitlab-org/gitlab/-/issues/376244#note_1167575425) has a nice summary of the possible aggregation strategies. The important thing to know from an analyst perspective is that Redis-based metrics come in three basic varities:
