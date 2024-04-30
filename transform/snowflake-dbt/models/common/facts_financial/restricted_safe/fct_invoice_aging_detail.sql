@@ -3,42 +3,39 @@
     tags=["mnpi"]
 ) }}
 
-
-
-WITH zuora_invoice_aging_detail AS (
-
 /* grain: transaction ID. The Invoice Aging detail report provides a list of invoices that have outstanding amounts as of the end of the accounting period.  */
 
-    SELECT *
-    FROM {{ source('zuora', 'invoice_aging_detail') }}
-    
-), final AS (
+{{ simple_cte([
+    ('zuora_invoice_aging_detail_source', 'zuora_invoice_aging_detail_source')
+]) }},
 
-SELECT
-   -- primary key 
-      zuora_invoice_aging_detail.id                          	               AS invoice_aging_detail_id,
+final AS (
 
-   -- keys
-      zuora_invoice_aging_detail.invoiceid               	                   AS invoice_id,     
-      zuora_invoice_aging_detail.accountingperiodid                  	       AS accounting_period_id,
+  SELECT
+    -- primary key 
+    zuora_invoice_aging_detail_source.invoice_aging_detail_id,
 
-   -- invoice aging detail dates
-      zuora_invoice_aging_detail.accountingperiodenddate                     AS accounting_period_end_date,
-     {{ get_date_id('zuora_invoice_aging_detail.accountingperiodenddate') }} AS accounting_period_end_date_id,
+    -- keys
+    zuora_invoice_aging_detail_source.invoice_id,
+    zuora_invoice_aging_detail_source.accounting_period_id,
 
-   -- additive fields
-      zuora_invoice_aging_detail.accountbalanceimpact                      	 AS account_balance_impact,
-      zuora_invoice_aging_detail.daysoverdue                     	           AS days_overdue
-    
+    -- invoice aging detail dates
+    zuora_invoice_aging_detail_source.accounting_period_end_date,
+    {{ get_date_id('zuora_invoice_aging_detail_source.accounting_period_end_date') }} AS accounting_period_end_date_id,
+
+    -- additive fields
+    zuora_invoice_aging_detail_source.account_balance_impact,
+    zuora_invoice_aging_detail_source.days_overdue
 
 
-FROM zuora_invoice_aging_detail
+
+  FROM zuora_invoice_aging_detail_source
 )
 
 {{ dbt_audit(
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-04-23",
-updated_date="2024-04-23"
+created_date="2024-04-30",
+updated_date="2024-04-30"
 ) }}
