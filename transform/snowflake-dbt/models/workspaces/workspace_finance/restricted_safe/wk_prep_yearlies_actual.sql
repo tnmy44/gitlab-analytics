@@ -8,6 +8,7 @@
     ('rpt_product_usage_health_score', 'rpt_product_usage_health_score'),
     ('mart_arr_all', 'mart_arr_with_zero_dollar_charges'),
     ('wk_fct_sales_funnel_actual', 'wk_fct_sales_funnel_actual'),
+    ('wk_fct_crm_opportunity', 'wk_fct_crm_opportunity'),
     ('dim_date','dim_date')
 ]) }},
 
@@ -26,21 +27,6 @@ SELECT
     AND fiscal_quarter_name_fy LIKE '%FY25%'
     GROUP BY 1,2,3
     ORDER BY 3 DESC
-),
-
-duo_final AS (
-  SELECT 
-    '2.1 Duo' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
-     close_fiscal_quarter_name AS quarter,
-     SUM(booked_net_arr) AS actuals_raw,
-    
-    FROM mart_crm_opportunity
-    WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name LIKE '%FY25%'
-    AND close_month <= date_trunc('month',current_date)
-    AND (product_details ILIKE '%duo%' or product_details ILIKE '%code suggestions%')
-    GROUP BY 1,2,3
 ),
 
 adoption_metrics_1 AS (
@@ -99,9 +85,6 @@ churn_contraction_1 AS (
       JOIN
          dim_crm_account 
          ON dim_crm_account.dim_crm_account_id = mart_crm_opportunity.dim_crm_account_id
-      left JOIN
-         dim_subscription 
-         on mart_crm_opportunity.dim_crm_opportunity_id = dim_subscription.dim_crm_opportunity_id 
    WHERE
       mart_crm_opportunity.SALES_TYPE = 'Renewal' 
       AND mart_crm_opportunity.STAGE_NAME IN 
@@ -144,56 +127,48 @@ WHERE quarter LIKE 'FY25%'
 
 ultimate_bookings_final AS (
 SELECT 
-    '4.2 Ultimate Bookings' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
-     close_fiscal_quarter_name AS quarter,
-     SUM(booked_net_arr) AS actuals_raw
+  '4.2 Ultimate Bookings' AS yearly_name,
+  'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
+   fiscal_quarter_name_fy AS quarter,
+   SUM(wk_fct_sales_funnel_actual.net_arr) AS actuals_raw
     
-    FROM mart_crm_opportunity
-    WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name LIKE '%FY25%'
-    AND close_month <= date_trunc('month',current_date)
-    AND product_category LIKE '%Ultimate%'
-    GROUP BY 1,2,3
+  FROM wk_fct_sales_funnel_actual 
+  LEFT JOIN wk_fct_crm_opportunity 
+  ON wk_fct_sales_funnel_actual.dim_crm_opportunity_id = wk_fct_crm_opportunity.dim_crm_opportunity_id
+  LEFT JOIN prod.common.dim_date 
+  ON date_actual = actual_date
+  WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
+  AND sales_funnel_kpi_name = 'Net ARR'
+  AND fiscal_quarter_name_fy LIKE '%FY25%'
+  AND wk_fct_crm_opportunity.product_category LIKE '%Ultimate%'
+  GROUP BY 1,2,3
+  ORDER BY 3 DESC
 ),
 
 dedicated_bookings_final AS (
-  SELECT 
-    '4.3 Dedicated Bookings' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
-     close_fiscal_quarter_name AS quarter,
-     SUM(booked_net_arr) AS actuals_raw
+SELECT 
+  '4.3 Dedicated Bookings' AS yearly_name,
+  'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
+  fiscal_quarter_name_fy AS quarter,
+  SUM(wk_fct_sales_funnel_actual.net_arr) AS actuals_raw
     
-    FROM mart_crm_opportunity
-    WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name LIKE '%FY25%'
-    AND close_month <= date_trunc('month',current_date)
-    AND product_details ILIKE '%dedicated%'
-    GROUP BY 1,2,3
-),
+  FROM wk_fct_sales_funnel_actual
+  LEFT JOIN wk_fct_crm_opportunity 
+  on wk_fct_sales_funnel_actual.dim_crm_opportunity_id = wk_fct_crm_opportunity.dim_crm_opportunity_id
+  LEFT JOIN prod.common.dim_date 
+  ON date_actual = actual_date
+  WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
+  AND sales_funnel_kpi_name = 'Net ARR'
+  AND fiscal_quarter_name_fy LIKE '%FY25%'
+  AND wk_fct_crm_opportunity.product_details ILIKE '%dedicated%'
+  GROUP BY 1,2,3
+  ORDER BY 3 DESC
 
-plan_bookings_final AS (
-  SELECT 
-    '4.4 Plan' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
-     close_fiscal_quarter_name AS quarter,
-     SUM(booked_net_arr) AS actuals_raw
-    
-    FROM mart_crm_opportunity
-    WHERE stage_name = 'Closed Won'
-    AND close_fiscal_quarter_name LIKE '%FY25%'
-    AND close_month <= date_trunc('month',current_date)
-    AND product_details ILIKE '%enterprise agile planning%'
-    GROUP BY 1,2,3
 ),
 
 final AS (
 
 SELECT * FROM total_bookings_final 
-
-UNION ALL
-
-SELECT * FROM duo_final
 
 UNION ALL
 
@@ -211,9 +186,6 @@ UNION ALL
 
 SELECT * FROM dedicated_bookings_final
 
-UNION ALL
-
-SELECT * FROM plan_bookings_final
 )
 
 SELECT 
