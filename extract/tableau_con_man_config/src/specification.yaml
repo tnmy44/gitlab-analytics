@@ -5519,12 +5519,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: jmcaninch
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: jmccure
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5777,12 +5771,6 @@ users:
     groups:
       - General All Access
   - user_name: jsolis
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: jspallino
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -8145,12 +8133,6 @@ users:
     groups:
       - General All Access
   - user_name: ramarilla
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: rauthappan
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
