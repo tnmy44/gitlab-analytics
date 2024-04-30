@@ -299,6 +299,7 @@
       fct_crm_opportunity.calculated_discount,
       fct_crm_opportunity.partner_discount,
       fct_crm_opportunity.partner_discount_calc,
+      fct_crm_opportunity.partner_margin_percentage.
       fct_crm_opportunity.comp_channel_neutral,
       fct_crm_opportunity.count_crm_attribution_touchpoints,
       fct_crm_opportunity.weighted_linear_iacv,
@@ -584,9 +585,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@chrissharp",
     created_date="2020-12-07",
-    updated_date="2024-03-05"
+    updated_date="2024-04-30"
   ) }}
 
 
