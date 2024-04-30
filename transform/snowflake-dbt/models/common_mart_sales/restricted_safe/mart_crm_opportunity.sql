@@ -13,7 +13,8 @@
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
-    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy'),
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , final AS (
@@ -87,7 +88,7 @@
       dim_crm_opportunity.dr_partner_engagement,
       dim_crm_opportunity.deal_path_engagement,
       dim_crm_opportunity.forecast_category_name,
-      dim_crm_opportunity.opportunity_owner,
+      dim_crm_user.user_name                                               AS opportunity_owner,
       dim_crm_opportunity.opportunity_owner_manager,
       dim_crm_opportunity.opportunity_owner_department,
       dim_crm_opportunity.opportunity_owner_role,
@@ -581,6 +582,8 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+    LEFT JOIN dim_crm_user
+      ON fct_crm_opportunity.dim_crm_user_id = dim_crm_user.dim_crm_user_id
 
 )
 
