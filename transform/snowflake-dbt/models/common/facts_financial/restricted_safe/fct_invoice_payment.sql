@@ -40,7 +40,7 @@ SELECT
 
 FROM zuora_invoice_payment_source
 INNER JOIN zuora_account
-  ON zuora_invoice_payment_source.accountid = zuora_account.account_id
+  ON zuora_invoice_payment_source.account_id = zuora_account.account_id
 )
 
 {{ dbt_audit(
