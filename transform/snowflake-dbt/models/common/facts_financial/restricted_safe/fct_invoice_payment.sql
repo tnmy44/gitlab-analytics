@@ -31,7 +31,7 @@ SELECT
 
    -- invoice payment dates
       zuora_invoice_payment_source.invoice_payment_date,
-     {{ get_date_id('zuora_invoice_payment_source.createddate') }} AS invoice_payment_date_id,
+     {{ get_date_id('zuora_invoice_payment_source.invoice_payment_date') }} AS invoice_payment_date_id,
 
    -- additive fields
       zuora_invoice_payment_source.invoice_payment_amount
