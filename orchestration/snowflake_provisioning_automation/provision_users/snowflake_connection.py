@@ -40,7 +40,8 @@ class SnowflakeConnection:
 
     def run_sql_statement(self, sql_statement: str, query_params: dict = {}):
         """run individual sql statement"""
-        info(f"Running sql_statement: {sql_statement}")
+        action = "Printing" if self.is_test_run else "Running"
+        info(f"{action} sql_statement: {sql_statement}")
         if self.is_test_run:
             return
 
