@@ -157,7 +157,7 @@ def main():
     logging.info(f"users_to_remove: {users_to_remove}")
 
     sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
-    # deprovision_users(sysadmin_connection, users_to_remove)
+    deprovision_users(sysadmin_connection, users_to_remove)
     sysadmin_connection.dispose_engine()
 
 
