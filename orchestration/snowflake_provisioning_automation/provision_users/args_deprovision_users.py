@@ -12,11 +12,13 @@ def parse_arguments() -> argparse.Namespace:
         --test-run
 
     All arguments are optional- if no args passed in,
-    then default arguments for `roles` and `users` are used.
+    then default for users is used.
+    The default user value will be all users in Snowflake
+    that are missing in roles.yml
     """
-    parser = argparse.ArgumentParser(description="Provision users in Snowflake options")
+    parser = argparse.ArgumentParser(description="Deprovision users in Snowflake options")
     parser.add_argument(
-        "-ua",
+        "-ur",
         "--users-to-remove",
         nargs="+",
         type=str,
