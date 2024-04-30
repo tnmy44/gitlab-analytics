@@ -243,6 +243,8 @@
       sfdc_opportunity.net_arr,
       sfdc_opportunity.xdr_net_arr_stage_1,
       sfdc_opportunity.xdr_net_arr_stage_3,
+      sfdc_opportunity.enterprise_agile_planning_net_arr,
+      sfdc_opportunity.duo_net_arr,
       sfdc_opportunity.raw_net_arr,
       sfdc_opportunity.created_and_won_same_quarter_net_arr,
       sfdc_opportunity.new_logo_count,

@@ -478,6 +478,8 @@
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.xdr_net_arr_stage_1,
       fct_crm_opportunity.xdr_net_arr_stage_3,
+      fct_crm_opportunity.enterprise_agile_planning_net_arr,
+      fct_crm_opportunity.duo_net_arr,
       fct_crm_opportunity.raw_net_arr,
       fct_crm_opportunity.created_and_won_same_quarter_net_arr,
       fct_crm_opportunity.new_logo_count,
