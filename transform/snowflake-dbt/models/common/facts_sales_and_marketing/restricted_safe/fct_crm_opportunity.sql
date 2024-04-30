@@ -232,6 +232,7 @@
       sfdc_opportunity.calculated_discount,
       sfdc_opportunity.partner_discount,
       sfdc_opportunity.partner_discount_calc,
+      sfdc_opportunity.partner_margin_percentage,
       sfdc_opportunity.comp_channel_neutral,
 
       -- additive fields
@@ -326,7 +327,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@snalamaru",
+    updated_by="@chrissharp",
     created_date="2020-11-30",
-    updated_date="2024-02-21"
+    updated_date="2024-04-30"
 ) }}
