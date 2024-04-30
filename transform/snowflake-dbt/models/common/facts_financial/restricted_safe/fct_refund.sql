@@ -43,7 +43,7 @@ SELECT
 
 FROM zuora_refund_source
 INNER JOIN zuora_account
-  ON zuora_refund.account_id = zuora_account.account_id
+  ON zuora_refund_source.account_id = zuora_account.account_id
 )
 
 {{ dbt_audit(
