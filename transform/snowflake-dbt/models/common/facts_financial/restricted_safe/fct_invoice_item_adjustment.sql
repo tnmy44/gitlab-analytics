@@ -33,7 +33,7 @@ final AS (
 
     -- invoice item adjustment dates
     zuora_invoice_item_adjustment_source.invoice_item_adjustment_date,
-    {{ get_date_id('zuora_invoice_item_adjustment_source.adjustmentdate') }} AS invoice_item_adjustment_date_id,
+    {{ get_date_id('zuora_invoice_item_adjustment_source.invoice_item_adjustment_date') }} AS invoice_item_adjustment_date_id,
 
     -- additive fields
     zuora_invoice_item_adjustment_source.invoice_item_adjustment_amount,
