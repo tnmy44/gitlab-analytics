@@ -268,6 +268,10 @@
     mart_crm_person.person_first_country,
     mart_crm_person.lead_score_classification,
     mart_crm_person.is_defaulted_trial,
+    mart_crm_person.lead_source,
+    mart_crm_person.source_buckets,
+    mart_crm_person.email_domain_type,
+    mart_crm_person.sfdc_record_type,
     CASE 
       WHEN mart_crm_person.propensity_to_purchase_score_group IS NULL 
         THEN 'No PTP Score' 
@@ -376,6 +380,10 @@ LEFT JOIN sales_dev_hierarchy
     NULL AS person_first_country,
     NULL AS lead_score_classification,
     NULL AS is_defaulted_trial,
+    NULL AS lead_source,
+    NULL AS source_buckets,
+    NULL AS email_domain_type,
+    NULL AS sfdc_record_type,
     NULL AS propensity_to_purchase_score_group,
     NULL AS is_high_ptp_lead,
     NULL AS marketo_last_interesting_moment,
