@@ -299,7 +299,7 @@
       fct_crm_opportunity.calculated_discount,
       fct_crm_opportunity.partner_discount,
       fct_crm_opportunity.partner_discount_calc,
-      fct_crm_opportunity.partner_margin_percentage.
+      fct_crm_opportunity.partner_margin_percentage,
       fct_crm_opportunity.comp_channel_neutral,
       fct_crm_opportunity.count_crm_attribution_touchpoints,
       fct_crm_opportunity.weighted_linear_iacv,
