@@ -5741,7 +5741,7 @@ models:
   - name: fct_refund_invoice_payment
     description: '{{ doc("fct_refund_invoice_payment") }}'
     columns:
-      - name: refund_invoice_payment_id
+      - name: refund_invoice_payment_pk
         description: Zuora refund invoice payment transaction - grain is one refund payment made on the invoice
         tests:
           - not_null
