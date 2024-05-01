@@ -5731,7 +5731,7 @@ models:
   - name: fct_refund
     description: '{{ doc("fct_refund") }}'
     columns:
-      - name: refund_id
+      - name: refund_pk
         description: Zuora refund transaction - grain is a refund made on the invoice or account
         tests:
           - not_null
