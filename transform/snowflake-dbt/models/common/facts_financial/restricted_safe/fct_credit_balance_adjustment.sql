@@ -24,11 +24,11 @@ final AS (
     --Primary key 
     {{ dbt_utils.generate_surrogate_key(['zuora_credit_balance_adjustment_source.credit_balance_adjustment_id']) }} AS credit_balance_adjustment_pk,
 
-    --Natural key 
+    --Natural keys 
     zuora_credit_balance_adjustment_source.credit_balance_adjustment_id,
+    zuora_credit_balance_adjustment_source.credit_balance_adjustment_number,
 
     --Foreign keys
-    zuora_credit_balance_adjustment_source.credit_balance_adjustment_number,
     zuora_account.dim_billing_account_id,
     zuora_credit_balance_adjustment_source.invoice_id                                                                                                AS dim_invoice_id,
     zuora_credit_balance_adjustment_source.accounting_period_id,

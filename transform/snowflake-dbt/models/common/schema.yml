@@ -5521,7 +5521,7 @@ models:
   - name: fct_invoice_item_adjustment
     description: '{{ doc("fct_invoice_item_adjustment") }}'
     columns:
-      - name: invoice_item_adjustment_id
+      - name: invoice_item_adjustment_pk
         description: Zuora invoice item adjustment - grain is one adjustment per invoice item
         tests:
           - not_null

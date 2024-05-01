@@ -24,11 +24,11 @@ final AS (
     --Primary key 
     {{ dbt_utils.generate_surrogate_key(['zuora_payment_source.payment_id']) }}     AS payment_pk,
     
-    --Natural key 
+    --Natural keys 
     zuora_payment_source.payment_id,
+    zuora_payment_source.payment_number,
 
     --Foreign keys
-    zuora_payment_source.payment_number,
     zuora_account.dim_billing_account_id,
 
     --Payment dates

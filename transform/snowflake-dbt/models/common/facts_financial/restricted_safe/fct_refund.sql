@@ -26,12 +26,11 @@ final AS (
 
     --Natural key 
     zuora_refund_source.refund_id,
+    zuora_refund_source.refund_number,
 
     --Foreign keys
     zuora_account.dim_billing_account_id,
-    zuora_refund_source.refund_number,
-
-
+  
     --Refund dates
     zuora_refund_source.refund_date,
     {{ get_date_id('zuora_refund_source.refund_date') }} AS refund_date_id,
