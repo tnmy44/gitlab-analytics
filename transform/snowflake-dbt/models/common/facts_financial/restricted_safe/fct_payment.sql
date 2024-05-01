@@ -45,7 +45,7 @@ final AS (
 
   FROM zuora_payment_source
   INNER JOIN zuora_account
-    ON zuora_payment_source.account_id = zuora_account.zuora_account.dim_billing_account_id
+    ON zuora_payment_source.account_id = zuora_account.dim_billing_account_id
 )
 
 {{ dbt_audit(
