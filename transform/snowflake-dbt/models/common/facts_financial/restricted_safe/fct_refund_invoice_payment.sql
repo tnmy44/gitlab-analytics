@@ -28,7 +28,7 @@ final AS (
     zuora_refund_invoice_payment_source.refund_invoice_payment_id,
 
     --Foreign keys
-    zuora_refund_invoice_payment_source.dim_invoice_id,
+    zuora_refund_invoice_payment_source.invoice_id                                                         AS dim_invoice_id,
     zuora_refund_invoice_payment_source.refund_id,
     zuora_refund_invoice_payment_source.payment_id,
     zuora_account.dim_billing_account_id,
