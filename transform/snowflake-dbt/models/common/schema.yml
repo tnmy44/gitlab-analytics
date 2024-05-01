@@ -5511,7 +5511,7 @@ models:
   - name: fct_invoice_aging_detail
     description: '{{ doc("fct_invoice_aging_detail") }}'
     columns:
-      - name: invoice_aging_detail_id
+      - name: invoice_aging_detail_pk
         description: The unique identifier of a transaction
         tests:
           - not_null
