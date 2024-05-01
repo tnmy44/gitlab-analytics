@@ -22,7 +22,7 @@ final AS (
 
   SELECT
     --Primary key 
-    zuora_invoice_payment_source.invoice_payment_pk,
+    zuora_invoice_payment_source.invoice_payment_id                                                 AS invoice_payment_pk,
 
     --Foreign keys
     zuora_invoice_payment_source.invoice_id                                                         AS dim_invoice_id,
