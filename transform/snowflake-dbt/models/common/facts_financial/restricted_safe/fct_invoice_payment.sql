@@ -27,7 +27,7 @@ final AS (
     --Foreign keys
     zuora_invoice_payment_source.invoice_id                                                         AS dim_invoice_id,
     zuora_invoice_payment_source.payment_id,
-    prep_billing_account.dim_billing_account_id,
+    zuora_account.dim_billing_account_id,
     zuora_invoice_payment_source.accounting_period_id,
 
 
