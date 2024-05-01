@@ -5491,7 +5491,7 @@ models:
   - name: fct_credit_balance_adjustment
     description: '{{ doc("fct_credit_balance_adjustment") }}'
     columns:
-      - name: credit_balance_adjustment_id
+      - name: credit_balance_adjustment_pk
         description: Zuora credit balance adjustment - grain is one adjustment per invoice or account
         tests:
           - not_null
