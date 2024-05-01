@@ -22,8 +22,11 @@ final AS (
 
   SELECT
     --Primary key 
-    zuora_invoice_payment_source.invoice_payment_id                                                 AS invoice_payment_pk,
+    {{ dbt_utils.generate_surrogate_key(['zuora_invoice_payment_source.invoice_payment_id']) }}     AS invoice_payment_pk,
 
+    --Natural key
+    zuora_invoice_payment_source.invoice_payment_id
+    
     --Foreign keys
     zuora_invoice_payment_source.invoice_id                                                         AS dim_invoice_id,
     zuora_invoice_payment_source.payment_id,
