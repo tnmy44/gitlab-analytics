@@ -232,6 +232,7 @@
       sfdc_opportunity.calculated_discount,
       sfdc_opportunity.partner_discount,
       sfdc_opportunity.partner_discount_calc,
+      sfdc_opportunity.partner_margin_percentage,
       sfdc_opportunity.comp_channel_neutral,
 
       -- additive fields
@@ -242,6 +243,8 @@
       sfdc_opportunity.net_arr,
       sfdc_opportunity.xdr_net_arr_stage_1,
       sfdc_opportunity.xdr_net_arr_stage_3,
+      sfdc_opportunity.enterprise_agile_planning_net_arr,
+      sfdc_opportunity.duo_net_arr,
       sfdc_opportunity.raw_net_arr,
       sfdc_opportunity.created_and_won_same_quarter_net_arr,
       sfdc_opportunity.new_logo_count,
@@ -326,7 +329,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@snalamaru",
+    updated_by="@chrissharp",
     created_date="2020-11-30",
-    updated_date="2024-02-21"
+    updated_date="2024-04-30"
 ) }}

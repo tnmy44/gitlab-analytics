@@ -13,7 +13,8 @@
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
-    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy'),
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , final AS (
@@ -87,7 +88,7 @@
       dim_crm_opportunity.dr_partner_engagement,
       dim_crm_opportunity.deal_path_engagement,
       dim_crm_opportunity.forecast_category_name,
-      dim_crm_opportunity.opportunity_owner,
+      dim_crm_user.user_name                                               AS opportunity_owner,
       dim_crm_opportunity.opportunity_owner_manager,
       dim_crm_opportunity.opportunity_owner_department,
       dim_crm_opportunity.opportunity_owner_role,
@@ -299,6 +300,7 @@
       fct_crm_opportunity.calculated_discount,
       fct_crm_opportunity.partner_discount,
       fct_crm_opportunity.partner_discount_calc,
+      fct_crm_opportunity.partner_margin_percentage,
       fct_crm_opportunity.comp_channel_neutral,
       fct_crm_opportunity.count_crm_attribution_touchpoints,
       fct_crm_opportunity.weighted_linear_iacv,
@@ -477,6 +479,8 @@
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.xdr_net_arr_stage_1,
       fct_crm_opportunity.xdr_net_arr_stage_3,
+      fct_crm_opportunity.enterprise_agile_planning_net_arr,
+      fct_crm_opportunity.duo_net_arr,
       fct_crm_opportunity.raw_net_arr,
       fct_crm_opportunity.created_and_won_same_quarter_net_arr,
       fct_crm_opportunity.new_logo_count,
@@ -578,15 +582,17 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+    LEFT JOIN dim_crm_user
+      ON fct_crm_opportunity.dim_crm_user_id = dim_crm_user.dim_crm_user_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@chrissharp",
     created_date="2020-12-07",
-    updated_date="2024-03-05"
+    updated_date="2024-04-30"
   ) }}
 
 
