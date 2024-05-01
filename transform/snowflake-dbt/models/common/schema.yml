@@ -5721,7 +5721,7 @@ models:
   - name: fct_payment
     description: '{{ doc("fct_payment") }}'
     columns:
-      - name: payment_id
+      - name: payment_pk
         description: Zuora payment transaction - grain is one payment applied to a single invoice or several invoices
         tests:
           - not_null
