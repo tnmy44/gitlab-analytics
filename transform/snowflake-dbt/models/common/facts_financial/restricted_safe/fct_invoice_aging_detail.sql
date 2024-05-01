@@ -12,18 +12,18 @@
 final AS (
 
   SELECT
-    --Primary keys 
-    zuora_invoice_aging_detail_source.invoice_aging_detail_id                                                  AS invoice_aging_detail_pk,
+    -- primary key 
+    zuora_invoice_aging_detail_source.invoice_aging_detail_id,
 
-    --Foreign keys
-    zuora_invoice_aging_detail_source.invoice_id                                                               AS dim_invoice_id,
+    -- keys
+    zuora_invoice_aging_detail_source.invoice_id,
     zuora_invoice_aging_detail_source.accounting_period_id,
 
-    --Invoice aging detail dates
+    -- invoice aging detail dates
     zuora_invoice_aging_detail_source.accounting_period_end_date,
     {{ get_date_id('zuora_invoice_aging_detail_source.accounting_period_end_date') }} AS accounting_period_end_date_id,
 
-    --Additive fields
+    -- additive fields
     zuora_invoice_aging_detail_source.account_balance_impact,
     zuora_invoice_aging_detail_source.days_overdue
 
@@ -36,6 +36,7 @@ final AS (
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-05-01",
-updated_date="2024-05-01"
+created_date="2024-04-30",
+updated_date="2024-04-30"
 ) }}
+
