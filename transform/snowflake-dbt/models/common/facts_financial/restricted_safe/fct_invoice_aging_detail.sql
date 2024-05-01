@@ -12,7 +12,7 @@
 final AS (
 
   SELECT
-    --Primary key 
+    --Primary keys 
     zuora_invoice_aging_detail_source.invoice_aging_detail_id                                                  AS invoice_aging_detail_pk,
 
     --Foreign keys
