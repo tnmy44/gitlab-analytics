@@ -1,7 +1,7 @@
 WITH
 source AS (
   SELECT * FROM
-    {{ source('sirt_alertapp', 'sirt_alertapp_data_test') }}
+    {{ source('sirt_alertapp', 'sirt_alertapp_data_testing') }}
 ),
 
 dedupped AS (

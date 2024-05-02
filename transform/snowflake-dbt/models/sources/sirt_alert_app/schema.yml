@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: sirt_alertapp_data
+  - name: sirt_alertapp_data_source
     description: Data on each media buy and corresponding performance
     columns:
       - name: alertid
