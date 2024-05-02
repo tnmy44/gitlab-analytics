@@ -10,18 +10,38 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
+def get_export(export_name: str, config_path: str) -> dict:
+    """
+    retrieve export record attributes from gcs_external.yml
+    """
+
+    with open(config_path, "r") as yaml_file:
+        try:
+            stream = safe_load(yaml_file)
+        except YAMLError as exc:
+            print(exc)
+
+    export = [
+        export
+        for export in stream["exports"]
+        if (export_name is None or export.get("name") == export_name)
+    ][0]
+
+    return export
+
+
 def get_billing_data_query(
-    selected_columns: str,
     bucket_path: str,
-    table: str,
-    partition_column: str,
-    partition: str,
+    export: dict,
+    export_date: str,
 ) -> str:
     """
     sql to run in bigquery for daily partition
     """
-
-    select_string = ", ".join(selected_columns)
+    if export["partition_date_part"] == "d":
+        partition = export_date[0:10]
+    elif export["partition_date_part"] == "m":
+        partition = export_date[0:7]
 
     return f"""
         EXPORT DATA OPTIONS(
@@ -29,31 +49,24 @@ def get_billing_data_query(
           format='PARQUET',
           overwrite=true
           ) AS
-            SELECT {select_string}
-            FROM `{table}`
-            WHERE {partition_column} = '{partition}'
+            {export['export_query']}
     """
 
 
 def run_export(
-    selected_columns: str,
     gcp_project: str,
     bucket_path: str,
-    table: str,
-    partition_column: str,
-    partition: str,
+    export_name: str,
+    config_path: str,
 ):
     """
     run sql command in bigquery
     """
+
+    export = get_export(export_name, config_path)
+
     export_date = config_dict["EXPORT_DATE"]
-    sql_statement = get_billing_data_query(
-        selected_columns,
-        bucket_path,
-        table,
-        partition_column,
-        partition,
-    )
+    sql_statement = get_billing_data_query(bucket_path, export, export_date)
 
     logging.info(sql_statement)
 
