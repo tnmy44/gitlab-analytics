@@ -334,6 +334,16 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/
 
 {% enddocs %}
 
+{% docs fct_invoice_aging_detail %}
+
+Fact table providing invoice aging details at the single transaction grain, e.g. payment, IIA, CBA.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Zuora_Finance/E_Accounting_Periods/F_View_Accounting_Period_Balances/Accounts_Receivable_Aging#Invoice_Aging_Details).
+
+{% enddocs %}
+
 {% docs fct_invoice_item %}
 Fact table providing invoice line item details.
 
@@ -342,6 +352,66 @@ The invoicing to customers business process can be found in the [handbook](https
 Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_invoice_payment %}
+
+Fact table providing invoice payment details at the single grain of a payment applied to an invoice.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Payment_Operations/AA_payment_operation_overview).
+
+{% enddocs %}
+
+{% docs fct_refund_invoice_payment %}
+
+Fact table providing refund invoice payment details at the single grain of a refund made on an invoice.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/Reporting/D_Data_Sources_and_Exports/C_Data_Source_Reference/Refund_Invoice_Payment_Data_Source).
+
+{% enddocs %}
+
+{% docs fct_refund %}
+
+Fact table providing refund details made on an invoice or billing account.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Payment_Operations/CC_Refunds).
+
+{% enddocs %}
+
+{% docs fct_credit_balance_adjustment %}
+
+Fact table providing credit balance adjustment details made on an invoice or billing account.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Central_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/CreditBalanceAdjustment).
+
+{% enddocs %}
+
+{% docs fct_invoice_item_adjustment %}
+
+Fact table providing invoice item adjustment details. One invoice may have several invoice items. The grain is the item adjustment.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Billing/Bill_your_customers/Adjust_invoice_amounts/Invoice_Item_Adjustments/AA_Overview_of_Invoice_Item_Adjustments).
+
+{% enddocs %}
+
+{% docs fct_payment %}
+
+Fact table providing payment details at the single grain of a payment received for a single invoice or multiple invoices.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Payment_Operations/AA_payment_operation_overview).
 
 {% enddocs %}
 
