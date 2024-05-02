@@ -3,7 +3,13 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
+from airflow_utils import (
+    DATA_IMAGE,
+    DATA_IMAGE_3_10,
+    clone_repo_cmd,
+    gitlab_defaults,
+    slack_failed_task,
+)
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_DATABASE,
@@ -100,7 +106,7 @@ deprovision_users_cmd = f"""
 """
 purge_dev_schemas = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE,
+    image=DATA_IMAGE_3_10,
     task_id="deprovision_users",
     name="deprovision_users",
     secrets=[

@@ -40,6 +40,7 @@ class IndentDumper(yaml.Dumper):
 
 
 def get_roles_from_url(branch: str = "master") -> Union[dict, list]:
+    """Read roles.yml from repo url"""
     url = f"https://gitlab.com/gitlab-data/analytics/-/raw/{branch}/permissions/snowflake/roles.yml?ref_type=heads"
     response = requests.get(url)
     response.raise_for_status()  # Raise an exception for bad status codes
@@ -62,9 +63,7 @@ def get_roles_from_yaml() -> Union[dict, list]:
 
 
 def save_roles_to_yaml(data: Union[dict, list]):
-    """
-    Save data structure as YAML
-    """
+    """Save data structure as YAML"""
     roles_file_name = "roles.yml"
     roles_file_path = os.path.join(YAML_PATH, roles_file_name)
     with open(roles_file_path, "w", encoding="utf-8") as file:
