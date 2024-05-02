@@ -1,5 +1,5 @@
 {{ config(
-    materialized='incremental',
+    materialized='view',
     tags=["mnpi_exception", "product"]
 ) }}
 
@@ -482,9 +482,8 @@ SELECT
 FROM
 unify u 
 WHERE
-        u.date_day < CURRENT_DATE()
-   {% if is_incremental() %}
-        AND
-        u.date_day > (SELECT MAX(date_day) FROM {{ this }})
-
-    {% endif %}
+u.date_day < CURRENT_DATE()
+AND
+u.metric_value IS NOT NULL
+AND
+u.metric IS NOT NULL
