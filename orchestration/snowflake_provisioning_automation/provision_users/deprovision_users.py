@@ -8,8 +8,8 @@ This is because there's no immediate rush to delete users,
 and also because deleting users is more sensitive, it will be an
 automatic job.
 
-The entrypoint of this job will be from an Airflow task.
-provisioning new users.
+The entrypoint of this job will be from
+Airflow DAG snowflake_cleanup.py
 """
 
 import os
