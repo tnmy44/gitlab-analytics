@@ -9,7 +9,6 @@ from yaml import safe_load, YAMLError
 
 config_dict = env.copy()
 
-
 def get_export(export_name: str, config_path: str) -> dict:
     """
     retrieve export record attributes from gcs_external.yml
@@ -54,10 +53,8 @@ def get_billing_data_query(
 
 
 def run_export(
-    gcp_project: str,
-    bucket_path: str,
-    export_name: str,
     config_path: str,
+    export_name: str,
 ):
     """
     run sql command in bigquery
@@ -66,17 +63,22 @@ def run_export(
     export = get_export(export_name, config_path)
 
     export_date = config_dict["EXPORT_DATE"]
+    GIT_BRANCH = config_dict["GIT_BRANCH"]
+
+    if GIT_BRANCH != "master":
+        export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
+
     sql_statement = get_billing_data_query(bucket_path, export, export_date)
 
     logging.info(sql_statement)
 
     credentials = json.loads(
-        config_dict["GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS"], strict=False
+        config_dict["GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS"] # needs replacement
     )
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
-        project=gcp_project,
+        project="billing-tools-277316", #needs replacement
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 

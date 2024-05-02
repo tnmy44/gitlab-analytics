@@ -110,7 +110,6 @@ dbt_external_table_run = KubernetesPodOperator(
 
 spec_file = "gcs_external/src/gcp_billing/gcs_external.yml"
 spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
-gcp_project = "billing-tools-277316"
 
 with open(
     spec_path,
@@ -124,16 +123,11 @@ with open(
 for export in stream["exports"]:
     export_name = export["name"]
 
-    if GIT_BRANCH != "master":
-        export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
-
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcs_external.py
         --config_path={spec_file} \
         --export_name={export_name} \
-        --bucket_path={export["bucket_path"]} \
-        --gcp_project={gcp_project}
     """
 
     task_name = export["name"]
@@ -147,6 +141,7 @@ for export in stream["exports"]:
         env_vars={
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
+            "GIT BRANCH": GIT_BRANCH
         },
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),
