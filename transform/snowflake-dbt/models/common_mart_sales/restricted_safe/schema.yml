@@ -466,6 +466,12 @@ models:
         description: The XDR influenced value of an Opportunity's Net ARR as of Stage 1 in SFDC.
       - name: xdr_net_arr_stage_3
         description: The XDR influenced value of an Opportunity's Net ARR as of Stage 3 in SFDC.
+      - name: enterprise_agile_planning_net_arr
+        description: The net arr related to the Enterprise Agile Planning element of the opportunity.
+      - name: duo_net_arr
+        description: The net arr related to the GitLab Duo element of the opportunity.
+      - name: partner_margin_percentage
+        description: The percentage of the opportunity net arr to which the partner is entitled.
 
 
   - name: mart_crm_opportunity_daily_snapshot

@@ -6377,6 +6377,7 @@ roles:
   - wleidheiser:
       member_of:
         - reporter
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - wlin:
@@ -6446,6 +6447,11 @@ roles:
       member_of:
         - snowflake_analyst
         - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - sguyon:
+      member_of:
+        - snowflake_analyst
       warehouses:
         - dev_xs
 users:
@@ -7462,6 +7468,10 @@ users:
       can_login: true
       member_of:
         - kshirazi
+  - sguyon:
+      can_login: true
+      member_of:
+        - sguyon
 warehouses:
   - admin:
       size: x-small
