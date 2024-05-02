@@ -175,7 +175,7 @@
     FROM dim_subscription_latest_version        
     LEFT JOIN dim_subscription_cancelled        
       ON dim_subscription_latest_version.subscription_name = dim_subscription_cancelled.subscription_name       
-      AND dim_subscription_latest_version.term_start_date = dim_subscription_cancelled.term_start_date        
+      AND dim_subscription_latest_version.term_start_date >= dim_subscription_cancelled.term_start_date        
     WHERE dim_subscription_cancelled.subscription_name IS NULL  
     AND 
        --data quality, last version is expired with no ARR in mart_arr. Should filter it out completely.
