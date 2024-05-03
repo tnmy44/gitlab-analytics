@@ -5,6 +5,7 @@
     ('dim_crm_user','dim_crm_user'),
     ('mart_crm_person','mart_crm_person'),
     ('sfdc_lead','sfdc_lead'),
+    ('mart_crm_account','mart_crm_account'),
     ('mart_crm_event','mart_crm_event'),
     ('mart_crm_task','mart_crm_task'),
     ('mart_team_member_directory','mart_team_member_directory'),
@@ -17,6 +18,7 @@
 
   SELECT 
     dim_crm_account_id,
+    mart_crm_account.bdr_prospecting_status,
     dim_crm_opportunity_id,
     net_arr,
     xdr_net_arr_stage_1,
@@ -35,7 +37,7 @@
     stage_2_scoping_fiscal_quarter_name,
     stage_3_technical_evaluation_date,
     stage_3_technical_evaluation_month,
-    stage_3_techincal_evaluation_fiscal_quarter_name, 
+    stage_3_technical_evaluation_fiscal_quarter_name, 
     days_in_1_discovery,
     days_in_sao,
     days_since_last_activity,
@@ -82,6 +84,8 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist
     LEFT JOIN dim_date 
       ON mart_crm_opportunity_stamped_hierarchy_hist.sales_accepted_date = dim_date.date_day
+    LEFT JOIN mart_crm_account 
+      ON mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     WHERE sdr_bdr_user_id IS NOT NULL 
       AND stage_1_discovery_date >= '2022-02-01' 
 
@@ -141,7 +145,7 @@
     mart_crm_person.dim_crm_person_id,
     sfdc_lead.converted_contact_id AS sfdc_record_id,
     sfdc_lead.lead_id AS original_lead_id,
-    sales_dev_opps.DIM_CRM_OPPORTUNITY_ID,
+    sales_dev_opps.dim_crm_opportunity_id,
     sales_dev_opps.opp_created_date,
     mart_crm_person.dim_crm_account_id
   FROM sfdc_lead 
@@ -261,6 +265,7 @@
     mart_crm_person.dim_crm_person_id,
     mart_crm_person.sfdc_record_id,
     COALESCE(opp_to_lead.dim_crm_account_id,mart_crm_person.dim_crm_account_id) AS dim_crm_account_id,
+    COALESCE(opp_to_lead.bdr_prospecting_status,mart_crm_person.matched_account_bdr_prospecting_status) AS bdr_prospecting_status,
     mart_crm_person.mql_date_latest,
     dim_mql_date.day_of_fiscal_quarter as mql_day_of_fiscal_quarter,
     dim_mql_date.fiscal_quarter_name_fy as mql_fiscal_quarter_name,
@@ -324,7 +329,7 @@
     opp_to_lead.stage_2_scoping_fiscal_quarter_name,
     opp_to_lead.stage_3_technical_evaluation_date,
     opp_to_lead.stage_3_technical_evaluation_month,
-    opp_to_lead.stage_3_techincal_evaluation_fiscal_quarter_name, 
+    opp_to_lead.stage_3_technical_evaluation_fiscal_quarter_name, 
     opp_to_lead.days_in_1_discovery,
     opp_to_lead.days_in_sao,
     opp_to_lead.days_since_last_activity,
@@ -381,6 +386,7 @@ LEFT JOIN sales_dev_hierarchy
     NULL AS dim_crm_person_id,
     NULL AS sfdc_record_id,
     opps_missing_link.dim_crm_account_id AS dim_crm_account_id,
+    opps_missing_link.bdr_prospecting_status,
     NULL AS mql_date_latest,
     NULL AS mql_day_of_fiscal_quarter,
     NULL AS mql_fiscal_quarter_name,
@@ -432,7 +438,7 @@ LEFT JOIN sales_dev_hierarchy
     opps_missing_link.stage_2_scoping_fiscal_quarter_name,
     opps_missing_link.stage_3_technical_evaluation_date,
     opps_missing_link.stage_3_technical_evaluation_month,
-    opps_missing_link.stage_3_techincal_evaluation_fiscal_quarter_name, 
+    opps_missing_link.stage_3_technical_evaluation_fiscal_quarter_name, 
     opps_missing_link.days_in_1_discovery,
     opps_missing_link.days_in_sao,
     opps_missing_link.days_since_last_activity,
