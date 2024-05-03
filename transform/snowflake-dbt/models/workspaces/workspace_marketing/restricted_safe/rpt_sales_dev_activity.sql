@@ -80,7 +80,7 @@
     WHEN mart_crm_opportunity_stamped_hierarchy_hist.opportunity_sales_development_representative IS NOT NULL 
     THEN 'SDR' 
     END AS sales_dev_bdr_or_sdr,
-    coalesce(opportunity_business_development_representative,opportunity_sales_development_representative) AS sdr_bdr_user_id
+    COALESCE(opportunity_business_development_representative,opportunity_sales_development_representative) AS sdr_bdr_user_id
     FROM mart_crm_opportunity_stamped_hierarchy_hist
     LEFT JOIN dim_date 
       ON mart_crm_opportunity_stamped_hierarchy_hist.sales_accepted_date = dim_date.date_day
@@ -267,8 +267,8 @@
     COALESCE(opp_to_lead.dim_crm_account_id,mart_crm_person.dim_crm_account_id) AS dim_crm_account_id,
     COALESCE(opp_to_lead.bdr_prospecting_status,mart_crm_person.matched_account_bdr_prospecting_status) AS bdr_prospecting_status,
     mart_crm_person.mql_date_latest,
-    dim_mql_date.day_of_fiscal_quarter as mql_day_of_fiscal_quarter,
-    dim_mql_date.fiscal_quarter_name_fy as mql_fiscal_quarter_name,
+    dim_mql_date.day_of_fiscal_quarter AS mql_day_of_fiscal_quarter,
+    dim_mql_date.fiscal_quarter_name_fy AS mql_fiscal_quarter_name,
     mart_crm_person.inquiry_date_pt,
     mart_crm_person.true_inquiry_date,
     dim_inquiry_date.day_of_fiscal_quarter as inquiry_day_of_fiscal_quarter,
