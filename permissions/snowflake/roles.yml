@@ -5519,6 +5519,7 @@ roles:
         - bamboohr_analytics
         - pto
         - workday
+        - prod_reporting_safe
       warehouses:
         - dev_xs
       owns:
