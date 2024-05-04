@@ -157,10 +157,12 @@ tables:
       , entity_id
       , entity_type
       , CASE
-            WHEN details ilike '%%custom_message: Added group%%' THEN 'custom_message: Added group'
-            WHEN details ilike '%%add: group%%' THEN 'add: group'
-            WHEN details ilike '%%remove: group%%' THEN 'remove: group'
-            ELSE NULL
+          WHEN details ILIKE '%%custom_message: Added group%%' THEN 'custom_message: Added group'
+          WHEN details ILIKE '%%add: group%%' THEN 'add: group'
+          WHEN details ILIKE '%%remove: group%%' THEN 'remove: group'
+          WHEN details ILIKE '%%banned%%' THEN 'banned'
+          WHEN details ILIKE '%%blocked%%' THEN 'blocked'
+          ELSE NULL
         END as details
       , created_at
       FROM audit_events
@@ -538,6 +540,7 @@ tables:
       , updated_at
       , NULL AS environment_type
       , state
+      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1049,6 +1052,20 @@ tables:
       , updated_at
       , base_access_level
       , read_code
+      , read_vulnerability
+      , admin_vulnerability
+      , read_dependency
+      , admin_merge_request
+      , admin_group_member
+      , manage_project_access_tokens
+      , archive_project
+      , manage_group_access_tokens
+      , remove_project
+      , admin_terraform_state
+      , admin_cicd_variables
+      , remove_group
+      , occupies_seat
+      , permissions
       FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1537,6 +1554,28 @@ tables:
       SELECT id
       , user_id
       , source_id
+      , source_type
+      , level
+      , new_note
+      , new_issue
+      , reopen_issue
+      , close_issue
+      , reassign_issue
+      , new_merge_request
+      , reopen_merge_request
+      , close_merge_request
+      , reassign_merge_request
+      , merge_merge_request
+      , failed_pipeline
+      , success_pipeline
+      , push_to_merge_request
+      , issue_due
+      , new_epic
+      , fixed_pipeline
+      , new_release
+      , moved_project
+      , change_reviewer_merge_request
+      , merge_when_pipeline_succeeds
       , created_at
       , updated_at
       FROM notification_settings
@@ -2332,7 +2371,6 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   subscription_user_add_on_assignments:
     dbt_source_model: true
-    deletes_exempt: True
     export_schema: 'gitlab_com'
     export_table: 'subscription_user_add_on_assignments'
     export_table_primary_key: id

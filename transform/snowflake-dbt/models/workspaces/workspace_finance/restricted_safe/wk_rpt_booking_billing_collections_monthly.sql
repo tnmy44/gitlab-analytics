@@ -12,6 +12,8 @@ WITH booking_billing AS
 SELECT
 wk_mart_booking_billing_ar_monthly.opportunity_invoice_payment_year_month,
 ROUND(wk_mart_booking_billing_ar_monthly.booking_amount,2)                                                                   AS booking_amount,
+fiscal_year,
+fiscal_quarter,
 ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_without_tax,2)                                                       AS invoice_amount_without_tax,
 ROUND(wk_mart_booking_billing_ar_monthly.invoice_tax_amount,2)                                                               AS invoice_tax_amount,
 ROUND(wk_mart_booking_billing_ar_monthly.invoice_amount_with_tax,2)                                                          AS invoice_amount_with_tax,
@@ -44,6 +46,8 @@ final AS
 
 SELECT 
 booking_billing.opportunity_invoice_payment_year_month,
+booking_billing.fiscal_year,
+booking_billing.fiscal_quarter,
 booking_billing.booking_amount,
 booking_billing.invoice_amount_without_tax,
 booking_billing.invoice_tax_amount,
@@ -62,6 +66,6 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-03-29",
-updated_date="2024-03-29"
+updated_date="2024-04-08"
 ) }}
 
