@@ -72,7 +72,7 @@ def run_export(
     if GIT_BRANCH != "master":
         export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
-    logging.info(f"bucket_path is {export["bucket_path"]} branch is {GIT_BRANCH}")
+    # logging.info(f"bucket_path is {export["bucket_path"]} branch is {GIT_BRANCH}")
 
     sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
