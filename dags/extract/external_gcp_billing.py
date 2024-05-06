@@ -125,9 +125,9 @@ for export in stream["exports"]:
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcs_external.py
+    python gcs_external/src/gcs_external.py \
         --config_path={spec_file} \
-        --export_name={export_name} \
+        --export_name={export_name}
     """
 
     task_name = export["name"]
