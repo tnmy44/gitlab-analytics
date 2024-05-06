@@ -81,7 +81,7 @@ def run_export(
     logging.info(f"authenticating with {gcp_credentials}")
     
     credentials = json.loads(
-        config_dict[gcp_credentials]
+        config_dict[gcp_credentials], strict=False
     )
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
