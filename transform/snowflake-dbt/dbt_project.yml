@@ -267,6 +267,12 @@ models:
       handbook:
         +schema: handbook
 
+      hyperproof:
+        +schema: hyperproof
+        sensitive:
+          +schema: sensitive
+          secure: true
+
       influx_db:
         +schema: influx_db
 

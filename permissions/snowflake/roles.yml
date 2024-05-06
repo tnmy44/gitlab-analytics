@@ -1568,6 +1568,22 @@ roles:
         tables:
           read:
             - raw.container_registry.*
+  - hyperproof:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - prep
+            - raw
+        schemas:
+          read:
+            - prep.hyperproof
+            - raw.hyperproof
+        tables:
+          read:
+            - prep.hyperproof.*
+            - raw.hyperproof.*
   - date:
       privileges:
         databases:
@@ -3530,6 +3546,7 @@ roles:
   - dfelton:
       member_of:
         - analyst_sales_sensitive
+        - hyperproof
         - reporter
         - restricted_safe
       warehouses:
@@ -4067,6 +4084,7 @@ roles:
   - jlongo:
       member_of:
         - analyst_sales_sensitive
+        - hyperproof
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
@@ -4876,12 +4894,6 @@ roles:
           write:
             - mcooper_prep.*.*
             - mcooper_prod.*.*
-  - mcottrell:
-      member_of:
-        - reporter
-        - restricted_safe
-      warehouses:
-        - dev_xs
   - mdrussell:
       member_of:
         - analytics_engineer_core
@@ -5507,6 +5519,7 @@ roles:
         - bamboohr_analytics
         - pto
         - workday
+        - prod_reporting_safe
       warehouses:
         - dev_xs
       owns:
@@ -6365,6 +6378,7 @@ roles:
   - wleidheiser:
       member_of:
         - reporter
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - wlin:
@@ -6385,6 +6399,58 @@ roles:
       warehouses:
         - dev_xs
   - rchanila:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - lionel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - dbernardi:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - bleducmills:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - aregnery:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ateclemariam:
+      member_of:
+        - analyst_sales
+        - restricted_safe
+        - snowflake_analyst
+        - static_sensitive
+      warehouses:
+        - dev_xs
+  - mmagoma:
+      member_of:
+        - gitlab_dotcom
+        - snowflake_analyst
+        - zendesk
+      warehouses:
+        - dev_xs
+  - jblevins:
+      member_of:
+        - snowflake_analyst
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - kshirazi:
+      member_of:
+        - snowflake_analyst
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - sguyon:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -6519,10 +6585,14 @@ users:
       can_login: true
       member_of:
         - ccontreras
+  - cdeleon:
+      can_login: true
+      member_of:
+        - cdeleon
   - cdewit:
       can_login: true
       member_of:
-        - aarts
+        - cdewit
   - cdu:
       can_login: true
       member_of:
@@ -6949,10 +7019,6 @@ users:
       can_login: true
       member_of:
         - mcooper
-  - mcottrell:
-      can_login: true
-      member_of:
-        - mcottrell
   - mdrussell:
       can_login: true
       member_of:
@@ -7371,6 +7437,42 @@ users:
       can_login: true
       member_of:
         - rchanila
+  - lionel:
+      can_login: true
+      member_of:
+        - lionel
+  - dbernardi:
+      can_login: true
+      member_of:
+        - dbernardi
+  - bleducmills:
+      can_login: true
+      member_of:
+        - bleducmills
+  - aregnery:
+      can_login: true
+      member_of:
+        - aregnery
+  - ateclemariam:
+      can_login: true
+      member_of:
+        - ateclemariam
+  - mmagoma:
+      can_login: true
+      member_of:
+        - mmagoma
+  - jblevins:
+      can_login: true
+      member_of:
+        - jblevins
+  - kshirazi:
+      can_login: true
+      member_of:
+        - kshirazi
+  - sguyon:
+      can_login: true
+      member_of:
+        - sguyon
 warehouses:
   - admin:
       size: x-small

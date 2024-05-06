@@ -144,6 +144,8 @@ models:
       description: '{{ doc("dim_installation_id") }}'
     - name: latest_subscription_id
       description: '{{ doc("latest_subscription_id") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
     - name: ping_deployment_type
@@ -662,10 +664,6 @@ models:
       description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
       tests:
         - dbt_utils.at_least_one
-    - name: coverage_fuzzing_pipeline_usage_28_days_event
-      description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
-      tests:
-        - dbt_utils.at_least_one
     - name: environments_all_time_event
       description: '{{ doc("environments_all_time_event_desc") }}'
       tests:
@@ -1038,10 +1036,6 @@ models:
         - dbt_utils.at_least_one
     - name: projects_with_repositories_enabled_all_time_user
       description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
-      tests:
-        - dbt_utils.at_least_one
-    - name: coverage_fuzzing_pipeline_usage_28_days_event
-      description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
       tests:
         - dbt_utils.at_least_one
     - name: environments_all_time_event
@@ -1620,6 +1614,10 @@ models:
       description: First date any team activation event was triggered.
     - name: dbt_updated_at
     - name: dbt_created_at
+    - name: lead_score_classification
+      description: The Salesforce grade of the lead score for a lead/contact. 
+    - name: is_defaulted_trial
+      description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
 - name: rpt_product_usage_health_score
   description: '{{ doc("rpt_product_usage_health_score") }}'
