@@ -42,7 +42,7 @@ def get_billing_data_query(
 
     return f"""
         EXPORT DATA OPTIONS(
-          uri='{bucket_path}/{partition}/*.parquet',
+          uri='{bucket_path}/{export_date}/*.parquet',
           format='PARQUET',
           overwrite=true
           ) AS
