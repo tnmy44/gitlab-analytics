@@ -39,10 +39,17 @@ def get_billing_data_query(
     """
     sql to run in bigquery for daily partition
     """
+    
+    if export["partition_date_part"] == None:
+        partition = export_date
+    elif export["partition_date_part"] == "d":
+        partition = export_date[0:10]
+    elif export["partition_date_part"] == "m":
+        partition = export_date[0:7]
 
     return f"""
         EXPORT DATA OPTIONS(
-          uri='{bucket_path}/{export_date}/*.parquet',
+          uri='{bucket_path}/{partition}/*.parquet',
           format='PARQUET',
           overwrite=true
           ) AS

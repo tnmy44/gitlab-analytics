@@ -122,13 +122,6 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
-    export_date = "{{ yesterday_ds }}"
-   
-
-    if export["partition_date_part"] == "d":
-        partition = export_date[0:10]
-    elif export["partition_date_part"] == "m":
-        partition = export_date[0:7]
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
@@ -147,7 +140,7 @@ for export in stream["exports"]:
         secrets=[GCP_BILLING_ACCOUNT_CREDENTIALS],
         env_vars={
             **pod_env_vars,
-            "EXPORT_DATE": partition,
+            "EXPORT_DATE": "{{ yesterday_ds }}",
             "GIT_BRANCH": GIT_BRANCH,
         },
         affinity=get_affinity("extraction"),
