@@ -265,8 +265,7 @@ parsed AS (
     value['savings_plan_savings_plan_rate']::DECIMAL                                   AS savings_plan_savings_plan_rate,
     value['savings_plan_total_commitment_to_date']::DECIMAL                            AS savings_plan_total_commitment_to_date,
     value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment,
-    modified_at_                                                                       AS modified_at,
-    CONCAT(value, year_mo_partition)                                                   AS value_partition_concat
+    modified_at_                                                                       AS modified_at
   FROM all_raw
 ),
 
