@@ -69,7 +69,7 @@ def run_export(
 
     if GIT_BRANCH != "master":
         export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
-
+    logging.info(f"bucket_path={export["bucket_path"]}, branch={GIT_BRANCH}")
     sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
     logging.info(sql_statement)
@@ -80,7 +80,7 @@ def run_export(
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
-        project=project
+        project=project,
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 
