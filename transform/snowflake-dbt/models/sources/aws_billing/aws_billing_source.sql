@@ -246,23 +246,22 @@ SELECT
   value['savings_plan_savings_plan_effective_cost']::DECIMAL as savings_plan_savings_plan_effective_cost,
   value['savings_plan_savings_plan_rate']::DECIMAL as savings_plan_savings_plan_rate,
   value['savings_plan_total_commitment_to_date']::DECIMAL as savings_plan_total_commitment_to_date,
-  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment,
-  modified_at_ as modified_at,
-  CONCAT(value, year_mo_partition) as value_partition_concat
+  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment
 FROM all_raw
 ),
 
 unique_ids as (
 
 SELECT 
-  DISTINCT value_partition_concat AS ids
+  DISTINCT identity_line_item_id, identity_time_interval
 FROM parsed
 ), 
 
 filtered as (
 
-SELECT * FROM parsed
-INNER JOIN unique_ids ON parsed.value_partition_concat = unique_ids.ids
+SELECT parsed.* FROM parsed
+INNER JOIN unique_ids ON parsed.identity_line_item_id = unique_ids.identity_line_item_id
+AND parsed.identity_time_interval = unique_ids.identity_time_interval
 )
 
 SELECT * FROM filtered
