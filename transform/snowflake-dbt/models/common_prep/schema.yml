@@ -2745,3 +2745,6 @@ models:
         description: The Marketo person's data quality score.
       - name: marketo_lead_score_2
         description: The Marketo person's Lead Score.
+
+  - name: prep_snowplow_sessions_all
+    description: '{{ doc("prep_snowplow_sessions_all") }}'
