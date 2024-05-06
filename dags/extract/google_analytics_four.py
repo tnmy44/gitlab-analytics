@@ -125,18 +125,13 @@ with open(
 for export in stream["exports"]:
     export_name = export["name"]
     export_date_str = "{{ yesterday_ds_nodash }}"
-    if GIT_BRANCH != "master":
-        export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
+
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcs_external.py \
-        --selected_columns={export['selected_columns']} \
-        --gcp_project={gcp_project} \
-        --bucket_path={export['bucket_path']} \
-        --table={export['table']}_{export_date_str} \
-        --partition_column={export['partition_column']} \
-        --partition={export_date_str}
+        --config_path={spec_file} \
+        --export_name={export_name}
     """
 
     task_name = export["name"]
@@ -149,7 +144,8 @@ for export in stream["exports"]:
         secrets=[GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS],
         env_vars={
             **pod_env_vars,
-            "EXPORT_DATE": "{{ yesterday_ds }}",
+            "EXPORT_DATE": export_date_str,
+            "GIT_BRANCH": GIT_BRANCH,
         },
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),
