@@ -11,7 +11,7 @@ exports:
         , DATE(_PARTITIONTIME) as _partition_date
         , current_timestamp() as gcs_export_time
       FROM `billing-tools-277316.gitlab_com_detailed_billing.gcp_billing_export_resource_v1_017B02_778F9C_493B83`
-      WHERE DATE(_PARTITIONTIME) = {EXECUTION_DATE}
+      WHERE DATE(_PARTITIONTIME) = {EXPORT_DATE}
   - name: summary-gcp-billing
     table: billing-tools-277316.gitlab_com_billing.gcp_billing_export_v1_017B02_778F9C_493B83
     bucket_path: gs://gl_gcp_billing_export/summary
@@ -21,5 +21,5 @@ exports:
         , DATE(_PARTITIONTIME) as _partition_date
         , current_timestamp() as gcs_export_time
       FROM `billing-tools-277316.gitlab_com_billing.gcp_billing_export_v1_017B02_778F9C_493B83`
-      WHERE CAST(DATE(_partitiontime) AS STRING FORMAT 'YYYY-MM') = {EXECUTION_DATE}
+      WHERE CAST(DATE(_partitiontime) AS STRING FORMAT 'YYYY-MM') = {EXPORT_DATE}
       

@@ -39,10 +39,6 @@ def get_billing_data_query(
     """
     sql to run in bigquery for daily partition
     """
-    if export["partition_date_part"] == "d":
-        partition = export_date[0:10]
-    elif export["partition_date_part"] == "m":
-        partition = export_date[0:7]
 
     return f"""
         EXPORT DATA OPTIONS(
