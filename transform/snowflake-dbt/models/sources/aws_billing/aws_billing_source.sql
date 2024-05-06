@@ -246,7 +246,8 @@ SELECT
   value['savings_plan_savings_plan_effective_cost']::DECIMAL as savings_plan_savings_plan_effective_cost,
   value['savings_plan_savings_plan_rate']::DECIMAL as savings_plan_savings_plan_rate,
   value['savings_plan_total_commitment_to_date']::DECIMAL as savings_plan_total_commitment_to_date,
-  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment
+  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment,
+  modified_at_ as modified_at
 FROM all_raw
 ),
 
