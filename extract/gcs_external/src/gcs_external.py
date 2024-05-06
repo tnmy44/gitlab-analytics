@@ -40,7 +40,7 @@ def get_billing_data_query(
     sql to run in bigquery for daily partition
     """
     
-    if export["partition_date_part"] == None:
+    if export.get("partition_date_part") == None:
         partition = export_date
     elif export["partition_date_part"] == "d":
         partition = export_date[0:10]
