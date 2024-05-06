@@ -47,6 +47,8 @@ def get_billing_data_query(
     elif export["partition_date_part"] == "m":
         partition = export_date[0:7]
 
+    export_query = export["export_query"].replace("{EXPORT_DATE}", partition)
+
     return f"""
         EXPORT DATA OPTIONS(
           uri='{bucket_path}/{partition}/*.parquet',
