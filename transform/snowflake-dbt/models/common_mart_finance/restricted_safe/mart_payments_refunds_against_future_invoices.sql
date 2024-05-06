@@ -10,10 +10,10 @@ WITH invoice_payment AS (
   SELECT
     DATE(DATE_TRUNC('month', dim_invoice.invoice_date)) AS invoice_month,
     fct_invoice_payment.invoice_payment_amount          AS applied_payment_amount,
-    fct_invoice_payment.invoice_id,
+    fct_invoice_payment.dim_invoice_id,
     fct_invoice_payment.payment_id
   FROM {{ ref('fct_invoice_payment') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON fct_invoice_payment.invoice_id = fct_invoice.dim_invoice_id
+  LEFT JOIN {{ ref('fct_invoice') }} ON fct_invoice_payment.dim_invoice_id = fct_invoice.dim_invoice_id
   LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice.dim_invoice_id = dim_invoice.dim_invoice_id
 
 ),
@@ -50,10 +50,10 @@ invoice_refund AS (
   SELECT
     DATE(DATE_TRUNC('month', dim_invoice.invoice_date))      AS invoice_month,
     fct_refund_invoice_payment.refund_invoice_payment_amount AS applied_payment_amount,
-    fct_refund_invoice_payment.invoice_id,
+    fct_refund_invoice_payment.dim_invoice_id,
     fct_refund_invoice_payment.refund_id
   FROM {{ ref('fct_refund_invoice_payment') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON fct_refund_invoice_payment.invoice_id = fct_invoice.dim_invoice_id
+  LEFT JOIN {{ ref('fct_invoice') }} ON fct_refund_invoice_payment.dim_invoice_id = fct_invoice.dim_invoice_id
   LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice.dim_invoice_id = dim_invoice.dim_invoice_id
 
 ),
