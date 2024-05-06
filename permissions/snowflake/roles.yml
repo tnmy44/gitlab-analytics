@@ -5922,6 +5922,7 @@ roles:
         - reporter
         - restricted_safe
         - workday
+        - workday_hcm
       warehouses:
         - dev_xs
   - smishra:
