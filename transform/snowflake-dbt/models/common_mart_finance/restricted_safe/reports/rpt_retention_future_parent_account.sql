@@ -82,7 +82,7 @@ py_arr_with_cy_parent AS (
   LEFT JOIN dim_crm_account_daily_snapshot
     ON child_account_arrs.child_account_id = dim_crm_account_daily_snapshot.dim_crm_account_id
       AND dim_crm_account_daily_snapshot.snapshot_date = DATEADD('year', 1, dim_date.snapshot_date_fpa_fifth)
-  WHERE retention_month > '2024-02-01'
+  WHERE retention_month >= '2024-03-01'
   -- this is when we started using the 5th day snapshot
   {{ dbt_utils.group_by(n=4) }}
 
