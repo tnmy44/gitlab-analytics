@@ -78,7 +78,8 @@ def run_export(
     sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
     logging.info(sql_statement)
-
+    logging.info(f"authenticating with {gcp_credentials} and {config_dict[gcp_credentials]}")
+    
     credentials = json.loads(
         config_dict[gcp_credentials]
     )
