@@ -141,7 +141,7 @@ for export in stream["exports"]:
         env_vars={
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
-            # "GIT BRANCH": GIT_BRANCH
+            "GIT_BRANCH": GIT_BRANCH,
         },
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),

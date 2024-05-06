@@ -50,7 +50,7 @@ def get_billing_data_query(
           format='PARQUET',
           overwrite=true
           ) AS
-            {export['export_query']}
+            {export["export_query"]}
     """
 
 
@@ -63,8 +63,6 @@ def run_export(
     """
 
     project, gcp_credentials, export = get_export(export_name, config_path)
-    logging.info(project)
-    logging.info(gcp_credentials)
 
     export_date = config_dict["EXPORT_DATE"]
     GIT_BRANCH = config_dict["GIT_BRANCH"]
@@ -72,7 +70,8 @@ def run_export(
     if GIT_BRANCH != "master":
         export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
-    # logging.info(f"bucket_path is {export["bucket_path"]} branch is {GIT_BRANCH}")
+    logging.info(GIT_BRANCH)
+    logging.info(export["bucket_path"])
 
     sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
