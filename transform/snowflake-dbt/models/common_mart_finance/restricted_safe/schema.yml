@@ -116,4 +116,6 @@ models:
     
   - name: mart_processed_iia_monthly
     description: View sums of invoice item adjustment amounts processed monthly for both credit and charges; period indicates accounting period in the billing system
-      
+
+  - name: mart_payments_refunds_against_future_invoices
+    description: View sums of payment or refunds made towards future dated invoices; period indicates accounting period in the billing system    
