@@ -40,5 +40,5 @@ WITH sfdc_campaign_info AS (
     created_by="@paul_armstrong",
     updated_by="@degan",
     created_date="2020-1-13",
-    updated_date="2023-12-15"
+    updated_date="2023-05-06"
 ) }}
