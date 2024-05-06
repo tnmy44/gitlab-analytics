@@ -95,8 +95,7 @@
 ), sfdc_account AS (
 
     SELECT *
-    FROM {{ ref('sfdc_account_source') }}
-    WHERE account_id IS NOT NULL
+    FROM {{ ref('prep_crm_account') }}
 
 ), sfdc_user AS (
 
@@ -232,17 +231,18 @@
       live_date.first_day_of_fiscal_quarter                                                                 AS snapshot_fiscal_quarter_date,
       live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
+      sfdc_account.parent_crm_account_geo,
       account_owner.crm_user_sales_segment                                                                  AS crm_account_owner_sales_segment,
       account_owner.crm_user_geo                                                                            AS crm_account_owner_geo,
       account_owner.crm_user_region                                                                         AS crm_account_owner_region,
       account_owner.crm_user_area                                                                           AS crm_account_owner_area,
       account_owner.crm_user_sales_segment_geo_region_area                                                  AS crm_account_owner_sales_segment_geo_region_area,
-      fulfillment_partner.account_name                                                                      AS fulfillment_partner_account_name,
+      fulfillment_partner.crm_account_name                                                                  AS fulfillment_partner_account_name,
       fulfillment_partner.partner_track                                                                     AS fulfillment_partner_partner_track,
-      partner_account.account_name                                                                          AS partner_account_account_name,
+      partner_account.crm_account_name                                                                      AS partner_account_account_name,
       partner_account.partner_track                                                                         AS partner_account_partner_track,
       sfdc_account.is_jihu_account,
-      sfdc_account.ultimate_parent_account_id                                                               AS dim_parent_crm_account_id,
+      sfdc_account.dim_parent_crm_account_id                                                                AS dim_parent_crm_account_id,
       CASE
         WHEN sfdc_opportunity_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 
                                                     'Closed Won', '10-Duplicate')
@@ -277,7 +277,7 @@
       END                                                                                                   AS opportunity_owner_user_area,
       opportunity_owner.user_role_name                                                                      AS opportunity_owner_role,
       opportunity_owner.title                                                                               AS opportunity_owner_title,
-      sfdc_account.account_owner_role                                                                       AS opportunity_account_owner_role,
+      sfdc_account.crm_account_owner_role                                                                   AS opportunity_account_owner_role,
       {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
                                                                      "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
@@ -289,13 +289,13 @@
     LEFT JOIN live_date
       ON CURRENT_DATE() = live_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
-      ON sfdc_opportunity_source.fulfillment_partner = fulfillment_partner.account_id
+      ON sfdc_opportunity_source.fulfillment_partner = fulfillment_partner.dim_crm_account_id
     LEFT JOIN sfdc_account AS partner_account
-      ON sfdc_opportunity_source.partner_account = partner_account.account_id
+      ON sfdc_opportunity_source.partner_account = partner_account.dim_crm_account_id
     LEFT JOIN sfdc_account
-      ON sfdc_opportunity_source.account_id= sfdc_account.account_id
+      ON sfdc_opportunity_source.account_id= sfdc_account.dim_crm_account_id
     LEFT JOIN sfdc_user AS account_owner
-      ON sfdc_account.owner_id = account_owner.dim_crm_user_id
+      ON sfdc_account.dim_crm_user_id = account_owner.dim_crm_user_id
     LEFT JOIN sfdc_user AS opportunity_owner
       ON sfdc_opportunity_source.owner_id = opportunity_owner.dim_crm_user_id
     WHERE sfdc_opportunity_source.account_id IS NOT NULL
