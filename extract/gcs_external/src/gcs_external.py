@@ -55,7 +55,7 @@ def get_billing_data_query(
           format='PARQUET',
           overwrite=true
           ) AS
-            {export["export_query"]}
+            {export_query}
     """
 
 
