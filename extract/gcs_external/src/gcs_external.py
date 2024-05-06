@@ -20,13 +20,15 @@ def get_export(export_name: str, config_path: str) -> dict:
         except YAMLError as exc:
             print(exc)
 
+    project = stream['project']
+    gcp_credentials = stream['credentials']
     export = [
         export
         for export in stream["exports"]
         if (export_name is None or export.get("name") == export_name)
     ][0]
 
-    return export
+    return project, gcp_credentials, export
 
 
 def get_billing_data_query(
@@ -60,7 +62,7 @@ def run_export(
     run sql command in bigquery
     """
 
-    export = get_export(export_name, config_path)
+    project, gcp_credentials, export = get_export(export_name, config_path)
 
     export_date = config_dict["EXPORT_DATE"]
     GIT_BRANCH = config_dict["GIT_BRANCH"]
@@ -68,17 +70,17 @@ def run_export(
     if GIT_BRANCH != "master":
         export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
 
-    sql_statement = get_billing_data_query(bucket_path, export, export_date)
+    sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
     logging.info(sql_statement)
 
     credentials = json.loads(
-        config_dict["GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS"] # needs replacement
+        config_dict[gcp_credentials]
     )
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
-        project="billing-tools-277316", #needs replacement
+        project=project
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 
