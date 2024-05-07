@@ -54,13 +54,17 @@ final AS (
   /* Final table showing the cba increase, decrease, the overpayment, the running totals of the increase and decrease and final credit balance in the accounting period */
 
   SELECT
+    --Primary key
     COALESCE(increase_cba.cba_increase_date, decrease_cba.cba_decrease_date) AS period,
+
+    --Aggregated amounts
     COALESCE(increase_cba.increase, 0)                                       AS increase,
     COALESCE(decrease_cba.decrease, 0)                                       AS decrease,
     COALESCE(overpayment.overpayment, 0)                                     AS overpayment,
     SUM(increase_cba.increase) OVER (ORDER BY period)                        AS running_total_increase,
     SUM(decrease_cba.decrease) OVER (ORDER BY period)                        AS running_total_decrease,
     ROUND((running_total_increase - running_total_decrease), 2)              AS credit_balance_per_month
+    
   FROM increase_cba
   FULL OUTER JOIN decrease_cba ON increase_cba.cba_increase_date = decrease_cba.cba_decrease_date
   FULL OUTER JOIN overpayment ON increase_cba.cba_increase_date = overpayment.overpayment_date

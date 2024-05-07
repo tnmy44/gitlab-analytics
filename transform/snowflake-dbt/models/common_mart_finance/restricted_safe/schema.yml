@@ -150,6 +150,22 @@ models:
 
   - name: mart_processed_cba_monthly
     description: Table showing the cba increase, decrease, the overpayment, the running totals of the increase and decrease and final credit balance in the accounting period; period indicates accounting period in the billing system
+    columns:
+        - name: period
+          description: Accounting period
+          tests:
+            - not_null
+            - unique
+        - name: increase
+          description: Sum of increased credit balance
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
+        - name: decrease
+          description: Sum of decreased credit balance
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_historical_balance_by_payment_terms_bucket_monthly
     description: View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system  
