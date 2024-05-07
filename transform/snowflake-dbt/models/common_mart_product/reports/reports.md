@@ -538,3 +538,16 @@ This model aggregates the SaaS-equivalent Event-based Redis counters at the name
 
 {% enddocs %}
 
+{% docs rpt_zoekt_code_search_rollout_daily %}
+
+This model aggregates the daily count of namespaces by various dimensions such as `zoekt_rollout_category` to monitor Zoekt rollout over time.
+
+**Note:** 
+- This model is set to never full refresh in order to prevent accidental loss of the [historical data](https://docs.getdbt.com/blog/change-data-capture) as there's no way to re-calculate prior versions without snapshots
+- This model's unique_key is set to report_date in order to capture the final version of each day
+
+**Intended Usage:**
+
+This model is intended to enable reporting and analysis on the Zoekt rollout over time.
+
+{% enddocs %}

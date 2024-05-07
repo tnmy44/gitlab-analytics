@@ -232,6 +232,12 @@ Boolean flag set to True if the ultimate parent namespace creator is in a 'block
 
 {% enddocs %}
 
+{% docs gitlab_plan_is_paid %}
+
+Indicates whether or not the namespace is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent. `NULL` if the namespace has been deleted.
+
+{% enddocs %}
+
 {% docs namespace_created_at %}
 
 The timestamp of the ultimate parent namespace creation
