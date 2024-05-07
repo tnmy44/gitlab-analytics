@@ -127,7 +127,9 @@ models:
     description: View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system  
 
   - name: mart_invoices_in_preview_monthly
-    description: The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices
+    description: The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices; period indicates accounting period in the billing system  
 
+  - name: mart_ar_per_ssp_channel_monthly
+    description: Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system  
 
   

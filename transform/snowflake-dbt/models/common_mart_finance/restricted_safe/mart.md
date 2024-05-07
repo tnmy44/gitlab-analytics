@@ -33,3 +33,9 @@ View of historical balances with payment terms and aging bucket by month; period
 The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices
 
 {% enddocs %}
+
+{% docs mart_ar_per_ssp_channel_monthly %}
+
+Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system
+
+{% enddocs %}
