@@ -505,6 +505,7 @@ and `suggestion_rejected` events. The explanation is in [this issue comment](htt
 can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md)
 
 {% enddocs %}
+
 {% docs rpt_user_based_metric_counts_namespace_monthly %}
 
 This model aggregates the SaaS-equivalent User-based Redis counters at the namespace level.
@@ -538,3 +539,20 @@ This model aggregates the SaaS-equivalent Event-based Redis counters at the name
 
 {% enddocs %}
 
+
+
+{% docs rpt_duo_pro_license_utilization_monthly %}
+
+**Description:** Reporting model to enable reporting on Duo Pro licesnsed seat utilization.
+
+**Data Grain:** dim_crm_account_id, reporting month, product_deployment, paired_tier
+
+**Intended Usage**
+
+This model is intended to enable reporting and analysis on licensed seat utilization per paired tier, deployment, and reporting month.
+
+**Other Comments:**
+
+- For nuances regarding each metric calcualation, please refer to the column descriptions.
+
+{% enddocs %}
