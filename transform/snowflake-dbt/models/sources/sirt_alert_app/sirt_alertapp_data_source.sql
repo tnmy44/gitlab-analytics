@@ -7,7 +7,7 @@ source AS (
 dedupped AS (
   SELECT *
   FROM source
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY alertid ORDER BY gcs_modified_at DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY alertid ORDER BY gcs_uploaded_at DESC) = 1
 )
 
 SELECT *

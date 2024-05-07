@@ -37,7 +37,7 @@ models:
         description: MITRE ATT&CK technique mapping
       - name: sentiment
         description: optional field about feedback of the alert
-      - name: gcs_modified_at
+      - name: gcs_uploaded_at
         description: File modified_at in GCS
         tests:
           - not_null
