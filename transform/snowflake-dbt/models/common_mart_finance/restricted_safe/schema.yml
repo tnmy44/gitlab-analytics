@@ -113,7 +113,18 @@ models:
 
   - name: mart_processed_refunds_monthly
     description: View sum of refund amounts processed monthly; period indicates accounting period in the billing system
-    
+    columns:
+        - name: period
+          description: Accounting period
+          tests:
+            - not_null
+            - unique
+        - name: refund_amount
+          description: Sum of refund amounts per period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
+
   - name: mart_processed_iia_monthly
     description: View sums of invoice item adjustment amounts processed monthly for both credit and charges; period indicates accounting period in the billing system
 
