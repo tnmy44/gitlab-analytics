@@ -133,11 +133,11 @@ SELECT DISTINCT
       ZEROIFNULL(COUNT(DISTINCT e.gsc_pseudonymized_user_id)) 
                                          AS count_active_users
     FROM dotcom_duo_pro_monthly_seats duo_pro 
-    LEFT JOIN mart_behavior_structured_event e
+    INNER JOIN mart_behavior_structured_event e
       ON duo_pro.product_entity_id = e.ultimate_parent_namespace_id
       AND duo_pro.reporting_month = DATE_TRUNC(month, e.behavior_date)
       AND e.event_action = 'request_duo_chat_response' 
-      AND e.behavior_at >= '2024-02-28' -- first charge date
+      AND e.behavior_at >= '2024-01-01' -- first charge month
     GROUP BY ALL
 
 ), sm_dedicated_chat_users AS  ( -- sm & dedicated chat 28d count unique users with subscriptions
@@ -151,11 +151,11 @@ SELECT DISTINCT
       'chat'                             AS primitive,
       ZEROIFNULL(p.metric_value)         AS count_active_users
     FROM sm_dedicated_duo_pro_monthly_seats duo_pro
-    LEFT JOIN mart_ping_instance_metric_28_day p
+    INNER JOIN mart_ping_instance_metric_28_day p
       ON  duo_pro.product_entity_id = p.dim_installation_id
       AND duo_pro.reporting_month = p.ping_created_date_month
       AND p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' 
-      AND p.major_minor_version_id >= 1611
+      AND p.major_minor_version_id >= 1611 --metric instrumented for 1611
       AND p.metric_value > 0
       AND p.is_last_ping_of_month = TRUE
 
