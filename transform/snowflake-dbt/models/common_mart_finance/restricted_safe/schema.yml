@@ -132,4 +132,5 @@ models:
   - name: mart_ar_per_ssp_channel_monthly
     description: Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system  
 
-  
+  - name: mart_payment_type_monthly
+    description: Table comparing total payment amounts and volumes per type per month; period indicates accounting period in the billing system 

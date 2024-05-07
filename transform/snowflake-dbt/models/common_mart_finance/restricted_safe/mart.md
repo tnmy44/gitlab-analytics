@@ -39,3 +39,9 @@ The count and amount of invoices to be billed in the future aka invoices in prev
 Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system
 
 {% enddocs %}
+
+{% docs mart_payment_type_monthly %}
+
+Table comparing total payment amounts and volumes per type per month; period indicates accounting period in the billing system 
+
+{% enddocs %}
