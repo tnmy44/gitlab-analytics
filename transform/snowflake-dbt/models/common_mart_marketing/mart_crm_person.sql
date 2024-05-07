@@ -32,7 +32,7 @@
       mql_date_first.first_day_of_month        AS mql_month_first,
       mql_date_first_pt.first_day_of_month     AS mql_month_first_pt,
       mql_date_latest.date_day                 AS mql_date_latest,
-       initial_mql_date_first_pt.date_day      AS initial_mql_date_first_pt,
+      initial_mql_date_first_pt.date_day       AS initial_mql_date_first_pt,
       initial_mql_date_first.first_day_of_month
                                                AS initial_mql_month_first,
       initial_mql_date_first_pt.first_day_of_month
@@ -199,6 +199,13 @@
       dim_crm_person.zoominfo_do_not_call_direct_phone,
       dim_crm_person.zoominfo_do_not_call_mobile_phone,
       dim_crm_person.zoominfo_company_employee_count,
+      dim_crm_person.bizible_mql_touchpoint_id,
+      dim_crm_person.bizible_mql_touchpoint_date,
+      dim_crm_person.bizible_mql_form_url,
+      dim_crm_person.bizible_mql_sfdc_campaign_id,
+      dim_crm_person.bizible_mql_ad_campaign_name,
+      dim_crm_person.bizible_mql_marketing_channel,
+      dim_crm_person.bizible_mql_marketing_channel_path,
       fct_crm_person.last_transfer_date_time,
       fct_crm_person.time_from_last_transfer_to_sequence,
       fct_crm_person.time_from_mql_to_last_transfer,
@@ -303,7 +310,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-03-11",
+    updated_date="2024-05-07",
   ) }}  

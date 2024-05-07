@@ -448,10 +448,53 @@ WITH biz_person AS (
       ON sfdc_leads.lead_id=crm_tasks.sfdc_record_id
     WHERE is_converted = 'FALSE'
 
+), bizible_mql_touchpoint_information_base AS (
+
+    SELECT DISTINCT
+        sfdc_bizible_touchpoint_source.bizible_person_id,
+        touchpoint_id,
+        bizible_touchpoint_date,
+        bizible_form_url,
+        campaign_id AS sfdc_campaign_id,
+        bizible_ad_campaign_name,
+        bizible_marketing_channel,
+        bizible_marketing_channel_path,
+        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date ASC) AS touchpoint_order_by_person
+    FROM PREP.SFDC.sfdc_contact_source
+    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
+        ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
+    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+        ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
+    WHERE touchpoint_id IS NOT null
+        AND marketo_qualified_lead_date IS NOT null
+        AND bizible_touchpoint_date > marketo_qualified_lead_date
+    ORDER BY bizible_touchpoint_date ASC
+
+), bizible_mql_touchpoint_information_final AS (
+
+  SELECT
+      bizible_person_id AS biz_mql_person_id,
+      touchpoint_id AS bizible_mql_touchpoint_id,
+      bizible_touchpoint_date AS bizible_mql_touchpoint_date,
+      bizible_form_url AS bizible_mql_form_url,
+      sfdc_campaign_id AS bizible_mql_sfdc_campaign_id,
+      bizible_ad_campaign_name AS bizible_mql_ad_campaign_name,
+      bizible_marketing_channel AS bizible_mql_marketing_channel,
+      bizible_marketing_channel_path AS bizible_mql_marketing_channel_path
+  FROM bizible_mql_touchpoint_information_base
+  WHERE touchpoint_order_by_person = 1
+
 ), final AS (
 
     SELECT
       crm_person_final.*,
+      bizible_mql_touchpoint_information_final.bizible_mql_touchpoint_id,
+      bizible_mql_touchpoint_information_final.bizible_mql_touchpoint_date,
+      bizible_mql_touchpoint_information_final.bizible_mql_form_url,
+      bizible_mql_touchpoint_information_final.bizible_mql_sfdc_campaign_id,
+      bizible_mql_touchpoint_information_final.bizible_mql_ad_campaign_name,
+      bizible_mql_touchpoint_information_final.bizible_mql_marketing_channel,
+      bizible_mql_touchpoint_information_final.bizible_mql_marketing_channel_path,
       LOWER(COALESCE(
                      account_demographics_upa_country,
                      zoominfo_company_country,
@@ -486,6 +529,8 @@ WITH biz_person AS (
     FROM crm_person_final
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
+    LEFT JOIN bizible_mql_touchpoint_information_final
+      ON crm_person_final.bizible_person_id=bizible_mql_touchpoint_information_final.biz_mql_person_id
     LEFT JOIN prep_location_country
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
@@ -499,5 +544,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-03-12"
+    updated_date="2024-05-06"
 ) }}
