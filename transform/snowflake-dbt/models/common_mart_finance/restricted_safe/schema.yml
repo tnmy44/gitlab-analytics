@@ -193,7 +193,7 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "zuora" ]
-        - name: pending_invoice_amount
+        - name: pending_invoice_count
           description: Count of pending invoices
           tests:
             - not_null
