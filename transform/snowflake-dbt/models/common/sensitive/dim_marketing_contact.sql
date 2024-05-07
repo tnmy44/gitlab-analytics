@@ -17,7 +17,7 @@ WITH sfdc_lead AS (
 
     SELECT *
     FROM {{ref('marketo_lead_source') }}
-    
+
 ), crm_account AS (
 
     SELECT *
@@ -149,7 +149,7 @@ WITH sfdc_lead AS (
     WHERE email IS NOT NULL
       OR  email <> ''
     QUALIFY record_number = 1
-  
+
 ), gitlab_dotcom AS (
 
     SELECT
@@ -246,7 +246,7 @@ WITH sfdc_lead AS (
     SELECT
       {{ dbt_utils.generate_surrogate_key(['emails.email_address']) }}                                                            AS dim_marketing_contact_id,
       emails.email_address,
-      COALESCE(zuora.first_name, marketo_lead.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name) 
+      COALESCE(zuora.first_name, marketo_lead.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name)
                                                                                                                          AS first_name,
       COALESCE(zuora.last_name, marketo_lead.last_name, sfdc.last_name, customer_db.last_name, gitlab_dotcom.last_name)  AS last_name,
       gitlab_dotcom.user_name                                                                                            AS gitlab_user_name,
@@ -269,6 +269,7 @@ WITH sfdc_lead AS (
       marketo_lead.is_marketo_opted_in,
       marketo_lead.has_marketo_unsubscribed,
       marketo_lead.marketo_compliance_segment_value                                                                      AS marketo_compliance_segment_value,
+      marketo_lead.sales_segmentation                                                                      AS marketo_sales_segmentation,
       IFNULL(marketo_lead.is_pql_marketo, FALSE)                                                                         AS is_pql_marketo,
       IFNULL(marketo_lead.is_paid_tier_marketo, FALSE)                                                                   AS is_paid_tier_marketo,
       IFNULL(marketo_lead.is_ptpt_contact_marketo, FALSE)                                                                AS is_ptpt_contact_marketo,
