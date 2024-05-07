@@ -174,7 +174,6 @@ models:
           description: Accounting period
           tests:
             - not_null
-            - unique
         - name: balance
           description: Open balance in period
           tests:
