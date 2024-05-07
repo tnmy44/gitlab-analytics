@@ -181,10 +181,26 @@ models:
           tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_invoices_in_preview_monthly
-    description: The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices; period indicates accounting period in the billing system  
+    description: The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices; period indicates accounting period in the billing system   
 
   - name: mart_ar_per_ssp_channel_monthly
     description: Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system  
+    columns:
+        - name: period
+          description: Accounting period
+          tests:
+            - not_null
+            - unique
+        - name: channel
+          description: channel type
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
+        - name: total_balance_per_channel
+          description: Balance amount per channel
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ] 
 
   - name: mart_payment_type_monthly
     description: Table comparing total payment amounts and volumes per type per month; period indicates accounting period in the billing system 

@@ -109,16 +109,24 @@ final AS (
 /* Compare balances and count per SSP channel vs. the total balances for all open invoices monthly */
 
   SELECT
+    --Primary key
     balance_per_ssp_channel.period,
+    
+    --Dates
     dim_date.fiscal_year                                                                                AS fiscal_year,
     dim_date.fiscal_quarter_name_fy                                                                     AS fiscal_quarter,
+
+    --Additive fields
     balance_per_ssp_channel.channel                                                                     AS channel,
+
+    --Aggregates
     balance_per_ssp_channel.total_balance_per_channel                                                   AS total_balance_per_channel,
     ROUND((balance_per_ssp_channel.total_balance_per_channel / total.total_all_balance) * 100, 2)       AS percentage_of_open_balance_per_path,
     total.total_all_balance                                                                             AS total_all_balance,
     balance_per_ssp_channel.invoice_count_per_channel                                                   AS invoice_count_per_channel,
     ROUND((balance_per_ssp_channel.invoice_count_per_channel / total.count_all_open_invoices) * 100, 2) AS percentage_of_open_invoices_count_per_path,
     total.count_all_open_invoices                                                                       AS count_all_open_invoices
+  
   FROM balance_per_ssp_channel
   LEFT JOIN total ON balance_per_ssp_channel.period = total.period
   LEFT JOIN {{ ref('dim_date') }} ON total.period = dim_date.date_actual
