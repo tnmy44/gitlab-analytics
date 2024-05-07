@@ -21,3 +21,9 @@ View sums of payment or refunds made towards future dated invoices; period indic
 Table showing the cba increase, decrease, the overpayment, the running totals of the increase and decrease and final credit balance in the accounting period; period indicates accounting period in the billing system
 
 {% enddocs %}
+
+{% docs mart_historical_balance_by_payment_terms_bucket_monthly %}
+
+View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system
+
+{% enddocs %}
