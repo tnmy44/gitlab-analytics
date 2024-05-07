@@ -17,4 +17,4 @@ sources:
       error_after: {count: 14, period: day}
 
     tables:
-      - name: sirt_alertapp_data_testing
+      - name: sirt_alertapp_data

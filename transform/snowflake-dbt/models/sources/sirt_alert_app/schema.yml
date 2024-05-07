@@ -16,7 +16,6 @@ models:
       - name: assignee
         description: name of person who worked on the alert
       - name: change_assignee
-        description: df
       - name: close_alert
         description: time in unix epoch when an alert was closed
       - name: comments
