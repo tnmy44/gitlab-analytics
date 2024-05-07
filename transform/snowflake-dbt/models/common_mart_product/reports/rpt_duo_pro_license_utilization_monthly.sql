@@ -195,7 +195,7 @@ SELECT DISTINCT
       AND duo_pro.reporting_month = reporting_month
     WHERE event_action = 'suggestion_requested'
       AND app_id = 'gitlab_ai_gateway'
-      AND behavior_at >= '2024-01-01' -- first charge date
+      AND behavior_at >= '2024-01-01' -- first charge month
       AND f.value IS NOT NULL
     GROUP BY ALL
 
@@ -228,7 +228,7 @@ SELECT DISTINCT
 ), final AS (
 
 --Grain: dim_crm_account_id, reporting month, deployment, tier
--- Because some SM and Dedicated installations can have multiple dim_crm_account_id values in mart_arr, including product_entity_id in the final model could lead to over counting seats purchased in a few cases
+--Because some SM and Dedicated installations can have multiple dim_crm_account_id values in mart_arr, including product_entity_id in the final model could lead to over counting seats purchased in a few cases
 
     SELECT 
       a.reporting_month,
