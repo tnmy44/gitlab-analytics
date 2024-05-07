@@ -271,6 +271,7 @@
       sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
       sfdc_opportunity.calculated_from_ratio_net_arr,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.net_arr_stage_1,
       sfdc_opportunity.xdr_net_arr_stage_1,
       sfdc_opportunity.xdr_net_arr_stage_3,
       sfdc_opportunity.enterprise_agile_planning_net_arr,
