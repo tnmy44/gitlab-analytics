@@ -203,3 +203,13 @@ models:
 
   - name: mart_payment_type_monthly
     description: Table comparing total payment amounts and volumes per type per month; period indicates accounting period in the billing system 
+    columns:
+        - name: period
+          description: Accounting period
+          tests:
+            - not_null
+        - name: total_payment_amount
+          description: payment amount
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
