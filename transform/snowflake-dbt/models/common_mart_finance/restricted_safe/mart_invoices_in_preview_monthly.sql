@@ -22,11 +22,17 @@ final AS (
 /* Add fiscal year and quarter */
 
   SELECT
+    --Primary key
     basis.period,
+
+    --Dates
     dim_date.fiscal_year            AS fiscal_year,
     dim_date.fiscal_quarter_name_fy AS fiscal_quarter,
+
+    --Aggregates
     basis.pending_invoice_amount    AS pending_invoice_amount,
     basis.pending_invoice_count     AS pending_invoice_count
+    
   FROM basis
   LEFT JOIN {{ ref('dim_date') }} ON basis.period = dim_date.date_actual
   ORDER BY period
