@@ -169,6 +169,7 @@ models:
 
   - name: mart_historical_balance_by_payment_terms_bucket_monthly
     description: View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system  
+    columns:
         - name: period
           description: Accounting period
           tests:
