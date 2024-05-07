@@ -422,8 +422,6 @@
       traction_response_time_in_business_hours,
       lead_score_classification,
       is_defaulted_trial,
-      lead_score_classification,
-      is_defaulted_trial,
       bizible_mql_touchpoint_id,
       bizible_mql_touchpoint_date,
       bizible_mql_form_url,
