@@ -136,6 +136,17 @@ models:
 
   - name: mart_payments_refunds_against_future_invoices
     description: View sums of payment or refunds made towards future dated invoices; period indicates accounting period in the billing system
+    columns:
+        - name: period
+          description: Accounting period
+          tests:
+            - not_null
+            - unique
+        - name: payments_refunds_against_future_invoices
+          description: Sum of payment and refund amounts made for future dated invoices
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_processed_cba_monthly
     description: Table showing the cba increase, decrease, the overpayment, the running totals of the increase and decrease and final credit balance in the accounting period; period indicates accounting period in the billing system

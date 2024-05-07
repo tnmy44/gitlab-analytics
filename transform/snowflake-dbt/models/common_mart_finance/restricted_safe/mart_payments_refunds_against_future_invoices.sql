@@ -107,8 +107,12 @@ final AS (
   /* Sum of payemnts and refunds made based off future dated invoices */
 
   SELECT
+    --Primary key
     period,
+
+    --Aggregated amounts
     SUM(payments_refunds_against_future_invoices) AS payments_refunds_against_future_invoices
+    
   FROM payment_refund
   GROUP BY period
   ORDER BY period
