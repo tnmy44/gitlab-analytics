@@ -8,11 +8,18 @@ WITH final AS (
 /* View of historical balances with payment terms and aging bucket by month */
 
   SELECT
-    fct_invoice_aging_detail.account_balance_impact                                AS balance,
-    DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date)                  AS payment_terms,
+    --Primary key
     DATE(DATE_TRUNC('month', fct_invoice_aging_detail.accounting_period_end_date)) AS period,
+
+    --Dates
     dim_date.fiscal_year                                                           AS fiscal_year,
     dim_date.fiscal_quarter_name_fy                                                AS fiscal_quarter,
+
+    --Aggregated amounts
+    fct_invoice_aging_detail.account_balance_impact                                AS balance,
+
+    --Additive fields
+    DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date)                  AS payment_terms,
     CASE
       WHEN days_overdue <= 0
         THEN '1 -- Current'
@@ -28,6 +35,7 @@ WITH final AS (
         THEN '6 -- More than 120 days past due'
       ELSE 'n/a'
     END                                                                            AS aging_bucket
+    
   FROM {{ ref('fct_invoice_aging_detail') }}
   LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
   LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = period
