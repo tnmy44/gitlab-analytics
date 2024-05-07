@@ -27,3 +27,9 @@ Table showing the cba increase, decrease, the overpayment, the running totals of
 View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system
 
 {% enddocs %}
+
+{% docs mart_invoices_in_preview_monthly %}
+
+The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices
+
+{% enddocs %}
