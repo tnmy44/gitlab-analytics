@@ -38,9 +38,13 @@ final AS (
 /* invoice item adjustment credit and charge monthly */
 
   SELECT
+    --Primary key
     COALESCE(iia_credit.iia_credit_date, iia_charge.iia_charge_date) AS period,
+
+    --Aggregated amounts
     COALESCE(iia_credit.amount_credit, 0)                            AS iia_credit_amount,
     COALESCE(iia_charge.amount_charge, 0)                            AS iia_charge_amount
+    
   FROM iia_credit
   FULL OUTER JOIN iia_charge ON iia_credit.iia_credit_date = iia_charge.iia_charge_date
   ORDER BY period
