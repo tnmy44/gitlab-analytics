@@ -1,24 +1,24 @@
 WITH
 source AS (
   SELECT
-  alertid::int as alertid,
-  ack_time::int as ack_time,
-  alert_name::varchar as alert_name,
-  alert_time::int as alert_time,
-  assignee::varchar as assignee,
-  change_assignee::varchar as change_assignee,
-  close_alert::int as close_alert,
-  comments::varchar as comments,
-  convert_incident::boolean as convert_incident,
-  to_date(db_date, 'YY-MM-DD') db_date,
-  event_time::int as event_time,
-  feature::varchar as feature,
-  label::varchar as label,
-  mitre_tac::varchar as mitre_tac,
-  mitre_teq::varchar as mitre_teq,
-  sentiment::varchar as sentiment,
-  gcs_uploaded_at::date as gcs_uploaded_at,
-  snowflake_uploaded_at::datetime as snowflake_uploaded_at
+    alertid::INT                    AS alertid,
+    ack_time::INT                   AS ack_time,
+    alert_name::VARCHAR             AS alert_name,
+    alert_time::INT                 AS alert_time,
+    assignee::VARCHAR               AS assignee,
+    change_assignee::VARCHAR        AS change_assignee,
+    close_alert::INT                AS close_alert,
+    comments::VARCHAR               AS comments,
+    convert_incident::BOOLEAN       AS convert_incident,
+    TO_DATE(db_date, 'YY-MM-DD')    AS db_date,
+    event_time::INT                 AS event_time,
+    feature::VARCHAR                AS feature,
+    label::VARCHAR                  AS label,
+    mitre_tac::VARCHAR              AS mitre_tac,
+    mitre_teq::VARCHAR              AS mitre_teq,
+    sentiment::VARCHAR              AS sentiment,
+    gcs_uploaded_at::DATE           AS gcs_uploaded_at,
+    snowflake_uploaded_at::DATETIME AS snowflake_uploaded_at
   FROM
     {{ source('sirt_alertapp', 'sirt_alertapp_data') }}
 ),
