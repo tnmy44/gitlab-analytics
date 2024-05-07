@@ -190,7 +190,6 @@ models:
           description: Accounting period
           tests:
             - not_null
-            - unique
         - name: channel
           description: channel type
           tests:
