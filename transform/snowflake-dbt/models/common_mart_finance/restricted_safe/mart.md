@@ -15,3 +15,9 @@ Booking amount and count by sales type; period indicates accounting period in th
 Compares standard vs. all bookings to determine percentage of non-standard booking where non-standard booking is defined as non-prepaid for multiyear orders and ramps
 
 {% enddocs %}
+
+{% docs mart_collections_monthly %}
+
+The table shows how percentually the payment received in one month is applied to invoices in various periods
+
+{% enddocs %}
