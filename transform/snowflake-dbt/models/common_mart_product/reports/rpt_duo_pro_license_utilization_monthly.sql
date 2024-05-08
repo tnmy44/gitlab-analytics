@@ -124,7 +124,7 @@ duo_pro_seat_assignments AS ( -- CTE to get number of seats assigned per namepsa
     ON a.add_on_purchase_id = p.id
   INNER JOIN gitlab_dotcom_memberships AS m
     ON a.user_id = m.user_id
-      AND p.namespace_id = p.namespace_id
+     AND p.namespace_id = p.namespace_id
   WHERE (a.pgp_is_deleted = FALSE OR a.pgp_is_deleted IS NULL) -- Exclude deleted rows -- https://gitlab.com/gitlab-data/analytics/-/issues/17911#note_1855404601
   GROUP BY ALL
 
@@ -133,7 +133,7 @@ duo_pro_seat_assignments AS ( -- CTE to get number of seats assigned per namepsa
 dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
 
   SELECT
-    duo_pro.reporting_month,
+    DATE_TRUNC(MONTH, e.behavior_date)                      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
     'duo pro'                                               AS unit_primitive_group,
@@ -143,7 +143,6 @@ dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
   FROM dotcom_duo_pro_monthly_seats AS duo_pro
   INNER JOIN mart_behavior_structured_event AS e
     ON duo_pro.product_entity_id = e.ultimate_parent_namespace_id
-    AND duo_pro.reporting_month = DATE_TRUNC(MONTH, e.behavior_date)
   WHERE e.event_action = 'request_duo_chat_response'
     AND e.behavior_at >= '2024-04-11' -- event was implemented in production
   GROUP BY ALL
@@ -153,7 +152,7 @@ dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
 sm_dedicated_chat_users AS ( -- sm & dedicated chat 28d count unique users with subscriptions
 
   SELECT DISTINCT
-    duo_pro.reporting_month,
+    p.ping_created_date_month  AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
     'duo pro'                  AS unit_primitive_group,
@@ -162,18 +161,17 @@ sm_dedicated_chat_users AS ( -- sm & dedicated chat 28d count unique users with 
   FROM sm_dedicated_duo_pro_monthly_seats AS duo_pro
   INNER JOIN mart_ping_instance_metric_28_day AS p
     ON duo_pro.product_entity_id = p.dim_installation_id
-      AND duo_pro.reporting_month = p.ping_created_date_month
-      AND p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-      AND p.major_minor_version_id >= 1611 --metric instrumented for 1611
-      AND p.metric_value > 0
-      AND p.is_last_ping_of_month = TRUE
+  WHERE p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
+    AND p.major_minor_version_id >= 1611 --metric instrumented for 1611
+    AND p.metric_value > 0
+    AND p.is_last_ping_of_month = TRUE
 
 ),
 
 dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscriptions - first step is to flatten on the entity id
 
   SELECT
-    duo_pro.reporting_month,
+    DATE_TRUNC(month, behavior_date)      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
     'duo pro'                             AS unit_primitive_group,
@@ -183,7 +181,6 @@ dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscript
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => ultimate_parent_namespace_ids) AS f
   INNER JOIN dotcom_duo_pro_monthly_seats AS duo_pro
     ON duo_pro.product_entity_id = f.value::VARCHAR
-      AND duo_pro.reporting_month = reporting_month
   WHERE event_action = 'suggestion_requested'
     AND app_id = 'gitlab_ai_gateway'
     AND behavior_at >= '2024-01-01' --first charge month
@@ -195,7 +192,7 @@ dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscript
 sm_dedicated_cs_users AS ( -- sm & dedicated chat code suggestions users with subscriptions - first step is to flatten on the entity id
 
   SELECT
-    duo_pro.reporting_month,
+    DATE_TRUNC(month, behavior_date)      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
     'duo pro'                             AS unit_primitive_group,
@@ -205,7 +202,6 @@ sm_dedicated_cs_users AS ( -- sm & dedicated chat code suggestions users with su
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => dim_installation_ids) AS f
   INNER JOIN sm_dedicated_duo_pro_monthly_seats AS duo_pro
     ON duo_pro.product_entity_id = f.value::VARCHAR
-      AND duo_pro.reporting_month = reporting_month
   WHERE event_action = 'suggestion_requested'
     AND app_id = 'gitlab_ai_gateway'
     AND behavior_at >= '2024-01-01' -- first charge month
