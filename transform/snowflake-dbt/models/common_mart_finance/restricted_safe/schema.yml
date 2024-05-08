@@ -122,3 +122,12 @@ models:
         - name: balance
           tests:
             - not_null   
+
+  - name: mart_booking_by_order_type_monthly
+    description: Booking amount and count by sales type; period indicates accounting period in the billing system
+    columns:
+        - name: period
+          tests:
+            - not_null
+            - unique
+          tags: [ "tdf", "mart", "zuora" ]           
