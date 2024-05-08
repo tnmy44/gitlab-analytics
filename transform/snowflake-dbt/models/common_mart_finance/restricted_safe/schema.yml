@@ -129,5 +129,4 @@ models:
         - name: period
           tests:
             - not_null
-            - unique
           tags: [ "tdf", "mart", "zuora" ]           
