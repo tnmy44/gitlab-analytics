@@ -255,12 +255,16 @@ final AS (
     IFF(a.product_deployment = 'SaaS', 'Gitlab.com', a.product_deployment)
       AS product_deployment, --SaaS has not been replaced by .com terminology in all data models, but .com is the correct convention
     a.add_on_name,
-    a.clean_paired_tier                                                                            AS paired_tier,
+    a.clean_paired_tier  
+      AS paired_tier,                                                                          
     a.is_product_entity_associated_w_subscription,
-    MAX(a.major_minor_version_id)                                                                  AS major_minor_version_id,
-    ZEROIFNULL(MAX(a.duo_pro_seats))                                                               AS paid_duo_pro_seats,
-    ZEROIFNULL(MAX(s.number_of_seats_assigned))
-      AS dotcom_number_of_seats_assigned,  -- only available for dotcom data - all SM/Dedicated deployments will show 0   
+    MAX(a.major_minor_version_id)                                                                  
+      AS major_minor_version_id,
+    ZEROIFNULL(MAX(a.duo_pro_seats))                                                               
+      AS paid_duo_pro_seats,
+    MAX(CASE WHEN a.product_deployment = 'SaaS' THEN ZEROIFNULL(s.number_of_seats_assigned)
+           ELSE null END)            
+      AS number_of_seats_assigned,  -- only available for dotcom data - all SM/Dedicated deployments will show null  
     ZEROIFNULL(MAX(IFF(u.primitive = 'chat', ZEROIFNULL(u.count_active_users), NULL)))
       AS chat_active_users,
     ZEROIFNULL(MAX(IFF(u.primitive = 'code suggestions', ZEROIFNULL(u.count_active_users), NULL)))
@@ -269,8 +273,8 @@ final AS (
       AS max_duo_pro_active_users,
     ZEROIFNULL(max_duo_pro_active_users / paid_duo_pro_seats)
       AS pct_usage_seat_utilization,
-    ZEROIFNULL(dotcom_number_of_seats_assigned / paid_duo_pro_seats)
-      AS pct_assignment_seat_utilization  -- only available for dotcom data - all SM/Dedicated deployments will show 0                                    
+    number_of_seats_assigned / paid_duo_pro_seats
+      AS pct_assignment_seat_utilization  -- only available for dotcom data - all SM/Dedicated deployments will show null                                   
   FROM all_monthly_duo_pro_seats AS a
   LEFT JOIN unit_primitive_group_product_usage AS u
     ON a.reporting_month = u.reporting_month
