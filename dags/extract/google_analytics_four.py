@@ -126,7 +126,6 @@ for export in stream["exports"]:
     export_name = export["name"]
     export_date_str = "{{ yesterday_ds_nodash }}"
 
-
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcs_external.py \
