@@ -464,7 +464,7 @@ aggregated_account_influenced_performance AS (
     combined_models.dim_crm_account_id,
     combined_models.true_event_date,
     combined_models.event_snapshot_type,
-    SUM(CASE WHEN is_net_arr_pipeline_created::BOOLEAN THEN influenced_net_arr END) AS influenced_pipeline
+    SUM(CASE WHEN is_net_arr_pipeline_created = 1 THEN influenced_net_arr END) AS influenced_pipeline
   FROM
     combined_models
   {{dbt_utils.group_by(n=4)}}
