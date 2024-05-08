@@ -27,3 +27,9 @@ The table shows how percentually the payment received in one month is applied to
 The table shows how percentually the payment received in one month is applied to invoices in various periods; period indicates accounting period in the billing system
 
 {% enddocs %}
+
+{% docs mart_public_sector_ar_monthly %}
+
+The table shows how percentually the payment received in one month is applied to invoices in various periods; period indicates accounting period in the billing system
+
+{% enddocs %}
