@@ -33,26 +33,35 @@ def get_export(export_name: str, config_path: str) -> dict:
 
 
 def get_billing_data_query(
-    bucket_path: str,
     export: dict,
-    export_date: str,
 ) -> str:
     """
     sql to run in bigquery for daily partition
     """
 
+    EXPORT_DATE = config_dict["EXPORT_DATE"]
+    GIT_BRANCH = config_dict["GIT_BRANCH"]
+
+    if GIT_BRANCH != "master":
+        root_dir = export["bucket_path"].index("/", len("gs://"))
+        export["bucket_path"] = (
+            export["bucket_path"][:root_dir]
+            + f"/{GIT_BRANCH}"
+            + export["bucket_path"][root_dir:]
+        )
+
     if export.get("partition_date_part") == None:
-        partition = export_date
+        partition = EXPORT_DATE
     elif export["partition_date_part"] == "d":
-        partition = export_date[0:10]
+        partition = EXPORT_DATE[0:10]
     elif export["partition_date_part"] == "m":
-        partition = export_date[0:7]
+        partition = EXPORT_DATE[0:7]
 
     export_query = export["export_query"].replace("{EXPORT_DATE}", partition)
 
     return f"""
         EXPORT DATA OPTIONS(
-          uri='{bucket_path}/{partition}/*.parquet',
+          uri='{export["bucket_path"]}/{partition}/*.parquet',
           format='PARQUET',
           overwrite=true
           ) AS
@@ -70,18 +79,7 @@ def run_export(
 
     project, gcp_credentials, export = get_export(export_name, config_path)
 
-    export_date = config_dict["EXPORT_DATE"]
-    GIT_BRANCH = config_dict["GIT_BRANCH"]
-
-    if GIT_BRANCH != "master":
-        root_dir = export["bucket_path"].index("/", len("gs://"))
-        export["bucket_path"] = (
-            export["bucket_path"][:root_dir]
-            + f"/{GIT_BRANCH}"
-            + export["bucket_path"][root_dir:]
-        )
-
-    sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
+    sql_statement = get_billing_data_query(export)
 
     logging.info(sql_statement)
     logging.info(f"authenticating with {gcp_credentials}")
