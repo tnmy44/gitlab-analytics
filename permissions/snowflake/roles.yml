@@ -2066,19 +2066,6 @@ roles:
           read:
             - prep.google_search_console.*
             - raw.google_search_console.*
-  - grafana:
-      warehouses:
-        - grafana
-      privileges:
-        databases:
-          read:
-            - prod
-        schemas:
-          read:
-            - prod.legacy
-        tables:
-          read:
-            - prod.legacy.snowplow_page_views_all_grafana_spigot
   - greenhouse:
       warehouses:
         - dev_xs
@@ -6759,10 +6746,6 @@ users:
       can_login: true
       member_of:
         - sales_systems_snowflake_api_role
-  - grafana:
-      can_login: true
-      member_of:
-        - grafana
   - gweaver:
       can_login: true
       member_of:
@@ -7492,8 +7475,6 @@ warehouses:
   - gainsight_xs:
       size: x-small
   - gitlab_postgres:
-      size: x-small
-  - grafana:
       size: x-small
   - loading:
       size: x-small
