@@ -126,7 +126,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_processed_iia_monthly
-    description: View sums of invoice item adjustment amounts processed monthly for both credit and charges; period indicates accounting period in the billing system
+    description: '{{ doc("mart_processed_iia_monthly") }}'
     columns:
         - name: period
           description: Accounting period
@@ -135,7 +135,7 @@ models:
             - unique
 
   - name: mart_payments_refunds_against_future_invoices
-    description: View sums of payment or refunds made towards future dated invoices; period indicates accounting period in the billing system
+    description: '{{ doc("mart_payments_refunds_against_future_invoices") }}'
     columns:
         - name: period
           description: Accounting period
@@ -149,8 +149,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_processed_cba_monthly
-    description: Table showing the cba increase, decrease, the overpayment, the running totals of the increase and decrease and final credit balance in the accounting period; period indicates accounting period in the billing system
-    columns:
+    description: '{{ doc("mart_processed_cba_monthly") }}'
         - name: period
           description: Accounting period
           tests:
@@ -168,7 +167,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_historical_balance_by_payment_terms_bucket_monthly
-    description: View of historical balances with payment terms and aging bucket by month; period indicates accounting period in the billing system  
+    description: '{{ doc("mart_historical_balance_by_payment_terms_bucket_monthly") }}'
     columns:
         - name: period
           description: Accounting period
@@ -181,8 +180,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ]
 
   - name: mart_invoices_in_preview_monthly
-    description: The count and amount of invoices to be billed in the future aka invoices in preview or pending invoices; period indicates accounting period in the billing system   
-    columns:
+    description: '{{ doc("mart_invoices_in_preview_monthly") }}'
         - name: period
           description: Accounting period
           tests:
@@ -200,7 +198,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ] 
 
   - name: mart_ar_per_ssp_channel_monthly
-    description: Shows balances and count per SSP channel vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system  
+    description: '{{ doc("mart_ar_per_ssp_channel_monthly") }}'
     columns:
         - name: period
           description: Accounting period
@@ -218,7 +216,7 @@ models:
           tags: [ "tdf", "mart", "zuora" ] 
 
   - name: mart_payment_type_monthly
-    description: Table comparing total payment amounts and volumes per type per month; period indicates accounting period in the billing system 
+    description: '{{ doc("mart_payment_type_monthly") }}'
     columns:
         - name: period
           description: Accounting period
