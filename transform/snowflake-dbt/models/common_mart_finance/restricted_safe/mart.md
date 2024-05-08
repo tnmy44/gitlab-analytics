@@ -30,6 +30,12 @@ The table shows how percentually the payment received in one month is applied to
 
 {% docs mart_public_sector_ar_monthly %}
 
-The table shows how percentually the payment received in one month is applied to invoices in various periods; period indicates accounting period in the billing system
+Compare balances and count per segment vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system
+
+{% enddocs %}
+
+{% docs mart_web_direct_vs_sales_assisted_ar_monthly %}
+
+Compare balances and count per path vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system
 
 {% enddocs %}

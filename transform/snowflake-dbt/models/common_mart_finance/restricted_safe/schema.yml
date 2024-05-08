@@ -182,4 +182,16 @@ models:
         - name: total_balance_per_segment
           tests:
             - not_null
-          tags: [ "tdf", "mart", "zuora" ]          
+          tags: [ "tdf", "mart", "zuora" ]   
+
+  - name: mart_web_direct_vs_sales_assisted_ar_monthly
+    description: '{{ doc("mart_web_direct_vs_sales_assisted_ar_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: total_balance_per_path
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]                 
