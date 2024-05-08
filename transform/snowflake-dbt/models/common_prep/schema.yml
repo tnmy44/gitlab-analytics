@@ -2578,6 +2578,8 @@ models:
         description: '{{ doc("license_company_name") }}'
       - name: license_expire_date
         description: '{{ doc("license_expire_date") }}'
+      - name: subscription_name
+        description: '{{ doc("subscription_name") }}'
       - name: original_subscription_name_slugify
         description: '{{ doc("original_subscription_name_slugify") }}'
       - name: dim_subscription_id
@@ -2799,3 +2801,6 @@ models:
         description: The Marketo person's data quality score.
       - name: marketo_lead_score_2
         description: The Marketo person's Lead Score.
+
+  - name: prep_snowplow_sessions_all
+    description: '{{ doc("prep_snowplow_sessions_all") }}'

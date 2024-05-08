@@ -870,3 +870,10 @@ All milestones created within a namespace, with details including the start date
 Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}
+
+{% docs prep_snowplow_sessions_all %}
+
+Unioned monthly partitions for all Snowplow sessions.
+
+{% enddocs %}
+

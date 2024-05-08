@@ -5519,6 +5519,7 @@ roles:
         - bamboohr_analytics
         - pto
         - workday
+        - prod_reporting_safe
       warehouses:
         - dev_xs
       owns:
@@ -5921,6 +5922,7 @@ roles:
         - reporter
         - restricted_safe
         - workday
+        - workday_hcm
       warehouses:
         - dev_xs
   - smishra:
@@ -6377,6 +6379,7 @@ roles:
   - wleidheiser:
       member_of:
         - reporter
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - wlin:
@@ -6417,6 +6420,38 @@ roles:
       warehouses:
         - dev_xs
   - aregnery:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ateclemariam:
+      member_of:
+        - analyst_sales
+        - restricted_safe
+        - snowflake_analyst
+        - static_sensitive
+      warehouses:
+        - dev_xs
+  - mmagoma:
+      member_of:
+        - gitlab_dotcom
+        - snowflake_analyst
+        - zendesk
+      warehouses:
+        - dev_xs
+  - jblevins:
+      member_of:
+        - snowflake_analyst
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - kshirazi:
+      member_of:
+        - snowflake_analyst
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - sguyon:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7419,6 +7454,26 @@ users:
       can_login: true
       member_of:
         - aregnery
+  - ateclemariam:
+      can_login: true
+      member_of:
+        - ateclemariam
+  - mmagoma:
+      can_login: true
+      member_of:
+        - mmagoma
+  - jblevins:
+      can_login: true
+      member_of:
+        - jblevins
+  - kshirazi:
+      can_login: true
+      member_of:
+        - kshirazi
+  - sguyon:
+      can_login: true
+      member_of:
+        - sguyon
 warehouses:
   - admin:
       size: x-small
