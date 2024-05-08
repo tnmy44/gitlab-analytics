@@ -46,7 +46,7 @@ def get_billing_data_query(
         root_dir = export["bucket_path"].index("/", len("gs://"))
         export["bucket_path"] = (
             export["bucket_path"][:root_dir]
-            + f"/{GIT_BRANCH}"
+            + f"/BRANCH_TEST_{GIT_BRANCH}"
             + export["bucket_path"][root_dir:]
         )
 
