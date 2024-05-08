@@ -17,15 +17,13 @@ pto AS (
         hr_employee_id,
         pto_date
       ORDER BY
-        end_date DESC, --- In order to accurately populate the most recently submitted absence, would like to utlise the 'created_at' field.
-        pto_uuid DESC -- Rakhi: Why did we order by pto_uuid, that are alphanumeric values? Shane: In order to remove duplication, we randomly choose one whichever comes first
+        created_at DESC --adding this, once created_at is added to pto_source
     )                                                      AS pto_rank,
     'Y'                                                    AS is_pto_date
   FROM pto_source
-  WHERE pto_status = 'AP' -- We would like to consider only approved absences. There infact is an absence approval process at Gitlab, although it's mandatory to approve pto requests by managers
---    AND pto_date <= CURRENT_DATE -- As it's a SSOT Absence data, we will include future absence data
-    AND pto_day_of_week BETWEEN 1 AND 5 -- to include only absences occuring on working days of a week
-  QUALIFY pto_rank = 1 -- to consider only unique rows of the data
+  WHERE pto_status = 'AP' 
+    AND pto_day_of_week BETWEEN 1 AND 5 -- excluding weekends
+  QUALIFY pto_rank = 1 -- inorder to consider only unique rows of the data
 ),
 team_status AS (
   SELECT 
