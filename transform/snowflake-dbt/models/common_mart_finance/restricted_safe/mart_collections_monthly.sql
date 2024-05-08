@@ -12,7 +12,7 @@ WITH invoice_detail AS (
     DATE(DATE_TRUNC('month', fct_payment.payment_date)) AS payment_period,
     SUM(fct_invoice_payment.invoice_payment_amount)     AS payment_applied_to_invoice
   FROM {{ ref('fct_invoice_payment') }}
-  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_payment.invoice_id = dim_invoice.dim_invoice_id
+  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_payment.dim_invoice_id = dim_invoice.dim_invoice_id
   LEFT JOIN {{ ref('fct_payment') }} ON fct_invoice_payment.payment_id = fct_payment.payment_id
   WHERE fct_payment.payment_status = 'Processed'
   GROUP BY payment_period, invoice_period
