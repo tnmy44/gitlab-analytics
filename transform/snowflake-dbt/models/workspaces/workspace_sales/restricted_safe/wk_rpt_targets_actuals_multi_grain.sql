@@ -896,7 +896,10 @@ unioned AS (
 
 SELECT 
   unioned.*,
-  MAX(IFF(snapshot_date < CURRENT_DATE(),snapshot_date, NULL)) OVER () AS max_snapshot_date,
+  MAX(CASE 
+        WHEN source != 'targets_actuals' AND snapshot_date < CURRENT_DATE() THEN snapshot_date 
+        ELSE NULL 
+    END) OVER () AS max_snapshot_date,
   FLOOR((DATEDIFF(day, current_first_day_of_fiscal_quarter, max_snapshot_date) / 7)) 
                                                                         AS most_recent_snapshot_week
 FROM unioned
