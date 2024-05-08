@@ -162,7 +162,7 @@ models:
   - name: mart_cdot_invoices_manual_intervention_monthly
     description: '{{ doc("mart_cdot_invoices_manual_intervention_monthly") }}'
     columns:
-        - name: payment_period
+        - name: period
           tests:
             - not_null
             - unique
