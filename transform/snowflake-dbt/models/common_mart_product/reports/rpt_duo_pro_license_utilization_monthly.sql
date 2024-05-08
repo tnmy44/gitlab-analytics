@@ -22,6 +22,7 @@ sm_dedicated_duo_pro_monthly_seats AS ( -- duo pro monthly seats associated enti
     duo_pro.arr_month
       AS reporting_month,
     duo_pro.subscription_name,
+    duo_pro.dim_subscription_id,
     duo_pro.crm_account_name,
     duo_pro.dim_crm_account_id,
     duo_pro.dim_parent_crm_account_id,
@@ -66,6 +67,7 @@ dotcom_duo_pro_monthly_seats AS ( -- duo pro monthly seats and associated entiti
     duo_pro.arr_month
       AS reporting_month,
     duo_pro.subscription_name,
+    duo_pro.dim_subscription_id,
     duo_pro.crm_account_name,
     duo_pro.dim_crm_account_id,
     duo_pro.dim_parent_crm_account_id,
@@ -250,6 +252,7 @@ final AS (
   SELECT
     a.reporting_month,
     a.subscription_name,
+    a.dim_subscription_id,
     a.crm_account_name,
     a.dim_crm_account_id,
     a.dim_parent_crm_account_id,
@@ -291,5 +294,5 @@ final AS (
     created_by="@eneuberger",
     updated_by="@eneuberger",
     created_date="2024-05-07",
-    updated_date="2024-05-07"
+    updated_date="2024-05-08"
 ) }}
