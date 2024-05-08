@@ -143,9 +143,9 @@ dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
   FROM dotcom_duo_pro_monthly_seats AS duo_pro
   INNER JOIN mart_behavior_structured_event AS e
     ON duo_pro.product_entity_id = e.ultimate_parent_namespace_id
-      AND duo_pro.reporting_month = DATE_TRUNC(MONTH, e.behavior_date)
-      AND e.event_action = 'request_duo_chat_response'
-      AND e.behavior_at >= '2024-01-01' -- first charge month
+    AND duo_pro.reporting_month = DATE_TRUNC(MONTH, e.behavior_date)
+  WHERE e.event_action = 'request_duo_chat_response'
+    AND e.behavior_at >= '2024-04-11' -- event was implemented in production
   GROUP BY ALL
 
 ),
