@@ -11,7 +11,6 @@
             'job_family',
             'management_level',
             'job_level',
-            'job_workday_id',
             '_fivetran_deleted']
         )
     }}
