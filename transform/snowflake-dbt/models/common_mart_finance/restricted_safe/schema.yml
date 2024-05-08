@@ -110,3 +110,15 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "atr" ]
+
+  - name: mart_current_ar_by_aging_payment_terms
+    description: Table showing currently overdue invoices with aging bucket and payment terms
+    columns:
+        - name: dim_invoice_id
+          tests:
+            - not_null
+            - unique
+          tags: [ "tdf", "mart", "zuora" ]     
+        - name: balance
+          tests:
+            - not_null   
