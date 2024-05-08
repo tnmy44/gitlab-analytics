@@ -274,7 +274,7 @@ final AS (
     ZEROIFNULL(max_duo_pro_active_users / paid_duo_pro_seats)
       AS pct_usage_seat_utilization,
     ZEROIFNULL(dotcom_number_of_seats_assigned / paid_duo_pro_seats)
-      AS pct_dotcom_assignment_seat_utilization  -- only available for dotcom data - all SM/Dedicated deployments will show 0                                    
+      AS pct_assignment_seat_utilization  -- only available for dotcom data - all SM/Dedicated deployments will show 0                                    
   FROM all_monthly_duo_pro_seats AS a
   LEFT JOIN unit_primitive_group_product_usage AS u
     ON a.reporting_month = u.reporting_month
