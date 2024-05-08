@@ -178,7 +178,7 @@ dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscript
     duo_pro.product_entity_type,
     'duo pro'                             AS unit_primitive_group,
     'code suggestions'                    AS primitive,
-    COUNT(DISTINCT gitlab_global_user_id) -- Any known data quality problems with this id?
+    COUNT(DISTINCT gitlab_global_user_id) 
       AS count_active_users
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => ultimate_parent_namespace_ids) AS f
   INNER JOIN dotcom_duo_pro_monthly_seats AS duo_pro
@@ -200,7 +200,7 @@ sm_dedicated_cs_users AS ( -- sm & dedicated chat code suggestions users with su
     duo_pro.product_entity_type,
     'duo pro'                             AS unit_primitive_group,
     'code suggestions'                    AS primitive,
-    COUNT(DISTINCT gitlab_global_user_id)  -- Any known data quality problems with this id?
+    COUNT(DISTINCT gitlab_global_user_id)  
       AS count_active_users
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => dim_installation_ids) AS f
   INNER JOIN sm_dedicated_duo_pro_monthly_seats AS duo_pro
