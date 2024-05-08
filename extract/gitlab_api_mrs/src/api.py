@@ -8,8 +8,8 @@ class GitLabAPI:
     def __init__(self, api_token):
         self.api_token = api_token
 
-    def get_urls_for_mrs_paged_for_project(
-        self, project_id: str, start: str, end: str, page: int
+    def get_attributes_for_mrs_paged_for_project(
+        self, project_id: str, start: str, end: str, mr_attribute_key: str, page: int
     ) -> List[str]:
         """
         This function is page specific and only returns 20 records at a time.
@@ -25,15 +25,15 @@ class GitLabAPI:
 
         if response.status_code == 200:
             mr_json_list = response.json()
-            return [mr["web_url"] for mr in mr_json_list]
+            return [mr[mr_attribute_key] for mr in mr_json_list]
         else:
             logging.warn(
                 f"Request for merge requests from project id {project_id} resulted in a code {response.status_code}."
             )
         return []
 
-    def get_urls_for_mrs_for_project(
-        self, project_id: str, start: str, end: str
+    def get_attributes_for_mrs_for_project(
+        self, project_id: str, start: str, end: str, mr_attribute_key
     ) -> List[str]:
         """
         This function returns all of the URLs of the merge requests updated in a specific timeframe for the specified project.
@@ -49,7 +49,7 @@ class GitLabAPI:
             if not current_result:
                 return aggregated_result
 
-    def get_mr_json(self, mr_url: str) -> Dict[Any, Any]:
+    def get_mr_webpage(self, mr_url: str) -> Dict[Any, Any]:
         """
         Gets the diff JSON for the merge request by making a request to /diffs.json appended to the url.
         If the HTTP response is non-200 or the JSON could not be parsed, an empty dictionary is returned.
@@ -65,4 +65,57 @@ class GitLabAPI:
                 return {}
         else:
             logging.warn(f"Received {response.status_code} for mr: {mr_url}")
+            return {}
+
+    def get_mr_graphsql(self, project_path: str, mr_iid: int) -> Dict[Any, Any]:
+        """
+        Gets the diff JSON for the merge request by making a request to /diffs.json appended to the url.
+        If the HTTP response is non-200 or the JSON could not be parsed, an empty dictionary is returned.
+        """
+
+        query = """
+        {
+          project(fullPath: $project_path) {
+            mergeRequests(iids: [$mr_iid]) {
+              nodes {
+                iid
+                projectId
+                targetBranch
+                updatedAt
+                diffStatsSummary {
+                  additions
+                  deletions
+                  fileCount
+                }
+                diffStats {
+                  path
+                  additions
+                  deletions
+                }
+              }
+            }
+          }
+        }
+        """
+
+        url = "https://gitlab.com/api/graphql"
+
+        headers = {
+            "Private-Token": self.api_token,
+        }
+        variables = {"project_path": project_path, "mr_iid": mr_iid}
+        response = requests.post(
+            url, json={"query": query}, headers=headers, timeout=10, variables=variables
+        )
+
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except ValueError:  # JSON was bad
+                logging.error(f"Json didn't parse for mr: {project_path}/{mr_iid}")
+                return {}
+        else:
+            logging.warn(
+                f"Received {response.status_code} for mr: {project_path}/{mr_iid}"
+            )
             return {}
