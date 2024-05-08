@@ -150,6 +150,7 @@ models:
 
   - name: mart_processed_cba_monthly
     description: '{{ doc("mart_processed_cba_monthly") }}'
+    columns:
         - name: period
           description: Accounting period
           tests:
@@ -181,6 +182,7 @@ models:
 
   - name: mart_invoices_in_preview_monthly
     description: '{{ doc("mart_invoices_in_preview_monthly") }}'
+    columns:
         - name: period
           description: Accounting period
           tests:
