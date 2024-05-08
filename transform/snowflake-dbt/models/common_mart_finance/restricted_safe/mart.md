@@ -39,3 +39,9 @@ Compare balances and count per segment vs. the total balances for all open invoi
 Compare balances and count per path vs. the total balances for all open invoices monthly; period indicates accounting period in the billing system
 
 {% enddocs %}
+
+{% docs mart_booking_billing_ar_monthly %}
+
+Comparison of booking, invoicing and payment amounts and counts
+
+{% enddocs %}
