@@ -129,4 +129,20 @@ models:
         - name: period
           tests:
             - not_null
-          tags: [ "tdf", "mart", "zuora" ]           
+          tags: [ "tdf", "mart", "zuora" ] 
+        - name: sales_type
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]    
+
+  - name: mart_booking_by_payment_schedule_opportunity_category_monthly
+    description: '{{ doc("mart_booking_by_payment_schedule_opportunity_category_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: standard_booking_count
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]             
