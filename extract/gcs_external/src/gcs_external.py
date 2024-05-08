@@ -9,6 +9,7 @@ from yaml import safe_load, YAMLError
 
 config_dict = env.copy()
 
+
 def get_export(export_name: str, config_path: str) -> dict:
     """
     retrieve export record attributes from gcs_external.yml
@@ -20,8 +21,8 @@ def get_export(export_name: str, config_path: str) -> dict:
         except YAMLError as exc:
             print(exc)
 
-    project = stream['project']
-    gcp_credentials = stream['credentials']
+    project = stream["project"]
+    gcp_credentials = stream["credentials"]
     export = [
         export
         for export in stream["exports"]
@@ -39,7 +40,7 @@ def get_billing_data_query(
     """
     sql to run in bigquery for daily partition
     """
-    
+
     if export.get("partition_date_part") == None:
         partition = export_date
     elif export["partition_date_part"] == "d":
@@ -73,16 +74,19 @@ def run_export(
     GIT_BRANCH = config_dict["GIT_BRANCH"]
 
     if GIT_BRANCH != "master":
-        export["bucket_path"] = f"{export['bucket_path']}/{GIT_BRANCH}"
+        root_dir = export["bucket_path"].index("/", len("gs://"))
+        export["bucket_path"] = (
+            export["bucket_path"][:root_dir]
+            + f"/{GIT_BRANCH}"
+            + export["bucket_path"][root_dir:]
+        )
 
     sql_statement = get_billing_data_query(export["bucket_path"], export, export_date)
 
     logging.info(sql_statement)
     logging.info(f"authenticating with {gcp_credentials}")
-    
-    credentials = json.loads(
-        config_dict[gcp_credentials], strict=False
-    )
+
+    credentials = json.loads(config_dict[gcp_credentials], strict=False)
     bq = BigQueryClient(credentials)
     result = bq.get_result_from_sql(
         sql_statement,
