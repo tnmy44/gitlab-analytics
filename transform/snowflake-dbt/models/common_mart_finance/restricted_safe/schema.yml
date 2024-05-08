@@ -112,7 +112,7 @@ models:
           tags: [ "tdf", "mart", "atr" ]
 
   - name: mart_processed_refunds_monthly
-    description: View sum of refund amounts processed monthly; period indicates accounting period in the billing system
+    description: '{{ doc("mart_processed_refunds_monthly") }}'
     columns:
         - name: period
           description: Accounting period
