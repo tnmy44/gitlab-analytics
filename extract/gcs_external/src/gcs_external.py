@@ -1,6 +1,8 @@
 import json
 import logging
 from os import environ as env
+from typing import Tuple
+
 import fire
 from google.cloud import bigquery
 
@@ -10,7 +12,7 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
-def get_export(export_name: str, config_path: str) -> tuple[str, str, dict]:
+def get_export(export_name: str, config_path: str) -> Tuple[str, str, dict]:
     """
     retrieve export record attributes as well as gcp project and credentials from gcs_external.yml
     """
