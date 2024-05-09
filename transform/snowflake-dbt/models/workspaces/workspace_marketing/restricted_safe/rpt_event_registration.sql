@@ -10,9 +10,9 @@
     ('mart_crm_person','mart_crm_person'),
     ('sfdc_campaign_member','sfdc_campaign_member'),
     ('mart_crm_account','mart_crm_account'),
-    ('sfdc_campaign_member', 'sfdc_campaign_member')
-    ('WK_MARKETO_ACTIVITY_FILL_OUT_FORM', 'WK_MARKETO_ACTIVITY_FILL_OUT_FORM')
-    ('WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN', 'WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN')
+    ('sfdc_campaign_member', 'sfdc_campaign_member'),
+    ('WK_MARKETO_ACTIVITY_FILL_OUT_FORM', 'wk_marketo_activity_fill_out_form'),
+    ('WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN', 'wk_marketo_activity_add_to_sfdc_campaign')
   ]) 
 }}
 
