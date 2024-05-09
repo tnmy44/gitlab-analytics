@@ -229,3 +229,98 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "zuora" ]
+
+  - name: mart_current_ar_by_aging_payment_terms
+    description: '{{ doc("mart_current_ar_by_aging_payment_terms") }}'
+    columns:
+        - name: dim_invoice_id
+          tests:
+            - not_null
+            - unique
+          tags: [ "tdf", "mart", "zuora" ]     
+        - name: balance
+          tests:
+            - not_null   
+
+  - name: mart_booking_by_order_type_monthly
+    description: '{{ doc("mart_booking_by_order_type_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ] 
+        - name: sales_type
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]    
+
+  - name: mart_booking_by_payment_schedule_opportunity_category_monthly
+    description: '{{ doc("mart_booking_by_payment_schedule_opportunity_category_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: standard_booking_count
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+
+  - name: mart_collections_monthly
+    description: '{{ doc("mart_collections_monthly") }}'
+    columns:
+        - name: payment_period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: billed_period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]    
+
+  - name: mart_cdot_invoices_manual_intervention_monthly
+    description: '{{ doc("mart_cdot_invoices_manual_intervention_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+            - unique
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: count_all_cdot_invoices
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]
+
+  - name: mart_public_sector_ar_monthly
+    description: '{{ doc("mart_public_sector_ar_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: total_balance_per_segment
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+
+  - name: mart_web_direct_vs_sales_assisted_ar_monthly
+    description: '{{ doc("mart_web_direct_vs_sales_assisted_ar_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+        - name: total_balance_per_path
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "zuora" ]   
+
+  - name: mart_booking_billing_ar_monthly
+    description: '{{ doc("mart_booking_billing_ar_monthly") }}'
+    columns:
+        - name: period
+          tests:
+            - not_null
+            - unique
+          tags: [ "tdf", "mart", "zuora" ]   
+
