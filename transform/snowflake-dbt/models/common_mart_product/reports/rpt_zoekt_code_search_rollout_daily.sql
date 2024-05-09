@@ -1,7 +1,7 @@
 {{
   config(
     materialized='incremental',
-    unique_key = "report_date",
+    unique_key = "zoekt_rollout_category_report_date_dim_namespace_id",
     full_refresh = false,
     on_schema_change = "sync_all_columns",
     tags=["product"]
@@ -20,6 +20,8 @@
 
   SELECT DISTINCT
     dim_namespace.dim_namespace_id,
+    dim_namespace.ultimate_parent_namespace_id,
+    dim_namespace.created_at::DATE                                              AS namespace_created_date,
     dim_namespace.namespace_type,
     dim_namespace.visibility_level,
     dim_namespace.namespace_creator_is_blocked,
@@ -48,10 +50,14 @@
   LEFT JOIN gitlab_dotcom_zoekt_indices AS zoekt_enabled_namespaces_indices
     ON zoekt_enabled_namespaces_indices.namespace_id = zoekt_enabled_namespaces.root_namespace_id
 
-), grouped AS (
+), final AS (
 
   SELECT
+    {{ dbt_utils.generate_surrogate_key(["report_date", "dim_namespace_id", "zoekt_rollout_categories"]) }} AS zoekt_rollout_category_report_date_dim_namespace_id,
     CURRENT_DATE()                   AS report_date,
+    dim_namespace_id,
+    ultimate_parent_namespace_id,
+    namespace_created_date,
     namespace_type,
     visibility_level,
     namespace_creator_is_blocked,
@@ -61,15 +67,13 @@
     current_gitlab_plan_title,
     search,
     zoekt_rollout_categories,
-    COUNT(DISTINCT dim_namespace_id) AS namespace_count
   FROM zoekt_rollout_category
-  GROUP BY ALL
 )
 
 {{ dbt_audit(
-    cte_ref="grouped",
+    cte_ref="final",
     created_by="@utkarsh060",
     updated_by="@utkarsh060",
     created_date="2024-05-07",
-    updated_date="2024-05-07"
+    updated_date="2024-05-09"
 ) }}

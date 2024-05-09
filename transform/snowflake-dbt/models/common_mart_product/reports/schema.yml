@@ -1959,6 +1959,12 @@ models:
 - name: rpt_zoekt_code_search_rollout_daily
   description: '{{ doc("rpt_zoekt_code_search_rollout_daily") }}'
   columns:
+    - name: dim_namespace_id
+      description: '{{ ("dim_namespace_id") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: namespace_created_date
+      description: '{{ doc("namespace_created_date") }}'
     - name: namespace_type
       description: '{{ doc("namespace_type") }}'
     - name: visibility_level

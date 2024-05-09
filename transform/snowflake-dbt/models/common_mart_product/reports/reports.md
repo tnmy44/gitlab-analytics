@@ -540,7 +540,7 @@ This model aggregates the SaaS-equivalent Event-based Redis counters at the name
 
 {% docs rpt_zoekt_code_search_rollout_daily %}
 
-This model aggregates the daily count of namespaces by various dimensions such as `zoekt_rollout_category` to monitor Zoekt rollout over time.
+This model categorizes GitLab namespaces based on their Zoekt search engine rollout status as of the report date by joining data from various source tables tracking Zoekt indexing and enablement status to monitor Zoekt rollout over time.
 
 **Note:** 
 - This model is set to never full refresh in order to prevent accidental loss of the [historical data](https://docs.getdbt.com/blog/change-data-capture) as there's no way to re-calculate prior versions without snapshots
@@ -548,6 +548,7 @@ This model aggregates the daily count of namespaces by various dimensions such a
 
 **Intended Usage:**
 
-This model is intended to enable reporting and analysis on the Zoekt rollout over time.
+This model is intended to provide visibility into the state of the ongoing Zoekt adoption across all namespaces over time.
+_Note: Once the Zoekt rollout is complete, revisit the cadence of this model in FY26Q1 to determine if it needs to be rebuilt less frequently or retired._
 
 {% enddocs %}
