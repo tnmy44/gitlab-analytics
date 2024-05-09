@@ -121,7 +121,7 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
         AND NOT (dim_product_detail.product_rate_plan_name = 'True-Up (Annual) - Dedicated - Ultimate'
                 AND arr = 0)   
         -- updated in https://gitlab.com/gitlab-data/analytics/-/issues/20559
-        AND NOT (dim_product_detail.product_category = 'Add On Services'
+        AND NOT (dim_product_detail.product_tier_name = 'Not Applicable'
                 AND arr = 0)      
         AND DATE_TRUNC('MONTH', CURRENT_DATE) > arr_month
       {{ dbt_utils.group_by(n=4)}}
