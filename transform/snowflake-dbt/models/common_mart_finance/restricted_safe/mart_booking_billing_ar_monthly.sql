@@ -3,7 +3,15 @@
     tags=["mnpi"]
 ) }}
 
-WITH opportunity_data AS (
+{{ simple_cte([
+    ('fct_crm_opportunity', 'fct_crm_opportunity'),
+    ('fct_invoice', 'fct_invoice'),
+    ('dim_invoice', 'dim_invoice'),
+    ('fct_payment', 'fct_payment'),
+    ('dim_date', 'dim_date')
+]) }},
+
+opportunity_data AS (
 
 /* Table providing opportunity amounts */
 
@@ -11,7 +19,7 @@ WITH opportunity_data AS (
     DATE_TRUNC('month', close_date) AS opportunity_close_month,
     SUM(amount)                     AS booking_amount,
     COUNT(amount)                   AS booking_count
-  FROM {{ ref('fct_crm_opportunity') }}
+  FROM fct_crm_opportunity
   WHERE is_closed_won = TRUE
   GROUP BY opportunity_close_month
 
@@ -27,8 +35,9 @@ invoice_data AS (
     SUM(fct_invoice.amount_without_tax)                           AS invoice_amount_without_tax,
     SUM(fct_invoice.amount) - SUM(fct_invoice.amount_without_tax) AS invoice_tax_amount,
     COUNT(fct_invoice.amount)                                     AS invoice_count
-  FROM {{ ref('dim_invoice') }}
-    JOIN {{ ref('fct_invoice') }} ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
+  FROM dim_invoice
+    JOIN fct_invoice 
+      ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
   WHERE dim_invoice.status = 'Posted'
   GROUP BY invoice_month
 
@@ -42,7 +51,7 @@ payment_data AS (
     DATE(DATE_TRUNC('month', payment_date)) AS payment_month,
     SUM(payment_amount)                     AS payment_amount,
     COUNT(payment_amount)                   AS payment_count
-  FROM {{ ref('fct_payment') }}
+  FROM fct_payment
   WHERE payment_status = 'Processed'
   GROUP BY payment_month
 
@@ -71,9 +80,12 @@ final AS (
     COALESCE(payment_data.payment_count, 0)              AS payment_count
 
   FROM opportunity_data
-  FULL OUTER JOIN invoice_data ON opportunity_data.opportunity_close_month = invoice_data.invoice_month
-  FULL OUTER JOIN payment_data ON opportunity_data.opportunity_close_month = payment_data.payment_month
-  LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = period
+  FULL OUTER JOIN invoice_data 
+    ON opportunity_data.opportunity_close_month = invoice_data.invoice_month
+  FULL OUTER JOIN payment_data 
+    ON opportunity_data.opportunity_close_month = payment_data.payment_month
+  LEFT JOIN dim_date 
+    ON dim_date.date_actual = period
   ORDER BY period
 
 )

@@ -3,7 +3,14 @@
     tags=["mnpi"]
 ) }}
 
-WITH segment AS (
+{{ simple_cte([
+    ('fct_invoice_aging_detail', 'fct_invoice_aging_detail'),
+    ('dim_crm_opportunity', 'dim_crm_opportunity'),
+    ('dim_invoice', 'dim_invoice'),
+    ('dim_date', 'dim_date')
+]) }},
+
+segment AS (
 
 /* Determine purchase segment of open invoices monthly */
 
@@ -16,9 +23,11 @@ WITH segment AS (
         THEN 'PubSec'
       ELSE 'Non-PubSec'
     END                                                                            AS segment
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('dim_crm_opportunity') }} ON dim_invoice.invoice_number = dim_crm_opportunity.invoice_number
+  FROM fct_invoice_aging_detail
+  LEFT JOIN dim_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+  LEFT JOIN dim_crm_opportunity 
+    ON dim_invoice.invoice_number = dim_crm_opportunity.invoice_number
 
 ),
 
@@ -32,7 +41,7 @@ balance_per_segment AS (
     SUM(segment.account_balance_impact)   AS total_balance_per_segment,
     COUNT(segment.account_balance_impact) AS invoice_count_per_segment
   FROM segment
-  GROUP BY segment.period, segment.segment
+  {{ dbt_utils.group_by(n=2)}}
   ORDER BY segment.period, segment.segment
 
 ),
@@ -45,7 +54,7 @@ total AS (
     DATE(DATE_TRUNC('month', fct_invoice_aging_detail.accounting_period_end_date)) AS period,
     SUM(account_balance_impact)                                                    AS total_all_balance,
     COUNT(account_balance_impact)                                                  AS count_all_open_invoices
-  FROM {{ ref('fct_invoice_aging_detail') }}
+  FROM fct_invoice_aging_detail
   GROUP BY period
 
 ),
@@ -72,8 +81,10 @@ final AS (
     balance_per_segment.invoice_count_per_segment                                                   AS invoice_count_per_segment
 
   FROM balance_per_segment
-  LEFT JOIN total ON balance_per_segment.period = total.period
-  LEFT JOIN {{ ref('dim_date') }} ON balance_per_segment.period = dim_date.date_actual
+  LEFT JOIN total 
+    ON balance_per_segment.period = total.period
+  LEFT JOIN dim_date 
+    ON balance_per_segment.period = dim_date.date_actual
 
 )
 

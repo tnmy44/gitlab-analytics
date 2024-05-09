@@ -3,7 +3,13 @@
     tags=["mnpi"]
 ) }}
 
-WITH purchase_path AS (
+{{ simple_cte([
+    ('fct_invoice_aging_detail', 'fct_invoice_aging_detail'),
+    ('dim_invoice', 'dim_invoice'),
+    ('dim_date', 'dim_date')
+]) }},
+
+purchase_path AS (
 
 /* Determine purchase path of open invoices monthly */
 
@@ -18,8 +24,9 @@ WITH purchase_path AS (
         THEN 'CDot'
       ELSE 'Sales Assisted'
     END AS purchase_path
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+  FROM fct_invoice_aging_detail
+  LEFT JOIN dim_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
 
 ),
 
@@ -33,7 +40,7 @@ balance_per_purchase_path AS (
     SUM(purchase_path.account_balance_impact)   AS total_balance_per_path,
     COUNT(purchase_path.account_balance_impact) AS invoice_count_per_path
   FROM purchase_path
-  GROUP BY purchase_path.accounting_period_end_date, purchase_path.purchase_path
+  {{ dbt_utils.group_by(n=2)}}
   ORDER BY purchase_path.accounting_period_end_date, purchase_path.purchase_path
 
 ),
@@ -46,7 +53,7 @@ total AS (
     accounting_period_end_date    AS period,
     SUM(account_balance_impact)   AS total_all_balance,
     COUNT(account_balance_impact) AS count_all_open_invoices
-  FROM {{ ref('fct_invoice_aging_detail') }}
+  FROM fct_invoice_aging_detail
   GROUP BY period
 
 ),
@@ -73,8 +80,10 @@ final AS (
     balance_per_purchase_path.invoice_count_per_path
 
   FROM balance_per_purchase_path
-  LEFT JOIN total ON balance_per_purchase_path.accounting_period_end_date = total.period
-  LEFT JOIN {{ ref('dim_date') }} ON balance_per_purchase_path.accounting_period_end_date = dim_date.date_actual
+  LEFT JOIN total 
+    ON balance_per_purchase_path.accounting_period_end_date = total.period
+  LEFT JOIN dim_date 
+    ON balance_per_purchase_path.accounting_period_end_date = dim_date.date_actual
 
 )
 

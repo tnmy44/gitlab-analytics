@@ -3,19 +3,29 @@
     tags=["mnpi"]
 ) }}
 
-WITH invoice_detail AS (
+{{ simple_cte([
+    ('fct_invoice_payment', 'fct_invoice_payment'),
+    ('dim_invoice', 'dim_invoice'),
+    ('fct_invoice', 'fct_invoice'),
+    ('fct_payment', 'fct_payment'),
+    ('dim_date', 'dim_date')
+]) }},
+
+invoice_detail AS (
 
 /* Selecting the applied payment amount with status ‘processed’, invoice month and payment month */
 
   SELECT
-    DATE(DATE_TRUNC('month', dim_invoice.invoice_date)) AS invoice_period,
     DATE(DATE_TRUNC('month', fct_payment.payment_date)) AS payment_period,
+    DATE(DATE_TRUNC('month', dim_invoice.invoice_date)) AS invoice_period,
     SUM(fct_invoice_payment.invoice_payment_amount)     AS payment_applied_to_invoice
-  FROM {{ ref('fct_invoice_payment') }}
-  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_payment.dim_invoice_id = dim_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('fct_payment') }} ON fct_invoice_payment.payment_id = fct_payment.payment_id
+  FROM fct_invoice_payment
+  LEFT JOIN dim_invoice 
+    ON fct_invoice_payment.dim_invoice_id = dim_invoice.dim_invoice_id
+  LEFT JOIN fct_payment 
+    ON fct_invoice_payment.payment_id = fct_payment.payment_id
   WHERE fct_payment.payment_status = 'Processed'
-  GROUP BY payment_period, invoice_period
+  {{ dbt_utils.group_by(n=2)}}
   ORDER BY payment_period, invoice_period
 
 ),
@@ -27,8 +37,9 @@ total_billed AS (
   SELECT
     DATE(DATE_TRUNC('month', dim_invoice.invoice_date)) AS billed_period,
     SUM(fct_invoice.amount)                             AS total_billed
-  FROM {{ ref('dim_invoice') }}
-    JOIN {{ ref('fct_invoice') }} ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
+  FROM dim_invoice
+    JOIN fct_invoice 
+      ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
   WHERE dim_invoice.status = 'Posted'
   GROUP BY billed_period
 
@@ -54,8 +65,10 @@ final AS (
     ROUND(((invoice_detail.payment_applied_to_invoice / total_billed.total_billed) * 100), 2) AS percentage_payment_applied_to_billed
 
   FROM invoice_detail
-  LEFT JOIN total_billed ON invoice_detail.invoice_period = total_billed.billed_period
-  LEFT JOIN {{ ref('dim_date') }} ON invoice_detail.payment_period = dim_date.date_actual
+  LEFT JOIN total_billed 
+    ON invoice_detail.invoice_period = total_billed.billed_period
+  LEFT JOIN dim_date 
+    ON invoice_detail.payment_period = dim_date.date_actual
 
 )
 

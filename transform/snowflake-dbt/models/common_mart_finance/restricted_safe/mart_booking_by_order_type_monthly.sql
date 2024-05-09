@@ -3,7 +3,13 @@
     tags=["mnpi"]
 ) }}
 
-WITH basis AS (
+{{ simple_cte([
+    ('fct_crm_opportunity', 'fct_crm_opportunity'),
+    ('dim_crm_opportunity', 'dim_crm_opportunity'),
+    ('dim_date', 'dim_date')
+]) }},
+
+basis AS (
 
 /* Booking amount and count by sales type */
 
@@ -12,10 +18,11 @@ WITH basis AS (
     dim_crm_opportunity.sales_type                            AS sales_type,
     SUM(fct_crm_opportunity.amount)                           AS opportunity_amount,
     COUNT(fct_crm_opportunity.amount)                         AS opportunity_count
-  FROM {{ ref('fct_crm_opportunity') }}
-  LEFT JOIN {{ ref('dim_crm_opportunity') }} ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+  FROM fct_crm_opportunity
+  LEFT JOIN dim_crm_opportunity 
+    ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
   WHERE dim_crm_opportunity.is_won = TRUE
-  GROUP BY period, dim_crm_opportunity.sales_type
+  {{ dbt_utils.group_by(n=2)}}
   ORDER BY period, dim_crm_opportunity.sales_type
 
 ),
@@ -40,7 +47,7 @@ final AS (
     basis.opportunity_count         AS opportunity_count
 
   FROM basis
-  LEFT JOIN {{ ref('dim_date') }} ON basis.period = dim_date.date_actual
+  LEFT JOIN dim_date ON basis.period = dim_date.date_actual
 
 )
 

@@ -3,15 +3,22 @@
     tags=["mnpi"]
 ) }}
 
-WITH standard_booking AS (
+{{ simple_cte([
+    ('fct_crm_opportunity', 'fct_crm_opportunity'),
+    ('dim_crm_opportunity', 'dim_crm_opportunity'),
+    ('dim_date', 'dim_date')
+]) }},
+
+standard_booking AS (
 
 /* Prepaid sales_assisted non-ramp booking */
 
   SELECT
     DATE(DATE_TRUNC('month', fct_crm_opportunity.close_date)) AS period,
     COUNT(fct_crm_opportunity.amount)                         AS standard_booking_count
-  FROM {{ ref('fct_crm_opportunity') }}
-  LEFT JOIN {{ ref('dim_crm_opportunity') }} ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+  FROM fct_crm_opportunity
+  LEFT JOIN dim_crm_opportunity 
+    ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
   WHERE dim_crm_opportunity.opportunity_category = 'Standard'
     AND (dim_crm_opportunity.payment_schedule = 'Prepaid' OR dim_crm_opportunity.payment_schedule = 'AWS Prepay' OR dim_crm_opportunity.payment_schedule = 'GCP Prepay')
     AND dim_crm_opportunity.is_won = TRUE
@@ -30,8 +37,9 @@ all_bookings AS (
   SELECT
     DATE(DATE_TRUNC('month', fct_crm_opportunity.close_date)) AS period,
     COUNT(fct_crm_opportunity.amount)                         AS all_sales_assisted_booking_count
-  FROM {{ ref('fct_crm_opportunity') }}
-  LEFT JOIN {{ ref('dim_crm_opportunity') }} ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+  FROM fct_crm_opportunity
+  LEFT JOIN dim_crm_opportunity 
+    ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
   WHERE dim_crm_opportunity.is_won = TRUE
     AND dim_crm_opportunity.is_web_portal_purchase = FALSE
   GROUP BY period
@@ -57,8 +65,10 @@ final AS (
     ROUND(((standard_booking.standard_booking_count / all_bookings.all_sales_assisted_booking_count) * 100), 2) AS percentage_standard,
     100 - percentage_standard                                                                                   AS percentage_non_standard
   FROM standard_booking
-  LEFT JOIN all_bookings ON standard_booking.period = all_bookings.period
-  LEFT JOIN {{ ref('dim_date') }} ON standard_booking.period = dim_date.date_actual
+  LEFT JOIN all_bookings 
+    ON standard_booking.period = all_bookings.period
+  LEFT JOIN dim_date 
+    ON standard_booking.period = dim_date.date_actual
   ORDER BY all_bookings.period
 
 )

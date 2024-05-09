@@ -3,14 +3,22 @@
     tags=["mnpi"]
 ) }}
 
-WITH cdot_created_invoices AS (
+{{ simple_cte([
+    ('dim_invoice', 'dim_invoice'),
+    ('fct_invoice_item_adjustment', 'fct_invoice_item_adjustment'),
+    ('fct_credit_balance_adjustment', 'fct_credit_balance_adjustment'),
+    ('fct_refund_invoice_payment', 'fct_refund_invoice_payment'),
+    ('dim_date', 'dim_date')
+]) }},
+
+cdot_created_invoices AS (
 
 /* Determine all invoices that were posted via CDot or API automation e.g. auto-renewal, QSR */
 
   SELECT
     DATE(DATE_TRUNC('month', invoice_date)) AS period,
     dim_invoice_id
-  FROM {{ ref('dim_invoice') }}
+  FROM dim_invoice
   WHERE status = 'Posted'
     AND (
       created_by_id = '2c92a0fd55822b4d015593ac264767f2'
@@ -26,10 +34,13 @@ manually_modified_invoices AS (
   SELECT DISTINCT
     DATE(DATE_TRUNC('month', invoice_date)) AS period,
     dim_invoice.dim_invoice_id
-  FROM {{ ref('dim_invoice') }}
-  LEFT JOIN {{ ref('fct_invoice_item_adjustment') }} ON dim_invoice.dim_invoice_id = fct_invoice_item_adjustment.dim_invoice_id
-  LEFT JOIN {{ ref('fct_credit_balance_adjustment') }} ON dim_invoice.dim_invoice_id = fct_credit_balance_adjustment.dim_invoice_id
-  LEFT JOIN {{ ref('fct_refund_invoice_payment') }} ON dim_invoice.dim_invoice_id = fct_refund_invoice_payment.dim_invoice_id
+  FROM dim_invoice
+  LEFT JOIN fct_invoice_item_adjustment 
+    ON dim_invoice.dim_invoice_id = fct_invoice_item_adjustment.dim_invoice_id
+  LEFT JOIN fct_credit_balance_adjustment 
+    ON dim_invoice.dim_invoice_id = fct_credit_balance_adjustment.dim_invoice_id
+  LEFT JOIN fct_refund_invoice_payment 
+    ON dim_invoice.dim_invoice_id = fct_refund_invoice_payment.dim_invoice_id
   WHERE dim_invoice.status = 'Posted'
     AND fct_invoice_item_adjustment.dim_invoice_id IS NULL
     AND fct_credit_balance_adjustment.dim_invoice_id IS NULL
@@ -48,7 +59,8 @@ cdot_invoices_manual_intervention_monthly AS (
     ROUND(((count_cdot_modified_invoices / count_all_cdot_invoices) * 100), 2)                     AS percentage_manually_modified_cdot_invoices
 
   FROM cdot_created_invoices
-  LEFT JOIN manually_modified_invoices ON cdot_created_invoices.dim_invoice_id = manually_modified_invoices.dim_invoice_id
+  LEFT JOIN manually_modified_invoices 
+    ON cdot_created_invoices.dim_invoice_id = manually_modified_invoices.dim_invoice_id
   GROUP BY cdot_created_invoices.period
   ORDER BY cdot_created_invoices.period
 
@@ -73,7 +85,8 @@ final AS (
     cdot_invoices_manual_intervention_monthly.percentage_manually_modified_cdot_invoices AS percentage_manually_modified_cdot_invoices
 
   FROM cdot_invoices_manual_intervention_monthly
-  LEFT JOIN {{ ref('dim_date') }} ON cdot_invoices_manual_intervention_monthly.period = dim_date.date_actual
+  LEFT JOIN dim_date 
+    ON cdot_invoices_manual_intervention_monthly.period = dim_date.date_actual
 
 )
 

@@ -3,7 +3,12 @@
     tags=["mnpi"]
 ) }}
 
-WITH ar_basis AS (
+{{ simple_cte([
+    ('dim_invoice', 'dim_invoice'),
+    ('fct_invoice', 'fct_invoice')
+]) }},
+
+ar_basis AS (
 
 /* Adding payment terms and days overdue to invoices */
 
@@ -14,8 +19,9 @@ WITH ar_basis AS (
     DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date) AS payment_terms,
     fct_invoice.balance                                           AS balance,
     fct_invoice.amount                                            AS invoice_amount
-  FROM {{ ref('dim_invoice') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
+  FROM dim_invoice
+  LEFT JOIN fct_invoice 
+    ON dim_invoice.dim_invoice_id = fct_invoice.dim_invoice_id
   WHERE dim_invoice.status = 'Posted'
     AND fct_invoice.balance > 0
 
