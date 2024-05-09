@@ -246,6 +246,7 @@
           THEN TRUE
         ELSE FALSE
       END AS is_created_through_deal_registration,
+      opp.resale_partner_name,
 
     --Person Data
       person_base.dim_crm_person_id,
@@ -394,7 +395,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=185)}}
+  {{dbt_utils.group_by(n=186)}}
     
 ), cohort_base_combined AS (
   
@@ -549,6 +550,7 @@
       null AS calculated_deal_count,
       null AS days_in_stage,
       null AS record_type_name,
+      null as resale_partner_name,
   
   --Touchpoint Data
       touchpoint_type,
@@ -764,6 +766,7 @@
       calculated_deal_count,
       days_in_stage,
       record_type_name,
+      resale_partner_name,
     
       --Touchpoint Data
       touchpoint_type,
@@ -1049,7 +1052,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2024-03-12",
+    updated_date="2024-05-06",
   ) }}

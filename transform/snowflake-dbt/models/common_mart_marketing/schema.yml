@@ -702,8 +702,8 @@ models:
           description: The Salesforce grade of the lead score for a lead/contact. 
         - name: is_defaulted_trial
           description: Boolean value of whether or not a lead/contact was defaulted to a trial.
-        - name: net_arr_stage_1
-          description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+        - name: resale_partner_name
+          description: The name of the resale partner on the opp. Often this will have a value for partner opps when the partner does not.
 
     - name: rpt_l2r_community_data
       description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 
