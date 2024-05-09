@@ -3,7 +3,14 @@
     tags=["mnpi"]
 ) }}
 
-WITH reseller AS (
+{{ simple_cte([
+    ('fct_invoice_aging_detail', 'fct_invoice_aging_detail'),
+    ('fct_invoice', 'fct_invoice'),
+    ('dim_billing_account', 'dim_billing_account'),
+    ('dim_date', 'dim_date')
+]) }},
+
+reseller AS (
 
 /* Assign reseller as channel */
 
@@ -15,9 +22,11 @@ WITH reseller AS (
         THEN 'Reseller'
       ELSE 'n/a'
     END                                                                            AS channel
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('dim_billing_account') }} ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+  FROM fct_invoice_aging_detail
+  LEFT JOIN fct_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
+  LEFT JOIN dim_billing_account 
+    ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
   WHERE dim_billing_account.ssp_channel = 'Reseller'
     AND (dim_billing_account.dim_billing_account_id != '2c92a00c6ccd018d016d02a684e036fa' AND dim_billing_account.dim_billing_account_id != '2c92a00872989ae10172a044c43758f6')
 
@@ -35,9 +44,11 @@ non_reseller AS (
         THEN 'Non-Reseller'
       ELSE 'n/a'
     END                                                                            AS channel
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('dim_billing_account') }} ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+  FROM fct_invoice_aging_detail
+  LEFT JOIN fct_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
+  LEFT JOIN dim_billing_account 
+    ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
   WHERE dim_billing_account.ssp_channel = 'Non-Reseller'
 
 ),
@@ -54,9 +65,11 @@ alliance AS (
         THEN 'Alliance'
       ELSE 'n/a'
     END                                                                            AS channel
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('fct_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('dim_billing_account') }} ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+  FROM fct_invoice_aging_detail
+  LEFT JOIN fct_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = fct_invoice.dim_invoice_id
+  LEFT JOIN dim_billing_account 
+    ON fct_invoice.dim_billing_account_id = dim_billing_account.dim_billing_account_id
   WHERE dim_billing_account.dim_billing_account_id = '2c92a00c6ccd018d016d02a684e036fa' OR dim_billing_account.dim_billing_account_id = '2c92a00872989ae10172a044c43758f6'
 
 ),
@@ -82,11 +95,11 @@ balance_per_ssp_channel AS (
 
   SELECT
     all_channels.period,
+    all_channels.channel,
     SUM(all_channels.balance)   AS total_balance_per_channel,
-    COUNT(all_channels.balance) AS invoice_count_per_channel,
-    all_channels.channel
+    COUNT(all_channels.balance) AS invoice_count_per_channel
   FROM all_channels
-  GROUP BY all_channels.period, all_channels.channel
+  {{ dbt_utils.group_by(n=2) }}
   ORDER BY all_channels.period, all_channels.channel
 
 ),
@@ -99,7 +112,7 @@ total AS (
     DATE(DATE_TRUNC('month', fct_invoice_aging_detail.accounting_period_end_date)) AS period,
     SUM(account_balance_impact)                                                    AS total_all_balance,
     COUNT(account_balance_impact)                                                  AS count_all_open_invoices
-  FROM {{ ref('fct_invoice_aging_detail') }}
+  FROM fct_invoice_aging_detail
   GROUP BY accounting_period_end_date
 
 ),
@@ -128,8 +141,10 @@ final AS (
     total.count_all_open_invoices                                                                       AS count_all_open_invoices
   
   FROM balance_per_ssp_channel
-  LEFT JOIN total ON balance_per_ssp_channel.period = total.period
-  LEFT JOIN {{ ref('dim_date') }} ON total.period = dim_date.date_actual
+  LEFT JOIN total 
+    ON balance_per_ssp_channel.period = total.period
+  LEFT JOIN dim_date 
+    ON total.period = dim_date.date_actual
   ORDER BY balance_per_ssp_channel.period, balance_per_ssp_channel.channel
 
 )
