@@ -19,6 +19,7 @@
 , zoekt_rollout_category AS (
 
   SELECT DISTINCT
+    CURRENT_DATE()                                                              AS report_date,
     dim_namespace.dim_namespace_id,
     dim_namespace.ultimate_parent_namespace_id,
     dim_namespace.created_at::DATE                                              AS namespace_created_date,
@@ -54,7 +55,7 @@
 
   SELECT
     {{ dbt_utils.generate_surrogate_key(["report_date", "dim_namespace_id", "zoekt_rollout_categories"]) }} AS zoekt_rollout_category_report_date_dim_namespace_id,
-    CURRENT_DATE()                   AS report_date,
+    report_date,
     dim_namespace_id,
     ultimate_parent_namespace_id,
     namespace_created_date,
