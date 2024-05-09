@@ -12,7 +12,7 @@ config_dict = env.copy()
 
 def get_export(export_name: str, config_path: str) -> tuple[str, str, dict]:
     """
-    retrieve export record attributes from gcs_external.yml
+    retrieve export record attributes as well as gcp project and credentials from gcs_external.yml
     """
 
     with open(config_path, "r") as yaml_file:
