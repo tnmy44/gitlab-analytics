@@ -43,8 +43,10 @@ final AS (
     END                                                                            AS aging_bucket
     
   FROM fct_invoice_aging_detail
-  LEFT JOIN dim_invoice ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
-  LEFT JOIN dim_date ON dim_date.date_actual = period
+  LEFT JOIN dim_invoice 
+    ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+  LEFT JOIN dim_date 
+    ON dim_date.date_actual = period
 
 )
 

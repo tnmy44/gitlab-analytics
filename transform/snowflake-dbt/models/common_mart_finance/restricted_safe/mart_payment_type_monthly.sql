@@ -13,7 +13,7 @@ WITH payment_by_type AS (
     SUM(fct_payment.payment_amount)                     AS payment_amount_by_type,
     COUNT(fct_payment.payment_amount)                   AS number_of_payments_by_type
   FROM {{ ref('fct_payment') }}
-  GROUP BY period, payment_type
+  {{ dbt_utils.group_by(n=2)}}
   ORDER BY period, payment_type
 
 ),
@@ -56,8 +56,10 @@ final AS (
     ROUND(((payment_by_type.number_of_payments_by_type / all_payments.total_number_of_payments) * 100), 2) AS percentage_payment_by_type_count
   
   FROM payment_by_type
-  LEFT JOIN all_payments ON payment_by_type.period = all_payments.period
-  LEFT JOIN {{ ref('dim_date') }} ON payment_by_type.period = dim_date.date_actual
+  LEFT JOIN all_payments 
+    ON payment_by_type.period = all_payments.period
+  LEFT JOIN {{ ref('dim_date') }} 
+    ON payment_by_type.period = dim_date.date_actual
   ORDER BY payment_by_type.period, payment_by_type.payment_type
 
 )
