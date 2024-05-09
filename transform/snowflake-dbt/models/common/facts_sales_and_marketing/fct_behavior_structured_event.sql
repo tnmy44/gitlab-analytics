@@ -23,6 +23,8 @@ structured_event_renamed AS (
       tracker_version,
       dim_behavior_event_sk,
       event_value,
+      event_label,
+      clean_event_label,
       is_staging_event,
       contexts,
       dvce_created_tstamp,
@@ -42,6 +44,7 @@ structured_event_renamed AS (
       dim_behavior_operating_system_sk,
       dim_behavior_website_page_sk,
       dim_behavior_referrer_page_sk,
+      dim_user_location_sk,
       gitlab_standard_context,
       gsc_environment,
       gsc_extra,
@@ -56,6 +59,7 @@ structured_event_renamed AS (
       user_city, 
       user_country,
       user_region,
+      user_region_name,
       user_timezone_name,
       has_performance_timing_context, 
       has_web_page_context,
@@ -160,6 +164,7 @@ structured_events_w_dim AS (
       events_with_plan.dim_behavior_referrer_page_sk,
       events_with_plan.dim_behavior_browser_sk,
       events_with_plan.dim_behavior_operating_system_sk,
+      events_with_plan.dim_user_location_sk,
       events_with_plan.gsc_namespace_id                     AS dim_namespace_id,
       events_with_plan.gsc_project_id                       AS dim_project_id,
       events_with_plan.dim_behavior_event_sk,
@@ -182,6 +187,8 @@ structured_events_w_dim AS (
       events_with_plan.page_url_scheme,
       events_with_plan.page_url_host,
       events_with_plan.page_url_fragment,
+      events_with_plan.event_label,
+      events_with_plan.clean_event_label,
       events_with_plan.event_value,
       events_with_plan.is_staging_event,
 
@@ -209,6 +216,7 @@ structured_events_w_dim AS (
       events_with_plan.user_city, 
       events_with_plan.user_country,
       events_with_plan.user_region,
+      events_with_plan.user_region_name,
       events_with_plan.user_timezone_name,
 
       -- Degenerate Dimensions (Experiment)
@@ -284,12 +292,13 @@ structured_events_w_dim AS (
 
     FROM events_with_plan
 
+
 )
 
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-04-23"
+    updated_date="2024-05-09"
 ) }}
