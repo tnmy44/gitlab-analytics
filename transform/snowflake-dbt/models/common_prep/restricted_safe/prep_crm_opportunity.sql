@@ -233,7 +233,7 @@
       live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
       live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
       live_date.last_day_of_fiscal_quarter                                                                  AS snapshot_last_day_of_fiscal_quarter,
-      sfdc_account.account_geo                                                                              AS parent_crm_account_geo,
+      sfdc_account.parent_crm_account_geo                                                                   AS parent_crm_account_geo,
       account_owner.crm_user_sales_segment                                                                  AS crm_account_owner_sales_segment,
       account_owner.crm_user_geo                                                                            AS crm_account_owner_geo,
       account_owner.crm_user_region                                                                         AS crm_account_owner_region,
@@ -1321,13 +1321,6 @@ LEFT JOIN cw_base
             THEN calculated_deal_count
         ELSE NULL
       END                                                         AS closed_opps_in_snapshot_quarter,
-
-      CASE
-        WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
-          AND is_win_rate_calc = TRUE
-            THEN calculated_deal_count * net_arr
-        ELSE NULL
-      END                                                         AS closed_net_arr_in_snapshot_quarter,
 
       CASE
         WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
