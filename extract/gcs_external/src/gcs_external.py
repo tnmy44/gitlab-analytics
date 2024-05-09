@@ -36,7 +36,7 @@ def get_billing_data_query(
     export: dict,
 ) -> str:
     """
-    sql to run in bigquery for daily partition
+    get sql command, with approprirate target to run in bigquery for daily partition
     """
 
     EXPORT_DATE = config_dict["EXPORT_DATE"]
@@ -74,7 +74,7 @@ def run_export(
     export_name: str,
 ):
     """
-    run sql command in bigquery
+    run export command in bigquery
     """
 
     project, gcp_credentials, export = get_export(export_name, config_path)
