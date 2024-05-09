@@ -10809,7 +10809,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-      - General SAFE Access      
+      - General SAFE Access
   - user_name: rcallam
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -11017,3 +11017,19 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: prodopoulos
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: yoi
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Customer Success All Access
+      - Sales All Access
