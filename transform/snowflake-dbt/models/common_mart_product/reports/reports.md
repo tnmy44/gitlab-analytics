@@ -505,6 +505,7 @@ and `suggestion_rejected` events. The explanation is in [this issue comment](htt
 can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md)
 
 {% enddocs %}
+
 {% docs rpt_user_based_metric_counts_namespace_monthly %}
 
 This model aggregates the SaaS-equivalent User-based Redis counters at the namespace level.
