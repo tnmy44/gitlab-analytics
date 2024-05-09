@@ -3,7 +3,13 @@
     tags=["mnpi"]
 ) }}
 
-WITH final AS (
+{{ simple_cte([
+    ('fct_invoice_aging_detail', 'fct_invoice_aging_detail'),
+    ('dim_invoice', 'dim_invoice'),
+    ('dim_date', 'dim_date')
+]) }},
+
+final AS (
 
 /* View of historical balances with payment terms and aging bucket by month */
 
@@ -36,9 +42,9 @@ WITH final AS (
       ELSE 'n/a'
     END                                                                            AS aging_bucket
     
-  FROM {{ ref('fct_invoice_aging_detail') }}
-  LEFT JOIN {{ ref('dim_invoice') }} ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
-  LEFT JOIN {{ ref('dim_date') }} ON dim_date.date_actual = period
+  FROM fct_invoice_aging_detail
+  LEFT JOIN dim_invoice ON fct_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+  LEFT JOIN dim_date ON dim_date.date_actual = period
 
 )
 
@@ -46,6 +52,6 @@ WITH final AS (
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-05-07",
-updated_date="2024-05-07"
+created_date="2024-05-09",
+updated_date="2024-05-09"
 ) }}
