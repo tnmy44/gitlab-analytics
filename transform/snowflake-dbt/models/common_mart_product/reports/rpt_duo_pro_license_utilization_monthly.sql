@@ -117,7 +117,8 @@ duo_pro_seat_assignments AS ( -- CTE to get number of seats assigned per namepsa
 
   SELECT
     m.namespace_id,
-    COUNT(DISTINCT a.user_id) AS number_of_seats_assigned,
+    COUNT(DISTINCT a.user_id) 
+      AS number_of_seats_assigned,
     p.purchase_xid -- subscription name
   FROM gitlab_dotcom_subscription_user_add_on_assignments AS a
   INNER JOIN gitlab_dotcom_subscription_add_on_purchases AS p
@@ -133,31 +134,40 @@ duo_pro_seat_assignments AS ( -- CTE to get number of seats assigned per namepsa
 dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
 
   SELECT
-    DATE_TRUNC(MONTH, e.behavior_date)                      AS reporting_month,
+    DATE_TRUNC(MONTH, behavior_date)                        
+      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                                               AS unit_primitive_group,
-    'chat'                                                  AS primitive,
-    ZEROIFNULL(COUNT(DISTINCT e.gsc_pseudonymized_user_id))
+    'duo pro'                                               
+      AS unit_primitive_group,
+    'chat'                                                  
+      AS primitive,
+    ZEROIFNULL(COUNT(DISTINCT gsc_pseudonymized_user_id))
       AS count_active_users
-  FROM dotcom_duo_pro_monthly_seats AS duo_pro
-  INNER JOIN mart_behavior_structured_event AS e
-    ON duo_pro.product_entity_id = e.ultimate_parent_namespace_id
-  WHERE e.event_action = 'request_duo_chat_response'
-    AND e.behavior_at >= '2024-04-11' -- event was implemented in production
+  FROM mart_behavior_structured_event, lateral flatten(input => contexts:data[0]:data:feature_enabled_by_namespace_ids) AS f  --GSC_FEATURE_ENABLED_BY_NAMESPACE_IDS is a VARCHAR datatype, so I need to use the value from contexts here
+  INNER JOIN dotcom_duo_pro_monthly_seats AS duo_pro
+    ON duo_pro.product_entity_id = f.value
+  WHERE event_action = 'request_duo_chat_response'
+    AND behavior_at >= '2024-04-11' -- event was implemented in production
+    AND f.value IS NOT NULL
   GROUP BY ALL
+
 
 ),
 
 sm_dedicated_chat_users AS ( -- sm & dedicated chat 28d count unique users with subscriptions
 
   SELECT DISTINCT
-    p.ping_created_date_month  AS reporting_month,
+    p.ping_created_date_month  
+      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                  AS unit_primitive_group,
-    'chat'                     AS primitive,
-    ZEROIFNULL(p.metric_value) AS count_active_users
+    'duo pro'                  
+      AS unit_primitive_group,
+    'chat'                     
+      AS primitive,
+    ZEROIFNULL(p.metric_value) 
+      AS count_active_users
   FROM sm_dedicated_duo_pro_monthly_seats AS duo_pro
   INNER JOIN mart_ping_instance_metric_28_day AS p
     ON duo_pro.product_entity_id = p.dim_installation_id
@@ -171,11 +181,14 @@ sm_dedicated_chat_users AS ( -- sm & dedicated chat 28d count unique users with 
 dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscriptions - first step is to flatten on the entity id
 
   SELECT
-    DATE_TRUNC(month, behavior_date)      AS reporting_month,
+    DATE_TRUNC(month, behavior_date)      
+      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                             AS unit_primitive_group,
-    'code suggestions'                    AS primitive,
+    'duo pro'                             
+      AS unit_primitive_group,
+    'code suggestions'                    
+      AS primitive,
     COUNT(DISTINCT gitlab_global_user_id) 
       AS count_active_users
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => ultimate_parent_namespace_ids) AS f
@@ -192,11 +205,14 @@ dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscript
 sm_dedicated_cs_users AS ( -- sm & dedicated chat code suggestions users with subscriptions - first step is to flatten on the entity id
 
   SELECT
-    DATE_TRUNC(month, behavior_date)      AS reporting_month,
+    DATE_TRUNC(month, behavior_date)      
+      AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                             AS unit_primitive_group,
-    'code suggestions'                    AS primitive,
+    'duo pro'                             
+      AS unit_primitive_group,
+    'code suggestions'                    
+      AS primitive,
     COUNT(DISTINCT gitlab_global_user_id)  
       AS count_active_users
   FROM mart_behavior_structured_event_code_suggestion, LATERAL FLATTEN(input => dim_installation_ids) AS f
@@ -264,7 +280,7 @@ final AS (
       AS paid_duo_pro_seats,
     MAX(CASE WHEN a.product_deployment = 'SaaS' THEN ZEROIFNULL(s.number_of_seats_assigned)
            ELSE null END)            
-      AS number_of_seats_assigned,  -- only available for dotcom data - all SM/Dedicated deployments will show null  
+      AS count_seats_assigned,  -- only available for dotcom data - all SM/Dedicated deployments will show null  
     ZEROIFNULL(MAX(IFF(u.primitive = 'chat', ZEROIFNULL(u.count_active_users), NULL)))
       AS chat_active_users,
     ZEROIFNULL(MAX(IFF(u.primitive = 'code suggestions', ZEROIFNULL(u.count_active_users), NULL)))
@@ -273,8 +289,12 @@ final AS (
       AS max_duo_pro_active_users,
     ZEROIFNULL(max_duo_pro_active_users / paid_duo_pro_seats)
       AS pct_usage_seat_utilization,
-    number_of_seats_assigned / paid_duo_pro_seats
-      AS pct_assignment_seat_utilization  -- only available for dotcom data - all SM/Dedicated deployments will show null                                   
+    IFF(pct_usage_seat_utilization > 1, 1, pct_usage_seat_utilization)
+      AS standard_pct_usage_seat_utilization,
+    count_seats_assigned / paid_duo_pro_seats
+      AS pct_assignment_seat_utilization,  -- only available for dotcom data - all SM/Dedicated deployments will show null     
+    IFF(pct_assignment_seat_utilization > 1, 1,  pct_assignment_seat_utilization)
+      AS standard_pct_assignment_seat_utilization,
   FROM all_monthly_duo_pro_seats AS a
   LEFT JOIN unit_primitive_group_product_usage AS u
     ON a.reporting_month = u.reporting_month
