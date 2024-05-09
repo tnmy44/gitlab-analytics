@@ -21,28 +21,30 @@ class GitLabAPI:
             end.replace("+", "%2B"),
         )
         url = f"https://gitlab.com/api/v4/projects/{project_id}/merge_requests?updated_after={start_query_param}&updated_before={end_query_param}&page={page}"
-        response = requests.get(url, headers={"Private-Token": self.api_token})
+        response = requests.get(
+            url, headers={"Private-Token": self.api_token}, timeout=20
+        )
 
         if response.status_code == 200:
             mr_json_list = response.json()
             return [mr[mr_attribute_key] for mr in mr_json_list]
-        else:
-            logging.warn(
-                f"Request for merge requests from project id {project_id} resulted in a code {response.status_code}."
-            )
+        logging.warn(
+            f"Request for merge requests from project id {project_id} resulted in a code {response.status_code}."
+        )
         return []
 
     def get_attributes_for_mrs_for_project(
         self, project_id: str, start: str, end: str, mr_attribute_key
     ) -> List[str]:
         """
-        This function returns all of the URLs of the merge requests updated in a specific timeframe for the specified project.
+        This function returns all of the URLs of the merge requests updated
+        in a specific timeframe for the specified project.
         """
         aggregated_result: List[str] = []
         current_page_number = 1
         while True:
-            current_result = self.get_urls_for_mrs_paged_for_project(
-                project_id, start, end, current_page_number
+            current_result = self.get_attributes_for_mrs_paged_for_project(
+                project_id, start, end, mr_attribute_key, current_page_number
             )
             aggregated_result = aggregated_result + current_result
             current_page_number = current_page_number + 1
@@ -51,11 +53,16 @@ class GitLabAPI:
 
     def get_mr_webpage(self, mr_url: str) -> Dict[Any, Any]:
         """
-        Gets the diff JSON for the merge request by making a request to /diffs.json appended to the url.
-        If the HTTP response is non-200 or the JSON could not be parsed, an empty dictionary is returned.
+        Gets the diff JSON for the merge request by making a request
+        to /diffs.json appended to the url.
+
+        If the HTTP response is non-200 or the JSON could not be parsed,
+        an empty dictionary is returned.
         """
         url = f"{mr_url}/diffs.json"
-        response = requests.get(url, headers={"Private-Token": self.api_token})
+        response = requests.get(
+            url, headers={"Private-Token": self.api_token}, timeout=20
+        )
 
         if response.status_code == 200:
             try:
@@ -69,8 +76,11 @@ class GitLabAPI:
 
     def get_mr_graphsql(self, project_path: str, mr_iid: int) -> Dict[Any, Any]:
         """
-        Gets the diff JSON for the merge request by making a request to /diffs.json appended to the url.
-        If the HTTP response is non-200 or the JSON could not be parsed, an empty dictionary is returned.
+        Gets the diff JSON for the merge request by making a request to
+        /diffs.json appended to the url.
+
+        If the HTTP response is non-200 or the JSON could not be parsed,
+        an empty dictionary is returned.
         """
 
         query = """
@@ -105,7 +115,10 @@ class GitLabAPI:
         }
         variables = {"project_path": project_path, "mr_iid": mr_iid}
         response = requests.post(
-            url, json={"query": query}, headers=headers, timeout=10, variables=variables
+            url,
+            json={"query": query, "variables": variables},
+            headers=headers,
+            timeout=10,
         )
 
         if response.status_code == 200:

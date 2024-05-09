@@ -25,7 +25,7 @@ def get_product_project_list() -> List[str]:
     Extracts the part of product CSV and returns the unique project_ids listed in the CSV.
     """
     url = "https://gitlab.com/gitlab-data/analytics/raw/master/transform/snowflake-dbt/data/projects_part_of_product.csv"
-    csv_bytes = requests.get(url).content
+    csv_bytes = requests.get(url, timeout=20).content
     df = pd.read_csv(io.StringIO(csv_bytes.decode("utf-8")))
     df = df.drop_duplicates(subset=[PROJECT_ID_KEY])
     project_list = df[[PROJECT_ID_KEY, PROJECT_PATH_KEY]].to_dict(orient="records")
@@ -33,7 +33,11 @@ def get_product_project_list() -> List[str]:
 
 
 def verify_mr_information(
-    pulled_mrs: int, project_id: int, snowflake_engine: Engine, start: str, end: str
+    pulled_mrs: int,
+    mr_project_id: int,
+    snowflake_engine: Engine,
+    mr_start: str,
+    mr_end: str,
 ) -> None:
     """
     Gets number of MRs present from gitlab_db for the same timeframe.
@@ -42,14 +46,14 @@ def verify_mr_information(
     count_query = f"""
         SELECT count(distinct id)
         FROM RAW.TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS
-        WHERE updated_at BETWEEN '{start}' AND '{end}'
-        AND target_project_id = {project_id}
+        WHERE updated_at BETWEEN '{mr_start}' AND '{mr_end}'
+        AND target_project_id = {mr_project_id}
     """
     result_set = query_executor(snowflake_engine, count_query)
     checked_mr_count = result_set[0][0]
     if checked_mr_count != pulled_mrs:
         logging.warn(
-            f"Project {project_id} MR counts didn't match: pulled {pulled_mrs}, see {checked_mr_count} in database."
+            f"Project {mr_project_id} MR counts didn't match: pulled {pulled_mrs}, see {checked_mr_count} in database."
         )
 
 
@@ -117,7 +121,7 @@ if __name__ == "__main__":
 
         wrote_to_file = False
 
-        with open(file_name, "w") as out_file:
+        with open(file_name, "w", encoding="utf-8") as out_file:
             for mr_attribute in mr_attributes:
                 if extract_name == "handbook":
                     # mr_attribute=mr_web_url
