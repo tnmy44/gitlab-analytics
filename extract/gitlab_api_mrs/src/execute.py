@@ -73,7 +73,7 @@ if __name__ == "__main__":
     extract_name = sys.argv[1]
 
     configurations_dict: Dict[str, Any] = {
-        "part_of_product_graphsql": {
+        "part_of_product_graphql": {
             "file_name": "part_of_product_mrs.json",
             "project_list": get_product_project_list(),
             "schema": "engineering_extracts",
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                     mr_information = api_client.get_mr_webpage(mr_attribute)
                 else:
                     # mr_attribute=mr_iid
-                    mr_information = api_client.get_mr_graphsql(
+                    mr_information = api_client.get_mr_graphql(
                         project_path, mr_attribute
                     )
                 if mr_information:

@@ -74,10 +74,10 @@ class GitLabAPI:
             logging.warn(f"Received {response.status_code} for mr: {mr_url}")
             return {}
 
-    def get_mr_graphsql(self, project_path: str, mr_iid: int) -> Dict[Any, Any]:
+    def get_mr_graphql(self, project_path: str, mr_iid: int) -> Dict[Any, Any]:
         """
         Gets the diff JSON for the merge request by making a request to
-        Graphsql endpoint
+        Graphql endpoint
 
         If the HTTP response is non-200 or the JSON could not be parsed,
         an empty dictionary is returned.
@@ -90,6 +90,7 @@ class GitLabAPI:
               nodes {
                 iid
                 projectId
+                webPath
                 targetBranch
                 updatedAt
                 diffStatsSummary {
