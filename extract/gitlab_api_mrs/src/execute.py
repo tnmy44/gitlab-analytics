@@ -103,7 +103,7 @@ if __name__ == "__main__":
     # mr_attributes is either a list of mr_iid or mr_web_url
     mr_attribute_key = configuration["mr_attribute_key"]
 
-    api_token = env["GITLAB_COM_API_TOKEN"]
+    api_token = config_dict["GITLAB_COM_API_TOKEN"]
     api_client = GitLabAPI(api_token)
 
     for project_list_d in configuration["project_list"]:
@@ -115,9 +115,11 @@ if __name__ == "__main__":
             project_id, start, end, mr_attribute_key
         )
 
+        """
         verify_mr_information(
             len(mr_attributes), project_id, snowflake_engine, start, end
         )
+        """
 
         wrote_to_file = False
 

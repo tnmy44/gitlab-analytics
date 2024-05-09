@@ -77,14 +77,14 @@ class GitLabAPI:
     def get_mr_graphsql(self, project_path: str, mr_iid: int) -> Dict[Any, Any]:
         """
         Gets the diff JSON for the merge request by making a request to
-        /diffs.json appended to the url.
+        Graphsql endpoint
 
         If the HTTP response is non-200 or the JSON could not be parsed,
         an empty dictionary is returned.
         """
 
         query = """
-        {
+        query GetMergeRequests($project_path: ID!, $mr_iid: String!) {
           project(fullPath: $project_path) {
             mergeRequests(iids: [$mr_iid]) {
               nodes {
@@ -113,7 +113,7 @@ class GitLabAPI:
         headers = {
             "Private-Token": self.api_token,
         }
-        variables = {"project_path": project_path, "mr_iid": mr_iid}
+        variables = {"project_path": project_path, "mr_iid": str(mr_iid)}
         response = requests.post(
             url,
             json={"query": query, "variables": variables},
