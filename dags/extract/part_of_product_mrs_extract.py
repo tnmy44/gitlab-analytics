@@ -45,7 +45,7 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gitlab_api_mrs/src/execute.py part_of_product
+    python gitlab_api_mrs/src/execute.py part_of_product_graphsql
 """
 
 # Create the DAG

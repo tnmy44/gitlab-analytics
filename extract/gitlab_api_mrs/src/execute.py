@@ -73,7 +73,7 @@ if __name__ == "__main__":
     extract_name = sys.argv[1]
 
     configurations_dict: Dict[str, Any] = {
-        "part_of_product": {
+        "part_of_product_graphsql": {
             "file_name": "part_of_product_mrs.json",
             "project_list": get_product_project_list(),
             "schema": "engineering_extracts",
@@ -141,6 +141,6 @@ if __name__ == "__main__":
             snowflake_stage_load_copy_remove(
                 file_name,
                 f"raw.{schema}.{stage}",
-                f"{schema}.{extract_name}_merge_requests_graphsql",
+                f"{schema}.{extract_name}_merge_requests",
                 snowflake_engine,
             )
