@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH prep_ci_runner AS (
 
   SELECT
@@ -64,7 +68,7 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2021-06-23",
-    updated_date="2024-04-26"
+    updated_date="2024-05-08"
 ) }}

@@ -134,6 +134,8 @@ models:
         description: The partner associated with this campaign through Vartopia.
       - name: mdf_request_id
         description: The ID MDF Request that funded the campaign for MDF Campaigns.
+      - name: resale_partner_name
+        description: The name of the resale partner on the opp. Often this will have a value for partner opps when the partner does not.
 
   - name: prep_crm_person
     description: '{{ doc("prep_crm_person") }}'
