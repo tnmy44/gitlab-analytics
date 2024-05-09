@@ -92,6 +92,7 @@ class GitLabAPI:
                 projectId
                 webPath
                 targetBranch
+                createdAt
                 updatedAt
                 diffStatsSummary {
                   additions

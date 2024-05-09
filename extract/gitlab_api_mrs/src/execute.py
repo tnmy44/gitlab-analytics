@@ -68,7 +68,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     start = config_dict["START"]
+    logging.info(f"\nstart: {start}")
     end = config_dict["END"]
+    logging.info(f"\nend: {end}")
 
     extract_name = sys.argv[1]
 
