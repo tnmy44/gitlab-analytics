@@ -10,7 +10,7 @@ from yaml import safe_load, YAMLError
 config_dict = env.copy()
 
 
-def get_export(export_name: str, config_path: str) -> dict:
+def get_export(export_name: str, config_path: str) -> tuple[str, str, dict]:
     """
     retrieve export record attributes from gcs_external.yml
     """
