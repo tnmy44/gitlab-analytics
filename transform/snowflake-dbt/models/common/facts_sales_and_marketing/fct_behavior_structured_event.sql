@@ -23,6 +23,8 @@ structured_event_renamed AS (
       tracker_version,
       dim_behavior_event_sk,
       event_value,
+      event_label,
+      clean_event_label,
       is_staging_event,
       contexts,
       dvce_created_tstamp,
@@ -185,8 +187,8 @@ structured_events_w_dim AS (
       events_with_plan.page_url_scheme,
       events_with_plan.page_url_host,
       events_with_plan.page_url_fragment,
-      dim_behavior_event.event_label,
-      dim_behavior_event.clean_event_label,
+      events_with_plan.event_label,
+      events_with_plan.clean_event_label,
       events_with_plan.event_value,
       events_with_plan.is_staging_event,
 
@@ -289,8 +291,6 @@ structured_events_w_dim AS (
       events_with_plan.has_ide_extension_version_context
 
     FROM events_with_plan
-    LEFT JOIN {{ ref('dim_behavior_event') }}
-      ON events_with_plan.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
 
 
 )
@@ -300,5 +300,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-05-08"
+    updated_date="2024-05-09"
 ) }}
