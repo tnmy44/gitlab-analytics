@@ -1622,6 +1622,28 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 {% enddocs %}
 
+{% docs fct_behavior_structured_event_30 %}
+
+**Description:** Derived fact table containing quantitative data for both staging and non-staging snowplow structured events for the **last 30 days**.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+- This model only includes structured events for the last 30 days
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
 {% docs dim_behavior_operating_system %}
 
 **Description:** Dimension containing operating system and device attributes for the analysis of Snowplow events.

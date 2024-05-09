@@ -156,9 +156,11 @@ def main():
     #
     logging.info(f"users_to_remove: {users_to_remove}")
 
-    sysadmin_connection = SnowflakeConnection(config_dict, "SYSADMIN", is_test_run)
-    deprovision_users(sysadmin_connection, users_to_remove)
-    sysadmin_connection.dispose_engine()
+    securityadmin_connection = SnowflakeConnection(
+        config_dict, "SECURITYADMIN", is_test_run
+    )
+    deprovision_users(securityadmin_connection, users_to_remove)
+    securityadmin_connection.dispose_engine()
 
 
 if __name__ == "__main__":
