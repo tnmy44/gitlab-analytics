@@ -50,7 +50,7 @@ class GitLabAPI:
             current_page_number = current_page_number + 1
             if not current_result:
                 logging.info(
-                    f"All {mr_attribute_key} for project_id {project_id}: {aggregated_result}"
+                    f"All MR {mr_attribute_key} for project_id {project_id}: {aggregated_result}"
                 )
                 return aggregated_result
 
@@ -128,7 +128,7 @@ class GitLabAPI:
 
         if response.status_code == 200:
             try:
-                return response.json()
+                data = response.json()
             except ValueError:  # JSON was bad
                 logging.error(f"Json didn't parse for mr: {project_path}/{mr_iid}")
                 return {}
@@ -137,3 +137,15 @@ class GitLabAPI:
                 f"Received {response.status_code} for mr: {project_path}/{mr_iid}"
             )
             return {}
+
+        # Check the grapql result for any NULL values
+        if not data.get("data", {}).get("project"):
+            logging.error(f"Invalid project_path: {project_path}")
+            return {}
+        if not data["data"]["project"].get("mergeRequests", {}).get("nodes"):
+            logging.error(
+                f"Invalid merge_request_id {mr_iid} for project {project_path}"
+            )
+            return {}
+
+        return data
