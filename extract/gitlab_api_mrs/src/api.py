@@ -49,6 +49,9 @@ class GitLabAPI:
             aggregated_result = aggregated_result + current_result
             current_page_number = current_page_number + 1
             if not current_result:
+                logging.info(
+                    f"All {mr_attribute_key} for project_id {project_id}: {aggregated_result}"
+                )
                 return aggregated_result
 
     def get_mr_webpage(self, mr_url: str) -> Dict[Any, Any]:
