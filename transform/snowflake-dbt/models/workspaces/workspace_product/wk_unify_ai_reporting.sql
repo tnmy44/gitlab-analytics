@@ -468,6 +468,7 @@ d.date_day,
 metrics.event_label AS ai_feature,
 metrics.plan,
 metrics.internal_or_external,
+'Gitlab.com' AS delivery_type,
 metrics.metric_value,
 metrics.metric
 FROM
@@ -475,10 +476,58 @@ PROD.common.dim_date d
 LEFT JOIN metrics ON d.date_day = metrics._date 
 WHERE
 d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
-)
 
+UNION ALL 
+
+SELECT 
+p.ping_created_date_month AS date_day,
+'chat' AS ai_feature,
+p.ping_product_tier AS plan,
+'External' AS internal_or_external,
+p.delivery_type,
+COALESCE(p.metric_value,0)::INT,
+'MAU' AS metric
+FROM 
+PROD.common_mart.mart_ping_instance_metric p
+WHERE
+  p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_month = TRUE
+  AND p.ping_created_date_month > '2024-01-01'
+  AND p.ping_deployment_type != 'Gitlab.com'
+  AND p.ping_deployment_type != 'GitLab.com'
+
+UNION ALL 
+
+SELECT 
+p.ping_created_date_week AS date_day,
+'chat' AS ai_feature,
+p.ping_product_tier AS plan,
+'External' AS internal_or_external,
+p.delivery_type,
+COALESCE(p.metric_value,0)::INT,
+'WAU' AS metric
+FROM 
+PROD.common_mart.mart_ping_instance_metric p
+WHERE
+  p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_week = TRUE
+  AND p.ping_created_date_month > '2024-01-01'
+  AND p.ping_deployment_type != 'Gitlab.com'
+  AND p.ping_deployment_type != 'GitLab.com'
+), dedup AS 
+(
 SELECT
-*
+u.date_day,
+u.ai_feature,
+u.plan,
+u.internal_or_external,
+u.delivery_type,
+u.metric_value,
+u.metric
 FROM
 unify u 
 WHERE
@@ -487,3 +536,87 @@ AND
 u.metric_value IS NOT NULL
 AND
 u.metric IS NOT NULL
+AND
+u.ai_feature !='chat'
+AND 
+(u.metric!='WAU' OR u.metric!='MAU')
+AND
+u.plan != 'All'
+AND
+u.internal_or_external != 'All'
+AND
+u.delivery_type != 'All'
+
+
+UNION ALL 
+
+SELECT
+u.date_day,
+u.ai_feature,
+u.plan,
+u.internal_or_external,
+u.delivery_type,
+SUM(u.metric_value) + SUM(u2.metric_value),
+u.metric
+FROM
+unify u 
+LEFT JOIN unify u2 
+  ON u.date_day = u2.date_day 
+  AND u.ai_feature = u2.ai_features
+  AND u.plan = u.plan
+  AND u.internal_or_external = u2.internal_or_external
+  AND u.delivery_type = u2.delivery_type
+  AND u.metric = u2.metricWHERE
+u.date_day < CURRENT_DATE()
+AND
+u.metric_value IS NOT NULL
+AND
+u.ai_feature ='chat'
+AND 
+u.metric='WAU'
+AND
+u.plan = 'All'
+AND
+u.internal_or_external = 'All'
+AND
+u.delivery_type = 'All'
+
+UNION ALL 
+
+SELECT
+u.date_day,
+u.ai_feature,
+u.plan,
+u.internal_or_external,
+u.delivery_type,
+SUM(u.metric_value) + SUM(u2.metric_value),,
+u.metric
+FROM
+unify u 
+LEFT JOIN unify u2 
+  ON u.date_day = u2.date_day 
+  AND u.ai_feature = u2.ai_features
+  AND u.plan = u.plan
+  AND u.internal_or_external = u2.internal_or_external
+  AND u.delivery_type = u2.delivery_type
+  AND u.metric = u2.metric
+WHERE
+u.date_day < CURRENT_DATE()
+AND
+u.metric_value IS NOT NULL
+AND
+u.ai_feature ='chat'
+AND 
+u.metric='MAU'
+AND
+u.plan = 'All'
+AND
+u.internal_or_external = 'All'
+AND
+u.delivery_type = 'All'
+)
+
+SELECT
+*
+FROM 
+dedup
