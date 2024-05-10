@@ -4,6 +4,7 @@ import logging
 import sys
 from os import environ as env
 from typing import Dict, Any, List
+from datetime import datetime
 
 import pandas as pd
 import requests
@@ -99,7 +100,9 @@ if __name__ == "__main__":
 
     configuration = configurations_dict[extract_name]
 
-    file_name: str = configuration["file_name"]  # type: ignore
+    # to make filename unique
+    current_ts = str(int(datetime.now().timestamp() * 1000))
+    file_name: str = f"{current_ts}_{configuration['file_name']}"  # type: ignore
     schema: str = configuration["schema"]
     stage: str = configuration["stage"]
     # mr_attributes is either a list of mr_iid or mr_web_url
