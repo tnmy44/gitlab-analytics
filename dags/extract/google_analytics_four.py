@@ -73,12 +73,12 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    # "retries": 1,
+    "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    # Only has data from March 2018
-    "start_date": datetime(2024, 4, 5),
+    # Only has data from Dec 13 2023
+    "start_date": datetime(2023, 12, 15),
 }
 
 dag = DAG(
