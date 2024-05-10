@@ -15,7 +15,9 @@ WITH snapshot_dates AS (
 
 ), final AS (
 
-    SELECT mart_available_to_renew_snapshot.*
+    SELECT 
+      mart_available_to_renew_snapshot.*,
+      snapshot_dates.first_day_of_month
     FROM mart_available_to_renew_snapshot
     INNER JOIN snapshot_dates
       ON mart_available_to_renew_snapshot.snapshot_date = snapshot_dates.snapshot_date_fpa
