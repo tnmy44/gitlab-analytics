@@ -53,7 +53,8 @@ dag = DAG(
     "part_of_product_mrs",
     default_args=default_args,
     schedule_interval="0 4 * * *",
-    catchup=False,
+    catchup=True,
+    max_active_runs=4,
 )
 
 # Task 1
