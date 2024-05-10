@@ -215,7 +215,7 @@ class InstanceNamespaceMetrics:
             insert_error_record = self.generate_error_insert(
                 metrics_name=name,
                 metrics_level=level,
-                metric_sql_select=sql_ready,
+                metric_sql_select=sql_select,
                 error_text=error_message,
             )
             conn.execute(insert_error_record)
