@@ -169,7 +169,7 @@ ORDER BY 1
 - Include subscriptions where:
   - `product_deployment_type IN ('Self-Managed', 'Dedicated')`
   - `subscription_status IN ('Active','Cancelled')`
-  - `product_tier_name <> 'Storage'`
+  - `product_tier_name NOT IN ('Storage', 'Not Applicable')`
 - `major_minor_version_id`, `version_is_prerelease`, and `instance_user_count` look at 'Last Ping of the Month' pings
 - Exclude the current month
 
