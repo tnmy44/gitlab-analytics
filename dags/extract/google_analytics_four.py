@@ -94,7 +94,7 @@ external_table_run_cmd = f"""
     dbt run-operation stage_external_sources \
         --args "select: source google_analytics_4_bigquery" --profiles-dir profile; ret=$?;
 """
-dbt_task_name = "dbt-gcp-billing-external-table-refresh"
+dbt_task_name = "dbt-google-analytics-four-external-table-refresh"
 dbt_external_table_run = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
