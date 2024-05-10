@@ -89,25 +89,25 @@ dag = DAG(
     catchup=True,
 )
 
-# external_table_run_cmd = f"""
-#     {dbt_install_deps_nosha_cmd} &&
-#     dbt run-operation stage_external_sources \
-#         --args "select: source gcp_billing" --profiles-dir profile; ret=$?;
-# """
-# dbt_task_name = "dbt-gcp-billing-external-table-refresh"
-# dbt_external_table_run = KubernetesPodOperator(
-#     **gitlab_defaults,
-#     image=DBT_IMAGE,
-#     task_id=dbt_task_name,
-#     trigger_rule="all_done",
-#     name=dbt_task_name,
-#     secrets=dbt_secrets,
-#     env_vars=gitlab_pod_env_vars,
-#     arguments=[external_table_run_cmd],
-#     affinity=get_affinity("dbt"),
-#     tolerations=get_toleration("dbt"),
-#     dag=dag,
-# )
+external_table_run_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    dbt run-operation stage_external_sources \
+        --args "select: source google_analytics_4_bigquery" --profiles-dir profile; ret=$?;
+"""
+dbt_task_name = "dbt-gcp-billing-external-table-refresh"
+dbt_external_table_run = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=dbt_task_name,
+    trigger_rule="all_done",
+    name=dbt_task_name,
+    secrets=dbt_secrets,
+    env_vars=gitlab_pod_env_vars,
+    arguments=[external_table_run_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
+    dag=dag,
+)
 
 spec_file = "gcs_external/src/google_analytics_four/gcs_external.yml"
 spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
@@ -152,4 +152,4 @@ for export in stream["exports"]:
         dag=dag,
     )
 
-    # billing_operator >> dbt_external_table_run
+    billing_operator >> dbt_external_table_run

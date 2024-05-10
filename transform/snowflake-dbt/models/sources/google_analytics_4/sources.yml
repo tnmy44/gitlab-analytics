@@ -23,7 +23,7 @@ sources:
           partitions:
             - name: date_part
               data_type: date
-              expression: to_date(split_part(metadata$filename, '/', 2),'YYYYMMDD')
+              expression: to_date(split_part(metadata$filename, '/', -2),'YYYYMMDD')
        
       - name: pseudonymous_users
         description: "Google Ananlytics 4 pseudonymous_users table"
@@ -33,5 +33,5 @@ sources:
           auto_refresh: false
           partitions:
             - name: date_part
-              data_type: varchar
-              expression: to_date(split_part(metadata$filename, '/', 2),'YYYYMMDD')
+              data_type: date
+              expression: to_date(split_part(metadata$filename, '/', -2),'YYYYMMDD')
