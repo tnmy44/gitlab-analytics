@@ -565,7 +565,7 @@ LEFT JOIN unify u2
   AND u.ai_feature = u2.ai_features
   AND u.plan = u.plan
   AND u.internal_or_external = u2.internal_or_external
-  AND u.delivery_type = u2.delivery_type
+  AND u2.delivery_type = 'Self-Managed'
   AND u.metric = u2.metricWHERE
 u.date_day < CURRENT_DATE()
 AND
@@ -589,7 +589,7 @@ u.ai_feature,
 u.plan,
 u.internal_or_external,
 u.delivery_type,
-SUM(u.metric_value) + SUM(u2.metric_value),,
+SUM(u.metric_value) + SUM(u2.metric_value),
 u.metric
 FROM
 unify u 
@@ -598,7 +598,7 @@ LEFT JOIN unify u2
   AND u.ai_feature = u2.ai_features
   AND u.plan = u.plan
   AND u.internal_or_external = u2.internal_or_external
-  AND u.delivery_type = u2.delivery_type
+  AND u2.delivery_type = 'Self-Managed'
   AND u.metric = u2.metric
 WHERE
 u.date_day < CURRENT_DATE()
