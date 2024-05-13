@@ -221,7 +221,7 @@
       ON dim_subscription_base.ramp_ssp_id = ramp_min_max_dates.ramp_ssp_id        
     WHERE dim_subscription_base.ramp_ssp_id IS NULL
      OR (dim_subscription_base.ramp_ssp_id IS NOT NULL 
-     AND max_term_end_date != term_end_date)  
+     AND max_term_end_date = term_end_date)  
    
 
   --ARR from charges and other columns as needed  
