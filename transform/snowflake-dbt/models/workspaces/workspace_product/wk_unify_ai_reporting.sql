@@ -562,7 +562,7 @@ FROM
 unify u 
 LEFT JOIN unify u2 
   ON u.date_day = u2.date_day 
-  AND u.ai_feature = u2.ai_features
+  AND u.ai_feature = u2.ai_feature
   AND u.plan = u.plan
   AND u.internal_or_external = u2.internal_or_external
   AND u2.delivery_type = 'Self-Managed'
@@ -596,7 +596,7 @@ FROM
 unify u 
 LEFT JOIN unify u2 
   ON u.date_day = u2.date_day 
-  AND u.ai_feature = u2.ai_features
+  AND u.ai_feature = u2.ai_feature
   AND u.plan = u.plan
   AND u.internal_or_external = u2.internal_or_external
   AND u2.delivery_type = 'Self-Managed'
