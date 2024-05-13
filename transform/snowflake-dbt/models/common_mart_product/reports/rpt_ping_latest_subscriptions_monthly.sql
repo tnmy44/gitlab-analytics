@@ -28,6 +28,7 @@ Determine latest version for each subscription to determine if the potential met
       ping_created_date_month           AS ping_created_date_month,
       dim_installation_id               AS dim_installation_id,
       latest_subscription_id            AS latest_subscription_id,
+      subscription_name                 AS subscription_name,
       ping_delivery_type                AS ping_delivery_type,
       ping_deployment_type              AS ping_deployment_type,
       ping_edition                      AS ping_edition,
@@ -50,6 +51,7 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
         ping_created_date_month           AS ping_created_date_month,
         dim_installation_id               AS dim_installation_id,
         latest_subscription_id            AS latest_subscription_id,
+        subscription_name                 AS subscription_name,
         ping_delivery_type                AS ping_delivery_type,
         ping_deployment_type              AS ping_deployment_type,
         ping_edition                      AS ping_edition,
@@ -57,7 +59,7 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
         major_minor_version_id            AS major_minor_version_id,
         MAX(instance_user_count)          AS instance_user_count
     FROM subscriptions_w_versions
-      {{ dbt_utils.group_by(n=8)}}
+      {{ dbt_utils.group_by(n=9)}}
 /*
 Get the count of pings each month per subscription_name_slugify
 */
@@ -131,6 +133,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     mart_charge_cleaned.arr_month                                                                           AS ping_created_date_month,
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_subscription_id,
+    subscription_name                                                                                       AS subscription_name,
     IFNULL(joined_subscriptions.ping_delivery_type, mart_charge_cleaned.product_delivery_type)              AS ping_delivery_type,
     IFNULL(joined_subscriptions.ping_deployment_type, mart_charge_cleaned.product_deployment_type)          AS ping_deployment_type,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
@@ -173,6 +176,7 @@ This CTE below grabs the missing installation/subs for each month missing from a
         ping_created_date_month                 AS ping_created_date_month,
         dim_installation_id                     AS dim_installation_id,
         latest_subscription_id                  AS latest_subscription_id,
+        subscription_name                       AS subscription_name,
         ping_delivery_type                      AS ping_delivery_type,
         ping_deployment_type                    AS ping_deployment_type,
         ping_edition                            AS ping_edition,
@@ -184,7 +188,7 @@ This CTE below grabs the missing installation/subs for each month missing from a
         WHERE is_last_ping_of_month = TRUE
           AND CONCAT(latest_subscription_id, to_varchar(ping_created_date_month)) NOT IN
             (SELECT DISTINCT(CONCAT(latest_subscription_id, to_varchar(ping_created_date_month))) FROM arr_counts_joined)
-          {{ dbt_utils.group_by(n=7)}}
+          {{ dbt_utils.group_by(n=8)}}
 
 /*
 Join to capture missing metrics, uses the last value found for these in fct_charge
@@ -208,6 +212,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         ping_created_date_month,
         dim_installation_id,
         latest_subscription_id,
+        subscription_name,
         ping_delivery_type,
         ping_deployment_type,
         ping_edition,
@@ -226,6 +231,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         ping_created_date_month,
         dim_installation_id,
         latest_subscription_id,
+        subscription_name,
         ping_delivery_type,
         ping_deployment_type,
         ping_edition,
@@ -245,6 +251,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         latest_subs_unioned.ping_created_date_month                                                                                                                               AS ping_created_date_month,
         latest_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
         latest_subs_unioned.latest_subscription_id                                                                                                                                AS latest_subscription_id,
+        latest_subs_unioned.subscription_name                                                                                                                                     AS subscription_name,
         latest_subs_unioned.ping_delivery_type                                                                                                                                    AS ping_delivery_type,
         latest_subs_unioned.ping_deployment_type                                                                                                                                  AS ping_deployment_type,
         latest_subs_unioned.ping_edition                                                                                                                                          AS ping_edition,
@@ -264,7 +271,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@chrissharp",
+     updated_by="@utkarsh060",
      created_date="2022-05-05",
-     updated_date="2024-02-21"
+     updated_date="2024-04-19"
  ) }}

@@ -144,6 +144,8 @@ models:
       description: '{{ doc("dim_installation_id") }}'
     - name: latest_subscription_id
       description: '{{ doc("latest_subscription_id") }}'
+    - name: subscription_name
+      description: '{{ doc("subscription_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
     - name: ping_deployment_type
@@ -1953,3 +1955,29 @@ models:
       description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+
+- name: rpt_zoekt_code_search_rollout_daily
+  description: '{{ doc("rpt_zoekt_code_search_rollout_daily") }}'
+  columns:
+    - name: dim_namespace_id
+      description: '{{ ("dim_namespace_id") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: namespace_created_date
+      description: '{{ doc("namespace_created_date") }}'
+    - name: namespace_type
+      description: '{{ doc("namespace_type") }}'
+    - name: visibility_level
+      description: '{{ doc("visibility_level") }}'
+    - name: namespace_creator_is_blocked
+      description: '{{ doc("namespace_creator_is_blocked") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_is_ultimate_parent
+      description: '{{ doc("namespace_is_ultimate_parent") }}'
+    - name: gitlab_plan_is_paid
+      description: '{{ doc("gitlab_plan_is_paid") }}'
+    - name: current_gitlab_plan_title
+      description: '{{ doc("plan_name_modified") }}'
+    - name: zoekt_rollout_categories
+      description: '{{ doc("zoekt_rollout_categories") }}'      

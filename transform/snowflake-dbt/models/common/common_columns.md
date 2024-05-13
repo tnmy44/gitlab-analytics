@@ -232,6 +232,12 @@ Boolean flag set to True if the ultimate parent namespace creator is in a 'block
 
 {% enddocs %}
 
+{% docs gitlab_plan_is_paid %}
+
+Indicates whether or not the namespace is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent. `NULL` if the namespace has been deleted.
+
+{% enddocs %}
+
 {% docs namespace_created_at %}
 
 The timestamp of the ultimate parent namespace creation
@@ -621,6 +627,12 @@ The [time frame](https://docs.gitlab.com/ee/development/service_ping/metrics_dic
 {% docs instance_user_count %}
 
 The number of active users existing in the installation. In this case "active" is referring to a user's state (ex. not blocked) as opposed to an indication of user activity with the product
+
+{% enddocs %}
+
+{% docs subscription_name %}
+
+If a subscription is linked to the license, name of the subscription, easily joined to `dim_subscription`, etc
 
 {% enddocs %}
 
@@ -1500,6 +1512,20 @@ An optional string which identifies the specific object being actioned. Example:
 Note: 
 - It is only populated for strutured events (`event=struct`)
 - The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% enddocs %}
+
+{% docs clean_event_label %}
+
+An optional string which identifies the specific object being actioned. Example: `invite_email`, `content_editor` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
+- It includes [REGEX logic](https://docs.snowflake.com/en/sql-reference/functions/regexp_like) to standardize the namespace identifiers in this field. 
+Example: If `REGEXP_LIKE(event_label, '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')` THEN `identifier_containing_numbers` ELSE `event_label`.
 
 {% enddocs %}
 

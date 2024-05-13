@@ -2066,19 +2066,6 @@ roles:
           read:
             - prep.google_search_console.*
             - raw.google_search_console.*
-  - grafana:
-      warehouses:
-        - grafana
-      privileges:
-        databases:
-          read:
-            - prod
-        schemas:
-          read:
-            - prod.legacy
-        tables:
-          read:
-            - prod.legacy.snowplow_page_views_all_grafana_spigot
   - greenhouse:
       warehouses:
         - dev_xs
@@ -2151,6 +2138,7 @@ roles:
             - prod.legacy
             - prod.workspace_marketing
             - prod.workspace_product
+            - prod.restricted_safe_workspace_marketing
         tables:
           read:
             - prep.gitlab_dotcom.gitlab_dotcom_users_source
@@ -2164,6 +2152,7 @@ roles:
             - prod.workspace_marketing.user_history
             - prod.workspace_marketing.user_unsubscribed_channel
             - prod.workspace_marketing.user_unsubscribed_message_type
+            - prod.restricted_safe_workspace_marketing.rpt_create_partner_touchpoints
   - influx_db:
       privileges:
         databases:
@@ -5519,6 +5508,7 @@ roles:
         - bamboohr_analytics
         - pto
         - workday
+        - prod_reporting_safe
       warehouses:
         - dev_xs
       owns:
@@ -5921,6 +5911,7 @@ roles:
         - reporter
         - restricted_safe
         - workday
+        - workday_hcm
       warehouses:
         - dev_xs
   - smishra:
@@ -6377,6 +6368,7 @@ roles:
   - wleidheiser:
       member_of:
         - reporter
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - wlin:
@@ -6446,6 +6438,16 @@ roles:
       member_of:
         - snowflake_analyst
         - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - sguyon:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - aspringfield:
+      member_of:
+        - snowflake_analyst
       warehouses:
         - dev_xs
 users:
@@ -6751,10 +6753,6 @@ users:
       can_login: true
       member_of:
         - sales_systems_snowflake_api_role
-  - grafana:
-      can_login: true
-      member_of:
-        - grafana
   - gweaver:
       can_login: true
       member_of:
@@ -7462,6 +7460,14 @@ users:
       can_login: true
       member_of:
         - kshirazi
+  - sguyon:
+      can_login: true
+      member_of:
+        - sguyon
+  - aspringfield:
+      can_login: true
+      member_of:
+        - aspringfield
 warehouses:
   - admin:
       size: x-small
@@ -7480,8 +7486,6 @@ warehouses:
   - gainsight_xs:
       size: x-small
   - gitlab_postgres:
-      size: x-small
-  - grafana:
       size: x-small
   - loading:
       size: x-small
