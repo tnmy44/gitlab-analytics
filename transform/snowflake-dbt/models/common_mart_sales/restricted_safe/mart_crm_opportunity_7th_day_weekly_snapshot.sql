@@ -7,7 +7,8 @@
     ('fct_crm_opportunity','fct_crm_opportunity_7th_day_weekly_snapshot'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
     ('dim_crm_user', 'dim_crm_user_daily_snapshot'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('dim_crm_user_hierarchy','dim_crm_user_hierarchy') 
 ]) }},
 
 final AS (
@@ -213,18 +214,17 @@ final AS (
         'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
     AS crm_account_user_sales_segment_region_grouped,
 
-    dim_crm_user_hierarchy.dim_crm_current_account_set_hierarchy_sk,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_sales_segment,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_geo,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_region,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_area,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_business_unit,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_name,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_1,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_2,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_3,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_4,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_5
+    dim_crm_user_hierarchy.crm_user_sales_segment                           AS dim_crm_current_account_set_sales_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                     AS dim_crm_current_account_set_geo,
+    dim_crm_user_hierarchy.crm_user_region                                  AS dim_crm_current_account_set_region,
+    dim_crm_user_hierarchy.crm_user_area                                    AS dim_crm_current_account_set_area,
+    dim_crm_user_hierarchy.crm_user_business_unit                           AS dim_crm_current_account_set_business_unit,
+    dim_crm_user_hierarchy.crm_user_role_name                               AS dim_crm_current_account_set_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                            AS dim_crm_current_account_set_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                            AS dim_crm_current_account_set_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                            AS dim_crm_current_account_set_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                            AS dim_crm_current_account_set_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                            AS dim_crm_current_account_set_role_level_5,
 
     -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
     fct_crm_opportunity.opportunity_owner_user_segment,
@@ -488,10 +488,6 @@ final AS (
     fct_crm_opportunity.created_deals_in_snapshot_quarter,
     fct_crm_opportunity.cycle_time_in_days_in_snapshot_quarter,
     fct_crm_opportunity.booked_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.created_arr,
-    fct_crm_opportunity.closed_won_opps,
-    fct_crm_opportunity.closed_opps,
-    fct_crm_opportunity.closed_net_arr,
     fct_crm_opportunity.arr_basis,
     fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
@@ -550,20 +546,6 @@ final AS (
   LEFT JOIN dim_crm_user AS account_owner_live
     ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
-  LEFT JOIN dim_sales_qualified_source
-    ON fct_crm_opportunity.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
-  LEFT JOIN dim_deal_path
-    ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
-  LEFT JOIN dim_order_type
-    ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
-  LEFT JOIN dim_order_type AS dim_order_type_live 
-    ON fct_crm_opportunity.dim_order_type_live_id = dim_order_type_live.dim_order_type_id
-  LEFT JOIN dim_dr_partner_engagement
-    ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
-  LEFT JOIN dim_alliance_type AS dim_alliance_type_current
-    ON fct_crm_opportunity.dim_alliance_type_current_id = dim_alliance_type_current.dim_alliance_type_id
-  LEFT JOIN dim_channel_type
-    ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
   LEFT JOIN dim_crm_user_hierarchy
     ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
   LEFT JOIN dim_date created_date

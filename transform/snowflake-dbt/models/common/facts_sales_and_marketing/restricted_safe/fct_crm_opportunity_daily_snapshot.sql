@@ -7,19 +7,16 @@
     ('sales_rep', 'prep_crm_user_daily_snapshot'),
     ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy'),
-    ('prep_date', 'prep_date')
-
+    ('prep_date', 'prep_date'),
+    ('prep_crm_account', 'prep_crm_account_daily_snapshot')
 ]) }},
 
 final AS (
 
   SELECT 
-    prep_crm_opportunity.dim_crm_account_id,
     prep_crm_opportunity.dim_crm_opportunity_id,
-    prep_crm_opportunity.dim_crm_user_id,
-    {# prep_crm_opportunity.dim_crm_account_user_id, #}
     prep_crm_opportunity.dim_parent_crm_opportunity_id,
-    {# {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_user_id') }}                                                           AS dim_crm_account_user_id, #}
+    {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_user_id') }}                                                       AS dim_crm_account_user_id,
     prep_crm_opportunity.dim_crm_account_id,
     prep_crm_opportunity.dim_crm_user_id,
     {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_hierarchy_id') }}                                                  AS dim_crm_opp_owner_user_hierarchy_id,
@@ -531,7 +528,6 @@ final AS (
     prep_crm_opportunity.sales_team_vp_level,
     prep_crm_opportunity.sales_team_avp_rd_level,
     prep_crm_opportunity.sales_team_asm_level,
-    prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
     prep_crm_opportunity.cycle_time_in_days,
     prep_crm_opportunity.created_arr_in_snapshot_quarter,
     prep_crm_opportunity.closed_won_opps_in_snapshot_quarter,
@@ -555,14 +551,15 @@ final AS (
   FROM prep_crm_opportunity
   LEFT JOIN prep_crm_user_hierarchy
     ON prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-  LEFT JOIN prep_crm_user_hierarchy AS account_hierarchy
-    ON prep_crm_account.dim_crm_parent_account_hierarchy_sk = account_hierarchy.dim_crm_user_hierarchy_sk
+  LEFT JOIN prep_crm_account
+    ON prep_crm_opportunity.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+      AND prep_crm_opportunity.snapshot_id = prep_crm_account.snapshot_id
   LEFT JOIN sales_rep
     ON prep_crm_opportunity.dim_crm_user_id = sales_rep.dim_crm_user_id
       AND prep_crm_opportunity.snapshot_id = sales_rep.snapshot_id
   LEFT JOIN sales_rep AS sales_rep_account
     ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id
-      AND prep_crm_opportunity.snapshot_id = sales_rep_account.snapshot_id
+      AND prep_crm_account.snapshot_id = sales_rep_account.snapshot_id
   LEFT JOIN prep_date
     ON prep_date.date_id = prep_crm_opportunity.close_date_id
   WHERE prep_crm_opportunity.is_live = 0
