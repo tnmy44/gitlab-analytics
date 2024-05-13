@@ -2153,7 +2153,6 @@ roles:
             - prod.workspace_marketing.user_unsubscribed_channel
             - prod.workspace_marketing.user_unsubscribed_message_type
             - prod.restricted_safe_workspace_marketing.rpt_create_partner_touchpoints
-
   - influx_db:
       privileges:
         databases:
@@ -6446,6 +6445,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - aspringfield:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7460,6 +7464,10 @@ users:
       can_login: true
       member_of:
         - sguyon
+  - aspringfield:
+      can_login: true
+      member_of:
+        - aspringfield
 warehouses:
   - admin:
       size: x-small
