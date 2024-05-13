@@ -16,17 +16,14 @@ final AS (
 
   SELECT
     -- keys and attributes
-    dim_sales_qualified_source_id,
-    dim_order_type_id,
-    dim_order_type_live_id,
     dim_crm_current_account_set_hierarchy_sk,
     order_type,
     order_type_live,
     order_type_grouped,
     stage_name,
-    deal_path_name,
+    deal_path,
     sales_type,
-    sales_qualified_source_name,
+    sales_qualified_source,
     sales_qualified_source_grouped,
 
     --dates
@@ -62,16 +59,11 @@ final AS (
     SUM(open_4plus_deal_count_in_snapshot_quarter)                     AS open_4plus_deal_count_in_snapshot_quarter,
 
     -- Additive fields
-    
-    SUM(created_arr)                                                   AS created_arr,
-    SUM(closed_won_opps)                                               AS closed_won_opps,
-    SUM(closed_opps)                                                   AS closed_opps,
-    SUM(closed_net_arr)                                                AS closed_net_arr,
     SUM(segment_order_type_iacv_to_net_arr_ratio)                      AS segment_order_type_iacv_to_net_arr_ratio,
     SUM(calculated_from_ratio_net_arr)                                 AS calculated_from_ratio_net_arr,
     SUM(net_arr)                                                       AS net_arr,
     SUM(raw_net_arr)                                                   AS raw_net_arr,
-    SUM(created_and_won_same_quarter_net_arr_combined)                 AS created_and_won_same_quarter_net_arr_combined,
+    SUM(created_and_won_same_quarter_net_arr)                          AS created_and_won_same_quarter_net_arr,
     SUM(new_logo_count)                                                AS new_logo_count,
     SUM(amount)                                                        AS amount,
     SUM(recurring_amount)                                              AS recurring_amount,

@@ -2,7 +2,8 @@
     ('fct_crm_opportunity','fct_crm_opportunity_7th_day_weekly_snapshot_aggregate'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
     ('dim_crm_user', 'prep_crm_user_daily_snapshot'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('dim_crm_user_hierarchy','dim_crm_user_hierarchy')
 ]) }},
 
 
@@ -10,31 +11,27 @@ final AS (
 
 
   SELECT
-    fct_crm_opportunity.dim_sales_qualified_source_id,
-    fct_crm_opportunity.dim_order_type_id,
-    fct_crm_opportunity.dim_order_type_live_id,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
-    
-    dim_crm_user_hierarchy.dim_crm_current_account_set_hierarchy_sk,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_sales_segment,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_geo,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_region,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_area,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_business_unit,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_name,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_1,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_2,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_3,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_4,
-    dim_crm_user_hierarchy.dim_crm_current_account_set_role_level_5
 
-    fct_crm_opportunity.sales_qualified_source_name,
+    dim_crm_user_hierarchy.crm_user_sales_segment                           AS dim_crm_current_account_set_sales_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                     AS dim_crm_current_account_set_geo,
+    dim_crm_user_hierarchy.crm_user_region                                  AS dim_crm_current_account_set_region,
+    dim_crm_user_hierarchy.crm_user_area                                    AS dim_crm_current_account_set_area,
+    dim_crm_user_hierarchy.crm_user_business_unit                           AS dim_crm_current_account_set_business_unit,
+    dim_crm_user_hierarchy.crm_user_role_name                               AS dim_crm_current_account_set_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                            AS dim_crm_current_account_set_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                            AS dim_crm_current_account_set_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                            AS dim_crm_current_account_set_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                            AS dim_crm_current_account_set_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                            AS dim_crm_current_account_set_role_level_5,
+
+    fct_crm_opportunity.sales_qualified_source,
     fct_crm_opportunity.sales_qualified_source_grouped,
     fct_crm_opportunity.order_type,
     fct_crm_opportunity.order_type_grouped,
     fct_crm_opportunity.order_type_live,
     fct_crm_opportunity.stage_name,
-    fct_crm_opportunity.deal_path_name,
+    fct_crm_opportunity.deal_path,
     fct_crm_opportunity.sales_type,
 
     fct_crm_opportunity.snapshot_date,
@@ -126,15 +123,11 @@ final AS (
     fct_crm_opportunity.created_deals_in_snapshot_quarter,
     fct_crm_opportunity.cycle_time_in_days_in_snapshot_quarter,
     fct_crm_opportunity.booked_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.created_arr,
-    fct_crm_opportunity.closed_won_opps,
-    fct_crm_opportunity.closed_opps,
-    fct_crm_opportunity.closed_net_arr,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
     fct_crm_opportunity.raw_net_arr,
-    fct_crm_opportunity.created_and_won_same_quarter_net_arr_combined,
+    fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
     fct_crm_opportunity.recurring_amount,
