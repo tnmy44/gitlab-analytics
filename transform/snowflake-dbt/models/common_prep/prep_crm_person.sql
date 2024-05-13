@@ -459,7 +459,7 @@ WITH biz_person AS (
         bizible_ad_campaign_name,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date ASC) AS touchpoint_order_by_person
+        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM PREP.SFDC.sfdc_contact_source
     LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
         ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
@@ -467,8 +467,28 @@ WITH biz_person AS (
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
         AND marketo_qualified_lead_date IS NOT null
-        AND bizible_touchpoint_date > marketo_qualified_lead_date
-    ORDER BY bizible_touchpoint_date ASC
+        AND bizible_touchpoint_date <= marketo_qualified_lead_date
+    ORDER BY bizible_touchpoint_date DESC
+    UNION ALL 
+    SELECT DISTINCT
+        sfdc_bizible_touchpoint_source.bizible_person_id,
+        touchpoint_id,
+        bizible_touchpoint_date,
+        bizible_form_url,
+        campaign_id AS sfdc_campaign_id,
+        bizible_ad_campaign_name,
+        bizible_marketing_channel,
+        bizible_marketing_channel_path,
+        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+    FROM PREP.SFDC.sfdc_lead_source
+    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
+        ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
+    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+        ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
+    WHERE touchpoint_id IS NOT null
+        AND marketo_qualified_lead_date IS NOT null
+        AND bizible_touchpoint_date <= marketo_qualified_lead_date
+    ORDER BY bizible_touchpoint_date DESC
 
 ), bizible_mql_touchpoint_information_final AS (
 
@@ -484,17 +504,57 @@ WITH biz_person AS (
   FROM bizible_mql_touchpoint_information_base
   WHERE touchpoint_order_by_person = 1
 
+), bizible_most_recent_touchpoint_information_base AS (
+
+    SELECT DISTINCT
+        sfdc_bizible_touchpoint_source.bizible_person_id,
+        touchpoint_id,
+        bizible_touchpoint_date,
+        bizible_form_url,
+        campaign_id AS sfdc_campaign_id,
+        bizible_ad_campaign_name,
+        bizible_marketing_channel,
+        bizible_marketing_channel_path,
+        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+    FROM PREP.SFDC.sfdc_contact_source
+    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
+        ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
+    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+        ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
+    WHERE touchpoint_id IS NOT null
+
+), bizible_most_recent_touchpoint_information_final AS (
+
+  SELECT
+      bizible_person_id AS biz_most_recent_person_id,
+      touchpoint_id AS bizible_most_recent_touchpoint_id,
+      bizible_touchpoint_date AS bizible_most_recent_touchpoint_date,
+      bizible_form_url AS bizible_most_recent_form_url,
+      sfdc_campaign_id AS bizible_most_recent_sfdc_campaign_id,
+      bizible_ad_campaign_name AS bizible_most_recent_ad_campaign_name,
+      bizible_marketing_channel AS bizible_most_recent_marketing_channel,
+      bizible_marketing_channel_path AS bizible_most_recent_marketing_channel_path
+  FROM bizible_most_recent_touchpoint_information_base
+  WHERE touchpoint_order_by_person = 1
+
 ), final AS (
 
     SELECT
       crm_person_final.*,
-      bizible_mql_touchpoint_information_final.bizible_mql_touchpoint_id,
+      bizible_mql_touchpoint_information_final.bizible_mq_touchpoint_id,
       bizible_mql_touchpoint_information_final.bizible_mql_touchpoint_date,
       bizible_mql_touchpoint_information_final.bizible_mql_form_url,
       bizible_mql_touchpoint_information_final.bizible_mql_sfdc_campaign_id,
       bizible_mql_touchpoint_information_final.bizible_mql_ad_campaign_name,
       bizible_mql_touchpoint_information_final.bizible_mql_marketing_channel,
       bizible_mql_touchpoint_information_final.bizible_mql_marketing_channel_path,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_touchpoint_id,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_touchpoint_date,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_form_url,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_sfdc_campaign_id,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_ad_campaign_name,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_marketing_channel,
+      bizible_most_recent_touchpoint_information_final.bizible_most_recent_marketing_channel_path,
       LOWER(COALESCE(
                      account_demographics_upa_country,
                      zoominfo_company_country,
