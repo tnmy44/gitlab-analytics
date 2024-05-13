@@ -5879,10 +5879,11 @@ users:
       - People All Access
   - user_name: jwagner
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: jwang
     user_name_domain: gitlab.com
     site_role: Viewer
