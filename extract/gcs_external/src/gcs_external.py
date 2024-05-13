@@ -52,7 +52,7 @@ def get_billing_data_query(
             + export["bucket_path"][root_dir:]
         )
 
-    if export.get("partition_date_part") == None:
+    if export.get("partition_date_part") is None:
         partition = EXPORT_DATE
     elif export["partition_date_part"] == "d":
         partition = EXPORT_DATE[0:10]
@@ -88,7 +88,7 @@ def run_export(
 
     credentials = json.loads(config_dict[gcp_credentials], strict=False)
     bq = BigQueryClient(credentials)
-    result = bq.get_result_from_sql(
+    bq.get_result_from_sql(
         sql_statement,
         project=project,
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
