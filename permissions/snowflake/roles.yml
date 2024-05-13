@@ -2138,6 +2138,7 @@ roles:
             - prod.legacy
             - prod.workspace_marketing
             - prod.workspace_product
+            - prod.restricted_safe_workspace_marketing
         tables:
           read:
             - prep.gitlab_dotcom.gitlab_dotcom_users_source
@@ -2151,6 +2152,8 @@ roles:
             - prod.workspace_marketing.user_history
             - prod.workspace_marketing.user_unsubscribed_channel
             - prod.workspace_marketing.user_unsubscribed_message_type
+            - prod.restricted_safe_workspace_marketing.rpt_create_partner_touchpoints
+
   - influx_db:
       privileges:
         databases:
