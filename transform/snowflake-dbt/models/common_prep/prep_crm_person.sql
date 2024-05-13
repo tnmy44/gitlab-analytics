@@ -468,7 +468,6 @@ WITH biz_person AS (
     WHERE touchpoint_id IS NOT null
         AND marketo_qualified_lead_date IS NOT null
         AND bizible_touchpoint_date <= marketo_qualified_lead_date
-    ORDER BY bizible_touchpoint_date DESC
     UNION ALL 
     SELECT DISTINCT
         sfdc_bizible_touchpoint_source.bizible_person_id,
