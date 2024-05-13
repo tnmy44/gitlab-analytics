@@ -494,6 +494,7 @@ roles:
         - gitlab_data_yaml
         - google_ads
         - google_analytics_360
+        - google_analytics_4
         - google_search_console
         - netsuite
         - marketo
