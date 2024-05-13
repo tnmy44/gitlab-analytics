@@ -581,6 +581,7 @@ AND
 u.internal_or_external = 'All'
 AND
 u.delivery_type = 'All'
+GROUP BY ALL
 
 UNION ALL 
 
@@ -615,6 +616,7 @@ AND
 u.internal_or_external = 'All'
 AND
 u.delivery_type = 'All'
+GROUP BY ALL
 )
 
 SELECT
