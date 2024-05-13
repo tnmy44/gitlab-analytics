@@ -35,6 +35,7 @@ renamed AS (
     value['diffStats']::ARRAY                                                                     AS file_diffs,
     value['targetBranch']::VARCHAR                                                                AS target_branch_name,
     value['iid']::NUMBER                                                                          AS product_merge_request_iid,
+    value['projectId']::NUMBER                                                                    AS product_merge_request_project_id,
     TRIM(ARRAY_TO_STRING(ARRAY_SLICE(SPLIT(plain_diff_url_path, '-'), 0, -1), '-'), '/')::VARCHAR AS product_merge_request_project,
     uploaded_at
   FROM dedupped
