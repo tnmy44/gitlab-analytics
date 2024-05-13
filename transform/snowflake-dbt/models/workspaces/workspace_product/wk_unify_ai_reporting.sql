@@ -505,7 +505,7 @@ p.ping_created_date_week AS date_day,
 'chat' AS ai_feature,
 p.ping_product_tier AS plan,
 'External' AS internal_or_external,
-p.delivery_type,
+p.ping_deployment_type AS delivery_type,
 COALESCE(p.metric_value,0)::INT,
 'WAU' AS metric
 FROM 
