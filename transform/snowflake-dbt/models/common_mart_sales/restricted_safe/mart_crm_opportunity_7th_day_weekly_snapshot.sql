@@ -534,7 +534,8 @@ final AS (
     
     --PTC related fields
     fct_crm_opportunity.ptc_predicted_arr,
-    fct_crm_opportunity.ptc_predicted_renewal_risk_category
+    fct_crm_opportunity.ptc_predicted_renewal_risk_category,
+    'granular' AS source
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account

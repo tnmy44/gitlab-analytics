@@ -8,7 +8,14 @@
     ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy'),
     ('prep_date', 'prep_date'),
-    ('prep_crm_account', 'prep_crm_account_daily_snapshot')
+    ('prep_crm_account', 'prep_crm_account_daily_snapshot'),
+    ('crm_account_dimensions','map_crm_account'),
+    ('sales_qualified_source','prep_sales_qualified_source'),
+    ('order_type','prep_order_type'),
+    ('deal_path','prep_deal_path'),
+    ('sales_segment','prep_sales_segment'),
+    ('dr_partner_engagement','prep_dr_partner_engagement'),
+    ('channel_type','prep_channel_type')
 ]) }},
 
 final AS (
@@ -16,9 +23,22 @@ final AS (
   SELECT 
     prep_crm_opportunity.dim_crm_opportunity_id,
     prep_crm_opportunity.dim_parent_crm_opportunity_id,
+    {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_user_id') }}                                                               AS dim_crm_user_id,
     {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_user_id') }}                                                       AS dim_crm_account_user_id,
-    prep_crm_opportunity.dim_crm_account_id,
-    prep_crm_opportunity.dim_crm_user_id,
+    {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
+    {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                                  AS dim_order_type_live_id,
+    {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                                 AS dim_dr_partner_engagement_id,
+    {{ get_keyed_nulls('channel_type.dim_channel_type_id') }}                                                                   AS dim_channel_type_id,
+    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
+    {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                         AS dim_deal_path_id,
+    {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}              AS dim_parent_sales_segment_id,
+    crm_account_dimensions.dim_parent_sales_territory_id,
+    crm_account_dimensions.dim_parent_industry_id,
+    {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}             AS dim_account_sales_segment_id,
+    crm_account_dimensions.dim_account_sales_territory_id,
+    crm_account_dimensions.dim_account_industry_id,
+    crm_account_dimensions.dim_account_location_country_id,
+    crm_account_dimensions.dim_account_location_region_id,
     {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_hierarchy_id') }}                                                  AS dim_crm_opp_owner_user_hierarchy_id,
     prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
     {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_business_unit_id') }}                                              AS dim_crm_opp_owner_business_unit_stamped_id,
@@ -180,7 +200,6 @@ final AS (
     prep_crm_opportunity.deal_path,
     prep_crm_opportunity.acv,
     prep_crm_opportunity.amount,
-    prep_crm_opportunity.closed_deals,
     prep_crm_opportunity.competitors,
     prep_crm_opportunity.critical_deal_flag,
     prep_crm_opportunity.forecast_category_name,
@@ -463,18 +482,10 @@ final AS (
     prep_crm_opportunity.stage_name_3plus,
     prep_crm_opportunity.stage_name_4plus,
     prep_crm_opportunity.calculated_deal_count,
-    prep_crm_opportunity.open_1plus_deal_count,
-    prep_crm_opportunity.open_3plus_deal_count,
-    prep_crm_opportunity.open_4plus_deal_count,
-    prep_crm_opportunity.booked_deal_count,
     prep_crm_opportunity.churned_contraction_deal_count,
     prep_crm_opportunity.booked_churned_contraction_deal_count,
     prep_crm_opportunity.booked_churned_contraction_net_arr,
     prep_crm_opportunity.churned_contraction_net_arr,
-    prep_crm_opportunity.open_1plus_net_arr,
-    prep_crm_opportunity.open_3plus_net_arr,
-    prep_crm_opportunity.open_4plus_net_arr,
-    prep_crm_opportunity.booked_net_arr,
     prep_crm_opportunity.calculated_partner_track,
     prep_crm_opportunity.is_excluded_from_pipeline_created,
     prep_crm_opportunity.calculated_age_in_days,
@@ -547,7 +558,25 @@ final AS (
     prep_crm_opportunity.positive_open_deal_count_in_snapshot_quarter,
     prep_crm_opportunity.positive_open_net_arr_in_snapshot_quarter,
     prep_crm_opportunity.closed_deals_in_snapshot_quarter,
-    prep_crm_opportunity.closed_net_arr_in_snapshot_quarter
+    prep_crm_opportunity.closed_net_arr_in_snapshot_quarter,
+    prep_crm_opportunity.created_arr,
+    prep_crm_opportunity.closed_won_opps,
+    prep_crm_opportunity.closed_opps,
+    prep_crm_opportunity.created_deals,
+    prep_crm_opportunity.positive_booked_deal_count,
+    prep_crm_opportunity.positive_booked_net_arr,
+    prep_crm_opportunity.positive_open_deal_count,
+    prep_crm_opportunity.positive_open_net_arr,
+    prep_crm_opportunity.closed_deals,
+    prep_crm_opportunity.closed_net_arr,
+    prep_crm_opportunity.open_1plus_net_arr,
+    prep_crm_opportunity.open_3plus_net_arr,
+    prep_crm_opportunity.open_4plus_net_arr,
+    prep_crm_opportunity.booked_net_arr,
+    prep_crm_opportunity.open_1plus_deal_count,
+    prep_crm_opportunity.open_3plus_deal_count,
+    prep_crm_opportunity.open_4plus_deal_count,
+    prep_crm_opportunity.booked_deal_count
   FROM prep_crm_opportunity
   LEFT JOIN prep_crm_user_hierarchy
     ON prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
@@ -560,7 +589,23 @@ final AS (
   LEFT JOIN sales_rep AS sales_rep_account
     ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id
       AND prep_crm_account.snapshot_id = sales_rep_account.snapshot_id
-  LEFT JOIN prep_date
+  LEFT JOIN crm_account_dimensions
+    ON prep_crm_opportunity.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
+  LEFT JOIN sales_qualified_source
+    ON prep_crm_opportunity.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
+  LEFT JOIN order_type
+    ON prep_crm_opportunity.order_type = order_type.order_type_name
+  LEFT JOIN order_type AS order_type_live
+    ON prep_crm_opportunity.order_type_live = order_type_live.order_type_name
+  LEFT JOIN deal_path
+    ON prep_crm_opportunity.deal_path = deal_path.deal_path_name
+  LEFT JOIN sales_segment
+    ON prep_crm_opportunity.sales_segment = sales_segment.sales_segment_name
+  LEFT JOIN dr_partner_engagement
+    ON prep_crm_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
+  LEFT JOIN channel_type
+    ON prep_crm_opportunity.channel_type = channel_type.channel_type_name
+  LEFT JOIN prep_date 
     ON prep_date.date_id = prep_crm_opportunity.close_date_id
   WHERE prep_crm_opportunity.is_live = 0
   {% if is_incremental() %}
