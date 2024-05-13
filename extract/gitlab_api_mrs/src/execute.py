@@ -120,11 +120,9 @@ if __name__ == "__main__":
             project_id, start, end, mr_attribute_key
         )
 
-        """
         verify_mr_information(
             len(mr_attributes), project_id, snowflake_engine, start, end
         )
-        """
 
         wrote_to_file = False
 
