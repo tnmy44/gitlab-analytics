@@ -2745,6 +2745,12 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: arivera
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: arosencrans
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9957,7 +9963,7 @@ users:
       - General All Access
   - user_name: jgdoyon
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
