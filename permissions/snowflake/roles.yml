@@ -2052,6 +2052,19 @@ roles:
           read:
             - prep.google_analytics_360.*
             - raw.google_analytics_360_fivetran.*
+  - google_analytics_4:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.google_analytics_4_bigquery
+        tables:
+          read:
+            - raw.google_analytics_4_bigquery.*
   - google_search_console:
       privileges:
         databases:
