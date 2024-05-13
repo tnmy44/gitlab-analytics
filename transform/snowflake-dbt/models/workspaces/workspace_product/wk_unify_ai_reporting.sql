@@ -566,7 +566,8 @@ LEFT JOIN unify u2
   AND u.plan = u.plan
   AND u.internal_or_external = u2.internal_or_external
   AND u2.delivery_type = 'Self-Managed'
-  AND u.metric = u2.metricWHERE
+  AND u.metric = u2.metric
+  WHERE
 u.date_day < CURRENT_DATE()
 AND
 u.metric_value IS NOT NULL
