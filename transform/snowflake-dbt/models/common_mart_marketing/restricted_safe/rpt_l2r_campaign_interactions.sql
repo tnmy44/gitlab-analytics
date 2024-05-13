@@ -904,6 +904,9 @@
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
       dim_campaign.is_a_channel_partner_involved,
+      dim_campaign.is_an_alliance_partner_involved,
+      dim_campaign.channel_partner_name,
+      dim_campaign.alliance_partner_name,
       campaign_owner.user_name          AS campaign_owner,
       campaign_owner_manager.user_name  AS campaign_owner_manager,
       CASE  
@@ -1054,5 +1057,5 @@
     created_by="@rkohnke",
     updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2024-05-06",
+    updated_date="2024-05-09",
   ) }}
