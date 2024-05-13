@@ -91,7 +91,7 @@ dag = DAG(
 
 external_table_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt --debug run-operation stage_external_sources \
+    dbt run-operation stage_external_sources \
         --args "select: source google_analytics_4_bigquery" --profiles-dir profile; ret=$?;
 """
 dbt_task_name = "dbt-google-analytics-four-external-table-refresh"
