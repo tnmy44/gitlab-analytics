@@ -744,6 +744,30 @@ WHERE
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
+UNION ALL 
+
+SELECT
+d.date_day,
+metrics.event_label AS ai_feature,
+metrics.plan,
+metrics.internal_or_external,
+'All' AS delivery_type,
+metrics.metric_value,
+metrics.metric
+FROM
+PROD.common.dim_date d 
+LEFT JOIN metrics ON d.date_day = metrics._date 
+WHERE
+d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
+AND 
+metrics.plan = 'All'
+AND 
+metrics.internal_or_external = 'All'
+AND 
+metrics.event_label = 'chat'
+AND
+metrics.metric IN ('MAU','WAU')
+
 ), dedup AS 
 (
 SELECT
