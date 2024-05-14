@@ -451,7 +451,7 @@ WITH biz_person AS (
 ), bizible_mql_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        sfdc_bizible_touchpoint_source.bizible_person_id,
+        sfdc_contact_source.contact_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -459,7 +459,7 @@ WITH biz_person AS (
         bizible_ad_campaign_name,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+        ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM PREP.SFDC.sfdc_contact_source
     LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
         ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
@@ -470,7 +470,7 @@ WITH biz_person AS (
         AND bizible_touchpoint_date <= marketo_qualified_lead_date
     UNION ALL 
     SELECT DISTINCT
-        sfdc_bizible_touchpoint_source.bizible_person_id,
+        sfdc_lead_source.lead_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -478,7 +478,7 @@ WITH biz_person AS (
         bizible_ad_campaign_name,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+        ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM PREP.SFDC.sfdc_lead_source
     LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
         ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
@@ -492,7 +492,7 @@ WITH biz_person AS (
 ), bizible_mql_touchpoint_information_final AS (
 
   SELECT
-      bizible_person_id AS biz_mql_person_id,
+      sfdc_record_id AS biz_mql_person_id,
       touchpoint_id AS bizible_mql_touchpoint_id,
       bizible_touchpoint_date AS bizible_mql_touchpoint_date,
       bizible_form_url AS bizible_mql_form_url,
@@ -506,7 +506,7 @@ WITH biz_person AS (
 ), bizible_most_recent_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        sfdc_bizible_touchpoint_source.bizible_person_id,
+        sfdc_lead_source.lead_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -514,10 +514,10 @@ WITH biz_person AS (
         bizible_ad_campaign_name,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY bizible_person_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM PREP.SFDC.sfdc_contact_source
+        ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+    FROM PREP.SFDC.sfdc_lead_source
     LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
-        ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
+        ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
     LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
@@ -525,7 +525,7 @@ WITH biz_person AS (
 ), bizible_most_recent_touchpoint_information_final AS (
 
   SELECT
-      bizible_person_id AS biz_most_recent_person_id,
+      sfdc_record_id AS biz_most_recent_person_id,
       touchpoint_id AS bizible_most_recent_touchpoint_id,
       bizible_touchpoint_date AS bizible_most_recent_touchpoint_date,
       bizible_form_url AS bizible_most_recent_form_url,
@@ -589,9 +589,9 @@ WITH biz_person AS (
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
     LEFT JOIN bizible_mql_touchpoint_information_final
-      ON crm_person_final.bizible_person_id=bizible_mql_touchpoint_information_final.biz_mql_person_id
+      ON crm_person_final.sfdc_record_id=bizible_mql_touchpoint_information_final.biz_mql_person_id
     LEFT JOIN bizible_most_recent_touchpoint_information_final
-      ON crm_person_final.bizible_person_id=bizible_most_recent_touchpoint_information_final.biz_most_recent_person_id
+      ON crm_person_final.sfdc_record_id=bizible_most_recent_touchpoint_information_final.biz_most_recent_person_id
     LEFT JOIN prep_location_country
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
@@ -605,5 +605,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-05-13"
+    updated_date="2024-05-14"
 ) }}
