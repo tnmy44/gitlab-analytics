@@ -488,13 +488,15 @@ p.ping_deployment_type AS delivery_type,
 SUM(COALESCE(p.RECORDED_USAGE,0)::INT),
 'MAU' AS metric
 FROM
-{{ ref('rpt_ping_metric_totals_w_estimates_monthly') }} p
+{{ ref('mart_ping_instance_metric') }} p
 WHERE
   p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
-  AND p.estimation_grain = 'metric/version check - subscription based estimation'
 GROUP BY ALL
 
 UNION ALL 
@@ -508,13 +510,15 @@ p.ping_deployment_type AS delivery_type,
 COALESCE(p.RECORDED_USAGE,0)::INT,
 'WAU' AS metric
 FROM 
-{{ ref('rpt_ping_metric_totals_w_estimates_monthly') }} p
+{{ ref('mart_ping_instance_metric') }} p
 WHERE
   p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
-  AND p.estimation_grain = 'metric/version check - subscription based estimation'
 GROUP BY ALL
 ), dedup AS 
 (
