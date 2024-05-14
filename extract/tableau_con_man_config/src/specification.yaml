@@ -7411,6 +7411,7 @@ users:
     groups:
       - ASM Restricted Access
       - General All Access
+      - General SAFE Access
   - user_name: mzimmerman
     user_name_domain: gitlab.com
     site_role: Viewer
