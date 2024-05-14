@@ -780,6 +780,8 @@ SUM(u.metric_value) AS metric_value,
 u.metric
 FROM
 unify u 
+JOIN 
+
 WHERE
 u.date_day < CURRENT_DATE()
 AND
@@ -787,10 +789,11 @@ u.metric_value IS NOT NULL
 AND
 u.metric IS NOT NULL
 GROUP BY ALL
+
 UNION ALL 
 
 SELECT 
-p.ping_created_date_month AS date_day,
+DATE_TRUNC(MONTH,p.ping_created_date_month) AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
@@ -812,7 +815,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-p.ping_created_date_week AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week) AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'All' AS internal_or_external,
