@@ -553,7 +553,7 @@ u.date_day,
 u.ai_feature,
 u.plan,
 u.internal_or_external,
-'All' AS u.delivery_type,
+'All' AS delivery_type,
 SUM(COALESCE(u.metric_value,0)) + SUM(COALESCE(u2.metric_value,0)),
 u.metric
 FROM
