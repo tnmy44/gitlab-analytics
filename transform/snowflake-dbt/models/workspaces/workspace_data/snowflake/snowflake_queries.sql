@@ -78,6 +78,7 @@ expanded AS (
     source.queued_overload_time,
     source.transaction_blocked_time,
     source.rows_produced,
+    source.bytes_scanned,
     source.bytes_written,
     source.bytes_spilled_to_remote_storage,
     source.bytes_spilled_to_local_storage,
