@@ -367,3 +367,7 @@ sheets:
     owner: '@rakhireddy'
     tabs: 
       - job_profiles_historical
+  - name: ci_runner_machine_type_mapping
+    owner: '@nhervas'
+    tabs: 
+      - ci_runner_machine_type_mapping

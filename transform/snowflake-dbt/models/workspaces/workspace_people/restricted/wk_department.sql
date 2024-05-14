@@ -46,8 +46,8 @@ SELECT
       THEN 'Field Operations'
     WHEN department = 'Development'
       THEN 'Core Development'
-    WHEN department = 'Quality'
-      THEN 'Platforms'
+    WHEN department IN ('Quality', 'Platforms')
+      THEN 'Internal Infrastructure'
     WHEN department = 'Infrastructure'
       THEN 'Core Infrastructure'
     WHEN department = 'Incubation Engineering'
