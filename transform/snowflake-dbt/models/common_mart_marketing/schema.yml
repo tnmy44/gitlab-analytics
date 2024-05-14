@@ -242,6 +242,8 @@ models:
           description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
         - name: bizible_most_recent_marketing_channel_path
           description: The bizible touchpoint marketing channel path, of the most recent touchpoint.  
+        - name: net_arr_stage_1
+          description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
