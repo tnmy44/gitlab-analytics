@@ -3,27 +3,19 @@ WITH team_status_dup AS (
     *
   FROM {{ref('fct_team_status')}}
 ),
-pto_source AS (
+pto_approved AS (
   SELECT 
-    *
+    *,
+    DAYOFWEEK(pto_date)                                    AS pto_day_of_week,
   FROM {{ref('gitlab_pto')}}
+    WHERE pto_status = 'AP' 
+      AND pto_day_of_week BETWEEN 1 AND 5 -- excluding weekends
 ),
 pto AS (
   SELECT
     *,
-    DAYOFWEEK(pto_date)                                    AS pto_day_of_week,
-    ROW_NUMBER() OVER (
-      PARTITION BY
-        hr_employee_id,
-        pto_date
-      ORDER BY
-        created_at DESC --adding this, once created_at is added to pto_source
-    )                                                      AS pto_rank,
     'Y'                                                    AS is_pto_date
-  FROM pto_source
-  WHERE pto_status = 'AP' 
-    AND pto_day_of_week BETWEEN 1 AND 5 -- excluding weekends
-  QUALIFY pto_rank = 1 -- inorder to consider only unique rows of the data
+  FROM pto_approved
 ),
 team_status AS (
   SELECT 

@@ -8618,6 +8618,7 @@ models:
             combination_of_columns:
               - dim_team_member_sk
               - absence_date
+              - pto_uuid
 
     columns:
       - name: dim_team_member_sk
