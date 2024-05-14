@@ -7389,6 +7389,12 @@ users:
     groups:
       - General All Access
       - People All Access
+  - user_name: mwinther
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: mwood
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
