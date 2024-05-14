@@ -6425,6 +6425,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - kkloss:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7439,6 +7444,10 @@ users:
       can_login: true
       member_of:
         - aspringfield
+  - kkloss:
+      can_login: true
+      member_of:
+        - kkloss
 warehouses:
   - admin:
       size: x-small
