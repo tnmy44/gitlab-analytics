@@ -34,7 +34,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
-BUCKET_NAME_CELLS= os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
+BUCKET_NAME_CELLS = os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
 database_type = os.environ.get("DATABASE_TYPE")
 TARGET_EXTRACT_SCHEMA = "tap_postgres"
 TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
@@ -44,6 +44,7 @@ INCREMENTAL_METADATA_TABLE = "incremental_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
 INCREMENTAL_LOAD_TYPE_BY_ID = "load_by_id"
+
 
 def get_gcs_scoped_credentials():
     """Get scoped credential"""
@@ -792,10 +793,18 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    postgres_engine = postgres_engine_factory(
-        connection_dict["postgres_source_connection"], env
-    )
-
+    if database_type == "cells":
+        postgres_engine = postgres_engine_factory(
+            connection_dict["postgres_source_connection_cells"], env
+        )
+    elif database_type == "ci":
+        postgres_engine = postgres_engine_factory(
+            connection_dict["postgres_source_connection_ci_legacy"], env
+        )
+    elif database_type == "main":
+        postgres_engine = postgres_engine_factory(
+            connection_dict["postgres_source_connection_main_legacy"], env
+        )
     snowflake_engine = snowflake_engine_factory(
         env,
         role="LOADER",

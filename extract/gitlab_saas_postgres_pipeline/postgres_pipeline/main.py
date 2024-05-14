@@ -1,3 +1,4 @@
+import os
 import logging
 from typing import Dict
 
@@ -13,6 +14,10 @@ from postgres_utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
+)
+
+connection_file_path = (
+    "../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_connection_info.yaml"
 )
 
 
@@ -35,9 +40,11 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
 
+    connection_manifest_dict = manifest_reader(connection_file_path)
     postgres_engine, snowflake_engine, metadata_engine = get_engines(
-        manifest_dict["connection_info"]
+        connection_manifest_dict["connection_info"]
     )
+
     logging.info(snowflake_engine)
 
     for table in manifest_dict["tables"]:

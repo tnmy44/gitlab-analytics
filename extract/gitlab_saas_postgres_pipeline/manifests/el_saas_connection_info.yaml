@@ -1,0 +1,31 @@
+connection_info:
+  postgres_source_connection_ci_legacy:
+    database: GITLAB_COM_CI_DB_NAME
+    host: GITLAB_COM_CI_DB_HOST
+    pass: GITLAB_COM_CI_DB_PASS
+    port: GITLAB_COM_CI_DB_PORT
+    user: GITLAB_COM_CI_DB_USER
+  postgres_source_connection_main_legacy:
+    database: GITLAB_COM_DB_NAME
+    host: GITLAB_COM_DB_HOST
+    pass: GITLAB_COM_DB_PASS
+    port: GITLAB_COM_PG_PORT
+    user: GITLAB_COM_DB_USER
+  postgres_source_connection_main_scd_legacy:
+    database: GITLAB_COM_DB_NAME
+    host: GITLAB_COM_DB_HOST
+    pass: GITLAB_COM_DB_PASS
+    port: GITLAB_COM_SCD_PG_PORT
+    user: GITLAB_COM_DB_USER
+  postgres_source_connection_cells: #to be changed
+    database: GITLAB_COM_DB_NAME
+    host: GITLAB_COM_DB_HOST
+    pass: GITLAB_COM_DB_PASS
+    port: GITLAB_COM_SCD_PG_PORT
+    user: GITLAB_COM_DB_USER
+  postgres_metadata_connection: #add new bucket logic details here
+    database: GITLAB_METADATA_DB_NAME
+    host: GITLAB_METADATA_DB_HOST
+    pass: GITLAB_METADATA_DB_PASS
+    port: GITLAB_METADATA_PG_PORT
+    user: GITLAB_METADATA_DB_USER
