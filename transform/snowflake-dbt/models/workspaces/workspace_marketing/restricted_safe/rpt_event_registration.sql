@@ -11,8 +11,8 @@
     ('sfdc_campaign_member','sfdc_campaign_member'),
     ('mart_crm_account','mart_crm_account'),
     ('sfdc_campaign_member', 'sfdc_campaign_member'),
-    ('WK_MARKETO_ACTIVITY_FILL_OUT_FORM', 'wk_marketo_activity_fill_out_form'),
-    ('WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN', 'wk_marketo_activity_add_to_sfdc_campaign')
+    ('wk_marketo_activity_fill_out_form', 'wk_marketo_activity_fill_out_form'),
+    ('wk_marketo_activity_add_to_sfdc_campaign', 'wk_marketo_activity_add_to_sfdc_campaign')
   ]) 
 }}
 
@@ -185,7 +185,7 @@
         max(case when split_part(value, '=', 1) = 'utm_source' then split_part(value, '=', 2) end)    as utm_source,
         max(case when split_part(value, '=', 1) = 'utm_content' then split_part(value, '=', 2) end)   as utm_content,
         max(case when split_part(value, '=', 1) = 'utm_partnerid' then split_part(value, '=', 2) end) as utm_partnerid
-    FROM WK_MARKETO_ACTIVITY_FILL_OUT_FORM,
+    FROM wk_marketo_activity_fill_out_form,
     TABLE(SPLIT_TO_TABLE(query_parameters, '&')) 
     where query_parameters is not null
     group by 1
@@ -193,25 +193,25 @@
 ), marketo_form_fills as (
 
     SELECT
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.lead_id AS marketo_lead_id,
+        wk_marketo_activity_fill_out_form.lead_id AS marketo_lead_id,
         WK_MARKETO_ACTIVITY_FILL_OUT_FORM.activity_date AS form_submit_date,
-        WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN.activity_date AS campaign_sync_date,
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.campaign_id AS marketo_form_campaign_id,
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.primary_attribute_value AS marketo_form_name,
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.webpage_id,
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.referrer_url,
-        WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN.primary_attribute_value AS sfdc_campaign_name,
+        wk_marketo_activity_add_to_sfdc_campaign.activity_date AS campaign_sync_date,
+        wk_marketo_activity_fill_out_form.campaign_id AS marketo_form_campaign_id,
+        wk_marketo_activity_fill_out_form.primary_attribute_value AS marketo_form_name,
+        wk_marketo_activity_fill_out_form.webpage_id,
+        wk_marketo_activity_fill_out_form.referrer_url,
+        wk_marketo_activity_add_to_sfdc_campaign.primary_attribute_value AS sfdc_campaign_name,
         marketo_query_params.utm_medium,
         marketo_query_params.utm_campaign,
         marketo_query_params.utm_source,
         marketo_query_params.utm_content,
         marketo_query_params.utm_partnerid
-    FROM WK_MARKETO_ACTIVITY_FILL_OUT_FORM
-    LEFT JOIN WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN
-        ON WK_MARKETO_ACTIVITY_FILL_OUT_FORM.lead_id = WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN.lead_id
-            AND WK_MARKETO_ACTIVITY_FILL_OUT_FORM.activity_date::DATE = WK_MARKETO_ACTIVITY_ADD_TO_SFDC_CAMPAIGN.activity_date::DATE
+    FROM wk_marketo_activity_fill_out_form
+    LEFT JOIN wk_marketo_activity_add_to_sfdc_campaign
+        ON wk_marketo_activity_fill_out_form.lead_id = wk_marketo_activity_add_to_sfdc_campaign.lead_id
+            AND wk_marketo_activity_fill_out_form.activity_date::DATE = wk_marketo_activity_add_to_sfdc_campaign.activity_date::DATE
     LEFT JOIN marketo_query_params
-        on WK_MARKETO_ACTIVITY_FILL_OUT_FORM.MARKETO_ACTIVITY_FILL_OUT_FORM_ID = marketo_query_params.MARKETO_ACTIVITY_FILL_OUT_FORM_ID
+        on wk_marketo_activity_fill_out_form.marketo_activity_fill_out_form_id = marketo_query_params.marketo_activity_fill_out_form_id
 
 
 ), final as (
