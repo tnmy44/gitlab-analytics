@@ -482,42 +482,40 @@ UNION ALL
 SELECT 
 p.ping_created_date_month AS date_day,
 'chat' AS ai_feature,
-p.ping_product_tier AS plan,
+LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
-p.ping_deployment_type,
-COALESCE(p.metric_value,0)::INT,
+p.ping_deployment_type AS delivery_type,
+SUM(COALESCE(p.RECORDED_USAGE,0)::INT),
 'MAU' AS metric
-FROM 
-PROD.common_mart.mart_ping_instance_metric p
+FROM
+{{ ref('rpt_ping_metric_totals_w_estimates_monthly') }} p
 WHERE
   p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  AND p.major_minor_version_id >= 1611
-  AND p.metric_value > 0
-  AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
+  AND p.estimation_grain = 'metric/version check - subscription based estimation'
+GROUP BY ALL
 
 UNION ALL 
 
 SELECT 
 p.ping_created_date_week AS date_day,
 'chat' AS ai_feature,
-p.ping_product_tier AS plan,
+LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
 p.ping_deployment_type AS delivery_type,
-COALESCE(p.metric_value,0)::INT,
+COALESCE(p.RECORDED_USAGE,0)::INT,
 'WAU' AS metric
 FROM 
-PROD.common_mart.mart_ping_instance_metric p
+{{ ref('rpt_ping_metric_totals_w_estimates_monthly') }} p
 WHERE
   p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  AND p.major_minor_version_id >= 1611
-  AND p.metric_value > 0
-  AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
+  AND p.estimation_grain = 'metric/version check - subscription based estimation'
+GROUP BY ALL
 ), dedup AS 
 (
 SELECT
@@ -555,8 +553,8 @@ u.date_day,
 u.ai_feature,
 u.plan,
 u.internal_or_external,
-u.delivery_type,
-SUM(u.metric_value) + SUM(u2.metric_value),
+'All' AS u.delivery_type,
+SUM(COALESCE(u.metric_value,0)) + SUM(COALESCE(u2.metric_value,0)),
 u.metric
 FROM
 unify u 
@@ -579,8 +577,6 @@ AND
 u.plan = 'All'
 AND
 u.internal_or_external = 'All'
-AND
-u.delivery_type = 'All'
 GROUP BY ALL
 
 UNION ALL 
@@ -590,8 +586,8 @@ u.date_day,
 u.ai_feature,
 u.plan,
 u.internal_or_external,
-u.delivery_type,
-SUM(u.metric_value) + SUM(u2.metric_value),
+'All' AS delivery_type,
+SUM(COALESCE(u.metric_value,0)) + SUM(COALESCE(u2.metric_value,0)),
 u.metric
 FROM
 unify u 
@@ -614,8 +610,6 @@ AND
 u.plan = 'All'
 AND
 u.internal_or_external = 'All'
-AND
-u.delivery_type = 'All'
 GROUP BY ALL
 )
 
