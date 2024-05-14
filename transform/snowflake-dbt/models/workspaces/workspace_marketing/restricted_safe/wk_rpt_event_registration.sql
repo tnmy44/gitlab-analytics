@@ -194,7 +194,7 @@
 
     SELECT
         wk_marketo_activity_fill_out_form.lead_id AS marketo_lead_id,
-        WK_MARKETO_ACTIVITY_FILL_OUT_FORM.activity_date AS form_submit_date,
+        wk_marketo_activity_fill_out_form.activity_date AS form_submit_date,
         wk_marketo_activity_add_to_sfdc_campaign.activity_date AS campaign_sync_date,
         wk_marketo_activity_fill_out_form.campaign_id AS marketo_form_campaign_id,
         wk_marketo_activity_fill_out_form.primary_attribute_value AS marketo_form_name,
