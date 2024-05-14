@@ -3189,6 +3189,16 @@ roles:
         - static_sensitive
       warehouses:
         - reporting
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.sensitive
+        tables:
+          read:
+            - prep.sensitive.mart_marketing_contact
   - bmandavia:
       member_of: []
       warehouses: []
