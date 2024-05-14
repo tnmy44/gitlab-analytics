@@ -106,7 +106,7 @@ dbt_external_table_run = KubernetesPodOperator(
     dag=dag,
 )
 
-spec_file = "gcs_external/src/gcp_billing/gcs_external.yml"
+spec_file = "bigquery/src/gcp_billing/bigquery_export.yml"
 spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
 
 with open(
@@ -123,7 +123,7 @@ for export in stream["exports"]:
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gcs_external/src/gcs_external.py \
+    python bigquery/src/bigquery_export.py \
         --config_path={spec_file} \
         --export_name={export_name}
     """
