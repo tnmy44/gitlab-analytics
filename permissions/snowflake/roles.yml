@@ -6425,7 +6425,7 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - mdunleavy:
+  - kkloss:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7444,10 +7444,10 @@ users:
       can_login: true
       member_of:
         - aspringfield
-  - mdunleavy:
+  - kkloss:
       can_login: true
       member_of:
-        - mdunleavy
+        - kkloss
 warehouses:
   - admin:
       size: x-small
