@@ -48,7 +48,7 @@ final AS (
 
   FROM zuora_credit_balance_adjustment_source
   INNER JOIN zuora_account
-    ON zuora_credit_balance_adjustment_source.account_id = zuora_account.dim_billing_account_id
+    ON zuora_credit_balance_adjustment_source.account_id = zuora_account.account_id
 )
 
 {{ dbt_audit(
