@@ -713,6 +713,8 @@ models:
           description: Campagin field of the Channel partner name
         - name: alliance_partner_name
           description: Campagin field of the Alliance partner name
+        - name: crm_account_type
+          description: The account type from SFDC (Customer, Former Customer, etc...)
 
     - name: rpt_l2r_community_data
       description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 
