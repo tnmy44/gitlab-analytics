@@ -520,6 +520,7 @@ WHERE
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
+
 ), dedup AS 
 (
 SELECT
@@ -528,7 +529,7 @@ u.ai_feature,
 u.plan,
 u.internal_or_external,
 u.delivery_type,
-u.metric_value,
+SUM(u.metric_value) AS metric_value,
 u.metric
 FROM
 unify u 
@@ -538,82 +539,6 @@ AND
 u.metric_value IS NOT NULL
 AND
 u.metric IS NOT NULL
-AND
-u.ai_feature !='chat'
-AND 
-(u.metric!='WAU' OR u.metric!='MAU')
-AND
-u.plan != 'All'
-AND
-u.internal_or_external != 'All'
-AND
-u.delivery_type != 'All'
-
-
-UNION ALL 
-
-SELECT
-u.date_day,
-u.ai_feature,
-u.plan,
-u.internal_or_external,
-'All' AS delivery_type,
-SUM(COALESCE(u.metric_value,0)) + SUM(COALESCE(u2.metric_value,0)),
-u.metric
-FROM
-unify u 
-LEFT JOIN unify u2 
-  ON u.date_day = u2.date_day 
-  AND u.ai_feature = u2.ai_feature
-  AND u.plan = u.plan
-  AND u.internal_or_external = u2.internal_or_external
-  AND u2.delivery_type = 'Self-Managed'
-  AND u.metric = u2.metric
-  WHERE
-u.date_day < CURRENT_DATE()
-AND
-u.metric_value IS NOT NULL
-AND
-u.ai_feature ='chat'
-AND 
-u.metric='WAU'
-AND
-u.plan = 'All'
-AND
-u.internal_or_external = 'All'
-GROUP BY ALL
-
-UNION ALL 
-
-SELECT
-u.date_day,
-u.ai_feature,
-u.plan,
-u.internal_or_external,
-'All' AS delivery_type,
-SUM(COALESCE(u.metric_value,0)) + SUM(COALESCE(u2.metric_value,0)),
-u.metric
-FROM
-unify u 
-LEFT JOIN unify u2 
-  ON u.date_day = u2.date_day 
-  AND u.ai_feature = u2.ai_feature
-  AND u.plan = u.plan
-  AND u.internal_or_external = u2.internal_or_external
-  AND u2.delivery_type = 'Self-Managed'
-  AND u.metric = u2.metric
-WHERE
-u.date_day < CURRENT_DATE()
-AND
-u.metric_value IS NOT NULL
-AND
-u.ai_feature ='chat'
-AND 
-u.metric='MAU'
-AND
-u.plan = 'All'
-AND
-u.internal_or_external = 'All'
 GROUP BY ALL
 )
 
