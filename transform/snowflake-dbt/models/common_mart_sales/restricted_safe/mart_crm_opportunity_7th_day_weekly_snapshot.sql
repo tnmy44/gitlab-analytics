@@ -214,17 +214,17 @@ final AS (
         'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
     AS crm_account_user_sales_segment_region_grouped,
 
-    dim_crm_user_hierarchy.crm_user_sales_segment                           AS dim_crm_current_account_set_sales_segment,
-    dim_crm_user_hierarchy.crm_user_geo                                     AS dim_crm_current_account_set_geo,
-    dim_crm_user_hierarchy.crm_user_region                                  AS dim_crm_current_account_set_region,
-    dim_crm_user_hierarchy.crm_user_area                                    AS dim_crm_current_account_set_area,
-    dim_crm_user_hierarchy.crm_user_business_unit                           AS dim_crm_current_account_set_business_unit,
-    dim_crm_user_hierarchy.crm_user_role_name                               AS dim_crm_current_account_set_role_name,
-    dim_crm_user_hierarchy.crm_user_role_level_1                            AS dim_crm_current_account_set_role_level_1,
-    dim_crm_user_hierarchy.crm_user_role_level_2                            AS dim_crm_current_account_set_role_level_2,
-    dim_crm_user_hierarchy.crm_user_role_level_3                            AS dim_crm_current_account_set_role_level_3,
-    dim_crm_user_hierarchy.crm_user_role_level_4                            AS dim_crm_current_account_set_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5                            AS dim_crm_current_account_set_role_level_5,
+    dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                     AS crm_current_account_set_geo,
+    dim_crm_user_hierarchy.crm_user_region                                  AS crm_current_account_set_region,
+    dim_crm_user_hierarchy.crm_user_area                                    AS crm_current_account_set_area,
+    dim_crm_user_hierarchy.crm_user_business_unit                           AS crm_current_account_set_business_unit,
+    dim_crm_user_hierarchy.crm_user_role_name                               AS crm_current_account_set_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                            AS crm_current_account_set_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                            AS crm_current_account_set_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                            AS crm_current_account_set_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
 
     -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
     fct_crm_opportunity.opportunity_owner_user_segment,
