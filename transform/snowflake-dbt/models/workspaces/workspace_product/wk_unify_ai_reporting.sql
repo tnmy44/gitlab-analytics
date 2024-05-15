@@ -503,7 +503,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
@@ -547,7 +547,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 'All' AS plan,
 'All' AS internal_or_external,
@@ -593,7 +593,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
@@ -637,7 +637,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 'All' AS plan,
 'External' AS internal_or_external,
@@ -681,7 +681,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 'All' AS plan,
 'All' AS internal_or_external,
@@ -725,7 +725,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
 'chat' AS ai_feature,
 'All' AS plan,
 'External' AS internal_or_external,
@@ -769,7 +769,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_at))::DATE AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_at)::DATE AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'All' AS internal_or_external,
