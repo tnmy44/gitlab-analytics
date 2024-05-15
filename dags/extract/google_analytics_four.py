@@ -62,8 +62,6 @@ dbt_secrets = [
     SNOWFLAKE_USER,
 ]
 
-from kubernetes_helpers import get_affinity, get_toleration
-
 env = os.environ.copy()
 
 GIT_BRANCH = env["GIT_BRANCH"]
