@@ -11094,7 +11094,7 @@ users:
       - General All Access
   - user_name: prodopoulos
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
