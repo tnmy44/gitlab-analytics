@@ -465,7 +465,7 @@ retentions
 (
 
 SELECT
-d.date_da::DATE AS date_day,
+d.date_day::DATE AS date_day,
 metrics.event_label AS ai_feature,
 metrics.plan,
 metrics.internal_or_external,
