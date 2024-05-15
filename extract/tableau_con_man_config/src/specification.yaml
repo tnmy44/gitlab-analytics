@@ -2884,6 +2884,12 @@ users:
     groups:
       - ASM Restricted Access
       - General All Access
+  - user_name: atiwari
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: atolba
     user_name_domain: gitlab.com
     site_role: Viewer
