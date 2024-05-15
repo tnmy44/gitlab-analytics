@@ -10838,7 +10838,7 @@ users:
       - General SAFE Access
   - user_name: lcharles
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
