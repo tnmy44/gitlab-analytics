@@ -34,7 +34,7 @@ team_status AS (
     is_position_active,
     is_current
     FROM team_status_dup
-    WHERE is_current=TRUE
+    WHERE is_current=TRUE --To consider only latest status of the team member
 ),
 combined_sources AS (
   SELECT 
@@ -72,9 +72,7 @@ combined_sources AS (
   FROM team_status
   INNER JOIN pto ON pto.hr_employee_id=team_status.employee_id
 ),
-/* 
-Skipping hire date and term date
-*/
+
 final AS (
 
   SELECT *
@@ -87,8 +85,8 @@ final AS (
     cte_ref='final',
     created_by='@rakhireddy',
     updated_by='@rakhireddy',
-    created_date='2024-04-12',
-    updated_date='2024-04-12',
+    created_date='2024-05-15',
+    updated_date='2024-05-15',
 ) }}
 
 
