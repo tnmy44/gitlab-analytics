@@ -780,8 +780,6 @@ SUM(u.metric_value) AS metric_value,
 u.metric
 FROM
 unify u 
-JOIN 
-
 WHERE
 u.date_day < CURRENT_DATE()
 AND
