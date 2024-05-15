@@ -769,7 +769,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATE_TRUNC(WEEK,p.ping_created_at) AS date_day,
+DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_at))::DATE AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'All' AS internal_or_external,
@@ -816,7 +816,7 @@ metrics.metric IN ('MAU','WAU')
 ), dedup AS 
 (
 SELECT
-u.date_day,
+u.date_day::DATE AS date_day,
 u.ai_feature,
 u.plan,
 u.internal_or_external,
