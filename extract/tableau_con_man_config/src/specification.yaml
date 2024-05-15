@@ -3522,7 +3522,7 @@ users:
       - Security Project Lead
   - user_name: cli
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
