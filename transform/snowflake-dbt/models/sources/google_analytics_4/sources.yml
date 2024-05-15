@@ -17,7 +17,7 @@ sources:
       - name: events
         description: "Google Ananlytics 4 events table"
         external:
-          location: "@raw.google_analytics_4_bigquery.marketing_ga4_gcs_export/BRANCH_TEST_google-analytics4-new-data-source/events"
+          location: "@raw.google_analytics_4_bigquery.marketing_ga4_gcs_export/events"
           file_format: "( type = parquet )"
           auto_refresh: false
           partitions:
@@ -28,7 +28,7 @@ sources:
       - name: pseudonymous_users
         description: "Google Ananlytics 4 pseudonymous_users table"
         external:
-          location: "@raw.google_analytics_4_bigquery.marketing_ga4_gcs_export/BRANCH_TEST_google-analytics4-new-data-source/pseudonymous_users"
+          location: "@raw.google_analytics_4_bigquery.marketing_ga4_gcs_export/pseudonymous_users"
           file_format: "( type = parquet )"
           auto_refresh: false
           partitions:
