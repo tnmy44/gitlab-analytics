@@ -746,50 +746,6 @@ GROUP BY ALL
 
 UNION ALL 
 
-SELECT
-d.date_day,
-metrics.event_label AS ai_feature,
-metrics.plan,
-metrics.internal_or_external,
-'All' AS delivery_type,
-metrics.metric_value,
-metrics.metric
-FROM
-PROD.common.dim_date d 
-LEFT JOIN metrics ON d.date_day = metrics._date 
-WHERE
-d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
-AND 
-metrics.plan = 'All'
-AND 
-metrics.internal_or_external = 'All'
-AND 
-metrics.event_label = 'chat'
-AND
-metrics.metric IN ('MAU','WAU')
-
-), dedup AS 
-(
-SELECT
-u.date_day,
-u.ai_feature,
-u.plan,
-u.internal_or_external,
-u.delivery_type,
-SUM(u.metric_value) AS metric_value,
-u.metric
-FROM
-unify u 
-WHERE
-u.date_day < CURRENT_DATE()
-AND
-u.metric_value IS NOT NULL
-AND
-u.metric IS NOT NULL
-GROUP BY ALL
-
-UNION ALL 
-
 SELECT 
 DATE_TRUNC(MONTH,p.ping_created_date_month) AS date_day,
 'chat' AS ai_feature,
@@ -813,7 +769,7 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
-DATEADD(DAY,1,DATE_TRUNC(WEEK,p.ping_created_date_week)) AS date_day,
+DATE_TRUNC(WEEK,p.ping_created_date))AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'All' AS internal_or_external,
@@ -831,6 +787,53 @@ WHERE
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
+
+UNION ALL 
+
+SELECT
+d.date_day,
+metrics.event_label AS ai_feature,
+metrics.plan,
+metrics.internal_or_external,
+'All' AS delivery_type,
+metrics.metric_value,
+metrics.metric
+FROM
+PROD.common.dim_date d 
+LEFT JOIN metrics ON d.date_day = metrics._date 
+WHERE
+d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
+AND 
+metrics.plan = 'All'
+AND 
+metrics.internal_or_external = 'All'
+AND 
+metrics.event_label = 'chat'
+AND
+metrics.metric IN ('MAU','WAU')
+
+
+), dedup AS 
+(
+SELECT
+u.date_day,
+u.ai_feature,
+u.plan,
+u.internal_or_external,
+u.delivery_type,
+SUM(u.metric_value) AS metric_value,
+u.metric
+FROM
+unify u 
+WHERE
+u.date_day < CURRENT_DATE()
+AND
+u.metric_value IS NOT NULL
+AND
+u.metric IS NOT NULL
+GROUP BY ALL
+
+
 
 )
 
