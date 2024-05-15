@@ -2273,6 +2273,13 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: acuffe
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - Customer Success All Access
+      - General All Access
   - user_name: acunskis
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -3423,9 +3430,10 @@ users:
       - General SAFE Access
   - user_name: cguitarte
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Viewer
     auth_setting: SAML
     groups:
+      - Customer Success All Access
       - General All Access
   - user_name: chaming
     user_name_domain: gitlab.com
@@ -4454,7 +4462,6 @@ users:
     groups:
       - Customer Success All Access
       - General All Access
-      - General SAFE Access
   - user_name: estrait
     user_name_domain: gitlab.com
     site_role: Viewer
