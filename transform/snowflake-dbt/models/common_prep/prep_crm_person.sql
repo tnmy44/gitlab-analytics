@@ -451,7 +451,7 @@ WITH biz_person AS (
 ), bizible_mql_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        sfdc_contact_source.contact_id AS sfdc_record_id,
+        sfdc_contacts.contact_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -460,17 +460,17 @@ WITH biz_person AS (
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM PREP.SFDC.sfdc_contact_source
-    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
-        ON sfdc_contact_source.contact_id = sfdc_bizible_person_source.bizible_contact_id
-    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+    FROM sfdc_contacts
+    LEFT JOIN {{ ref('sfdc_bizible_person_source') }}
+        ON sfdc_contacts.contact_id = sfdc_bizible_person_source.bizible_contact_id
+    LEFT JOIN {{ ref('sfdc_bizible_touchpoint_source') }}
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
         AND marketo_qualified_lead_date IS NOT null
         AND bizible_touchpoint_date <= marketo_qualified_lead_date
     UNION ALL 
     SELECT DISTINCT
-        sfdc_lead_source.lead_id AS sfdc_record_id,
+        sfdc_leads.lead_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -479,10 +479,10 @@ WITH biz_person AS (
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM PREP.SFDC.sfdc_lead_source
-    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
+    FROM sfdc_leads
+    LEFT JOIN {{ ref('sfdc_bizible_person_source') }}
         ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
-    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+    LEFT JOIN {{ ref('sfdc_bizible_touchpoint_source') }}
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
         AND marketo_qualified_lead_date IS NOT null
@@ -506,7 +506,7 @@ WITH biz_person AS (
 ), bizible_most_recent_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        sfdc_lead_source.lead_id AS sfdc_record_id,
+        sfdc_leads.lead_id AS sfdc_record_id,
         touchpoint_id,
         bizible_touchpoint_date,
         bizible_form_url,
@@ -515,10 +515,10 @@ WITH biz_person AS (
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM PREP.SFDC.sfdc_lead_source
-    LEFT JOIN PREP.SFDC.sfdc_bizible_person_source
+    FROM sfdc_leads
+    LEFT JOIN {{ ref('sfdc_bizible_person_source') }}
         ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
-    LEFT JOIN PREP.SFDC.sfdc_bizible_touchpoint_source
+    LEFT JOIN {{ ref('sfdc_bizible_touchpoint_source') }}
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
 
@@ -605,5 +605,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-05-14"
+    updated_date="2024-05-16"
 ) }}
