@@ -212,8 +212,6 @@ WITH date_details AS (
       close_date_ending,
       opps,
       opps_ending,
-      c19,
-      c19_ending,
       net_iacv,
       net_iacv_ending,
       forecasted_iacv,
