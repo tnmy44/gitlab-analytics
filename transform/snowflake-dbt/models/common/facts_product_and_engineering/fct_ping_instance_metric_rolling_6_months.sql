@@ -1,5 +1,6 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    cluster_by=['ping_created_date']
 ) }}
 
 WITH fct_ping_instance_metric_rolling_6_months AS (
@@ -14,7 +15,7 @@ WITH fct_ping_instance_metric_rolling_6_months AS (
 {{ dbt_audit(
     cte_ref="fct_ping_instance_metric_rolling_6_months",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@utkarsh060",
     created_date="2022-07-20",
-    updated_date="2022-07-29"
+    updated_date="2024-05-15"
 ) }}

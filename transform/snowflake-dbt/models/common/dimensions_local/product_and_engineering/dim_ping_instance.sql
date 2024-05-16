@@ -1,6 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    materialized = "table"
+    materialized = "table",
+    cluster_by=['ping_created_date']
 ) }}
 
 {{ simple_cte([
@@ -142,7 +143,7 @@ usage_data_w_date AS (
 {{ dbt_audit(
     cte_ref="usage_data_w_date",
     created_by="@icooper-acp",
-    updated_by="@pempey",
+    updated_by="@utkarsh060",
     created_date="2022-03-08",
-    updated_date="2024-04-01"
+    updated_date="2024-05-15"
 ) }}

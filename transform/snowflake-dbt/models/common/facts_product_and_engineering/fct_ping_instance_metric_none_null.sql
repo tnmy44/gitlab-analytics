@@ -1,5 +1,6 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    cluster_by=['ping_created_date']
 ) }}
 
 {{ simple_cte([
@@ -30,7 +31,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@tpoole",
-    updated_by="@tpoole",
+    updated_by="@utkarsh060",
     created_date="2022-01-09",
-    updated_date="2022-01-09"
+    updated_date="2024-05-15"
 ) }}
