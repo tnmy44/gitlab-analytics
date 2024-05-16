@@ -4830,6 +4830,7 @@ roles:
         - customers_db
         - data_team_analyst
         - data_science_readonly
+        - gainsight_customer_success
         - restricted_safe
         - salesforce_sandbox
         - workday
@@ -4874,6 +4875,7 @@ roles:
         - analyst_engineering
         - analyst_growth
         - data_team_analyst
+        - gainsight_customer_success
         - restricted_safe
         - bi_tool_eval_read
         - zuora
@@ -6206,6 +6208,7 @@ roles:
         - analyst_engineering
         - analyst_growth
         - data_team_analyst
+        - gainsight_customer_success
         - restricted_safe
         - bi_tool_eval_read
         - zuora
