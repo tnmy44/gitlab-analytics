@@ -473,7 +473,7 @@ metrics.internal_or_external,
 metrics.metric_value,
 metrics.metric
 FROM
-PROD.common.dim_date d 
+{{ ref('dim_date') }} d 
 LEFT JOIN metrics ON d.date_day = metrics._date 
 WHERE
 d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
@@ -633,6 +633,7 @@ WHERE
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
+
 UNION ALL 
 
 SELECT 
@@ -676,7 +677,6 @@ WHERE
   AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
-
 UNION ALL 
 
 SELECT 
@@ -842,7 +842,7 @@ metrics.internal_or_external,
 metrics.metric_value,
 metrics.metric
 FROM
-PROD.common.dim_date d 
+{{ ref('dim_date') }} d 
 LEFT JOIN metrics ON d.date_day = metrics._date 
 WHERE
 d.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
