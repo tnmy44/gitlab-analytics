@@ -481,7 +481,7 @@ WITH biz_person AS (
         ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM sfdc_leads
     LEFT JOIN {{ ref('sfdc_bizible_person_source') }}
-        ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
+        ON sfdc_leads.lead_id = sfdc_bizible_person_source.bizible_lead_id
     LEFT JOIN {{ ref('sfdc_bizible_touchpoint_source') }}
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
@@ -517,7 +517,7 @@ WITH biz_person AS (
         ROW_NUMBER () OVER (PARTITION BY sfdc_record_id ORDER BY bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM sfdc_leads
     LEFT JOIN {{ ref('sfdc_bizible_person_source') }}
-        ON sfdc_lead_source.lead_id = sfdc_bizible_person_source.bizible_lead_id
+        ON sfdc_leads.lead_id = sfdc_bizible_person_source.bizible_lead_id
     LEFT JOIN {{ ref('sfdc_bizible_touchpoint_source') }}
         ON sfdc_bizible_person_source.person_id = sfdc_bizible_touchpoint_source.bizible_person_id
     WHERE touchpoint_id IS NOT null
