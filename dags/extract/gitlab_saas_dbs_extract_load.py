@@ -306,7 +306,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
             python ../extract/gitlab_saas_postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest_db_manifest.yaml {operation}
+            ../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml {operation}
         "
     """
 
@@ -328,11 +328,12 @@ def get_last_loaded(dag_name: String) -> Union[None, str]:
 
 def generate_cmd(dag_name, operation, cloudsql_instance_name):
     """Generate the command"""
+    file_name="el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
     if cloudsql_instance_name is None:
         return f"""
             {clone_repo_cmd} &&
             cd analytics/extract/gitlab_saas_postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap ../manifests/el_saas_gitlab_dotcom_consolidated_manifest_db_manifest.yaml {operation}
+            python main.py tap ../manifests/{file_name} {operation}
         """
 
     return use_cloudsql_proxy(dag_name, operation, cloudsql_instance_name)
@@ -499,7 +500,7 @@ for source_name, config in config_dict.items():
             )
         with extract_dag:
             # Actual PGP extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list_unfiltered = extract_table_list_from_manifest(manifest)
             table_list = extract_list_based_on_database_type(
@@ -589,7 +590,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list_unfiltered = extract_table_list_from_manifest(manifest)
             table_list = extract_list_based_on_database_type(
@@ -649,7 +650,7 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_scd_consolidated_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_scd_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list_unfiltered = extract_table_list_from_manifest(manifest)
             table_list = extract_list_based_on_database_type(
