@@ -282,7 +282,7 @@ Below checklist of activities would be run once for quarter to validate security
 
 ## Tableau
 1. [ ] Validate offboarded employess have been removed from Tableau Cloud
-1. [ ] Deprovision access if an user has not logged-in within the past 90 days from the moment of performing audit.
+1. [ ] Deprovision access if a user has had access for >=90 days, but have not logged in during the past 90 days from the moment of performing audit. 
   - [Deprovision Check](https://10az.online.tableau.com/t/gitlab/views/UserDeprovisionCheck/UserDeprovisionCheck)
 
 ## Package version inventory
