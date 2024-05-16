@@ -615,6 +615,27 @@ GROUP BY ALL
 UNION ALL 
 
 SELECT 
+DATE_TRUNC(WEEK,p.ping_created_date_week)::DATE AS date_day,
+'chat' AS ai_feature,
+LOWER(p.ping_product_tier) AS plan,
+'All' AS internal_or_external,
+'All' AS delivery_type,
+SUM(COALESCE(p.metric_value,0)::INT),
+'WAU' AS metric
+FROM 
+{{ ref('mart_ping_instance_metric') }} p
+WHERE
+  p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_week = TRUE
+  AND p.ping_created_date_month > '2024-01-01'
+  AND p.ping_deployment_type != 'Gitlab.com'
+  AND p.ping_deployment_type != 'GitLab.com'
+GROUP BY ALL
+UNION ALL 
+
+SELECT 
 p.ping_created_date_month::DATE AS date_day,
 'chat' AS ai_feature,
 'All' AS plan,
@@ -751,6 +772,28 @@ DATE_TRUNC(MONTH,p.ping_created_date_month)::DATE AS date_day,
 'chat' AS ai_feature,
 LOWER(p.ping_product_tier) AS plan,
 'External' AS internal_or_external,
+'All' AS delivery_type,
+SUM(COALESCE(p.metric_value,0)::INT),
+'MAU' AS metric
+FROM
+{{ ref('mart_ping_instance_metric') }} p
+WHERE
+  p.metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
+  AND p.major_minor_version_id >= 1611
+  AND p.metric_value > 0
+  AND p.is_last_ping_of_month = TRUE
+  AND p.ping_created_date_month > '2024-01-01'
+  AND p.ping_deployment_type != 'Gitlab.com'
+  AND p.ping_deployment_type != 'GitLab.com'
+GROUP BY ALL
+
+UNION ALL 
+
+SELECT 
+DATE_TRUNC(MONTH,p.ping_created_date_month)::DATE AS date_day,
+'chat' AS ai_feature,
+LOWER(p.ping_product_tier) AS plan,
+'All' AS internal_or_external,
 'All' AS delivery_type,
 SUM(COALESCE(p.metric_value,0)::INT),
 'MAU' AS metric
