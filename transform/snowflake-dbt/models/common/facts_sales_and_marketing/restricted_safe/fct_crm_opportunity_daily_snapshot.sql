@@ -23,6 +23,7 @@ final AS (
   SELECT 
     prep_crm_opportunity.dim_crm_opportunity_id,
     prep_crm_opportunity.dim_parent_crm_opportunity_id,
+    {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_id') }}                                                            AS dim_crm_account_id,
     {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_user_id') }}                                                               AS dim_crm_user_id,
     {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_user_id') }}                                                       AS dim_crm_account_user_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
