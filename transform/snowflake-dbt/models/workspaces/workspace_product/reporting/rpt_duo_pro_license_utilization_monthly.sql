@@ -13,8 +13,8 @@
     ('mart_behavior_structured_event', 'mart_behavior_structured_event'),
     ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
     ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion')
-	('dim_product_detail', 'dim_product_detail')
-	('zqu__productrateplan__c', 'zqu__productrateplan__c')
+	  ('dim_product_detail', 'dim_product_detail')
+	  ('zqu__productrateplan__c', 'zqu__productrateplan__c')
 
     ])
 }},
