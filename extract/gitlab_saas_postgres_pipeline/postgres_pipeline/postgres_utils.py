@@ -793,28 +793,33 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    if database_type == "cells":
-        postgres_engine = postgres_engine_factory(
-            connection_dict["postgres_source_connection_cells"], env
-        )
-    elif database_type == "ci":
-        postgres_engine = postgres_engine_factory(
-            connection_dict["postgres_source_connection_ci_legacy"], env
-        )
-    elif database_type == "main":
-        postgres_engine = postgres_engine_factory(
+    # if database_type == "cells":
+    #     postgres_engine = postgres_engine_factory(
+    #         connection_dict["postgres_source_connection_cells"], env
+    #     )
+    # elif database_type == "ci":
+    #     postgres_engine = postgres_engine_factory(
+    #         connection_dict["postgres_source_connection_ci_legacy"], env
+    #     )
+    # elif database_type == "main":
+    #     postgres_engine = postgres_engine_factory(
+    #         connection_dict["postgres_source_connection_main_legacy"], env
+    #     )
+    postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_main_legacy"], env
-        )
+         )
     snowflake_engine = snowflake_engine_factory(
         env,
         role="LOADER",
         schema=TARGET_EXTRACT_SCHEMA,
     )
-    metadata_engine = None
+
     if connection_dict.get("postgres_metadata_connection"):
         metadata_engine = postgres_engine_factory(
             connection_dict["postgres_metadata_connection"], env
         )
+    else:
+        metadata_engine = None
 
     return postgres_engine, snowflake_engine, metadata_engine
 
