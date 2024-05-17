@@ -39,9 +39,6 @@ BUCKET_NAME_CELLS = os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
 TARGET_EXTRACT_SCHEMA = "tap_postgres"
 TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
 
-config_dict = os.environ.copy()
-database_type = config_dict["database_type"]
-
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 INCREMENTAL_METADATA_TABLE = "incremental_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
@@ -789,7 +786,7 @@ def id_query_generator(
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine]:
+def get_engines(connection_dict: Dict[Any, Any], database_type: str) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
