@@ -4,7 +4,8 @@
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
     unique_key = "ping_instance_metric_id",
-    on_schema_change="sync_all_columns"
+    on_schema_change="sync_all_columns",
+    post_hook=["DELETE FROM {{ this }} WHERE is_current_ping = FALSE "]
 ) }}
 
 {{ simple_cte([
@@ -13,6 +14,25 @@
     ])
 
 }},
+
+{% if is_incremental() %}
+
+ping_instance_list AS (
+  SELECT
+    ARRAY_AGG( dim_ping_instance_id) AS dim_ping_instance_id_array
+  FROM dim_ping_instance
+  GROUP BY dim_instance_id, dim_host_id, uploaded_group
+  HAVING MAX(next_ping_uploaded_at) >  '{{ filter_date }}'
+),
+
+updated_ping_instance AS (
+  SELECT
+    value::VARCHAR AS dim_ping_instance_id
+  FROM ping_instance_list
+  INNER JOIN LATERAL FLATTEN(INPUT => dim_ping_instance_id_array)
+),
+
+{% endif %}
 
 fct_ping_instance_metric AS (
 
@@ -23,6 +43,7 @@ fct_ping_instance_metric AS (
   FROM {{ ref('fct_ping_instance_metric') }}
   {% if is_incremental() %}
     WHERE uploaded_at > '{{ filter_date }}'
+    OR dim_ping_instance_id  IN (SELECT * FROM updated_ping_instance)
   {% endif %}
 
 ),
@@ -30,14 +51,14 @@ fct_ping_instance_metric AS (
 filtered_fct_ping_instance_metric AS (
   SELECT
     fct_ping_instance_metric.*,
-    dim_ping_metric.time_frame
+    dim_ping_metric.time_frame,
+    dim_ping_instance.is_last_ping_of_month AS is_current_ping
   FROM fct_ping_instance_metric
   INNER JOIN dim_ping_metric
     ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
   INNER JOIN dim_ping_instance
     ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
   WHERE dim_ping_metric.time_frame IN ('28d', 'all')
-    AND dim_ping_instance.is_last_ping_of_month = TRUE
     AND fct_ping_instance_metric.has_timed_out = FALSE
     AND fct_ping_instance_metric.metric_value IS NOT NULL
 ),
@@ -87,7 +108,8 @@ final AS (
     ping_created_at,
     umau_value,
     data_source,
-    uploaded_at
+    uploaded_at,
+    is_current_ping
   FROM time_frame_28_day_metrics
 
   UNION ALL
@@ -114,7 +136,8 @@ final AS (
     ping_created_at,
     umau_value,
     data_source,
-    uploaded_at
+    uploaded_at,
+    is_current_ping
   FROM time_frame_all_time_metrics
 
 )
