@@ -801,12 +801,10 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_ci_legacy"], env
         )
-    elif database_type == "main":
+    else :
         postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_main_legacy"], env
         )
-    else:
-        pass
     # postgres_engine = postgres_engine_factory(
     #         connection_dict["postgres_source_connection_main_legacy"], env
     #      )
