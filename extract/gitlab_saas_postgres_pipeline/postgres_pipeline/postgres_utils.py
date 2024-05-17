@@ -793,15 +793,19 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
+    # There are 3 database types to read from main db, ci db and cells db
     if database_type == "cells":
+        logging.info("Reading from cells db")
         postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_cells"], env
         )
     elif database_type == "ci":
+        logging.info("Reading from ci legacy db")
         postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_ci_legacy"], env
         )
     else :
+        logging.info("Reading from main legacy db")
         postgres_engine = postgres_engine_factory(
             connection_dict["postgres_source_connection_main_legacy"], env
         )
