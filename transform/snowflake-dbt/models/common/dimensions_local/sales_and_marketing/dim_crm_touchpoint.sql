@@ -161,6 +161,9 @@ WITH campaign_details AS (
       COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
 
+    -- new utm parsing
+    {{ utm_parsing('utm_campaign') }}
+
       bizible_marketing_channel,
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dn8MQAQ' THEN 'Paid Social.LinkedIn Lead Gen'
@@ -288,5 +291,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2024-01-31" 
+    updated_date="2024-05-17" 
 ) }}
