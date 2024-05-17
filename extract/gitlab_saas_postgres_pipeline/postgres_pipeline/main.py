@@ -17,7 +17,7 @@ from postgres_utils import (
 )
 
 connection_file_path = (
-    "../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_connection_info.yaml"
+    "../manifests/el_saas_connection_info.yaml"
 )
 
 
