@@ -1,6 +1,5 @@
 {{ config(
-    tags=["product", "mnpi_exception"],
-    cluster_by=['ping_created_date']
+    tags=["product", "mnpi_exception"]
 ) }}
 
 {{ simple_cte([
