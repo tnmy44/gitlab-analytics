@@ -199,13 +199,6 @@
       dim_crm_person.zoominfo_do_not_call_direct_phone,
       dim_crm_person.zoominfo_do_not_call_mobile_phone,
       dim_crm_person.zoominfo_company_employee_count,
-      dim_crm_person.bizible_mql_touchpoint_id,
-      dim_crm_person.bizible_mql_touchpoint_date,
-      dim_crm_person.bizible_mql_form_url,
-      dim_crm_person.bizible_mql_sfdc_campaign_id,
-      dim_crm_person.bizible_mql_ad_campaign_name,
-      dim_crm_person.bizible_mql_marketing_channel,
-      dim_crm_person.bizible_mql_marketing_channel_path,
       fct_crm_person.last_transfer_date_time,
       fct_crm_person.time_from_last_transfer_to_sequence,
       fct_crm_person.time_from_mql_to_last_transfer,
@@ -224,7 +217,23 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
-      dim_crm_person.person_first_country
+      dim_crm_person.person_first_country,
+      
+      --MQL and Most Recent Touchpoint info
+      dim_crm_person.bizible_mql_touchpoint_id,
+      dim_crm_person.bizible_mql_touchpoint_date,
+      dim_crm_person.bizible_mql_form_url,
+      dim_crm_person.bizible_mql_sfdc_campaign_id,
+      dim_crm_person.bizible_mql_ad_campaign_name,
+      dim_crm_person.bizible_mql_marketing_channel,
+      dim_crm_person.bizible_mql_marketing_channel_path,
+      dim_crm_person.bizible_most_recent_touchpoint_id,
+      dim_crm_person.bizible_most_recent_touchpoint_date,
+      dim_crm_person.bizible_most_recent_form_url,
+      dim_crm_person.bizible_most_recent_sfdc_campaign_id,
+      dim_crm_person.bizible_most_recent_ad_campaign_name,
+      dim_crm_person.bizible_most_recent_marketing_channel,
+      dim_crm_person.bizible_most_recent_marketing_channel_path
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -312,5 +321,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-05-07",
+    updated_date="2024-05-17",
   ) }}  
