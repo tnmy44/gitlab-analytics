@@ -16,11 +16,6 @@ from postgres_utils import (
     manifest_reader,
 )
 
-connection_file_path = (
-    "../manifests/el_saas_connection_info.yaml"
-)
-
-
 def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     if load_only_table and load_only_table in manifest_dict["tables"].keys():
@@ -29,7 +24,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
         }
 
 
-def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
+def main(file_path: str, load_type: str,connection_info_file_name:str , load_only_table: str = None) -> None:
     """
     Read data from a postgres DB and upload it directly to Snowflake.
     """
@@ -40,7 +35,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
 
-    connection_manifest_dict = manifest_reader(connection_file_path)
+    connection_manifest_dict = manifest_reader(connection_info_file_name)
     postgres_engine, snowflake_engine, metadata_engine = get_engines(
         connection_manifest_dict["connection_info"]
     )
