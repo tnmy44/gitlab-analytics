@@ -98,7 +98,7 @@ WITH campaign_details AS (
       COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
       -- new utm parsing
-    {{ utm_parsing('utm_campaign') }},
+    {{ utm_parsing('utm_campaign') }}
       bizible_marketing_channel,
       bizible_marketing_channel_path,
       bizible_medium,
@@ -216,6 +216,7 @@ WITH campaign_details AS (
       combined_touchpoints.utm_budget,
       combined_touchpoints.utm_allptnr,
       combined_touchpoints.utm_partnerid,
+      combined_touchpoints.utm_campaign_date,
       combined_touchpoints.bizible_marketing_channel,
       combined_touchpoints.bizible_marketing_channel_path,
       combined_touchpoints.bizible_medium,
