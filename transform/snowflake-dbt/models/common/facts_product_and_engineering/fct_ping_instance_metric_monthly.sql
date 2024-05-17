@@ -43,6 +43,7 @@ filtered_fct_ping_instance_metric AS (
     {% if is_incremental() %}
     AND dim_ping_instance.next_ping_uploaded_at > '{{ filter_date }}'
     {% else %}
+    -- Only filtered on a full refresh as the post_hook DELETE step applies the filter during an incremental build
     AND dim_ping_instance.is_last_ping_of_month = TRUE
     {% endif %}
     AND fct_ping_instance_metric.has_timed_out = FALSE
