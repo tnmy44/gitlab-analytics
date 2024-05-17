@@ -333,8 +333,8 @@ def get_last_loaded(dag_name: String) -> Union[None, str]:
 
 def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type):
     """Generate the command"""
-    file_name="el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
-    connection_info_file_name= "el_saas_connection_info.yaml"
+    file_name = "el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
+    connection_info_file_name = "el_saas_connection_info.yaml"
     if cloudsql_instance_name is None:
         return f"""
             {clone_repo_cmd} &&
