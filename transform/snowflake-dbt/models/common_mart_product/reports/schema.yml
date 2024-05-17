@@ -1663,6 +1663,8 @@ models:
       description: Unique identifier of a version of a subscription
     - name: ultimate_subscription_flag
       description: This field is a flag that designates if a subscription is an ultimate subscription or not. 1 = Ultimate subscription, 0 = Non-Ultimate subscription
+    - name: product_tier_name
+      description: Name of the GitLab tier associated with the product
     - name: is_oss_program
       description: This field is a flag that designates if a subscription is an OSS program or not. True = OSS Subscription, False = Not an OSS Subscription
     - name: delivery_type 
