@@ -27,6 +27,17 @@ WITH source AS (
       comments__c                               AS comments,
       description                               AS full_comments,
       subject                                   AS task_subject,
+      CASE 
+        WHEN contains(subject, 'Microsite Program') 
+          THEN 'Microsite Program'
+        WHEN contains(subject, 'Free Trial Program')
+          THEN 'Free Trial Program'
+        WHEN trim(subject) = 'GitLab Dedicated Landing Pages'
+          THEN 'GitLab Dedicated Landing Pages'
+        WHEN trim(subject) = 'Partner Concierge Program'
+          THEN 'Partner Concierge Program'
+        ELSE NULL
+      END                                       AS partner_marketing_task_subject,
       activitydate                              AS task_date,
       createddate                               AS task_created_date,
       createdbyid                               AS task_created_by_id,
