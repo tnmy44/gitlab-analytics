@@ -15,24 +15,6 @@
 
 }},
 
-{% if is_incremental() %}
-
-ping_instance_list AS (
-  SELECT
-    ARRAY_AGG( dim_ping_instance_id) AS dim_ping_instance_id_array
-  FROM dim_ping_instance
-  GROUP BY dim_instance_id, dim_host_id, uploaded_group
-  HAVING MAX(next_ping_uploaded_at) >  '{{ filter_date }}'
-),
-
-updated_ping_instance AS (
-  SELECT
-    value::VARCHAR AS dim_ping_instance_id
-  FROM ping_instance_list
-  INNER JOIN LATERAL FLATTEN(INPUT => dim_ping_instance_id_array)
-),
-
-{% endif %}
 
 fct_ping_instance_metric AS (
 
@@ -43,7 +25,6 @@ fct_ping_instance_metric AS (
   FROM {{ ref('fct_ping_instance_metric') }}
   {% if is_incremental() %}
     WHERE uploaded_at > '{{ filter_date }}'
-    OR dim_ping_instance_id  IN (SELECT * FROM updated_ping_instance)
   {% endif %}
 
 ),
