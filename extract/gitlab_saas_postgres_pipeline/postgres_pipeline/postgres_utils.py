@@ -61,10 +61,7 @@ def get_gcs_bucket() -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
     scoped_credentials = get_gcs_scoped_credentials()
     storage_client = storage.Client(credentials=scoped_credentials)
-    if database_type == "cells":
-        return storage_client.get_bucket(BUCKET_NAME_CELLS)
-    else:
-        return storage_client.get_bucket(BUCKET_NAME)
+    return storage_client.get_bucket(BUCKET_NAME)
 
 
 def upload_to_gcs(
