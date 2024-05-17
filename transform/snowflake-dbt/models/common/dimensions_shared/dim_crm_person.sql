@@ -1,9 +1,12 @@
-{{ config(
-    tags=["mnpi_exception"],
-    {
+{{ config({
     "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_person_id') }}"
     })
 }}
+
+{{ config(
+    materialized="table",
+    tags=["mnpi_exception"]
+) }}
 
 WITH crm_person AS (
 
