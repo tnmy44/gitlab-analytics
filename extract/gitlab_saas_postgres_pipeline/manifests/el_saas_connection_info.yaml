@@ -1,11 +1,11 @@
 connection_info:
-  postgres_source_connection_ci_legacy:
+  postgres_source_connection_ci:
     database: GITLAB_COM_CI_DB_NAME
     host: GITLAB_COM_CI_DB_HOST
     pass: GITLAB_COM_CI_DB_PASS
     port: GITLAB_COM_CI_DB_PORT
     user: GITLAB_COM_CI_DB_USER
-  postgres_source_connection_main_legacy:
+  postgres_source_connection_main:
     database: GITLAB_COM_DB_NAME
     host: GITLAB_COM_DB_HOST
     pass: GITLAB_COM_DB_PASS

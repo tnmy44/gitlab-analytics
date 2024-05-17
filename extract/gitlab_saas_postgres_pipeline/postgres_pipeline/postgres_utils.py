@@ -790,26 +790,32 @@ def get_engines(connection_dict: Dict[Any, Any], database_type: str) -> Tuple[En
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    logging.info(f"Databas type  : {database_type}")
-    # There are 3 database types to read from main db, ci db and cells db
-    if database_type == "cells":
-        logging.info("Reading from cells db")
-        postgres_engine = postgres_engine_factory(
-            connection_dict["postgres_source_connection_cells"], env
+    
+    connection_info_var = f"postgres_source_connection_{database_type}"
+
+    postgres_engine = postgres_engine_factory(
+            connection_dict[connection_info_var], env
         )
-    elif database_type == "ci":
-        logging.info("Reading from ci legacy db")
-        postgres_engine = postgres_engine_factory(
-            connection_dict["postgres_source_connection_ci_legacy"], env
-        )
-    else :
-        logging.info("Reading from main legacy db")
-        postgres_engine = postgres_engine_factory(
-            connection_dict["postgres_source_connection_main_legacy"], env
-        )
-    # postgres_engine = postgres_engine_factory(
+
+    # # There are 3 database types to read from main db, ci db and cells db
+    # if database_type == "cells":
+    #     logging.info("Reading from cells db")
+    #     postgres_engine = postgres_engine_factory(
+    #         connection_dict["postgres_source_connection_cells"], env
+    #     )
+    # elif database_type == "ci":
+    #     logging.info("Reading from ci legacy db")
+    #     postgres_engine = postgres_engine_factory(
+    #         connection_dict["postgres_source_connection_ci_legacy"], env
+    #     )
+    # else :
+    #     logging.info("Reading from main legacy db")
+    #     postgres_engine = postgres_engine_factory(
     #         connection_dict["postgres_source_connection_main_legacy"], env
-    #      )
+    #     )
+    # # postgres_engine = postgres_engine_factory(
+    # #         connection_dict["postgres_source_connection_main_legacy"], env
+    # #      )
     snowflake_engine = snowflake_engine_factory(
         env,
         role="LOADER",
