@@ -8,7 +8,7 @@
 {{ simple_cte([
     ('paid_user_metrics', 'mart_product_usage_paid_user_metrics_monthly'),
     ('dim_crm_account', 'dim_crm_account'),
-    ('mart_arr_all', 'mart_arr_with_zero_dollar_charges')
+    ('mart_arr', 'mart_arr')
 ])}}
 
 , joined AS (
@@ -28,8 +28,8 @@
         paid_user_metrics.subscription_name,
         paid_user_metrics.dim_subscription_id_original,
         paid_user_metrics.dim_subscription_id,
-        IFF(mart_arr_all.product_tier_name ILIKE '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
-        mart_arr_all.product_tier_name,
+        IFF(mart_arr.product_tier_name ILIKE '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
+        mart_arr.product_tier_name,
         paid_user_metrics.delivery_type,
         paid_user_metrics.deployment_type,
         paid_user_metrics.instance_type,
@@ -271,11 +271,11 @@
 FROM paid_user_metrics
 LEFT JOIN dim_crm_account
     ON paid_user_metrics.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-LEFT JOIN mart_arr_all
-    ON paid_user_metrics.dim_subscription_id_original = mart_arr_all.dim_subscription_id_original
-    AND paid_user_metrics.snapshot_month = mart_arr_all.arr_month
-    AND paid_user_metrics.delivery_type = mart_arr_all.product_delivery_type
-    AND mart_arr_all.product_tier_name NOT IN ('Storage','Not Applicable')
+LEFT JOIN mart_arr
+    ON paid_user_metrics.dim_subscription_id_original = mart_arr.dim_subscription_id_original
+    AND paid_user_metrics.snapshot_month = mart_arr.arr_month
+    AND paid_user_metrics.delivery_type = mart_arr.product_delivery_type
+    AND mart_arr.product_tier_name NOT IN ('Storage','Not Applicable')
 WHERE paid_user_metrics.license_user_count != 0
 qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instance_identifier ORDER BY paid_user_metrics.ping_created_at DESC NULLs last) = 1
 
