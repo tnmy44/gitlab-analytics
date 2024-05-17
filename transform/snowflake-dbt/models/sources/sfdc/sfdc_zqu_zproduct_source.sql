@@ -25,7 +25,7 @@ with source AS (
       zqu__allow_feature_changes__c::BOOLEAN       AS zqu_allow_feature_changes,
       lastreferenceddate ::VARCHAR                 AS last_referenced_date,
       lastvieweddate::VARCHAR                      AS last_viewed_date,
-      ownerid ::VARCHAR                            AS ownerid,   
+      ownerid ::VARCHAR                            AS owner_id,   
       zqu__deleted__c::BOOLEAN                     AS zqu_deleted,
       zqu__effectiveenddatetext__c::VARCHAR        AS zqu_effective_end_date_text,
       zqu__effectiveenddate__c::VARCHAR            AS zqu_effective_end_date,
