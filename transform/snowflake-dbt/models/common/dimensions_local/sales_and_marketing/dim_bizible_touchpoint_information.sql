@@ -24,8 +24,8 @@
     LEFT JOIN prep_crm_touchpoint
         ON fct_crm_person.bizible_person_id = prep_crm_touchpoint.bizible_person_id
     WHERE prep_crm_touchpoint.touchpoint_id IS NOT null
-        AND fct_crm_person.marketo_qualified_lead_date IS NOT null
-        AND prep_crm_touchpoint.bizible_touchpoint_date <= fct_crm_person.marketo_qualified_lead_date
+        AND fct_crm_person.mql_date_latest IS NOT null
+        AND prep_crm_touchpoint.bizible_touchpoint_date <= fct_crm_person.mql_date_latest
     ORDER BY prep_crm_touchpoint.bizible_touchpoint_date DESC
 
 ), bizible_mql_touchpoint_information_final AS (
