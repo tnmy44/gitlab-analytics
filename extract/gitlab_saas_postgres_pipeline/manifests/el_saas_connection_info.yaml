@@ -11,7 +11,7 @@ connection_info:
     pass: GITLAB_COM_DB_PASS
     port: GITLAB_COM_PG_PORT
     user: GITLAB_COM_DB_USER
-  postgres_source_connection_cells: #to be changed
+  postgres_source_connection_cells: # connection information to be changed
     database: GITLAB_COM_DB_NAME
     host: GITLAB_COM_DB_HOST
     pass: GITLAB_COM_DB_PASS

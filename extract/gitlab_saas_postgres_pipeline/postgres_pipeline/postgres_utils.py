@@ -35,9 +35,12 @@ from sqlalchemy.schema import CreateTable, DropTable
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BUCKET_NAME_CELLS = os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
-database_type = os.environ.get("DATABASE_TYPE")
+
 TARGET_EXTRACT_SCHEMA = "tap_postgres"
 TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
+
+config_dict = os.environ.copy()
+database_type = config_dict["database_type"]
 
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 INCREMENTAL_METADATA_TABLE = "incremental_metadata"

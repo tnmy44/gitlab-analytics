@@ -24,7 +24,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
         }
 
 
-def main(file_path: str, load_type: str,connection_info_file_name:str , load_only_table: str = None) -> None:
+def main(file_path: str, load_type: str, connection_info_file_name:str, load_only_table: str = None) -> None:
     """
     Read data from a postgres DB and upload it directly to Snowflake.
     """
