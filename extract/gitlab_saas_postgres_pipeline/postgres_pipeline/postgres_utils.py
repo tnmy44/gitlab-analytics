@@ -783,7 +783,9 @@ def id_query_generator(
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[Any, Any], database_type: str) -> Tuple[Engine, Engine, Engine]:
+def get_engines(
+    connection_dict: Dict[Any, Any], database_type: str
+) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
@@ -793,9 +795,7 @@ def get_engines(connection_dict: Dict[Any, Any], database_type: str) -> Tuple[En
     logging.info(f"Reading from {database_type} db")
     connection_info_var = f"postgres_source_connection_{database_type}"
 
-    postgres_engine = postgres_engine_factory(
-            connection_dict[connection_info_var], env
-        )
+    postgres_engine = postgres_engine_factory(connection_dict[connection_info_var], env)
 
     snowflake_engine = snowflake_engine_factory(
         env,

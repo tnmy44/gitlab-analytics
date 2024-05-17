@@ -16,6 +16,7 @@ from postgres_utils import (
     manifest_reader,
 )
 
+
 def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     if load_only_table and load_only_table in manifest_dict["tables"].keys():
@@ -24,7 +25,13 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
         }
 
 
-def main(file_path: str, load_type: str, connection_info_file_name: str, database_type: str, load_only_table: str = None) -> None:
+def main(
+    file_path: str,
+    load_type: str,
+    connection_info_file_name: str,
+    database_type: str,
+    load_only_table: str = None,
+) -> None:
     """
     Read data from a postgres DB and upload it directly to Snowflake.
     """
