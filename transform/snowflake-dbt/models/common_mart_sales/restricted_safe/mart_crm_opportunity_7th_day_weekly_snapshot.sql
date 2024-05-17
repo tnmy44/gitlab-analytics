@@ -366,7 +366,6 @@ final AS (
     dim_date.current_day_of_fiscal_year,
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
-    dim_date.current_week_of_fiscal_quarter,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
@@ -591,8 +590,9 @@ final AS (
     --PTC related fields
     fct_crm_opportunity.ptc_predicted_arr,
     fct_crm_opportunity.ptc_predicted_renewal_risk_category,
-    'granular' AS source
-
+    'granular' AS source,
+    IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
+    IFF(dim_date.current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
     ON fct_crm_opportunity.dim_crm_account_id = dim_crm_account.dim_crm_account_id
@@ -605,7 +605,7 @@ final AS (
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
   LEFT JOIN dim_crm_user_hierarchy
     ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-  LEFT JOIN dim_date snapshot_date
+  LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN dim_date created_date
     ON fct_crm_opportunity.created_date = created_date.date_actual
@@ -660,10 +660,5 @@ final AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@lisvinueza",
-    updated_by="@lisvinueza",
-    created_date="2024-05-10",
-    updated_date="2024-05-10"
-  ) }}
+SELECT * 
+FROM final

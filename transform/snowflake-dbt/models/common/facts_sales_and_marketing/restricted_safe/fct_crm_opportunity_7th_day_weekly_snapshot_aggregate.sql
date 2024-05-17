@@ -59,6 +59,11 @@ final AS (
     SUM(open_4plus_deal_count_in_snapshot_quarter)                     AS open_4plus_deal_count_in_snapshot_quarter,
 
     -- Additive fields
+    SUM(net_incremental_acv)                                           AS net_incremental_acv,
+    SUM(incremental_acv)                                               AS incremental_acv,
+    SUM(created_in_snapshot_quarter_net_arr)                           AS created_in_snapshot_quarter_net_arr,
+    SUM(created_in_snapshot_quarter_deal_count)                        AS created_in_snapshot_quarter_deal_count,
+    SUM(opportunity_based_iacv_to_net_arr_ratio)                       AS opportunity_based_iacv_to_net_arr_ratio,
     SUM(segment_order_type_iacv_to_net_arr_ratio)                      AS segment_order_type_iacv_to_net_arr_ratio,
     SUM(calculated_from_ratio_net_arr)                                 AS calculated_from_ratio_net_arr,
     SUM(net_arr)                                                       AS net_arr,
@@ -88,6 +93,7 @@ final AS (
     SUM(booked_net_arr)                                                AS booked_net_arr,
     SUM(churned_contraction_net_arr)                                   AS churned_contraction_net_arr,
     SUM(calculated_deal_count)                                         AS calculated_deal_count,
+    SUM(cycle_time_in_days)                                            AS cycle_time_in_days,
     SUM(booked_churned_contraction_deal_count)                         AS booked_churned_contraction_deal_count,
     SUM(booked_churned_contraction_net_arr)                            AS booked_churned_contraction_net_arr,
     SUM(renewal_amount)                                                AS renewal_amount,

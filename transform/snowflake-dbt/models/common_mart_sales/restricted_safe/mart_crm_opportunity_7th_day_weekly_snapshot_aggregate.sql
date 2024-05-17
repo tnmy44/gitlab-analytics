@@ -117,10 +117,13 @@ final AS (
     fct_crm_opportunity.created_deals_in_snapshot_quarter,
     fct_crm_opportunity.cycle_time_in_days_in_snapshot_quarter,
     fct_crm_opportunity.booked_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
     fct_crm_opportunity.raw_net_arr,
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.incremental_acv,
     fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
@@ -150,6 +153,8 @@ final AS (
     fct_crm_opportunity.booked_churned_contraction_net_arr,
     fct_crm_opportunity.renewal_amount,
     fct_crm_opportunity.total_contract_value,
+    fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
+    fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
     fct_crm_opportunity.days_in_stage,
     fct_crm_opportunity.calculated_age_in_days,
     fct_crm_opportunity.days_since_last_activity,
@@ -159,9 +164,10 @@ final AS (
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari,
     fct_crm_opportunity.vsa_start_date_net_arr,
+    fct_crm_opportunity.cycle_time_in_days,
     'aggregate' AS source,
     IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
-    IFF(current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
+    IFF(dim_date.current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
   FROM fct_crm_opportunity
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
