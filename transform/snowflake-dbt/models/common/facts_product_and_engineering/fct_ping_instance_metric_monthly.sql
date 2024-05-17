@@ -40,6 +40,11 @@ filtered_fct_ping_instance_metric AS (
   INNER JOIN dim_ping_instance
     ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
   WHERE dim_ping_metric.time_frame IN ('28d', 'all')
+    {% if is_incremental() %}
+    AND dim_ping_instance.next_ping_uploaded_at > '{{ filter_date }}'
+    {% else %}
+    AND dim_ping_instance.is_last_ping_of_month = TRUE
+    {% endif %}
     AND fct_ping_instance_metric.has_timed_out = FALSE
     AND fct_ping_instance_metric.metric_value IS NOT NULL
 ),
