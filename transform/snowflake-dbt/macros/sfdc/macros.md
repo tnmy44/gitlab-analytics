@@ -63,3 +63,13 @@ This macro applies correct mapping to the campaign budget_holder field based on 
 {% docs date_spine_7th_day %}
 This macro generates a date spine that provides weekly snapshots (every 7 days) throughout a quarter, extending up to day 84. For the final week of the quarter, the duration varies: it can span 8 days for Q2, Q3, and Q4, while for Q1, it may be 5 or 6 days, depending on the year.
 {% enddocs %}
+
+
+{% docs union_tables %}
+
+The `union_tables` is derived from the `dbt_utils.union_relations` macro. It is designed to handle unions of tables with unequal schemas, supporting WHERE clauses and individual table filters, then combining all results using UNION. It constructs SQL SELECT statements for each specified table, ensuring correct column alignment and handling missing columns by filling them with NULL values. It allows for optional column overrides, inclusion or exclusion of specific columns, and the addition of a source column to identify the originating table. Example usage below:
+
+
+
+
+{% enddocs %}
