@@ -1,6 +1,7 @@
 {{ config({
     "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_person_id') }}"
-    })
+    },
+    tags=["mnpi_exception"])
 }}
 
 WITH crm_person AS (
