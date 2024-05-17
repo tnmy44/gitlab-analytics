@@ -436,8 +436,8 @@ def get_check_replica_snapshot_command(dag_name):
         print("Checking cells gitlab_dotcom DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
-            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd && "
-            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+            "python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci && "
+            "python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
         )
     return check_replica_snapshot_command
 
