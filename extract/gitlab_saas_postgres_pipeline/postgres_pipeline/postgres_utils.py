@@ -793,6 +793,7 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
+    logging.info(f"Databas type  : {database_type}")
     # There are 3 database types to read from main db, ci db and cells db
     if database_type == "cells":
         logging.info("Reading from cells db")
