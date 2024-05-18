@@ -37,6 +37,10 @@ final AS (
     snapshot_day_of_fiscal_year_normalised,
     snapshot_last_day_of_fiscal_quarter,
 
+    close_fiscal_quarter_date,
+    created_fiscal_quarter_date,
+    arr_created_fiscal_quarter_date,
+
     -- Running sum of metrics
 
     SUM(positive_booked_deal_count_in_snapshot_quarter)                AS positive_booked_deal_count_in_snapshot_quarter,

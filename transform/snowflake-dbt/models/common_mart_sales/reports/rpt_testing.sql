@@ -1,4 +1,4 @@
-{{ union_tables(
+{{ union_tables_with_filters(
     relations=[
         ref('mart_crm_opportunity_7th_day_weekly_snapshot'), 
         ref('mart_crm_opportunity_7th_day_weekly_snapshot_aggregate'), 
