@@ -55,6 +55,15 @@ final AS (
     dim_date.current_day_of_fiscal_year,
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
+    close_date.first_day_of_fiscal_quarter                          AS close_fiscal_quarter_date,
+    close_date.fiscal_quarter_name_fy                               AS close_fiscal_quarter_name,
+    close_date.fiscal_year                                          AS close_fiscal_year,
+    created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
+    created_date.fiscal_quarter_name_fy                             AS created_fiscal_quarter_name,
+    created_date.fiscal_year                                        AS created_fiscal_year,
+    arr_created_date.first_day_of_fiscal_quarter                    AS arr_created_fiscal_quarter_date,
+    arr_created_date.fiscal_quarter_name_fy                         AS arr_created_fiscal_quarter_name,
+    arr_created_date.fiscal_year                                    AS arr_created_fiscal_year,
     dim_date.date_day                                               AS snapshot_day,
     dim_date.day_name                                               AS snapshot_day_name, 
     dim_date.day_of_week                                            AS snapshot_day_of_week,
@@ -171,6 +180,12 @@ final AS (
   FROM fct_crm_opportunity
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
+  LEFT JOIN dim_date close_date
+    ON fct_crm_opportunity.close_fiscal_quarter_date = close_date.first_day_of_fiscal_quarter
+  LEFT JOIN dim_date arr_created_date
+    ON fct_crm_opportunity.close_fiscal_quarter_date = arr_created_date.first_day_of_fiscal_quarter
+  LEFT JOIN dim_date created_date
+    ON fct_crm_opportunity.close_fiscal_quarter_date = created_date.first_day_of_fiscal_quarter
   LEFT JOIN dim_crm_user_hierarchy
     ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
 
