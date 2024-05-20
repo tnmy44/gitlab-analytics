@@ -15,7 +15,7 @@ WITH crm_person AS (
       --id
       dim_crm_person_id,
       sfdc_record_id,
-      crm_person.bizible_person_id,
+      bizible_person_id,
       sfdc_record_type,
       email_hash,
       email_domain,
@@ -121,26 +121,8 @@ WITH crm_person AS (
       propensity_to_purchase_past_score_group,
       is_defaulted_trial,
       lead_score_classification,
-      person_first_country,
-
-      --MQL and Most Recent Touchpoint info
-      dim_bizible_touchpoint_information.bizible_mql_touchpoint_id,
-      dim_bizible_touchpoint_information.bizible_mql_touchpoint_date,
-      dim_bizible_touchpoint_information.bizible_mql_form_url,
-      dim_bizible_touchpoint_information.bizible_mql_sfdc_campaign_id,
-      dim_bizible_touchpoint_information.bizible_mql_ad_campaign_name,
-      dim_bizible_touchpoint_information.bizible_mql_marketing_channel,
-      dim_bizible_touchpoint_information.bizible_mql_marketing_channel_path,
-      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_id,
-      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_date,
-      dim_bizible_touchpoint_information.bizible_most_recent_form_url,
-      dim_bizible_touchpoint_information.bizible_most_recent_sfdc_campaign_id,
-      dim_bizible_touchpoint_information.bizible_most_recent_ad_campaign_name,
-      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel,
-      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel_path
+      person_first_country
     FROM crm_person
-    LEFT JOIN {{ ref('dim_bizible_touchpoint_information') }}
-        ON crm_person.bizible_person_id=dim_bizible_touchpoint_information.bizible_person_id
 )
 
 {{ dbt_audit(
