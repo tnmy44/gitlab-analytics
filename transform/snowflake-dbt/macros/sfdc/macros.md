@@ -69,7 +69,6 @@ This macro generates a date spine that provides weekly snapshots (every 7 days) 
 
 The `union_tables` is derived from the `dbt_utils.union_relations` macro. It is designed to handle unions of tables with unequal schemas, supporting WHERE clauses and individual table filters, then combining all results using UNION. It constructs SQL SELECT statements for each specified table, ensuring correct column alignment and handling missing columns by filling them with NULL values. It allows for optional column overrides, inclusion or exclusion of specific columns, and the addition of a source column to identify the originating table. Example usage below:
 
-
-
+This macro also casts numeric columns to NUMBER to avoid overflow issues.
 
 {% enddocs %}
