@@ -38,7 +38,7 @@ def get_billing_data_query(
     export: dict,
 ) -> str:
     """
-    get sql command, with an appropriate target to run in 
+    get sql command, with an appropriate target to run in
     bigquery for daily partition
     """
 
