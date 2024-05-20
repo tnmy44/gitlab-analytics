@@ -121,8 +121,26 @@ WITH crm_person AS (
       propensity_to_purchase_past_score_group,
       is_defaulted_trial,
       lead_score_classification,
-      person_first_country
+      person_first_country,
+       
+    --MQL and Most Recent Touchpoint info
+      dim_bizible_touchpoint_information.bizible_mql_touchpoint_id,
+      dim_bizible_touchpoint_information.bizible_mql_touchpoint_date,
+      dim_bizible_touchpoint_information.bizible_mql_form_url,
+      dim_bizible_touchpoint_information.bizible_mql_sfdc_campaign_id,
+      dim_bizible_touchpoint_information.bizible_mql_ad_campaign_name,
+      dim_bizible_touchpoint_information.bizible_mql_marketing_channel,
+      dim_bizible_touchpoint_information.bizible_mql_marketing_channel_path,
+      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_id,
+      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_date,
+      dim_bizible_touchpoint_information.bizible_most_recent_form_url,
+      dim_bizible_touchpoint_information.bizible_most_recent_sfdc_campaign_id,
+      dim_bizible_touchpoint_information.bizible_most_recent_ad_campaign_name,
+      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel,
+      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel_path
     FROM crm_person
+    LEFT JOIN {{ ref('dim_bizible_touchpoint_information') }}
+      ON crm_person.bizible_person_id=dim_bizible_touchpoint_information.bizible_person_id
 )
 
 {{ dbt_audit(
@@ -130,5 +148,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2024-05-17"
+    updated_date="2024-05-20"
 ) }}
