@@ -1,3 +1,9 @@
+{{config(
+    materialized='table',
+    tags=["mnpi_exception"]
+  )
+}}
+
 WITH biz_person AS (
 
     SELECT *
