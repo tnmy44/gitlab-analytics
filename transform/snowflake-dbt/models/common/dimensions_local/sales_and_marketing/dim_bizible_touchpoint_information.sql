@@ -20,6 +20,7 @@
     WHERE is_deleted = 'FALSE'
         AND (marketo_qualified_lead_datetime IS NOT NULL
             OR mql_datetime_inferred IS NOT NULL)
+    GROUP BY 1,2
 
 
 ), marketing_qualified_contacts AS (
@@ -32,6 +33,7 @@
     WHERE is_deleted = 'FALSE'
         AND (marketo_qualified_lead_datetime IS NOT NULL
             OR mql_datetime_inferred IS NOT NULL )
+    GROUP BY 1,2
     HAVING mql_event_id NOT IN (
                          SELECT mql_event_id
                          FROM marketing_qualified_leads
