@@ -6,6 +6,15 @@
     ('dim_crm_user_hierarchy','dim_crm_user_hierarchy')
 ]) }},
 
+distinct_quarters AS (
+
+  SELECT 
+    DISTINCT first_day_of_fiscal_quarter, 
+    fiscal_quarter_name_fy, 
+    fiscal_year
+  FROM dim_date
+
+),
 
 final AS (
 
@@ -178,13 +187,13 @@ final AS (
     IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
     IFF(dim_date.current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
   FROM fct_crm_opportunity
-  LEFT JOIN dim_date 
+  INNER JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
-  LEFT JOIN dim_date close_date
+  INNER JOIN distinct_quarters AS close_date
     ON fct_crm_opportunity.close_fiscal_quarter_date = close_date.first_day_of_fiscal_quarter
-  LEFT JOIN dim_date arr_created_date
+  INNER JOIN distinct_quarters AS arr_created_date
     ON fct_crm_opportunity.close_fiscal_quarter_date = arr_created_date.first_day_of_fiscal_quarter
-  LEFT JOIN dim_date created_date
+  INNER JOIN distinct_quarters AS created_date
     ON fct_crm_opportunity.close_fiscal_quarter_date = created_date.first_day_of_fiscal_quarter
   LEFT JOIN dim_crm_user_hierarchy
     ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk

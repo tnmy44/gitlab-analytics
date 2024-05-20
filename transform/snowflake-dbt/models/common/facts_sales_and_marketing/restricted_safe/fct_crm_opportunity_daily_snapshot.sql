@@ -207,7 +207,6 @@ final AS (
     prep_crm_opportunity.forecasted_iacv,
     prep_crm_opportunity.iacv_created_date,
     prep_crm_opportunity.incremental_acv,
-    prep_crm_opportunity.pre_covid_iacv,
     prep_crm_opportunity.invoice_number,
     prep_crm_opportunity.is_refund,
     prep_crm_opportunity.is_downgrade,
