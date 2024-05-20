@@ -613,9 +613,10 @@ final AS (
   LEFT JOIN prep_date 
     ON prep_date.date_id = prep_crm_opportunity.close_date_id
   WHERE prep_crm_opportunity.is_live = 0
+
   {% if is_incremental() %}
   
-    AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
+    AND prep_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
   {% endif %}
 
