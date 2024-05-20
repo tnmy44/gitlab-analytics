@@ -29,3 +29,5 @@ macros:
     description: '{{ doc("integrated_budget_holder")}}'
   - name: date_spine_7th_day
     description: '{{ doc("date_spine_7th_day")}}'
+  - name: integrated_budget_holder
+    description: '{{ doc("integrated_budget_holder") }}''
