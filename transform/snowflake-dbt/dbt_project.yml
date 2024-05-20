@@ -339,6 +339,10 @@ models:
       sheetload:
         +schema: sheetload
 
+      sirt_alertapp:
+        +materialized: table
+        +schema: sirt_alertapp
+
       snowflake:
         +schema: snowflake
 
