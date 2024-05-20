@@ -301,9 +301,6 @@ final AS (
     fct_crm_opportunity.partner_discount,
     fct_crm_opportunity.partner_discount_calc,
     fct_crm_opportunity.comp_channel_neutral,
-    fct_crm_opportunity.count_crm_attribution_touchpoints,
-    fct_crm_opportunity.weighted_linear_iacv,
-    fct_crm_opportunity.count_campaigns,
 
     -- Solutions-Architech fields
     fct_crm_opportunity.sa_tech_evaluation_close_status,
@@ -483,9 +480,6 @@ final AS (
     fct_crm_opportunity.days_in_3_technical_evaluation,
     fct_crm_opportunity.days_in_4_proposal,
     fct_crm_opportunity.days_in_5_negotiating,
-    fct_crm_opportunity.days_in_sao,
-    fct_crm_opportunity.calculated_age_in_days,
-    fct_crm_opportunity.days_since_last_activity,
     dim_date.date_day                                               AS snapshot_day,
     dim_date.day_name                                               AS snapshot_day_name, 
     dim_date.day_of_week                                            AS snapshot_day_of_week,
