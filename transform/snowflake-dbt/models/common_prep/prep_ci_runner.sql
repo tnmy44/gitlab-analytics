@@ -48,7 +48,7 @@
       gitlab_dotcom_ci_runners_source.public_projects_minutes_cost_factor,
       gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor,
       COALESCE(sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type, 'Other') AS ci_runner_machine_type,
-      sheetload_ci_runner_machine_type_mapping_source.cost_factor
+      COALESCE(sheetload_ci_runner_machine_type_mapping_source.cost_factor, 0) AS cost_factor
 
     FROM gitlab_dotcom_ci_runners_source
     LEFT JOIN dim_date 
@@ -63,5 +63,5 @@
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2021-06-23",
-    updated_date="2024-05-17"
+    updated_date="2024-05-20"
 ) }}
