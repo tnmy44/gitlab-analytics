@@ -160,7 +160,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_COM_DB_PASS,
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
-            GITLAB_COM_SCD_PG_PORT,
+            GITLAB_COM_PG_PORT,
         ],
         # "start_date": datetime(2023, 10, 3),
         "start_date": datetime(2024, 5, 17),
