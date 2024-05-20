@@ -50,8 +50,6 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
     dim_crm_user_hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
     
-    
-
     -- Dates
     dim_date.current_day_name,  
     dim_date.current_date_actual,
@@ -121,7 +119,6 @@ final AS (
     ON targets_actuals.dim_sales_qualified_source_id = sales_qualified_source.dim_sales_qualified_source_id 
   LEFT JOIN order_type
     ON targets_actuals.dim_order_type_id = order_type.dim_order_type_id 
-
 
 )
 

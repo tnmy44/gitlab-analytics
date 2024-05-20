@@ -1366,7 +1366,7 @@ LEFT JOIN cw_base
           AND  is_eligible_age_analysis = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual) 
       ELSE NULL
-    END                                                         AS cycle_time_in_days_in_snapshot_quarter, -- ensure only closed opps are used in the calculation
+    END                                                         AS cycle_time_in_days_in_snapshot_quarter, 
     CASE
       WHEN sfdc_opportunity.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
         AND is_booked_net_arr = TRUE 
