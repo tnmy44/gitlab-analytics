@@ -46,15 +46,9 @@ final AS (
     arr_created_to_close_diff,
 
     -- Running sum of metrics
-
-    SUM(positive_booked_deal_count_in_snapshot_quarter)                AS positive_booked_deal_count_in_snapshot_quarter,
-    SUM(positive_booked_net_arr_in_snapshot_quarter)                   AS positive_booked_net_arr_in_snapshot_quarter,
-    SUM(positive_open_deal_count_in_snapshot_quarter)                  AS positive_open_deal_count_in_snapshot_quarter,
-    SUM(positive_open_net_arr_in_snapshot_quarter)                     AS positive_open_net_arr_in_snapshot_quarter,
     SUM(created_arr_in_snapshot_quarter)                               AS created_arr_in_snapshot_quarter,
     SUM(closed_won_opps_in_snapshot_quarter)                           AS closed_won_opps_in_snapshot_quarter,
     SUM(closed_opps_in_snapshot_quarter)                               AS closed_opps_in_snapshot_quarter,
-    SUM(closed_net_arr_in_snapshot_quarter)                            AS closed_net_arr_in_snapshot_quarter,
     SUM(booked_net_arr_in_snapshot_quarter)                            AS booked_net_arr_in_snapshot_quarter,
     SUM(created_deals_in_snapshot_quarter)                             AS created_deals_in_snapshot_quarter,
     SUM(cycle_time_in_days_in_snapshot_quarter)                        AS cycle_time_in_days_in_snapshot_quarter,
@@ -65,6 +59,14 @@ final AS (
     SUM(open_1plus_deal_count_in_snapshot_quarter)                     AS open_1plus_deal_count_in_snapshot_quarter,
     SUM(open_3plus_deal_count_in_snapshot_quarter)                     AS open_3plus_deal_count_in_snapshot_quarter,
     SUM(open_4plus_deal_count_in_snapshot_quarter)                     AS open_4plus_deal_count_in_snapshot_quarter,
+    SUM(positive_booked_deal_count_in_snapshot_quarter)                AS positive_booked_deal_count_in_snapshot_quarter,
+    SUM(positive_booked_net_arr_in_snapshot_quarter)                   AS positive_booked_net_arr_in_snapshot_quarter,
+    SUM(positive_open_deal_count_in_snapshot_quarter)                  AS positive_open_deal_count_in_snapshot_quarter,
+    SUM(positive_open_net_arr_in_snapshot_quarter)                     AS positive_open_net_arr_in_snapshot_quarter,
+    SUM(closed_deals_in_snapshot_quarter)                              AS closed_deals_in_snapshot_quarter,
+    SUM(closed_net_arr_in_snapshot_quarter)                            AS closed_net_arr_in_snapshot_quarter,
+
+
 
     -- Additive fields
     SUM(net_incremental_acv)                                           AS net_incremental_acv,
@@ -114,7 +116,17 @@ final AS (
     SUM(arr_basis_for_clari)                                           AS arr_basis_for_clari,
     SUM(forecasted_churn_for_clari)                                    AS forecasted_churn_for_clari,
     SUM(override_arr_basis_clari)                                      AS override_arr_basis_clari,
-    SUM(vsa_start_date_net_arr)                                        AS vsa_start_date_net_arr
+    SUM(vsa_start_date_net_arr)                                        AS vsa_start_date_net_arr,
+    SUM(created_arr)                                                   AS created_arr,
+    SUM(closed_won_opps)                                               AS closed_won_opps,
+    SUM(closed_opps)                                                   AS closed_opps,
+    SUM(created_deals)                                                 AS created_deals,
+    SUM(positive_booked_deal_count)                                    AS positive_booked_deal_count,
+    SUM(positive_booked_net_arr)                                       AS positive_booked_net_arr,
+    SUM(positive_open_deal_count)                                      AS positive_open_deal_count,
+    SUM(positive_open_net_arr)                                         AS positive_open_net_arr,
+    SUM(closed_deals)                                                  AS closed_deals,
+    SUM(closed_net_arr)                                                AS closed_net_arr
   FROM actuals
   INNER JOIN day_7_list
     ON actuals.snapshot_date = day_7_list.day_7

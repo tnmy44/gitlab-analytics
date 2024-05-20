@@ -21,3 +21,4 @@ WITH unioned AS (
 
 SELECT * 
 FROM unioned 
+WHERE snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
