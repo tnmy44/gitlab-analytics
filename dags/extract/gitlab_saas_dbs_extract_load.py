@@ -92,8 +92,7 @@ config_dict: Dict[Any, Any] = {
             CUSTOMERS_DB_HOST,
             CUSTOMERS_DB_NAME,
         ],
-        # "start_date": datetime(2023, 10, 3),
-        "start_date": datetime(2024, 5, 17),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "customers",
         "description": "This DAG does full extract & load of customer database(Postgres) to snowflake",
     },
@@ -117,8 +116,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
         ],
-        # "start_date": datetime(2023, 10, 3),
-        "start_date": datetime(2024, 5, 17),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
@@ -143,8 +141,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
         ],
-        # "start_date": datetime(2023, 10, 3),
-        "start_date": datetime(2024, 5, 17),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load of gitlab.com CI* database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com CI* database(Postgres) to snowflake",
@@ -167,8 +164,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_PG_PORT,
             GITLAB_METADATA_DB_USER,
         ],
-        # "start_date": datetime(2023, 10, 3),
-        "start_date": datetime(2024, 5, 17),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com-scd",
         "description": "This DAG does Full extract & load of gitlab.com database(Postgres) to snowflake",
     },
@@ -190,8 +186,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_PG_PORT,
             GITLAB_METADATA_DB_USER,
         ],
-        # "start_date": datetime(2023, 10, 3),
-        "start_date": datetime(2024, 5, 17),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com-scd",
         "description": "This DAG does Full extract & load of gitlab.com database CI* (Postgres) to snowflake",
     },
@@ -539,7 +534,7 @@ for source_name, config in config_dict.items():
                     f"--load_type incremental --load_only_table {table}",
                     config["cloudsql_instance_name"],
                     config["database_type"],
-                    TASK_TYPE
+                    TASK_TYPE,
                 )
 
                 incremental_extract = KubernetesPodOperator(
@@ -568,7 +563,7 @@ for source_name, config in config_dict.items():
                         f"--load_type deletes --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
-                        TASK_TYPE
+                        TASK_TYPE,
                     )
 
                     deletes_extract = KubernetesPodOperator(
@@ -633,7 +628,7 @@ for source_name, config in config_dict.items():
                         f"--load_type backfill --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
-                        TASK_TYPE
+                        TASK_TYPE,
                     )
                     sync_extract = KubernetesPodOperator(
                         **gitlab_defaults,
@@ -695,7 +690,7 @@ for source_name, config in config_dict.items():
                         f"--load_type scd --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
-                        TASK_TYPE
+                        TASK_TYPE,
                     )
 
                     scd_extract = KubernetesPodOperator(
