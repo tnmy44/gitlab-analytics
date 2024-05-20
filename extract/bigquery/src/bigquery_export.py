@@ -38,7 +38,8 @@ def get_billing_data_query(
     export: dict,
 ) -> str:
     """
-    get sql command, with approprirate target to run in bigquery for daily partition
+    get sql command, with an appropriate target to run in 
+    bigquery for daily partition
     """
 
     EXPORT_DATE = config_dict["EXPORT_DATE"]
