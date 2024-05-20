@@ -66,8 +66,6 @@ final AS (
     SUM(closed_deals_in_snapshot_quarter)                              AS closed_deals_in_snapshot_quarter,
     SUM(closed_net_arr_in_snapshot_quarter)                            AS closed_net_arr_in_snapshot_quarter,
 
-
-
     -- Additive fields
     SUM(net_incremental_acv)                                           AS net_incremental_acv,
     SUM(incremental_acv)                                               AS incremental_acv,
