@@ -40,6 +40,10 @@ final AS (
     close_fiscal_quarter_date,
     created_fiscal_quarter_date,
     arr_created_fiscal_quarter_date,
+    arr_landing_quarter,
+    snapshot_landing_quarter,
+    snapshot_to_close_diff,
+    arr_created_to_close_diff,
 
     -- Running sum of metrics
 

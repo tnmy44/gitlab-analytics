@@ -354,6 +354,7 @@ final AS (
     fct_crm_opportunity.competitors_aws_flag,
 
     -- Dates
+    
     dim_date.current_day_name,  
     dim_date.current_date_actual,
     dim_date.current_fiscal_year,
@@ -366,6 +367,10 @@ final AS (
     dim_date.current_day_of_fiscal_year,
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
+    fct_crm_opportunity.arr_landing_quarter,
+    fct_crm_opportunity.snapshot_landing_quarter,
+    fct_crm_opportunity.snapshot_to_close_diff,
+    fct_crm_opportunity.arr_created_to_close_diff,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
