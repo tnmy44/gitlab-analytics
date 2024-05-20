@@ -1291,15 +1291,25 @@ LEFT JOIN cw_base
                       ) 
       END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
 
-      DATEDIFF(MONTH, arr_created_fiscal_quarter_date, close_fiscal_quarter_date) AS quarter_landing_diff,
+      DATEDIFF(MONTH, arr_created_fiscal_quarter_date, close_fiscal_quarter_date) AS arr_created_to_close_diff,
 
       CASE
-        WHEN quarter_landing_diff BETWEEN 0 AND 2 THEN 'CQ'
-        WHEN quarter_landing_diff BETWEEN 3 AND 5 THEN 'CQ+1'
-        WHEN quarter_landing_diff BETWEEN 6 AND 8 THEN 'CQ+2'
-        WHEN quarter_landing_diff BETWEEN 9 AND 11 THEN 'CQ+3'
-        WHEN quarter_landing_diff >= 12 THEN 'CQ+4 >='
-      END AS landed_quarter,  
+        WHEN arr_created_to_close_diff BETWEEN 0 AND 2 THEN 'CQ'
+        WHEN arr_created_to_close_diff BETWEEN 3 AND 5 THEN 'CQ+1'
+        WHEN arr_created_to_close_diff BETWEEN 6 AND 8 THEN 'CQ+2'
+        WHEN arr_created_to_close_diff BETWEEN 9 AND 11 THEN 'CQ+3'
+        WHEN arr_created_to_close_diff >= 12 THEN 'CQ+4 >='
+      END AS arr_landing_quarter,  
+
+      DATEDIFF(MONTH, sfdc_opportunity.snapshot_fiscal_quarter_date, close_fiscal_quarter_date) AS snapshot_to_close_diff,
+
+      CASE
+        WHEN snapshot_to_close_diff BETWEEN 0 AND 2 THEN 'CQ'
+        WHEN snapshot_to_close_diff BETWEEN 3 AND 5 THEN 'CQ+1'
+        WHEN snapshot_to_close_diff BETWEEN 6 AND 8 THEN 'CQ+2'
+        WHEN snapshot_to_close_diff BETWEEN 9 AND 11 THEN 'CQ+3'
+        WHEN snapshot_to_close_diff >= 12 THEN 'CQ+4 >='
+      END AS snapshot_landing_quarter,  
 
     CASE
       WHEN is_renewal = 1 
