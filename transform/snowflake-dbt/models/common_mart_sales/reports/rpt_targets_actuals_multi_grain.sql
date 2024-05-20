@@ -1,3 +1,8 @@
+{{ config(
+    tags=[ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+) }}
+
+
 WITH unioned AS (
 
   {{ union_tables(

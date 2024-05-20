@@ -193,4 +193,3 @@ models:
       It serves as a singular source for creating pipeline visualizations in Tableau, 
       offering a comprehensive view across different timeframes. This report is a multi
       grain table, since the data is at 3 different levels of granularity.
-    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
