@@ -8663,7 +8663,7 @@ models:
           - not_null
       - name: absence_end
         description: The team member's absence end date
-      - name: absence_date
+      - name: absence_date  
         description: The team member's day of absence   
         tests: 
           - not_null

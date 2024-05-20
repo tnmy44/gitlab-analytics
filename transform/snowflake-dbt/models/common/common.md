@@ -1985,7 +1985,7 @@ Fact derived from `fct_behavior_structured_event`, limited to only Snowplow even
 
 {% docs fct_team_member_absence %}
 
-This table is a derived fact from fct_team_status and gitlab_pto. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake.
-The grain of this table is one row per absence_date per dim_team_member_sk combination. 
+This table is a derived fact from fct_team_status and gitlab_pto. Sensitive columns are masked and only visible by team members with the `analyst_people` role assigned in Snowflake.
+The grain of this table is one row per pto_uuid per absence_date per dim_team_member_sk combination. 
 
 {% enddocs %}
