@@ -19,7 +19,7 @@ WITH crm_person AS (
       --id
       dim_crm_person_id,
       sfdc_record_id,
-      bizible_person_id,
+      crm_person.bizible_person_id,
       sfdc_record_type,
       email_hash,
       email_domain,
