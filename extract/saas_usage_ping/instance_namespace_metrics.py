@@ -136,7 +136,7 @@ class InstanceNamespaceMetrics:
         safe_dict = query_dict.replace("'", "\\'")
         prepared_query = prepared_query.replace(
             "FROM",
-            f",'{ping_name}', '{ping_level}', '{safe_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
+            f",'{ping_name}', '{ping_level}', '{safe_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM", 1
         )
 
         return prepared_query
