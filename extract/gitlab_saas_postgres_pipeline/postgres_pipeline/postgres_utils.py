@@ -803,6 +803,7 @@ def get_engines(
     )
 
     if connection_dict.get("postgres_metadata_connection"):
+        logging.info(f"{connection_dict.get("postgres_metadata_connection")}")
         metadata_engine = postgres_engine_factory(
             connection_dict["postgres_metadata_connection"], env
         )
