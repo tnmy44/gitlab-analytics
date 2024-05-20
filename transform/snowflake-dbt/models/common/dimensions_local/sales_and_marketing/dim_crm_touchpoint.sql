@@ -163,6 +163,7 @@ WITH campaign_details AS (
 
     -- new utm parsing
     {{ utm_parsing('utm_campaign') }}
+    {{ utm_parsing('utm_content') }}
 
       bizible_marketing_channel,
       CASE
@@ -217,6 +218,15 @@ WITH campaign_details AS (
       combined_touchpoints.utm_allptnr,
       combined_touchpoints.utm_partnerid,
       combined_touchpoints.utm_campaign_date,
+      combined_touchpoints.utm_campaign_region,
+      combined_touchpoints.utm_campaign_budget,
+      combined_touchpoints.utm_campaign_type,
+      combined_touchpoints.utm_campaign_gtm,
+      combined_touchpoints.utm_campaign_language,
+      combined_touchpoints.utm_campaign_agency,
+      combined_touchpoints.utm_content_offer,
+      combined_touchpoints.utm_content_asset_type,
+      combined_touchpoints.utm_content_industry,
       combined_touchpoints.bizible_marketing_channel,
       combined_touchpoints.bizible_marketing_channel_path,
       combined_touchpoints.bizible_medium,
@@ -292,5 +302,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2024-05-17" 
+    updated_date="2024-05-20" 
 ) }}
