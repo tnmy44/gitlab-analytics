@@ -34,6 +34,31 @@ def get_export(export_name: str, config_path: str) -> Tuple[str, str, dict]:
     return project, gcp_credentials, export
 
 
+def set_bucket_path(branch: str, export:dict) -> None:
+    '''
+    set export parameter for dev environment
+    '''
+    if branch != "master":
+        root_dir = export["bucket_path"].index("/", len("gs://"))
+        export["bucket_path"] = (
+            export["bucket_path"][:root_dir]
+            + f"/BRANCH_TEST_{branch}"
+            + export["bucket_path"][root_dir:]
+        )
+
+def get_partition(date_part:str, export:str) -> str:
+    '''
+    get date partition parameter
+    '''
+    EXPORT_DATE = config_dict["EXPORT_DATE"]
+
+    if export.get("partition_date_part") is None:
+        return EXPORT_DATE
+    elif export["partition_date_part"] == "d":
+        return EXPORT_DATE[0:10]
+    elif export["partition_date_part"] == "m":
+        return EXPORT_DATE[0:7]
+
 def get_billing_data_query(
     export: dict,
 ) -> str:
@@ -45,31 +70,20 @@ def get_billing_data_query(
     EXPORT_DATE = config_dict["EXPORT_DATE"]
     GIT_BRANCH = config_dict["GIT_BRANCH"]
 
-    if GIT_BRANCH != "master":
-        root_dir = export["bucket_path"].index("/", len("gs://"))
-        export["bucket_path"] = (
-            export["bucket_path"][:root_dir]
-            + f"/BRANCH_TEST_{GIT_BRANCH}"
-            + export["bucket_path"][root_dir:]
-        )
+    set_bucket_path(branch=GIT_BRANCH, export=export)
 
-    if export.get("partition_date_part") is None:
-        partition = EXPORT_DATE
-    elif export["partition_date_part"] == "d":
-        partition = EXPORT_DATE[0:10]
-    elif export["partition_date_part"] == "m":
-        partition = EXPORT_DATE[0:7]
+    partition = get_partition(date_part=export.get("partition_date_part"), export=export)
 
     export_query = export["export_query"].replace("{EXPORT_DATE}", partition)
 
-    return f"""
-        EXPORT DATA OPTIONS(
-          uri='{export["bucket_path"]}/{partition}/*.parquet',
-          format='PARQUET',
-          overwrite=true
-          ) AS
-            {export_query}
-    """
+    return (
+        f"EXPORT DATA OPTIONS("
+        f"  uri='{export['bucket_path']}/{partition}/*.parquet',"
+        f"  format='PARQUET',"
+        f"  overwrite=true"
+        f"  ) AS"
+        f"    {export_query}"
+    )
 
 
 def run_export(
