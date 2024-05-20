@@ -1,5 +1,5 @@
 {{ config(
-    tags=[ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    tags=["mnpi_exception"]
 ) }}
 
 
