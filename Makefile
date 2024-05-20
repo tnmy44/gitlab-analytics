@@ -88,6 +88,7 @@ init-airflow:
 	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-ops-pool 2 "Airflow pool for ops database extract"
 	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set customers-pool 2 "Airflow pool for customer database full extract"
 	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-com-pool 8 "Airflow pool for gitlab database incremental extract"
+	@"$(DOCKER_RUN)" airflow_scheduler airflow pools set gitlab-com-scd-pool 16 "Airflow pool for gitlab database full extract"
 	@"$(DOCKER_DOWN)"
 
 ########################################################################################################################
