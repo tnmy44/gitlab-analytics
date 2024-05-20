@@ -30,6 +30,8 @@ SELECT
   se_action                                                                                                         AS event_action,
   se_category                                                                                                       AS event_category,
   se_label                                                                                                          AS event_label,
+  IFF(REGEXP_LIKE(se_label, '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'),
+                                          'identifier_containing_numbers', se_label)                                AS clean_event_label,
   se_property                                                                                                       AS event_property,
   se_value                                                                                                          AS event_value,
   is_staging_event                                                                                                  AS is_staging_event,
