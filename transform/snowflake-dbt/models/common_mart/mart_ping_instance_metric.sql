@@ -1,6 +1,5 @@
 {{ config(
-    tags=["product", "mnpi_exception"],
-    cluster_by=['ping_created_at::DATE']
+    tags=["product", "mnpi_exception"]
 ) }}
 
 WITH final AS (
@@ -29,8 +28,8 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@utkarsh060",
+    updated_by="@iweeks",
     created_date="2022-05-03",
-    updated_date="2024-05-15"
+    updated_date="2022-07-20"
 ) }}
 
