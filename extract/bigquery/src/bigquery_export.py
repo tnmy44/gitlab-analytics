@@ -34,10 +34,10 @@ def get_export(export_name: str, config_path: str) -> Tuple[str, str, dict]:
     return project, gcp_credentials, export
 
 
-def set_bucket_path(branch: str, export:dict) -> None:
-    '''
+def set_bucket_path(branch: str, export: dict) -> None:
+    """
     set export parameter for dev environment
-    '''
+    """
     if branch != "master":
         root_dir = export["bucket_path"].index("/", len("gs://"))
         export["bucket_path"] = (
@@ -46,10 +46,11 @@ def set_bucket_path(branch: str, export:dict) -> None:
             + export["bucket_path"][root_dir:]
         )
 
-def get_partition(date_part:str, export:str) -> str:
-    '''
+
+def get_partition(date_part: str, export: str) -> str:
+    """
     get date partition parameter
-    '''
+    """
     EXPORT_DATE = config_dict["EXPORT_DATE"]
 
     if export.get("partition_date_part") is None:
@@ -58,6 +59,7 @@ def get_partition(date_part:str, export:str) -> str:
         return EXPORT_DATE[0:10]
     elif export["partition_date_part"] == "m":
         return EXPORT_DATE[0:7]
+
 
 def get_billing_data_query(
     export: dict,
@@ -72,7 +74,9 @@ def get_billing_data_query(
 
     set_bucket_path(branch=GIT_BRANCH, export=export)
 
-    partition = get_partition(date_part=export.get("partition_date_part"), export=export)
+    partition = get_partition(
+        date_part=export.get("partition_date_part"), export=export
+    )
 
     export_query = export["export_query"].replace("{EXPORT_DATE}", partition)
 
