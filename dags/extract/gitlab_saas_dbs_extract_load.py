@@ -332,9 +332,12 @@ def get_last_loaded(dag_name: String) -> Union[None, str]:
     )
 
 
-def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type):
+def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type, TASK_TYPE):
     """Generate the command"""
-    file_name = "el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
+    if TASK_TYPE == "db-scd":
+        file_name = "el_saas_gitlab_dotcom_scd_consolidated_db_manifest.yaml"
+    else:
+        file_name = "el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
     connection_info_file_name = "el_saas_connection_info.yaml"
     if cloudsql_instance_name is None:
         return f"""
@@ -531,6 +534,7 @@ for source_name, config in config_dict.items():
                     f"--load_type incremental --load_only_table {table}",
                     config["cloudsql_instance_name"],
                     config["database_type"],
+                    TASK_TYPE
                 )
 
                 incremental_extract = KubernetesPodOperator(
@@ -559,6 +563,7 @@ for source_name, config in config_dict.items():
                         f"--load_type deletes --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
+                        TASK_TYPE
                     )
 
                     deletes_extract = KubernetesPodOperator(
@@ -623,6 +628,7 @@ for source_name, config in config_dict.items():
                         f"--load_type backfill --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
+                        TASK_TYPE
                     )
                     sync_extract = KubernetesPodOperator(
                         **gitlab_defaults,
@@ -684,6 +690,7 @@ for source_name, config in config_dict.items():
                         f"--load_type scd --load_only_table {table}",
                         config["cloudsql_instance_name"],
                         config["database_type"],
+                        TASK_TYPE
                     )
 
                     scd_extract = KubernetesPodOperator(
