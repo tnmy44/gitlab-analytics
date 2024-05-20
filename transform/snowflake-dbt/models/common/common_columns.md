@@ -457,13 +457,13 @@ The main edition of GitLab on the installation (EE, CE), also referred to as dis
 
 {% docs ping_product_tier %}
 
-The product tier of the ping, inferred from the edition and the plan saved in the license (Core, Starter, Premium, Ultimate). `Core` is synonymous with `Free`
+The product tier of the ping, inferred from the edition and the plan saved in the license (Free, Starter, Premium, Ultimate).
 
 {% enddocs %}
 
 {% docs ping_edition_product_tier %}
 
-The concatenation of `ping_edition` and `ping_product_tier` (ex. `EE - Premium`, `EE - Ultimate`, `EE - Core`, etc). `Core` is synonymous with `Free`
+The concatenation of `ping_edition` and `ping_product_tier` (ex. `EE - Premium`, `EE - Ultimate`, `EE - Free`, etc).
 
 {% enddocs %}
 
