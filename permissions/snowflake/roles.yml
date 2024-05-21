@@ -334,7 +334,9 @@ roles:
         - qualtrics
         - zuora_revenue
         - zuora_query_api
-      privileges:
+        - sensitive_marketing
+  - sensitive_marketing:
+        privileges:
         databases:
           read:
             - prep
