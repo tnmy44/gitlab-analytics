@@ -554,13 +554,13 @@ models:
 - name: mart_ping_instance_metric_monthly
   description: ' {{ doc("mart_ping_instance_metric_monthly") }} '
   columns:
-    - name: ping_instance_metric_id
+    - name: ping_instance_wave_monthly_pk
+      description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_at_date_month
       tests:
+        - unique
         - not_null
-        - unique:
-            config:
-              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
-      description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
+    - name: ping_instance_metric_id
+      description: Outdated, misstated primary key. Leaving in the model to not break dependencies, but can be ignored in the future.
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
     - name: metrics_path
