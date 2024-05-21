@@ -34,7 +34,7 @@ filtered_fct_ping_instance_metric AS (
     fct_ping_instance_metric.*,
     dim_ping_metric.time_frame,
     dim_ping_instance.is_last_ping_of_month AS is_current_ping,
-    dim_ping_instance.ping_created_at_date_month
+    dim_ping_instance.ping_created_date_month
   FROM fct_ping_instance_metric
   INNER JOIN dim_ping_metric
     ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path

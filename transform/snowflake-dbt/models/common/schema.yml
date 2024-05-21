@@ -4288,7 +4288,7 @@ models:
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
       - name: ping_instance_metric_monthly_pk
-        description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_at_date_month
+        description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_date_month
         tests:
           - unique
           - not_null
@@ -4353,7 +4353,7 @@ models:
     description: ' {{ doc("fct_ping_instance_metric_weekly") }} '
     columns:
       - name: ping_instance_metric_weekly_pk
-        description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_at_date_week
+        description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_date_week
         tests:
           - unique
           - not_null
