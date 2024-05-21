@@ -9,6 +9,11 @@ WITH crm_person AS (
     SELECT *
     FROM {{ ref('prep_crm_person') }}
 
+), dim_bizible_touchpoint_information AS (
+
+  SELECT *
+  FROM {{ ref('dim_bizible_touchpoint_information') }}
+
 ), final AS (
 
     SELECT
@@ -139,7 +144,7 @@ WITH crm_person AS (
       dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel,
       dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel_path
     FROM crm_person
-    LEFT JOIN {{ ref('dim_bizible_touchpoint_information') }}
+    LEFT JOIN dim_bizible_touchpoint_information
       ON crm_person.bizible_person_id=dim_bizible_touchpoint_information.bizible_person_id
 )
 
@@ -148,5 +153,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2024-05-20"
+    updated_date="2024-05-21"
 ) }}
