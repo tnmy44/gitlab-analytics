@@ -2607,12 +2607,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: amccomiskey
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: amcdonald
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6705,13 +6699,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: manggara
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: marin
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7236,12 +7223,6 @@ users:
     groups:
       - General All Access
   - user_name: mnevolo
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: mnielsen
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
