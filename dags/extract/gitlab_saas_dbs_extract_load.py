@@ -356,26 +356,17 @@ def extract_manifest(manifest_file_path):
     return manifest_dict
 
 
-def extract_table_list_from_manifest(manifest_contents):
+def extract_table_dict_from_manifest(manifest_contents):
     """Extract table from the manifest file for which extraction needs to be done"""
     return manifest_contents["tables"] if manifest_contents.get("tables") else []
 
 
-def extract_list_based_on_database_type(table_list, database_type):
+def extract_table_dict_based_on_database_type(table_dict, database_type):
     """Extract the list of tables based on the database type"""
     return_dict = {}
-    if database_type == "ci":
-        for table_key, table_values in table_list.items():
-            if table_values["database_type"] == "ci":
-                output_dict = {table_key: table_values}
-                return_dict.update(output_dict)
-    elif database_type == "main":
-        for table_key, table_values in table_list.items():
-            if table_values["database_type"] == "main":
-                output_dict = {table_key: table_values}
-                return_dict.update(output_dict)
-    elif database_type == "cells":
-        for table_key, table_values in table_list.items():
+    return_dict = {}
+    for table_key, table_values in table_dict.items():
+        if table_values["database_type"] == database_type or database_type == "cells":
             output_dict = {table_key: table_values}
             return_dict.update(output_dict)
     return return_dict
@@ -420,23 +411,25 @@ def get_check_replica_snapshot_command(dag_name):
     """
     The get_check_replica_snapshot_command is responsible for preparing the check_replica_snapshot_command, which is used in the dag configuration.
     """
+    base_snapshot_command = (
+        "python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py"
+    )
+    check_ci_cmd = f"{base_snapshot_command} check_snapshot_ci"
+    check_main_cmd = f"{base_snapshot_command} check_snapshot_main_db_incremental"
     if "el_saas_gitlab_com_ci" in dag_name:
         print("Checking CI DAG...")
         check_replica_snapshot_command = (
-            f"{clone_and_setup_extraction_cmd} && "
-            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+            f"{clone_and_setup_extraction_cmd} && " f"{check_ci_cmd}"
         )
     elif dag_name == "el_saas_gitlab_com_scd":
         print("Checking gitlab_dotcom_scd DAG...")
         check_replica_snapshot_command = (
-            f"{clone_and_setup_extraction_cmd} && "
-            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+            f"{clone_and_setup_extraction_cmd} && " f"{check_main_cmd}"
         )
     elif dag_name == "el_saas_gitlab_com":
         print("Checking gitlab_dotcom_incremental DAG...")
         check_replica_snapshot_command = (
-            f"{clone_and_setup_extraction_cmd} && "
-            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+            f"{clone_and_setup_extraction_cmd} && " f"{check_main_cmd}"
         )
     elif (
         dag_name == "el_saas_cells_gitlab_com"
@@ -445,8 +438,8 @@ def get_check_replica_snapshot_command(dag_name):
         print("Checking cells gitlab_dotcom DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
-            "python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci && "
-            "python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+            f"{check_ci_cmd} && "
+            f"{check_main_cmd}"
         )
     return check_replica_snapshot_command
 
@@ -512,14 +505,14 @@ for source_name, config in config_dict.items():
             # Actual PGP extract
             file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list_unfiltered = extract_table_list_from_manifest(manifest)
-            table_list = extract_list_based_on_database_type(
-                table_list_unfiltered, config["database_type"]
+            table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
+            table_dict = extract_table_dict_based_on_database_type(
+                table_dict_unfiltered, config["database_type"]
             )
             incremental_extracts = []
             deletes_extracts = []
 
-            for table in table_list:
+            for table in table_dict:
                 # tables that aren't incremental won't be processed by the incremental dag
                 if not is_incremental(manifest["tables"][table]):
                     continue
@@ -606,16 +599,16 @@ for source_name, config in config_dict.items():
         with incremental_backfill_dag:
             file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list_unfiltered = extract_table_list_from_manifest(manifest)
-            table_list = extract_list_based_on_database_type(
-                table_list_unfiltered, config["database_type"]
+            table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
+            table_dict = extract_table_dict_based_on_database_type(
+                table_dict_unfiltered, config["database_type"]
             )
             if has_replica_snapshot:
                 check_replica_snapshot_backfill = get_check_replica_snapshot_task(
                     config["dag_name"], incremental_backfill_dag
                 )
 
-            for table in table_list:
+            for table in table_dict:
                 if is_incremental(manifest["tables"][table]):
                     TASK_TYPE = "backfill"
 
@@ -668,15 +661,15 @@ for source_name, config in config_dict.items():
             # PGP Extract
             file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_scd_consolidated_db_manifest.yaml"
             manifest = extract_manifest(file_path)
-            table_list_unfiltered = extract_table_list_from_manifest(manifest)
-            table_list = extract_list_based_on_database_type(
-                table_list_unfiltered, config["database_type"]
+            table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
+            table_dict = extract_table_dict_based_on_database_type(
+                table_dict_unfiltered, config["database_type"]
             )
             if has_replica_snapshot:
                 check_replica_snapshot_scd = get_check_replica_snapshot_task(
                     config["dag_name"], sync_dag
                 )
-            for table in table_list:
+            for table in table_dict:
                 if not is_incremental(manifest["tables"][table]):
                     TASK_TYPE = "db-scd"
 
