@@ -87,8 +87,6 @@ WITH campaign_details AS (
       PARSE_URL(bizible_form_url_raw)['parameters']['utm_allptnr']::VARCHAR       AS bizible_form_page_utm_allptnr,
       PARSE_URL(bizible_form_url_raw)['parameters']['utm_partnerid']::VARCHAR     AS bizible_form_page_utm_partnerid,
 
-    
-
     --Final UTM Parameters
       COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
       COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
@@ -99,8 +97,8 @@ WITH campaign_details AS (
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
       
       -- new utm parsing
-    {{ utm_parsing('utm_campaign') }}
-    {{ utm_parsing('utm_content') }}
+    {{ utm_campaign_parsing('utm_campaign') }}
+    {{ utm_content_parsing('utm_content') }}
       bizible_marketing_channel,
       bizible_marketing_channel_path,
       bizible_medium,
@@ -164,8 +162,8 @@ WITH campaign_details AS (
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
 
     -- new utm parsing
-    {{ utm_parsing('utm_campaign') }}
-    {{ utm_parsing('utm_content') }}
+    {{ utm_campaign_parsing('utm_campaign') }}
+    {{ utm_content_parsing('utm_content') }}
 
       bizible_marketing_channel,
       CASE
