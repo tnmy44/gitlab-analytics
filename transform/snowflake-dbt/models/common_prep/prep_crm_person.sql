@@ -481,11 +481,28 @@ WITH biz_person AS (
         UPPER(crm_person_final.account_demographics_area),
         '-',
         prep_date.fiscal_year
-      ) AS dim_account_demographics_hierarchy_sk
+      ) AS dim_account_demographics_hierarchy_sk,
 
+    --MQL and Most Recent Touchpoint info
+      prep_bizible_touchpoint_information.bizible_mql_touchpoint_id,
+      prep_bizible_touchpoint_information.bizible_mql_touchpoint_date,
+      prep_bizible_touchpoint_information.bizible_mql_form_url,
+      prep_bizible_touchpoint_information.bizible_mql_sfdc_campaign_id,
+      prep_bizible_touchpoint_information.bizible_mql_ad_campaign_name,
+      prep_bizible_touchpoint_information.bizible_mql_marketing_channel,
+      prep_bizible_touchpoint_information.bizible_mql_marketing_channel_path,
+      prep_bizible_touchpoint_information.bizible_most_recent_touchpoint_id,
+      prep_bizible_touchpoint_information.bizible_most_recent_touchpoint_date,
+      prep_bizible_touchpoint_information.bizible_most_recent_form_url,
+      prep_bizible_touchpoint_information.bizible_most_recent_sfdc_campaign_id,
+      prep_bizible_touchpoint_information.bizible_most_recent_ad_campaign_name,
+      prep_bizible_touchpoint_information.bizible_most_recent_marketing_channel,
+      prep_bizible_touchpoint_information.bizible_most_recent_marketing_channel_path
     FROM crm_person_final
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
+    LEFT JOIN prep_bizible_touchpoint_information
+      ON crm_person.bizible_person_id=prep_bizible_touchpoint_information.bizible_person_id
     LEFT JOIN prep_location_country
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
@@ -499,5 +516,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-03-12"
+    updated_date="2024-05-21"
 ) }}

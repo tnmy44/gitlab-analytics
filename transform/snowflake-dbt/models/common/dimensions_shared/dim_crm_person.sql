@@ -9,18 +9,13 @@ WITH crm_person AS (
     SELECT *
     FROM {{ ref('prep_crm_person') }}
 
-), dim_bizible_touchpoint_information AS (
-
-  SELECT *
-  FROM {{ ref('dim_bizible_touchpoint_information') }}
-
 ), final AS (
 
     SELECT
       --id
       dim_crm_person_id,
       sfdc_record_id,
-      crm_person.bizible_person_id,
+      bizible_person_id,
       sfdc_record_type,
       email_hash,
       email_domain,
@@ -129,23 +124,21 @@ WITH crm_person AS (
       person_first_country,
        
     --MQL and Most Recent Touchpoint info
-      dim_bizible_touchpoint_information.bizible_mql_touchpoint_id,
-      dim_bizible_touchpoint_information.bizible_mql_touchpoint_date,
-      dim_bizible_touchpoint_information.bizible_mql_form_url,
-      dim_bizible_touchpoint_information.bizible_mql_sfdc_campaign_id,
-      dim_bizible_touchpoint_information.bizible_mql_ad_campaign_name,
-      dim_bizible_touchpoint_information.bizible_mql_marketing_channel,
-      dim_bizible_touchpoint_information.bizible_mql_marketing_channel_path,
-      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_id,
-      dim_bizible_touchpoint_information.bizible_most_recent_touchpoint_date,
-      dim_bizible_touchpoint_information.bizible_most_recent_form_url,
-      dim_bizible_touchpoint_information.bizible_most_recent_sfdc_campaign_id,
-      dim_bizible_touchpoint_information.bizible_most_recent_ad_campaign_name,
-      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel,
-      dim_bizible_touchpoint_information.bizible_most_recent_marketing_channel_path
+      bizible_mql_touchpoint_id,
+      bizible_mql_touchpoint_date,
+      bizible_mql_form_url,
+      bizible_mql_sfdc_campaign_id,
+      bizible_mql_ad_campaign_name,
+      bizible_mql_marketing_channel,
+      bizible_mql_marketing_channel_path,
+      bizible_most_recent_touchpoint_id,
+      bizible_most_recent_touchpoint_date,
+      bizible_most_recent_form_url,
+      bizible_most_recent_sfdc_campaign_id,
+      bizible_most_recent_ad_campaign_name,
+      bizible_most_recent_marketing_channel,
+      bizible_most_recent_marketing_channel_path
     FROM crm_person
-    LEFT JOIN dim_bizible_touchpoint_information
-      ON crm_person.bizible_person_id=dim_bizible_touchpoint_information.bizible_person_id
 )
 
 {{ dbt_audit(

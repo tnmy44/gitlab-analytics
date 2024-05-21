@@ -6,33 +6,78 @@
 {{ simple_cte([
     ('sfdc_lead_source','sfdc_lead_source'),
     ('sfdc_contact_source','sfdc_contact_source'),
-    ('prep_crm_person','prep_crm_person'),
-    ('prep_crm_touchpoint','prep_crm_touchpoint')
+    ('sfdc_bizible_person_source','sfdc_bizible_person_source'),
+    ('sfdc_bizible_touchpoint_source','sfdc_bizible_touchpoint_source')
 ]) }}
 
-, marketing_qualified_leads AS (
-    
+, prep_lead AS (
+
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
         lead_id AS sfdc_record_id,
-        MAX(marketo_qualified_lead_datetime)::timestamp AS mql_date_latest
+        converted_contact_id,
+        marketo_qualified_lead_datetime,
+        mql_datetime_inferred
     FROM sfdc_lead_source
     WHERE is_deleted = 'FALSE'
-        AND (marketo_qualified_lead_datetime IS NOT NULL
-            OR mql_datetime_inferred IS NOT NULL)
+
+), prep_contact AS (
+
+    SELECT
+        contact_id AS sfdc_record_id,
+        marketo_qualified_lead_datetime,
+        mql_datetime_inferred
+    FROM sfdc_contact_source
+    WHERE is_deleted = 'FALSE'
+
+), prep_bizible AS (
+
+    SELECT 
+        sfdc_bizible_touchpoint_source.*,
+        sfdc_bizible_person_source.bizible_contact_id,
+        sfdc_bizible_person_source.bizible_lead_id
+    FROM sfdc_bizible_touchpoint_source
+    LEFT JOIN sfdc_bizible_person_source
+        ON sfdc_bizible_touchpoint_source.bizible_person_id = sfdc_bizible_person_source.person_id
+    WHERE sfdc_bizible_person_source.is_deleted = 'FALSE' 
+        AND sfdc_bizible_touchpoint_source.is_deleted = 'FALSE' 
+
+), prep_person AS (
+
+    SELECT
+        sfdc_record_id,
+        bizible_person_id
+    FROM prep_lead
+    LEFT JOIN prep_bizible
+        ON prep_lead.sfdc_record_id=prep_bizible.bizible_contact_id
+    UNION ALL
+    SELECT
+        sfdc_record_id,
+        bizible_person_id
+    FROM prep_contact
+    LEFT JOIN prep_bizible
+        ON prep_contact.sfdc_record_id=prep_bizible.bizible_contact_id
+
+), marketing_qualified_leads AS (
+    
+    SELECT
+        {{ dbt_utils.generate_surrogate_key(['COALESCE(converted_contact_id, sfdc_record_id)','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
+        sfdc_record_id,
+        MAX(marketo_qualified_lead_datetime)::timestamp AS mql_date_latest
+    FROM prep_lead
+    WHERE marketo_qualified_lead_datetime IS NOT NULL
+        OR mql_datetime_inferred IS NOT NULL
     GROUP BY 1,2
 
 
 ), marketing_qualified_contacts AS (
 
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['contact_id','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
-        contact_id AS sfdc_record_id,
+        {{ dbt_utils.generate_surrogate_key(['sfdc_record_id','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
+        sfdc_record_id,
         MAX(marketo_qualified_lead_datetime)::timestamp AS mql_date_latest
-    FROM sfdc_contact_source
-    WHERE is_deleted = 'FALSE'
-        AND (marketo_qualified_lead_datetime IS NOT NULL
-            OR mql_datetime_inferred IS NOT NULL )
+    FROM prep_contact
+    WHERE marketo_qualified_lead_datetime IS NOT NULL
+        OR mql_datetime_inferred IS NOT NULL
     GROUP BY 1,2
     HAVING mql_event_id NOT IN (
                          SELECT mql_event_id
@@ -54,24 +99,24 @@
 ), bizible_mql_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        prep_crm_person.sfdc_record_id,
-        prep_crm_touchpoint.touchpoint_id,
-        prep_crm_touchpoint.bizible_touchpoint_date,
-        prep_crm_touchpoint.bizible_form_url,
-        prep_crm_touchpoint.campaign_id AS sfdc_campaign_id,
-        prep_crm_touchpoint.bizible_ad_campaign_name,
-        prep_crm_touchpoint.bizible_marketing_channel,
-        prep_crm_touchpoint.bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY prep_crm_person.sfdc_record_id ORDER BY prep_crm_touchpoint.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM prep_crm_person
+        prep_person.sfdc_record_id,
+        prep_bizible.touchpoint_id,
+        prep_bizible.bizible_touchpoint_date,
+        prep_bizible.bizible_form_url,
+        prep_bizible.campaign_id AS sfdc_campaign_id,
+        prep_bizible.bizible_ad_campaign_name,
+        prep_bizible.bizible_marketing_channel,
+        prep_bizible.bizible_marketing_channel_path,
+        ROW_NUMBER () OVER (PARTITION BY prep_person.sfdc_record_id ORDER BY prep_bizible.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+    FROM prep_person
     LEFT JOIN mql_person_prep
-        ON prep_crm_person.sfdc_record_id=mql_person_prep.sfdc_record_id
-    LEFT JOIN prep_crm_touchpoint
-        ON prep_crm_person.bizible_person_id = prep_crm_touchpoint.bizible_person_id
-    WHERE prep_crm_touchpoint.touchpoint_id IS NOT null
+        ON prep_person.sfdc_record_id=mql_person_prep.sfdc_record_id
+    LEFT JOIN prep_bizible
+        ON prep_person.bizible_person_id = prep_bizible.bizible_person_id
+    WHERE prep_bizible.touchpoint_id IS NOT null
         AND mql_person_prep.mql_date_latest IS NOT null
-        AND prep_crm_touchpoint.bizible_touchpoint_date <= mql_person_prep.mql_date_latest
-    ORDER BY prep_crm_touchpoint.bizible_touchpoint_date DESC
+        AND prep_bizible.bizible_touchpoint_date <= mql_person_prep.mql_date_latest
+    ORDER BY prep_bizible.bizible_touchpoint_date DESC
 
 ), bizible_mql_touchpoint_information_final AS (
 
@@ -91,18 +136,18 @@
 
     SELECT DISTINCT
         prep_crm_person.sfdc_record_id,
-        prep_crm_touchpoint.touchpoint_id,
-        prep_crm_touchpoint.bizible_touchpoint_date,
-        prep_crm_touchpoint.bizible_form_url,
-        prep_crm_touchpoint.campaign_id AS sfdc_campaign_id,
-        prep_crm_touchpoint.bizible_ad_campaign_name,
-        prep_crm_touchpoint.bizible_marketing_channel,
-        prep_crm_touchpoint.bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY prep_crm_person.sfdc_record_id ORDER BY prep_crm_touchpoint.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+        prep_bizible.touchpoint_id,
+        prep_bizible.bizible_touchpoint_date,
+        prep_bizible.bizible_form_url,
+        prep_bizible.campaign_id AS sfdc_campaign_id,
+        prep_bizible.bizible_ad_campaign_name,
+        prep_bizible.bizible_marketing_channel,
+        prep_bizible.bizible_marketing_channel_path,
+        ROW_NUMBER () OVER (PARTITION BY prep_crm_person.sfdc_record_id ORDER BY prep_bizible.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
     FROM prep_crm_person
-    LEFT JOIN prep_crm_touchpoint
-        ON prep_crm_person.bizible_person_id = prep_crm_touchpoint.bizible_person_id
-    WHERE prep_crm_touchpoint.touchpoint_id IS NOT null
+    LEFT JOIN prep_bizible
+        ON prep_crm_person.bizible_person_id = prep_bizible.bizible_person_id
+    WHERE prep_bizible.touchpoint_id IS NOT null
 
 ), bizible_most_recent_touchpoint_information_final AS (
 
@@ -147,5 +192,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2024-05-17",
-    updated_date="2024-05-20",
+    updated_date="2024-05-21",
   ) }}
