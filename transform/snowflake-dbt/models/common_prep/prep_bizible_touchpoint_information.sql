@@ -135,7 +135,7 @@
 ), bizible_most_recent_touchpoint_information_base AS (
 
     SELECT DISTINCT
-        prep_crm_person.sfdc_record_id,
+        prep_person.sfdc_record_id,
         prep_bizible.touchpoint_id,
         prep_bizible.bizible_touchpoint_date,
         prep_bizible.bizible_form_url,
@@ -143,10 +143,10 @@
         prep_bizible.bizible_ad_campaign_name,
         prep_bizible.bizible_marketing_channel,
         prep_bizible.bizible_marketing_channel_path,
-        ROW_NUMBER () OVER (PARTITION BY prep_crm_person.sfdc_record_id ORDER BY prep_bizible.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
-    FROM prep_crm_person
+        ROW_NUMBER () OVER (PARTITION BY prep_person.sfdc_record_id ORDER BY prep_bizible.bizible_touchpoint_date DESC) AS touchpoint_order_by_person
+    FROM prep_person
     LEFT JOIN prep_bizible
-        ON prep_crm_person.bizible_person_id = prep_bizible.bizible_person_id
+        ON prep_person.bizible_person_id = prep_bizible.bizible_person_id
     WHERE prep_bizible.touchpoint_id IS NOT null
 
 ), bizible_most_recent_touchpoint_information_final AS (

@@ -11,6 +11,11 @@ WITH biz_person AS (
     WHERE bizible_touchpoint_position LIKE '%FT%'
      AND is_deleted = 'FALSE'
 
+), prep_bizible_touchpoint_information AS (
+
+    SELECT *
+    FROM {{ref('prep_bizible_touchpoint_information')}}
+
 ), prep_date AS (
 
     SELECT *
