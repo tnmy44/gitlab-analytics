@@ -74,6 +74,7 @@ time_frame_all_time_metrics AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.generate_surrogate_key(['dim_installation_id', 'metrics_path', 'DATE_TRUNC('month', ping_created_at)']) }} AS ping_instance_metric_monthly_pk,
     ping_instance_metric_id,
     dim_ping_instance_id,
     dim_product_tier_id,
@@ -102,6 +103,7 @@ final AS (
   UNION ALL
 
   SELECT
+    {{ dbt_utils.generate_surrogate_key(['dim_installation_id', 'metrics_path', 'DATE_TRUNC('month', ping_created_at)']) }} AS ping_instance_metric_monthly_pk,
     ping_instance_metric_id,
     dim_ping_instance_id,
     dim_product_tier_id,
