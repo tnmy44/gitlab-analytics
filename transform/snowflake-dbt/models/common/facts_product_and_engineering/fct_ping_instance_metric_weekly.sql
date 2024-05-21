@@ -28,6 +28,7 @@
 time_frame_7_day_metrics AS (
 
     SELECT
+      {{ dbt_utils.generate_surrogate_key(['dim_installation_id', 'metrics_path', 'ping_created_at_date_week']) }} AS ping_instance_metric_week_pk,
       fct_ping_instance_metric.*,
       dim_ping_metric.time_frame
     FROM fct_ping_instance_metric
@@ -45,7 +46,7 @@ time_frame_7_day_metrics AS (
 {{ dbt_audit(
     cte_ref="time_frame_7_day_metrics",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mdrussell",
     created_date="2022-08-08",
-    updated_date="2024-03-21"
+    updated_date="2024-05-21"
 ) }}
