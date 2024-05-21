@@ -3377,3 +3377,9 @@ For Shared Runners, whenever a user runs jobs on a specific machine type the cos
 
 {% enddocs %}
 
+{% docs ping_instance_metric_monthly_pk %}
+ 
+Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_at_date_month
+
+{% enddocs %}
+

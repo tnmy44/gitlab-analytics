@@ -4290,7 +4290,7 @@ models:
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
       - name: ping_instance_metric_monthly_pk
-        description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_date_month
+        description: '{{ doc("ping_instance_metric_monthly_pk") }}'
         tests:
           - unique
           - not_null

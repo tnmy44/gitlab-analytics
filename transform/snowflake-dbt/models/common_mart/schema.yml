@@ -554,8 +554,8 @@ models:
 - name: mart_ping_instance_metric_monthly
   description: ' {{ doc("mart_ping_instance_metric_monthly") }} '
   columns:
-    - name: ping_instance_wave_monthly_pk
-      description: Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_at_date_month
+    - name: ping_instance_metric_monthly_pk
+      description: '{{ doc("ping_instance_metric_monthly_pk") }}'
       tests:
         - unique
         - not_null
