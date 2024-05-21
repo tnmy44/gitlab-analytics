@@ -314,8 +314,9 @@
 - This data is enhanced with additional license, subscription, CRM account, and billing attributes for ease of analysis
 
 **Data Grain:**
-- dim_ping_instance_id
+- dim_installation
 - metrics_path
+- ping_created_date_week
 
 **Filters Applied to Model:**
 - Exclude non-production SaaS installations (ex: `staging.gitlab.com`)
