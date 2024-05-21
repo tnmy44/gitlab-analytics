@@ -47,7 +47,7 @@ def set_bucket_path(branch: str, export: dict) -> None:
         )
 
 
-def get_partition(date_part: str, export: str) -> str:
+def get_partition(date_part: str, export: dict) -> str:
     """
     get date partition parameter
     """
