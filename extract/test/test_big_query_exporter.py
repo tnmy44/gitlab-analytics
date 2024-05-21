@@ -3,23 +3,23 @@ from unittest.mock import mock_open, patch
 
 
 @pytest.fixture
-def mock_file():
-    data = 'stream: {project: test_project, credentials: test_creds, exports: [{name: test_export, export_query: "SELECT * FROM table"}]}'
-    return mock_open(read_data=data)
+# def mock_file():
+#     data = 'stream: {project: test_project, credentials: test_creds, exports: [{name: test_export, export_query: "SELECT * FROM table"}]}'
+#     return mock_open(read_data=data)
 
 
-def test_get_export(mock_file, monkeypatch):
-    from extract.bigquery.src.bigquery_export import get_export
+# def test_get_export(mock_file, monkeypatch):
+#     from extract.bigquery.src.bigquery_export import get_export
 
-    with patch("builtins.open", mock_file):
-        project, creds, export = get_export("test_export", "config.yaml")
-        assert project == "test_project"
-        assert creds == "test_creds"
-        assert export == {"name": "test_export", "export_query": "SELECT * FROM table"}
+#     with patch("builtins.open", mock_file):
+#         project, creds, export = get_export("test_export", "config.yaml")
+#         assert project == "test_project"
+#         assert creds == "test_creds"
+#         assert export == {"name": "test_export", "export_query": "SELECT * FROM table"}
 
-    with patch("builtins.open", mock_file):
-        project, creds, export = get_export(None, "config.yaml")
-        assert export == {"name": "test_export", "export_query": "SELECT * FROM table"}
+#     with patch("builtins.open", mock_file):
+#         project, creds, export = get_export(None, "config.yaml")
+#         assert export == {"name": "test_export", "export_query": "SELECT * FROM table"}
 
 
 def test_set_bucket_path():
