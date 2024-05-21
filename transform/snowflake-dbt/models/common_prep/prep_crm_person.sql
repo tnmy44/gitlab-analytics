@@ -507,7 +507,7 @@ WITH biz_person AS (
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
     LEFT JOIN prep_bizible_touchpoint_information
-      ON crm_person.bizible_person_id=prep_bizible_touchpoint_information.bizible_person_id
+      ON crm_person_final.bizible_person_id=prep_bizible_touchpoint_information.bizible_person_id
     LEFT JOIN prep_location_country
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
