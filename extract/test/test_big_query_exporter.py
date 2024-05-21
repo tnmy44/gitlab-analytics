@@ -9,7 +9,7 @@ def mock_file():
 
 
 def test_get_export(mock_file, monkeypatch):
-    from bigquery_export import get_export
+    from from extract.bigquery.src.bigquery_export import get_export
 
     with patch("builtins.open", mock_file):
         project, creds, export = get_export("test_export", "config.yaml")
@@ -23,7 +23,7 @@ def test_get_export(mock_file, monkeypatch):
 
 
 def test_set_bucket_path():
-    from bigquery_export import set_bucket_path
+    from from extract.bigquery.src.bigquery_export import set_bucket_path
 
     export = {"bucket_path": "gs://test/path"}
     set_bucket_path("master", export)
@@ -39,7 +39,7 @@ def test_set_bucket_path():
     [(None, "2023-04-01"), ("d", "2023-04-01"), ("m", "2023-04")],
 )
 def test_get_partition(partition_date_part, expected_partition, monkeypatch):
-    from bigquery_export import get_partition
+    from from extract.bigquery.src.bigquery_export import get_partition
 
     monkeypatch.setenv("EXPORT_DATE", "2023-04-01")
     export = {}
@@ -57,7 +57,7 @@ def test_get_partition(partition_date_part, expected_partition, monkeypatch):
     ],
 )
 def test_get_billing_data_query(branch, expected_path, monkeypatch):
-    from bigquery_export import get_billing_data_query
+    from from extract.bigquery.src.bigquery_export import get_billing_data_query
 
     monkeypatch.setenv("EXPORT_DATE", "2023-04-01")
     monkeypatch.setenv("GIT_BRANCH", branch)
