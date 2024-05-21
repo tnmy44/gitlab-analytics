@@ -1,4 +1,4 @@
-{%- macro utm_parsing(utm_column_name) -%}
+{%- macro utm_campaign_parsing(utm_column_name) -%}
 
 CASE 
     WHEN REGEXP_COUNT({{utm_column_name}}, '_') >= 6  
