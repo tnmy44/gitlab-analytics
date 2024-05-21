@@ -11,6 +11,13 @@ WITH final AS (
       prep_team_member.work_email,
       prep_team_member.date_of_birth,
       prep_team_member.key_talent_status,
+      prep_team_member.age_calculated,
+      prep_team_member.age_cohort,
+      prep_team_member.region_modified,
+      prep_team_member.gender_region,
+      prep_team_member.ethnicity_region,
+      prep_team_member.urg_group,
+      prep_team_member.urg_region,
       prep_team_member.gitlab_username,
       prep_team_member.growth_potential_rating,
       prep_team_member.performance_rating,
@@ -40,6 +47,13 @@ WITH final AS (
       'Missing work_email'                                            AS work_email,
       '9999-12-31 00:00:00.000 +0000'                                 AS date_of_birth,
       'Missing key_talent_status'                                     AS key_talent_status,
+      -1                                       AS age_calculated,
+      'Missing age_cohort'   AS age_cohort,
+      'Missing region_modified'   AS region_modified,
+      'Missing gender_region'   AS gender_region,
+      'Missing ethnicity_region'   AS ethnicity_region,
+      FALSE   AS urg_group,
+      'Missing urg_region'   AS urg_region,
       'Missing gitlab_username'                                       AS gitlab_username,
       'Missing growth_potential_rating'                               AS growth_potential_rating,
       'Missing performance_rating'                                    AS performance_rating,
@@ -60,7 +74,7 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref='final',
     created_by='@lisvinueza',
-    updated_by='@lisvinueza',
+    updated_by='@rakhireddy',
     created_date='2023-03-27',
-    updated_date='2023-07-24'
+    updated_date='2024-05-21'
 ) }}

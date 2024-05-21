@@ -2141,6 +2141,14 @@ models:
         description: Masked. Team member date of birth
         meta:
           masking_policy: analyst_people_sensitive
+      - name: age_calculated 
+        description: Masked. Team member's age
+        meta:
+          masking_policy: analyst_people_sensitive    
+      - name: age_cohort 
+        description: Masked. Team member's age bucket
+        meta:
+          masking_policy: analyst_people_sensitive         
       - name: key_talent_status 
         description: Masked. Team member Key Talent status
         meta:
@@ -2154,9 +2162,29 @@ models:
         meta:
           masking_policy: analyst_people_sensitive
       - name: employee_type
-        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
+        description: Masked. The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
           masking_policy: analyst_people_sensitive
+      - name: region_modified
+        description: Region modified for team members from the Americas. Team members are split into LATAM or NORAM
+      - name: gender_region
+        description: Masked. Team member's gender and region combined
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: ethnicity_region
+        description: Masked. Team member's ethnicity and region combined
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: urg_group
+        description: Masked. Team member's URG group
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: urg_region
+        description: Masked. Team member's URG region
+        meta:
+          masking_policy: analyst_people_sensitive
+  
+
 
   - name: prep_billing_account
     description: '{{ doc("prep_billing_account") }}'
