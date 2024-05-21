@@ -47,18 +47,20 @@ def set_bucket_path(branch: str, export: dict) -> None:
         )
 
 
-def get_partition(date_part: str, export: dict) -> str:
+def get_partition(export: dict) -> str:
     """
     get date partition parameter
     """
     EXPORT_DATE = config_dict["EXPORT_DATE"]
 
     if export.get("partition_date_part") is None:
-        return EXPORT_DATE
+        partition = EXPORT_DATE
     elif export["partition_date_part"] == "d":
-        return EXPORT_DATE[0:10]
+        partition = EXPORT_DATE[0:10]
     elif export["partition_date_part"] == "m":
-        return EXPORT_DATE[0:7]
+        partition = EXPORT_DATE[0:7]
+
+    return partition
 
 
 def get_billing_data_query(
@@ -74,9 +76,7 @@ def get_billing_data_query(
 
     set_bucket_path(branch=GIT_BRANCH, export=export)
 
-    partition = get_partition(
-        date_part=export.get("partition_date_part"), export=export
-    )
+    partition = get_partition(export)
 
     export_query = export["export_query"].replace("{EXPORT_DATE}", partition)
 
