@@ -4782,13 +4782,6 @@ roles:
           write:
             - lwork_prep.*.*
             - lwork_prod.*.*
-  - manggara:
-      member_of:
-        - analyst_finance
-        - bamboohr_analytics
-        - restricted_safe
-      warehouses:
-        - dev_xs
   - marin:
       member_of:
         - snowflake_analyst
@@ -6995,10 +6988,6 @@ users:
       can_login: true
       member_of:
         - lwork
-  - manggara:
-      can_login: true
-      member_of:
-        - manggara
   - marin:
       can_login: true
       member_of:
