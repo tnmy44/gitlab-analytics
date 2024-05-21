@@ -29,5 +29,3 @@ macros:
     description: '{{ doc("integrated_budget_holder")}}'
   - name: date_spine_7th_day
     description: '{{ doc("date_spine_7th_day")}}'
-  - name: union_tables
-    description: '{{ doc("union_tables")}}'
