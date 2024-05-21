@@ -2,6 +2,7 @@ import logging
 from typing import Dict, Any, List
 
 import requests
+from gitlabdata.orchestration_utils import make_request
 
 
 class GitLabAPI:
@@ -119,12 +120,13 @@ class GitLabAPI:
             "Private-Token": self.api_token,
         }
         variables = {"project_path": project_path, "mr_iid": str(mr_iid)}
-        response = requests.post(
-            url,
-            json={"query": query, "variables": variables},
-            headers=headers,
-            timeout=10,
-        )
+
+        request_kwargs = {
+            "json": {"query": query, "variables": variables},
+            "headers": headers,
+            "timeout": 20,
+        }
+        response = make_request("POST", url, **request_kwargs)
 
         if response.status_code == 200:
             try:
