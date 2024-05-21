@@ -24,6 +24,8 @@ final AS (
     fct_crm_opportunity.dim_crm_opportunity_id,
     dim_crm_account.dim_parent_crm_account_id,
     fct_crm_opportunity.dim_crm_account_id,
+    fct_crm_opportunity.dim_crm_person_id,
+    fct_crm_opportunity.sfdc_contact_id,
     fct_crm_opportunity.dim_crm_user_id,
     fct_crm_opportunity.dim_parent_crm_opportunity_id,
     fct_crm_opportunity.duplicate_opportunity_id,
@@ -49,6 +51,7 @@ final AS (
     fct_crm_opportunity.risk_reasons,
     fct_crm_opportunity.downgrade_reason,
     fct_crm_opportunity.downgrade_details,
+    fct_crm_opportunity.ssp_id,
     fct_crm_opportunity.sales_type,
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
@@ -124,6 +127,7 @@ final AS (
     fct_crm_opportunity.is_edu_oss,
     fct_crm_opportunity.is_ps_opp,
     fct_crm_opportunity.is_sao,
+    fct_crm_opportunity.is_sdr_sao,
     fct_crm_opportunity.is_win_rate_calc,
     fct_crm_opportunity.is_net_arr_pipeline_created,
     fct_crm_opportunity.is_net_arr_closed_deal,
@@ -149,7 +153,10 @@ final AS (
     fct_crm_opportunity.is_eligible_age_analysis,
     fct_crm_opportunity.is_eligible_churn_contraction,
     fct_crm_opportunity.is_booked_net_arr,
+    fct_crm_opportunity.is_abm_tier_sao,
+    fct_crm_opportunity.is_abm_tier_closed_won,
     fct_crm_opportunity.is_downgrade,
+    fct_crm_opportunity.is_swing_deal,
     fct_crm_opportunity.is_excluded_from_pipeline_created,
     fct_crm_opportunity.critical_deal_flag,
 
@@ -202,6 +209,7 @@ final AS (
     fct_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
     -- crm owner/sales rep live fields
+    opp_owner_live.user_name AS opp_owner_name,
     opp_owner_live.crm_user_sales_segment,
     opp_owner_live.crm_user_sales_segment_grouped,
     opp_owner_live.crm_user_geo,
@@ -213,6 +221,7 @@ final AS (
     AS crm_user_sales_segment_region_grouped,
 
     -- crm account owner/sales rep live fields
+    account_owner_live.user_name AS account_owner_name,
     account_owner_live.crm_user_sales_segment AS crm_account_user_sales_segment,
     account_owner_live.crm_user_sales_segment_grouped AS crm_account_user_sales_segment_grouped,
     account_owner_live.crm_user_geo AS crm_account_user_geo,
