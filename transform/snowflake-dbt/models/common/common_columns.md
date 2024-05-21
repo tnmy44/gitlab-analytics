@@ -3370,3 +3370,10 @@ A timestamp used for checking when the last time the dimensions for the record w
 Flag to indicate a project has turned on the [Merge Trains](https://docs.gitlab.com/ee/ci/pipelines/merge_trains.html) feature
 
 {% enddocs %}
+
+{% docs cost_factor %}
+ 
+For Shared Runners, whenever a user runs jobs on a specific machine type the cost to GitLab needs to be multiplied by a cost factor as the larger the machine the more expensive it is to run.
+
+{% enddocs %}
+
