@@ -2154,7 +2154,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-      - General SAFE Access
   - user_name: aarts
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
