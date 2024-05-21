@@ -1434,7 +1434,7 @@ Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"
 
 **Description:** Atomic level instance Service Ping data for the last ping of the week per installation by ping and metric for 7-day metrics. This includes basic identifiers for easy joins out to dimension tables. This is a filtered version of `fct_ping_instance_metric`
 - The data includes a single row per ping and metric. Moreover, we filter down to the last ping of the week.
-  - Alternatively stated, there is a single row per installation, month, and metric.
+  - Alternatively stated, there is a single row per installation, week, and metric.
 - Includes installation, instance, date, product, billing, and subscription identifiers
 
 **Data Grain:**
