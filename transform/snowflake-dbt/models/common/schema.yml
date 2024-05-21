@@ -4407,6 +4407,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
