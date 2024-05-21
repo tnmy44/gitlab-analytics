@@ -3485,6 +3485,7 @@ roles:
         - linkedin_ads
         - static_pmg_readonly
         - analyst_marketing_sensitive
+        - sensitive_marketing
       warehouses:
         - dev_xs
       owns:
@@ -5627,6 +5628,7 @@ roles:
         - snowplow
         - zuora_order
         - zuora_stitch_rest_api
+        - sensitive_marketing
       warehouses:
         - dev_xs
       owns:
