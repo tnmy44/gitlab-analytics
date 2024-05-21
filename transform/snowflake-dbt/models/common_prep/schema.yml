@@ -183,7 +183,7 @@ models:
       - name: bizible_most_recent_marketing_channel_path
         description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
 
-  - name: dim_bizible_touchpoint_information
+  - name: prep_bizible_touchpoint_information
     description: Touchpoint information from key marketing and sales milestones.
     columns:
       - name: bizible_person_id
