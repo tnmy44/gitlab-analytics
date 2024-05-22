@@ -13,8 +13,6 @@
     ('mart_behavior_structured_event', 'mart_behavior_structured_event'),
     ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
     ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion')
-	  ('dim_product_detail', 'dim_product_detail'),
-	  ('zqu__productrateplan__c', 'zqu__productrateplan__c')
 
     ])
 }},
@@ -34,12 +32,8 @@ SELECT
   SUM(mart_arr.quantity) 
     AS dp_paid_seats
 FROM mart_arr
-LEFT JOIN dim_product_detail
-  ON mart_arr.dim_product_detail_id = dim_product_detail.dim_product_detail_id
-LEFT JOIN zqu__productrateplan__c AS sfdc_zuora_product_rate_plan
-  ON sfdc_zuora_product_rate_plan.zqu__zuoraid__c = dim_product_detail.product_rate_plan_id
-WHERE arr_month >= '2024-02-01' -- first duo pro arr
-  AND LOWER(sfdc_zuora_product_rate_plan.product_category__c) ILIKE '%duo pro%'
+WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
+  AND LOWER(product_rate_plan_name) LIKE '%duo pro%'
 GROUP BY ALL
 
 ), 
