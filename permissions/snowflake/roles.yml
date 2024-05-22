@@ -6357,6 +6357,18 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
+      privileges:
+        databases:
+          read:
+            - prep
+          write:
+            - raw
+        schemas:
+          read:
+            - prep.sensitive
+        tables:
+          read:
+            - prep.sensitive.rally_optouts
   - wlin:
       member_of:
         - adaptive
