@@ -33,31 +33,6 @@ def get_product_project_list() -> List[str]:
     return project_list
 
 
-def verify_mr_information(
-    pulled_mrs: int,
-    mr_project_id: int,
-    snowflake_engine: Engine,
-    mr_start: str,
-    mr_end: str,
-) -> None:
-    """
-    Gets number of MRs present from gitlab_db for the same timeframe.
-    If that number doesn't match the number passed in, a warning is logged.
-    """
-    count_query = f"""
-        SELECT count(distinct id)
-        FROM RAW.TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS
-        WHERE updated_at BETWEEN '{mr_start}' AND '{mr_end}'
-        AND target_project_id = {mr_project_id}
-    """
-    result_set = query_executor(snowflake_engine, count_query)
-    checked_mr_count = result_set[0][0]
-    if checked_mr_count != pulled_mrs:
-        logging.warn(
-            f"Project {mr_project_id} MR counts didn't match: pulled {pulled_mrs}, see {checked_mr_count} in database."
-        )
-
-
 if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=20)
 
@@ -122,10 +97,6 @@ if __name__ == "__main__":
 
         mr_attributes = api_client.get_attributes_for_mrs_for_project(
             project_id, start, end, mr_attribute_key
-        )
-
-        verify_mr_information(
-            len(mr_attributes), project_id, snowflake_engine, start, end
         )
 
         wrote_to_file = False
