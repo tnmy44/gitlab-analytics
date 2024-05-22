@@ -31,7 +31,7 @@ WITH source AS (
       release_date::VARCHAR                          AS release_date,
       rate_amount::FLOAT                             AS rate_amount,
       rate_amount_unit_type_id::FLOAT                AS rate_amount_unit_type_id,
-      rate_amount_unit_type_symbol::VARCHAR          AS rate_amount_unit_type_symbol,
+      rate_amount_display_symbol::VARCHAR            AS rate_amount_display_symbol,
       earning_group_id::FLOAT                        AS earning_group_id,
       earning_group_name::VARCHAR                    AS earning_group_name,
       reason_code_id::FLOAT                          AS reason_code_id,
