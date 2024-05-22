@@ -9,7 +9,6 @@ import pytest
 from extract.saas_usage_ping.instance_namespace_metrics import InstanceNamespaceMetrics
 
 
-
 @pytest.fixture(name="namespace_ping")
 def get_namespace_ping():
     """
@@ -313,7 +312,6 @@ def test_validate_schema(namespace_file):
     """
     validate json validate_ for namespace json file
     """
-
 
     namespace_schema = {
         "properties": {
