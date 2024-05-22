@@ -4036,6 +4036,7 @@ roles:
         - zendesk
       warehouses:
         - dev_xs
+        - dev_l
   - jhackamack:
       member_of:
         - analyst_sales
