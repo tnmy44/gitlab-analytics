@@ -562,7 +562,7 @@
 ), intermediate AS (
 
   SELECT DISTINCT
-    {{ dbt_utils.generate_surrogate_key(['cohort_base_combined.dim_crm_person_id','cohort_base_combined.dim_crm_touchpoint_id','cohort_base_combined.dim_crm_opportunity_id]) }}
+    {{ dbt_utils.generate_surrogate_key(['cohort_base_combined.dim_crm_person_id','cohort_base_combined.dim_crm_touchpoint_id','cohort_base_combined.dim_crm_opportunity_id']) }}
                                                  AS lead_to_revenue_id,
     cohort_base_combined.*,
     --inquiry_date fields
