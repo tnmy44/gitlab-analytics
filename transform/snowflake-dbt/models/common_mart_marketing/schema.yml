@@ -642,6 +642,8 @@ models:
           description: Boolean value of whether or not a lead/contact was defaulted to a trial.
         - name: net_arr_stage_1
           description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+        - name: valid_deal_count
+          description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
 
 
     - name: rpt_l2r_campaign_interactions
