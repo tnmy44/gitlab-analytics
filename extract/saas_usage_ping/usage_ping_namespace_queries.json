@@ -204,8 +204,8 @@
     "level": "namespace"
   },
   {
-    "counter_name": "counts.issues_created_from_alerts",
-    "counter_query": "SELECT projects.namespace_id AS id, projects.namespace_id, COUNT(issues.id) FROM prep.gitlab_dotcom.gitlab_dotcom_issues_dedupe_source AS issues INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_alert_management_alerts_dedupe_source AS alert_management_alerts ON alert_management_alerts.issue_id = issues.id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = issues.project_id  WHERE issues.work_item_type_id = 1  GROUP BY 1,2",
+    "counter_name": "counts.issues_created_from_alertsxxx",
+    "counter_query": "SELECT xxxxxprojects.namespace_id AS id, projects.namespace_id, COUNT(issues.id) FROM prep.gitlab_dotcom.gitlab_dotcom_issues_dedupe_source AS issues INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_alert_management_alerts_dedupe_source AS alert_management_alerts ON alert_management_alerts.issue_id = issues.id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = issues.project_id  WHERE issues.work_item_type_id = 1  GROUP BY 1,2",
     "time_window_query": false,
     "level": "namespace"
   },
