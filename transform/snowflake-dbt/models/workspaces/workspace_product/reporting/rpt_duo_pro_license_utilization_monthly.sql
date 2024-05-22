@@ -127,7 +127,7 @@ duo_pro_seat_assignments AS ( -- CTE to get number of seats assigned per namepsa
   FROM gitlab_dotcom_subscription_user_add_on_assignments AS a
   INNER JOIN gitlab_dotcom_subscription_add_on_purchases AS p
     ON a.add_on_purchase_id = p.id
-  INNER JOIN legacy.gitlab_dotcom_memberships AS m
+  INNER JOIN gitlab_dotcom_memberships AS m
     ON a.user_id = m.user_id
      AND p.namespace_id = p.namespace_id
   WHERE (a.pgp_is_deleted = FALSE OR a.pgp_is_deleted IS NULL) -- Exclude deleted rows -- https://gitlab.com/gitlab-data/analytics/-/issues/17911#note_1855404601
