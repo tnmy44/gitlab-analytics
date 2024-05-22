@@ -637,7 +637,7 @@ LEFT JOIN cw_base
       END                                                                                         AS is_eligible_asp_analysis,
       CASE
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
-         AND is_booked_net_arr = TRUE
+         AND is_booked_net_arr = 1
          AND sfdc_opportunity_live.is_edu_oss = 0
          AND sfdc_opportunity_live.is_jihu_account = 0
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
