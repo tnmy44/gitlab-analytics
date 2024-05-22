@@ -6,6 +6,8 @@ from extract.bigquery.src.bigquery_export import (
     get_partition,
     get_billing_data_query,
 )
+
+
 @pytest.fixture
 def mock_file():
     data = 'stream: {project: test_project, credentials: test_creds, exports: [{name: test_export, export_query: "SELECT * FROM table"}]}'
