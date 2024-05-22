@@ -5756,7 +5756,7 @@ users:
       - General SAFE Access
   - user_name: jrabbits
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -8988,7 +8988,7 @@ users:
       - Product All Access
   - user_name: skhan
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - ASM Restricted Access
