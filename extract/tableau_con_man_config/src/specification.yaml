@@ -4283,7 +4283,7 @@ users:
       - General SAFE Access
   - user_name: dvanrooijen
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: SiteAdministratorCreator
     auth_setting: SAML
     groups:
       - Data Team All Access
