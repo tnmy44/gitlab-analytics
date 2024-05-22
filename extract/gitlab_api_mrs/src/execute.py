@@ -86,7 +86,11 @@ if __name__ == "__main__":
         "handbook": {
             "file_name": "handbook_mrs.json",
             "project_list": [
-                {PROJECT_ID_KEY: 7764, PROJECT_PATH_KEY: "gitlab-com/www-gitlab-com"}
+                {PROJECT_ID_KEY: 7764, PROJECT_PATH_KEY: "gitlab-com/www-gitlab-com"},
+                {
+                    PROJECT_ID_KEY: 42817607,
+                    PROJECT_PATH_KEY: "gitlab-com/content-sites/handbook",
+                },
             ],
             "schema": "handbook",
             "stage": "handbook_load",
