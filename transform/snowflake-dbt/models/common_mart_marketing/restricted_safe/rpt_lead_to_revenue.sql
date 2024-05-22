@@ -147,6 +147,7 @@
       opp.created_date AS opp_created_date,
       opp.close_date,
       opp.is_won,
+      opp.valid_deal_count,
       opp.is_sao,
       opp.new_logo_count,
       opp.net_arr,
@@ -368,7 +369,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=89)}}
+    {{dbt_utils.group_by(n=90)}}
     
 ), cohort_base_combined AS (
   
@@ -430,6 +431,7 @@
       opp_base_with_batp.lead_source AS opp_lead_source,
       opp_base_with_batp.source_buckets AS opp_source_buckets,
       is_won,
+      valid_deal_count,
       is_sao,
       new_logo_count,
       net_arr,
@@ -560,6 +562,8 @@
 ), intermediate AS (
 
   SELECT DISTINCT
+    {{ dbt_utils.generate_surrogate_key(['cohort_base_combined.dim_crm_person_id','cohort_base_combined.dim_crm_touchpoint_id','cohort_base_combined.dim_crm_opportunity_id]) }}
+                                                 AS lead_to_revenue_id,
     cohort_base_combined.*,
     --inquiry_date fields
     inquiry_date.fiscal_year                     AS inquiry_date_range_year,
@@ -628,5 +632,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-05-07",
+    updated_date="2024-05-22",
   ) }}

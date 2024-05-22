@@ -199,6 +199,7 @@
       -- flags
       sfdc_opportunity.is_closed,
       sfdc_opportunity.is_won,
+      sfdc_opportunity.valid_deal_count,
       sfdc_opportunity.is_refund,
       sfdc_opportunity.is_downgrade,
       sfdc_opportunity.is_swing_deal,
