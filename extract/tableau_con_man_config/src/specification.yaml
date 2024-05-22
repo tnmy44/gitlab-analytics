@@ -4037,7 +4037,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-
   - user_name: dlawrence
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4284,7 +4283,7 @@ users:
       - General SAFE Access
   - user_name: dvanrooijen
     user_name_domain: gitlab.com
-    site_role: SiteAdministratorCreator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - Data Team All Access
@@ -5708,7 +5707,7 @@ users:
       - General SAFE Access
   - user_name: jpeguero
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - Data Team All Access
@@ -6238,7 +6237,7 @@ users:
       - General All Access
   - user_name: kmagda
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - Data Team All Access
@@ -6826,7 +6825,7 @@ users:
       - General SAFE Access
   - user_name: mcoons
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -8349,7 +8348,7 @@ users:
       - General SAFE Access
   - user_name: remy
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - Engineering All Access
@@ -8537,14 +8536,14 @@ users:
       - General All Access
   - user_name: rnealon
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
       - General SAFE Access
   - user_name: rnienaber
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - Engineering All Access
@@ -10354,7 +10353,7 @@ users:
       - General All Access
   - user_name: msaleiko
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -10366,7 +10365,7 @@ users:
       - General All Access
   - user_name: dfrey
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
