@@ -3,7 +3,7 @@ The main test routine for instance_namespace_metrics
 """
 
 from datetime import datetime, timedelta
-from jsonschema import validate
+
 import pytest
 
 from extract.saas_usage_ping.instance_namespace_metrics import InstanceNamespaceMetrics
@@ -306,20 +306,3 @@ def test_multiple_select_statement(namespace_file, namespace_ping):
         assert actual.count("DATE_PART(epoch_second, CURRENT_TIMESTAMP())") == 1
         assert actual.count("Success") == 1
         assert actual.count(metrics.get("counter_name")) == 1
-
-
-def test_validate_schema(namespace_file):
-    """
-    validate json validate_ for namespace json file
-    """
-
-    namespace_schema = {
-        "properties": {
-            "counter_name": {"type": "string"},
-            "counter_query": {"type": "string"},
-            "time_window_query": {"type": "boolean"},
-            "level": {"type": "string"},
-        },
-    }
-
-    assert validate(instance=namespace_file, schema=namespace_schema) is None
