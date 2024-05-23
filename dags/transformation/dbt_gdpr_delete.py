@@ -120,4 +120,3 @@ dbt_gdpr_deletes_command_task = KubernetesPodOperator(
     tolerations=get_toleration("dbt"),
     dag=dag,
 )
-
