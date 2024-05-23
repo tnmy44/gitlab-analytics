@@ -6464,10 +6464,20 @@ roles:
       warehouses:
         - dev_xs
   - zapier:
-      member_of:
-        - snowflake_analyst
       warehouses:
         - dev_xs
+      privileges:
+        databases:
+          read:
+            - prod
+        schemas:
+          read:
+            - prod.
+
+        tables:
+          read:
+            - prod..
+
 users:
   - aadesanya:
       can_login: true
