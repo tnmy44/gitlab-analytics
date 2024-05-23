@@ -16,7 +16,7 @@ from airflow_utils import (
 )
 
 from kube_secrets import (
-    GCP_BILLING_ACCOUNT_CREDENTIALS,
+    GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS,
     GIT_DATA_TESTS_CONFIG,
     GIT_DATA_TESTS_PRIVATE_KEY,
     MCD_DEFAULT_API_ID,
@@ -71,17 +71,17 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    # "retries": 1,
+    "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2023, 8, 24),
+    "start_date": datetime(2023, 12, 15),
 }
 
 dag = DAG(
-    "external_gcs_gcp_billing",
+    "el_google_analytics_four",
     default_args=default_args,
-    schedule_interval="0 10 * * *",
+    schedule_interval="0 8 * * *",
     concurrency=1,
     catchup=True,
 )
@@ -89,9 +89,9 @@ dag = DAG(
 external_table_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt run-operation stage_external_sources \
-        --args "select: source gcp_billing" --profiles-dir profile; ret=$?;
+        --args "select: source google_analytics_4_bigquery" --profiles-dir profile; ret=$?;
 """
-dbt_task_name = "dbt-gcp-billing-external-table-refresh"
+dbt_task_name = "dbt-google-analytics-four-external-table-refresh"
 dbt_external_table_run = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
@@ -106,7 +106,7 @@ dbt_external_table_run = KubernetesPodOperator(
     dag=dag,
 )
 
-spec_file = "bigquery/src/gcp_billing/bigquery_export.yml"
+spec_file = "bigquery/src/google_analytics_four/bigquery_export.yml"
 spec_path = f"{REPO_BASE_PATH}/extract/{spec_file}"
 
 with open(
@@ -120,6 +120,7 @@ with open(
 
 for export in stream["exports"]:
     export_name = export["name"]
+    export_date_str = "{{ yesterday_ds_nodash }}"
 
     billing_extract_command = f"""
     {clone_and_setup_extraction_cmd} &&
@@ -135,10 +136,10 @@ for export in stream["exports"]:
         image=DATA_IMAGE,
         task_id=export_name,
         name=export_name,
-        secrets=[GCP_BILLING_ACCOUNT_CREDENTIALS],
+        secrets=[GCP_MKTG_GOOG_ANALYTICS4_5E6DC7D6_CREDENTIALS],
         env_vars={
             **pod_env_vars,
-            "EXPORT_DATE": "{{ yesterday_ds }}",
+            "EXPORT_DATE": export_date_str,
             "GIT_BRANCH": GIT_BRANCH,
         },
         affinity=get_affinity("extraction"),
