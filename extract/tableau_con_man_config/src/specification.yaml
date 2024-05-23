@@ -4942,6 +4942,7 @@ users:
     groups:
       - Engineering All Access
       - General All Access
+      - General SAFE Access
   - user_name: ikosenko
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
