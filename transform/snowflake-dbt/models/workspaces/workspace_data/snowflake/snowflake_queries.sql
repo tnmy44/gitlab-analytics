@@ -84,6 +84,8 @@ expanded AS (
     source.bytes_spilled_to_local_storage,
     source.credits_used_cloud_services,
     source.percentage_scanned_from_cache,
+    source.partitions_total,
+    source.partitions_scanned,
     query_metering.total_attributed_credits,
     ROUND(credit_rates.contract_rate * query_metering.total_attributed_credits, 2)    AS dollars_spent,
     IFF(team_members.employee_id IS NULL, user_types.user_type, 'Team Member')        AS user_type,
