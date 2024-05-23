@@ -3,7 +3,6 @@
 {%- call statement('gdpr_deletions', fetch_result=True) %}
     select SHA2(TRIM(LOWER(email_address)))
     from {{ source('driveload', 'gdpr_delete_requests') }}
-    limit 10
 {%- endcall -%}
 
     {%- set value_list = load_result('gdpr_deletions') -%}
