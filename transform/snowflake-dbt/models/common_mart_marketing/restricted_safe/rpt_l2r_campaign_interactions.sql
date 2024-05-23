@@ -73,6 +73,8 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
+      lead_score_classification,
+      is_defaulted_trial,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -244,6 +246,7 @@
           THEN TRUE
         ELSE FALSE
       END AS is_created_through_deal_registration,
+      opp.resale_partner_name,
 
     --Person Data
       person_base.dim_crm_person_id,
@@ -294,6 +297,8 @@
       last_utm_content,
       person_base.prospect_share_status,
       person_base.partner_prospect_status,
+      person_base.lead_score_classification,
+      person_base.is_defaulted_trial,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -390,7 +395,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=182)}}
+  {{dbt_utils.group_by(n=186)}}
     
 ), cohort_base_combined AS (
   
@@ -454,6 +459,8 @@
       last_utm_content,
       prospect_share_status,
       partner_prospect_status,
+      lead_score_classification,
+      is_defaulted_trial,
 
   --Person Dates
       true_inquiry_date,
@@ -543,6 +550,7 @@
       null AS calculated_deal_count,
       null AS days_in_stage,
       null AS record_type_name,
+      null as resale_partner_name,
   
   --Touchpoint Data
       touchpoint_type,
@@ -667,6 +675,8 @@
       last_utm_content,
       prospect_share_status,
       partner_prospect_status,
+      lead_score_classification,
+      is_defaulted_trial,
     
     --Person Dates
       true_inquiry_date,
@@ -756,6 +766,7 @@
       calculated_deal_count,
       days_in_stage,
       record_type_name,
+      resale_partner_name,
     
       --Touchpoint Data
       touchpoint_type,
@@ -893,6 +904,9 @@
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
       dim_campaign.is_a_channel_partner_involved,
+      dim_campaign.is_an_alliance_partner_involved,
+      dim_campaign.channel_partner_name,
+      dim_campaign.alliance_partner_name,
       campaign_owner.user_name          AS campaign_owner,
       campaign_owner_manager.user_name  AS campaign_owner_manager,
       CASE  
@@ -904,6 +918,7 @@
       -- Account
       dim_crm_account.abm_tier,
       dim_crm_account.health_number,
+      dim_crm_account.crm_account_type,
 
      -- Opportunity Report Fields
      CASE 
@@ -1041,7 +1056,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2024-02-01",
+    updated_date="2024-05-14",
   ) }}

@@ -210,6 +210,10 @@ models:
           description: Shows if the person record is a lead or contact in SFDC.
         - name: is_high_priority
           description: A person-level flag to indicate if the person is a high prioirty person, according to Salesforce field logic. 
+        - name: lead_score_classification
+          description: The Salesforce grade of the lead score for a lead/contact. 
+        - name: is_defaulted_trial
+          description: Boolean value of whether or not a lead/contact was defaulted to a trial.
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -251,6 +255,10 @@ models:
           description: The sum of SAOs by the various dimensions.
         - name: touchpoint_sales_stage
           description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
+        - name: lead_score_classification
+          description: The Salesforce grade of the lead score for a lead/contact. 
+        - name: is_defaulted_trial
+          description: Boolean value of whether or not a lead/contact was defaulted to a trial. 
 
 
     - name: rpt_lead_to_revenue
@@ -628,6 +636,13 @@ models:
           description: The XDR influenced value of an Opportunity's Net ARR as of Stage 1 in SFDC.
         - name: xdr_net_arr_stage_3
           description: The XDR influenced value of an Opportunity's Net ARR as of Stage 3 in SFDC.
+        - name: lead_score_classification
+          description: The Salesforce grade of the lead score for a lead/contact. 
+        - name: is_defaulted_trial
+          description: Boolean value of whether or not a lead/contact was defaulted to a trial.
+        - name: net_arr_stage_1
+          description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
@@ -686,8 +701,20 @@ models:
           description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
         - name: campaign_owner_manager
           description: The name of the campaign owners manager from SFDC.
-
-
+        - name: lead_score_classification
+          description: The Salesforce grade of the lead score for a lead/contact. 
+        - name: is_defaulted_trial
+          description: Boolean value of whether or not a lead/contact was defaulted to a trial.
+        - name: resale_partner_name
+          description: The name of the resale partner on the opp. Often this will have a value for partner opps when the partner does not.
+        - name: is_an_alliance_partner_involved
+          description: True / False Feild on the campaign for Alliance Partners Involment
+        - name: channel_partner_name
+          description: Campagin field of the Channel partner name
+        - name: alliance_partner_name
+          description: Campagin field of the Alliance partner name
+        - name: crm_account_type
+          description: The account type from SFDC (Customer, Former Customer, etc...)
 
     - name: rpt_l2r_community_data
       description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 

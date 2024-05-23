@@ -178,13 +178,6 @@ Below checklist of activities would be run once for quarter to validate security
 				
      ```
 
-
-3. [ ] Generate a report of all changes to the TD: Sales Funnel dashboard in the quarter.
-
-    <details>
-
-     * [ ]  Pull the report for business logic changes made to the `mart_crm_opportunity` model from the link (https://gitlab.com/gitlab-data/analytics/-/commits/master/transform/snowflake-dbt/models/marts/sales_funnel/restricted_safe/mart_crm_opportunity.sql?search=) by filtering on label “Business logic change”.
-
 ## DBT Execution
 1. [ ] Generate report on top 25 long running dbt models
 
@@ -286,6 +279,11 @@ Below checklist of activities would be run once for quarter to validate security
 ## Monte Carlo
 1. [ ] Validate off-boarded employees have been removed from Monte Carlo access.
 1. [ ] Deprovision access if an account has not logged-in within the past 90 days from the moment of performing audit.
+
+## Tableau
+1. [ ] Validate offboarded employess have been removed from Tableau Cloud
+1. [ ] Deprovision access if a user has had access for >=90 days, but have not logged in during the past 90 days from the moment of performing audit. 
+  - [Deprovision Check](https://10az.online.tableau.com/t/gitlab/views/UserDeprovisionCheck/UserDeprovisionCheck)
 
 ## Package version inventory
 
