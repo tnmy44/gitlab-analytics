@@ -281,7 +281,7 @@ SELECT
      fiscal_quarter_name_fy AS quarter,
      SUM(enterprise_agile_planning_net_arr) AS actuals_raw
     
-    FROM art_crm_opportunity
+    FROM mart_crm_opportunity
     LEFT JOIN dim_date 
     ON date_actual = close_date
     WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
