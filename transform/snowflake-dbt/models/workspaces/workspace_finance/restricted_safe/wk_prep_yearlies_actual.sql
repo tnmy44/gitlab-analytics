@@ -7,6 +7,7 @@
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('rpt_product_usage_health_score', 'rpt_product_usage_health_score'),
     ('mart_arr_all', 'mart_arr_with_zero_dollar_charges'),
+    ('mart_crm_account', 'mart_crm_account'),
     ('dim_date','dim_date')
 ]) }},
 
@@ -98,7 +99,7 @@ security_adoption_1 AS (
    FROM
       RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL AS mart_arr_all 
       LEFT JOIN
-         prod.restricted_safe_common_mart_sales.mart_crm_account AS mart_crm_account 
+         mart_crm_account 
          ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
    WHERE
       ARR_MONTH >= '2023-02-01' 
