@@ -153,9 +153,11 @@ SELECT DISTINCT
    RATIO_TO_REPORT(Ultimate_ARR) OVER (PARTITION BY ARR_MONTH) AS percent_of_ultimate_arr 
    
    FROM security_adoption_4 		
+   LEFT JOIN dim_date 
+   ON arr_month = date_actual 
    WHERE SECURITY_COLOR_ULTIMATE_ONLY IS NOT NULL 
-   AND MONTH(ARR_MONTH) in (4,7,10,1)  
-   GROUP BY 1,2 
+   AND arr_month < current_date
+   GROUP BY 1,2,3
    ORDER BY 1 DESC 
 ),
 
@@ -163,14 +165,13 @@ security_adoption_final as (
 SELECT
    '3.3 Ultimate Security & Compliance Adoption' AS yearly_name,
    'PROD.COMMON_MART_PRODUCT.RPT_PRODUCT_USAGE_HEALTH_SCORE, PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL' AS source_table,
-   fiscal_quarter_name_fy as quarter,
+   quarter,
    percent_of_ultimate_arr AS actuals_raw 
 
    FROM security_adoption_5 
-   LEFT JOIN dim_date 
-   ON arr_month = date_actual 
    WHERE security_color_ultimate_only = 'Green'
-   AND fiscal_quarter_name_fy LIKE '%FY25%'
+   AND quarter LIKE '%FY25%'
+   AND arr_month_rank = 1
 ),
 
 churn_contraction_1 AS (
