@@ -97,7 +97,7 @@ security_adoption_1 AS (
       PRODUCT_DELIVERY_TYPE,
       SUM(ARR) AS total_subscription_arr 
    FROM
-      RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL AS mart_arr_all 
+      mart_arr_all 
       LEFT JOIN
          mart_crm_account 
          ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
@@ -164,7 +164,7 @@ security_adoption_5 as (
       security_adoption_4 		
    WHERE
       SECURITY_COLOR_ULTIMATE_ONLY IS NOT NULL 
-      AND ARR_MONTH = date_trunc('month', dateadd('month', - 1, current_date())) 
+      AND MONTH(ARR_MONTH) in (4,7,10,1)  
    GROUP BY
       1,2 
    ORDER BY
@@ -183,6 +183,7 @@ FROM
       ON arr_month = date_actual 
 WHERE
    security_color_ultimate_only = 'Green'
+   AND fiscal_quarter_name_fy LIKE '%FY25%'
 ),
 
 churn_contraction_1 AS (
