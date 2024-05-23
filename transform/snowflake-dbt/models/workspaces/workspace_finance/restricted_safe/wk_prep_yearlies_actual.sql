@@ -69,8 +69,7 @@ SELECT
    ON arr_month = snapshot_month
    AND mart_arr_all.dim_subscription_id_original = adoption_metrics_1.dim_subscription_id_original
    AND mart_arr_all.product_delivery_type = adoption_metrics_1.delivery_type
-   WHERE product_tier_name <> 'Storage'
-	AND product_tier_name <> 'Not Applicable'
+   WHERE product_tier_name NOT IN ('Storage','Not Applicable')
    GROUP BY 1,2,3,4,5
 ),
 
