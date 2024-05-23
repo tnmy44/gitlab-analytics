@@ -124,7 +124,7 @@ class GitLabAPI:
         request_kwargs = {
             "json": {"query": query, "variables": variables},
             "headers": headers,
-            "timeout": 20,
+            "timeout": 90,
         }
         response = make_request("POST", url, **request_kwargs)
 
