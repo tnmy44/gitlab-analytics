@@ -27,6 +27,8 @@
   
   --Person Data
       person_base.email_hash,
+      person_base.sfdc_record_type,
+      person_base.person_first_country,
       person_base.email_domain_type,
       person_base.source_buckets,
       person_base.true_inquiry_date,
@@ -376,7 +378,8 @@
     SELECT
    --IDs
       dim_crm_person_id,
-      person_base_with_tp.dim_crm_account_id,
+      COALESCE (person_base_with_tp.dim_crm_account_id,opp_base_with_batp.dim_crm_account_id) AS dim_crm_account_id,
+      COALESCE (person_base_with_tp.dim_parent_crm_account_id,opp_base_with_batp.dim_parent_crm_account_id) AS dim_parent_crm_account_id,
       sfdc_record_id,
       COALESCE (person_base_with_tp.dim_crm_touchpoint_id,opp_base_with_batp.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
       person_base_with_tp.dim_crm_touchpoint_id AS dim_crm_btp_touchpoint_id,
@@ -389,6 +392,8 @@
   --Person Data
       email_hash,
       email_domain_type,
+      sfdc_record_type,
+      person_first_country,
       person_base_with_tp.source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
@@ -632,5 +637,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-05-22",
+    updated_date="2024-05-23",
   ) }}
