@@ -2061,9 +2061,11 @@ roles:
         schemas:
           read:
             - raw.google_analytics_4_bigquery
+            - raw.google_analytics_4_fivetran
         tables:
           read:
             - raw.google_analytics_4_bigquery.*
+            - raw.google_analytics_4_fivetran.*
   - google_search_console:
       privileges:
         databases:
@@ -4036,6 +4038,7 @@ roles:
         - zendesk
       warehouses:
         - dev_xs
+        - dev_l
   - jhackamack:
       member_of:
         - analyst_sales
