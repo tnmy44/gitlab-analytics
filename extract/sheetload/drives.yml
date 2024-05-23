@@ -1,4 +1,104 @@
 folders:
+  - name: clari_exports
+    owner: '@paul_armstrong'
+    folder_name: clari_export_csv
+    table_name: clari_export_forecast_net_iacv
+    table_replace_append: 1 # For Append 1 and to replace 0
+  - name: email_domain_classification
+    owner: '@jeanpeguero'
+    folder_name: email_domain_classification
+    table_name: email_domain_classification
+    table_replace_append: 0
+  - name: financial_metrics_program_phase_1
+    owner: '@paul_armmstrong'
+    folder_name: financial_metrics_program_phase_1
+    table_name: financial_metrics_program_phase_1
+    table_replace_append: 0 # For Append 1 and to replace 0 , This is the old behavior of this table where it will replace the table and reload not modifying the same.
+  - name: marketing_dnc_list
+    owner: '@jeanpeguero'
+    folder_name: marketing_do_not_contact_list
+    table_name: marketing_dnc_list
+    table_replace_append: 1
+  - name: lam_corrections
+    owner: '@paul_armstrong'
+    folder_name: lam_corrections
+    table_name: lam_corrections
+    table_replace_append: 1
+  - name: ssa_coverage_fitted_curves
+    owner: '@jeanpeguero'
+    folder_name: ssa_coverage_fitted_curves
+    table_name: ssa_coverage_fitted_curves
+    table_replace_append: 0
+  - name: ssa_quarterly_aggregated_metrics_for_coverage
+    owner: '@jeanpeguero'
+    folder_name: ssa_quarterly_aggregated_metrics_for_coverage
+    table_name: ssa_quarterly_aggregated_metrics_for_coverage
+    table_replace_append: 0
+  - name: zuora_revenue_billing_waterfall_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_billing_waterfall_report
+    table_name: zuora_revenue_billing_waterfall_report
+    table_replace_append: 1
+  - name: zuora_revenue_rc_rollforward_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_rc_rollforward_report
+    table_name: zuora_revenue_rc_rollforward_report
+    table_replace_append: 1
+  - name: zuora_revenue_unreleased_pob_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_unreleased_pob_report
+    table_name: zuora_revenue_unreleased_pob_report
+    table_replace_append: 1
+  - name: zuora_revenue_unbill_rollforward_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_unbill_rollforward_report
+    table_name: zuora_revenue_unbill_rollforward_report
+    table_replace_append: 1
+  - name: zuora_revenue_revenue_waterfall_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_revenue_waterfall_report
+    table_name: zuora_revenue_revenue_waterfall_report
+    table_replace_append: 1
+  - name: zuora_revenue_waterfall_report_with_wf_type_adjustments
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_waterfall_report_with_wf_type_adjustments
+    table_name: zuora_revenue_waterfall_report_with_wf_type_adjustments
+    table_replace_append: 1
+  - name: zuora_revenue_waterfall_report_with_wf_type_unbilled_revenue
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_waterfall_report_with_wf_type_unbilled_revenue
+    table_name: zuora_revenue_waterfall_report_with_wf_type_unbilled_revenue
+    table_replace_append: 1
+  - name: zuora_revenue_waterfall_report_with_wf_type_net_revenue_with_mje_flag_y
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_waterfall_report_with_wf_type_net_revenue_with_mje_flag_y
+    table_name: zuora_revenue_waterfall_report_with_wf_type_net_revenue_with_mje_flag_y
+    table_replace_append: 1
+  - name: zuora_revenue_billing_waterfall_report_with_additional_columns
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_billing_waterfall_with_additional_columns
+    table_name: zuora_revenue_billing_waterfall_report_with_additional_columns
+    table_replace_append: 1
+  - name: marketing_press_sov
+    owner: '@chrissharp'
+    folder_name: marketing_press_sov
+    table_name: marketing_press_sov
+    table_replace_append: 0
+  - name: booking_to_billing_monthly_reconciliation
+    owner: '@chrissharp'
+    folder_name: booking_to_billing_monthly_reconciliation
+    table_name: booking_to_billing_monthly_reconciliation
+    table_replace_append: 1
+  - name: zuora_revenue_valid_reports_lists
+    owner: '@vedprakash2021'
+    folder_name: zuora_revenue_valid_reports_lists
+    table_name: zuora_revenue_valid_reports_lists
+    table_replace_append: 1
+  - name: pending_invoices_report
+    owner: '@annapiaseczna'
+    folder_name: pending_invoices_report
+    table_name: pending_invoices_report
+    table_replace_append: 0
   - name: gdpr_delete_requests
     owner: '@parmstrong'
     folder_name: gdpr_delete_requests
