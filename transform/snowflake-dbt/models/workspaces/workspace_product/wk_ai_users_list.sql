@@ -93,16 +93,14 @@ AND
 SELECT 
 DISTINCT n.ultimate_parent_namespace_id,
 FROM {{ ref('mart_arr') }} AS mart_arr
-LEFT JOIN {{ ref('dim_product_detail') }} AS dim_product_detail
-  ON mart_arr.dim_product_detail_id = dim_product_detail.dim_product_detail_id
-LEFT JOIN  {{ ref('zqu__productrateplan__c') }}  AS sfdc_zuora_product_rate_plan
-  ON sfdc_zuora_product_rate_plan.zqu__zuoraid__c = dim_product_detail.product_rate_plan_id
 INNER JOIN  {{ ref('dim_subscription') }} AS s -- joining to get namespace id because that identifier is not in mart_arr
-ON mart_arr.dim_subscription_id = s.dim_subscription_id
+    ON mart_arr.dim_subscription_id = s.dim_subscription_id
 JOIN 
  {{ ref('dim_namespace') }} n ON n.dim_namespace_id = s.namespace_id 
-WHERE arr_month >= '2024-02-01' -- first duo pro arr
-  AND LOWER(sfdc_zuora_product_rate_plan.product_category__c) ILIKE '%duo pro%'
+WHERE 
+arr_month >= '2024-02-01' -- first duo pro arr
+  AND 
+  LOWER(product_rate_plan_name) LIKE '%duo pro%'
 )
 
 
