@@ -6477,7 +6477,6 @@ roles:
         tables:
           read:
             - prod..
-
 users:
   - aadesanya:
       can_login: true
