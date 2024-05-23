@@ -75,7 +75,6 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    # Only has data from Dec 13 2023
     "start_date": datetime(2023, 12, 15),
 }
 
