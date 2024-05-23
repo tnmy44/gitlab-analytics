@@ -6331,10 +6331,11 @@ users:
       - General SAFE Access
   - user_name: kslaats
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: ksvoboda
     user_name_domain: gitlab.com
     site_role: Viewer
