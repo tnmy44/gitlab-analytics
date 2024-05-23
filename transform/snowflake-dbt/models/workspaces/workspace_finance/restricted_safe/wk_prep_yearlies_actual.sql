@@ -147,10 +147,12 @@ SELECT DISTINCT
 
 security_adoption_5 as (
 SELECT DISTINCT
-   ARR_MONTH,
-   SECURITY_COLOR_ULTIMATE_ONLY,
-   SUM(total_subscription_arr) AS Ultimate_ARR,
-   RATIO_TO_REPORT(Ultimate_ARR) OVER (PARTITION BY ARR_MONTH) AS percent_of_ultimate_arr 
+   arr_month,
+   security_color_ultimate_only,
+   fiscal_quarter_name_fy as quarter,
+   dense_rank() over (partition by fiscal_quarter_name_fy order by arr_month desc) as arr_month_rank,
+   SUM(total_subscription_arr) AS ultimate_ARR,
+   RATIO_TO_REPORT(ultimate_ARR) OVER (PARTITION BY arr_month) AS percent_of_ultimate_arr 
    
    FROM security_adoption_4 		
    LEFT JOIN dim_date 
