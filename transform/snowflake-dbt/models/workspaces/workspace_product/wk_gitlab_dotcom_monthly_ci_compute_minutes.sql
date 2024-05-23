@@ -23,7 +23,7 @@ WITH pipeline_activity AS (
       ELSE 'Self-Managed Runners'
     END AS runner_type,
     ci_runner_machine_type,
-    cost_factor.
+    cost_factor,
     COUNT(DISTINCT fct_ci_runner_activity.dim_ci_runner_id) as count_of_runners,
     COUNT(DISTINCT dim_ci_pipeline_id) as count_of_pipelines,
     SUM(ci_build_duration_in_s) / 60 AS ci_build_minutes
