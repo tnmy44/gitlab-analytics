@@ -129,15 +129,4 @@ duo_purchasers d ON d.ultimate_parent_namespace_id = m.ultimate_parent_namespace
 GROUP BY ALL
 ORDER BY 
 USER_COUNT_CHAT DESC 
-
-
-
-
-
-
-{{ dbt_audit(
-    created_by="@mpetersen",
-    updated_by="@mpetersen",
-    created_date="2024-05-24",
-    updated_date="2024-05-24"
-) }}
+;
