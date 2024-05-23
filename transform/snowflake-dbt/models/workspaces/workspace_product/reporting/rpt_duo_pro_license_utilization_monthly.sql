@@ -27,7 +27,7 @@ SELECT
   mart_arr.crm_account_name,
   mart_arr.dim_crm_account_id,
   mart_arr.dim_parent_crm_account_id,
-  SPLIT_PART(mart_arr.product_rate_plan_name, ' - ', 1)
+  mart_arr.product_deployment_type
     AS product_deployment,
   SUM(mart_arr.quantity) 
     AS dp_paid_seats
