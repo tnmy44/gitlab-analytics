@@ -7,24 +7,39 @@
     ('mart_crm_opportunity', 'mart_crm_opportunity'),
     ('rpt_product_usage_health_score', 'rpt_product_usage_health_score'),
     ('mart_arr_all', 'mart_arr_with_zero_dollar_charges'),
-    ('wk_fct_sales_funnel_actual', 'wk_fct_sales_funnel_actual'),
-    ('wk_fct_crm_opportunity', 'wk_fct_crm_opportunity'),
     ('dim_date','dim_date')
 ]) }},
 
 total_bookings_final AS (
 SELECT 
     '1.1 Total Bookings' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
+    'PROD.RESTRICTED_SAFE_COMMON_MART)SALES.MART_CRM_OPPORTUNITY' AS source_table,
      fiscal_quarter_name_fy AS quarter,
-     SUM(net_arr) AS actuals_raw
+     SUM(booked_net_arr) AS actuals_raw
     
-    FROM wk_fct_sales_funnel_actual
+    FROM mart_crm_opportunity
     LEFT JOIN dim_date 
-    ON date_actual = actual_date
-    WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
-    AND sales_funnel_kpi_name = 'Net ARR'
+    ON date_actual = close_date
+    WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
     AND fiscal_quarter_name_fy LIKE '%FY25%'
+    AND fpa_master_bookings_flag = true
+    GROUP BY 1,2,3
+    ORDER BY 3 DESC
+),
+
+duo_final as (
+SELECT 
+    '2.1 Duo' AS yearly_name,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
+     fiscal_quarter_name_fy AS quarter,
+     SUM(duo_net_arr) AS actuals_raw
+    
+    FROM mart_crm_opportunity
+    LEFT JOIN dim_date 
+    ON date_actual = close_date
+    WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
+    AND fiscal_quarter_name_fy LIKE '%FY25%'
+    AND fpa_master_bookings_flag = true
     GROUP BY 1,2,3
     ORDER BY 3 DESC
 ),
@@ -74,6 +89,101 @@ adoption_metrics_final AS (
   AND usage_data_sent = true
 ),
 
+security_adoption_1 AS (
+   SELECT DISTINCT
+      ARR_MONTH,
+      DIM_SUBSCRIPTION_ID_ORIGINAL,
+      PRODUCT_DELIVERY_TYPE,
+      SUM(ARR) AS total_subscription_arr 
+   FROM
+      RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL AS mart_arr_all 
+      LEFT JOIN
+         prod.restricted_safe_common_mart_sales.mart_crm_account AS mart_crm_account 
+         ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
+   WHERE
+      ARR_MONTH >= '2023-02-01' 
+      AND ARR_MONTH < current_date 
+      AND CRM_ACCOUNT_TYPE = 'Customer' 
+      AND PRODUCT_TIER_NAME NOT IN ('Storage','Not Applicable')
+   GROUP BY
+      1,2,3 
+),
+
+security_adoption_2 AS (
+   SELECT DISTINCT
+      ARR_MONTH,
+      DIM_SUBSCRIPTION_ID_ORIGINAL,
+      PRODUCT_DELIVERY_TYPE,
+      PRODUCT_TIER_NAME 
+   FROM
+      mart_arr_all 
+      LEFT JOIN
+         mart_crm_account 
+         ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
+   WHERE
+      ARR_MONTH >= '2023-02-01' 
+      AND ARR_MONTH < current_date 
+      AND CRM_ACCOUNT_TYPE = 'Customer' 
+      AND PRODUCT_TIER_NAME NOT IN ('Storage','Not Applicable')
+),
+security_adoption_3 AS (
+   SELECT
+      * 
+   FROM
+      rpt_product_usage_health_score 
+   WHERE
+      is_primary_instance_subscription = true 
+),
+security_adoption_4 AS (
+   SELECT DISTINCT
+      security_adoption_2.ARR_MONTH,
+      security_adoption_2.DIM_SUBSCRIPTION_ID_ORIGINAL,
+      security_adoption_1.PRODUCT_DELIVERY_TYPE,
+      security_adoption_1.total_subscription_arr,
+      security_adoption_3.SECURITY_COLOR_ULTIMATE_ONLY 
+   FROM
+      security_adoption_2 
+      LEFT JOIN
+         security_adoption_1 
+         ON security_adoption_2.DIM_SUBSCRIPTION_ID_ORIGINAL = security_adoption_1.DIM_SUBSCRIPTION_ID_ORIGINAL 
+         AND security_adoption_2.ARR_MONTH = security_adoption_1.ARR_MONTH 
+      LEFT JOIN
+         security_adoption_3 
+         ON security_adoption_2.DIM_SUBSCRIPTION_ID_ORIGINAL = security_adoption_3.DIM_SUBSCRIPTION_ID_ORIGINAL 
+         AND security_adoption_2.ARR_MONTH = security_adoption_3.SNAPSHOT_MONTH 
+         AND security_adoption_1.PRODUCT_DELIVERY_TYPE = security_adoption_3.DELIVERY_TYPE 
+),
+security_adoption_5 as (
+   SELECT DISTINCT
+      ARR_MONTH,
+      SECURITY_COLOR_ULTIMATE_ONLY,
+      SUM(total_subscription_arr) AS Ultimate_ARR,
+      RATIO_TO_REPORT(Ultimate_ARR) OVER (PARTITION BY ARR_MONTH) AS percent_of_ultimate_arr 
+   FROM
+      security_adoption_4 		
+   WHERE
+      SECURITY_COLOR_ULTIMATE_ONLY IS NOT NULL 
+      AND ARR_MONTH = date_trunc('month', dateadd('month', - 1, current_date())) 
+   GROUP BY
+      1,2 
+   ORDER BY
+      1 DESC 
+),
+security_adoption_final as (
+SELECT
+   '3.3 Ultimate Security & Compliance Adoption' AS yearly_name,
+   'PROD.COMMON_MART_PRODUCT.RPT_PRODUCT_USAGE_HEALTH_SCORE, PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_ALL' AS source_table,
+   fiscal_quarter_name_fy as quarter,
+   percent_of_ultimate_arr AS actuals_raw 
+FROM
+   security_adoption_5 
+   LEFT JOIN
+      prod.common.dim_date 
+      ON arr_month = date_actual 
+WHERE
+   security_color_ultimate_only = 'Green'
+),
+
 churn_contraction_1 AS (
    SELECT
       mart_crm_opportunity.CLOSE_FISCAL_QUARTER_NAME,
@@ -81,10 +191,11 @@ churn_contraction_1 AS (
       mart_crm_opportunity.order_type,
       mart_crm_opportunity.WON_ARR_BASIS_FOR_CLARI - mart_crm_opportunity.ARR_BASIS_FOR_CLARI AS renewal_net_arr 
    FROM
-      mart_crm_opportunity 
+      mart_crm_opportunity
       JOIN
-         dim_crm_account 
+         dim_crm_account
          ON dim_crm_account.dim_crm_account_id = mart_crm_opportunity.dim_crm_account_id
+
    WHERE
       mart_crm_opportunity.SALES_TYPE = 'Renewal' 
       AND mart_crm_opportunity.STAGE_NAME IN 
@@ -106,7 +217,7 @@ churn_contraction_1 AS (
 churn_contraction_2 AS (
    SELECT
       CLOSE_FISCAL_QUARTER_NAME,
-      SUM(CASE WHEN order_type in ('4. Contraction','5. Churn - Partial','6. Churn - Final') then renewal_net_arr end) AS renewal_net_arr_loss,     
+      SUM(CASE WHEN order_type in ('3. Growth','4. Contraction','5. Churn - Partial','6. Churn - Final') then renewal_net_arr end) AS renewal_net_arr_loss,     
       SUM(arr_bASis_for_clari) AS atr 
    FROM
       churn_contraction_1
@@ -122,57 +233,77 @@ SELECT
    renewal_net_arr_loss / atr* - 1 AS actuals_raw
 FROM
    churn_contraction_2
-WHERE quarter LIKE 'FY25%'
+WHERE quarter like 'FY25%'
 ),
 
 ultimate_bookings_final AS (
-SELECT 
-  '4.2 Ultimate Bookings' AS yearly_name,
-  'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
-   fiscal_quarter_name_fy AS quarter,
-   SUM(wk_fct_sales_funnel_actual.net_arr) AS actuals_raw
+    SELECT 
+    '4.2 Ultimate Bookings' AS yearly_name,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
+     fiscal_quarter_name_fy AS quarter,
+     SUM(booked_net_arr) AS actuals_raw
     
-  FROM wk_fct_sales_funnel_actual 
-  LEFT JOIN wk_fct_crm_opportunity 
-  ON wk_fct_sales_funnel_actual.dim_crm_opportunity_id = wk_fct_crm_opportunity.dim_crm_opportunity_id
-  LEFT JOIN prod.common.dim_date 
-  ON date_actual = actual_date
-  WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
-  AND sales_funnel_kpi_name = 'Net ARR'
-  AND fiscal_quarter_name_fy LIKE '%FY25%'
-  AND wk_fct_crm_opportunity.product_category LIKE '%Ultimate%'
-  GROUP BY 1,2,3
-  ORDER BY 3 DESC
+    FROM mart_crm_opportunity 
+    LEFT JOIN dim_date 
+    ON date_actual = close_date
+    WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
+    AND fiscal_quarter_name_fy LIKE '%FY25%'
+    AND product_category LIKE '%Ultimate%'
+    AND fpa_master_bookings_flag = true
+    GROUP BY 1,2,3
+    ORDER BY 3 DESC
 ),
 
 dedicated_bookings_final AS (
-SELECT 
-  '4.3 Dedicated Bookings' AS yearly_name,
-  'PROD.RESTRICTED_SAFE_COMMON.FCT_CRM_OPPORTUNITY' AS source_table,
-  fiscal_quarter_name_fy AS quarter,
-  SUM(wk_fct_sales_funnel_actual.net_arr) AS actuals_raw
+    SELECT 
+    '4.3 Dedicated Bookings' AS yearly_name,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
+     fiscal_quarter_name_fy AS quarter,
+     SUM(booked_net_arr) AS actuals_raw
     
-  FROM wk_fct_sales_funnel_actual
-  LEFT JOIN wk_fct_crm_opportunity 
-  on wk_fct_sales_funnel_actual.dim_crm_opportunity_id = wk_fct_crm_opportunity.dim_crm_opportunity_id
-  LEFT JOIN prod.common.dim_date 
-  ON date_actual = actual_date
-  WHERE date_trunc('month',actual_date) <= date_trunc('month',current_date) 
-  AND sales_funnel_kpi_name = 'Net ARR'
-  AND fiscal_quarter_name_fy LIKE '%FY25%'
-  AND wk_fct_crm_opportunity.product_details ILIKE '%dedicated%'
-  GROUP BY 1,2,3
-  ORDER BY 3 DESC
-
+    FROM mart_crm_opportunity
+    LEFT JOIN dim_date 
+    ON date_actual = close_date
+    WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
+    AND fiscal_quarter_name_fy LIKE '%FY25%'
+    AND product_details ilike '%dedicated%'
+    AND fpa_master_bookings_flag = true
+    GROUP BY 1,2,3
+    ORDER BY 3 DESC
 ),
 
-final AS (
+plan_final as (
+SELECT 
+    '4.4 Plan' AS yearly_name,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
+     fiscal_quarter_name_fy AS quarter,
+     SUM(enterprise_agile_planning_net_arr) AS actuals_raw
+    
+    FROM art_crm_opportunity
+    LEFT JOIN dim_date 
+    ON date_actual = close_date
+    WHERE date_trunc('month',close_date) <= date_trunc('month',current_date) 
+    AND fiscal_quarter_name_fy LIKE '%FY25%'
+    and fpa_master_bookings_flag = true
+    GROUP BY 1,2,3
+    ORDER BY 3 DESC
+),
+
+final  AS (
 
 SELECT * FROM total_bookings_final 
 
 UNION ALL
 
+SELECT * FROM duo_final
+
+UNION ALL
+
 SELECT * FROM adoption_metrics_final
+
+UNION ALL
+
+SELECT * FROM security_adoption_final 
 
 UNION ALL
 
@@ -186,6 +317,9 @@ UNION ALL
 
 SELECT * FROM dedicated_bookings_final
 
+UNION ALL
+
+SELECT * FROM plan_final
 )
 
 SELECT 
