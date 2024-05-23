@@ -129,4 +129,3 @@ duo_purchasers d ON d.ultimate_parent_namespace_id = m.ultimate_parent_namespace
 GROUP BY ALL
 ORDER BY 
 USER_COUNT_CHAT DESC 
-;
