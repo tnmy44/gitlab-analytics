@@ -8705,12 +8705,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: salvarez
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: sarnold
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -9428,12 +9422,6 @@ users:
     auth_setting: SAML
     groups:
       - ASM Restricted Access
-      - General All Access
-  - user_name: taspropotamitis
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
       - General All Access
   - user_name: tbulva
     user_name_domain: gitlab.com
