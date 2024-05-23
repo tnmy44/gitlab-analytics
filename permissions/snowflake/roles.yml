@@ -1172,6 +1172,7 @@ roles:
             - prod.*
             - raw.snapshots
             - raw.gcp_billing
+            - raw.google_analytics_4_bigquery
             - raw.dbt_artifacts
         tables:
           read:
@@ -1182,6 +1183,7 @@ roles:
             - prod.*.*
             - raw.snapshots.*
             - raw.gcp_billing.*
+            - raw.google_analytics_4_bigquery.*
             - raw.dbt_artifacts.*
   - sales_analytics:
       warehouses:
