@@ -124,9 +124,11 @@ SELECT DISTINCT
 
 security_adoption_3 AS (
 SELECT
-   * 
-   FROM rpt_product_usage_health_score 
-   WHERE is_primary_instance_subscription = true 
+    *
+  FROM rpt_product_usage_health_score
+  WHERE INSTANCE_TYPE = 'Production'
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type
+  ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
 ),
 
 security_adoption_4 AS (
