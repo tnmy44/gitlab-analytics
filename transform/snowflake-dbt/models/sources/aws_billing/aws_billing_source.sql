@@ -5,83 +5,129 @@
 
 WITH dedicated_legacy_0475 AS (
 
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'dedicated_legacy_0475') }}
+  )
+
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'dedicated_legacy_0475') }}
+  FROM {{ source('aws_billing', 'dedicated_legacy_0475') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
 
 ),
 
 dedicated_dev_3675 AS (
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'dedicated_dev_3675') }}
+  )
 
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'dedicated_dev_3675') }}
+  FROM {{ source('aws_billing', 'dedicated_dev_3675') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
+
 
 ),
 
 gitlab_marketplace_5127 AS (
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }}
+  )
 
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }}
+  FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
+
 ),
 
 itorg_3027 AS (
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'itorg_3027') }}
+  )
 
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'itorg_3027') }}
+  FROM {{ source('aws_billing', 'itorg_3027') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
+
 
 ),
 
 legacy_gitlab_0347 AS (
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'legacy_gitlab_0347') }}
+  )
 
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'legacy_gitlab_0347') }}
+  FROM {{ source('aws_billing', 'legacy_gitlab_0347') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
 
 ),
 
 services_org_6953 AS (
+  WITH dupes AS (
+    SELECT DISTINCT
+      value['identity_line_item_id']::VARCHAR  AS identity_line_item_id,
+      value['identity_time_interval']::VARCHAR AS identity_time_interval
+    FROM {{ source('aws_billing', 'services_org_6953') }}
+  )
 
   SELECT
-    *,
+    s.*,
     metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'services_org_6953') }}
+  FROM {{ source('aws_billing', 'services_org_6953') }} AS s
+  INNER JOIN dupes AS d
+    ON s.value['identity_line_item_id']::VARCHAR = d.identity_line_item_id
+      AND s.value['identity_time_interval']::VARCHAR = d.identity_time_interval
   {% if is_incremental() %}
-
     WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
   {% endif %}
 
 ),
@@ -272,6 +318,7 @@ parsed AS (
 unique_ids AS (
 
   SELECT DISTINCT
+    bill_payer_account_id,
     identity_line_item_id,
     identity_time_interval
   FROM parsed
@@ -281,7 +328,8 @@ filtered AS (
 
   SELECT parsed.*
   FROM parsed
-  INNER JOIN unique_ids ON parsed.identity_line_item_id = unique_ids.identity_line_item_id
+  INNER JOIN unique_ids ON parsed.bill_payer_account_id = unique_ids.bill_payer_account_id
+    AND parsed.identity_line_item_id = unique_ids.identity_line_item_id
     AND parsed.identity_time_interval = unique_ids.identity_time_interval
 )
 
