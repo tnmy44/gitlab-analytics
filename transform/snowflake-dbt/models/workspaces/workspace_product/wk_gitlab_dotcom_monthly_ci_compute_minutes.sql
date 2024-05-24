@@ -69,7 +69,9 @@ SELECT
   count_of_runners,
   count_of_pipelines,
   ci_build_minutes,
-  ci_build_minutes * cost_factor AS compute_minutes_with_cost_factor,
+  CASE WHEN cost_factor = 0 THEN ci_build_minutes
+       ELSE ci_build_minutes * cost_factor
+       END AS compute_minutes_with_cost_factor,
   CASE 
     WHEN plan_title = 'Free' THEN 400
     WHEN plan_title = 'Premium' THEN 10000
