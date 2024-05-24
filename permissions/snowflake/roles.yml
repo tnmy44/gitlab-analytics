@@ -254,6 +254,10 @@ databases:
       shared: true
   - snowplow_stg_test_ved_raw:
       shared: true
+  - kvasireddy_prod:
+      shared: false
+  - kvasireddy_prep:
+      shared: false
 roles:
   - accountadmin:
       warehouses:
