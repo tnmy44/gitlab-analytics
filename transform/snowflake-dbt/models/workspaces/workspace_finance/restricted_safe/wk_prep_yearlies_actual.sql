@@ -14,7 +14,7 @@
 total_bookings_final AS (
 SELECT 
     '1.1 Total Bookings' AS yearly_name,
-    'PROD.RESTRICTED_SAFE_COMMON_MART)SALES.MART_CRM_OPPORTUNITY' AS source_table,
+    'PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY' AS source_table,
      fiscal_quarter_name_fy AS quarter,
      SUM(booked_net_arr) AS actuals_raw
     
