@@ -223,6 +223,7 @@ WITH campaign_details AS (
       combined_touchpoints.utm_campaign_type,
       combined_touchpoints.utm_campaign_gtm,
       combined_touchpoints.utm_campaign_language,
+      combined_touchpoints.utm_campaign_name,
       combined_touchpoints.utm_campaign_agency,
       combined_touchpoints.utm_content_offer,
       combined_touchpoints.utm_content_asset_type,
