@@ -254,6 +254,10 @@ databases:
       shared: true
   - snowplow_stg_test_ved_raw:
       shared: true
+  - kvasireddy_prod:
+      shared: false
+  - kvasireddy_prep:
+      shared: false
 roles:
   - accountadmin:
       warehouses:
@@ -336,19 +340,19 @@ roles:
         - zuora_query_api
         - sensitive_marketing
   - sensitive_marketing:
-        privileges:
-          databases:
-            read:
-              - prep
-          schemas:
-            read:
-              - prep.*
-          tables:
-            read:
-              - prep.sensitive.bdg_marketing_contact_role
-              - prep.sensitive.dim_marketing_contact
-              - prep.sensitive.bdg_marketing_contact_order
-              - prep.sensitive.mart_marketing_contact
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.*
+        tables:
+          read:
+            - prep.sensitive.bdg_marketing_contact_role
+            - prep.sensitive.dim_marketing_contact
+            - prep.sensitive.bdg_marketing_contact_order
+            - prep.sensitive.mart_marketing_contact
   - analyst_core:
       warehouses:
         - dev_xs
@@ -1172,6 +1176,7 @@ roles:
             - prod.*
             - raw.snapshots
             - raw.gcp_billing
+            - raw.google_analytics_4_bigquery
             - raw.dbt_artifacts
         tables:
           read:
@@ -1182,6 +1187,7 @@ roles:
             - prod.*.*
             - raw.snapshots.*
             - raw.gcp_billing.*
+            - raw.google_analytics_4_bigquery.*
             - raw.dbt_artifacts.*
   - sales_analytics:
       warehouses:
@@ -2915,6 +2921,22 @@ roles:
           read:
             - raw.zuora_revenue.*
             - prep.zuora_revenue.*
+  - clari:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.clari
+            - prep.clari
+        tables:
+          read:
+            - raw.clari.*
+            - prep.clari.*  
   - aadesanya:
       member_of:
         - snowflake_analyst
@@ -4264,11 +4286,6 @@ roles:
         - reporter
       warehouses:
         - dev_xs
-  - jsalazar:
-      member_of:
-        - reporter
-      warehouses:
-        - dev_xs
   - jsingh:
       member_of:
         - engineer
@@ -5047,6 +5064,8 @@ roles:
         - xactly
         - restricted_safe
         - bi_tool_eval_read
+        - clari
+        - zendesk
       warehouses:
         - dev_xs
       owns:
@@ -6463,6 +6482,53 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - kvasireddy:
+      member_of:
+        - adaptive
+        - analyst_finance
+        - bamboohr_analytics
+        - customers_db
+        - data_science_readonly
+        - data_team_analyst
+        - data_manager
+        - marketo
+        - restricted_safe
+        - salesforce_sandbox
+        - xactly
+      warehouses:
+        - dev_xs
+      owns:
+        databases:
+          - kvasireddy_prep
+          - kvasireddy_prod
+        schemas:
+          - kvasireddy_prep.*
+          - kvasireddy_prod.*
+        tables:
+          - kvasireddy_prep.*.*
+          - kvasireddy_prod.*.*
+      privileges:
+        databases:
+          read:
+            - kvasireddy_prep
+            - kvasireddy_prod
+          write:
+            - kvasireddy_prep
+            - kvasireddy_prod
+        schemas:
+          read:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+          write:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+        tables:
+          read:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
+          write:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
 users:
   - aadesanya:
       can_login: true
@@ -6888,10 +6954,6 @@ users:
       can_login: true
       member_of:
         - jrubi
-  - jsalazar:
-      can_login: true
-      member_of:
-        - jsalazar
   - jsingh:
       can_login: true
       member_of:
@@ -7493,6 +7555,10 @@ users:
       can_login: true
       member_of:
         - seanhall
+  - kvasireddy:
+      can_login: true
+      member_of:
+        - kvasireddy
 warehouses:
   - admin:
       size: x-small

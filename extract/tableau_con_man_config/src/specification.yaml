@@ -3569,14 +3569,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: cmaynard
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
-      - Marketing All Access
   - user_name: cmcdonald
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5808,12 +5800,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: jsalazar
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: jsandlin
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6511,6 +6497,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: lmacalalad
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -6581,10 +6568,11 @@ users:
       - General All Access
   - user_name: lquinteiroalves
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: lroberts
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -11220,3 +11208,10 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: bhenzelmann
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
