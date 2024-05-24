@@ -29,7 +29,7 @@
         paid_user_metrics.dim_subscription_id_original,
         paid_user_metrics.dim_subscription_id,
         IFF(mart_arr_all.product_tier_name ILIKE '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
-        IFF(mart_arr_all.product_rate_plan_name ILIKE '%OSS Program%', true, false)                                                        AS is_oss_program,
+        IFF(mart_arr_all.product_rate_plan_name ILIKE '%OSS Program%' mart_arr_all.arr = 0, true, false)                                                        AS is_oss_program,
         paid_user_metrics.delivery_type,
         paid_user_metrics.deployment_type,
         paid_user_metrics.instance_type,
@@ -286,7 +286,7 @@ final as (
 
 select
    *,
-   CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type, instance_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
+   CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type, instance_type, is_oss_program ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
               and instance_type = 'Production' and is_oss_program = false
              THEN True 
              ELSE False 
