@@ -1158,6 +1158,8 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+      - name: cost_factor
+        description: '{{ doc("cost_factor") }}'
 
   - name: prep_ci_stage
     description: '{{ doc("dim_ci_stage") }}'

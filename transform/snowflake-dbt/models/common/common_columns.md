@@ -457,13 +457,13 @@ The main edition of GitLab on the installation (EE, CE), also referred to as dis
 
 {% docs ping_product_tier %}
 
-The product tier of the ping, inferred from the edition and the plan saved in the license (Core, Starter, Premium, Ultimate). `Core` is synonymous with `Free`
+The product tier of the ping, inferred from the edition and the plan saved in the license (Free, Starter, Premium, Ultimate).
 
 {% enddocs %}
 
 {% docs ping_edition_product_tier %}
 
-The concatenation of `ping_edition` and `ping_product_tier` (ex. `EE - Premium`, `EE - Ultimate`, `EE - Core`, etc). `Core` is synonymous with `Free`
+The concatenation of `ping_edition` and `ping_product_tier` (ex. `EE - Premium`, `EE - Ultimate`, `EE - Free`, etc).
 
 {% enddocs %}
 
@@ -3370,3 +3370,10 @@ A timestamp used for checking when the last time the dimensions for the record w
 Flag to indicate a project has turned on the [Merge Trains](https://docs.gitlab.com/ee/ci/pipelines/merge_trains.html) feature
 
 {% enddocs %}
+
+{% docs cost_factor %}
+ 
+For Shared Runners, whenever a user runs jobs on a specific machine type the cost to GitLab needs to be multiplied by a cost factor as the larger the machine the more expensive it is to run.
+
+{% enddocs %}
+

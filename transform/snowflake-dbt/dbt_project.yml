@@ -320,6 +320,12 @@ models:
         +materialized: table
         +schema: qualtrics
 
+      rally_initial_export:
+        +schema: rally_initial_export
+
+      rally_webhook_stitch:
+        +schema: rally_initial_export
+
       rspec:
         +schema: rspec
 
