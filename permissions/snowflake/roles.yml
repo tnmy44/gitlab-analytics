@@ -2921,6 +2921,22 @@ roles:
           read:
             - raw.zuora_revenue.*
             - prep.zuora_revenue.*
+  - clari:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.clari
+            - prep.clari
+        tables:
+          read:
+            - raw.clari.*
+            - prep.clari.*  
   - aadesanya:
       member_of:
         - snowflake_analyst
@@ -5048,6 +5064,8 @@ roles:
         - xactly
         - restricted_safe
         - bi_tool_eval_read
+        - clari
+        - zendesk
       warehouses:
         - dev_xs
       owns:
