@@ -5180,6 +5180,7 @@ roles:
   - nhertz:
       member_of:
         - reporter
+        - rally_source
       warehouses:
         - dev_xs
   - nhervas:
