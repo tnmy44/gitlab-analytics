@@ -4270,11 +4270,6 @@ roles:
         - reporter
       warehouses:
         - dev_xs
-  - jsalazar:
-      member_of:
-        - reporter
-      warehouses:
-        - dev_xs
   - jsingh:
       member_of:
         - engineer
@@ -6941,10 +6936,6 @@ users:
       can_login: true
       member_of:
         - jrubi
-  - jsalazar:
-      can_login: true
-      member_of:
-        - jsalazar
   - jsingh:
       can_login: true
       member_of:
