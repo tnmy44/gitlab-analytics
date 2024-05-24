@@ -34,6 +34,7 @@ time_frame_7_day_metrics AS (
       {{ dbt_utils.generate_surrogate_key(['fct_ping_instance_metric.dim_installation_id', 'fct_ping_instance_metric.metrics_path', 'dim_ping_instance.ping_created_date_week']) }} AS ping_instance_metric_weekly_pk,
       fct_ping_instance_metric.*,
       dim_ping_metric.time_frame,
+      dim_ping_instance.ping_created_date_week,
       dim_ping_instance.is_last_ping_of_week AS is_current_ping
     FROM fct_ping_instance_metric
     INNER JOIN dim_ping_metric
@@ -57,5 +58,5 @@ time_frame_7_day_metrics AS (
     created_by="@iweeks",
     updated_by="@mdrussell",
     created_date="2022-08-08",
-    updated_date="2024-05-21"
+    updated_date="2024-05-24"
 ) }}
