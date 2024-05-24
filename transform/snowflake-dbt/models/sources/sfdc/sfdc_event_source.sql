@@ -70,6 +70,17 @@ WITH source AS (
       meeting_cancelled__c::BOOLEAN          AS is_meeting_canceled,
       close_task__c::BOOLEAN                 AS is_closed_event,
       activity__c::FLOAT                     AS is_activity,
+      CASE 
+        WHEN contains(subject, 'Microsite Program') 
+          THEN 'Microsite Program'
+        WHEN contains(subject, 'Free Trial Program')
+          THEN 'Free Trial Program'
+        WHEN trim(subject) = 'GitLab Dedicated Landing Pages'
+          THEN 'GitLab Dedicated Landing Pages'
+        WHEN trim(subject) = 'Partner Concierge Program'
+          THEN 'Partner Concierge Program'
+        ELSE NULL
+      END                                    AS partner_marketing_task_subject,  
 
 
     --Recurrence Info
