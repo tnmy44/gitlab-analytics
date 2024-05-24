@@ -6465,9 +6465,51 @@ roles:
         - dev_xs
   - kvasireddy:
       member_of:
-        - snowflake_analyst
+        - adaptive
+        - analyst_finance
+        - bamboohr_analytics
+        - customers_db
+        - data_science_readonly
+        - data_team_analyst
+        - data_manager
+        - marketo
+        - restricted_safe
+        - salesforce_sandbox
+        - xactly
       warehouses:
         - dev_xs
+      owns:
+        databases:
+          - kvasireddy_prep
+          - kvasireddy_prod
+        schemas:
+          - kvasireddy_prep.*
+          - kvasireddy_prod.*
+        tables:
+          - kvasireddy_prep.*.*
+          - kvasireddy_prod.*.*
+      privileges:
+        databases:
+          read:
+            - kvasireddy_prep
+            - kvasireddy_prod
+          write:
+            - kvasireddy_prep
+            - kvasireddy_prod
+        schemas:
+          read:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+          write:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+        tables:
+          read:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
+          write:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
 users:
   - aadesanya:
       can_login: true
