@@ -15,7 +15,7 @@ WITH prep AS (
         gsc_is_gitlab_team_member,
         e.gsc_pseudonymized_user_id
     FROM
-        {{ ref('mart_behavior_structured_event') }}e
+        {{ ref('mart_behavior_structured_event') }} e
     WHERE
         behavior_at BETWEEN '2024-03-21'
         AND CURRENT_DATE --first date of these events
@@ -77,7 +77,7 @@ mapper_ai AS (
         {{ ref('dim_namespace') }}n
         LEFT JOIN cs ON cs.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
         LEFT JOIN duo_enabled d ON d.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
-        JOIN {{ ref('gitlab_dotcom_members') }}m ON m.source_id = n.ultimate_parent_namespace_id
+        JOIN {{ ref('gitlab_dotcom_members') }} m ON m.source_id = n.ultimate_parent_namespace_id
         AND m.access_level = 50
         AND m.is_currently_valid = TRUE
     WHERE
