@@ -6530,10 +6530,18 @@ roles:
             - kvasireddy_prep.*.*
             - kvasireddy_prod.*.*
   - zapier:
-      member_of:
-        - snowflake_analyst
       warehouses:
-        - dev_xs
+        - transform_xs
+      privileges:
+        databases:
+          read:
+            - prod
+        schemas:
+          read:
+            - prod.workspace_customer_success
+        tables:
+          read:
+            - prod.workspace_customer_success.mart_product_usage_health_score
 users:
   - aadesanya:
       can_login: true
