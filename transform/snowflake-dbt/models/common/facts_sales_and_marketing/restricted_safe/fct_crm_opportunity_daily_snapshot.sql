@@ -420,8 +420,8 @@ final AS (
     prep_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
     prep_crm_opportunity.calculated_from_ratio_net_arr,
     prep_crm_opportunity.net_arr,
-    prep_crm_opportunity.arr_landing_quarter,
-    prep_crm_opportunity.snapshot_landing_quarter,
+    prep_crm_opportunity.landing_quarter_relative_to_arr_created_date,
+    prep_crm_opportunity.landing_quarter_relative_to_snapshot_date,
     prep_crm_opportunity.snapshot_to_close_diff,
     prep_crm_opportunity.arr_created_to_close_diff,
 

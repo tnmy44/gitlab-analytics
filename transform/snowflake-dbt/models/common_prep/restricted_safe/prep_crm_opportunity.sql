@@ -1299,7 +1299,7 @@ LEFT JOIN cw_base
         WHEN arr_created_to_close_diff BETWEEN 6 AND 8 THEN 'CQ+2'
         WHEN arr_created_to_close_diff BETWEEN 9 AND 11 THEN 'CQ+3'
         WHEN arr_created_to_close_diff >= 12 THEN 'CQ+4 >='
-      END AS arr_landing_quarter,  
+      END AS landing_quarter_relative_to_arr_created_date,  
 
       DATEDIFF(MONTH, sfdc_opportunity.snapshot_fiscal_quarter_date, close_fiscal_quarter_date) AS snapshot_to_close_diff,
 
@@ -1309,7 +1309,7 @@ LEFT JOIN cw_base
         WHEN snapshot_to_close_diff BETWEEN 6 AND 8 THEN 'CQ+2'
         WHEN snapshot_to_close_diff BETWEEN 9 AND 11 THEN 'CQ+3'
         WHEN snapshot_to_close_diff >= 12 THEN 'CQ+4 >='
-      END AS snapshot_landing_quarter,  
+      END AS landing_quarter_relative_to_snapshot_date,  
 
     CASE
       WHEN is_renewal = 1 

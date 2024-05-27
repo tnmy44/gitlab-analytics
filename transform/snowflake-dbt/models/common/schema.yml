@@ -5523,10 +5523,20 @@ models:
   - name: fct_crm_opportunity_7th_day_weekly_snapshot_aggregate
     description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot_aggregate") }}'
     tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: unique_key
+        tests:
+          - not_null
+          - unique
   
   - name: fct_targets_actuals_7th_day_weekly_snapshot
     description: '{{ doc("fct_targets_actuals_7th_day_weekly_snapshot") }}'
     tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: unique_key
+        tests:
+          - not_null
+          - unique
 
   - name: fct_credit_balance_adjustment
     description: '{{ doc("fct_credit_balance_adjustment") }}'

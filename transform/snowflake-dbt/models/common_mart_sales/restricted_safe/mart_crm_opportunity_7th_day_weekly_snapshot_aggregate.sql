@@ -20,6 +20,7 @@ final AS (
 
 
   SELECT
+    fct_crm_opportunity.unique_key,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
 
     dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,
@@ -50,8 +51,8 @@ final AS (
     fct_crm_opportunity.snapshot_fiscal_quarter_date,
     fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
-    fct_crm_opportunity.arr_landing_quarter,
-    fct_crm_opportunity.snapshot_landing_quarter,
+    fct_crm_opportunity.landing_quarter_relative_to_arr_created_date,
+    fct_crm_opportunity.landing_quarter_relative_to_snapshot_date,
     fct_crm_opportunity.snapshot_to_close_diff,
     fct_crm_opportunity.arr_created_to_close_diff,
 

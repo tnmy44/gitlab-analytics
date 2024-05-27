@@ -15,6 +15,9 @@ day_7_list AS (
 final AS (
 
   SELECT
+
+    {{ dbt_utils.generate_surrogate_key(['snapshot_id', 'dim_crm_current_account_set_hierarchy_sk', 'order_type', 'order_type_live', 'stage_name', 'deal_path', 'sales_type', 'sales_qualified_source', 'close_fiscal_quarter_date', 'created_fiscal_quarter_date', 'arr_created_fiscal_quarter_date']) }} AS unique_key,
+
     -- keys and attributes
     dim_crm_current_account_set_hierarchy_sk,
     order_type,
@@ -40,8 +43,8 @@ final AS (
     close_fiscal_quarter_date,
     created_fiscal_quarter_date,
     arr_created_fiscal_quarter_date,
-    arr_landing_quarter,
-    snapshot_landing_quarter,
+    landing_quarter_relative_to_arr_created_date,
+    landing_quarter_relative_to_snapshot_date,
     snapshot_to_close_diff,
     arr_created_to_close_diff,
 

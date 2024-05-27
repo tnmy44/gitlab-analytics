@@ -21,6 +21,16 @@ WITH unioned AS (
 
 SELECT 
   unioned.*,
+  NULL AS day_of_week,
+  NULL AS first_day_of_fiscal_year,
+  NULL AS first_day_of_week,
+  NULL AS fiscal_month_name_fy,
+  NULL AS fiscal_quarter_name_fy,
+  NULL AS last_day_of_fiscal_quarter,
+  NULL AS last_day_of_fiscal_year,
+  NULL AS last_day_of_month,
+  NULL AS last_day_of_week,
+  NULL AS dim_order_type_live_id,
   MAX(CASE 
         WHEN source != 'targets_actuals' AND snapshot_date < CURRENT_DATE() THEN snapshot_date 
         ELSE NULL 
