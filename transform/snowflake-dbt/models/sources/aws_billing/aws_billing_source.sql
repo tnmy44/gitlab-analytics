@@ -270,4 +270,4 @@ parsed AS (
   FROM all_raw
 )
 
-SELECT * FROM raw
+SELECT * FROM all_raw
