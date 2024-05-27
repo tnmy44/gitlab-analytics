@@ -1,6 +1,6 @@
 WITH team_member AS (
 
-  SELECT 
+  SELECT distinct
     dim_team_member_sk,
     employee_id,
     nationality,
@@ -12,7 +12,7 @@ WITH team_member AS (
     work_email,
     date_of_birth,
     age_calculated,
-    age_cohort,
+    age_cohort, 
     gitlab_username,
     team_id,
     country,
@@ -89,8 +89,6 @@ final AS (
     team_member.gender,
     team_member.work_email,
     team_member.date_of_birth,
-    team_member.age_calculated                                            AS age,
-    team_member.age_cohort,
     team_member.gitlab_username,
     team_member.country,
     team_member.region,
@@ -127,7 +125,9 @@ final AS (
     team_member_absence.total_hours,
     team_member_absence.recorded_hours,
     team_member_absence.absence_status,
-    team_member_absence.employee_day_length
+    team_member_absence.employee_day_length,
+    team_member.valid_from,
+    team_member.valid_to
   FROM team_member
   INNER JOIN team_member_absence
     ON team_member_absence.employee_id = team_member.employee_id 
