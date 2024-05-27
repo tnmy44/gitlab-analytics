@@ -6430,7 +6430,7 @@ users:
       - General All Access
   - user_name: lcoleman
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -8952,7 +8952,7 @@ users:
       - General All Access
   - user_name: skauffman
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
