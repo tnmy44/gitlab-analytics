@@ -94,7 +94,7 @@ dag = DAG(
     "dbt_gdpr_delete_requests",
     description="This DAG is responsible for doing incremental model refresh",
     default_args=default_args,
-    schedule_interval="45 8 * * *",
+    schedule_interval="0 3 * * *",
     catchup=False,
 )
 
