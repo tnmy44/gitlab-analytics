@@ -2936,7 +2936,7 @@ roles:
         tables:
           read:
             - raw.clari.*
-            - prep.clari.*  
+            - prep.clari.*
   - aadesanya:
       member_of:
         - snowflake_analyst
@@ -6529,6 +6529,11 @@ roles:
           write:
             - kvasireddy_prep.*.*
             - kvasireddy_prod.*.*
+  - zapier:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7559,6 +7564,10 @@ users:
       can_login: true
       member_of:
         - kvasireddy
+  - zapier:
+      can_login: true
+      member_of:
+        - zapier
 warehouses:
   - admin:
       size: x-small
