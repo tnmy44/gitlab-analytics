@@ -109,8 +109,8 @@ final AS (
     sales_qualified_source.sales_qualified_source_name,
     sales_qualified_source.sales_qualified_source_grouped,
     order_type.order_type_name                                      AS order_type,
-    'targets_actuals' AS source,
-    order_type.order_type_grouped
+    order_type.order_type_grouped,
+    'targets_actuals' AS source
   FROM targets_actuals
   LEFT JOIN dim_date 
     ON targets_actuals.date_actual = dim_date.date_actual
