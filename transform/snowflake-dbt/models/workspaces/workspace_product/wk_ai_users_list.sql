@@ -2,6 +2,7 @@
     materialized = 'table',
     tags = ["mnpi_exception", "product"]
 ) }} 
+
 WITH prep AS (
     SELECT
         e.contexts:data [0] :data:feature_enabled_by_namespace_ids AS array_names,
@@ -47,7 +48,7 @@ cs_prep AS (
         a.value AS namespace_id,
         *
     FROM
-        {{ ref('fct_behavior_structured_event_code_suggestion') }}c,
+        {{ ref('fct_behavior_structured_event_code_suggestion') }} c,
         LATERAL FLATTEN(c.ultimate_parent_namespace_ids) AS a
     WHERE
         c.namespace_is_internal != TRUE
@@ -74,7 +75,7 @@ mapper_ai AS (
         COALESCE(d.user_count_chat, 0) AS user_count_chat,
         COALESCE(d.event_count_chat, 0) AS event_count_chat
     FROM
-        {{ ref('dim_namespace') }}n
+        {{ ref('dim_namespace') }} n
         LEFT JOIN cs ON cs.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
         LEFT JOIN duo_enabled d ON d.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
         JOIN {{ ref('gitlab_dotcom_members') }} m ON m.source_id = n.ultimate_parent_namespace_id
