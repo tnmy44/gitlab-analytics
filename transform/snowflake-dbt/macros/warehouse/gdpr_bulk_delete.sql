@@ -13,7 +13,7 @@
 
       {% for data_row in values %}
 
-        {{ gdpr_delete_test(data_row[0])}}
+        {{ gdpr_delete(data_row[0])}}
         {%- call statement('remove_data', fetch_result=True) %}
             DELETE FROM {{ source('driveload', 'gdpr_delete_requests') }}
             WHERE  SHA2(TRIM(LOWER(email_address))) = '{{data_row[0]}}'
