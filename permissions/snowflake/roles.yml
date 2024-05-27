@@ -6531,7 +6531,7 @@ roles:
             - kvasireddy_prod.*.*
   - zapier:
       warehouses:
-        - transform_xs
+        - transforming_xs
       privileges:
         databases:
           read:
