@@ -1,7 +1,8 @@
-{ { config(
+{{ config(
     materialized = 'table',
     tags = ["mnpi_exception", "product"]
-) } } WITH prep AS (
+) }} 
+WITH prep AS (
     SELECT
         e.contexts:data [0] :data:feature_enabled_by_namespace_ids AS array_names,
         CASE
@@ -14,7 +15,7 @@
         gsc_is_gitlab_team_member,
         e.gsc_pseudonymized_user_id
     FROM
-        { { ref('mart_behavior_structured_event') } } e
+        {{ ref('mart_behavior_structured_event') }}e
     WHERE
         behavior_at BETWEEN '2024-03-21'
         AND CURRENT_DATE --first date of these events
@@ -35,7 +36,7 @@ duo_enabled AS (
         COUNT(DISTINCT BEHAVIOR_STRUCTURED_EVENT_PK) AS event_count_chat
     FROM
         unpacked u
-        JOIN { { ref('dim_namespace') } } n ON u.namespace_id = n.dim_namespace_id
+        JOIN {{ ref('dim_namespace') }} n ON u.namespace_id = n.dim_namespace_id
     WHERE
         u.GSC_IS_GITLAB_TEAM_MEMBER = 'false'
     GROUP BY
@@ -46,7 +47,7 @@ cs_prep AS (
         a.value AS namespace_id,
         *
     FROM
-        { { ref('fct_behavior_structured_event_code_suggestion') } } c,
+        {{ ref('fct_behavior_structured_event_code_suggestion') }}c,
         LATERAL FLATTEN(c.ultimate_parent_namespace_ids) AS a
     WHERE
         c.namespace_is_internal != TRUE
@@ -58,7 +59,7 @@ cs AS (
         COUNT(DISTINCT BEHAVIOR_STRUCTURED_EVENT_PK) AS code_suggestion_event_count
     FROM
         cs_prep
-        JOIN { { ref('dim_namespace') } } n ON n.dim_namespace_id = cs_prep.namespace_id
+        JOIN {{ ref('dim_namespace') }} n ON n.dim_namespace_id = cs_prep.namespace_id
     GROUP BY
         ALL
 ),
@@ -73,10 +74,10 @@ mapper_ai AS (
         COALESCE(d.user_count_chat, 0) AS user_count_chat,
         COALESCE(d.event_count_chat, 0) AS event_count_chat
     FROM
-        { { ref('dim_namespace') } } n
+        {{ ref('dim_namespace') }}n
         LEFT JOIN cs ON cs.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
         LEFT JOIN duo_enabled d ON d.ultimate_parent_namespace_id = n.ultimate_parent_namespace_id
-        JOIN { { ref('gitlab_dotcom_members') } } m ON m.source_id = n.ultimate_parent_namespace_id
+        JOIN {{ ref('gitlab_dotcom_members') }}m ON m.source_id = n.ultimate_parent_namespace_id
         AND m.access_level = 50
         AND m.is_currently_valid = TRUE
     WHERE
@@ -91,10 +92,10 @@ duo_purchasers AS (
     SELECT
         DISTINCT n.ultimate_parent_namespace_id,
     FROM
-        { { ref('mart_arr') } } AS mart_arr
-        INNER JOIN { { ref('dim_subscription') } } AS s -- joining to get namespace id because that identifier is not in mart_arr
+        {{ ref('mart_arr') }} AS mart_arr
+        INNER JOIN {{ ref('dim_subscription') }} AS s -- joining to get namespace id because that identifier is not in mart_arr
         ON mart_arr.dim_subscription_id = s.dim_subscription_id
-        JOIN { { ref('dim_namespace') } } n ON n.dim_namespace_id = s.namespace_id
+        JOIN {{ ref('dim_namespace') }} n ON n.dim_namespace_id = s.namespace_id
     WHERE
         arr_month >= '2024-02-01' -- first duo pro arr
         AND LOWER(mart_arr.product_deployment_type) = 'gitlab.com'
