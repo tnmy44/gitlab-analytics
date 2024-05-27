@@ -1,4 +1,4 @@
-{% macro gdpr_bulk_delete(run_queries=False) %}
+{% macro gdpr_bulk_delete() %}
 
 {%- call statement('gdpr_deletions', fetch_result=True) %}
     select SHA2(TRIM(LOWER(email_address)))
@@ -13,7 +13,7 @@
 
       {% for data_row in values %}
 
-        {{ gdpr_delete(data_row[0])}}
+        {{ gdpr_delete(data_row[0], run_queries='True')}}
         {%- call statement('remove_data', fetch_result=True) %}
             DELETE FROM {{ source('driveload', 'gdpr_delete_requests') }}
             WHERE  SHA2(TRIM(LOWER(email_address))) = '{{data_row[0]}}'
