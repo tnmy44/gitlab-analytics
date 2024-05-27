@@ -52,6 +52,14 @@ SELECT
       THEN 'Core Infrastructure'
     WHEN department = 'Incubation Engineering'
       THEN 'Expansion'
+    WHEN department = 'Product Management'
+      THEN 'Product Leadership'
+    WHEN department = 'Product Monetization'
+      THEN 'Monetization'
+    WHEN department = 'UX'
+      THEN 'UX Research'
+    WHEN department = 'Security'
+      THEN 'Office of CISO'
     ELSE department
   END AS modified_department,
   CASE

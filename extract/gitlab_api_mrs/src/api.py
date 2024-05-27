@@ -2,6 +2,9 @@ import logging
 from typing import Dict, Any, List
 
 import requests
+from gitlabdata.orchestration_utils import make_request
+
+REQUEST_TIMEOUT = 90
 
 
 class GitLabAPI:
@@ -22,7 +25,7 @@ class GitLabAPI:
         )
         url = f"https://gitlab.com/api/v4/projects/{project_id}/merge_requests?updated_after={start_query_param}&updated_before={end_query_param}&page={page}"
         response = requests.get(
-            url, headers={"Private-Token": self.api_token}, timeout=20
+            url, headers={"Private-Token": self.api_token}, timeout=REQUEST_TIMEOUT
         )
 
         if response.status_code == 200:
@@ -64,7 +67,7 @@ class GitLabAPI:
         """
         url = f"{mr_url}/diffs.json"
         response = requests.get(
-            url, headers={"Private-Token": self.api_token}, timeout=20
+            url, headers={"Private-Token": self.api_token}, timeout=REQUEST_TIMEOUT
         )
 
         if response.status_code == 200:
@@ -119,12 +122,13 @@ class GitLabAPI:
             "Private-Token": self.api_token,
         }
         variables = {"project_path": project_path, "mr_iid": str(mr_iid)}
-        response = requests.post(
-            url,
-            json={"query": query, "variables": variables},
-            headers=headers,
-            timeout=10,
-        )
+
+        request_kwargs = {
+            "json": {"query": query, "variables": variables},
+            "headers": headers,
+            "timeout": REQUEST_TIMEOUT,
+        }
+        response = make_request("POST", url, **request_kwargs)
 
         if response.status_code == 200:
             try:

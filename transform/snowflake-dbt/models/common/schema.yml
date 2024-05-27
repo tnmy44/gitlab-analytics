@@ -2689,6 +2689,8 @@ models:
       - name: ci_runner_type_summary
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+      - name: cost_factor
+        description: '{{ doc("cost_factor") }}'
 
   - name: dim_ci_stage
     description: '{{ doc("dim_ci_stage") }}'
@@ -4341,6 +4343,8 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_weekly
     description: ' {{ doc("fct_ping_instance_metric_weekly") }} '
@@ -4403,6 +4407,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
@@ -5954,6 +5960,9 @@ models:
           combination_of_columns:
             - metrics_path
             - redis_event
+    columns:
+      - name: is_health_scoring_metric
+        description: '{{ doc("is_health_score_metric") }}'
 
   - name: fct_crm_event
     description: The Events portion of Activities from SFDC. 
