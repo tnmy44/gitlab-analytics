@@ -99,7 +99,6 @@ dag = DAG(
 )
 
 
-# run non-product models on small warehouse
 dbt_gdpr_deletes_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
