@@ -29,6 +29,44 @@ WITH prep_amendment AS (
       subscription_cohort_year
     FROM {{ ref('map_subscription_lineage') }}
 
+), data_quality_filter_subscription_slugify AS (
+    
+    /*
+    There was a data quality issue where a subscription_name_slugify can be mapped to more than one subscription_name. 
+    There are 5 subscription_name_slugifys and 10 subscription_names that this impacts as of 2023-02-20. This CTE is 
+    used to filter out these subscriptions from the model. The data quality issue causes a fanout with the subscription 
+    lineages that are used to group on in the data model.
+    This DQ issue has been fixed and the way subscriptions are named now does not have this problem.
+    So this CTE is for cleaning up historical data and future proofing the model in case this DQ issue come again.
+    */
+
+    SELECT 
+      subscription_name_slugify,
+      COUNT(subscription_name) AS nbr_records
+    FROM PROD.COMMON.DIM_SUBSCRIPTION
+    WHERE subscription_status IN ('Active', 'Cancelled')
+    GROUP BY 1
+    HAVING nbr_records > 1
+
+), oldest_subscription_in_cohort AS (
+  -- oldest subs is being filltered with the join condition
+  SELECT 
+
+    -- Oldest subcription cohort keys
+    subscription.dim_subscription_id AS dim_oldest_subscription_in_cohort_id,
+    subscription.dim_crm_account_id AS dim_oldest_crm_account_in_cohort_id,
+
+    -- Oldest subcription cohort information
+    subscription_lineage.subscription_cohort_month AS oldest_subscription_cohort_month
+  
+  FROM subscription
+  LEFT JOIN subscription_lineage
+    ON subscription_lineage.oldest_subscription_in_cohort = subscription.subscription_name_slugify
+  WHERE subscription.subscription_status IN ('Active', 'Cancelled') -- Is this required?
+    AND subscription.subscription_name_slugify NOT IN (SELECT subscription_name_slugify FROM data_quality_filter_subscription_slugify)
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_oldest_subscription_in_cohort_id ORDER BY oldest_subscription_cohort_month DESC) = 1 -- Remove duplicates
+
+
 ), final AS (
 
   SELECT
@@ -52,6 +90,10 @@ WITH prep_amendment AS (
     subscription.dim_crm_opportunity_id_current_open_renewal,
     subscription.dim_crm_opportunity_id_closed_lost_renewal,
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                        AS dim_amendment_id_subscription,
+
+    -- Oldest subcription cohort keys
+    oldest_subscription.dim_oldest_subscription_in_cohort_id,
+    oldest_subscription.dim_oldest_crm_account_in_cohort_id,
 
     --Subscription Information
     subscription.created_by_id,
@@ -84,6 +126,9 @@ WITH prep_amendment AS (
     subscription.was_purchased_through_reseller,
     subscription.multi_year_deal_subscription_linkage,
 
+    -- Oldest subcription cohort information
+    oldest_subscription.oldest_subscription_cohort_month,
+
     --Date Information
     subscription.subscription_start_date,
     subscription.subscription_end_date,
@@ -112,6 +157,8 @@ WITH prep_amendment AS (
   FROM subscription
   LEFT JOIN subscription_lineage
     ON subscription_lineage.subscription_name_slugify = subscription.subscription_name_slugify
+  LEFT JOIN oldest_subscription_in_cohort AS oldest_subscription
+    ON oldest_subscription.dim_oldest_subscription_in_cohort_id = subscription.dim_subscription_id
   LEFT JOIN prep_amendment
     ON subscription.dim_amendment_id_subscription = prep_amendment.dim_amendment_id
   LEFT JOIN subscription_opportunity_mapping
@@ -122,7 +169,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2020-12-16",
-    updated_date="2023-04-12"
+    updated_date="2024-05-27"
 ) }}
