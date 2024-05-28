@@ -873,7 +873,7 @@ models:
   
   - name: mart_targets_actuals_7th_day_weekly_snapshot
     columns: 
-      - name: unique_key
+      - name: targets_actuals_weekly_snapshot_pk
         tests:
           - not_null
           - unique
@@ -893,11 +893,11 @@ models:
               field: crm_opportunity_snapshot_id
   - name: mart_crm_opportunity_7th_day_weekly_snapshot_aggregate
     columns:
-      - name: unique_key
+      - name: opportunity_weekly_snapshot_aggregate_pk
         tests:
           - not_null
           - unique
           - relationships:
               to: ref('fct_crm_opportunity_7th_day_weekly_snapshot_aggregate')
-              field: unique_key
+              field: opportunity_weekly_snapshot_aggregate_pk
 

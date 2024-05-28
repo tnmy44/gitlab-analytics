@@ -138,7 +138,7 @@ base AS (
 final AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['base.date_id', 'base.dim_crm_current_account_set_hierarchy_sk', 'base.dim_order_type_id','base.dim_sales_qualified_source_id']) }} AS unique_key,
+    {{ dbt_utils.generate_surrogate_key(['base.date_id', 'base.dim_crm_current_account_set_hierarchy_sk', 'base.dim_order_type_id','base.dim_sales_qualified_source_id']) }} AS targets_actuals_weekly_snapshot_pk,
     base.date_id,
     base.date_actual,
     base.fiscal_quarter_name,

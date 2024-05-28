@@ -20,7 +20,7 @@ final AS (
 
 
   SELECT
-    fct_crm_opportunity.unique_key,
+    fct_crm_opportunity.opportunity_weekly_snapshot_aggregate_pk,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
 
     dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,

@@ -5524,7 +5524,7 @@ models:
     description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot_aggregate") }}'
     tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
     columns: 
-      - name: unique_key
+      - name: opportunity_weekly_snapshot_aggregate_pk
         tests:
           - not_null
           - unique
@@ -5533,7 +5533,7 @@ models:
     description: '{{ doc("fct_targets_actuals_7th_day_weekly_snapshot") }}'
     tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
     columns: 
-      - name: unique_key
+      - name: targets_actuals_weekly_snapshot_pk
         tests:
           - not_null
           - unique
