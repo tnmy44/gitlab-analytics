@@ -11293,3 +11293,9 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: speker
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
