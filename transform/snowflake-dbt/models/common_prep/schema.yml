@@ -2576,25 +2576,18 @@ models:
 
   - name: prep_pto
     description: '{{ doc("prep_pto") }}'
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-            combination_of_columns:
-              - employee_id
-              - absence_date
-              - pto_uuid
-
     columns:
-      - name: employee_id
-        description: Unique ID of the team member.
+      - name: hr_employee_id
+        description: The employee id of Workday
         tests:
           - not_null
-      - name: absence_start
+      - name: start_date
         description: The team member's absence start date
         tests: 
           - not_null
-      - name: absence_end
+      - name: end_date
         description: The team member's absence end date
-      - name: absence_date  
+      - name: pto_date  
         description: The team member's day of absence   
         tests: 
           - not_null
@@ -2608,6 +2601,9 @@ models:
         description: Unique identifier for this pto event
       - name: pto_type_uuid
         description: The UUID of this OOO Type.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: pto_group_type
         meta:
           masking_policy: analyst_people_sensitive
       - name: pto_status
@@ -2627,3 +2623,7 @@ models:
         description: How long this User's "day" is in hours
       - name: pto_day_of_week
         description: Absence's day of the week. Number of the day of the week, with Sunday = 1 and Saturday = 7
+      - name: pto_type_name
+        meta:
+          masking_policy: analyst_people_sensitive
+
