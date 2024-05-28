@@ -11287,3 +11287,9 @@ users:
       - Sales All Access
       - Sales Development SAFE Access
       - Sales Project Lead
+  - user_name: afoltz
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
