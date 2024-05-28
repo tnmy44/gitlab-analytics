@@ -6542,6 +6542,11 @@ roles:
         tables:
           read:
             - prod.workspace_customer_success.mart_product_usage_health_score
+  - gsodhi:
+      member_of:
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7576,6 +7581,10 @@ users:
       can_login: true
       member_of:
         - zapier
+  - gsodhi:
+      can_login: true
+      member_of:
+        - gsodhi
 warehouses:
   - admin:
       size: x-small
