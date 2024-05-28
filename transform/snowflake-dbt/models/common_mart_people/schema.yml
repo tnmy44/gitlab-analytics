@@ -130,6 +130,7 @@ models:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:
              - dim_team_member_sk
+             - absence_date
              - pto_uuid
              - valid_from
     columns:
