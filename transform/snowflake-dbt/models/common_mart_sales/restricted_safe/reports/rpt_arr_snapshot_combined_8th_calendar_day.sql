@@ -42,7 +42,9 @@
       dim_parent_crm_account_id,
       parent_crm_account_name,
       parent_crm_account_billing_country,
-      parent_crm_account_sales_segment,
+      -- Coalescing these two values since sales segment has been changed in SFDC but finance reporting needs to keep using the legacy value
+      -- Background issue: https://gitlab.com/gitlab-data/analytics/-/issues/20395
+      COALESCE(parent_crm_account_sales_segment_legacy, parent_crm_account_sales_segment)       AS parent_crm_account_sales_segment,
       parent_crm_account_industry,
       parent_crm_account_owner_team,
       parent_crm_account_sales_territory,
@@ -83,7 +85,9 @@
       dim_parent_crm_account_id,
       parent_crm_account_name,
       NULL                                                                                      AS parent_crm_account_billing_country,
-      parent_crm_account_sales_segment,
+      -- Sales segment has been changed in SFDC but finance reporting needs to keep using the legacy value
+      -- Background issue: https://gitlab.com/gitlab-data/analytics/-/issues/20395
+      parent_crm_account_sales_segment_legacy                                                   AS parent_crm_account_sales_segment,
       parent_crm_account_industry,
       NULL                                                                                      AS parent_crm_account_owner_team,
       NULL                                                                                      AS parent_crm_account_sales_territory,
@@ -368,13 +372,14 @@
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
+    WHERE combined.arr_month < '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-08-16",
-    updated_date="2023-09-13"
+    updated_date="2024-05-09"
 ) }}

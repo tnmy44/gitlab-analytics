@@ -60,9 +60,6 @@ WITH source AS (
         BDR_LU__c                                                                           AS opportunity_business_development_representative_lookup,
         BDR_SDR__c                                                                          AS opportunity_development_representative,
 
-
-        account_owner_team_o__c                                                             AS account_owner_team_stamped,
-
         sales_accepted_date__c                                                              AS sales_accepted_date,
         engagement_type__c                                                                  AS sales_path,
         sales_qualified_date__c                                                             AS sales_qualified_date,
@@ -85,7 +82,6 @@ WITH source AS (
         incremental_acv_2__c                                                                AS forecasted_iacv,
         iacv_created_date__c                                                                AS iacv_created_date,
         incremental_acv__c                                                                  AS incremental_acv,
-        pre_covid_iacv__c                                                                   AS pre_covid_iacv,
         invoice_number__c                                                                   AS invoice_number,
         is_refund_opportunity__c                                                            AS is_refund,
         is_downgrade_opportunity__c                                                         AS is_downgrade,
@@ -141,6 +137,9 @@ WITH source AS (
         arr__c                                                                              AS arr,
         stage_3_net_arr__c                                                                  AS xdr_net_arr_stage_3,
         stage_1_xdr_net_arr__c                                                              AS xdr_net_arr_stage_1,
+        stage_1_net_arr__c                                                                  AS net_arr_stage_1,
+        enterprise_agile_planning_net_arr__c                                                AS enterprise_agile_planning_net_arr,
+        duo_net_arr__c                                                                      AS duo_net_arr,
         days_in_sao__c                                                                      AS days_in_sao,
         new_logo_count__c                                                                   AS new_logo_count,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
@@ -262,12 +261,12 @@ WITH source AS (
         calculated_discount__c                                                              AS calculated_discount,
         partner_discount__c                                                                 AS partner_discount,
         partner_discount_calc__c                                                            AS partner_discount_calc,
+        partner_margin__c                                                                   AS partner_margin_percentage,
         comp_channel_neutral__c                                                             AS comp_channel_neutral,
 
         -- command plan fields
         fm_champion__c                                                                      AS cp_champion,
         fm_close_plan__c                                                                    AS cp_close_plan,
-        fm_competition__c                                                                   AS cp_competition,
         fm_decision_criteria__c                                                             AS cp_decision_criteria,
         fm_decision_process__c                                                              AS cp_decision_process,
         fm_economic_buyer__c                                                                AS cp_economic_buyer,

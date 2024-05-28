@@ -53,6 +53,8 @@
           THEN '1. New - First Order'
         ELSE '3. Growth'
       END AS person_order_type,
+      person_base.lead_score_classification,
+      person_base.is_defaulted_trial,
 
   --Account Data
       mart_crm_account.crm_account_name,
@@ -148,6 +150,7 @@
       opp.is_sao,
       opp.new_logo_count,
       opp.net_arr,
+      opp.net_arr_stage_1,
       opp.xdr_net_arr_stage_1,
       opp.xdr_net_arr_stage_3,
       opp.is_net_arr_closed_deal,
@@ -365,7 +368,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=88)}}
+    {{dbt_utils.group_by(n=89)}}
     
 ), cohort_base_combined AS (
   
@@ -411,6 +414,8 @@
       traction_first_response_time,
       traction_first_response_time_seconds,
       traction_response_time_in_business_hours,
+      lead_score_classification,
+      is_defaulted_trial,
   
   --Opp Data
       opportunity_name,
@@ -428,6 +433,7 @@
       is_sao,
       new_logo_count,
       net_arr,
+      net_arr_stage_1,
       xdr_net_arr_stage_1,
       xdr_net_arr_stage_3,
       is_net_arr_closed_deal,
@@ -622,5 +628,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-03-05",
+    updated_date="2024-05-07",
   ) }}
