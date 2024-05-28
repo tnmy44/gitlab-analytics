@@ -2102,6 +2102,14 @@ models:
         description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
       - name: gsc_feature_enabled_by_namespace_ids
         description: '{{ doc("gsc_feature_enabled_by_namespace_ids") }}'
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.

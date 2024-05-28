@@ -153,6 +153,10 @@ suggestion_level AS (
     requested.ide_vendor,
     requested.ide_version,
     requested.language_server_version,
+    requested.suggestion_source,
+    requested.is_invoked,
+    requested.options_count,
+    requested.accepted_option,
     --model_engine and model_name not available on requested event. Default to loaded event, fall back to others to maximize coverage
     COALESCE(loaded.model_engine, shown.model_engine, 
       accepted.model_engine, rejected.model_engine, 
@@ -227,6 +231,6 @@ suggestion_level AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-05-15"
+    updated_date="2024-05-28"
 ) }}
 

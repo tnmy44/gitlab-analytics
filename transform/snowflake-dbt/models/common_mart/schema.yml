@@ -1532,3 +1532,11 @@ models:
       description: '{{ doc("code_suggestions_installation_host_name") }}'
     - name: namespace_is_internal
       description: '{{ doc("code_suggestions_namespace_is_internal") }}'
+    - name: suggestion_source
+      description: ' {{ doc("code_suggestions_suggestion_source") }} '
+    - name: is_invoked
+      description: ' {{ doc("code_suggestions_is_invoked") }} '
+    - name: options_count
+      description: ' {{ doc("code_suggestions_options_count") }} '
+    - name: accepted_option
+      description: ' {{ doc("code_suggestions_accepted_option") }} '
