@@ -879,7 +879,7 @@ models:
           - unique
           - relationships:
               to: ref('fct_targets_actuals_7th_day_weekly_snapshot')
-              field: unique_key
+              field: targets_actuals_weekly_snapshot_pk
 
   - name: mart_crm_opportunity_7th_day_weekly_snapshot
     columns:
