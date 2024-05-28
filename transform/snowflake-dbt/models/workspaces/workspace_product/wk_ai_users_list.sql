@@ -101,7 +101,19 @@ duo_purchasers AS (
         arr_month >= '2024-02-01' -- first duo pro arr
         AND LOWER(mart_arr.product_deployment_type) = 'gitlab.com'
         AND LOWER(product_rate_plan_name) LIKE '%duo pro%'
+), used_trial AS 
+(
+SELECT
+DISTINCT 
+n.ultimate_parent_namespace_id
+FROM
+{{ ref('fct_trial') }} t
+JOIN
+PROD.common.dim_namespace n ON n.dim_namespace_id = t.dim_namespace_id
+WHERE 
+product_rate_plan_id LIKE '%duo%pro%'
 )
+
 SELECT
     m.ultimate_parent_namespace_id,
     MAX(m.owner_user_id) AS owner_user_id,
@@ -118,12 +130,14 @@ SELECT
         ELSE FALSE
     END AS used_both,
     CASE
-        WHEN d.ultimate_parent_namespace_id IS NULL THEN 'Trial'
-        ELSE 'Purchaser'
+        WHEN d.ultimate_parent_namespace_id IS NULL THEN 'Purchased Duo'
+        WHEN t.ultimate_parent_namespace_id IS NOT NULL THEN 'Trial'
+        ELSE 'Other'
     END AS trial_v_purchasers
 FROM
     mapper_ai m
     LEFT JOIN duo_purchasers d ON d.ultimate_parent_namespace_id = m.ultimate_parent_namespace_id
+    LEFT JOIN used_trial t ON t.ultimate_parent_namespace_id = m.ultimate_parent_namespace_id
 GROUP BY
     ALL
 ORDER BY
