@@ -858,3 +858,9 @@ All milestones created within a namespace, with details including the start date
 Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}
+
+{% docs prep_pto %}
+
+Prep table to store approved absences that fall on a working day and an additional absence_status column. 
+
+{% enddocs %}

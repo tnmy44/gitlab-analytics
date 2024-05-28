@@ -3,19 +3,10 @@ WITH team_status_dup AS (
     *
   FROM {{ref('fct_team_status')}}
 ),
-pto_approved AS (
-  SELECT 
-    *,
-    DAYOFWEEK(pto_date)                                    AS pto_day_of_week,
-  FROM {{ref('gitlab_pto')}}
-    WHERE pto_status = 'AP' 
-      AND pto_day_of_week BETWEEN 1 AND 5 -- excluding weekends
-),
 pto AS (
   SELECT
-    *,
-    'Y'                                                    AS is_pto_date
-  FROM pto_approved
+    *
+  FROM {{ref('prep_pto')}}
 ),
 team_status AS (
   SELECT 
@@ -68,7 +59,6 @@ combined_sources AS (
       AND DATEDIFF('day', pto.start_date, pto.end_date) > 4, 'Out Sick-Extended', pto.pto_type_name
     ) AS absence_status,
     pto.employee_day_length
-
   FROM team_status
   INNER JOIN pto ON pto.hr_employee_id=team_status.employee_id
 ),
