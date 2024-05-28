@@ -7932,12 +7932,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: ovider
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: paporte
     user_name_domain: gitlab.com
     site_role: Unlicensed
