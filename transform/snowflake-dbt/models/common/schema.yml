@@ -5520,6 +5520,34 @@ models:
           - unique
         tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
 
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot") }}'
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot_aggregate
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot_aggregate") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: opportunity_weekly_snapshot_aggregate_pk
+        tests:
+          - not_null
+          - unique
+  
+  - name: fct_targets_actuals_7th_day_weekly_snapshot
+    description: '{{ doc("fct_targets_actuals_7th_day_weekly_snapshot") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: targets_actuals_weekly_snapshot_pk
+        tests:
+          - not_null
+          - unique
+
   - name: fct_credit_balance_adjustment
     description: '{{ doc("fct_credit_balance_adjustment") }}'
     columns:
