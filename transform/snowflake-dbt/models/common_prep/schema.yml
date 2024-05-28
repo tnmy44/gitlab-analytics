@@ -2128,6 +2128,14 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: age_calculated 
+        description: Masked. Team member's age
+        meta:
+          masking_policy: analyst_people_sensitive    
+      - name: age_cohort 
+        description: Masked. Team member's age bucket
+        meta:
+          masking_policy: analyst_people_sensitive      
       - name: team_id
         description: Identification number of the team to which the particular team member belongs
       - name: hire_date
@@ -2783,3 +2791,56 @@ models:
 
   - name: prep_snowplow_sessions_all
     description: '{{ doc("prep_snowplow_sessions_all") }}'
+
+  - name: prep_pto
+    description: '{{ doc("prep_pto") }}'
+    columns:
+      - name: hr_employee_id
+        description: The employee id of Workday
+        tests:
+          - not_null
+      - name: start_date
+        description: The team member's absence start date
+        tests: 
+          - not_null
+      - name: end_date
+        description: The team member's absence end date
+      - name: pto_date  
+        description: The team member's day of absence   
+        tests: 
+          - not_null
+      - name: is_pto
+        description: If this absence day overlaps with a PTO.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: is_holiday
+        description: If this absence day overlaps with a holiday.
+      - name: pto_uuid
+        description: Unique identifier for this pto event
+      - name: pto_type_uuid
+        description: The UUID of this OOO Type.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: pto_group_type
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: pto_status
+        description: Enum:"AP" "RQ" "DN" "CN" 2-character enumeration denoting the status of the OOO Event.
+          "AP" = Approved  "RQ" = Requested  "DN" = Denied  "CN" = Cancelled
+      - name: pto_status_name
+        description: The decoded pto_status
+      - name: total_hours
+        description: How long the user was OOO for. This is different from recorded_hours in that it is unaware of holidays and weekends.
+      - name: recorded_hours
+        description: How many hours were recorded as OOO for this event.
+      - name: absence_status
+        description: The team member's absence status.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: employee_day_length
+        description: How long this User's "day" is in hours
+      - name: pto_day_of_week
+        description: Absence's day of the week. Number of the day of the week, with Sunday = 1 and Saturday = 7
+      - name: pto_type_name
+        meta:
+          masking_policy: analyst_people_sensitive
