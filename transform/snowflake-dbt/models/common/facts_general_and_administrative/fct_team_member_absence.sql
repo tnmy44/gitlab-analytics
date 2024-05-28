@@ -1,11 +1,9 @@
 WITH team_status_dup AS (
-  SELECT 
-    *
+  SELECT *
   FROM {{ref('fct_team_status')}}
 ),
 pto AS (
-  SELECT
-    *
+  SELECT *
   FROM {{ref('prep_pto')}}
 ),
 team_status AS (
@@ -54,10 +52,7 @@ combined_sources AS (
     pto.pto_status_name AS pto_status_name,
     pto.total_hours AS total_hours,
     pto.recorded_hours AS recorded_hours,
-     IFF(
-      pto.pto_type_name = 'Out Sick'
-      AND DATEDIFF('day', pto.start_date, pto.end_date) > 4, 'Out Sick-Extended', pto.pto_type_name
-    ) AS absence_status,
+    pto.absence_status,
     pto.employee_day_length
   FROM team_status
   INNER JOIN pto ON pto.hr_employee_id=team_status.employee_id
@@ -78,5 +73,3 @@ final AS (
     created_date='2024-05-15',
     updated_date='2024-05-15',
 ) }}
-
-

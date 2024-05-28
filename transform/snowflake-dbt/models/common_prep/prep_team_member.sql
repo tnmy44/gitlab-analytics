@@ -1,6 +1,7 @@
 WITH all_team_members AS (
 
-  SELECT * 
+  SELECT *,
+  preferred_first_name || ' ' || preferred_last_name                                                                  AS full_name
   FROM {{ref('all_workers_source')}}
 
 ),
@@ -169,6 +170,7 @@ final AS (
     COALESCE(all_team_members.ethnicity, 'Unknown Ethnicity')                                               AS ethnicity,
     COALESCE(all_team_members.preferred_first_name, 'Unknown First Name')                                   AS first_name,
     COALESCE(all_team_members.preferred_last_name, 'Unknown Last Name')                                     AS last_name,
+    COALESCE(all_team_members.full_name, 'Unknown Full Name')                                               AS full_name,
     COALESCE(all_team_members.gender, 'Unknown Gender')                                                     AS gender,
     COALESCE(all_team_members.work_email, 'Unknown Work Email')                                             AS work_email,
     all_team_members.date_of_birth                                                                          AS date_of_birth,

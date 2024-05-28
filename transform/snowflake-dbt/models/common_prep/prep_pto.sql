@@ -1,7 +1,7 @@
 WITH source AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_pto_source') }}
+  SELECT *
+  FROM {{ ref('gitlab_pto_source') }}
 ),
 
 map AS (
@@ -24,14 +24,17 @@ report AS (
   LEFT JOIN map
     ON source.hr_employee_id = map.bhr_employee_id
 ),
+
 pto AS (
   SELECT *
   FROM report
 ),
+
 prep_date AS (
   SELECT *
   FROM {{ ref('prep_date') }}
 ),
+
 final AS (
   SELECT
     pto.*,
