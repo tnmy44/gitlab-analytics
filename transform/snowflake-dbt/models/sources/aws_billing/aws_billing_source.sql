@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key = ['bill_payer_account_id', 'identity_line_item_id', 'identity_time_interval'] 
+    unique_key = ['bill_payer_account_id', 'bill_invoice_id', 'identity_line_item_id', 'identity_time_interval'] 
     )
 }}
 
@@ -270,4 +270,4 @@ parsed AS (
   FROM all_raw
 )
 
-SELECT * FROM all_raw
+SELECT * FROM parsed
