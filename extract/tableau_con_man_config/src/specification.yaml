@@ -9773,6 +9773,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Acces
   - user_name: mmagoma
     user_name_domain: gitlab.com
     site_role: Creator
