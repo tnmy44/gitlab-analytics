@@ -7342,12 +7342,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: msporchia
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mstittri
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7929,12 +7923,6 @@ users:
   - user_name: oradwan
     user_name_domain: gitlab.com
     site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: ovider
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
     auth_setting: SAML
     groups:
       - General All Access
