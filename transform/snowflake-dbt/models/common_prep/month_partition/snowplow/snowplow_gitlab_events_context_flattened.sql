@@ -130,8 +130,8 @@ WITH filtered_source as (
             {'field':'gitlab_global_user_id'},
             {'field':'suggestion_source'},
             {'field':'is_invoked', 'data_type':'boolean'},
-            {'field':'options_count'},
-            {'field':'accepted_option'}
+            {'field':'options_count', 'data_type':'int'},
+            {'field':'accepted_option', 'data_type':'int'}
             ]
         )
       }},
