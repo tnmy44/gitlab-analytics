@@ -2370,6 +2370,24 @@ roles:
         tables:
           read:
             - prod.pumps_sensitive.*
+  - rally_source:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.rally_initial_export
+            - raw.rally_webhook_stitch
+            - prep.sensitive
+        tables:
+          read:
+            - raw.rally_initial_export.*
+            - raw.rally_webhook_stitch.*
+            - prep.sensitive.rally_optouts
   - restricted_safe:
       warehouses:
         - reporting
@@ -5183,6 +5201,7 @@ roles:
   - nhertz:
       member_of:
         - reporter
+        - rally_source
       warehouses:
         - dev_xs
   - nhervas:
@@ -6376,6 +6395,7 @@ roles:
       member_of:
         - reporter
         - snowflake_analyst_safe
+        - rally_source
       warehouses:
         - dev_xs
   - wlin:
