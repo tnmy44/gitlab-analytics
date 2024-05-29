@@ -1439,7 +1439,7 @@ Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"
 
 **Data Grain:**
 - dim_installation_id
-- ping_created_at_date_week
+- ping_created_date_week
 - metrics_path
 
 **Filters Applied to Model:**

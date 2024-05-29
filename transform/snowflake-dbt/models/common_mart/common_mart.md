@@ -314,7 +314,7 @@
 - This data is enhanced with additional license, subscription, CRM account, and billing attributes for ease of analysis
 
 **Data Grain:**
-- dim_installation
+- dim_installation_id
 - metrics_path
 - ping_created_date_week
 
