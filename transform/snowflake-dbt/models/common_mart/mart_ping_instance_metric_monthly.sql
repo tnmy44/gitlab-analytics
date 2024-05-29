@@ -1,6 +1,5 @@
 {{ config(
-    tags=["product", "mnpi_exception"],
-    cluster_by=['ping_created_date_month']
+    tags=["product", "mnpi_exception"]
 ) }}
 
 {{ simple_cte([
@@ -306,5 +305,5 @@
     created_by="@icooper-acp",
     updated_by="@utkarsh060",
     created_date="2022-03-11",
-    updated_date="2024-05-15"
+    updated_date="2024-04-18"
 ) }}

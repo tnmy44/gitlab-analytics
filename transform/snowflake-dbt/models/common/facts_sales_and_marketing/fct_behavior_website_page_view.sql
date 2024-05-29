@@ -2,7 +2,6 @@
         materialized = "incremental",
         unique_key = "fct_behavior_website_page_view_sk",
         on_schema_change='sync_all_columns',
-        cluster_by=['behavior_at::DATE'],
         tags=['product']
 ) }}
 
@@ -104,7 +103,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2024-05-15"
+    updated_date="2024-05-03"
 ) }}
