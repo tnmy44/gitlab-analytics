@@ -75,7 +75,7 @@ WITH source AS (
         -- opportunity information
         acv_2__c                                                                            AS acv,
         amount                                                                              AS amount,
-        IFF(acv_2__c >= 0, 1, 0)                                                            AS closed_deals, -- so that you can exclude closed deals that had negative impact
+        IFF(acv_2__c >= 0, 1, 0)                                                            AS is_closed_deals, -- so that you can exclude closed deals that had negative impact
         competitors__c                                                                      AS competitors,
         critical_deal_flag__c                                                               AS critical_deal_flag,
         {{sfdc_deal_size('arr_net__c', 'deal_size')}},

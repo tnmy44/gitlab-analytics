@@ -254,6 +254,10 @@ databases:
       shared: true
   - snowplow_stg_test_ved_raw:
       shared: true
+  - kvasireddy_prod:
+      shared: false
+  - kvasireddy_prep:
+      shared: false
 roles:
   - accountadmin:
       warehouses:
@@ -336,19 +340,19 @@ roles:
         - zuora_query_api
         - sensitive_marketing
   - sensitive_marketing:
-        privileges:
-          databases:
-            read:
-              - prep
-          schemas:
-            read:
-              - prep.*
-          tables:
-            read:
-              - prep.sensitive.bdg_marketing_contact_role
-              - prep.sensitive.dim_marketing_contact
-              - prep.sensitive.bdg_marketing_contact_order
-              - prep.sensitive.mart_marketing_contact
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.*
+        tables:
+          read:
+            - prep.sensitive.bdg_marketing_contact_role
+            - prep.sensitive.dim_marketing_contact
+            - prep.sensitive.bdg_marketing_contact_order
+            - prep.sensitive.mart_marketing_contact
   - analyst_core:
       warehouses:
         - dev_xs
@@ -1172,6 +1176,7 @@ roles:
             - prod.*
             - raw.snapshots
             - raw.gcp_billing
+            - raw.google_analytics_4_bigquery
             - raw.dbt_artifacts
         tables:
           read:
@@ -1182,6 +1187,7 @@ roles:
             - prod.*.*
             - raw.snapshots.*
             - raw.gcp_billing.*
+            - raw.google_analytics_4_bigquery.*
             - raw.dbt_artifacts.*
   - sales_analytics:
       warehouses:
@@ -2061,9 +2067,11 @@ roles:
         schemas:
           read:
             - raw.google_analytics_4_bigquery
+            - raw.google_analytics_4_fivetran
         tables:
           read:
             - raw.google_analytics_4_bigquery.*
+            - raw.google_analytics_4_fivetran.*
   - google_search_console:
       privileges:
         databases:
@@ -2362,6 +2370,24 @@ roles:
         tables:
           read:
             - prod.pumps_sensitive.*
+  - rally_source:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.rally_initial_export
+            - raw.rally_webhook_stitch
+            - prep.sensitive
+        tables:
+          read:
+            - raw.rally_initial_export.*
+            - raw.rally_webhook_stitch.*
+            - prep.sensitive.rally_optouts
   - restricted_safe:
       warehouses:
         - reporting
@@ -2913,6 +2939,22 @@ roles:
           read:
             - raw.zuora_revenue.*
             - prep.zuora_revenue.*
+  - clari:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.clari
+            - prep.clari
+        tables:
+          read:
+            - raw.clari.*
+            - prep.clari.*
   - aadesanya:
       member_of:
         - snowflake_analyst
@@ -3141,6 +3183,7 @@ roles:
       member_of:
         - analyst_engineering
         - restricted_safe
+        - zuora_query_api
       warehouses:
         - dev_xs
       owns:
@@ -4262,11 +4305,6 @@ roles:
         - reporter
       warehouses:
         - dev_xs
-  - jsalazar:
-      member_of:
-        - reporter
-      warehouses:
-        - dev_xs
   - jsingh:
       member_of:
         - engineer
@@ -5045,6 +5083,8 @@ roles:
         - xactly
         - restricted_safe
         - bi_tool_eval_read
+        - clari
+        - zendesk
       warehouses:
         - dev_xs
       owns:
@@ -5162,6 +5202,7 @@ roles:
   - nhertz:
       member_of:
         - reporter
+        - rally_source
       warehouses:
         - dev_xs
   - nhervas:
@@ -6355,6 +6396,7 @@ roles:
       member_of:
         - reporter
         - snowflake_analyst_safe
+        - rally_source
       warehouses:
         - dev_xs
   - wlin:
@@ -6459,6 +6501,71 @@ roles:
   - seanhall:
       member_of:
         - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kvasireddy:
+      member_of:
+        - adaptive
+        - analyst_finance
+        - bamboohr_analytics
+        - customers_db
+        - data_science_readonly
+        - data_team_analyst
+        - data_manager
+        - marketo
+        - restricted_safe
+        - salesforce_sandbox
+        - xactly
+      warehouses:
+        - dev_xs
+      owns:
+        databases:
+          - kvasireddy_prep
+          - kvasireddy_prod
+        schemas:
+          - kvasireddy_prep.*
+          - kvasireddy_prod.*
+        tables:
+          - kvasireddy_prep.*.*
+          - kvasireddy_prod.*.*
+      privileges:
+        databases:
+          read:
+            - kvasireddy_prep
+            - kvasireddy_prod
+          write:
+            - kvasireddy_prep
+            - kvasireddy_prod
+        schemas:
+          read:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+          write:
+            - kvasireddy_prep.*
+            - kvasireddy_prod.*
+        tables:
+          read:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
+          write:
+            - kvasireddy_prep.*.*
+            - kvasireddy_prod.*.*
+  - zapier:
+      warehouses:
+        - transforming_xs
+      privileges:
+        databases:
+          read:
+            - prod
+        schemas:
+          read:
+            - prod.workspace_customer_success
+        tables:
+          read:
+            - prod.workspace_customer_success.mart_product_usage_health_score
+  - gsodhi:
+      member_of:
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
 users:
@@ -6886,10 +6993,6 @@ users:
       can_login: true
       member_of:
         - jrubi
-  - jsalazar:
-      can_login: true
-      member_of:
-        - jsalazar
   - jsingh:
       can_login: true
       member_of:
@@ -7491,6 +7594,18 @@ users:
       can_login: true
       member_of:
         - seanhall
+  - kvasireddy:
+      can_login: true
+      member_of:
+        - kvasireddy
+  - zapier:
+      can_login: true
+      member_of:
+        - zapier
+  - gsodhi:
+      can_login: true
+      member_of:
+        - gsodhi
 warehouses:
   - admin:
       size: x-small
