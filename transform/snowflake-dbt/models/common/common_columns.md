@@ -2892,7 +2892,7 @@ When the suggestion is accepted, this field indicates the option number which wa
 
 {% docs code_suggestions_suggestion_source %}
 
-Source where the suggestion is retried from. This can be either the cache or network.
+Source where the suggestion is retrieved from. This can be either the cache or network.
 
 {% enddocs %}
 
