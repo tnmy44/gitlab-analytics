@@ -3183,6 +3183,7 @@ roles:
       member_of:
         - analyst_engineering
         - restricted_safe
+        - zuora_query_api
       warehouses:
         - dev_xs
       owns:
