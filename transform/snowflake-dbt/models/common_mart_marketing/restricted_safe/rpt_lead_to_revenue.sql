@@ -113,6 +113,17 @@
       mart_crm_touchpoint.bizible_landing_page_utm_budget,
       mart_crm_touchpoint.bizible_landing_page_utm_allptnr,
       mart_crm_touchpoint.bizible_landing_page_utm_partnerid,
+      mart_crm_touchpoint.utm_campaign_date,
+      mart_crm_touchpoint.utm_campaign_region,
+      mart_crm_touchpoint.utm_campaign_budget,
+      mart_crm_touchpoint.utm_campaign_type,
+      mart_crm_touchpoint.utm_campaign_gtm,
+      mart_crm_touchpoint.utm_campaign_language,
+      mart_crm_touchpoint.utm_campaign_name,
+      mart_crm_touchpoint.utm_campaign_agency,
+      mart_crm_touchpoint.utm_content_offer,
+      mart_crm_touchpoint.utm_content_asset_type,
+      mart_crm_touchpoint.utm_content_industry,
       mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
@@ -222,6 +233,17 @@
       mart_crm_attribution_touchpoint.bizible_landing_page_utm_budget,
       mart_crm_attribution_touchpoint.bizible_landing_page_utm_allptnr,
       mart_crm_attribution_touchpoint.bizible_landing_page_utm_partnerid,
+      mart_crm_attribution_touchpoint.utm_campaign_date,
+      mart_crm_attribution_touchpoint.utm_campaign_region,
+      mart_crm_attribution_touchpoint.utm_campaign_budget,
+      mart_crm_attribution_touchpoint.utm_campaign_type,
+      mart_crm_attribution_touchpoint.utm_campaign_gtm,
+      mart_crm_attribution_touchpoint.utm_campaign_language,
+      mart_crm_attribution_touchpoint.utm_campaign_name,
+      mart_crm_attribution_touchpoint.utm_campaign_agency,
+      mart_crm_attribution_touchpoint.utm_content_offer,
+      mart_crm_attribution_touchpoint.utm_content_asset_type,
+      mart_crm_attribution_touchpoint.utm_content_industry,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.campaign_rep_role_name,
@@ -388,7 +410,11 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
+<<<<<<< HEAD
     {{dbt_utils.group_by(n=91)}}
+=======
+    {{dbt_utils.group_by(n=100)}}
+>>>>>>> 6e4674e7b4 (Pushing new fields downstream)
     
 ), cohort_base_combined AS (
   
@@ -543,6 +569,17 @@
       COALESCE(person_base_with_tp.bizible_landing_page_utm_budget,opp_base_with_batp.bizible_landing_page_utm_budget) AS bizible_landing_page_utm_budget, 
       COALESCE(person_base_with_tp.bizible_landing_page_utm_allptnr,opp_base_with_batp.bizible_landing_page_utm_allptnr) AS bizible_landing_page_utm_allptnr, 
       COALESCE(person_base_with_tp.bizible_landing_page_utm_partnerid,opp_base_with_batp.bizible_landing_page_utm_partnerid) AS bizible_landing_page_utm_partnerid, 
+      COALESCE(person_base_with_tp.utm_campaign_date,opp_base_with_batp.utm_campaign_date) AS bizible_utm_campaign_date,
+      COALESCE(person_base_with_tp.utm_campaign_region,opp_base_with_batp.utm_campaign_region) AS bizible_utm_campaign_region,
+      COALESCE(person_base_with_tp.utm_campaign_budget,opp_base_with_batp.utm_campaign_budget) AS bizible_utm_campaign_budget,
+      COALESCE(person_base_with_tp.utm_campaign_type,opp_base_with_batp.utm_campaign_type) AS bizible_utm_campaign_type,
+      COALESCE(person_base_with_tp.utm_campaign_gtm,opp_base_with_batp.utm_campaign_gtm) AS bizible_utm_campaign_gtm,
+      COALESCE(person_base_with_tp.utm_campaign_language,opp_base_with_batp.utm_campaign_language) AS bizible_utm_campaign_language,
+      COALESCE(person_base_with_tp.utm_campaign_name,opp_base_with_batp.utm_campaign_name) AS bizible_utm_campaign_name,
+      COALESCE(person_base_with_tp.utm_campaign_agency,opp_base_with_batp.utm_campaign_agency) AS bizible_utm_campaign_agency,
+      COALESCE(person_base_with_tp.utm_content_offer,opp_base_with_batp.utm_content_offer) AS bizible_utm_content_offer,
+      COALESCE(person_base_with_tp.utm_content_asset_type,opp_base_with_batp.utm_content_asset_type) AS bizible_utm_content_asset_type,
+      COALESCE(person_base_with_tp.utm_content_industry,opp_base_with_batp.utm_content_industry) AS bizible_utm_content_industry,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -673,5 +710,9 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
+<<<<<<< HEAD
     updated_date="2024-06-06",
+=======
+    updated_date="2024-05-29",
+>>>>>>> 6e4674e7b4 (Pushing new fields downstream)
   ) }}
