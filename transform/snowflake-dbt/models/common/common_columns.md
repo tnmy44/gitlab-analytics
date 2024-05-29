@@ -2886,7 +2886,7 @@ The total number of options provided for the current suggestion. A user can sele
 
 {% docs code_suggestions_accepted_option %}
 
-When the suggestion is accepted, this field indicates the option number which was chosen by the user out of the possible options provided.
+When the suggestion is accepted, this field indicates the option number which was chosen by the user out of the possible options provided. This is a 1-based index.
 
 {% enddocs %}
 
