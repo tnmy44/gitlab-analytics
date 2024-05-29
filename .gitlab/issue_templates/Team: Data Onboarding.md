@@ -115,12 +115,10 @@ There are many slack channels for communication of data team needs and informati
 | ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
 | `data` | Yes | Yes | Yes | Yes | Yes | 
 | `data-lounge` | Yes | Yes | Yes | Yes | Yes |
-| `data-onboarding` | Yes | Yes | Yes | Yes | Yes |
 | `data-daily` | No | Yes | Yes | Yes | Yes |
+| `data-weekly` | No | Yes | Yes | Yes | Yes |
 | `data-triage` | No | Yes | Yes | Yes | Yes |
 | `data-engineering` | No | Yes | Yes | Yes | Yes |
-| `business-technology` | No | Yes | Yes | Yes | Yes |
-| `bt-team-lounge` | No | Yes | Yes | Yes | Yes |
 | `analytics-pipelines` | No | No | Yes | No | No |
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
