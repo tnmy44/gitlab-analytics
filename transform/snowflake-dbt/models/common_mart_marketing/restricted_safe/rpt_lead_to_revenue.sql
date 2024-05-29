@@ -567,7 +567,7 @@
 ), intermediate AS (
 
   SELECT DISTINCT
-    {{ dbt_utils.generate_surrogate_key(['cohort_base_combined.dim_crm_person_id','cohort_base_combined.dim_crm_touchpoint_id','cohort_base_combined.dim_crm_opportunity_id']) }}
+    {{ dbt_utils.generate_surrogate_key(['cohort_base_combined.dim_crm_person_id','cohort_base_combined.dim_crm_btp_touchpoint_id','cohort_base_combined.dim_crm_batp_touchpoint_id','cohort_base_combined.dim_crm_opportunity_id']) }}
                                                  AS lead_to_revenue_id,
     cohort_base_combined.*,
     --inquiry_date fields
@@ -624,6 +624,8 @@
     ON cohort_base_combined.close_date = closed_date.date_day
   LEFT JOIN dim_date AS touchpoint_date
     ON cohort_base_combined.bizible_touchpoint_date = touchpoint_date.date_day
+  WHERE dim_crm_person_id IS NOT NULL
+    OR dim_crm_opportunity_id IS NOT NULL
 
 ), final AS (
 
