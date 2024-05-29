@@ -264,6 +264,11 @@ models:
     - name: rpt_lead_to_revenue
       description: Maps a person (unconverted lead or a contact) to an opportunity through their associated Salesforce account and connects any of their related touchpoints.
       columns:
+        - name: lead_to_revenue_id
+          tests:
+              - not_null
+              - unique
+          description: The primary key in the lead to revenue table - a compilation of the person, touchpoint, and opportunity ids.
         - name: dim_crm_person_id
           description: A dbt generated surrogate key combining the lead id and contact id.
         - name: dim_crm_account_id
