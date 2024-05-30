@@ -8,37 +8,37 @@
 
 WITH dedicated_legacy_0475 AS (
 
-{{ dedupe_source('dedicated_legacy_0475', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('dedicated_legacy_0475', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 dedicated_dev_3675 AS (
 
-{{ dedupe_source('dedicated_dev_3675', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('dedicated_dev_3675', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 gitlab_marketplace_5127 AS (
 
-{{ dedupe_source('gitlab_marketplace_5127', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('gitlab_marketplace_5127', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 itorg_3027 AS (
 
-{{ dedupe_source('itorg_3027', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('itorg_3027', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 legacy_gitlab_0347 AS (
 
-{{ dedupe_source('legacy_gitlab_0347', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('legacy_gitlab_0347', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 services_org_6953 AS (
 
-{{ dedupe_source('services_org_6953', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
+{{ dedupe_aws_source('services_org_6953', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
@@ -220,7 +220,8 @@ parsed AS (
     value['savings_plan_savings_plan_effective_cost']::DECIMAL                         AS savings_plan_savings_plan_effective_cost,
     value['savings_plan_savings_plan_rate']::DECIMAL                                   AS savings_plan_savings_plan_rate,
     value['savings_plan_total_commitment_to_date']::DECIMAL                            AS savings_plan_total_commitment_to_date,
-    value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment
+    value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment,
+    modified_at_ as modified_at
   FROM all_raw
 )
 
