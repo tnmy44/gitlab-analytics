@@ -11330,3 +11330,9 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: avpfestin
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
