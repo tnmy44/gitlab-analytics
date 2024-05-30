@@ -213,7 +213,7 @@
 
 
 --Getting Last term version of the subscription         
-), dim_subscription_latest_version AS (
+), subscriptions_last_term_version AS (
 
     SELECT 
       ROW_NUMBER() OVER (PARTITION BY subscription_name, term_end_date ORDER BY ramp_ssp_id, subscription_version DESC) AS last_term_version,
@@ -222,6 +222,7 @@
     WHERE exclude_from_term_sorting = FALSE
 
 
+---Subscriptions base
 ), dim_subscription_base AS (
 
     SELECT
@@ -232,33 +233,6 @@
     INNER JOIN subscriptions_last_term_version
       ON dim_subscription.dim_subscription_id = subscriptions_last_term_version.dim_subscription_id
     WHERE last_term_version = 1
-
-
----Subscriptions base
-), dim_subscription_base AS (     
-
-    SELECT 
-      dim_subscription_latest_version.*
-    FROM dim_subscription_latest_version        
-    LEFT JOIN dim_subscription_cancelled        
-      ON dim_subscription_latest_version.subscription_name = dim_subscription_cancelled.subscription_name       
-      AND dim_subscription_latest_version.term_start_date >= dim_subscription_cancelled.term_start_date        
-    WHERE dim_subscription_cancelled.subscription_name IS NULL  
-    AND 
-       --data quality, last version is expired with no ARR in mart_arr. Should filter it out completely.
-       dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3bb595f14eef','2c92a0ff5e1dcf14015e3c191d4f7689','2c92a007644967bc01645d54e7df49a8', '2c92a007644967bc01645d54e9b54a4b', '2c92a0ff5e1dcf1a015e3bf7a32475a5')
-       --test subscription
-       AND dim_subscription_latest_version.subscription_name != 'Test- New Subscription'
-       --data quality, last term not entered with same pattern, sub_name = A-S00022101
-       AND dim_subscription_id != '2c92a00f7579c362017588a2de19174a'
-       --term dates do not align to the subscription term dates, sub_name = A-S00038937
-       AND dim_subscription_id != '2c92a01177472c5201774af57f834a43'
-       --data quality, last term not entered with same pattern that fits ATR logic. Edge cases that needs to be filtered out to get to the last term version that should count for this subscription.
-       --sub_name = A-S00011774
-       AND dim_subscription_id NOT IN ('8a1298657dd7f81d017dde1bd9c03fa8','8a128b317dd7e89a017ddd38a74d3037','8a128b317dd7e89a017ddd38a6052ff0',
-                                       '8a128b317dc30baa017dc41e5b0932e9','8a128b317dc30baa017dc41e59dd32be','8a128b317dc30baa017dc41e58b43295',
-                                       '2c92a0fd7cc1ab13017cc843195f62fb','2c92a0fd7cc1ab13017cc843186f62da','2c92a0fd7cc1ab13017cc843178162b6',
-                                       '2c92a0fd7cc1ab13017cc843164d6292')
 
 
 --Calculating min and max term dates for all ramps
