@@ -261,5 +261,5 @@ code_suggestion_context AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-05-24"
+    updated_date="2024-05-30"
 ) }}
