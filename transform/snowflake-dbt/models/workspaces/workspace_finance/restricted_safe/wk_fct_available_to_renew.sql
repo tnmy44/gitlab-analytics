@@ -177,7 +177,6 @@
             subscription_version) = subscription_end_fiscal_year THEN TRUE
         WHEN LEAD(term_start_month) OVER (PARTITION BY subscription_name ORDER BY subscription_version)
             = term_start_month THEN TRUE
-            
         --check for subsequent subscriptiptions that are backed out
         WHEN LEAD(term_start_month) OVER (PARTITION BY subscription_name ORDER BY subscription_version)
             < term_start_month THEN TRUE
