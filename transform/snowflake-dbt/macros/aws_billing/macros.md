@@ -28,7 +28,7 @@ FROM (
 SELECT *,
     metadata$file_last_modified AS modified_at_,
     ROW_NUMBER() OVER (PARTITION BY id ORDER BY metadata$file_last_modified DESC) AS rn
-FROM aws_billing.my_cost_usage_data
+FROM "RAW".aws_billing.my_cost_usage_data
 WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM my_deduped_table)
 ) subquery
 WHERE rn = 1
@@ -84,7 +84,7 @@ SELECT *,
     value['identity_line_item_id']::VARCHAR, 
     value['identity_time_interval']::VARCHAR ORDER BY metadata$file_last_modified DESC) AS rn
 FROM "RAW".aws_billing.dedicated_legacy_0475
-WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM "CLEROUX_PREP".aws_billing.aws_billing_source_test)
+WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM "PREP".aws_billing.aws_billing_source_test)
 ) subquery
 WHERE rn = 1
         UNION ALL   
@@ -97,7 +97,7 @@ SELECT *,
     value['identity_line_item_id']::VARCHAR, 
     value['identity_time_interval']::VARCHAR ORDER BY metadata$file_last_modified DESC) AS rn
 FROM "RAW".aws_billing.dedicated_dev_3675
-WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM "CLEROUX_PREP".aws_billing.aws_billing_source_test)
+WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM "PREP".aws_billing.aws_billing_source_test)
 ) subquery
 WHERE rn = 1
 ```

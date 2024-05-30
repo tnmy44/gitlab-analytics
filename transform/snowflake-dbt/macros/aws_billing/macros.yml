@@ -9,10 +9,10 @@ macros:
         description: Name of the source table (from schema.yml file).
       - name: source_schema
         type: string
-        description: Name of the source table (from schema.yml file). Default value is GITLAB_DOTCOM.
+        description: Name of the source table (from schema.yml file). Default value is AWS_BILLING.
       - name: condition_column
         type: string
-        description: Name of the column for data deduplication. Default value is UPDATED_AT.
+        description: Name of the column for data deduplication. Default value is metadata$file_last_modified.
       - name: unique_key
         type: string
         description: Unique column (pseudo primary key). Default value is ID.
@@ -20,14 +20,14 @@ macros:
     description: '{{ doc("dedupe_and_union_aws_source") }}'
     arguments:
       - name: source_tables
-        type: string
+        type: comma separated list between brackets
         description: Name of the source table (from schema.yml file).
       - name: source_schema
         type: string
-        description: Name of the source table (from schema.yml file). Default value is GITLAB_DOTCOM.
+        description: Name of the source table (from schema.yml file). Default value is AWS_BILLING.
       - name: condition_column
         type: string
-        description: Name of the column for data deduplication. Default value is UPDATED_AT.
+        description: Name of the column for data deduplication. Default value is metadata$file_last_modified.
       - name: unique_key
         type: string
         description: Unique column (pseudo primary key). Default value is ID.
