@@ -3,59 +3,23 @@
     )
 }}
 
-{% set unique_key = "value['bill_payer_account_id']::VARCHAR, value['bill_invoice_id']::VARCHAR, value['identity_line_item_id']::VARCHAR, value['identity_time_interval']::VARCHAR" %}
+{% set unique_key = "value['bill_payer_account_id']::VARCHAR, 
+    value['bill_invoice_id']::VARCHAR, 
+    value['identity_line_item_id']::VARCHAR, 
+    value['identity_time_interval']::VARCHAR" %}
+{% set source_tables = ['dedicated_legacy_0475', 
+    'dedicated_dev_3675', 
+    'gitlab_marketplace_5127', 
+    'itorg_3027', 
+    'legacy_gitlab_0347', 
+    'services_org_6953'] %}
 
 
-WITH dedicated_legacy_0475 AS (
-
-{{ dedupe_aws_source('dedicated_legacy_0475', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-dedicated_dev_3675 AS (
-
-{{ dedupe_aws_source('dedicated_dev_3675', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-gitlab_marketplace_5127 AS (
-
-{{ dedupe_aws_source('gitlab_marketplace_5127', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-itorg_3027 AS (
-
-{{ dedupe_aws_source('itorg_3027', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-legacy_gitlab_0347 AS (
-
-{{ dedupe_aws_source('legacy_gitlab_0347', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-services_org_6953 AS (
-
-{{ dedupe_aws_source('services_org_6953', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
-
-),
-
-all_raw AS (
-
-  SELECT * FROM dedicated_legacy_0475
-  UNION ALL
-  SELECT * FROM dedicated_dev_3675
-  UNION ALL
-  SELECT * FROM gitlab_marketplace_5127
-  UNION ALL
-  SELECT * FROM itorg_3027
-  UNION ALL
-  SELECT * FROM legacy_gitlab_0347
-  UNION ALL
-  SELECT * FROM services_org_6953
-
+WITH all_raw_deduped as (
+{{ dedupe_and_union_aws_source(source_tables, 
+    'aws_billing', 
+    'metadata$file_last_modified', 
+    unique_key) }}
 ),
 
 parsed AS (
@@ -222,7 +186,7 @@ parsed AS (
     value['savings_plan_total_commitment_to_date']::DECIMAL                            AS savings_plan_total_commitment_to_date,
     value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment,
     modified_at_ as modified_at
-  FROM all_raw
+  FROM all_raw_deduped
 )
 
 SELECT * FROM parsed

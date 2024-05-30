@@ -13,13 +13,15 @@ This macro is designed to deduplicate data from an AWS billing source table. It 
 
 **Example Usage:**
 
+{% raw %}
 ```jinja2
 {% set my_deduped_table = dedupe_aws_source('my_cost_usage_data') %}
 select * from {{ my_deduped_table }}
 ```
-
+{% endraw %}
 ## Generated SQL:
 
+{% raw %}
 ```sql
 SELECT *
 FROM (
@@ -31,7 +33,7 @@ WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM my_deduped_tab
 ) subquery
 WHERE rn = 1
 ```
-
+{% endraw %}
 {% enddocs %}
 
 {% docs dedupe_and_union_aws_source %}
@@ -50,6 +52,7 @@ This macro combines data from multiple AWS billing source tables, deduplicates r
 * `unique_key` (optional, default: 'id'): A comma-separated string specifying the columns that uniquely identify a record (e.g., "value['field1']::VARCHAR, value['field2']::VARCHAR").
 
 **Example Usage:**
+{% raw %}
 ```jinja2
 {% set unique_key = "value['bill_payer_account_id']::VARCHAR, 
     value['bill_invoice_id']::VARCHAR, 
@@ -67,9 +70,9 @@ WITH all_raw_deduped as (
 )
 
 ```
-
+{% endraw %}
 ## Generated SQL:
-
+{% raw %}
 ```sql
 WITH all_raw_deduped as (     
 SELECT *
@@ -98,5 +101,5 @@ WHERE metadata$file_last_modified > (SELECT MAX(modified_at) FROM "CLEROUX_PREP"
 ) subquery
 WHERE rn = 1
 ```
-
+{% endraw %}
 {% enddocs %}
