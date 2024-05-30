@@ -28,7 +28,7 @@ site:
   cache_warmup_enabled: false
   commenting_enabled: true
   extract_encryption_mode: disabled
-  request_access_enabled: true
+  request_access_enabled: false
   run_now_enabled: true
   tier_explorer_capacity: 150
   tier_creator_capacity: 60
