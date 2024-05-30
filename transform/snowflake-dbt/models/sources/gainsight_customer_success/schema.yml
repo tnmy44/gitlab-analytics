@@ -1031,6 +1031,76 @@ models:
         - name: _fivetran_synced
           tests:
             - not_null
+    - name: email_log_v2
+      description: '{{ doc("gainsight_email_logs") }}'
+      columns:
+        - name: gsid
+        - name: _fivetran_deleted
+        - name: _fivetran_synced
+        - name: rejected_date
+        - name: gs_user_id
+        - name: reply_to_name
+        - name: email_group_id
+        - name: sent_date
+        - name: link_clicked_count
+        - name: name
+        - name: is_sent
+        - name: first_open_date
+        - name: email_content_id
+        - name: external_relationship_person_id
+        - name: is_opened
+        - name: external_company_person_id
+        - name: external_user_id
+        - name: bounce_type
+        - name: gs_person_id
+        - name: gs_person_type
+        - name: page_id
+        - name: email_id
+          meta:
+            sensitive: true
+        - name: link_clicked_date
+        - name: email_template_name
+        - name: request_id
+        - name: is_bounced
+        - name: spam_marked_date
+        - name: category_ids
+        - name: latest_open_date
+        - name: is_rejected
+        - name: created_date
+        - name: recipient_gs_id
+        - name: is_unsubscribed
+        - name: is_spam
+        - name: executed_date
+        - name: parent_recipient_gs_id
+        - name: record_external_id
+        - name: source_id
+        - name: email_template_id
+        - name: sent_by
+        - name: modified_date
+        - name: source
+        - name: gs_company_person_id
+        - name: email_template_version_name
+        - name: from_name
+        - name: opened_count
+        - name: lower_case_email_id
+          meta:
+            sensitive: true
+        - name: record_id
+        - name: reply_to_email_id
+          meta:
+            sensitive: true
+        - name: link_clicked_json
+        - name: source_name
+        - name: bounced_reason
+        - name: gs_company_id
+        - name: external_company_id
+        - name: bounce_ddate
+        - name: email_template_version_id
+        - name: unsubscribed_date
+        - name: from_email_id
+        - name: is_group_email
+        - name: address_type
+
     - name: nps_survey_response
       description: '{{ doc("gainsight_nps_survey_response") }}'
       columns:
