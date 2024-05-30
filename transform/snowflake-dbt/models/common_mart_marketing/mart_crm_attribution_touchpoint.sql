@@ -364,6 +364,7 @@
     FROM joined
     LEFT JOIN linear_base 
       ON joined.dim_crm_opportunity_id = linear_base.dim_crm_opportunity_id
+    WHERE joined.dim_crm_touchpoint_id IS NOT NULL
 
 )
 
@@ -373,5 +374,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-05-29"
+    updated_date="2024-05-30"
 ) }}

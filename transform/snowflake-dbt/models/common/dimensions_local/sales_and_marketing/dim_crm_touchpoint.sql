@@ -296,6 +296,7 @@ WITH campaign_details AS (
       ON combined_touchpoints.dim_crm_touchpoint_id = bizible_campaign_grouping.dim_crm_touchpoint_id
     LEFT JOIN devrel_influence_campaigns
       ON combined_touchpoints.bizible_ad_campaign_name = devrel_influence_campaigns.campaign_name
+    WHERE combined_touchpoints.dim_crm_touchpoint_id IS NOT NULL
 )
 
 {{ dbt_audit(
@@ -303,5 +304,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2024-05-20" 
+    updated_date="2024-05-30" 
 ) }}

@@ -356,6 +356,7 @@
   FROM joined
   LEFT JOIN mql_weighted_tps 
     ON joined.dim_crm_touchpoint_id=mql_weighted_tps.dim_crm_touchpoint_id
+  WHERE joined.dim_crm_touchpoint_id IS NOT NULL
 
 )
 
@@ -364,5 +365,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2024-05-29"
+    updated_date="2024-05-30"
 ) }}
