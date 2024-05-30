@@ -148,8 +148,6 @@
       END AS is_dup_term				
     FROM dim_subscription			
     LEFT JOIN ramp_deals_ssp_id_multiyear_linkage				
-     ON dim_subscription.dim_crm_opportunity_id = ramp_deals_ssp_id_multiyear_linkage.dim_crm_opportunity_id	
-
      ON dim_subscription.dim_crm_opportunity_id = ramp_deals_ssp_id_multiyear_linkage.dim_crm_opportunity_id
     WHERE
     --data quality, last version is expired with no ARR in mart_arr. Should filter it out completely.
