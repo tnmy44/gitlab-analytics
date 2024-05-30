@@ -6151,6 +6151,8 @@ models:
         description: The Date the event was last modified. 
       - name: systemmodstamp
         description: The time/date stamp from SFDC when this record was created. 
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
 
   - name: dim_crm_task
@@ -6168,6 +6170,8 @@ models:
       - name: task_subject
         meta:
            masking_policy: data_science_sensitive
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
