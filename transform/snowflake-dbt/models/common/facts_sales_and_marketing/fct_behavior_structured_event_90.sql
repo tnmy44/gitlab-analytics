@@ -4,7 +4,7 @@
     unique_key='behavior_structured_event_pk',
     tags=['product'],
     on_schema_change='sync_all_columns',
-    post_hook=["{{ rolling_window_delete('behavior_at','day',1) }}"],
+    post_hook=["{{ rolling_window_delete('behavior_at','day',90) }}"],
     cluster_by=['behavior_at::DATE']
   )
 
