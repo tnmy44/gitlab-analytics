@@ -3,7 +3,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "ping_instance_metric_id",
+    unique_key = "ping_instance_metric_monthly_pk",
     on_schema_change="sync_all_columns",
     post_hook=["DELETE FROM {{ this }} WHERE is_current_ping = FALSE "]
 ) }}
