@@ -547,7 +547,7 @@ projects:
 # ==========================================
 # Support
 # This subset of projects are for the
-# Security Production folders
+# Support Production folders
 # ==========================================
 
   - project_name: Support
