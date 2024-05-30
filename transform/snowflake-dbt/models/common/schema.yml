@@ -2689,6 +2689,8 @@ models:
       - name: ci_runner_type_summary
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+      - name: cost_factor
+        description: '{{ doc("cost_factor") }}'
 
   - name: dim_ci_stage
     description: '{{ doc("dim_ci_stage") }}'
@@ -4341,6 +4343,8 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_weekly
     description: ' {{ doc("fct_ping_instance_metric_weekly") }} '
@@ -4403,6 +4407,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
@@ -5504,6 +5510,34 @@ models:
           - unique
         tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
 
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot") }}'
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot_aggregate
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot_aggregate") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: opportunity_weekly_snapshot_aggregate_pk
+        tests:
+          - not_null
+          - unique
+  
+  - name: fct_targets_actuals_7th_day_weekly_snapshot
+    description: '{{ doc("fct_targets_actuals_7th_day_weekly_snapshot") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: targets_actuals_weekly_snapshot_pk
+        tests:
+          - not_null
+          - unique
+
   - name: fct_credit_balance_adjustment
     description: '{{ doc("fct_credit_balance_adjustment") }}'
     columns:
@@ -5936,6 +5970,9 @@ models:
           combination_of_columns:
             - metrics_path
             - redis_event
+    columns:
+      - name: is_health_scoring_metric
+        description: '{{ doc("is_health_score_metric") }}'
 
   - name: fct_crm_event
     description: The Events portion of Activities from SFDC. 
@@ -6109,6 +6146,8 @@ models:
         description: The Date the event was last modified. 
       - name: systemmodstamp
         description: The time/date stamp from SFDC when this record was created. 
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
 
   - name: dim_crm_task
@@ -6126,6 +6165,8 @@ models:
       - name: task_subject
         meta:
            masking_policy: data_science_sensitive
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'

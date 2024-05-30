@@ -491,6 +491,9 @@ models:
         tests:
             - not_null
             - unique
+            - relationships:
+                to: ref('fct_crm_opportunity_daily_snapshot')
+                field: crm_opportunity_snapshot_id
         tags: ["tdf", "mart", "sales_funnel"]
       - name: dim_crm_opportunity_id
         tests:
@@ -867,4 +870,34 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+  
+  - name: mart_targets_actuals_7th_day_weekly_snapshot
+    columns: 
+      - name: targets_actuals_weekly_snapshot_pk
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_targets_actuals_7th_day_weekly_snapshot')
+              field: targets_actuals_weekly_snapshot_pk
+
+  - name: mart_crm_opportunity_7th_day_weekly_snapshot
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_crm_opportunity_7th_day_weekly_snapshot')
+              field: crm_opportunity_snapshot_id
+  - name: mart_crm_opportunity_7th_day_weekly_snapshot_aggregate
+    columns:
+      - name: opportunity_weekly_snapshot_aggregate_pk
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_crm_opportunity_7th_day_weekly_snapshot_aggregate')
+              field: opportunity_weekly_snapshot_aggregate_pk
 
