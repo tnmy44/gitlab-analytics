@@ -624,8 +624,8 @@
     ON cohort_base_combined.close_date = closed_date.date_day
   LEFT JOIN dim_date AS touchpoint_date
     ON cohort_base_combined.bizible_touchpoint_date = touchpoint_date.date_day
-  WHERE dim_crm_person_id IS NOT NULL
-    OR dim_crm_opportunity_id IS NOT NULL
+  WHERE cohort_base_combined.dim_crm_person_id IS NOT NULL
+    OR cohort_base_combined.dim_crm_opportunity_id IS NOT NULL
 
 ), final AS (
 
@@ -639,5 +639,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-05-23",
+    updated_date="2024-05-30",
   ) }}
