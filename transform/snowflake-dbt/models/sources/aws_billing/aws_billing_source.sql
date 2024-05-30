@@ -1,89 +1,44 @@
 {{ config(
-    materialized='incremental',
-    unique_key = ['bill_payer_account_id', 'bill_invoice_id', 'identity_line_item_id', 'identity_time_interval'] 
+    materialized='incremental'
     )
 }}
 
+{% set unique_key = "value['bill_payer_account_id']::VARCHAR, value['bill_invoice_id']::VARCHAR, value['identity_line_item_id']::VARCHAR, value['identity_time_interval']::VARCHAR" %}
+
+
 WITH dedicated_legacy_0475 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'dedicated_legacy_0475') }}
-  {% if is_incremental() %}
-
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
+{{ dedupe_source('dedicated_legacy_0475', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 dedicated_dev_3675 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'dedicated_dev_3675') }}
-  {% if is_incremental() %}
-
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
+{{ dedupe_source('dedicated_dev_3675', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 gitlab_marketplace_5127 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }}
-  {% if is_incremental() %}
+{{ dedupe_source('gitlab_marketplace_5127', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
 ),
 
 itorg_3027 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'itorg_3027') }}
-  {% if is_incremental() %}
-
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
+{{ dedupe_source('itorg_3027', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 legacy_gitlab_0347 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'legacy_gitlab_0347') }}
-  {% if is_incremental() %}
-
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
+{{ dedupe_source('legacy_gitlab_0347', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
 services_org_6953 AS (
 
-  SELECT
-    *,
-    metadata$file_last_modified AS modified_at_
-  FROM {{ source('aws_billing', 'services_org_6953') }}
-  {% if is_incremental() %}
-
-    WHERE metadata$file_last_modified >= (SELECT MAX(modified_at) FROM {{ this }})
-
-  {% endif %}
+{{ dedupe_source('services_org_6953', 'aws_billing', 'metadata$file_last_modified', unique_key) }}
 
 ),
 
@@ -265,8 +220,7 @@ parsed AS (
     value['savings_plan_savings_plan_effective_cost']::DECIMAL                         AS savings_plan_savings_plan_effective_cost,
     value['savings_plan_savings_plan_rate']::DECIMAL                                   AS savings_plan_savings_plan_rate,
     value['savings_plan_total_commitment_to_date']::DECIMAL                            AS savings_plan_total_commitment_to_date,
-    value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment,
-    modified_at_                                                                       AS modified_at
+    value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment
   FROM all_raw
 )
 
