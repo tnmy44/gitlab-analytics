@@ -5764,16 +5764,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: jng-ext
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - Customer Success All Access
-      - Finance All Access
-      - General All Access
-      - General SAFE Access
-      - Sales All Access
   - user_name: jng
     user_name_domain: gitlab.com
     site_role: Viewer
