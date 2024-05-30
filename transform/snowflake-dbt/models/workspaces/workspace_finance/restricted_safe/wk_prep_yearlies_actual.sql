@@ -102,27 +102,11 @@ SELECT DISTINCT
    WHERE arr_month >= '2023-02-01' 
    AND arr_month < current_date 
    AND crm_account_type = 'Customer' 
-   AND product_tier_name NOT IN ('Storage','Not Applicable')
+   AND product_tier_name ILIKE '%Ultimate%'
    GROUP BY 1,2,3 
 ),
 
 security_adoption_2 AS (
-SELECT DISTINCT
-   arr_month,
-   dim_subscription_id_original,
-   product_delivery_type,
-   product_tier_name 
-
-   FROM mart_arr_all 
-   LEFT JOIN mart_crm_account 
-   ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
-   WHERE arr_month >= '2023-02-01' 
-   AND arr_month < current_date 
-   AND crm_account_type = 'Customer' 
-   AND product_tier_name NOT IN ('Storage','Not Applicable')
-),
-
-security_adoption_3 AS (
 SELECT
     *
   FROM rpt_product_usage_health_score
@@ -131,25 +115,22 @@ SELECT
   ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
 ),
 
-security_adoption_4 AS (
+security_adoption_3 AS (
 SELECT DISTINCT
-   security_adoption_2.arr_month,
-   security_adoption_2.dim_subscription_id_original,
+   security_adoption_1.arr_month,
+   security_adoption_1.dim_subscription_id_original,
    security_adoption_1.product_delivery_type,
    security_adoption_1.total_subscription_arr,
-   security_adoption_3.security_color_ultimate_only 
+   security_adoption_2.security_color_ultimate_only 
    
-   FROM security_adoption_2 
-   LEFT JOIN security_adoption_1 
-   ON security_adoption_2.dim_subscription_id_original = security_adoption_1.dim_subscription_id_original 
-   AND security_adoption_2.arr_month = security_adoption_1.arr_month 
-   LEFT JOIN security_adoption_3 
-   ON security_adoption_2.dim_subscription_id_original = security_adoption_3.dim_subscription_id_original 
-   AND security_adoption_2.arr_month = security_adoption_3.snapshot_month 
-   AND security_adoption_1.product_delivery_type = security_adoption_3.delivery_type 
+   FROM security_adoption_1 
+   LEFT JOIN security_adoption_2 
+   ON security_adoption_1.dim_subscription_id_original = security_adoption_2.dim_subscription_id_original 
+   AND security_adoption_1.arr_month = security_adoption_2.snapshot_month 
+   AND security_adoption_1.product_delivery_type = security_adoption_2.delivery_type 
 ),
 
-security_adoption_5 as (
+security_adoption_4 as (
 SELECT DISTINCT
    arr_month,
    security_color_ultimate_only,
@@ -158,7 +139,7 @@ SELECT DISTINCT
    SUM(total_subscription_arr) AS ultimate_ARR,
    RATIO_TO_REPORT(ultimate_ARR) OVER (PARTITION BY arr_month) AS percent_of_ultimate_arr 
    
-   FROM security_adoption_4 		
+   FROM security_adoption_3 		
    LEFT JOIN dim_date 
    ON arr_month = date_actual 
    WHERE SECURITY_COLOR_ULTIMATE_ONLY IS NOT NULL 
@@ -174,7 +155,7 @@ SELECT
    quarter,
    percent_of_ultimate_arr AS actuals_raw 
 
-   FROM security_adoption_5 
+   FROM security_adoption_4 
    WHERE security_color_ultimate_only = 'Green'
    AND quarter LIKE '%FY25%'
    AND arr_month_rank = 1
