@@ -6568,6 +6568,11 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
+  - avpfestin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7606,6 +7611,10 @@ users:
       can_login: true
       member_of:
         - gsodhi
+  - avpfestin:
+      can_login: true
+      member_of:
+        - avpfestin
 warehouses:
   - admin:
       size: x-small
