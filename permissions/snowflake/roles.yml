@@ -90,10 +90,6 @@ databases:
       shared: false
   - jclapper_prep:
       shared: false
-  - jng_prod:
-      shared: false
-  - jng_prep:
-      shared: false
   - jpeguero_prod:
       shared: false
   - jpeguero_prep:
@@ -4183,50 +4179,6 @@ roles:
         - reporter
       warehouses:
         - dev_xs
-  - jng:
-      member_of:
-        - analytics_engineer_core
-        - analyst_engineering
-        - analyst_growth
-        - data_team_analyst
-        - restricted_safe
-        - bi_tool_eval_read
-        - marketo
-        - zuora
-      warehouses:
-        - dev_xs
-      owns:
-        databases:
-          - jng_prep
-          - jng_prod
-        schemas:
-          - jng_prep.*
-          - jng_prod.*
-        tables:
-          - jng_prep.*.*
-          - jng_prod.*.*
-      privileges:
-        databases:
-          read:
-            - jng_prep
-            - jng_prod
-          write:
-            - jng_prep
-            - jng_prod
-        schemas:
-          read:
-            - jng_prep.*
-            - jng_prod.*
-          write:
-            - jng_prep.*
-            - jng_prod.*
-        tables:
-          read:
-            - jng_prep.*.*
-            - jng_prod.*.*
-          write:
-            - jng_prep.*.*
-            - jng_prod.*.*
   - jpeguero:
       member_of:
         - analyst_finance
@@ -6978,10 +6930,6 @@ users:
       can_login: true
       member_of:
         - joshua
-  - jng:
-      can_login: true
-      member_of:
-        - jng
   - jpeguero:
       can_login: true
       member_of:
