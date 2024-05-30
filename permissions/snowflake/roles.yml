@@ -90,10 +90,6 @@ databases:
       shared: false
   - jclapper_prep:
       shared: false
-  - jng_prod:
-      shared: false
-  - jng_prep:
-      shared: false
   - jpeguero_prod:
       shared: false
   - jpeguero_prep:
@@ -2370,6 +2366,24 @@ roles:
         tables:
           read:
             - prod.pumps_sensitive.*
+  - rally_source:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.rally_initial_export
+            - raw.rally_webhook_stitch
+            - prep.sensitive
+        tables:
+          read:
+            - raw.rally_initial_export.*
+            - raw.rally_webhook_stitch.*
+            - prep.sensitive.rally_optouts
   - restricted_safe:
       warehouses:
         - reporting
@@ -2936,7 +2950,7 @@ roles:
         tables:
           read:
             - raw.clari.*
-            - prep.clari.*  
+            - prep.clari.*
   - aadesanya:
       member_of:
         - snowflake_analyst
@@ -3165,6 +3179,7 @@ roles:
       member_of:
         - analyst_engineering
         - restricted_safe
+        - zuora_query_api
       warehouses:
         - dev_xs
       owns:
@@ -4164,50 +4179,6 @@ roles:
         - reporter
       warehouses:
         - dev_xs
-  - jng:
-      member_of:
-        - analytics_engineer_core
-        - analyst_engineering
-        - analyst_growth
-        - data_team_analyst
-        - restricted_safe
-        - bi_tool_eval_read
-        - marketo
-        - zuora
-      warehouses:
-        - dev_xs
-      owns:
-        databases:
-          - jng_prep
-          - jng_prod
-        schemas:
-          - jng_prep.*
-          - jng_prod.*
-        tables:
-          - jng_prep.*.*
-          - jng_prod.*.*
-      privileges:
-        databases:
-          read:
-            - jng_prep
-            - jng_prod
-          write:
-            - jng_prep
-            - jng_prod
-        schemas:
-          read:
-            - jng_prep.*
-            - jng_prod.*
-          write:
-            - jng_prep.*
-            - jng_prod.*
-        tables:
-          read:
-            - jng_prep.*.*
-            - jng_prod.*.*
-          write:
-            - jng_prep.*.*
-            - jng_prod.*.*
   - jpeguero:
       member_of:
         - analyst_finance
@@ -5183,6 +5154,7 @@ roles:
   - nhertz:
       member_of:
         - reporter
+        - rally_source
       warehouses:
         - dev_xs
   - nhervas:
@@ -6376,6 +6348,7 @@ roles:
       member_of:
         - reporter
         - snowflake_analyst_safe
+        - rally_source
       warehouses:
         - dev_xs
   - wlin:
@@ -6529,6 +6502,29 @@ roles:
           write:
             - kvasireddy_prep.*.*
             - kvasireddy_prod.*.*
+  - zapier:
+      warehouses:
+        - transforming_xs
+      privileges:
+        databases:
+          read:
+            - prod
+        schemas:
+          read:
+            - prod.workspace_customer_success
+        tables:
+          read:
+            - prod.workspace_customer_success.mart_product_usage_health_score
+  - gsodhi:
+      member_of:
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - avpfestin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -6934,10 +6930,6 @@ users:
       can_login: true
       member_of:
         - joshua
-  - jng:
-      can_login: true
-      member_of:
-        - jng
   - jpeguero:
       can_login: true
       member_of:
@@ -7559,6 +7551,18 @@ users:
       can_login: true
       member_of:
         - kvasireddy
+  - zapier:
+      can_login: true
+      member_of:
+        - zapier
+  - gsodhi:
+      can_login: true
+      member_of:
+        - gsodhi
+  - avpfestin:
+      can_login: true
+      member_of:
+        - avpfestin
 warehouses:
   - admin:
       size: x-small
