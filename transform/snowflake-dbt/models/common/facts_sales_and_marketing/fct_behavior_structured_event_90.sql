@@ -25,7 +25,7 @@ WITH structured_event_90_days AS (
         ]) 
     }}
   FROM {{ ref('fct_behavior_structured_event') }}
-  WHERE DATE_TRUNC(MONTH, behavior_at) >= DATEADD(DAY, -90, DATE_TRUNC(DAY, CURRENT_DATE))
+  WHERE DATE_TRUNC(DAY, behavior_at) >= DATEADD(DAY, -90, DATE_TRUNC(DAY, CURRENT_DATE))
     {% if is_incremental() %}
       AND behavior_at >= (SELECT MAX(behavior_at) FROM {{ this }})
     {% endif %}
@@ -37,5 +37,5 @@ WITH structured_event_90_days AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-05-03",
-    updated_date="2024-05-03"
+    updated_date="2024-05-31"
 ) }}
