@@ -5,7 +5,7 @@
     materialized = "incremental",
     unique_key = "ping_instance_metric_monthly_pk",
     on_schema_change="sync_all_columns",
-    incremental_strategy="delete+insert"
+    incremental_strategy="delete+insert",
     post_hook=["DELETE FROM {{ this }} WHERE is_current_ping = FALSE "]
 ) }}
 
