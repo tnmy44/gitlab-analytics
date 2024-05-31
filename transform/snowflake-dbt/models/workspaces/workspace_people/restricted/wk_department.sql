@@ -60,6 +60,10 @@ SELECT
       THEN 'UX Research'
     WHEN department = 'Security'
       THEN 'Office of CISO'
+    WHEN department in ('Field Marketing', 'Partner Marketing')
+      THEN 'Regional Marketing'
+    WHEN department in ('Account Based Marketing', 'Campaigns', 'Search Marketing')
+      THEN 'Digital Marketing'      
     ELSE department
   END AS modified_department,
   CASE
