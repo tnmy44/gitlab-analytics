@@ -42,10 +42,6 @@ databases:
       shared: false
   - cbraza_prep:
       shared: false
-  - cdeleon_prod:
-      shared: false
-  - cdeleon_prep:
-      shared: false
   - cleroux_prod:
       shared: false
   - cleroux_prep:
@@ -201,10 +197,6 @@ databases:
   - rkohnke_prod:
       shared: false
   - rkohnke_prep:
-      shared: false
-  - rrendon_prod:
-      shared: false
-  - rrendon_prep:
       shared: false
   - sbalasani_prod:
       shared: false
@@ -3297,21 +3289,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - cdeleon:
-      member_of:
-        - analyst_engineering
-      warehouses:
-        - dev_xs
-      owns:
-        databases:
-          - cdeleon_prep
-          - cdeleon_prod
-        schemas:
-          - cdeleon_prep.*
-          - cdeleon_prod.*
-        tables:
-          - cdeleon_prep.*.*
-          - cdeleon_prod.*.*
   - cdewit:
       member_of:
         - reporter
@@ -4081,11 +4058,6 @@ roles:
         - analyst_sales
         - restricted_safe
         - static_sensitive
-      warehouses:
-        - dev_xs
-  - jhalloran:
-      member_of:
-        - snowflake_analyst
       warehouses:
         - dev_xs
   - jhope:
@@ -5686,35 +5658,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - rrendon:
-      member_of:
-        - analyst_engineering
-        - aws_billing
-        - elasticsearch_billing
-      warehouses:
-        - dev_xs
-      privileges:
-        databases:
-          read:
-            - rrendon_prep
-            - rrendon_prod
-          write:
-            - rrendon_prep
-            - rrendon_prod
-        schemas:
-          read:
-            - rrendon_prep.*
-            - rrendon_prod.*
-          write:
-            - rrendon_prep.*
-            - rrendon_prod.*
-        tables:
-          read:
-            - rrendon_prep.*.*
-            - rrendon_prod.*.*
-          write:
-            - rrendon_prep.*.*
-            - rrendon_prod.*.*
   - rrosu:
       member_of: []
       warehouses: []
@@ -5724,14 +5667,6 @@ roles:
   - rwoo:
       member_of: []
       warehouses: []
-  - sawezec:
-      member_of:
-        - analyst_growth
-        - restricted_safe
-        - data_team_analyst
-        - bi_tool_eval_read
-      warehouses:
-        - dev_xs
   - sbalasani:
       member_of:
         - analytics_engineer_core
@@ -6651,10 +6586,6 @@ users:
       can_login: true
       member_of:
         - ccontreras
-  - cdeleon:
-      can_login: true
-      member_of:
-        - cdeleon
   - cdewit:
       can_login: true
       member_of:
@@ -6898,10 +6829,6 @@ users:
       can_login: true
       member_of:
         - jhackamack
-  - jhalloran:
-      can_login: true
-      member_of:
-        - jhalloran
   - jhope:
       can_login: true
       member_of:
@@ -7273,10 +7200,6 @@ users:
       can_login: true
       member_of:
         - rpereira
-  - rrendon:
-      can_login: true
-      member_of:
-        - rrendon
   - rrosu:
       can_login: false
       member_of: []
@@ -7290,10 +7213,6 @@ users:
       can_login: true
       member_of:
         - sbalasani
-  - sawezec:
-      can_login: true
-      member_of:
-        - sawezec
   - schaturvedi:
       can_login: true
       member_of:
