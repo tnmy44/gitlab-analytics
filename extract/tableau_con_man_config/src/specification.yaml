@@ -547,7 +547,7 @@ projects:
 # ==========================================
 # Support
 # This subset of projects are for the
-# Security Production folders
+# Support Production folders
 # ==========================================
 
   - project_name: Support
@@ -1078,7 +1078,7 @@ projects:
 # ==========================================
 # Support
 # This subset of projects are for the
-# Security Ad-hoc folders
+# Support Ad-hoc folders
 # ==========================================
 
   - project_name: Support
@@ -1613,7 +1613,7 @@ projects:
 # ==========================================
 # Support
 # This subset of projects are for the
-# Security Development folders
+# Support Development folders
 # ==========================================
 
   - project_name: Support
@@ -9859,6 +9859,7 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+      - Security Project Lead
   - user_name: vmishra
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
