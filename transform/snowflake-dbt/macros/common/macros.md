@@ -50,3 +50,15 @@ The primary purpose of this macro is to provide flexibility in unioning the requ
 For example, the `prep_snowplow_unnested_events_all` model requires 800 days of data, which could be covered by unioning multiple monthly partitions. In contrast, the `prep_snowplow_unnested_events_all_30` model only requires 30 days of data, necessitating the union of a smaller number of monthly partitions. However, both models can leverage the `macro_prep_snowplow_unnested_events_all` macro to apply the same transformation logic to their respective unioned data sets.
 
 {% enddocs %}
+
+{% docs utm_campaign_parsing %}
+
+Parses the new Marketing utm_campaign parameter into its consituent pieces, to be used in marketing reporting. 
+
+{% enddocs %}
+
+{% docs utm_content_parsing %}
+
+Parses the new Marketing utm_content parameter into its consituent pieces, to be used in marketing reporting. 
+
+{% enddocs %}
