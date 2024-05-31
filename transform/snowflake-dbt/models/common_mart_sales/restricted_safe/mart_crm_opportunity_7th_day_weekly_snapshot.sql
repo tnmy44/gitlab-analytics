@@ -1,55 +1,37 @@
-{{ simple_cte([
-    ('fct_crm_opportunity','wk_fct_crm_opportunity_7th_day_weekly_snapshot'),
-    ('dim_crm_account','dim_crm_account_daily_snapshot'),
-    ('dim_crm_user', 'wk_prep_crm_user_daily_snapshot'),
-    ('dim_date', 'dim_date'),
-    ('dim_crm_user_hierarchy', 'wk_dim_crm_user_hierarchy'),
-]) }},
+{{ config(
+    materialized="incremental",
+    unique_key="crm_opportunity_snapshot_id"
+) }}
 
+{{ simple_cte([
+    ('fct_crm_opportunity','fct_crm_opportunity_7th_day_weekly_snapshot'),
+    ('dim_crm_account','dim_crm_account_daily_snapshot'),
+    ('dim_crm_user', 'dim_crm_user_daily_snapshot'),
+    ('dim_date', 'dim_date'),
+    ('dim_crm_user_hierarchy','dim_crm_user_hierarchy') 
+]) }},
 
 final AS (
 
 
   SELECT
 
+    --primary key
     fct_crm_opportunity.crm_opportunity_snapshot_id,
-    fct_crm_opportunity.dim_crm_opportunity_id,
-    fct_crm_opportunity.dim_crm_user_id,
+
+    -- surrogate keys
     fct_crm_opportunity.snapshot_id,
-    fct_crm_opportunity.dim_sales_qualified_source_id,
-    fct_crm_opportunity.dim_order_type_id,
-    fct_crm_opportunity.dim_order_type_live_id,
-    
-    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
-
-    fct_crm_opportunity.crm_current_account_set_sales_segment_live AS crm_current_account_set_sales_segment,
-    fct_crm_opportunity.crm_current_account_set_geo_live AS crm_current_account_set_geo,
-    fct_crm_opportunity.crm_current_account_set_region_live AS crm_current_account_set_region,
-    fct_crm_opportunity.crm_current_account_set_area_live AS crm_current_account_set_area,
-    fct_crm_opportunity.crm_current_account_set_business_unit_live AS crm_current_account_set_business_unit,
-    fct_crm_opportunity.crm_current_account_set_role_name,
-    fct_crm_opportunity.crm_current_account_set_role_level_1,
-    fct_crm_opportunity.crm_current_account_set_role_level_2,
-    fct_crm_opportunity.crm_current_account_set_role_level_3,
-    fct_crm_opportunity.crm_current_account_set_role_level_4,
-    fct_crm_opportunity.crm_current_account_set_role_level_5,
-
-    fct_crm_opportunity.merged_crm_opportunity_id,
+    fct_crm_opportunity.dim_crm_opportunity_id,
+    dim_crm_account.dim_parent_crm_account_id,
     fct_crm_opportunity.dim_crm_account_id,
     fct_crm_opportunity.dim_crm_person_id,
     fct_crm_opportunity.sfdc_contact_id,
-    fct_crm_opportunity.record_type_id,
-    fct_crm_opportunity.opportunity_name,
-    fct_crm_opportunity.report_user_segment_geo_region_area_sqs_ot,
-    fct_crm_opportunity.opp_owner_name,
-    fct_crm_opportunity.sales_qualified_source_name,
-    fct_crm_opportunity.sales_qualified_source_grouped,
-    fct_crm_opportunity.order_type,
-    fct_crm_opportunity.order_type_live,
-    fct_crm_opportunity.order_type_grouped,
-    fct_crm_opportunity.stage_name,
-    fct_crm_opportunity.deal_path_name,
-    fct_crm_opportunity.sales_type,
+    fct_crm_opportunity.dim_crm_user_id,
+    fct_crm_opportunity.dim_parent_crm_opportunity_id,
+    fct_crm_opportunity.duplicate_opportunity_id,
+    fct_crm_opportunity.merged_opportunity_id,
+    fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk,
+    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
     fct_crm_opportunity.snapshot_fiscal_year,
@@ -58,81 +40,127 @@ final AS (
     fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
 
-    
-    fct_crm_opportunity.days_in_0_pending_acceptance,
-    fct_crm_opportunity.days_in_1_discovery,
-    fct_crm_opportunity.days_in_2_scoping,
-    fct_crm_opportunity.days_in_3_technical_evaluation,
-    fct_crm_opportunity.days_in_4_proposal,
-    fct_crm_opportunity.days_in_5_negotiating,
+    -- opportunity attributes
+    fct_crm_opportunity.opportunity_name,
+    fct_crm_opportunity.stage_name,
+    fct_crm_opportunity.reason_for_loss,
+    fct_crm_opportunity.reason_for_loss_details,
+    fct_crm_opportunity.reason_for_loss_staged,
+    fct_crm_opportunity.reason_for_loss_calc,
+    fct_crm_opportunity.risk_type,
+    fct_crm_opportunity.risk_reasons,
+    fct_crm_opportunity.downgrade_reason,
+    fct_crm_opportunity.downgrade_details,
     fct_crm_opportunity.ssp_id,
-    fct_crm_opportunity.ga_client_id,
-    fct_crm_opportunity.is_closed,
-    fct_crm_opportunity.is_won,
-    fct_crm_opportunity.is_refund,
-    fct_crm_opportunity.is_downgrade,
-    fct_crm_opportunity.is_swing_deal,
-    fct_crm_opportunity.is_edu_oss,
-    fct_crm_opportunity.is_web_portal_purchase,
+    fct_crm_opportunity.sales_type,
+    fct_crm_opportunity.deal_path AS deal_path_name,
+    fct_crm_opportunity.order_type,
+    fct_crm_opportunity.order_type_grouped,
+    fct_crm_opportunity.order_type_live,
+    fct_crm_opportunity.dr_partner_engagement AS dr_partner_engagement_name,
+    fct_crm_opportunity.alliance_type AS alliance_type_name,
+    fct_crm_opportunity.alliance_type_short AS alliance_type_short_name,
+    fct_crm_opportunity.channel_type AS channel_type_name,
+    fct_crm_opportunity.sales_qualified_source AS sales_qualified_source_name,
+    fct_crm_opportunity.sales_qualified_source_grouped,
+    fct_crm_opportunity.sqs_bucket_engagement,
+    fct_crm_opportunity.closed_buckets,
+    fct_crm_opportunity.opportunity_category,
+    fct_crm_opportunity.source_buckets,
+    fct_crm_opportunity.opportunity_sales_development_representative,
+    fct_crm_opportunity.opportunity_business_development_representative,
+    fct_crm_opportunity.opportunity_development_representative,
+    fct_crm_opportunity.sdr_or_bdr,
+    fct_crm_opportunity.iqm_submitted_by_role,
+    fct_crm_opportunity.sdr_pipeline_contribution,
     fct_crm_opportunity.fpa_master_bookings_flag,
+    fct_crm_opportunity.sales_path,
+    fct_crm_opportunity.professional_services_value,
+    fct_crm_opportunity.primary_solution_architect,
+    fct_crm_opportunity.product_details,
+    fct_crm_opportunity.product_category,
+    fct_crm_opportunity.products_purchased,
+    fct_crm_opportunity.growth_type,
+    fct_crm_opportunity.opportunity_deal_size,
+    fct_crm_opportunity.deployment_preference,
+    fct_crm_opportunity.net_new_source_categories,
+    fct_crm_opportunity.invoice_number,
+    fct_crm_opportunity.primary_campaign_source_id,
+    fct_crm_opportunity.ga_client_id,
+    fct_crm_opportunity.military_invasion_comments,
+    fct_crm_opportunity.military_invasion_risk_scale,
+    fct_crm_opportunity.vsa_readout,
+    fct_crm_opportunity.vsa_start_date,
+    fct_crm_opportunity.vsa_end_date,
+    fct_crm_opportunity.vsa_url,
+    fct_crm_opportunity.vsa_status,
+    fct_crm_opportunity.intended_product_tier,
+    fct_crm_opportunity.opportunity_term,
+    fct_crm_opportunity.record_type_id,
+    fct_crm_opportunity.opportunity_owner_manager,
+    fct_crm_opportunity.opportunity_owner_department,
+    fct_crm_opportunity.opportunity_owner_role,
+    fct_crm_opportunity.opportunity_owner_title,
+    fct_crm_opportunity.solutions_to_be_replaced,
+    fct_crm_opportunity.opportunity_health,
+    fct_crm_opportunity.tam_notes,
+    fct_crm_opportunity.generated_source,
+    fct_crm_opportunity.churn_contraction_type,
+    fct_crm_opportunity.churn_contraction_net_arr_bucket,
+    fct_crm_opportunity.stage_name_3plus,
+    fct_crm_opportunity.stage_name_4plus,
+    fct_crm_opportunity.stage_category,
+    fct_crm_opportunity.deal_category,
+    fct_crm_opportunity.deal_group,
+    fct_crm_opportunity.deal_size,
+    fct_crm_opportunity.calculated_deal_size,
+    fct_crm_opportunity.dr_partner_engagement,
+    fct_crm_opportunity.deal_path_engagement,
+    fct_crm_opportunity.forecast_category_name,
+    fct_crm_opportunity.opportunity_owner,
+    fct_crm_opportunity.dim_crm_user_id AS owner_id,
+    fct_crm_opportunity.resale_partner_name,
+
+    -- flags
+    fct_crm_opportunity.is_won,
+    fct_crm_opportunity.is_closed,
+    fct_crm_opportunity.is_edu_oss,
+    fct_crm_opportunity.is_ps_opp,
     fct_crm_opportunity.is_sao,
     fct_crm_opportunity.is_sdr_sao,
+    fct_crm_opportunity.is_win_rate_calc,
+    fct_crm_opportunity.is_net_arr_pipeline_created,
     fct_crm_opportunity.is_net_arr_closed_deal,
     fct_crm_opportunity.is_new_logo_first_order,
-    fct_crm_opportunity.is_net_arr_pipeline_created_combined,
-    fct_crm_opportunity.is_win_rate_calc,
     fct_crm_opportunity.is_closed_won,
+    fct_crm_opportunity.is_web_portal_purchase,
     fct_crm_opportunity.is_stage_1_plus,
     fct_crm_opportunity.is_stage_3_plus,
     fct_crm_opportunity.is_stage_4_plus,
     fct_crm_opportunity.is_lost,
     fct_crm_opportunity.is_open,
     fct_crm_opportunity.is_active,
+    fct_crm_opportunity.is_risky,
     fct_crm_opportunity.is_credit,
     fct_crm_opportunity.is_renewal,
+    fct_crm_opportunity.is_refund,
     fct_crm_opportunity.is_deleted,
-    fct_crm_opportunity.is_excluded_from_pipeline_created_combined,
-    fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
     fct_crm_opportunity.is_duplicate,
     fct_crm_opportunity.is_contract_reset,
     fct_crm_opportunity.is_comp_new_logo_override,
-    fct_crm_opportunity.is_eligible_open_pipeline_combined,
-    fct_crm_opportunity.is_eligible_age_analysis_combined,
+    fct_crm_opportunity.is_eligible_open_pipeline,
+    fct_crm_opportunity.is_eligible_asp_analysis,
+    fct_crm_opportunity.is_eligible_age_analysis,
     fct_crm_opportunity.is_eligible_churn_contraction,
     fct_crm_opportunity.is_booked_net_arr,
     fct_crm_opportunity.is_abm_tier_sao,
     fct_crm_opportunity.is_abm_tier_closed_won,
-    fct_crm_opportunity.primary_solution_architect,
-    fct_crm_opportunity.product_details,
-    fct_crm_opportunity.product_category,
-    fct_crm_opportunity.intended_product_tier,
-    fct_crm_opportunity.products_purchased,
-    fct_crm_opportunity.growth_type,
-    fct_crm_opportunity.opportunity_deal_size,
-    fct_crm_opportunity.closed_buckets,
-    fct_crm_opportunity.calculated_deal_size,
-    fct_crm_opportunity.deal_size,
-    fct_crm_opportunity.lead_source,
-    fct_crm_opportunity.dr_partner_deal_type,
-    fct_crm_opportunity.dr_partner_engagement,
-    fct_crm_opportunity.partner_account,
-    fct_crm_opportunity.dr_status,
-    fct_crm_opportunity.dr_deal_id,
-    fct_crm_opportunity.dr_primary_registration,
-    fct_crm_opportunity.distributor,
-    fct_crm_opportunity.influence_partner,
-    fct_crm_opportunity.fulfillment_partner,
-    fct_crm_opportunity.platform_partner,
-    fct_crm_opportunity.partner_track,
-    fct_crm_opportunity.resale_partner_track,
-    fct_crm_opportunity.is_public_sector_opp,
-    fct_crm_opportunity.is_registration_from_portal,
-    fct_crm_opportunity.calculated_discount,
-    fct_crm_opportunity.partner_discount,
-    fct_crm_opportunity.partner_discount_calc,
-    fct_crm_opportunity.comp_channel_neutral,
+    fct_crm_opportunity.is_downgrade,
+    fct_crm_opportunity.is_swing_deal,
+    fct_crm_opportunity.is_excluded_from_pipeline_created,
+    fct_crm_opportunity.critical_deal_flag,
 
-    dim_crm_account.dim_parent_crm_account_id,
+
 
     -- account fields
     dim_crm_account.crm_account_name,
@@ -156,53 +184,184 @@ final AS (
     dim_crm_account.crm_account_zi_technologies,
     dim_crm_account.is_jihu_account,
 
-    -- fields to be removed after a bug is fixed in Tableau
-    NULL AS sao_crm_opp_owner_sales_segment_stamped,
-    NULL AS sao_crm_opp_owner_sales_segment_stamped_grouped,
-    NULL AS sao_crm_opp_owner_geo_stamped,
-    NULL AS sao_crm_opp_owner_region_stamped,
-    NULL AS sao_crm_opp_owner_area_stamped,
-    NULL AS sao_crm_opp_owner_segment_region_stamped_grouped,
-    NULL AS sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
-    NULL AS crm_opp_owner_stamped_name,
-    NULL AS crm_account_owner_stamped_name,
-    NULL AS crm_opp_owner_sales_segment_stamped,
-    NULL AS crm_opp_owner_sales_segment_stamped_grouped,
-    NULL AS crm_opp_owner_geo_stamped,
-    NULL AS crm_opp_owner_region_stamped,
-    NULL AS crm_opp_owner_area_stamped,
-    NULL AS crm_opp_owner_business_unit_stamped,
-    NULL AS crm_opp_owner_sales_segment_region_stamped_grouped,
-    NULL AS crm_opp_owner_sales_segment_geo_region_area_stamped,
-    NULL AS crm_opp_owner_user_role_type_stamped,
-    NULL AS crm_user_sales_segment,
-    NULL AS crm_user_geo,
-    NULL AS crm_user_region,
-    NULL AS crm_user_area,
-    NULL AS crm_user_business_unit,
-    NULL AS crm_user_sales_segment_grouped,
-    NULL AS crm_user_sales_segment_region_grouped,
-    NULL AS crm_user_role_name,
-    NULL AS crm_user_role_level_1,
-    NULL AS crm_user_role_level_2,
-    NULL AS crm_user_role_level_3,
-    NULL AS crm_user_role_level_4,
-    NULL AS crm_user_role_level_5,
-    NULL AS crm_account_user_sales_segment,
-    NULL AS crm_account_user_sales_segment_grouped,
-    NULL AS crm_account_user_geo,
-    NULL AS crm_account_user_region,
-    NULL AS crm_account_user_area,
-    NULL AS crm_account_user_sales_segment_region_grouped,
+    -- crm opp owner/account owner fields stamped at SAO date
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
+    fct_crm_opportunity.sao_crm_opp_owner_geo_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_region_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_area_stamped,
+    fct_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
+    fct_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+
+    -- crm opp owner/account owner stamped fields stamped at close date
+    fct_crm_opportunity.crm_opp_owner_stamped_name,
+    fct_crm_opportunity.crm_account_owner_stamped_name,
+    fct_crm_opportunity.user_segment_stamped AS crm_opp_owner_sales_segment_stamped,
+    fct_crm_opportunity.user_segment_stamped_grouped AS crm_opp_owner_sales_segment_stamped_grouped,
+    fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
+    fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
+    fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
+    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
+    {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
+        'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
+    AS crm_opp_owner_sales_segment_region_stamped_grouped,
+    fct_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
+    fct_crm_opportunity.crm_opp_owner_user_role_type_stamped,
+
+    -- crm owner/sales rep live fields
+    opp_owner_live.user_name AS opp_owner_name,
+    opp_owner_live.crm_user_sales_segment,
+    opp_owner_live.crm_user_sales_segment_grouped,
+    opp_owner_live.crm_user_geo,
+    opp_owner_live.crm_user_region,
+    opp_owner_live.crm_user_area,
+    opp_owner_live.crm_user_business_unit,
+    {{ sales_segment_region_grouped('opp_owner_live.crm_user_sales_segment',
+        'opp_owner_live.crm_user_geo', 'opp_owner_live.crm_user_region') }}
+    AS crm_user_sales_segment_region_grouped,
+
+    -- crm account owner/sales rep live fields
+    account_owner_live.user_name AS account_owner_name,
+    account_owner_live.crm_user_sales_segment AS crm_account_user_sales_segment,
+    account_owner_live.crm_user_sales_segment_grouped AS crm_account_user_sales_segment_grouped,
+    account_owner_live.crm_user_geo AS crm_account_user_geo,
+    account_owner_live.crm_user_region AS crm_account_user_region,
+    account_owner_live.crm_user_area AS crm_account_user_area,
+    {{ sales_segment_region_grouped('account_owner_live.crm_user_sales_segment',
+        'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
+    AS crm_account_user_sales_segment_region_grouped,
+
+    dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                     AS crm_current_account_set_geo,
+    dim_crm_user_hierarchy.crm_user_region                                  AS crm_current_account_set_region,
+    dim_crm_user_hierarchy.crm_user_area                                    AS crm_current_account_set_area,
+    dim_crm_user_hierarchy.crm_user_business_unit                           AS crm_current_account_set_business_unit,
+    dim_crm_user_hierarchy.crm_user_role_name                               AS crm_current_account_set_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                            AS crm_current_account_set_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                            AS crm_current_account_set_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                            AS crm_current_account_set_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
+
+    -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
+    fct_crm_opportunity.opportunity_owner_user_segment,
+    fct_crm_opportunity.opportunity_owner_user_geo,
+    fct_crm_opportunity.opportunity_owner_user_region,
+    fct_crm_opportunity.opportunity_owner_user_area,
+    fct_crm_opportunity.report_opportunity_user_segment,
+    fct_crm_opportunity.report_opportunity_user_geo,
+    fct_crm_opportunity.report_opportunity_user_region,
+    fct_crm_opportunity.report_opportunity_user_area,
+    fct_crm_opportunity.report_user_segment_geo_region_area,
+    fct_crm_opportunity.report_user_segment_geo_region_area_sqs_ot,
+    fct_crm_opportunity.key_segment,
+    fct_crm_opportunity.key_sqs,
+    fct_crm_opportunity.key_ot,
+    fct_crm_opportunity.key_segment_sqs,
+    fct_crm_opportunity.key_segment_ot,
+    fct_crm_opportunity.key_segment_geo,
+    fct_crm_opportunity.key_segment_geo_sqs,
+    fct_crm_opportunity.key_segment_geo_ot,
+    fct_crm_opportunity.key_segment_geo_region,
+    fct_crm_opportunity.key_segment_geo_region_sqs,
+    fct_crm_opportunity.key_segment_geo_region_ot,
+    fct_crm_opportunity.key_segment_geo_region_area,
+    fct_crm_opportunity.key_segment_geo_region_area_sqs,
+    fct_crm_opportunity.key_segment_geo_region_area_ot,
+    fct_crm_opportunity.key_segment_geo_area,
+    fct_crm_opportunity.sales_team_cro_level,
+    fct_crm_opportunity.sales_team_rd_asm_level,
+    fct_crm_opportunity.sales_team_vp_level,
+    fct_crm_opportunity.sales_team_avp_rd_level,
+    fct_crm_opportunity.sales_team_asm_level,
+    LOWER(
+      account_owner_live.crm_user_sales_segment
+    ) AS account_owner_user_segment,
+    LOWER(
+      account_owner_live.crm_user_geo
+    ) AS account_owner_user_geo,
+    LOWER(
+      account_owner_live.crm_user_region
+    ) AS account_owner_user_region,
+    LOWER(
+      account_owner_live.crm_user_area
+    ) AS account_owner_user_area,
 
     -- channel fields
-    
+    fct_crm_opportunity.lead_source,
+    fct_crm_opportunity.dr_partner_deal_type,
+    fct_crm_opportunity.partner_account,
     partner_account.crm_account_name AS partner_account_name,
     partner_account.gitlab_partner_program  AS partner_gitlab_program,
+    fct_crm_opportunity.calculated_partner_track,
+    fct_crm_opportunity.dr_status,
+    fct_crm_opportunity.distributor,
+    fct_crm_opportunity.dr_deal_id,
+    fct_crm_opportunity.dr_primary_registration,
+    fct_crm_opportunity.influence_partner,
+    fct_crm_opportunity.fulfillment_partner,
     fulfillment_partner.crm_account_name AS fulfillment_partner_name,
+    fct_crm_opportunity.platform_partner,
+    fct_crm_opportunity.partner_track,
+    fct_crm_opportunity.resale_partner_track,
+    fct_crm_opportunity.is_public_sector_opp,
+    fct_crm_opportunity.is_registration_from_portal,
+    fct_crm_opportunity.calculated_discount,
+    fct_crm_opportunity.partner_discount,
+    fct_crm_opportunity.partner_discount_calc,
+    fct_crm_opportunity.comp_channel_neutral,
+
+    -- Solutions-Architech fields
+    fct_crm_opportunity.sa_tech_evaluation_close_status,
+    fct_crm_opportunity.sa_tech_evaluation_end_date,
+    fct_crm_opportunity.sa_tech_evaluation_start_date,
+
+    -- Command Plan fields
+    fct_crm_opportunity.cp_partner,
+    fct_crm_opportunity.cp_paper_process,
+    fct_crm_opportunity.cp_help,
+    fct_crm_opportunity.cp_review_notes,
+    fct_crm_opportunity.cp_champion,
+    fct_crm_opportunity.cp_close_plan,
+    fct_crm_opportunity.cp_decision_criteria,
+    fct_crm_opportunity.cp_decision_process,
+    fct_crm_opportunity.cp_economic_buyer,
+    fct_crm_opportunity.cp_identify_pain,
+    fct_crm_opportunity.cp_metrics,
+    fct_crm_opportunity.cp_risks,
+    fct_crm_opportunity.cp_value_driver,
+    fct_crm_opportunity.cp_why_do_anything_at_all,
+    fct_crm_opportunity.cp_why_gitlab,
+    fct_crm_opportunity.cp_why_now,
+    fct_crm_opportunity.cp_score,
+    fct_crm_opportunity.cp_use_cases,
+
+    -- Competitor flags
+    fct_crm_opportunity.competitors,
+    fct_crm_opportunity.competitors_other_flag,
+    fct_crm_opportunity.competitors_gitlab_core_flag,
+    fct_crm_opportunity.competitors_none_flag,
+    fct_crm_opportunity.competitors_github_enterprise_flag,
+    fct_crm_opportunity.competitors_bitbucket_server_flag,
+    fct_crm_opportunity.competitors_unknown_flag,
+    fct_crm_opportunity.competitors_github_flag,
+    fct_crm_opportunity.competitors_gitlab_flag,
+    fct_crm_opportunity.competitors_jenkins_flag,
+    fct_crm_opportunity.competitors_azure_devops_flag,
+    fct_crm_opportunity.competitors_svn_flag,
+    fct_crm_opportunity.competitors_bitbucket_flag,
+    fct_crm_opportunity.competitors_atlassian_flag,
+    fct_crm_opportunity.competitors_perforce_flag,
+    fct_crm_opportunity.competitors_visual_studio_flag,
+    fct_crm_opportunity.competitors_azure_flag,
+    fct_crm_opportunity.competitors_amazon_code_commit_flag,
+    fct_crm_opportunity.competitors_circleci_flag,
+    fct_crm_opportunity.competitors_bamboo_flag,
+    fct_crm_opportunity.competitors_aws_flag,
 
     -- Dates
-    dim_date.current_day_name,
+    
+    dim_date.current_day_name,  
     dim_date.current_date_actual,
     dim_date.current_fiscal_year,
     dim_date.current_first_day_of_fiscal_year,
@@ -214,7 +373,10 @@ final AS (
     dim_date.current_day_of_fiscal_year,
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
-    dim_date.current_week_of_fiscal_quarter,
+    fct_crm_opportunity.landing_quarter_relative_to_arr_created_date,
+    fct_crm_opportunity.landing_quarter_relative_to_snapshot_date,
+    fct_crm_opportunity.snapshot_to_close_diff,
+    fct_crm_opportunity.arr_created_to_close_diff,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
@@ -321,6 +483,12 @@ final AS (
     arr_created_date.first_day_of_fiscal_quarter                    AS net_arr_created_fiscal_quarter_date,
     arr_created_date.fiscal_quarter_name_fy                         AS net_arr_created_fiscal_quarter_name,
     arr_created_date.fiscal_year                                    AS net_arr_created_fiscal_year,
+    fct_crm_opportunity.days_in_0_pending_acceptance,
+    fct_crm_opportunity.days_in_1_discovery,
+    fct_crm_opportunity.days_in_2_scoping,
+    fct_crm_opportunity.days_in_3_technical_evaluation,
+    fct_crm_opportunity.days_in_4_proposal,
+    fct_crm_opportunity.days_in_5_negotiating,
     dim_date.date_day                                               AS snapshot_day,
     dim_date.day_name                                               AS snapshot_day_name, 
     dim_date.day_of_week                                            AS snapshot_day_of_week,
@@ -362,22 +530,9 @@ final AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    FLOOR((DATEDIFF(day, dim_date.first_day_of_fiscal_quarter, fct_crm_opportunity.snapshot_date) / 7)) 
-                                                                    AS snapshot_week_of_fiscal_quarter,
+    dim_date.week_of_fiscal_quarter                                 AS snapshot_week_of_fiscal_quarter,
 
     --additive fields
-    fct_crm_opportunity.positive_booked_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.positive_booked_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.positive_open_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.positive_open_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.closed_deals_in_snapshot_quarter,
-    fct_crm_opportunity.closed_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
-    fct_crm_opportunity.open_1plus_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.open_3plus_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.open_4plus_deal_count_in_snapshot_quarter,
     fct_crm_opportunity.created_arr_in_snapshot_quarter,
     fct_crm_opportunity.closed_won_opps_in_snapshot_quarter,
     fct_crm_opportunity.closed_opps_in_snapshot_quarter,
@@ -385,15 +540,28 @@ final AS (
     fct_crm_opportunity.created_deals_in_snapshot_quarter,
     fct_crm_opportunity.cycle_time_in_days_in_snapshot_quarter,
     fct_crm_opportunity.booked_deal_count_in_snapshot_quarter,
-    fct_crm_opportunity.created_arr,
-    fct_crm_opportunity.closed_won_opps,
-    fct_crm_opportunity.closed_opps,
-    fct_crm_opportunity.closed_net_arr,
+    fct_crm_opportunity.open_1plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_3plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_4plus_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.open_1plus_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.open_3plus_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.open_4plus_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_booked_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_booked_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_deal_count_in_snapshot_quarter,
+    fct_crm_opportunity.positive_open_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.closed_deals_in_snapshot_quarter,
+    fct_crm_opportunity.closed_net_arr_in_snapshot_quarter,
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.incremental_acv,
+    fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
+    fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
+    fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
     fct_crm_opportunity.raw_net_arr,
-    fct_crm_opportunity.created_and_won_same_quarter_net_arr_combined,
+    fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
     fct_crm_opportunity.recurring_amount,
@@ -418,6 +586,7 @@ final AS (
     fct_crm_opportunity.booked_net_arr,
     fct_crm_opportunity.churned_contraction_net_arr,
     fct_crm_opportunity.calculated_deal_count,
+    fct_crm_opportunity.cycle_time_in_days,
     fct_crm_opportunity.booked_churned_contraction_deal_count,
     fct_crm_opportunity.booked_churned_contraction_net_arr,
     fct_crm_opportunity.renewal_amount,
@@ -431,20 +600,23 @@ final AS (
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari,
     fct_crm_opportunity.vsa_start_date_net_arr,
-    fct_crm_opportunity.day_of_week,
-    fct_crm_opportunity.first_day_of_week,
-    fct_crm_opportunity.date_id,
-    fct_crm_opportunity.fiscal_month_name_fy,
-    fct_crm_opportunity.fiscal_quarter_name_fy,
-    fct_crm_opportunity.first_day_of_fiscal_quarter,
-    fct_crm_opportunity.first_day_of_fiscal_year,
-    fct_crm_opportunity.last_day_of_week,
-    fct_crm_opportunity.last_day_of_month,
-    fct_crm_opportunity.last_day_of_fiscal_quarter,
-    fct_crm_opportunity.last_day_of_fiscal_year,
+    fct_crm_opportunity.created_arr,
+    fct_crm_opportunity.closed_won_opps,
+    fct_crm_opportunity.closed_opps,
+    fct_crm_opportunity.created_deals,
+    fct_crm_opportunity.positive_booked_deal_count,
+    fct_crm_opportunity.positive_booked_net_arr,
+    fct_crm_opportunity.positive_open_deal_count,
+    fct_crm_opportunity.positive_open_net_arr,
+    fct_crm_opportunity.closed_deals,
+    fct_crm_opportunity.closed_net_arr,
+    
+    --PTC related fields
+    fct_crm_opportunity.ptc_predicted_arr,
+    fct_crm_opportunity.ptc_predicted_renewal_risk_category,
+    'granular' AS source,
     IFF(dim_date.current_first_day_of_fiscal_quarter = snapshot_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter,
-    IFF(dim_date.current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week,
-    'granular' AS source
+    IFF(dim_date.current_first_day_of_week = dim_date.first_day_of_week, TRUE, FALSE) AS is_current_snapshot_week
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
     ON fct_crm_opportunity.dim_crm_account_id = dim_crm_account.dim_crm_account_id
@@ -455,55 +627,59 @@ final AS (
   LEFT JOIN dim_crm_user AS account_owner_live
     ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
+  LEFT JOIN dim_crm_user_hierarchy
+    ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN dim_date created_date
-    ON fct_crm_opportunity.created_date_id = created_date.date_id
+    ON fct_crm_opportunity.created_date = created_date.date_actual
   LEFT JOIN dim_date sales_accepted_date
-    ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
+    ON fct_crm_opportunity.sales_accepted_date = sales_accepted_date.date_actual
   LEFT JOIN dim_date close_date
-    ON fct_crm_opportunity.close_date_id = close_date.date_id
+    ON fct_crm_opportunity.close_date = close_date.date_actual
   LEFT JOIN dim_date stage_0_pending_acceptance_date
-    ON fct_crm_opportunity.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
+    ON fct_crm_opportunity.stage_0_pending_acceptance_date = stage_0_pending_acceptance_date.date_actual
   LEFT JOIN dim_date stage_1_discovery_date
-    ON fct_crm_opportunity.stage_1_discovery_date_id = stage_1_discovery_date.date_id
+    ON fct_crm_opportunity.stage_1_discovery_date = stage_1_discovery_date.date_actual
   LEFT JOIN dim_date stage_2_scoping_date
-    ON fct_crm_opportunity.stage_2_scoping_date_id = stage_2_scoping_date.date_id
+    ON fct_crm_opportunity.stage_2_scoping_date = stage_2_scoping_date.date_actual
   LEFT JOIN dim_date stage_3_technical_evaluation_date
-    ON fct_crm_opportunity.stage_3_technical_evaluation_date_id = stage_3_technical_evaluation_date.date_id
+    ON fct_crm_opportunity.stage_3_technical_evaluation_date = stage_3_technical_evaluation_date.date_actual
   LEFT JOIN dim_date stage_4_proposal_date
-    ON fct_crm_opportunity.stage_4_proposal_date_id = stage_4_proposal_date.date_id
+    ON fct_crm_opportunity.stage_4_proposal_date = stage_4_proposal_date.date_actual
   LEFT JOIN dim_date stage_5_negotiating_date
-    ON fct_crm_opportunity.stage_5_negotiating_date_id = stage_5_negotiating_date.date_id
+    ON fct_crm_opportunity.stage_5_negotiating_date = stage_5_negotiating_date.date_actual
   LEFT JOIN dim_date stage_6_awaiting_signature_date
       ON fct_crm_opportunity.stage_6_awaiting_signature_date_id = stage_6_awaiting_signature_date.date_id
   LEFT JOIN dim_date stage_6_closed_won_date
-    ON fct_crm_opportunity.stage_6_closed_won_date_id = stage_6_closed_won_date.date_id
+    ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actual
   LEFT JOIN dim_date stage_6_closed_lost_date
-    ON fct_crm_opportunity.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
+    ON fct_crm_opportunity.stage_6_closed_lost_date = stage_6_closed_lost_date.date_actual
   LEFT JOIN dim_date subscription_start_date
-    ON fct_crm_opportunity.subscription_start_date_id = subscription_start_date.date_id
+    ON fct_crm_opportunity.subscription_start_date = subscription_start_date.date_actual
   LEFT JOIN dim_date subscription_end_date
-    ON fct_crm_opportunity.subscription_end_date_id = subscription_end_date.date_id
+    ON fct_crm_opportunity.subscription_end_date = subscription_end_date.date_actual
   LEFT JOIN dim_date sales_qualified_date
-    ON fct_crm_opportunity.sales_qualified_date_id = sales_qualified_date.date_id
+    ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
   LEFT JOIN dim_date last_activity_date
-    ON fct_crm_opportunity.last_activity_date_id = last_activity_date.date_id
+    ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
   LEFT JOIN dim_date sales_last_activity_date
-    ON fct_crm_opportunity.sales_last_activity_date_id = sales_last_activity_date.date_id
+    ON fct_crm_opportunity.sales_last_activity_date = sales_last_activity_date.date_actual
   LEFT JOIN dim_date technical_evaluation_date
-    ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
+    ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
   LEFT JOIN dim_date arr_created_date 
-    ON fct_crm_opportunity.arr_created_date_id = arr_created_date.date_id
+    ON fct_crm_opportunity.arr_created_date = arr_created_date.date_actual
   LEFT JOIN dim_crm_account AS partner_account
     ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = partner_account.snapshot_id 
   LEFT JOIN dim_crm_account AS fulfillment_partner
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
-  LEFT JOIN dim_crm_user_hierarchy
-    ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk
+  {% if is_incremental() %}
   
+  WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
+
+  {% endif %}
 
 
 )
