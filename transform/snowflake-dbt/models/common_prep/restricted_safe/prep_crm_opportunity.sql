@@ -1130,7 +1130,6 @@ LEFT JOIN cw_base
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_area, sfdc_opportunity.crm_opp_owner_area_stamped)
       ) AS report_area,
-      --why aren't the role level fields in this table? why is there no join to the user hierarchy table?
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_role_level_1, sfdc_opportunity.crm_opp_owner_role_level_1)
       )                                                     AS report_role_level_1,
