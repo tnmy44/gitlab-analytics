@@ -8647,16 +8647,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: rrendon
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - Engineering All Access
-      - General All Access
-      - General SAFE Access
-      - Engineering Project Lead
-      - Security Project Lead
   - user_name: rrichburg
     user_name_domain: gitlab.com
     site_role: Viewer
