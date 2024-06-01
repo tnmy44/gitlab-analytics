@@ -34,8 +34,6 @@ databases:
       shared: false
   - apiaseczna_prep:
       shared: false
-  - bi_tool_eval:
-      shared: false
   - testing_db:
       shared: false
   - cbraza_prod:
@@ -1421,38 +1419,6 @@ roles:
           read:
             - prep.bizible.*
             - raw.bizible.*
-  - bi_tool_eval_db:
-      warehouses:
-        - reporting
-      privileges:
-        databases:
-          read:
-            - bi_tool_eval
-          write:
-            - bi_tool_eval
-        schemas:
-          read:
-            - bi_tool_eval.*
-          write:
-            - bi_tool_eval.*
-        tables:
-          read:
-            - bi_tool_eval.*.*
-          write:
-            - bi_tool_eval.*.*
-  - bi_tool_eval_read:
-      warehouses:
-        - reporting
-      privileges:
-        databases:
-          read:
-            - bi_tool_eval
-        schemas:
-          read:
-            - bi_tool_eval.*
-        tables:
-          read:
-            - bi_tool_eval.*.*
   - covid19:
       privileges:
         databases:
@@ -2996,7 +2962,6 @@ roles:
         - restricted_safe
         - salesforce_sandbox
         - xactly
-        - bi_tool_eval_db
       warehouses:
         - dev_xs
       owns:
@@ -3062,7 +3027,6 @@ roles:
         - analyst_sales
         - xactly
         - restricted_safe
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
       owns:
@@ -3131,7 +3095,6 @@ roles:
       member_of:
         - analyst_people
         - bamboohr
-        - bi_tool_eval_read
         - pto
         - restricted_safe
         - workday
@@ -3226,7 +3189,6 @@ roles:
         - analyst_sales
         - reporter
         - restricted_safe
-        - bi_tool_eval_read
         - static_sensitive
       warehouses:
         - reporting
@@ -3271,7 +3233,6 @@ roles:
         - analyst_growth
         - restricted_safe
         - data_team_analyst
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
       owns:
@@ -3289,7 +3250,6 @@ roles:
         - analyst_sales
         - xactly
         - restricted_safe
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
   - cdu:
@@ -3375,7 +3335,6 @@ roles:
         - analytics_engineer_core
         - analyst_engineering
         - analyst_growth
-        - bi_tool_eval_read
         - customers_db
         - data_science_readonly
         - gitlab_dotcom
@@ -3517,7 +3476,6 @@ roles:
         - reporter
         - analyst_marketing
         - restricted_safe
-        - bi_tool_eval_read
         - data_science_readonly
         - facebook_ads
         - hightouch_role
@@ -3596,7 +3554,6 @@ roles:
         - reporter
         - analyst_marketing
         - restricted_safe
-        - bi_tool_eval_read
         - data_science_readonly
         - facebook_ads
         - linkedin_ads
@@ -3606,7 +3563,6 @@ roles:
       member_of:
         - analyst_growth
         - restricted_safe
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
       owns:
@@ -3823,7 +3779,6 @@ roles:
   - hkacmarski:
       member_of:
         - analyst_sales
-        - bi_tool_eval_read
         - reporter
         - restricted_safe
       warehouses:
@@ -3872,7 +3827,6 @@ roles:
         - restricted_safe
         - salesforce_sandbox
         - xactly
-        - bi_tool_eval_db
       warehouses:
         - dev_xs
       owns:
@@ -3912,7 +3866,6 @@ roles:
         - reporter
         - analyst_marketing
         - restricted_safe
-        - bi_tool_eval_read
         - data_science_readonly
         - facebook_ads
         - linkedin_ads
@@ -4397,7 +4350,6 @@ roles:
   - kdietz:
       member_of:
         - analyst_core
-        - bi_tool_eval_read
         - data_team_analyst
         - google_analytics_360
         - marketo
@@ -4636,7 +4588,6 @@ roles:
   - lmai:
       member_of:
         - analyst_engineering
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
       owns:
@@ -4735,7 +4686,6 @@ roles:
         - analyst_sales
         - restricted_safe
         - data_team_analyst
-        - bi_tool_eval_read
         - xactly
         - sales_analytics
         - data_science_readonly
@@ -4785,7 +4735,6 @@ roles:
       member_of:
         - analyst_sales
         - restricted_safe
-        - bi_tool_eval_read
         - static_sensitive
       warehouses:
         - dev_xs
@@ -4864,7 +4813,6 @@ roles:
         - data_team_analyst
         - gainsight_customer_success
         - restricted_safe
-        - bi_tool_eval_read
         - zuora
       warehouses:
         - dev_xs
@@ -5034,7 +4982,6 @@ roles:
         - analyst_sales
         - xactly
         - restricted_safe
-        - bi_tool_eval_read
         - clari
         - zendesk
       warehouses:
@@ -5161,7 +5108,6 @@ roles:
       member_of:
         - analyst_growth
         - restricted_safe
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
       owns:
@@ -5217,7 +5163,6 @@ roles:
         - restricted_safe
         - salesforce_sandbox
         - xactly
-        - bi_tool_eval_db
         - zuora_stitch_rest_api
         - jbare
       warehouses:
@@ -5258,7 +5203,6 @@ roles:
       member_of:
         - analyst_growth
         - restricted_safe
-        - bi_tool_eval_read
         - customers_db
         - zuora_query_api
       warehouses:
@@ -5300,7 +5244,6 @@ roles:
         - analyst_sales
         - restricted_safe
         - data_team_analyst
-        - bi_tool_eval_read
         - xactly
         - sales_analytics
         - data_science_readonly
@@ -5408,7 +5351,6 @@ roles:
         - analyst_people
         - analyst_sales
         - bamboohr
-        - bi_tool_eval_db
         - prometheus
         - pto
         - restricted_safe
@@ -5611,7 +5553,6 @@ roles:
       member_of:
         - analyst_marketing
         - bizible
-        - bi_tool_eval_read
         - data_team_analyst
         - data_science_readonly
         - facebook_ads
@@ -5673,7 +5614,6 @@ roles:
         - analyst_sales
         - restricted_safe
         - data_team_analyst
-        - bi_tool_eval_read
         - xactly
         - sales_analytics
         - data_science_readonly
@@ -5729,7 +5669,6 @@ roles:
         - analyst_growth
         - restricted_safe
         - data_team_analyst
-        - bi_tool_eval_read
       warehouses:
         - dev_xs
   - sbalasani:
@@ -5737,7 +5676,6 @@ roles:
         - analytics_engineer_core
         - analyst_engineering
         - analyst_growth
-        - bi_tool_eval_read
         - data_team_analyst
         - marketo
         - restricted_safe
@@ -6201,7 +6139,6 @@ roles:
         - data_team_analyst
         - gainsight_customer_success
         - restricted_safe
-        - bi_tool_eval_read
         - zuora
       warehouses:
         - dev_xs
@@ -6618,10 +6555,6 @@ users:
       can_login: true
       member_of:
         - asalimi
-  - bi_tool_eval:
-      can_login: true
-      member_of:
-        - bi_tool_eval_read
   - bbutterfield:
       can_login: true
       member_of:
