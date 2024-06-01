@@ -40,10 +40,6 @@ databases:
       shared: false
   - cbraza_prep:
       shared: false
-  - cdeleon_prod:
-      shared: false
-  - cdeleon_prep:
-      shared: false
   - cleroux_prod:
       shared: false
   - cleroux_prep:
@@ -3257,21 +3253,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - cdeleon:
-      member_of:
-        - analyst_engineering
-      warehouses:
-        - dev_xs
-      owns:
-        databases:
-          - cdeleon_prep
-          - cdeleon_prod
-        schemas:
-          - cdeleon_prep.*
-          - cdeleon_prod.*
-        tables:
-          - cdeleon_prep.*.*
-          - cdeleon_prod.*.*
   - cdewit:
       member_of:
         - reporter
@@ -6584,10 +6565,6 @@ users:
       can_login: true
       member_of:
         - ccontreras
-  - cdeleon:
-      can_login: true
-      member_of:
-        - cdeleon
   - cdewit:
       can_login: true
       member_of:
