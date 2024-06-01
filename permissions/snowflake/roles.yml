@@ -196,10 +196,6 @@ databases:
       shared: false
   - rkohnke_prep:
       shared: false
-  - rrendon_prod:
-      shared: false
-  - rrendon_prep:
-      shared: false
   - sbalasani_prod:
       shared: false
   - sbalasani_prep:
@@ -5607,35 +5603,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - rrendon:
-      member_of:
-        - analyst_engineering
-        - aws_billing
-        - elasticsearch_billing
-      warehouses:
-        - dev_xs
-      privileges:
-        databases:
-          read:
-            - rrendon_prep
-            - rrendon_prod
-          write:
-            - rrendon_prep
-            - rrendon_prod
-        schemas:
-          read:
-            - rrendon_prep.*
-            - rrendon_prod.*
-          write:
-            - rrendon_prep.*
-            - rrendon_prod.*
-        tables:
-          read:
-            - rrendon_prep.*.*
-            - rrendon_prod.*.*
-          write:
-            - rrendon_prep.*.*
-            - rrendon_prod.*.*
   - rrosu:
       member_of: []
       warehouses: []
@@ -7183,10 +7150,6 @@ users:
       can_login: true
       member_of:
         - rpereira
-  - rrendon:
-      can_login: true
-      member_of:
-        - rrendon
   - rrosu:
       can_login: false
       member_of: []
