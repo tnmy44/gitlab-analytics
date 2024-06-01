@@ -16,7 +16,7 @@ WITH zuora_product AS (
 ), sfdc_zuora_product AS (
 
     SELECT *
-    FROM {{ ref('sfdc_zuora_product') }}
+    FROM {{ source('salesforce', 'zqu_zproduct') }}
 
 ), sfdc_zuora_product_rate_plan AS (
 
@@ -106,7 +106,7 @@ WITH zuora_product AS (
     INNER JOIN sfdc_zuora_product 
       ON sfdc_zuora_product.zqu__sku__c = zuora_product.sku 
     LEFT JOIN sfdc_zuora_product_rate_plan 
-      ON sfdc_zuora_product.id = sfdc_zuora_product_rate_plan.zqu__zproduct__c 
+      ON sfdc_zuora_product.id = sfdc_zuora_product_rate_plan.zqu_zproduct_id 
     LEFT JOIN common_product_tier_mapping
       ON zuora_product_rate_plan_charge.product_rate_plan_id = common_product_tier_mapping.product_rate_plan_id
     LEFT JOIN common_product_tier
@@ -114,7 +114,7 @@ WITH zuora_product AS (
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
       AND zuora_product_rate_plan_charge_tier.active = TRUE
-    {{ dbt_utils.group_by(n=21) }}
+    {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1, 3
 
 ), final AS (--add annualized billing list price
