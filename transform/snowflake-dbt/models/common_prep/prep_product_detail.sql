@@ -18,7 +18,7 @@ WITH zuora_product AS (
     SELECT *
     FROM {{ ref('sfdc_zuora_product') }}
 
-), sfdc_zuora_product_rate_plan_source AS (
+), sfdc_zuora_product_rate_plan AS (
 
     SELECT *
     FROM {{ ref('sfdc_zqu_product_rate_plan_source') }}
