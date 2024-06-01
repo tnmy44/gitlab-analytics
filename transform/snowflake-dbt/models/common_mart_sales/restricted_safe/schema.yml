@@ -77,6 +77,8 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce
 
   - name: mart_arr_jihu
     description: '{{ doc("mart_arr_jihu") }}'
@@ -326,6 +328,8 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other)
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
@@ -870,6 +874,8 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce
   
   - name: mart_targets_actuals_7th_day_weekly_snapshot
     columns: 
