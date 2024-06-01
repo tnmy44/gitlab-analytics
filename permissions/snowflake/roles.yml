@@ -4013,11 +4013,6 @@ roles:
         - static_sensitive
       warehouses:
         - dev_xs
-  - jhalloran:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - jhope:
       member_of:
         - snowflake_analyst
@@ -5612,13 +5607,6 @@ roles:
   - rwoo:
       member_of: []
       warehouses: []
-  - sawezec:
-      member_of:
-        - analyst_growth
-        - restricted_safe
-        - data_team_analyst
-      warehouses:
-        - dev_xs
   - sbalasani:
       member_of:
         - analytics_engineer_core
@@ -6775,10 +6763,6 @@ users:
       can_login: true
       member_of:
         - jhackamack
-  - jhalloran:
-      can_login: true
-      member_of:
-        - jhalloran
   - jhope:
       can_login: true
       member_of:
@@ -7163,10 +7147,6 @@ users:
       can_login: true
       member_of:
         - sbalasani
-  - sawezec:
-      can_login: true
-      member_of:
-        - sawezec
   - schaturvedi:
       can_login: true
       member_of:
