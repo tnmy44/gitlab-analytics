@@ -4317,6 +4317,11 @@ models:
   - name: fct_ping_instance_metric_monthly
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
+      - name: ping_instance_metric_monthly_pk
+        description: '{{ doc("ping_instance_metric_monthly_pk") }}'
+        tests:
+          - unique
+          - not_null
       - name: ping_instance_metric_id
         tests:
           - not_null
@@ -5526,6 +5531,8 @@ models:
         description: The percentage of the opportunity net arr to which the partner is entitled.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+      - name: valid_deal_count
+        description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
       
 
   - name: fct_crm_opportunity_daily_snapshot
