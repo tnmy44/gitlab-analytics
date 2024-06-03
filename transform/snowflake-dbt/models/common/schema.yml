@@ -6686,7 +6686,256 @@ models:
         description: ' {{ doc("code_suggestions_accepted_option") }} '
 
   - name: fct_behavior_structured_event_30
-    description: '{{ doc("fct_behavior_structured_event") }}'
+    description: '{{ doc("fct_behavior_structured_event_30") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_user_location_sk
+        description: '{{ doc("dim_user_location_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_label
+        description: '{{ doc("event_label") }}'
+      - name: clean_event_label
+        description: '{{ doc("clean_event_label") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: gsc_feature_enabled_by_namespace_ids
+        description: ' {{ doc("gsc_feature_enabled_by_namespace_ids") }} '
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: gitlab_standard_context
+        description: ' {{ doc("gitlab_standard_context") }} '
+      - name: gitlab_standard_context_schema
+        description: ' {{ doc("gitlab_standard_context_schema") }} '
+      - name: has_gitlab_standard_context
+        description: ' {{ doc("has_gitlab_standard_context") }} '
+      - name: is_gitlab_team_member
+        description: ' {{ doc("gsc_is_gitlab_team_member") }} '
+      - name: web_page_context
+        description: ' {{ doc("web_page_context") }} '
+      - name: web_page_context_schema
+        description: ' {{ doc("web_page_context_schema") }} '
+      - name: has_web_page_context
+        description: ' {{ doc("has_web_page_context") }} '
+      - name: web_page_id
+        description: ' {{ doc("web_page_id") }} '
+      - name: gitlab_experiment_context
+        description: ' {{ doc("gitlab_experiment_context") }} '
+      - name: gitlab_experiment_context_schema
+        description: ' {{ doc("gitlab_experiment_context_schema") }} '
+      - name: has_gitlab_experiment_context
+        description: ' {{ doc("has_gitlab_experiment_context") }} '
+      - name: experiment_name
+        description: ' {{ doc("experiment_name") }} '
+      - name: experiment_context_key
+        description: ' {{ doc("experiment_context_key") }} '
+      - name: experiment_variant
+        description: ' {{ doc("experiment_variant") }} '
+      - name: experiment_migration_keys
+        description: ' {{ doc("experiment_migration_keys") }} '
+      - name: code_suggestions_context
+        description: ' {{ doc("code_suggestions_context") }} '
+      - name: code_suggestions_context_schema
+        description: ' {{ doc("code_suggestions_context_schema") }} '
+      - name: has_code_suggestions_context
+        description: ' {{ doc("has_code_suggestions_context") }} '
+      - name: model_engine
+        description: ' {{ doc("code_suggestions_model_engine") }} '
+      - name: model_name
+        description: ' {{ doc("code_suggestions_model_name") }} '
+      - name: prefix_length
+        description: ' {{ doc("code_suggestions_prefix_length") }} '
+      - name: suffix_length
+        description: ' {{ doc("code_suggestions_suffix_length") }} '
+      - name: language
+        description: ' {{ doc("code_suggestions_language") }} '
+      - name: user_agent
+        description: ' {{ doc("code_suggestions_user_agent") }} '
+      - name: delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+        accepted_values:
+          values: ['Self-Managed', 'SaaS']
+      - name: api_status_code
+        description: ' {{ doc("code_suggestions_api_status_code") }} '
+      - name: duo_namespace_ids
+        description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+      - name: saas_namespace_ids
+        description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
+      - name: namespace_ids
+        description: ' {{ doc("code_suggestions_namespace_ids") }} '
+      - name: instance_id
+        description: ' {{ doc("dim_instance_id") }} '
+      - name: host_name
+        description: ' {{ doc("host_name") }} '
+      - name: is_streaming
+        description: ' {{ doc("code_suggestions_is_streaming") }} '
+      - name: gitlab_global_user_id
+        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+      - name: ide_extension_version_context
+        description: ' {{ doc("ide_extension_version_context") }} '
+      - name: ide_extension_version_context_schema
+        description: ' {{ doc("ide_extension_version_context_schema") }} '
+      - name: has_ide_extension_version_context
+        description: ' {{ doc("has_ide_extension_version_context") }} '
+      - name: extension_name
+        description: ' {{ doc("extension_name") }} '
+      - name: extension_version
+        description: ' {{ doc("extension_version") }} '
+      - name: ide_name
+        description: ' {{ doc("ide_name") }} '
+      - name: ide_vendor
+        description: ' {{ doc("ide_vendor") }} '
+      - name: ide_version
+        description: ' {{ doc("ide_version") }} '
+      - name: language_server_version
+        description: ' {{ doc("language_server_version") }} '
+      - name: gitlab_service_ping_context
+        description: ' {{ doc("gitlab_service_ping_context") }} '
+      - name: gitlab_service_ping_context_schema
+        description: ' {{ doc("gitlab_service_ping_context_schema") }} '
+      - name: has_gitlab_service_ping_context
+        description: ' {{ doc("has_gitlab_service_ping_context") }} '
+      - name: redis_event_name
+        description: ' {{ doc("redis_event_name") }} '
+      - name: key_path
+        description: ' {{ doc("service_ping_key_path") }} '
+      - name: data_source
+        description: ' {{ doc("service_ping_data_source") }} '
+      - name: performance_timing_context
+        description: ' {{ doc("performance_timing_context") }} '
+      - name: performance_timing_context_schema
+        description: ' {{ doc("performance_timing_context_schema") }} '
+      - name: has_performance_timing_context
+        description: ' {{ doc("has_performance_timing_context") }} '
+      - name: connect_end
+        description: ' {{ doc("connect_end") }} '
+      - name: connect_start
+        description: ' {{ doc("connect_start") }} '
+      - name: dom_complete
+        description: ' {{ doc("dom_complete") }} '
+      - name: dom_content_loaded_event_end
+        description: ' {{ doc("dom_content_loaded_event_end") }} '
+      - name: dom_content_loaded_event_start
+        description: ' {{ doc("dom_content_loaded_event_start") }} '
+      - name: dom_interactive
+        description: ' {{ doc("dom_interactive") }} '
+      - name: dom_loading
+        description: ' {{ doc("dom_loading") }} '
+      - name: domain_lookup_end
+        description: ' {{ doc("domain_lookup_end") }} '
+      - name: domain_lookup_start
+        description: ' {{ doc("domain_lookup_start") }} '
+      - name: fetch_start
+        description: ' {{ doc("fetch_start") }} '
+      - name: load_event_end
+        description: ' {{ doc("load_event_end") }} '
+      - name: load_event_start
+        description: ' {{ doc("load_event_start") }} '
+      - name: navigation_start
+        description: ' {{ doc("navigation_start") }} '
+      - name: redirect_end
+        description: ' {{ doc("redirect_end") }} '
+      - name: redirect_start
+        description: ' {{ doc("redirect_start") }} '
+      - name: request_start
+        description: ' {{ doc("request_start") }} '
+      - name: response_end
+        description: ' {{ doc("response_end") }} '
+      - name: response_start
+        description: ' {{ doc("response_start") }} '
+      - name: secure_connection_start
+        description: ' {{ doc("secure_connection_start") }} '
+      - name: unload_event_end
+        description: ' {{ doc("unload_event_end") }} '
+      - name: unload_event_start
+        description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
+
+  - name: fct_behavior_structured_event_90
+    description: '{{ doc("fct_behavior_structured_event_90") }}'
     columns: 
       - name: behavior_structured_event_pk
         tests:
