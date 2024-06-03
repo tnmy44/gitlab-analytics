@@ -4289,6 +4289,11 @@ models:
   - name: fct_ping_instance_metric_monthly
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
+      - name: ping_instance_metric_monthly_pk
+        description: '{{ doc("ping_instance_metric_monthly_pk") }}'
+        tests:
+          - unique
+          - not_null
       - name: ping_instance_metric_id
         tests:
           - not_null
