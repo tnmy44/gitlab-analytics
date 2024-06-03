@@ -1094,6 +1094,9 @@ models:
         description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan.
       - name: product_category
         description: Categorizes Zuora Products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce.
+
 
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
