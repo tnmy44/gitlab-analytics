@@ -1,5 +1,6 @@
 {{ config({
-        "alias": "dim_product_detail"
+        "alias": "dim_product_detail",
+        tags=["mnpi_exception"]
     })
 }}
 
