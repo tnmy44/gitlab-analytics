@@ -1,3 +1,9 @@
+{{ config({
+        "alias": "dim_product_detail",
+        "tags": "mnpi_exception"
+    })
+}}
+
 WITH base AS (
 
     SELECT *
