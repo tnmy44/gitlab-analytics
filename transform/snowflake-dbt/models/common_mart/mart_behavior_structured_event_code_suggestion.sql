@@ -134,6 +134,10 @@ filtered_code_suggestion_events AS (
     host_name,
     is_streaming,
     gitlab_global_user_id,
+    suggestion_source,
+    is_invoked,
+    options_count,
+    accepted_option,
     namespace_ids,
     ultimate_parent_namespace_ids,
     dim_installation_ids,
@@ -161,7 +165,7 @@ filtered_code_suggestion_events AS (
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
     created_by="@michellecooper",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-05-14"
+    updated_date="2024-05-28"
 ) }}
