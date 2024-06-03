@@ -16,7 +16,7 @@ WITH zuora_product AS (
 ), sfdc_zuora_product AS (
 
     SELECT *
-    FROM {{ source('salesforce', 'zqu_zproduct') }}
+    FROM {{ ref('sfdc_zqu_zproduct_source') }}
 
 ), sfdc_zuora_product_rate_plan AS (
 
@@ -97,16 +97,17 @@ WITH zuora_product AS (
       END                                                                               AS is_arpu,
       MIN(zuora_product_rate_plan_charge_tier.price)                                    AS billing_list_price
     FROM zuora_product
+    INNER JOIN sfdc_zuora_product 
+      ON sfdc_zuora_product.zqu_sku = zuora_product.sku
+    LEFT JOIN sfdc_zuora_product_rate_plan 
+      ON sfdc_zuora_product.zqu_zproduct_id = sfdc_zuora_product_rate_plan.zqu_zproduct_id 
     INNER JOIN zuora_product_rate_plan
       ON zuora_product.product_id = zuora_product_rate_plan.product_id
+      AND zuora_product_rate_plan.product_rate_plan_id = sfdc_zuora_product_rate_plan.zqu_zuora_id
     INNER JOIN zuora_product_rate_plan_charge
       ON zuora_product_rate_plan.product_rate_plan_id = zuora_product_rate_plan_charge.product_rate_plan_id
     INNER JOIN zuora_product_rate_plan_charge_tier
       ON zuora_product_rate_plan_charge.product_rate_plan_charge_id = zuora_product_rate_plan_charge_tier.product_rate_plan_charge_id
-    INNER JOIN sfdc_zuora_product 
-      ON sfdc_zuora_product.zqu__sku__c = zuora_product.sku 
-    LEFT JOIN sfdc_zuora_product_rate_plan 
-      ON sfdc_zuora_product.id = sfdc_zuora_product_rate_plan.zqu_zproduct_id 
     LEFT JOIN common_product_tier_mapping
       ON zuora_product_rate_plan_charge.product_rate_plan_id = common_product_tier_mapping.product_rate_plan_id
     LEFT JOIN common_product_tier
@@ -151,7 +152,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@rakhireddy",
+    updated_by="@snalamaru",
     created_date="2020-12-16",
-    updated_date="2024-06-01"
+    updated_date="2024-06-03"
 ) }}
