@@ -57,6 +57,22 @@
       END AS person_order_type,
       person_base.lead_score_classification,
       person_base.is_defaulted_trial,
+      
+    --MQL and Most Recent Touchpoint info
+      person_base.bizible_mql_touchpoint_id,
+      person_base.bizible_mql_touchpoint_date,
+      person_base.bizible_mql_form_url,
+      person_base.bizible_mql_sfdc_campaign_id,
+      person_base.bizible_mql_ad_campaign_name,
+      person_base.bizible_mql_marketing_channel,
+      person_base.bizible_mql_marketing_channel_path,
+      person_base.bizible_most_recent_touchpoint_id,
+      person_base.bizible_most_recent_touchpoint_date,
+      person_base.bizible_most_recent_form_url,
+      person_base.bizible_most_recent_sfdc_campaign_id,
+      person_base.bizible_most_recent_ad_campaign_name,
+      person_base.bizible_most_recent_marketing_channel,
+      person_base.bizible_most_recent_marketing_channel_path,
 
   --Account Data
       mart_crm_account.crm_account_name,
@@ -422,6 +438,22 @@
       traction_response_time_in_business_hours,
       lead_score_classification,
       is_defaulted_trial,
+
+  --MQL and Most Recent Touchpoint info
+      person_base_with_tp.bizible_mql_touchpoint_id,
+      person_base_with_tp.bizible_mql_touchpoint_date,
+      person_base_with_tp.bizible_mql_form_url,
+      person_base_with_tp.bizible_mql_sfdc_campaign_id,
+      person_base_with_tp.bizible_mql_ad_campaign_name,
+      person_base_with_tp.bizible_mql_marketing_channel,
+      person_base_with_tp.bizible_mql_marketing_channel_path,
+      person_base_with_tp.bizible_most_recent_touchpoint_id,
+      person_base_with_tp.bizible_most_recent_touchpoint_date,
+      person_base_with_tp.bizible_most_recent_form_url,
+      person_base_with_tp.bizible_most_recent_sfdc_campaign_id,
+      person_base_with_tp.bizible_most_recent_ad_campaign_name,
+      person_base_with_tp.bizible_most_recent_marketing_channel,
+      person_base_with_tp.bizible_most_recent_marketing_channel_path,
   
   --Opp Data
       opportunity_name,

@@ -214,6 +214,36 @@ models:
           description: The Salesforce grade of the lead score for a lead/contact. 
         - name: is_defaulted_trial
           description: Boolean value of whether or not a lead/contact was defaulted to a trial.
+        - name: bizible_mql_touchpoint_id
+          description: The bizible touchpoint id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_touchpoint_date
+          description: The bizible touchpoint date, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_form_url
+          description: The bizible touchpoint form url, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_sfdc_campaign_id
+          description: The sfdc campaign id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_ad_campaign_name
+          description: The bizible touchpoint ad campaign name, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_marketing_channel
+          description: The bizible touchpoint marketing channel, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_marketing_channel_path
+          description: The bizible touchpoint marketing channel path, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_most_recent_touchpoint_id
+          description: The bizible touchpoint id, of the most recent touchpoint.  
+        - name: bizible_most_recent_touchpoint_date
+          description: The bizible touchpoint date, of the most recent touchpoint.  
+        - name: bizible_most_recent_form_url
+          description: The bizible touchpoint form url,of the most recent touchpoint. 
+        - name: bizible_most_recent_sfdc_campaign_id
+          description: The sfdc campaign id, of the most recent touchpoint. 
+        - name: bizible_most_recent_ad_campaign_name
+          description: The bizible touchpoint ad campaign name, of the most recent touchpoint.
+        - name: bizible_most_recent_marketing_channel
+          description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
+        - name: bizible_most_recent_marketing_channel_path
+          description: The bizible touchpoint marketing channel path, of the most recent touchpoint.  
+        - name: net_arr_stage_1
+          description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -649,7 +679,34 @@ models:
           description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
         - name: valid_deal_count
           description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
-
+        - name: bizible_mql_touchpoint_id
+          description: The bizible touchpoint id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_touchpoint_date
+          description: The bizible touchpoint date, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_form_url
+          description: The bizible touchpoint form url, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_sfdc_campaign_id
+          description: The sfdc campaign id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_ad_campaign_name
+          description: The bizible touchpoint ad campaign name, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_marketing_channel
+          description: The bizible touchpoint marketing channel, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_mql_marketing_channel_path
+          description: The bizible touchpoint marketing channel path, of the touchpoint directly preceding the person's Marketo MQL Date. 
+        - name: bizible_most_recent_touchpoint_id
+          description: The bizible touchpoint id, of the most recent touchpoint.  
+        - name: bizible_most_recent_touchpoint_date
+          description: The bizible touchpoint date, of the most recent touchpoint.  
+        - name: bizible_most_recent_form_url
+          description: The bizible touchpoint form url,of the most recent touchpoint. 
+        - name: bizible_most_recent_sfdc_campaign_id
+          description: The sfdc campaign id, of the most recent touchpoint. 
+        - name: bizible_most_recent_ad_campaign_name
+          description: The bizible touchpoint ad campaign name, of the most recent touchpoint.
+        - name: bizible_most_recent_marketing_channel
+          description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
+        - name: bizible_most_recent_marketing_channel_path
+          description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
