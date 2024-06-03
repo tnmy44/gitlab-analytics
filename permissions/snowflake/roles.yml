@@ -7151,10 +7151,6 @@ users:
       can_login: true
       member_of:
         - schaturvedi
-  - securitybotsnowflakeapi:
-      can_login: true
-      member_of:
-        - securityadmin
   - sfigueroa:
       can_login: true
       member_of:
