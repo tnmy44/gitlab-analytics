@@ -410,6 +410,34 @@ models:
         description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of `AMER, APAC, EMEA, LATAM.`
       - name: is_partner_recalled
         description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+      - name: bizible_mql_touchpoint_id
+        description: The bizible touchpoint id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_touchpoint_date
+        description: The bizible touchpoint date, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_form_url
+        description: The bizible touchpoint form url, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_sfdc_campaign_id
+        description: The sfdc campaign id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_ad_campaign_name
+        description: The bizible touchpoint ad campaign name, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_marketing_channel
+        description: The bizible touchpoint marketing channel, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_marketing_channel_path
+        description: The bizible touchpoint marketing channel path, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_most_recent_touchpoint_id
+        description: The bizible touchpoint id, of the most recent touchpoint.  
+      - name: bizible_most_recent_touchpoint_date
+        description: The bizible touchpoint date, of the most recent touchpoint.  
+      - name: bizible_most_recent_form_url
+        description: The bizible touchpoint form url,of the most recent touchpoint. 
+      - name: bizible_most_recent_sfdc_campaign_id
+        description: The sfdc campaign id, of the most recent touchpoint. 
+      - name: bizible_most_recent_ad_campaign_name
+        description: The bizible touchpoint ad campaign name, of the most recent touchpoint.
+      - name: bizible_most_recent_marketing_channel
+        description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
+      - name: bizible_most_recent_marketing_channel_path
+        description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -4289,6 +4317,11 @@ models:
   - name: fct_ping_instance_metric_monthly
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
+      - name: ping_instance_metric_monthly_pk
+        description: '{{ doc("ping_instance_metric_monthly_pk") }}'
+        tests:
+          - unique
+          - not_null
       - name: ping_instance_metric_id
         tests:
           - not_null
@@ -5498,6 +5531,8 @@ models:
         description: The percentage of the opportunity net arr to which the partner is entitled.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+      - name: valid_deal_count
+        description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
       
 
   - name: fct_crm_opportunity_daily_snapshot
@@ -6641,6 +6676,14 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
 
   - name: fct_behavior_structured_event_30
     description: '{{ doc("fct_behavior_structured_event") }}'
@@ -6882,6 +6925,14 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
@@ -9274,6 +9325,14 @@ models:
       description: '{{ doc("code_suggestions_installation_host_name") }}'
     - name: namespace_is_internal
       description: '{{ doc("code_suggestions_namespace_is_internal") }}'
+    - name: suggestion_source
+      description: ' {{ doc("code_suggestions_suggestion_source") }} '
+    - name: is_invoked
+      description: ' {{ doc("code_suggestions_is_invoked") }} '
+    - name: options_count
+      description: ' {{ doc("code_suggestions_options_count") }} '
+    - name: accepted_option
+      description: ' {{ doc("code_suggestions_accepted_option") }} '
 
   - name: fct_behavior_structured_event_ide_extension_version
     description: '{{ doc("fct_behavior_structured_event_ide_extension_version") }}'
