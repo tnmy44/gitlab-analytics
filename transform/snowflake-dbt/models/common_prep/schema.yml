@@ -473,7 +473,7 @@ models:
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
       - name: product_rate_plan_category
-        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce.
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce..
 
   - name: prep_ptp_scores_by_user
     description: '{{ doc("prep_ptp_scores_by_user") }}'

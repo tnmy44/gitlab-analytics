@@ -27,11 +27,6 @@ WITH zuora_product AS (
     SELECT *
     FROM {{ ref('sfdc_zqu_product_rate_plan_source') }}
 
-), zuora_product_source AS (
-
-    SELECT *
-    FROM {{ ref('zuora_product_source') }}
-
 ), zuora_product_rate_plan_charge_tier AS (
 
     SELECT *
