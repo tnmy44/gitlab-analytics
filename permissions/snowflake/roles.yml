@@ -2018,14 +2018,17 @@ roles:
         databases:
           read:
             - raw
+            - prep
         schemas:
           read:
             - raw.google_analytics_4_bigquery
             - raw.google_analytics_4_fivetran
+            - prep.google_analytics_4
         tables:
           read:
             - raw.google_analytics_4_bigquery.*
             - raw.google_analytics_4_fivetran.*
+            - prep.google_analytics_4.*
   - google_search_console:
       privileges:
         databases:
