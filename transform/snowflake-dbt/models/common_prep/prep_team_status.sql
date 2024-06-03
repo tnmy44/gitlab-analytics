@@ -52,7 +52,7 @@ final AS (
     COALESCE(team_member_position.team_id,'Unknown Team ID')                                                           AS team_id,
     COALESCE(team_member_position.job_code,'Unknown Job Code')                                                         AS job_code,
     team_member_position.position,
-    COALESCE(team_member_position.job_family,,'Unknown Job Family')                                                    AS job_family,
+    COALESCE(team_member_position.job_family,'Unknown Job Family')                                                    AS job_family,
     team_member_position.job_specialty_single,
     team_member_position.job_specialty_multi,
     COALESCE(team_member_position.management_level,'Unknown Management Level')                                         AS management_level,
