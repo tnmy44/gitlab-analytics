@@ -4199,7 +4199,7 @@ users:
       - General All Access
   - user_name: doregan
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
@@ -11449,3 +11449,11 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: jdleon
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Finance All Access
