@@ -67,7 +67,7 @@ WITH dim_billing_account AS (
     LEFT JOIN parent_account_name
       ON parent_account_name.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
-    {# AND dim_product_detail.product_name NOT LIKE '%Enterprise Agile Planning' #}
+    {# AND dim_product_detail.product_name LIKE '%Enterprise Agile Planning' #}
 
 ), max_min_month AS (
 
@@ -241,5 +241,6 @@ WITH dim_billing_account AS (
 )
 
 SELECT *
-FROM combined
+FROM prior_month
 {# WHERE dim_parent_crm_account_id = '0018X00003EwLiXQAV' #}
+WHERE dim_parent_crm_account_id = '001PL0000021qGNYAY'
