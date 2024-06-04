@@ -67,7 +67,6 @@ WITH dim_billing_account AS (
     LEFT JOIN parent_account_name
       ON parent_account_name.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
-    {# AND dim_product_detail.product_name LIKE '%Enterprise Agile Planning' #}
 
 ), max_min_month AS (
 
@@ -226,21 +225,19 @@ WITH dim_billing_account AS (
       ON type_of_arr_change.dim_parent_crm_account_id = reason_for_arr_change_price_change.dim_parent_crm_account_id
       AND type_of_arr_change.arr_month = reason_for_arr_change_price_change.arr_month
       AND type_of_arr_change.product_tier_name = reason_for_arr_change_price_change.product_tier_name
-      AND type_of_arr_change.product_delivery_type = reason_for_arr_change_seat_change.product_delivery_type
+      AND type_of_arr_change.product_delivery_type = reason_for_arr_change_price_change.product_delivery_type
     LEFT JOIN reason_for_arr_change_end
       ON type_of_arr_change.dim_parent_crm_account_id = reason_for_arr_change_end.dim_parent_crm_account_id
       AND type_of_arr_change.arr_month = reason_for_arr_change_end.arr_month
       AND type_of_arr_change.product_tier_name = reason_for_arr_change_end.product_tier_name
-      AND type_of_arr_change.product_delivery_type = reason_for_arr_change_seat_change.product_delivery_type
+      AND type_of_arr_change.product_delivery_type = reason_for_arr_change_end.product_delivery_type
     LEFT JOIN annual_price_per_seat_change
       ON type_of_arr_change.dim_parent_crm_account_id = annual_price_per_seat_change.dim_parent_crm_account_id
       AND type_of_arr_change.arr_month = annual_price_per_seat_change.arr_month
       AND type_of_arr_change.product_tier_name = annual_price_per_seat_change.product_tier_name
-      AND type_of_arr_change.product_delivery_type = reason_for_arr_change_seat_change.product_delivery_type
+      AND type_of_arr_change.product_delivery_type = annual_price_per_seat_change.product_delivery_type
 
 )
 
 SELECT *
-FROM prior_month
-{# WHERE dim_parent_crm_account_id = '0018X00003EwLiXQAV' #}
-WHERE dim_parent_crm_account_id = '001PL0000021qGNYAY'
+FROM combined
