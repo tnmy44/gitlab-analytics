@@ -1254,7 +1254,7 @@ models:
     description: a model containing actual values for the yearly items. The model contains both SAFE and MNPI data. 
     columns:
       - name: yearly_name
-        description: name of the yearly item and primary key for the table
+        description: name of the yearly item
         tests:
           - not_null
       - name: source_table
@@ -1268,8 +1268,7 @@ models:
     description: a model containing both yearlies targets and actuals values. The model contains both SAFE and MNPI data. 
     columns:
       - name: yearly_name
-        description: name of the yearly item and primary key for the table
-        tests:
+        description: name of the yearly item
           - not_null
       - name: yearly_dri
         description: DRI(s) of the yearly item
