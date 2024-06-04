@@ -154,6 +154,7 @@
 
       -- Flags
       fct_crm_opportunity.is_won,
+      fct_crm_opportunity.valid_deal_count,
       fct_crm_opportunity.is_closed,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.is_ps_opp,
@@ -610,7 +611,7 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-05-07"
+    updated_date="2024-05-22"
   ) }}
 
 

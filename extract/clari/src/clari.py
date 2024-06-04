@@ -188,6 +188,7 @@ def upload_results_dict(
         # update fiscal_quarter formatting to conform with dim table
         "api_fiscal_quarter": fiscal_quarter.replace("_", "-"),
         "dag_schedule": config_dict["task_schedule"],
+        "airflow_task_instance_key_str": config_dict["task_instance_key_str"],
     }
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
 
