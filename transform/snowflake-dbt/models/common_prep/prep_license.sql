@@ -48,7 +48,7 @@ WITH customers_db_licenses AS (
       ON customers_db_licenses.license_md5 = license_md5_subscription_mapping.license_md5
     LEFT JOIN license_md5_overwrite_temp
       ON customers_db_licenses.license_md5 = license_md5_overwrite_temp.license_md5
-      AND customers_db_licenses.dim_subscription_id = '8a129c378f1000b3018f29aba5ff7c84'
+      AND customers_db_licenses.zuora_subscription_id = '8a129c378f1000b3018f29aba5ff7c84'
 
 ), renamed AS (
 
