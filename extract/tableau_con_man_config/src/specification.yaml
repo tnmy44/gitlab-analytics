@@ -11457,3 +11457,17 @@ users:
       - General All Access
       - General SAFE Access
       - Finance All Access
+  - user_name: nscoville
+    user_name_domain: gitlab.com
+    site_role: SiteAdministratorCreator
+    auth_setting: SAML
+    groups:
+      - Ad-hoc Project Lead
+      - Data Team All Access
+      - Data Team Project Lead
+      - Development Project Lead
+      - General All Access
+      - General SAFE Access
+      - Production Project Lead
+      - Resources Project Lead
+      - Test Permissions Group
