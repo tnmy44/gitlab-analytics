@@ -13,13 +13,22 @@ WITH customers_db_licenses AS (
     SELECT *
     FROM {{ ref('license_md5_to_subscription_mapping_temp') }}
 
+), license_md5_overwrite_temp AS (
+
+    SELECT *
+    FROM {{ ref('license_md5_overwrite_temp') }}
+
 ), licenses AS (
 
     SELECT
       customers_db_licenses.license_id AS dim_license_id,
       customers_db_licenses.license_md5,
       customers_db_licenses.license_sha256,
-      COALESCE(customers_db_licenses.zuora_subscription_id, license_md5_subscription_mapping.zuora_subscription_id) AS dim_subscription_id,
+      COALESCE(
+        license_md5_overwrite_temp.dim_subscription_id,
+        customers_db_licenses.zuora_subscription_id, 
+        license_md5_subscription_mapping.zuora_subscription_id
+      ) AS dim_subscription_id,
       customers_db_licenses.zuora_subscription_name AS subscription_name,
       'Customers Portal' AS environment,
       customers_db_licenses.license_user_count,
@@ -37,6 +46,9 @@ WITH customers_db_licenses AS (
     FROM customers_db_licenses
     LEFT JOIN license_md5_subscription_mapping
       ON customers_db_licenses.license_md5 = license_md5_subscription_mapping.license_md5
+    LEFT JOIN license_md5_overwrite_temp
+      ON customers_db_licenses.license_md5 = license_md5_overwrite_temp.license_md5
+      AND customers_db_licenses.dim_subscription_id = '8a129c378f1000b3018f29aba5ff7c84'
 
 ), renamed AS (
 
