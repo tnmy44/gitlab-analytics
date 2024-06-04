@@ -64,7 +64,7 @@ WITH zuora_product AS (
       common_product_tier_mapping.product_delivery_type                                 AS product_delivery_type,
       common_product_tier_mapping.product_deployment_type                               AS product_deployment_type,
       common_product_tier_mapping.product_category                                      AS product_category,
-      sfdc_zuora_product_rate_plan.product_rate_plan_category                           AS product_rate_plan_category,
+      sfdc_zuora_product_rate_plan.product_category                                     AS product_rate_plan_category,
       CASE
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%support%'
           THEN 'Support Only'
