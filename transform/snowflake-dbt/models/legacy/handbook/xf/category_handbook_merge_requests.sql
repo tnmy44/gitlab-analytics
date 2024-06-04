@@ -35,7 +35,6 @@ WITH merge_requests AS (
         AND merge_requests.project_id = 7764 --handbook project
     LEFT JOIN file_classifications
       ON LOWER(mr_files.handbook_file_edited) LIKE '%' || file_classifications.handbook_path || '%'
-    WHERE merge_requests.is_merge_to_master 
 
 ), renamed AS (
 
