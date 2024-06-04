@@ -2184,6 +2184,24 @@ The closed lost renewal opportunity, where applicable, mapped mapped to a subscr
 
 {% enddocs %}
 
+{% docs dim_oldest_crm_account_in_cohort_id %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the Account ID from SFDC identifing the customer for the oldest subscription in a lineage.
+
+{% enddocs %}
+
+{% docs oldest_subscription_start_date %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date for the oldest subscription in a lineage. This date can be used to know when customers first start paying and can be utlized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
+{% docs oldest_subscription_cohort_month %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date month for the oldest subscription in a lineage. This cohort month can be used to know when customers first start paying and can be utlized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
 {% docs dim_plan_sk %}
 
 The surrogate key for joining to the `dim_plan` table
