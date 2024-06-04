@@ -6401,6 +6401,26 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - acook:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - aevans:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - tmccaslin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jdleon:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7415,6 +7435,22 @@ users:
       can_login: true
       member_of:
         - avpfestin
+  - acook:
+      can_login: true
+      member_of:
+        - acook
+  - aevans:
+      can_login: true
+      member_of:
+        - aevans
+  - tmccaslin:
+      can_login: true
+      member_of:
+        - tmccaslin
+  - jdleon:
+      can_login: true
+      member_of:
+        - jdleon
 warehouses:
   - admin:
       size: x-small
