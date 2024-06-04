@@ -6006,25 +6006,6 @@ roles:
         - analyst_people_sensitive
       warehouses:
         - reporting
-  - target_snowflake:
-      warehouses:
-        - loading
-      privileges:
-        databases:
-          read:
-            - testing_db
-          write:
-            - testing_db
-        schemas:
-          read:
-            - testing_db.*
-          write:
-            - testing_db.*
-        tables:
-          read:
-            - testing_db.*.*
-          write:
-            - testing_db.*.*
   - tfigueiro:
       member_of:
         - reporter
@@ -6968,7 +6949,6 @@ users:
       can_login: true
       member_of:
         - meltano
-        - target_snowflake
   - mfleisher:
       can_login: true
       member_of:
@@ -7262,10 +7242,6 @@ users:
       can_login: true
       member_of:
         - tableau_restricted_people_data
-  - target_snowflake:
-      can_login: true
-      member_of:
-        - target_snowflake
   - tfigueiro:
       can_login: true
       member_of:
