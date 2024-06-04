@@ -100,7 +100,7 @@ SELECT DISTINCT
    LEFT JOIN mart_crm_account 
    ON mart_arr_all.dim_crm_account_id = mart_crm_account.dim_crm_account_id 
    WHERE arr_month >= '2023-02-01' 
-   AND arr_month < current_date 
+   AND arr_month < dateadd('month',-1,current_date)
    AND crm_account_type = 'Customer' 
    AND product_tier_name ILIKE '%Ultimate%'
    GROUP BY 1,2,3 
@@ -143,7 +143,7 @@ SELECT DISTINCT
    LEFT JOIN dim_date 
    ON arr_month = date_actual 
    WHERE SECURITY_COLOR_ULTIMATE_ONLY IS NOT NULL 
-   AND arr_month < current_date
+   AND arr_month < dateadd('month',-1,current_date)
    GROUP BY 1,2,3
    ORDER BY 1 DESC 
 ),
