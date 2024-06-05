@@ -6411,7 +6411,7 @@ roles:
         - dev_xs
   - testtableau:
       member_of:
-        - snowflake_analyst
+        - reporter
       warehouses:
         - dev_xs
 users:
