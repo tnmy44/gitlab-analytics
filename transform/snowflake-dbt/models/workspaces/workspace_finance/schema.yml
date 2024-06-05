@@ -1252,6 +1252,11 @@ models:
     
   - name: wk_prep_yearlies_actual
     description: a model containing actual values for the yearly items. The model contains both SAFE and MNPI data. 
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - yearly_name
+            - quarter
     columns:
       - name: yearly_name
         description: name of the yearly item
@@ -1266,6 +1271,11 @@ models:
 
   - name: wk_yearlies_target_attainment_mnpi
     description: a model containing both yearlies targets and actuals values. The model contains both SAFE and MNPI data. 
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - yearly_name
+            - quarter
     columns:
       - name: yearly_name
         description: name of the yearly item
