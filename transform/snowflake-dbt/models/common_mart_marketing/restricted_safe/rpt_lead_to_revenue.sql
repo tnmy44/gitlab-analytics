@@ -410,11 +410,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-<<<<<<< HEAD
-    {{dbt_utils.group_by(n=91)}}
-=======
-    {{dbt_utils.group_by(n=100)}}
->>>>>>> 6e4674e7b4 (Pushing new fields downstream)
+    {{dbt_utils.group_by(n=102)}}
     
 ), cohort_base_combined AS (
   
@@ -710,9 +706,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-<<<<<<< HEAD
-    updated_date="2024-06-06",
-=======
-    updated_date="2024-05-29",
->>>>>>> 6e4674e7b4 (Pushing new fields downstream)
+    updated_date="2024-06-06"
   ) }}
