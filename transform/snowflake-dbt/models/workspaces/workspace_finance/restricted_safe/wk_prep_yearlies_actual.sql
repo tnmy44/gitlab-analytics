@@ -83,7 +83,7 @@ SELECT
    FROM adoption_metrics_2
    LEFT JOIN dim_date
    ON arr_month = date_actual
-   WHERE arr_month < current_date
+   WHERE arr_month <= dateadd('month',-1,current_date)
    AND fiscal_month_name_fy LIKE '%FY25%'
    AND usage_data_sent = true
    QUALIFY dense_rank() over (partition by quarter order by arr_month desc) = 1
