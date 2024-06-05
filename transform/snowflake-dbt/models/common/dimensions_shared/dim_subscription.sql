@@ -43,7 +43,7 @@ WITH prep_amendment AS (
     SELECT 
       subscription_name_slugify,
       COUNT(subscription_name) AS nbr_records
-    FROM PROD.COMMON.DIM_SUBSCRIPTION
+    FROM subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
     GROUP BY 1
     HAVING nbr_records > 1
@@ -137,10 +137,6 @@ WITH prep_amendment AS (
     ON subscription.dim_subscription_id = subscription_opportunity_mapping.dim_subscription_id
 
 ), final AS (
-
-    /*
-    This CTE fetches the subscription id, crm account id, subscription start date and subscription cohort month for the oldest subscription in the lineage a given subscription is a part of. 
-    */
 
     SELECT
       --Surrogate Key
@@ -239,5 +235,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@utkarsh060",
     created_date="2020-12-16",
-    updated_date="2024-06-03"
+    updated_date="2024-06-05"
 ) }}
