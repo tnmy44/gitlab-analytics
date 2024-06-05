@@ -106,7 +106,7 @@ dotcom_duo_pro_monthly_seats AS ( -- duo pro monthly seats and associated entiti
     ON m.ping_created_date_month = reporting_month
     AND m.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' -- installation id for Gitlab.com
     AND m.is_last_ping_of_month = TRUE
-  WHERE product_deployment IN = 'GitLab.com'
+  WHERE product_deployment = 'GitLab.com'
     AND reporting_month BETWEEN '2024-02-01' AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, CURRENT_DATE))
   GROUP BY ALL
 
