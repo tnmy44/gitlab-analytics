@@ -1,3 +1,6 @@
+
+
+
 import logging
 import os
 import sys
@@ -26,6 +29,8 @@ def get_file_name(config_name):
         return "target/manifest.json"
     elif config_name == "manifest_reduce":
         return "target/manifest.json"
+    elif config_name == "gdpr_logs":
+        return "logs/dbt.log"
     else:
         return "target/run_results.json"
 
@@ -43,6 +48,8 @@ def get_table_name(config_name, snowflake_database):
         return f'"{snowflake_database}".dbt.manifest'
     elif config_name == "manifest_reduce":
         return f'"{snowflake_database}".dbt.manifest'
+    elif config_name == "gdpr_logs":
+        return f'"{snowflake_database}".dbt.gdpr_logs'
     else:
         return f'"{snowflake_database}".dbt.run_results'
 

@@ -12,6 +12,13 @@
       {%- set values = value_list['data'] %}
 
       {% for data_row in values %}
+        {% if data_row[1] == 'full' %}
+        {{ gdpr_delete_test(data_row[0], run_queries='True')}}
+        {% endif %}
+        {% if data_row[1] == 'gitlab' %}
+        {{ gdpr_gitlab_delete_test(data_row[0], run_queries='True')}}
+        {% endif %}
+
 
         {{ gdpr_delete(data_row[0], run_queries='True')}}
         {%- call statement('remove_data', fetch_result=True) %}
