@@ -6414,6 +6414,11 @@ roles:
         - reporter
       warehouses:
         - dev_xs
+  - nscoville:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7443,6 +7448,10 @@ users:
       can_login: true
       member_of:
         - testtableau
+  - nscoville:
+      can_login: true
+      member_of:
+        - nscoville
 warehouses:
   - admin:
       size: x-small
