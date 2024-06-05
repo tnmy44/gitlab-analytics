@@ -6416,7 +6416,8 @@ roles:
         - dev_xs
   - nscoville:
       member_of:
-        - snowflake_analyst
+        - snowflake_analyst_safe
+        - data_team_analyst
       warehouses:
         - dev_xs
 users:
