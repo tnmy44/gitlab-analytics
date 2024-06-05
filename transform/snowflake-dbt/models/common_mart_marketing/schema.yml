@@ -774,7 +774,6 @@ models:
         - name: utm_content_industry
           description: The industry portion of the new utm_content structure.
 
-
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
       columns:
