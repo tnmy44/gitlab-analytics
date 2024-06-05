@@ -40,6 +40,16 @@ final AS (
     fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
 
+        --live fields
+    fct_crm_opportunity.sales_qualified_source_live,
+    fct_crm_opportunity.is_edu_oss_live,
+    fct_crm_opportunity.opportunity_category_live,
+    fct_crm_opportunity.is_jihu_account_live,
+    {# fct_crm_opportunity.order_type_live, #} --pending confirmation from melia and natalie
+    fct_crm_opportunity.deal_path_live,
+    fct_crm_opportunity.parent_crm_account_geo_live,
+    fct_crm_opportunity.order_type_grouped_live,
+
     -- opportunity attributes
     fct_crm_opportunity.opportunity_name,
     fct_crm_opportunity.stage_name,

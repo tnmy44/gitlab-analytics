@@ -16,18 +16,21 @@ final AS (
 
   SELECT
 
-    {{ dbt_utils.generate_surrogate_key(['snapshot_id', 'dim_crm_current_account_set_hierarchy_sk', 'order_type', 'order_type_live', 'stage_name', 'deal_path', 'sales_type', 'sales_qualified_source', 'close_fiscal_quarter_date', 'created_fiscal_quarter_date', 'arr_created_fiscal_quarter_date']) }} AS opportunity_weekly_snapshot_aggregate_pk,
+    {{ dbt_utils.generate_surrogate_key(['snapshot_id', 'dim_crm_current_account_set_hierarchy_sk', 'order_type_live', 'order_type_grouped_live', 'stage_name', 'deal_path_live', 'sales_type', 'sales_qualified_source_live', 'sales_qualified_source_grouped_live', 'close_fiscal_quarter_date', 'created_fiscal_quarter_date', 'arr_created_fiscal_quarter_date']) }} AS opportunity_weekly_snapshot_aggregate_pk,
 
     -- keys and attributes
     dim_crm_current_account_set_hierarchy_sk,
-    order_type,
-    order_type_live,
-    order_type_grouped,
+    
+    --snapshot fields
     stage_name,
-    deal_path,
     sales_type,
-    sales_qualified_source,
-    sales_qualified_source_grouped,
+    
+    --live fields
+    sales_qualified_source_live,
+    sales_qualified_source_grouped_live,
+    {# order_type_live, #} --pending confirmation from melia and natalie
+    deal_path_live,
+    order_type_grouped_live,
 
     --dates
     snapshot_id,

@@ -131,7 +131,17 @@ final AS (
         THEN dim_crm_account_user_role_level_5_id
       ELSE dim_crm_opp_owner_role_level_5_id
     END                                                                                                                         AS dim_crm_current_account_set_role_level_5_id,
-    
+
+    --live fields
+    prep_crm_opportunity.sales_qualified_source_live,
+    prep_crm_opportunity.is_edu_oss_live,
+    prep_crm_opportunity.opportunity_category_live,
+    prep_crm_opportunity.is_jihu_account_live,
+    {# prep_crm_opportunity.order_type_live, #} --pending confirmation from melia and natalie
+    prep_crm_opportunity.deal_path_live,
+    prep_crm_opportunity.parent_crm_account_geo_live,
+    prep_crm_opportunity.order_type_grouped_live,
+
     prep_crm_opportunity.order_type,
     prep_crm_opportunity.opportunity_term_base,
     prep_crm_opportunity.sales_qualified_source,
