@@ -6409,6 +6409,11 @@ roles:
         - xactly
       warehouses:
         - dev_xs
+  - testtableau:
+      member_of:
+        - reporter
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7434,6 +7439,10 @@ users:
       can_login: true
       member_of:
         - jdleon
+  - testtableau:
+      can_login: true
+      member_of:
+        - testtableau
 warehouses:
   - admin:
       size: x-small
