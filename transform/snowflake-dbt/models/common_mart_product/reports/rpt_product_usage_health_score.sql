@@ -29,7 +29,7 @@
         paid_user_metrics.dim_subscription_id_original,
         paid_user_metrics.dim_subscription_id,
         IFF(mart_arr_all.product_tier_name ILIKE '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
-        IFF(mart_arr_all.product_rate_plan_name ILIKE '%OSS Program%' AND SUM(mart_arr_all.arr) over (partition by mart_arr_all.dim_subscription_id_original, mart_arr_all.arr_month, mart_arr_all.product_delivery_type) = 0, true, false)                                                        AS is_oss_program,
+        IFF(mart_arr_all.product_rate_plan_name ILIKE '%OSS Program%' AND SUM(mart_arr_all.arr) OVER (PARTITION BY mart_arr_all.dim_subscription_id_original, mart_arr_all.arr_month, mart_arr_all.product_delivery_type) = 0, TRUE, FALSE)                                                        AS is_oss_program,
         paid_user_metrics.delivery_type,
         paid_user_metrics.deployment_type,
         paid_user_metrics.instance_type,
