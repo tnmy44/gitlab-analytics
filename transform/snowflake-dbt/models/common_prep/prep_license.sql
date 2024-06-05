@@ -13,10 +13,10 @@ WITH customers_db_licenses AS (
     SELECT *
     FROM {{ ref('license_md5_to_subscription_mapping_temp') }}
 
-), license_md5_overwrite_temp AS (
+), overwrite_expired_subscription AS (
 
     SELECT *
-    FROM {{ ref('license_md5_overwrite_temp') }}
+    FROM {{ ref('overwrite_expired_subscription') }}
 
 ), licenses AS (
 
@@ -25,7 +25,7 @@ WITH customers_db_licenses AS (
       customers_db_licenses.license_md5,
       customers_db_licenses.license_sha256,
       COALESCE(
-        license_md5_overwrite_temp.dim_subscription_id,
+        overwrite_expired_subscription.dim_subscription_id,
         customers_db_licenses.zuora_subscription_id, 
         license_md5_subscription_mapping.zuora_subscription_id
       ) AS dim_subscription_id,
@@ -46,9 +46,8 @@ WITH customers_db_licenses AS (
     FROM customers_db_licenses
     LEFT JOIN license_md5_subscription_mapping
       ON customers_db_licenses.license_md5 = license_md5_subscription_mapping.license_md5
-    LEFT JOIN license_md5_overwrite_temp
-      ON customers_db_licenses.license_md5 = license_md5_overwrite_temp.license_md5
-      AND customers_db_licenses.dim_subscription_id = '8a129c378f1000b3018f29aba5ff7c84'
+    LEFT JOIN overwrite_expired_subscription
+      ON customers_db_licenses.license_id = overwrite_expired_subscription.dim_license_id
 
 ), renamed AS (
 
@@ -86,7 +85,7 @@ WITH customers_db_licenses AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@snalamaru",
-    updated_by="@rbacovic",
+    updated_by="@mdrussell",
     created_date="2021-01-08",
-    updated_date="2022-12-01"
+    updated_date="2024-06-05"
 ) }}

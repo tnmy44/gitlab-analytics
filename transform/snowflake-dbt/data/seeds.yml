@@ -35,3 +35,5 @@ seeds:
     description: A categorization of non GitLab team member snowflake users
   - name: test_employee_ids
     description: Employee IDs that were created as test or duplicate accounts in BambooHR. 
+  - name: overwrite_expired_subscription
+    description: Used to correct subscription information for pings and licenses that have a mistaken subscription associated with them.
