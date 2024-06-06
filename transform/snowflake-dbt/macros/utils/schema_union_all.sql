@@ -53,7 +53,7 @@
 
           {%- for col in excluded_col -%}
         
-            {%- set excluded_col_string = excluded_fields.append(col | as_text) -%}
+            {%- set excluded_fields = excluded_fields.append(col|upper) -%}
   
           {%- endfor -%}
 
@@ -67,8 +67,13 @@
 
     {%- if value_list and value_list['QUALIFIED_NAME'] -%}
           
-        {% for qualified_name, column_names in zip(value_list['QUALIFIED_NAME'], value_list['COLUMN_NAMES']) -%} {{excluded_col_fields_string}}
-              SELECT {{column_names}}
+        {% for qualified_name, column_names in zip(value_list['QUALIFIED_NAME'], value_list['COLUMN_NAMES']) -%} 
+
+            {%- set columns_names_list = column_names.split(',') -%}
+
+            {%- set columns_with_exclusions =  (columns_names_list | reject('in', excluded_fields) | list + excluded_fields | reject('in', columns_names_list) | list) | join(', ')   -%}
+
+              SELECT {{columns_with_exclusions}}
               FROM "{{ database }}". {{qualified_name}}
               {%- if boolean_filter_statement %}
               WHERE {{ boolean_filter_statement }}
