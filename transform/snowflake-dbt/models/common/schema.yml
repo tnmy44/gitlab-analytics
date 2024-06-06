@@ -5183,8 +5183,8 @@ models:
         description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date
@@ -5517,7 +5517,7 @@ models:
       - name: dim_order_type_id
         description: '{{ doc("order_type") }}'
       - name: dim_order_type_current_id
-        description: '{{ doc("order_type_live") }}'
+        description: '{{ doc("order_type_current") }}'
       - name: pre_military_invasion_arr
         description: '{{ doc("pre_military_invasion_arr") }}'
       - name: won_arr_basis_for_clari
