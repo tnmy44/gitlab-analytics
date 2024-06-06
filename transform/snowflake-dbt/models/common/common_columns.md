@@ -2192,13 +2192,13 @@ Zuora subscriptions can have lineages of linked subscriptions. This field provid
 
 {% docs oldest_subscription_start_date %}
 
-Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date for the oldest subscription in a lineage. This date can be used to know when customers first start paying and can be utlized for different use cases such as reporting on `Time to X Value`.
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date for the oldest subscription in a lineage. This date can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
 
 {% enddocs %}
 
 {% docs oldest_subscription_cohort_month %}
 
-Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date month for the oldest subscription in a lineage. This cohort month can be used to know when customers first start paying and can be utlized for different use cases such as reporting on `Time to X Value`.
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date month for the oldest subscription in a lineage. This cohort month can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
 
 {% enddocs %}
 
