@@ -28,7 +28,7 @@ def get_file_name(config_name):
     elif config_name == "manifest_reduce":
         return "target/manifest.json"
     elif config_name == "gdpr_logs":
-        parse_log_data('logs/dbt.log', 'log_data.json')
+        parse_log_data("logs/dbt.log", "log_data.json")
         return "'log_data.json'"
     else:
         return "target/run_results.json"
@@ -41,11 +41,11 @@ def parse_log_data(log_file_name: str, output_json_name: str):
     :param output_json_name: File name to write json
     :return:
     """
-    with open(log_file_name, 'r') as file:
+    with open(log_file_name, "r") as file:
         log_data = file.readlines()
 
     parsed_data = [json.loads(line) for line in log_data]
-    with open(output_json_name, 'w', encoding='utf-8') as f:
+    with open(output_json_name, "w", encoding="utf-8") as f:
         json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
 
@@ -66,6 +66,7 @@ def get_table_name(config_name, snowflake_database):
         return f'"{snowflake_database}".dbt.gdpr_logs'
     else:
         return f'"{snowflake_database}".dbt.run_results'
+
 
 if __name__ == "__main__":
     config_name = sys.argv[1]
