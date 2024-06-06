@@ -16,7 +16,7 @@
 
   {%- endif -%}
 
- {%- call statement('get_schemata', fetch_result=True) -%}
+ {%- set sql_statement -%}
 
   SELECT DISTINCT 
     '"' || table_schema || '"."' || table_name || '"' AS qualified_name,
@@ -31,23 +31,21 @@
       WHEN REGEXP_INSTR(table_schema,'\\d{4}_\\d{2}') > 0 THEN 'YYYY_MM'
     END AS schema_date_format,
     TO_DATE(REGEXP_SUBSTR(table_name,'\\d{4}_\\d{2}_?\\d{0,2}'),table_date_format) as table_date,
-    TO_DATE(REGEXP_SUBSTR(table_schema,'\\d{4}_\\d{2}_?\\d{0,2}'),schema_date_format) as schema_date
-  FROM "{{ database }}".information_schema.tables
+    TO_DATE(REGEXP_SUBSTR(table_schema,'\\d{4}_\\d{2}_?\\d{0,2}'),schema_date_format) as schema_date,
+    LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_name) AS column_names
+  FROM "{{ database }}".information_schema.columns
   WHERE table_schema ILIKE '%{{ schema_part }}%'
     AND table_schema NOT ILIKE '%{{ exclude_part }}%'
     AND table_name ILIKE '{{ table_name }}'
     {%- if day_limit %}
     AND COALESCE(table_date,schema_date) >= DATE_TRUNC('month',DATEADD('day',-{{ day_limit }}, CURRENT_DATE()))
     {%- endif -%}
+  GROUP BY ALL
   ORDER BY 1
 
-  {%- endcall -%}
+  {%- endset -%}
 
-    {%- set value_list = load_result('get_schemata') -%}
-
-    {%- if value_list and value_list['data'] -%}
-
-        {%- set values = value_list['data'] | map(attribute=0) | list -%}
+  {%- set value_list = dbt_utils.get_query_results_as_dict(sql_statement) -%}
               
         {%- if excluded_col -%}
 
@@ -66,10 +64,12 @@
           {%- set excluded_col_fields_string = "" -%}
 
         {%- endif -%}
+
+    {%- if value_list and value_list['QUALIFIED_NAME'] -%}
           
-        {% for schematable in values -%}
-              SELECT * {{excluded_col_fields_string}}
-              FROM "{{ database }}".{{ schematable }}
+        {% for qualified_name, column_names in zip(value_list['QUALIFIED_NAME'], value_list['COLUMN_NAMES']) -%} {{excluded_col_fields_string}}
+              SELECT {{column_names}}
+              FROM "{{ database }}". {{qualified_name}}
               {%- if boolean_filter_statement %}
               WHERE {{ boolean_filter_statement }}
               {%- endif -%}
@@ -81,7 +81,8 @@
             
     {%- else -%}
 
-        {{ return(1) }}
+
+        {{ return("/* No models found to union in schema_union_all */") }}
 
     {%- endif %}
 
