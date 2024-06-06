@@ -9097,12 +9097,6 @@ users:
       - Finance All Access
       - General All Access
       - General SAFE Access
-  - user_name: smoore
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: smorris
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -11472,6 +11466,24 @@ users:
     groups:
       - General All Access
   - user_name: bmcdonald
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: smoore
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: tylsmith
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: dmuggli
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
