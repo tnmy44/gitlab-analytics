@@ -5494,12 +5494,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: jgouws
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: jgrothjan
     user_name_domain: gitlab.com
     site_role: Viewer
