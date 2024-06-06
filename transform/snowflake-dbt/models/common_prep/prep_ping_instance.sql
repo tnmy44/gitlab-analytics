@@ -7,7 +7,8 @@
 
 {{ simple_cte([
     ('raw_usage_data', 'version_raw_usage_data_source'),
-    ('automated_instance_service_ping', 'instance_combined_metrics')
+    ('automated_instance_service_ping', 'instance_combined_metrics'),
+    ('overwrite_expired_subscription', 'overwrite_expired_subscription')
     ])
 
 }}
@@ -87,10 +88,17 @@
         ELSE 'Self-Managed'
       END                                                                                                                                         AS ping_deployment_type,
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                            AS raw_usage_data_payload,
-      IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
+      IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type, --GitLab SaaS pings here are manual, everything else is SM
+      COALESCE(
+        overwrite_expired_subscription.dim_subscription_id,
+        raw_usage_data_payload['license_subscription_id']::VARCHAR
+      )                                                                                                                                           AS license_subscription_id
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+    LEFT JOIN overwrite_expired_subscription
+      ON overwrite_expired_subscription.hostname = usage_data.host_name
+      AND overwrite_expired_subscription.ping_day = TO_DATE(usage_data.ping_created_at)
     WHERE usage_data.ping_created_at  < (SELECT MAX(created_at) FROM raw_usage_data)
       AND NOT(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' AND ping_created_at >= '2023-02-19') --excluding GitLab SaaS pings from 2023-02-19 and after
 
@@ -176,7 +184,8 @@
       'SaaS' AS ping_delivery_type,
       'GitLab.com' AS ping_deployment_type,
       raw_usage_data_payload,
-      ping_type
+      ping_type,
+      NULL AS license_subscription_id
     FROM automated_instance_service_ping
     WHERE created_at >= '2023-02-19' --start using the automated SaaS Service Ping as of 2023-02-19
 
@@ -193,7 +202,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@utkarsh060",
+    updated_by="@mdrussell",
     created_date="2022-03-17",
-    updated_date="2024-05-10"
+    updated_date="2024-06-05"
 ) }}

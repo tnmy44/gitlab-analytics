@@ -14,8 +14,7 @@
     ('prep_ping_instance', 'prep_ping_instance'),
     ('dim_crm_account','dim_crm_account'),
     ('prep_app_release_major_minor', 'prep_app_release_major_minor'),
-    ('dim_installation', 'dim_installation'),
-    ('overwrite_expired_subscription','overwrite_expired_subscription') 
+    ('dim_installation', 'dim_installation')
     ])
 
 }}
@@ -35,7 +34,6 @@
       prep_ping_instance.*,
       prep_ping_instance.raw_usage_data_payload:license_billable_users::NUMBER                            AS license_billable_users, 
       TO_DATE(prep_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
-      (prep_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
     FROM prep_ping_instance
       {% if is_incremental() %}
@@ -73,10 +71,7 @@
       add_country_info_to_usage_ping.license_md5                                         AS license_md5,
       add_country_info_to_usage_ping.dim_location_country_id                             AS dim_location_country_id,
       add_country_info_to_usage_ping.license_trial_ends_on                               AS license_trial_ends_on,
-      COALESCE(
-        overwrite_expired_subscription.dim_subscription_id,
-        add_country_info_to_usage_ping.license_subscription_id
-      )                                                                                  AS license_subscription_id,
+      add_country_info_to_usage_ping.license_subscription_id                             AS license_subscription_id,
       add_country_info_to_usage_ping.license_billable_users                              AS license_billable_users,
       add_country_info_to_usage_ping.Instance_user_count                                 AS instance_user_count,
       add_country_info_to_usage_ping.historical_max_users                                AS historical_max_users,
@@ -95,9 +90,6 @@
     LEFT JOIN prep_app_release_major_minor AS latest_version -- Join the latest version released at the time of the ping.
       ON add_country_info_to_usage_ping.ping_created_at BETWEEN latest_version.release_date AND {{ coalesce_to_infinity('latest_version.next_version_release_date') }}
       AND latest_version.application = 'GitLab'
-    LEFT JOIN overwrite_expired_subscription
-      ON overwrite_expired_subscription.hostname = add_country_info_to_usage_ping.hostname
-      AND overwrite_expired_subscription.ping_day = TO_DATE(add_country_info_to_usage_ping.ping_created_at)
     QUALIFY RANK() OVER(PARTITION BY add_country_info_to_usage_ping.dim_ping_instance_id ORDER BY latest_version.release_date DESC) = 1
     -- Adding the QUALIFY statement because of the latest_version CTE. There is rare case when the ping_created_at is right between the last day of a release and when the new one comes out.
     -- This causes two records to be matched and then we have two records per one ping.
@@ -190,7 +182,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2024-06-05"
+    updated_date="2023-06-12"
 ) }}

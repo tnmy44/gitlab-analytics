@@ -34,7 +34,7 @@ WITH source AS (
         ping_delivery_type                                                                      AS ping_delivery_type,
         ping_deployment_type                                                                    AS ping_deployment_type,
         TO_DATE(source.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
-        (source.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+        license_subscription_id                                                                 AS license_subscription_id,
         source.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
         path                                                                                    AS metrics_path,
         IFF(value = -1, 0, value)                                                               AS metric_value,
@@ -50,7 +50,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@chrissharp",
+      updated_by="@mdrussell",
       created_date="2022-03-17",
-      updated_date="2023-11-17"
+      updated_date="2024-06-05"
   ) }}
