@@ -133,7 +133,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.subscription_start_date,
       sfdc_opportunity.subscription_end_date,
       sfdc_opportunity.true_up_value,
-      sfdc_opportunity.order_type_live,
+      sfdc_opportunity.order_type_current,
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
       sfdc_opportunity.recurring_amount,

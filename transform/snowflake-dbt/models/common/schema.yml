@@ -5516,7 +5516,7 @@ models:
         description: The ratio of incremental annual contract value to net ARR assigned to this opportunity based on its segment and order type. This field is a helper used to map old IACV values to new net ARR values, which were updated for all opportunities closed prior to 2021-02-01.
       - name: dim_order_type_id
         description: '{{ doc("order_type") }}'
-      - name: dim_order_type_live_id
+      - name: dim_order_type_current_id
         description: '{{ doc("order_type_live") }}'
       - name: pre_military_invasion_arr
         description: '{{ doc("pre_military_invasion_arr") }}'

@@ -110,7 +110,7 @@ WITH source AS (
         start_date__c::DATE                             AS subscription_start_date,
         end_date__c::DATE                               AS subscription_end_date,
         NULL                                            AS true_up_value,
-        order_type_live__c                              AS order_type_live,
+        order_type_live__c                              AS order_type_current,
         order_type_test__c                              AS order_type_stamped,
         CASE
           WHEN order_type_stamped = '1. New - First Order'

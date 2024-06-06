@@ -466,10 +466,10 @@ LEFT JOIN cw_base
       sfdc_opportunity_live.is_edu_oss                                                            AS is_edu_oss_live,
       sfdc_opportunity_live.opportunity_category                                                  AS opportunity_category_live,
       sfdc_opportunity_live.is_jihu_account                                                       AS is_jihu_account_live,
-      {# sfdc_opportunity_live.order_type                                                            AS order_type_live, #} --pending confirmation from melia and natalie
       sfdc_opportunity_live.deal_path                                                             AS deal_path_live,
       sfdc_opportunity_live.parent_crm_account_geo                                                AS parent_crm_account_geo_live,
       sfdc_opportunity_live.order_type_grouped                                                    AS order_type_grouped_live,
+      sfdc_opportunity_live.order_type                                                            AS order_type_live,
 
 
       -- net arr
