@@ -64,7 +64,7 @@
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
       CASE
-        WHEN hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+        WHEN usage_data.hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
                                                                     '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
           THEN TRUE
         ELSE FALSE
