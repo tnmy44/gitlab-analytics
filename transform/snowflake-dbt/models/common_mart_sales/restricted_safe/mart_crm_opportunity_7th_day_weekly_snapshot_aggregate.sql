@@ -1,7 +1,5 @@
 {{ simple_cte([
     ('fct_crm_opportunity','fct_crm_opportunity_7th_day_weekly_snapshot_aggregate'),
-    ('dim_crm_account','dim_crm_account_daily_snapshot'),
-    ('dim_crm_user', 'prep_crm_user_daily_snapshot'),
     ('dim_date', 'dim_date'),
     ('dim_crm_user_hierarchy','dim_crm_user_hierarchy')
 ]) }},
@@ -205,11 +203,11 @@ final AS (
   FROM fct_crm_opportunity
   INNER JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
-  INNER JOIN distinct_quarters AS close_date
+  LEFT JOIN distinct_quarters AS close_date
     ON fct_crm_opportunity.close_fiscal_quarter_date = close_date.first_day_of_fiscal_quarter
-  INNER JOIN distinct_quarters AS arr_created_date
+  LEFT JOIN distinct_quarters AS arr_created_date
     ON fct_crm_opportunity.arr_created_fiscal_quarter_date = arr_created_date.first_day_of_fiscal_quarter
-  INNER JOIN distinct_quarters AS created_date
+  LEFT JOIN distinct_quarters AS created_date
     ON fct_crm_opportunity.created_fiscal_quarter_date = created_date.first_day_of_fiscal_quarter
   LEFT JOIN dim_crm_user_hierarchy
     ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
