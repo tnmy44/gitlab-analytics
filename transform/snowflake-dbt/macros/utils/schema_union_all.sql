@@ -54,14 +54,8 @@
           {%- for col in excluded_col -%}
         
             {%- set excluded_fields = excluded_fields.append(col|upper) -%}
-  
-          {%- endfor -%}
 
-          {%- set excluded_col_fields_string = "EXCLUDE (" + ','.join(excluded_fields) + ")" -%}
-            
-        {%- else -%}
-
-          {%- set excluded_col_fields_string = "" -%}
+          {% endfor %}
 
         {%- endif -%}
 
