@@ -28,6 +28,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.lead_source,
       prep_crm_opportunity.merged_opportunity_id,
       prep_crm_opportunity.duplicate_opportunity_id,
+      prep_crm_opportunity.contract_reset_opportunity_id,
       prep_crm_opportunity.net_new_source_categories,
       prep_crm_opportunity.primary_campaign_source_id,
       prep_crm_opportunity.sales_path,
@@ -248,7 +249,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@snalamaru",
+    updated_by="@rkohnke",
     created_date="2020-11-20",
-    updated_date="2024-04-18"
+    updated_date="2024-06-06"
 ) }}

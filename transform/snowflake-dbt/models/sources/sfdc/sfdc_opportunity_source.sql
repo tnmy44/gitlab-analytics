@@ -45,6 +45,7 @@ WITH source AS (
         leadsource                                      AS lead_source,
         merged_opportunity__c                           AS merged_opportunity_id,
         duplicate_opportunity__c                        AS duplicate_opportunity_id,
+        contract_reset_opportunity__c                   AS contract_reset_opportunity_id,
         account_owner__c                                AS account_owner,
         opportunity_owner__c                            AS opportunity_owner,
         manager_current__c                              AS opportunity_owner_manager,
