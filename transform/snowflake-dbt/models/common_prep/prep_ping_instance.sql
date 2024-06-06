@@ -97,7 +97,7 @@
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
     LEFT JOIN overwrite_expired_subscription
-      ON overwrite_expired_subscription.hostname = usage_data.host_name
+      ON overwrite_expired_subscription.hostname = usage_data.hostname
       AND overwrite_expired_subscription.ping_day = TO_DATE(usage_data.ping_created_at)
     WHERE usage_data.ping_created_at  < (SELECT MAX(created_at) FROM raw_usage_data)
       AND NOT(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' AND ping_created_at >= '2023-02-19') --excluding GitLab SaaS pings from 2023-02-19 and after
