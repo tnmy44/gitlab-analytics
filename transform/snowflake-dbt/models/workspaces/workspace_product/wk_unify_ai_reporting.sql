@@ -496,7 +496,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -518,7 +517,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -541,7 +539,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -563,7 +560,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 UNION ALL
@@ -584,7 +580,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -606,7 +601,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -630,7 +624,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -652,7 +645,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -674,7 +666,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -696,7 +687,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -718,7 +708,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 UNION ALL 
@@ -739,7 +728,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -761,7 +749,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -783,7 +770,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -805,7 +791,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -827,7 +812,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -849,7 +833,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_month = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
@@ -871,7 +854,6 @@ WHERE
   AND p.metric_value > 0
   AND p.is_last_ping_of_week = TRUE
   AND p.ping_created_date_month > '2024-01-01'
-  AND p.ping_deployment_type != 'Gitlab.com'
   AND p.ping_deployment_type != 'GitLab.com'
 GROUP BY ALL
 
