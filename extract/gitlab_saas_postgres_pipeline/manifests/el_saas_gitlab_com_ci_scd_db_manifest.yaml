@@ -64,7 +64,7 @@ tables:
       , chat_name_id
       FROM ci_pipeline_chat_data
   ci_pipeline_metadata_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    additional_filtering: WHERE project_id in {INTERNAL_PROJECT_IDS}
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: ci_pipeline_metadata_internal_only
