@@ -244,6 +244,10 @@ databases:
       shared: false
   - kvasireddy_prep:
       shared: false
+  - mxiao_prod:
+      shared: false
+  - mxiao_prep:
+      shared: false
 roles:
   - accountadmin:
       warehouses:
@@ -5045,7 +5049,39 @@ roles:
         - reporter
         - restricted_safe
       warehouses:
-        - dev_xs
+        - dev_xs 
+      owns:
+        databases:
+          - mxiao_prep
+          - mxiao_prod
+        schemas:
+          - mxiao_prep.*
+          - mxiao_prod.*
+        tables:
+          - mxiao_prep.*.*
+          - mxiao_prod.*.*
+      privileges:
+        databases:
+          read:
+            - mxiao_prep
+            - mxiao_prod
+          write:
+            - mxiao_prep
+            - mxiao_prod
+        schemas:
+          read:
+            - mxiao_prep.*
+            - mxiao_prod.*
+          write:
+            - mxiao_prep.*
+            - mxiao_prod.*
+        tables:
+          read:
+            - mxiao_prep.*.*
+            - mxiao_prod.*.*
+          write:
+            - mxiao_prep.*.*
+            - mxiao_prod.*.*
   - nbilgrami:
       member_of:
         - reporter
