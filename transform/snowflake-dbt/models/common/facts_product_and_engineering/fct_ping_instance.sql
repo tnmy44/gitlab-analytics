@@ -182,7 +182,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-03-08",
-    updated_date="2023-06-12"
+    updated_date="2024-06-05"
 ) }}
