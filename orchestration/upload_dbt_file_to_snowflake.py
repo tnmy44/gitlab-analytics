@@ -36,9 +36,9 @@ def get_file_name(config_name):
 
 def parse_log_data(log_file_name: str, output_json_name: str):
     """
-
-    :param log_file_name:
-    :param output_json_name:
+        Function to parse the json lines log output into something more manageable for the stage function
+    :param log_file_name: File name to read
+    :param output_json_name: File name to write json
     :return:
     """
     with open(log_file_name, 'r') as file:

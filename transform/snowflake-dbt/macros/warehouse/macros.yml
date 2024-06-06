@@ -11,6 +11,8 @@ macros:
     description: '{{ doc("get_backup_table_command") }}'
   - name: grant_usage_to_schemas
     description: '{{ doc("grant_usage_to_schemas") }}'
+  - name: gdpr_delete_test
+  - name: gdpr_gitlab_delete_test
   - name: gdpr_delete
     description: '{{ doc("gdpr_delete") }}'
     arguments:
