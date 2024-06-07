@@ -12,7 +12,7 @@
 
          {% if set_sql %}
              {% set results = run_query(set_sql) %}
-             {{ log("Snowflake response: " ~ results, info=True) }}
+             {{ log('{"email_sha": "' ~ email_sha ~ '","snowflake_response": "' ~ results ~ '"}', info=True) }}
          {% endif %}
 
 
