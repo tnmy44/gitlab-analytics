@@ -42,6 +42,7 @@ final AS (
 
         --live fields
     fct_crm_opportunity.sales_qualified_source_live,
+    fct_crm_opportunity.sales_qualified_source_grouped_live,
     fct_crm_opportunity.is_edu_oss_live,
     fct_crm_opportunity.opportunity_category_live,
     fct_crm_opportunity.is_jihu_account_live,

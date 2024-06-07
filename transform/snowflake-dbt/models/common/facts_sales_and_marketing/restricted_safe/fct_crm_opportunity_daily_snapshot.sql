@@ -27,7 +27,7 @@ final AS (
     {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_user_id') }}                                                               AS dim_crm_user_id,
     {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_account_user_id') }}                                                       AS dim_crm_account_user_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
-    {{ get_keyed_nulls('order_type_current.dim_order_type_id') }}                                                                  AS dim_order_type_current_id,
+    {{ get_keyed_nulls('order_type_current.dim_order_type_id') }}                                                               AS dim_order_type_current_id,
     {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                                 AS dim_dr_partner_engagement_id,
     {{ get_keyed_nulls('channel_type.dim_channel_type_id') }}                                                                   AS dim_channel_type_id,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
@@ -134,6 +134,7 @@ final AS (
 
     --live fields
     prep_crm_opportunity.sales_qualified_source_live,
+    prep_crm_opportunity.sales_qualified_source_grouped_live,
     prep_crm_opportunity.is_edu_oss_live,
     prep_crm_opportunity.opportunity_category_live,
     prep_crm_opportunity.is_jihu_account_live,
