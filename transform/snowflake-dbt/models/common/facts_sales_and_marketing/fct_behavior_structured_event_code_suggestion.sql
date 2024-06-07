@@ -156,7 +156,9 @@ code_suggestion_context AS (
     code_suggestion_context.behavior_structured_event_pk,
     code_suggestion_context.instance_id,
     dim_installation.dim_installation_id,
-    dim_installation.host_name
+    dim_installation.host_name,
+    dim_installation.product_delivery_type,
+    dim_installation.product_deployment_type
   FROM code_suggestion_context
   LEFT JOIN dim_installation
     ON dim_installation.dim_instance_id = code_suggestion_context.instance_id
@@ -172,7 +174,9 @@ code_suggestion_context AS (
     code_suggestion_context.behavior_structured_event_pk,
     code_suggestion_context.instance_id,
     dim_installation.dim_installation_id,
-    dim_installation.host_name
+    dim_installation.host_name,
+    dim_installation.product_delivery_type,
+    dim_installation.product_deployment_type
   FROM code_suggestion_context
   LEFT JOIN dim_installation
     ON dim_installation.dim_instance_id = code_suggestion_context.instance_id
@@ -208,6 +212,8 @@ code_suggestion_context AS (
     context_with_installation_id.behavior_structured_event_pk,
     ARRAY_AGG(DISTINCT context_with_installation_id.dim_installation_id) WITHIN GROUP (ORDER BY context_with_installation_id.dim_installation_id ASC)                     AS dim_installation_ids,
     ARRAY_AGG(DISTINCT context_with_installation_id.host_name) WITHIN GROUP (ORDER BY context_with_installation_id.host_name)                                             AS host_names,
+    ARRAY_AGG(DISTINCT context_with_installation_id.product_delivery_type) WITHIN GROUP (ORDER BY context_with_installation_id.product_delivery_type ASC)                 AS product_delivery_types,
+    ARRAY_AGG(DISTINCT context_with_installation_id.product_deployment_type) WITHIN GROUP (ORDER BY context_with_installation_id.product_deployment_type ASC)             AS product_deployment_types,
     ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.subscription_name) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.subscription_name ASC)                 AS subscription_names,
     ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.dim_crm_account_id) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.dim_crm_account_id ASC)               AS dim_crm_account_ids,
     ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.dim_parent_crm_account_id) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.dim_parent_crm_account_id ASC) AS dim_parent_crm_account_ids,
@@ -219,7 +225,9 @@ code_suggestion_context AS (
     ARRAY_SIZE(dim_parent_crm_account_ids)                                                                                                                                AS count_dim_parent_crm_account_ids,
     ARRAY_SIZE(crm_account_names)                                                                                                                                         AS count_crm_account_names,
     ARRAY_SIZE(parent_crm_account_names)                                                                                                                                  AS count_parent_crm_account_names,
-    ARRAY_SIZE(host_names)                                                                                                                                                AS count_host_names
+    ARRAY_SIZE(host_names)                                                                                                                                                AS count_host_names,
+    ARRAY_SIZE(product_delivery_types)                                                                                                                                    AS count_product_delivery_types,
+    ARRAY_SIZE(product_deployment_types)                                                                                                                                  AS count_product_deployment_types
   FROM context_with_installation_id
   LEFT JOIN bdg_latest_instance_subscription
     ON context_with_installation_id.dim_installation_id = bdg_latest_instance_subscription.dim_installation_id
@@ -239,6 +247,8 @@ code_suggestion_context AS (
     COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.parent_crm_account_names,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.parent_crm_account_names),[])                                    AS parent_crm_account_names,
     COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,[])                                                                                                                                            AS dim_installation_ids,
     COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,[])                                                                                                                                                      AS host_names,
+    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_delivery_types,[])                                                                                                                                          AS product_delivery_types,
+    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_deployment_types,[])                                                                                                                                        AS product_deployment_types,
     IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_crm_account_ids) = 1, 
       COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids,0))::VARCHAR, NULL)                          AS dim_crm_account_id,
     IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_parent_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_parent_crm_account_ids) = 1, 
@@ -252,12 +262,16 @@ code_suggestion_context AS (
     IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_ultimate_parent_namespace_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,0)::VARCHAR, NULL)         AS ultimate_parent_namespace_id,
     IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_installation_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,0)::VARCHAR, NULL)                               AS dim_installation_id,
     IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_host_names = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,0)::VARCHAR, NULL)                                                   AS installation_host_name,
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_product_delivery_types = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_delivery_types,0)::VARCHAR, NULL)                           AS product_delivery_type,
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_product_deployment_types = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_deployment_types,0)::VARCHAR, NULL)                       AS product_deployment_type,
     code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.namespace_is_internal                                                                                                                                                      AS namespace_is_internal
   FROM code_suggestion_context
   LEFT JOIN code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.behavior_structured_event_pk
   LEFT JOIN code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm 
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.behavior_structured_event_pk
+  LEFT JOIN dim_installation
+    ON dim_installation_id = dim_installation.dim_installation_id
 )
 
 {{ dbt_audit(
@@ -265,5 +279,5 @@ code_suggestion_context AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-06-03"
+    updated_date="2024-06-07"
 ) }}
