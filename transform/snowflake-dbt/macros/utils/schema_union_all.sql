@@ -68,7 +68,7 @@
             {%- set columns_with_exclusions =  (columns_names_list | reject('in', excluded_fields) | list + excluded_fields | reject('in', columns_names_list) | list) | join(', ')   -%}
 
               SELECT {{columns_with_exclusions}}
-              FROM "{{ database }}". {{qualified_name}}
+              FROM "{{ database }}".{{ qualified_name }}
               {%- if boolean_filter_statement %}
               WHERE {{ boolean_filter_statement }}
               {%- endif -%}
