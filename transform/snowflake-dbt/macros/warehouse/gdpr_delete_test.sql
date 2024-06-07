@@ -8,7 +8,7 @@
         {% set set_sql %}
         SET email_sha = '{{email_sha}}';
         {% endset %}
-        {{ log('{email_sha: ' ~ email_sha ~ '}', info = True) }}
+        {{ log('{"email_sha": ' ~ email_sha ~ '}', info = True) }}
 
          {% if set_sql %}
              {% set results = run_query(set_sql) %}
