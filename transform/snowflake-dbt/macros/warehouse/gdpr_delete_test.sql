@@ -10,4 +10,10 @@
         {% endset %}
         {{ log('{email_sha: ' ~ email_sha ~ '}', info = True) }}
 
+         {% if set_sql %}
+             {% set results = run_query(set_sql) %}
+             {% set rows_updated = results.print_table() %}
+         {% endif %}
+        {{ log(rows_updated, info = True) }}
+
 {%- endmacro -%}
