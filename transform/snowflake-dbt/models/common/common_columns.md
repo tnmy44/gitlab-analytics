@@ -2872,6 +2872,30 @@ Pseudonymised combination of instance id and user id sent in Code Suggestions ev
 
 {% enddocs %}
 
+{% docs code_suggestions_is_invoked %}
+
+Flag to indicate whether the request for a suggestion was triggered automatically while the user was typing or invoked by the user hovering over the suggestion to get more options.
+
+{% enddocs %}
+
+{% docs code_suggestions_options_count %}
+ 
+The total number of options provided for the current suggestion. A user can select from one of these options.
+
+{% enddocs %}
+
+{% docs code_suggestions_accepted_option %}
+
+When the suggestion is accepted, this field indicates the option number which was chosen by the user out of the possible options provided. This is a 1-based index.
+
+{% enddocs %}
+
+{% docs code_suggestions_suggestion_source %}
+
+Source where the suggestion is retrieved from. This can be either the cache or network.
+
+{% enddocs %}
+
 {% docs ide_extension_version_context %}
 
 IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
@@ -3374,6 +3398,12 @@ Flag to indicate a project has turned on the [Merge Trains](https://docs.gitlab.
 {% docs cost_factor %}
  
 For Shared Runners, whenever a user runs jobs on a specific machine type the cost to GitLab needs to be multiplied by a cost factor as the larger the machine the more expensive it is to run.
+
+{% enddocs %}
+
+{% docs ping_instance_metric_monthly_pk %}
+ 
+Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_date_month
 
 {% enddocs %}
 
