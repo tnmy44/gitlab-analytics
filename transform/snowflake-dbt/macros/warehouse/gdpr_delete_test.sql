@@ -12,9 +12,7 @@
 
          {% if set_sql %}
              {% set results = run_query(set_sql) %}
-             {% set rows_updated = results.print_table() %}
-            {{ log(rows_updated, info = True) }}
-            {{ log(results.print_table(), info = True) }}
+             {{ log("Snowflake response: " ~ results, info=True) }}
          {% endif %}
 
 
