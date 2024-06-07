@@ -154,6 +154,8 @@ suggestion_level AS (
     requested.ide_version,
     requested.language_server_version,
     requested.is_invoked,
+    requested.has_advanced_context,
+    requested.is_direct_connection,
 
     --model_engine, model_name, accepted_option, suggestion_source, and options_count are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
     accepted.accepted_option,

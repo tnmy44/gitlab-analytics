@@ -2890,6 +2890,18 @@ When the suggestion is accepted, this field indicates the option number which wa
 
 {% enddocs %}
 
+{% docs code_suggestions_has_advanced_context %}
+
+Flag indicating whether the suggestion was requested with additional context.
+
+{% enddocs %}
+
+{% docs code_suggestions_is_direct_connection %}
+
+Flag indicating whether the suggestion request was sent to monolith or directly to AI gateway.
+
+{% enddocs %}
+
 {% docs code_suggestions_suggestion_source %}
 
 Source where the suggestion is retrieved from. This can be either the cache or network.
