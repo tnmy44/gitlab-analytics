@@ -130,7 +130,7 @@ WITH filtered_source as (
             {'field':'gitlab_global_user_id'},
             {'field':'suggestion_source'},
             {'field':'is_invoked', 'data_type':'boolean'},
-            {'field':'options_count', 'formula':"NULLIF(context_data['options_count']::VARCHAR, 'null')::NUMBER", 'alias':'options_count'},
+            {'field':'options_count', 'formula':"NULLIF(context_data['options_count']::VARCHAR, 'null')", 'data_type':'number', 'alias':'options_count'},
             {'field':'accepted_option', 'data_type':'int'}
             ]
         )

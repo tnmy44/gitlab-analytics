@@ -2495,12 +2495,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: agroleau
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: agupta
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -5489,12 +5483,6 @@ users:
     groups:
       - General All Access
   - user_name: jgonsalves
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: jgouws
     user_name_domain: gitlab.com
     site_role: Unlicensed
     auth_setting: SAML
@@ -8598,12 +8586,6 @@ users:
     groups:
       - Engineering All Access
       - General All Access
-  - user_name: robyrne
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: rpereira
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -9109,12 +9091,6 @@ users:
       - Finance All Access
       - General All Access
       - General SAFE Access
-  - user_name: smoore
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: smorris
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -9827,7 +9803,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-      - General SAFE Acces
+      - General SAFE Access
   - user_name: mmagoma
     user_name_domain: gitlab.com
     site_role: Creator
@@ -11457,3 +11433,59 @@ users:
       - General All Access
       - General SAFE Access
       - Finance All Access
+  - user_name: nscoville
+    user_name_domain: gitlab.com
+    site_role: SiteAdministratorCreator
+    auth_setting: SAML
+    groups:
+      - Ad-hoc Project Lead
+      - Data Team All Access
+      - Data Team Project Lead
+      - Development Project Lead
+      - General All Access
+      - General SAFE Access
+      - Production Project Lead
+      - Resources Project Lead
+      - Test Permissions Group
+  - user_name: tgao
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: mgay
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: bmcdonald
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: smoore
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: tylsmith
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: dmuggli
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: rwessels
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access

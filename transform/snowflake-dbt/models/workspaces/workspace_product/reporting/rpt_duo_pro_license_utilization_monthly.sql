@@ -106,7 +106,7 @@ dotcom_duo_pro_monthly_seats AS ( -- duo pro monthly seats and associated entiti
     ON m.ping_created_date_month = reporting_month
     AND m.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' -- installation id for Gitlab.com
     AND m.is_last_ping_of_month = TRUE
-  WHERE product_deployment IN ('SaaS')
+  WHERE product_deployment = 'GitLab.com'
     AND reporting_month BETWEEN '2024-02-01' AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, CURRENT_DATE))
   GROUP BY ALL
 
@@ -273,8 +273,7 @@ final AS (
     a.crm_account_name,
     a.dim_crm_account_id,
     a.dim_parent_crm_account_id,
-    IFF(a.product_deployment = 'SaaS', 'Gitlab.com', a.product_deployment)
-      AS product_deployment, --SaaS has not been replaced by .com terminology in all data models, but .com is the correct convention
+    a.product_deployment, 
     a.add_on_name,
     a.clean_paired_tier  
       AS paired_tier,                                                                          
@@ -283,7 +282,7 @@ final AS (
       AS major_minor_version_id,
     ZEROIFNULL(MAX(a.duo_pro_seats))                                                               
       AS paid_duo_pro_seats,
-    MAX(CASE WHEN a.product_deployment = 'SaaS' THEN ZEROIFNULL(s.number_of_seats_assigned)
+    MAX(CASE WHEN a.product_deployment = 'GitLab.com' THEN ZEROIFNULL(s.number_of_seats_assigned)
            ELSE null END)            
       AS count_seats_assigned,  -- only available for dotcom data - all SM/Dedicated deployments will show null  
     ZEROIFNULL(MAX(IFF(u.primitive = 'chat', ZEROIFNULL(u.count_active_users), NULL)))

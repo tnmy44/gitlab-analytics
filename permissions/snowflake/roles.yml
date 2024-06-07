@@ -244,6 +244,10 @@ databases:
       shared: false
   - kvasireddy_prep:
       shared: false
+  - mxiao_prod:
+      shared: false
+  - mxiao_prep:
+      shared: false
 roles:
   - accountadmin:
       warehouses:
@@ -3010,6 +3014,7 @@ roles:
       member_of:
         - reporter
         - restricted_safe
+        - salesforce
       warehouses:
         - dev_xs
   - aherrero:
@@ -5045,7 +5050,39 @@ roles:
         - reporter
         - restricted_safe
       warehouses:
-        - dev_xs
+        - dev_xs 
+      owns:
+        databases:
+          - mxiao_prep
+          - mxiao_prod
+        schemas:
+          - mxiao_prep.*
+          - mxiao_prod.*
+        tables:
+          - mxiao_prep.*.*
+          - mxiao_prod.*.*
+      privileges:
+        databases:
+          read:
+            - mxiao_prep
+            - mxiao_prod
+          write:
+            - mxiao_prep
+            - mxiao_prod
+        schemas:
+          read:
+            - mxiao_prep.*
+            - mxiao_prod.*
+          write:
+            - mxiao_prep.*
+            - mxiao_prod.*
+        tables:
+          read:
+            - mxiao_prep.*.*
+            - mxiao_prod.*.*
+          write:
+            - mxiao_prep.*.*
+            - mxiao_prod.*.*
   - nbilgrami:
       member_of:
         - reporter
@@ -6006,25 +6043,6 @@ roles:
         - analyst_people_sensitive
       warehouses:
         - reporting
-  - target_snowflake:
-      warehouses:
-        - loading
-      privileges:
-        databases:
-          read:
-            - testing_db
-          write:
-            - testing_db
-        schemas:
-          read:
-            - testing_db.*
-          write:
-            - testing_db.*
-        tables:
-          read:
-            - testing_db.*.*
-          write:
-            - testing_db.*.*
   - tfigueiro:
       member_of:
         - reporter
@@ -6426,6 +6444,17 @@ roles:
         - data_team_analyst
         - restricted_safe
         - xactly
+      warehouses:
+        - dev_xs
+  - testtableau:
+      member_of:
+        - reporter
+      warehouses:
+        - dev_xs
+  - nscoville:
+      member_of:
+        - snowflake_analyst_safe
+        - data_team_analyst
       warehouses:
         - dev_xs
 users:
@@ -6968,7 +6997,6 @@ users:
       can_login: true
       member_of:
         - meltano
-        - target_snowflake
   - mfleisher:
       can_login: true
       member_of:
@@ -7262,10 +7290,6 @@ users:
       can_login: true
       member_of:
         - tableau_restricted_people_data
-  - target_snowflake:
-      can_login: true
-      member_of:
-        - target_snowflake
   - tfigueiro:
       can_login: true
       member_of:
@@ -7458,6 +7482,14 @@ users:
       can_login: true
       member_of:
         - jdleon
+  - testtableau:
+      can_login: true
+      member_of:
+        - testtableau
+  - nscoville:
+      can_login: true
+      member_of:
+        - nscoville
 warehouses:
   - admin:
       size: x-small
