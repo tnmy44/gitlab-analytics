@@ -53,8 +53,6 @@ overall_target AS (
   WHERE result_type IS NOT NULL 
     AND status_type IS NOT NULL
     AND metric_created_at IS NOT NULL
-    AND metric_sla_type IS NOT NULL
-    AND metric_value IS NOT NULL
 
 ),
 
