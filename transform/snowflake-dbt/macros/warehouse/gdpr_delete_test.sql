@@ -8,6 +8,6 @@
         {% set set_sql %}
         SET email_sha = '{{email_sha}}';
         {% endset %}
-        {{ log(set_sql, info = True) }}
+        {{ log('{email_sha: ' ~ email_sha ~ '}', info = True) }}
 
 {%- endmacro -%}
