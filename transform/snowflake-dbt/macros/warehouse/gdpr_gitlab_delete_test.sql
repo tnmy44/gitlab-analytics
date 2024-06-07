@@ -9,7 +9,7 @@
         SET email_sha = '{{email_sha}}';
         SELECT 'GITLAB_VERSION'
         {% endset %}
-        {{ log('{"email_sha": ' ~ email_sha ~ '}', info = True) }}
+        {{ log('{"email_sha": "' ~ email_sha ~ '"}', info = True) }}
         {{ log('{Gitlab version: ' ~ email_sha ~ '}', info = True) }}
 
 
