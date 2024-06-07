@@ -102,7 +102,7 @@ dag = DAG(
 dbt_gdpr_deletes_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt --no-use-colors --log-format json run-operation gdpr_bulk_delete --profiles-dir profile --target prod; ret=$?;
+    dbt --no-use-colors --log-path gdpr_run_logs --log-format json run-operation gdpr_bulk_delete --profiles-dir profile --target prod; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py gdpr_logs; exit $ret
 """

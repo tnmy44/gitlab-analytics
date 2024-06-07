@@ -28,7 +28,7 @@ def get_file_name(config_name):
     elif config_name == "manifest_reduce":
         return "target/manifest.json"
     elif config_name == "gdpr_logs":
-        parse_log_data("logs/dbt.log", "log_data.json")
+        parse_log_data("gdpr_run_logs/dbt.log", "log_data.json")
         return "log_data.json"
     else:
         return "target/run_results.json"
