@@ -69,7 +69,7 @@
 
             {%- set columns_names_list = column_names.split(',') -%}
 
-            {%- set columns_with_exclusions =  (columns_names_list | reject('in', excluded_fields) | list + excluded_fields | reject('in', columns_names_list) | list) | join(', ')   -%}
+            {%- set columns_with_exclusions =  (columns_names_list | reject('in', excluded_fields) | list) | join(', ')   -%}
 
               SELECT {{columns_with_exclusions}}
               FROM "{{ database }}".{{ qualified_name }}
