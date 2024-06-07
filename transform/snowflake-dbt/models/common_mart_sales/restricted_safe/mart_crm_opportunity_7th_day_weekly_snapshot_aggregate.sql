@@ -33,15 +33,21 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
     dim_crm_user_hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
 
+    --snapshot fields
+    fct_crm_opportunity.sales_qualified_source,
+    fct_crm_opportunity.sales_qualified_source_grouped,
+    fct_crm_opportunity.order_type,
+    fct_crm_opportunity.order_type_grouped,
+    fct_crm_opportunity.stage_name,
+    fct_crm_opportunity.deal_path,
+    fct_crm_opportunity.sales_type,
+
     --live fields
     fct_crm_opportunity.sales_qualified_source_live,
     fct_crm_opportunity.sales_qualified_source_grouped_live,
-    fct_crm_opportunity.order_type,
     fct_crm_opportunity.order_type_live,
-    prep_crm_opportunity.order_type_grouped_live,
-    fct_crm_opportunity.stage_name,
+    fct_crm_opportunity.order_type_grouped_live,
     fct_crm_opportunity.deal_path_live,
-    fct_crm_opportunity.sales_type,
 
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
