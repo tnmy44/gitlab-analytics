@@ -42,6 +42,7 @@ WITH prep_amendment AS (
 
     SELECT 
       subscription_name_slugify,
+      1 AS is_data_quality_filter_subscription_slugify_flag,
       COUNT(subscription_name) AS nbr_records
     FROM subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
@@ -102,6 +103,7 @@ WITH prep_amendment AS (
     subscription.creator_account,
     subscription.was_purchased_through_reseller,
     subscription.multi_year_deal_subscription_linkage,
+    COALESCE(dqf.is_data_quality_filter_subscription_slugify_flag, 0)               AS is_data_quality_filter_subscription_slugify_flag,
 
     --Date Information
     subscription.subscription_start_date,
@@ -135,6 +137,8 @@ WITH prep_amendment AS (
     ON subscription.dim_amendment_id_subscription = prep_amendment.dim_amendment_id
   LEFT JOIN subscription_opportunity_mapping
     ON subscription.dim_subscription_id = subscription_opportunity_mapping.dim_subscription_id
+  LEFT JOIN data_quality_filter_subscription_slugify AS dqf
+    ON subscription.subscription_name_slugify = dqf.subscription_name_slugify
 
 ), final AS (
 
@@ -224,10 +228,9 @@ WITH prep_amendment AS (
     LEFT JOIN joined AS oldest_subscription
       ON subscription.oldest_subscription_in_cohort = oldest_subscription.subscription_name_slugify
       AND subscription.subscription_status IN ('Active', 'Cancelled')
-      AND subscription.subscription_name_slugify NOT IN (SELECT subscription_name_slugify FROM data_quality_filter_subscription_slugify)
+      AND subscription.is_data_quality_filter_subscription_slugify_flag = 0
       AND oldest_subscription.subscription_status IN ('Active', 'Cancelled')
-      AND oldest_subscription.subscription_name_slugify NOT IN (SELECT subscription_name_slugify FROM data_quality_filter_subscription_slugify)
-
+      AND oldest_subscription.is_data_quality_filter_subscription_slugify_flag = 0
 )
 
 {{ dbt_audit(
@@ -235,5 +238,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@utkarsh060",
     created_date="2020-12-16",
-    updated_date="2024-06-05"
+    updated_date="2024-06-07"
 ) }}
