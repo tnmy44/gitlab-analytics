@@ -19,20 +19,24 @@
  {%- set sql_statement -%}
 
   SELECT DISTINCT 
-    '"' || table_schema || '"."' || table_name || '"' AS qualified_name,
-    table_schema,
-    table_name,
+    '"' || table_schema || '"."' || table_name || '"'                                 AS qualified_name,
+    table_schema                                                                      AS table_schema,
+    table_name                                                                        AS table_name,
     CASE
-      WHEN REGEXP_INSTR(table_name,'\\d{4}_\\d{2}_\\d{2}') > 0 THEN 'YYYY_MM_DD'
-      WHEN REGEXP_INSTR(table_name,'\\d{4}_\\d{2}') > 0 THEN 'YYYY_MM'
-    END AS table_date_format,
+      WHEN REGEXP_INSTR(table_name,'\\d{4}_\\d{2}_\\d{2}') > 0 
+        THEN 'YYYY_MM_DD'
+      WHEN REGEXP_INSTR(table_name,'\\d{4}_\\d{2}') > 0 
+        THEN 'YYYY_MM'
+    END                                                                               AS table_date_format,
     CASE
-      WHEN REGEXP_INSTR(table_schema,'\\d{4}_\\d{2}_\\d{2}') > 0 THEN 'YYYY_MM_DD'
-      WHEN REGEXP_INSTR(table_schema,'\\d{4}_\\d{2}') > 0 THEN 'YYYY_MM'
-    END AS schema_date_format,
-    TO_DATE(REGEXP_SUBSTR(table_name,'\\d{4}_\\d{2}_?\\d{0,2}'),table_date_format) as table_date,
-    TO_DATE(REGEXP_SUBSTR(table_schema,'\\d{4}_\\d{2}_?\\d{0,2}'),schema_date_format) as schema_date,
-    LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_name) AS column_names
+      WHEN REGEXP_INSTR(table_schema,'\\d{4}_\\d{2}_\\d{2}') > 0 
+        THEN 'YYYY_MM_DD'
+      WHEN REGEXP_INSTR(table_schema,'\\d{4}_\\d{2}') > 0 
+        THEN 'YYYY_MM'
+    END                                                                               AS schema_date_format,
+    TO_DATE(REGEXP_SUBSTR(table_name,'\\d{4}_\\d{2}_?\\d{0,2}'),table_date_format)    AS table_date,
+    TO_DATE(REGEXP_SUBSTR(table_schema,'\\d{4}_\\d{2}_?\\d{0,2}'),schema_date_format) AS schema_date,
+    LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_name)                     AS column_names
   FROM "{{ database }}".information_schema.columns
   WHERE table_schema ILIKE '%{{ schema_part }}%'
     AND table_schema NOT ILIKE '%{{ exclude_part }}%'
@@ -40,13 +44,15 @@
     {%- if day_limit %}
     AND COALESCE(table_date,schema_date) >= DATE_TRUNC('month',DATEADD('day',-{{ day_limit }}, CURRENT_DATE()))
     {%- endif -%}
-  GROUP BY ALL
+  {{ dbt_utils.group_by(n=7) }}
   ORDER BY 1
 
   {%- endset -%}
 
   {%- set value_list = dbt_utils.get_query_results_as_dict(sql_statement) -%}
               
+    {%- if value_list and value_list['QUALIFIED_NAME'] -%}
+
         {%- if excluded_col -%}
 
           {%- set excluded_fields = [] -%}
@@ -58,8 +64,6 @@
           {% endfor %}
 
         {%- endif -%}
-
-    {%- if value_list and value_list['QUALIFIED_NAME'] -%}
           
         {% for qualified_name, column_names in zip(value_list['QUALIFIED_NAME'], value_list['COLUMN_NAMES']) -%} 
 
