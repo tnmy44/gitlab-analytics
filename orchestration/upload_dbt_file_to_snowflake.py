@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 import json
-import pandas as pd
 from os import environ as env
 from reduce_file_size import (
     reduce_manifest_file,
@@ -14,11 +13,7 @@ from reduce_file_size import (
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
-    dataframe_uploader,
 )
-
-from sqlalchemy.engine.base import Engine
-
 
 COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = (
     14  # actually, it is 16MB, but to avoid corner case should put 14
@@ -33,27 +28,25 @@ def get_file_name(config_name):
     elif config_name == "manifest_reduce":
         return "target/manifest.json"
     elif config_name == "gdpr_logs":
-        return "log_data.json"
+        parse_log_data("logs/dbt.log", "log_data.json")
+        return "'log_data.json'"
     else:
         return "target/run_results.json"
 
 
-def parse_log_data(log_file_name: str, output_table_name: str, engine: Engine):
+def parse_log_data(log_file_name: str, output_json_name: str):
     """
         Function to parse the json lines log output into something more manageable for the stage function
     :param log_file_name: File name to read
-    :param output_table_name: File name to write json
+    :param output_json_name: File name to write json
     :return:
     """
     with open(log_file_name, "r") as file:
         log_data = file.readlines()
 
     parsed_data = [json.loads(line) for line in log_data]
-
-    df = pd.DataFrame.from_dict(parsed_data)
-
-    dataframe_uploader(df, engine, output_table_name, if_exists="replace")
-
+    with open(output_json_name, "w", encoding="utf-8") as f:
+        json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
 
 def get_table_name(config_name, snowflake_database):
@@ -117,8 +110,6 @@ if __name__ == "__main__":
             get_table_name(config_name, snowflake_database),
             snowflake_engine,
         )
-    elif file_name == 'log_data.json':
-        parse_log_data("logs/dbt.log", get_table_name(config_name, snowflake_database), snowflake_engine)
     else:
         logging.error(
             f"Dbt File {file_name} is missing. Check if dbt run completed successfully"
