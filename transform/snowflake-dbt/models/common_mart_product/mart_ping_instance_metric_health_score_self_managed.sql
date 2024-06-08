@@ -22,6 +22,7 @@
     FROM fct_ping_instance_metric
     WHERE (license_md5 IS NOT NULL OR
            license_sha256 IS NOT NULL)
+      AND dim_ping_instance_id != '65260503' -- correcting for DQ issue: https://gitlab.com/gitlab-data/analytics/-/merge_requests/10180#note_1935896779
 )
 
 , final AS (

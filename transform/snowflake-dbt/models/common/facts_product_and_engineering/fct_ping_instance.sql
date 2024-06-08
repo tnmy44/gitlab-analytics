@@ -34,6 +34,7 @@
       prep_ping_instance.*,
       prep_ping_instance.raw_usage_data_payload:license_billable_users::NUMBER                            AS license_billable_users, 
       TO_DATE(prep_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
+      (prep_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
     FROM prep_ping_instance
       {% if is_incremental() %}
@@ -182,7 +183,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2024-06-05"
+    updated_date="2023-06-12"
 ) }}
