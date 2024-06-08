@@ -109,7 +109,7 @@
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-07-06",
-    updated_date="2023-06-22"
+    updated_date="2024-06-07"
 ) }}

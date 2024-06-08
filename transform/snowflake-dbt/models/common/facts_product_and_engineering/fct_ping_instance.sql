@@ -14,7 +14,7 @@
     ('prep_ping_instance', 'prep_ping_instance'),
     ('dim_crm_account','dim_crm_account'),
     ('prep_app_release_major_minor', 'prep_app_release_major_minor'),
-    ('dim_installation', 'dim_installation')
+    ('dim_installation', 'dim_installation') 
     ])
 
 }}
