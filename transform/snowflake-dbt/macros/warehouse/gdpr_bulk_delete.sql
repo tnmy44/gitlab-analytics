@@ -13,7 +13,7 @@
 
       {% for data_row in values %}
         {% if data_row[1] == 'full' %}
-        {{ gdpr_delete_test(data_row[0], run_queries='True')}}
+        {{ gdpr_delete_snowflake_logging(data_row[0], run_queries='True')}}
         {% endif %}
         {% if data_row[1] == 'gitlab' %}
         {{ gdpr_gitlab_delete_test(data_row[0], run_queries='True')}}
