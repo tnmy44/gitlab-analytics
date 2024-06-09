@@ -50,9 +50,11 @@
                 DELETE FROM {{fqd_name}} WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  '{{email_sha}}';
             {% endset %}
             {{ log(delete_sql, info = True) }}
+            {{ log('{"email_sha": "' ~ email_sha ~ '","sql_statement": "' ~ delete_sql ~ '"}', info=True) }}
 
             {% if run_queries %}
                 {% set results = run_query(delete_sql) %}
+                {{ log('{"email_sha": "' ~ email_sha ~ '","snowflake_response": "' ~ results ~ '"}', info=True) }}
                 {% set rows_deleted = results.print_table() %}
             {% endif %}
 
@@ -128,9 +130,11 @@
 
             {% endset %}
             {{ log(sql, info = True) }}
+            {{ log('{"email_sha": "' ~ email_sha ~ '","sql_statement": "' ~ sql ~ '"}', info=True) }}
 
             {% if run_queries %}
                 {% set results = run_query(sql) %}
+                {{ log('{"email_sha": "' ~ email_sha ~ '","snowflake_response": "' ~ results ~ '"}', info=True) }}
                 {% set rows_updated = results.print_table() %}
             {% endif %}
 
@@ -150,6 +154,7 @@
 
             {% if email_sql %}
                 {% set results = run_query(email_sql) %}
+                {{ log('{"email_sha": "' ~ email_sha ~ '","snowflake_response": "' ~ results ~ '"}', info=True) }}
                 {% set rows_updated = results.print_table() %}
             {% endif %}
 
@@ -160,5 +165,6 @@
     {%- endif -%}
 
     {{ log("Removal Complete!", info = True) }}
+    {{ log('{"email_sha": "' ~ email_sha ~ '","snowflake_response": "Removal Complete!"}', info=True) }}
 
 {%- endmacro -%}
