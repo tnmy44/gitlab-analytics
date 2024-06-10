@@ -270,8 +270,6 @@ code_suggestion_context AS (
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.behavior_structured_event_pk
   LEFT JOIN code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm 
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.behavior_structured_event_pk
-  LEFT JOIN dim_installation
-    ON dim_installation_id = dim_installation.dim_installation_id
 )
 
 {{ dbt_audit(
