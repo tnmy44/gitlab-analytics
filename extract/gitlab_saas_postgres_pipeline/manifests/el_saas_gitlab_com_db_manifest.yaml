@@ -1411,6 +1411,7 @@ tables:
       , push_rule_id
       , shared_runners_enabled
       , custom_project_templates_group_id
+      , traversal_ids
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
