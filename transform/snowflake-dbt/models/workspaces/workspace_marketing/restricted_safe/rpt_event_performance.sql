@@ -541,7 +541,7 @@ SELECT
     mart_crm_account.crm_account_sub_industry,
 
     --PIPELINE METRICS
-    account_pipeline.stage_name,
+    aggregated_account_influenced_performance.stage_name,
 
     --METRICS
     account_pipeline.open_pipeline_live,
