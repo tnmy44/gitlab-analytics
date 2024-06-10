@@ -2892,7 +2892,7 @@ When the suggestion is accepted, this field indicates the option number which wa
 
 {% docs code_suggestions_has_advanced_context %}
 
-Flag indicating whether the suggestion was requested with additional context.
+Flag indicating whether the suggestion was requested with additional context. NULL means that the feature flags for the advanced context feature are not enabled
 
 {% enddocs %}
 
