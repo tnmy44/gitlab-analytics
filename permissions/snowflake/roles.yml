@@ -5050,7 +5050,7 @@ roles:
         - reporter
         - restricted_safe
       warehouses:
-        - dev_xs 
+        - dev_xs
       owns:
         databases:
           - mxiao_prep
@@ -6457,6 +6457,11 @@ roles:
         - data_team_analyst
       warehouses:
         - dev_xs
+  - jaltherr:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7490,6 +7495,10 @@ users:
       can_login: true
       member_of:
         - nscoville
+  - jaltherr:
+      can_login: true
+      member_of:
+        - jaltherr
 warehouses:
   - admin:
       size: x-small
