@@ -463,11 +463,12 @@ aggregated_account_influenced_performance AS (
     combined_models.dim_campaign_id,
     combined_models.dim_crm_account_id,
     combined_models.true_event_date,
+    combined_models.stage_name,
     combined_models.event_snapshot_type,
     SUM(CASE WHEN is_net_arr_pipeline_created = 1 THEN influenced_net_arr END) AS influenced_pipeline
   FROM
     combined_models
-  {{dbt_utils.group_by(n=4)}}
+  {{dbt_utils.group_by(n=5)}}
 
 ),
 
@@ -539,6 +540,9 @@ SELECT
     mart_crm_account.crm_account_industry,
     mart_crm_account.crm_account_sub_industry,
 
+    --PIPELINE METRICS
+    account_pipeline.stage_name,
+
     --METRICS
     account_pipeline.open_pipeline_live,
     account_pipeline.registered_leads,
@@ -564,8 +568,8 @@ SELECT
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@dmicovic",
+    created_by="@degan",
     updated_by="@dmicovic",
     created_date="2024-04-23",
-    updated_date="2024-04-23",
+    updated_date="2024-05-10",
   ) }}
