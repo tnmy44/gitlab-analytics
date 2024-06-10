@@ -1,12 +1,14 @@
 {{ config(
-    materialized='incremental'
+    materialized='incremental',
+    unique_key = "unique_key_aws"
     )
 }}
 
-{% set unique_key = "value['bill_payer_account_id']::VARCHAR, 
+{% set macro_unique_key = "value['bill_payer_account_id']::VARCHAR, 
     value['bill_invoice_id']::VARCHAR, 
     value['identity_line_item_id']::VARCHAR, 
     value['identity_time_interval']::VARCHAR" %}
+
 {% set source_tables = ['dedicated_legacy_0475', 
     'dedicated_dev_3675', 
     'gitlab_marketplace_5127', 
@@ -19,7 +21,7 @@ WITH all_raw_deduped as (
 {{ dedupe_and_union_aws_source(source_tables, 
     'aws_billing', 
     'metadata$file_last_modified', 
-    unique_key) }}
+    macro_unique_key) }}
 ),
 
 parsed AS (
@@ -185,6 +187,11 @@ parsed AS (
     value['savings_plan_savings_plan_rate']::DECIMAL                                   AS savings_plan_savings_plan_rate,
     value['savings_plan_total_commitment_to_date']::DECIMAL                            AS savings_plan_total_commitment_to_date,
     value['savings_plan_used_commitment']::DECIMAL                                     AS savings_plan_used_commitment,
+    {{ dbt_utils.generate_surrogate_key(["value['bill_payer_account_id']::VARCHAR",
+                                            "value['bill_invoice_id']::VARCHAR",
+                                            "value['identity_line_item_id']::VARCHAR",
+                                            "value['identity_time_interval']::VARCHAR"]) }} 
+                                                                                       AS unique_key_aws,
     modified_at_ as modified_at
   FROM all_raw_deduped
 )
