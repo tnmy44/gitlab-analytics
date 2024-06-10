@@ -94,6 +94,9 @@
 -- ci metrics --
         paid_user_metrics.ci_pipelines_28_days_user,
         div0(paid_user_metrics.ci_pipelines_28_days_user, paid_user_metrics.billable_user_count) AS ci_pipeline_utilization,
+        paid_user_metrics.ci_builds_all_time_user,
+        paid_user_metrics.ci_builds_all_time_event,
+        paid_user_metrics.ci_runners_all_time_event,
         CASE WHEN ci_pipeline_utilization IS NULL THEN NULL
             WHEN ci_pipeline_utilization < .25 THEN 25
             WHEN ci_pipeline_utilization >= .25 and ci_pipeline_utilization < .50 THEN 63
@@ -337,5 +340,5 @@ from
     created_by="@snalamaru",
     updated_by="@jonglee1218",
     created_date="2023-12-10",
-    updated_date="2024-05-16"
+    updated_date="2024-06-10"
 ) }}
