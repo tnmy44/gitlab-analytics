@@ -94,6 +94,7 @@
 -- ci metrics --
         paid_user_metrics.ci_pipelines_28_days_user,
         div0(paid_user_metrics.ci_pipelines_28_days_user, paid_user_metrics.billable_user_count) AS ci_pipeline_utilization,
+        paid_user_metrics.ci_builds_28_days_user,
         paid_user_metrics.ci_builds_all_time_user,
         paid_user_metrics.ci_builds_all_time_event,
         paid_user_metrics.ci_runners_all_time_event,
