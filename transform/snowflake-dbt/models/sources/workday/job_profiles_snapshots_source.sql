@@ -2,6 +2,15 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snapshots', 'job_profiles_snapshots') }}
+  WHERE NOT _fivetran_deleted
+
+),
+
+jp AS ( -- Confirm record exists in current job_profiles table
+
+  SELECT DISTINCT job_workday_id            AS ref_id
+  FROM {{ source('workday','job_profiles') }}
+  WHERE NOT _fivetran_deleted
 
 ),
 
@@ -18,6 +27,7 @@ final AS (
     dbt_valid_to::TIMESTAMP                 AS valid_to,
     job_workday_id::VARCHAR                 AS job_workday_id
   FROM source
+  INNER JOIN jp on source.job_workday_id = jp.ref_id
 
 )
 
