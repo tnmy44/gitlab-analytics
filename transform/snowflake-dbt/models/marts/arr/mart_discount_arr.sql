@@ -116,9 +116,9 @@ WITH dim_date AS (
       END                                                               AS is_excluded_from_disc_analysis,
       dim_product_detail.annual_billing_list_price                      AS annual_billing_list_price,
       dim_crm_opportunity.opportunity_owner_user_segment                AS opportunity_owner_user_segment,
-      dim_crm_opportunity.opportunity_owner_user_geo                    AS opportunity_owner_user_geo,
-      dim_crm_opportunity.opportunity_owner_user_region                 AS opportunity_owner_user_region,
-      dim_crm_opportunity.opportunity_owner_user_area                   AS opportunity_owner_user_area,
+      dim_crm_opportunity.report_geo                                    AS report_geo,
+      dim_crm_opportunity.report_region                                 AS report_region,
+      dim_crm_opportunity.report_area                                   AS report_area,
       dim_crm_opportunity.order_type                                    AS order_type,
       ARRAY_AGG(IFF(dim_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
                    'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
