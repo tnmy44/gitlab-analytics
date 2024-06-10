@@ -2943,7 +2943,7 @@ roles:
         - transforming_xl
   - abhaskar:
       member_of:
-=        - snowflake_analyst_safe
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - abright:
