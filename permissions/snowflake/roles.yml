@@ -1443,6 +1443,8 @@ roles:
             - prep.customers.*
             - prep.sensitive.customers_db_customers_pii
   - prod_reporting:
+      member_of:
+        - boneyard 
       privileges:
         databases:
           read:
