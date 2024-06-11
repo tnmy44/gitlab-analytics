@@ -318,7 +318,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
             python ../extract/gitlab_saas_postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_ops_scd_db_manifest.yaml {operation}
+            ../extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_ops_db_manifest.yaml {operation}
         "
     """
 
