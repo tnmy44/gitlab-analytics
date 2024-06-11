@@ -2,10 +2,9 @@ WITH source AS (
 
   SELECT
     *,
-    code_suggestions_context['data']['gitlab_global_user_id']::VARCHAR AS gitlab_global_user_id,
-    code_suggestions_context['data']['gitlab_instance_id']::VARCHAR    AS gitlab_instance_id,
-    gitlab_instance_id || '-' || gitlab_global_user_id                 AS instance_user_id
-  FROM {{ ref('wk_mart_behavior_structured_event_code_suggestion') }}
+    instance_id                                              AS gitlab_instance_id,
+    instance_id || '-' || gitlab_global_user_id              AS instance_user_id
+  FROM {{ ref('mart_behavior_structured_event_code_suggestion') }}
   WHERE app_id = 'gitlab_ai_gateway'
     AND gitlab_global_user_id != ''
 
@@ -28,20 +27,45 @@ daily_usage AS (
 
 ),
 
-int AS (
+dau AS (
+  SELECT
+    behavior_date                    AS day,
+    COUNT(DISTINCT instance_user_id) AS user_count
+  FROM daily_usage
+  GROUP BY 1
+),
+
+wau AS (
 
   SELECT
-    DATE(behavior_at)                       AS day,
-    COUNT(DISTINCT source.instance_user_id) AS user_count
-  FROM source
-  LEFT JOIN daily_usage
-    ON source.instance_user_id = daily_usage.instance_user_id
+    a.day,
+    COUNT(DISTINCT c.instance_user_id) AS unique_7d_rolling_count
+  FROM dau AS a
+  INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -7, a.day) AND a.day
   GROUP BY 1
   ORDER BY 1 DESC
+
+),
+
+mau AS (
+
+  SELECT
+    a.day,
+    COUNT(DISTINCT c.instance_user_id) AS unique_28d_rolling_count
+  FROM dau AS a
+  INNER JOIN daily_usage AS c ON c.behavior_date BETWEEN DATEADD('day', -28, a.day) AND a.day
+  GROUP BY 1
+  ORDER BY 1 DESC
+
 )
 
 SELECT
-  day,
-  SUM(user_count) OVER (ORDER BY day ROWS BETWEEN 27 PRECEDING AND CURRENT ROW) AS rolling_28_day_umau
-FROM int
-ORDER BY day DESC
+  dau.day,
+  dau.user_count AS unique_daily_count,
+  wau.unique_7d_rolling_count,
+  mau.unique_28d_rolling_count
+FROM dau
+LEFT JOIN wau
+  ON dau.day = wau.day
+LEFT JOIN mau
+  ON dau.day = mau.day

@@ -63,7 +63,7 @@ product_categories_yml_base AS (
 
   SELECT DISTINCT
     LOWER(group_name)                                                         AS group_name,
-    LOWER(stage_section)                                                      AS section_name,
+    REPLACE(LOWER(stage_section) ,'_',' ')                                    AS section_name,
     LOWER(stage_display_name)                                                 AS stage_name,
     IFF(group_name LIKE '%::%', SPLIT_PART(LOWER(group_name), '::', 1), NULL) AS root_name
   FROM {{ ref('stages_groups_yaml_source') }}
@@ -101,13 +101,13 @@ milestones AS (
   SELECT
     *,
     CASE
-      WHEN group_id = 9970
+      WHEN group_id in (9970,6543)
         AND start_date <= DATEADD('month', 1, CURRENT_DATE)
         AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+') THEN
         DENSE_RANK() OVER (
           PARTITION BY
             IFF(
-              group_id = 9970
+              group_id in (9970,6543)
               AND start_date <= DATEADD('month', 1, CURRENT_DATE)
               AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+'),
               1,
@@ -225,7 +225,7 @@ final AS (
       ELSE 'undefined'
     END                                                                                                                                                                                                                                                                                                 AS subtype_label,
     COALESCE(
-      subtype_label = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
+      COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bbug::*([^,]*)'), 'undefined') = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
       AND internal_issues.namespace_id NOT IN (5821789, 1819570, 1986712, 2139148, 4955423, 3786502)
       AND internal_issues.project_id != 52764962 --change requested by Ethan, this is a test project
       AND NOT ARRAY_CONTAINS('feature'::VARIANT, internal_issues.labels)
@@ -264,7 +264,8 @@ final AS (
     internal_issues.epic_state,
     internal_issues.issue_assignee_user_name,
     ARRAY_CONTAINS('customer'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                         AS is_customer_related,
-    internal_issues.issue_type
+    internal_issues.issue_type,
+    internal_issues.due_date
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON internal_issues.project_id = projects.dim_project_id

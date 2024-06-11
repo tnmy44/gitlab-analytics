@@ -952,6 +952,7 @@ tables:
       , NULL AS environment_type
       , state
       , tier
+      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1523,6 +1524,20 @@ tables:
       , remove_group
       , occupies_seat
       , permissions
+      , read_vulnerability
+      , admin_vulnerability
+      , read_dependency
+      , admin_merge_request
+      , admin_group_member
+      , manage_project_access_tokens
+      , archive_project
+      , manage_group_access_tokens
+      , remove_project
+      , admin_terraform_state
+      , admin_cicd_variables
+      , remove_group
+      , occupies_seat
+      , permissions
       FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1901,6 +1916,7 @@ tables:
       , shared_runners_enabled
       , custom_project_templates_group_id
       , traversal_ids
+      , traversal_ids
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2002,6 +2018,7 @@ tables:
     additional_filtering: |-
       AND created_at NOT IN ( '2746-07-23 18:16:42.925+00 BC')
       AND (namespace_id in {INTERNAL_NAMESPACE_IDS} OR project_id in {INTERNAL_PROJECT_IDS})
+      AND (namespace_id in {INTERNAL_NAMESPACE_IDS} OR project_id in {INTERNAL_PROJECT_IDS})
     dbt_source_model: true
     deletes_exempt: True
     is_incremental: True
@@ -2052,6 +2069,28 @@ tables:
       SELECT id
       , user_id
       , source_id
+      , source_type
+      , level
+      , new_note
+      , new_issue
+      , reopen_issue
+      , close_issue
+      , reassign_issue
+      , new_merge_request
+      , reopen_merge_request
+      , close_merge_request
+      , reassign_merge_request
+      , merge_merge_request
+      , failed_pipeline
+      , success_pipeline
+      , push_to_merge_request
+      , issue_due
+      , new_epic
+      , fixed_pipeline
+      , new_release
+      , moved_project
+      , change_reviewer_merge_request
+      , merge_when_pipeline_succeeds
       , source_type
       , level
       , new_note
@@ -3339,7 +3378,11 @@ tables:
     import_query: |-
       SELECT id
       , root_namespace_id
+      SELECT id
+      , root_namespace_id
       , search
+      , created_at
+      , updated_at
       , created_at
       , updated_at
       FROM zoekt_enabled_namespaces
@@ -3357,7 +3400,12 @@ tables:
       SELECT id
       , zoekt_enabled_namespace_id
       , zoekt_node_id
+      SELECT id
+      , zoekt_enabled_namespace_id
+      , zoekt_node_id
       , namespace_id
+      , created_at
+      , updated_at
       , created_at
       , updated_at
       , state

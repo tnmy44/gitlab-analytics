@@ -691,18 +691,6 @@ All columns are pulled directly from the yaml files, with the exception of the f
 
 {% enddocs %}
 
-{% docs has_performance_timing_context %}
-
-A flag to indicate if the event has additional information in the context field related to `performance_timing`.
-
-{% enddocs %} 
-
-{% docs has_web_page_context %}
-
-A flag to indicate if the event has additional information in the context field related to `web_page`.
-
-{% enddocs %}
-
 {% docs has_ci_build_failed_context %}
 
 A flag to indicate if the event has additional information in the context field related to `ci_build_failed`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab).
@@ -715,21 +703,9 @@ A flag to indicate if the event has additional information in the context field 
 
 {% enddocs %}
 
-{% docs has_gitlab_standard_context %}
-
-A flag to indicate if the event has additional information in the context field related to `gitlab_standard`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
-
-{% enddocs %}
-
 {% docs has_email_campaigns_context %}
 
 A flag to indicate if the event has additional information in the context field related to `email_campaigns`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
-
-{% enddocs %}
-
-{% docs has_gitlab_service_ping_context %}
-
-A flag to indicate if the event has additional information in the context field related to `gitlab_service_ping`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
 
 {% enddocs %}
 
@@ -748,12 +724,6 @@ A flag to indicate if the event has additional information in the context field 
 {% docs has_secure_scan_context %}
 
 A flag to indicate if the event has additional information in the context field related to `secure_scan`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
-
-{% enddocs %}
-
-{% docs has_gitlab_experiment_context  %}
-
-A flag to indicate if the event has additional information in the context field related to `gitlab_experiment`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
 
 {% enddocs %}
 
@@ -805,6 +775,12 @@ A surrogate key for the attributes of the user location.  This is built as a con
 
 {% enddocs %}
 
+{% docs prep_snowplow_unnested_events_all %}
+
+This is the primary events view which is the union of the Fishtown and GitLab tables across the last 25 months of snowplow_YYYY_MM schemas. All of the unstructured including both staging and non-staging events are unpacked - [link click tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#39-link-click-tracking), [form tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#3101-enableformtracking), and [time tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#timing).
+
+{% enddocs %}
+
 {% docs prep_billing_account %}
 
 Prep model for merging the billing accounts data from both Zuora and CDot sources. This model will be used as a source model for creating `dim_billing_account` core business data object downstream.
@@ -820,6 +796,12 @@ A surrogate key that uniquely identifes each row of the billing account table.  
 {% docs link_click_element_id %}
 
 The element id from the unstructured link click event
+
+{% enddocs %}
+
+{% docs is_staging_event %}
+
+Flag to indicate whether the event is staging or not. Staging events are defined as events where `app_id = 'gitlab-staging'` or the `page_url` indicates that the event comes from a staging environment.
 
 {% enddocs %}
 
@@ -882,3 +864,10 @@ All milestones created within a namespace, with details including the start date
 Contains the latest Seat Link record for every installation in the source Seat Link model.
 
 {% enddocs %}
+
+{% docs prep_snowplow_sessions_all %}
+
+Unioned monthly partitions for all Snowplow sessions.
+
+{% enddocs %}
+
