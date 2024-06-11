@@ -382,7 +382,7 @@ def extract_table_dict_based_on_database_type(table_dict, database_type):
     """Extract the list of tables based on the database type"""
     return_dict = {}
     for table_key, table_values in table_dict.items():
-        if table_values["database_type"] == database_type:
+        if table_values["database_type"] == database_type or database_type == "cells":
             output_dict = {table_key: table_values}
             return_dict.update(output_dict)
     return return_dict
