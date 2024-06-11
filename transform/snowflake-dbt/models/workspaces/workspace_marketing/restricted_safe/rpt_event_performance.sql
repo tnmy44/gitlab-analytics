@@ -298,6 +298,7 @@ account_pipeline AS (
     account_summary.true_event_date,
     snapshot_dates.event_snapshot_type,
     COALESCE(attended_leads > 0 AND account_summary.dim_crm_account_id IS NOT NULL, FALSE)                                                                                                                          AS account_has_attended_flag,
+    opportunity_snapshot_base.stage_name,
     --METRICS 
     account_summary.registered_leads,
     account_summary.attended_leads,
@@ -337,7 +338,7 @@ account_pipeline AS (
     ON account_summary.dim_crm_account_id = opportunity_snapshot_base.dim_crm_account_id
       AND snapshot_dates.date_day = opportunity_snapshot_base.opportunity_snapshot_date
  
-  {{dbt_utils.group_by(n=8)}}
+  {{dbt_utils.group_by(n=9)}}
 ),
 
 
@@ -463,11 +464,12 @@ aggregated_account_influenced_performance AS (
     combined_models.dim_campaign_id,
     combined_models.dim_crm_account_id,
     combined_models.true_event_date,
+    combined_models.stage_name,
     combined_models.event_snapshot_type,
     SUM(CASE WHEN is_net_arr_pipeline_created = 1 THEN influenced_net_arr END) AS influenced_pipeline
   FROM
     combined_models
-  {{dbt_utils.group_by(n=4)}}
+  {{dbt_utils.group_by(n=5)}}
 
 ),
 
@@ -539,6 +541,9 @@ SELECT
     mart_crm_account.crm_account_industry,
     mart_crm_account.crm_account_sub_industry,
 
+    --PIPELINE METRICS
+    aggregated_account_influenced_performance.stage_name,
+
     --METRICS
     account_pipeline.open_pipeline_live,
     account_pipeline.registered_leads,
@@ -556,6 +561,7 @@ SELECT
         AND account_pipeline.dim_campaign_id = aggregated_account_influenced_performance.dim_campaign_id
         AND account_pipeline.event_snapshot_type = aggregated_account_influenced_performance.event_snapshot_type
         AND account_pipeline.true_event_date = aggregated_account_influenced_performance.true_event_date
+        AND account_pipeline.stage_name = aggregated_account_influenced_performance.stage_name
     LEFT JOIN campaigns ON account_pipeline.dim_campaign_id = campaigns.dim_campaign_id
     LEFT JOIN mart_crm_account
     ON account_pipeline.dim_crm_account_id = mart_crm_account.dim_crm_account_id
@@ -564,8 +570,8 @@ SELECT
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@dmicovic",
+    created_by="@degan",
     updated_by="@dmicovic",
     created_date="2024-04-23",
-    updated_date="2024-04-23",
+    updated_date="2024-05-10",
   ) }}
