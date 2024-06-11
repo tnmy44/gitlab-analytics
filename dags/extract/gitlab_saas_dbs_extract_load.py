@@ -335,9 +335,17 @@ def get_last_loaded(dag_name: String) -> Union[None, str]:
 def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type, TASK_TYPE):
     """Generate the command"""
     if TASK_TYPE == "db-scd":
-        file_name = "el_saas_gitlab_dotcom_scd_consolidated_db_manifest.yaml"
+        if database_type == "ops":
+            file_name = "el_saas_gitlab_ops_scd_db_manifest.yaml"
+        elif database_type == "customers":
+            file_name = "el_saas_customers_scd_db_manifest.yaml"
+        else:
+            file_name = "el_gitlab_dotcom_scd_db_manifest.yaml"
     else:
-        file_name = "el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
+        if database_type == "ops":
+            file_name = "el_saas_gitlab_ops_db_manifest.yaml"
+        else:
+            file_name = "el_gitlab_dotcom_db_manifest.yaml"
     connection_info_file_name = "el_saas_connection_info.yaml"
     if cloudsql_instance_name is None:
         return f"""
@@ -499,7 +507,10 @@ for source_name, config in config_dict.items():
             )
         with extract_dag:
             # Actual PGP extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
+            if config["database_type"] == "ops":
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_ops_db_manifest.yaml"
+            else:
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
@@ -593,7 +604,10 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
+            if config["database_type"] == "ops":
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_ops_db_manifest.yaml"
+            else:
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
@@ -655,7 +669,12 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_scd_db_manifest.yaml"
+            if config["database_type"] == "customers":
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_customers_scd_db_manifest.yaml"
+            elif config["database_type"] == "ops":
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_ops_scd_db_manifest.yaml"
+            else:
+                file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_scd_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
