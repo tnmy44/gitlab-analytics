@@ -311,14 +311,16 @@ def is_incremental(table_dict):
     return is_valid_query or incremental_type
 
 
-def use_cloudsql_proxy(dag_name, operation, instance_name, connection_info_file_name):
+def use_cloudsql_proxy(
+    dag_name, operation, instance_name, connection_info_file_name, database_type
+):
     """Use cloudsql proxy for connecting to ops Database"""
     return f"""
         {clone_repo_cmd} &&
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
             python ../extract/gitlab_saas_postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/gitlab_saas_postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation} ../manifests/{connection_info_file_name}
+            ../extract/gitlab_saas_postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation} ../manifests/{connection_info_file_name} {database_type}
         "
     """
 
@@ -355,7 +357,13 @@ def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type, TAS
             python main.py tap ../manifests/{file_name} {operation} ../manifests/{connection_info_file_name} {database_type}
         """
 
-    return use_cloudsql_proxy(dag_name, operation, cloudsql_instance_name, connection_info_file_name)
+    return use_cloudsql_proxy(
+        dag_name,
+        operation,
+        cloudsql_instance_name,
+        connection_info_file_name,
+        database_type,
+    )
 
 
 def extract_manifest(manifest_file_path):
