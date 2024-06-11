@@ -10237,7 +10237,7 @@ users:
       - General SAFE Access
   - user_name: sbitters
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
