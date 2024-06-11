@@ -26,7 +26,7 @@ WITH source AS (
       runner_token_expiration_interval::NUMBER                  AS runner_token_expiration_interval,
       separated_caches::BOOLEAN                                 AS separated_caches,
       allow_fork_pipelines_to_run_in_parent_project::BOOLEAN    AS allow_fork_pipelines_to_run_in_parent_project,
-      inbound_job_token_scope_enabled::BOOLEAN                  AS inbound_job_token_scope_enabled
+      inbound_job_token_scope_enabled::BOOLEAN                  AS inbound_job_token_scope_enabled,
       "DBT_VALID_FROM"::TIMESTAMP                               AS valid_from,
       "DBT_VALID_TO"::TIMESTAMP                                 AS valid_to
     FROM source
