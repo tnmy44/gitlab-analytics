@@ -2,7 +2,7 @@ tables:
   ci_builds_runner_session:
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_builds_runner_session
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -13,7 +13,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_build_trace_chunks
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -26,7 +26,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: 'ci_job_token_project_scope_links'
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -41,7 +41,7 @@ tables:
   ci_namespace_monthly_usages:
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_namespace_monthly_usages
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -58,7 +58,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_pipeline_chat_data
     export_table_primary_key: pipeline_id
     import_db: GITLAB_DB
@@ -71,7 +71,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_pipeline_metadata_internal_only
     export_table_primary_key: pipeline_id
     import_db: GITLAB_DB
@@ -84,7 +84,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_project_monthly_usages
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -100,7 +100,7 @@ tables:
     dbt_source_model: true
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_sources_pipelines
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -115,7 +115,7 @@ tables:
   ci_variables:
     export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: main
+    database_type: ci
     export_table: ci_variables
     export_table_primary_key: id
     import_db: GITLAB_DB
