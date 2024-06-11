@@ -298,6 +298,7 @@ account_pipeline AS (
     account_summary.true_event_date,
     snapshot_dates.event_snapshot_type,
     COALESCE(attended_leads > 0 AND account_summary.dim_crm_account_id IS NOT NULL, FALSE)                                                                                                                          AS account_has_attended_flag,
+    opportunity_snapshot_base.stage_name,
     --METRICS 
     account_summary.registered_leads,
     account_summary.attended_leads,
@@ -560,6 +561,7 @@ SELECT
         AND account_pipeline.dim_campaign_id = aggregated_account_influenced_performance.dim_campaign_id
         AND account_pipeline.event_snapshot_type = aggregated_account_influenced_performance.event_snapshot_type
         AND account_pipeline.true_event_date = aggregated_account_influenced_performance.true_event_date
+        AND account_pipeline.stage_name = aggregated_account_influenced_performance.stage_name
     LEFT JOIN campaigns ON account_pipeline.dim_campaign_id = campaigns.dim_campaign_id
     LEFT JOIN mart_crm_account
     ON account_pipeline.dim_crm_account_id = mart_crm_account.dim_crm_account_id
