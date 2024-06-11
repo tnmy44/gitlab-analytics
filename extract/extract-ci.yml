@@ -67,8 +67,9 @@ qualtrics_sheetload:
   <<: *extract_definition
   script:
     - echo $MANIFEST_NAME
+    - echo $DATABASE_TYPE
     - cd extract/gitlab_saas_postgres_pipeline/postgres_pipeline/
-    - python main.py tap ../manifests/${MANIFEST_NAME}_db_manifest.yaml --load_type test
+    - python main.py tap ../manifests/${MANIFEST_NAME}_db_manifest.yaml --load_type test ../manifests/el_gitlab_dotcom_db_manifest.yaml $DATABASE_TYPE
   only:
     - merge_requests
     - $MANIFEST_NAME
