@@ -78,11 +78,14 @@ expanded AS (
     source.queued_overload_time,
     source.transaction_blocked_time,
     source.rows_produced,
+    source.bytes_scanned,
     source.bytes_written,
     source.bytes_spilled_to_remote_storage,
     source.bytes_spilled_to_local_storage,
     source.credits_used_cloud_services,
     source.percentage_scanned_from_cache,
+    source.partitions_total,
+    source.partitions_scanned,
     query_metering.total_attributed_credits,
     ROUND(credit_rates.contract_rate * query_metering.total_attributed_credits, 2)    AS dollars_spent,
     IFF(team_members.employee_id IS NULL, user_types.user_type, 'Team Member')        AS user_type,
@@ -106,7 +109,27 @@ expanded AS (
     dbt_metadata['package_name']::VARCHAR                                             AS package_name,
     dbt_metadata['relation']['database']::VARCHAR                                     AS relation_database,
     dbt_metadata['relation']['schema']::VARCHAR                                       AS relation_schema,
-    dbt_metadata['relation']['identifier']::VARCHAR                                   AS relation_identifier
+    dbt_metadata['relation']['identifier']::VARCHAR                                   AS relation_identifier,
+    CASE
+      WHEN rlike(dbt_runner,'[0-9]+-[0-9]+-?[0-9]*$') THEN 'ci'
+      WHEN rlike(dbt_runner,'.+__.+__.+__.+__.+__.+$') THEN 'airflow'
+    ELSE dbt_runner
+    END AS runner_source,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 1),NULL) AS airflow_dag_id,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 2),NULL) AS airflow_task_id,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 3),NULL) AS airflow_dag_run_date_id,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 4),NULL) || '__' || SPLIT_PART(dbt_runner, '__', 5) AS airflow_run_id,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 6),NULL) AS airflow_try_number,
+    IFF(runner_source = 'airflow',SPLIT_PART(dbt_runner, '__', 4),NULL) AS airflow_orchestration,
+    IFF(runner_source = 'ci',TRY_TO_NUMBER(SPLIT_PART(dbt_runner,'-',1)),NULL) AS ci_user_id,
+    IFF(runner_source = 'ci',TRY_TO_NUMBER(SPLIT_PART(dbt_runner,'-',2)),NULL) AS ci_merge_request_id,
+    IFF(runner_source = 'ci',TRY_TO_NUMBER(SPLIT_PART(dbt_runner,'-',3)),NULL) AS ci_build_id,
+    TRY_PARSE_JSON(REGEXP_SUBSTR(query_tag, '\{ \"tableau-query-origins\".*\}'))   AS tableau_metadata,
+    tableau_metadata['tableau-query-origins']['dashboard-luid']::VARCHAR AS tableau_dashboard_luid,
+    tableau_metadata['tableau-query-origins']['site-luid']::VARCHAR AS tableau_site_luid,
+    tableau_metadata['tableau-query-origins']['user-luid']::VARCHAR AS tableau_user_luid,
+    tableau_metadata['tableau-query-origins']['workbook-luid']::VARCHAR AS tableau_workbook_luid,
+    NULLIF(tableau_metadata['tableau-query-origins']['worksheet-luid']::VARCHAR,'') AS tableau_worksheet_luid
   FROM source
   LEFT JOIN query_metering
     ON source.query_id = query_metering.query_id

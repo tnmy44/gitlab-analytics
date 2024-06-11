@@ -1,8 +1,9 @@
-{{ config({
-    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_person_id') }}"
-    })
+{{config(
+    materialized='table',
+    tags=["mnpi_exception"],
+    post_hook=["{{ missing_member_column(primary_key = 'dim_crm_person_id') }}"]
+  )
 }}
-
 WITH crm_person AS (
 
     SELECT *
@@ -118,15 +119,32 @@ WITH crm_person AS (
       propensity_to_purchase_namespace_id,
       propensity_to_purchase_past_insights,
       propensity_to_purchase_past_score_group,
-      person_first_country
-
+      is_defaulted_trial,
+      lead_score_classification,
+      person_first_country,
+       
+    --MQL and Most Recent Touchpoint info
+      bizible_mql_touchpoint_id,
+      bizible_mql_touchpoint_date,
+      bizible_mql_form_url,
+      bizible_mql_sfdc_campaign_id,
+      bizible_mql_ad_campaign_name,
+      bizible_mql_marketing_channel,
+      bizible_mql_marketing_channel_path,
+      bizible_most_recent_touchpoint_id,
+      bizible_most_recent_touchpoint_date,
+      bizible_most_recent_form_url,
+      bizible_most_recent_sfdc_campaign_id,
+      bizible_most_recent_ad_campaign_name,
+      bizible_most_recent_marketing_channel,
+      bizible_most_recent_marketing_channel_path
     FROM crm_person
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2023-10-13"
+    updated_date="2024-05-21"
 ) }}

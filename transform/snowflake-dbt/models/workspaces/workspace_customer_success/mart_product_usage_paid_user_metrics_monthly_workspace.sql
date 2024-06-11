@@ -1,7 +1,7 @@
 {{
   config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception"],
   )
 }}
 
@@ -15,8 +15,8 @@
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
-    ('redis_metrics_28d_user', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
-    ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time'),
+    ('redis_metrics_28d_user', 'rpt_user_based_metric_counts_namespace_monthly'),
+    ('redis_metrics_all_time_event', 'rpt_event_based_metric_counts_namespace_all_time'),
     ('dim_product_detail', 'dim_product_detail')
 ]) }}
 
@@ -204,6 +204,8 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                  AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
+      subscriptions.dim_oldest_subscription_in_cohort_id,
+      subscriptions.dim_oldest_crm_account_in_cohort_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
@@ -211,6 +213,8 @@
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
       most_recent_subscription_version.subscription_end_date,
+      subscriptions.oldest_subscription_start_date,
+      subscriptions.oldest_subscription_cohort_month,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_ping_instance_id                                       AS dim_usage_ping_id,
@@ -444,6 +448,8 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
+      subscriptions.dim_oldest_subscription_in_cohort_id,
+      subscriptions.dim_oldest_crm_account_in_cohort_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
@@ -451,6 +457,8 @@
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
       most_recent_subscription_version.subscription_end_date,
+      subscriptions.oldest_subscription_start_date,
+      subscriptions.oldest_subscription_cohort_month,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -745,7 +753,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@annapiaseczna",
+    updated_by="@utkarsh060",
     created_date="2022-01-14",
-    updated_date="2023-12-07"
+    updated_date="2024-05-27"
 ) }}

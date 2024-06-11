@@ -1,5 +1,5 @@
 -- connection uses SECURITYADMIN role and ADMIN warehouse
-set username = (select upper('{{ username }}'));
+set username = (select upper(:username));
 
 set prep_db = (select $username || '_PREP');
 set prod_db = (select $username || '_PROD');
