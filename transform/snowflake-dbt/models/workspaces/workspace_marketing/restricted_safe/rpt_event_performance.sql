@@ -338,7 +338,7 @@ account_pipeline AS (
     ON account_summary.dim_crm_account_id = opportunity_snapshot_base.dim_crm_account_id
       AND snapshot_dates.date_day = opportunity_snapshot_base.opportunity_snapshot_date
  
-  {{dbt_utils.group_by(n=8)}}
+  {{dbt_utils.group_by(n=9)}}
 ),
 
 
