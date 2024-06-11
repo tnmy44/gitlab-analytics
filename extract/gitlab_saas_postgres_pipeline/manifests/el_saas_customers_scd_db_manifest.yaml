@@ -303,6 +303,7 @@ tables:
       FROM schema_migrations
   self_managed_instance_activations:
     advanced_metadata: true
+    database_type: customers
     export_db: EXPORT_DB
     export_schema: 'customers'
     export_table: 'self_managed_instance_activations'
@@ -360,6 +361,7 @@ tables:
       FROM trial_histories
   trials:
     advanced_metadata: true
+    database_type: customers
     export_db: EXPORT_DB
     export_schema: 'customers'
     export_table: 'trials'
@@ -378,6 +380,7 @@ tables:
       FROM trials
   trial_accounts:
     advanced_metadata: true
+    database_type: customers
     export_db: EXPORT_DB
     export_schema: 'customers'
     export_table: 'trial_accounts'
