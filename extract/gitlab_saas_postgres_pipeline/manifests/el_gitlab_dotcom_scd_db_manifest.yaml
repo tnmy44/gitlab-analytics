@@ -1,8 +1,8 @@
 tables:
   ci_builds_runner_session:
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_builds_runner_session
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -11,9 +11,9 @@ tables:
       FROM ci_builds_runner_session
   ci_build_trace_chunks:
     dbt_source_model: true
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_build_trace_chunks
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -24,9 +24,9 @@ tables:
       FROM ci_build_trace_chunks
   ci_job_token_project_scope_links:
     dbt_source_model: true
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: 'ci_job_token_project_scope_links'
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -39,9 +39,9 @@ tables:
       , direction
       FROM ci_job_token_project_scope_links
   ci_namespace_monthly_usages:
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_namespace_monthly_usages
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -56,9 +56,9 @@ tables:
       FROM ci_namespace_monthly_usages
   ci_pipeline_chat_data:
     dbt_source_model: true
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_pipeline_chat_data
     export_table_primary_key: pipeline_id
     import_db: GITLAB_DB
@@ -66,11 +66,25 @@ tables:
       SELECT pipeline_id
       , chat_name_id
       FROM ci_pipeline_chat_data
+  ci_pipeline_metadata_internal_only:
+    additional_filtering: WHERE project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: main
+    export_table: ci_pipeline_metadata_internal_only
+    export_table_primary_key: pipeline_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , pipeline_id
+      , name
+      FROM ci_pipeline_metadata
   ci_project_monthly_usages:
     dbt_source_model: true
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_project_monthly_usages
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -84,9 +98,9 @@ tables:
       FROM ci_project_monthly_usages
   ci_sources_pipelines:
     dbt_source_model: true
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_sources_pipelines
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -99,9 +113,9 @@ tables:
       , source_job_id
       FROM ci_sources_pipelines
   ci_variables:
+    export_schema: 'gitlab_com'    
     is_incremental: False
-    database_type: ci
-    export_schema: 'gitlab_com'
+    database_type: main
     export_table: ci_variables
     export_table_primary_key: id
     import_db: GITLAB_DB

@@ -116,7 +116,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
         ],
-        "start_date": datetime(2023, 10, 3),
+        "start_date": datetime(2024, 6, 9),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
@@ -236,7 +236,7 @@ config_dict: Dict[Any, Any] = {
     },
     "el_cells_gitlab_com": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_saas_cells_gitlab_com",
+        "dag_name": "el_cells_gitlab_com",
         "database_type": "cells",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
@@ -255,14 +255,14 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_SCHEMA,
             GITLAB_BACKFILL_BUCKET_CELLS,
         ],
-        "start_date": datetime(2024, 5, 13),
+        "start_date": datetime(2024, 6, 9),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
-        "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) Cells to snowflake",
     },
     "el_cells_gitlab_com_scd": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_saas_cells_gitlab_com_scd",
+        "dag_name": "el_cells_gitlab_com_scd",
         "database_type": "cells",
         "env_vars": {},
         "extract_schedule_interval": "00 4,16 */1 * *",
@@ -282,7 +282,7 @@ config_dict: Dict[Any, Any] = {
         ],
         "start_date": datetime(2024, 5, 13),
         "task_name": "gitlab-com-scd",
-        "description": "This DAG does Full extract & load of gitlab.com database CI* (Postgres) to snowflake",
+        "description": "This DAG does Full extract & load of gitlab.com database Cells (Postgres) to snowflake",
     },
 }
 
@@ -430,10 +430,7 @@ def get_check_replica_snapshot_command(dag_name):
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && " f"{check_main_cmd}"
         )
-    elif (
-        dag_name == "el_saas_cells_gitlab_com"
-        or dag_name == "el_saas_cells_gitlab_com_scd"
-    ):
+    elif dag_name == "el_cells_gitlab_com" or dag_name == "el_cells_gitlab_com_scd":
         print("Checking cells gitlab_dotcom DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
@@ -502,7 +499,7 @@ for source_name, config in config_dict.items():
             )
         with extract_dag:
             # Actual PGP extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
@@ -596,7 +593,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_consolidated_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
@@ -658,7 +655,7 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_dotcom_scd_consolidated_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_scd_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_dict_unfiltered = extract_table_dict_from_manifest(manifest)
             table_dict = extract_table_dict_based_on_database_type(
