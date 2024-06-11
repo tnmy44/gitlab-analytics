@@ -341,17 +341,12 @@ def get_last_loaded(dag_name: String) -> Union[None, str]:
 def generate_cmd(dag_name, operation, cloudsql_instance_name, database_type, TASK_TYPE):
     """Generate the command"""
     if TASK_TYPE == "db-scd":
-        if database_type == "ops":
-            file_name = "el_saas_gitlab_ops_scd_db_manifest.yaml"
-        elif database_type == "customers":
+        if database_type == "customers":
             file_name = "el_saas_customers_scd_db_manifest.yaml"
         else:
             file_name = "el_gitlab_dotcom_scd_db_manifest.yaml"
     else:
-        if database_type == "ops":
-            file_name = "el_saas_gitlab_ops_db_manifest.yaml"
-        else:
-            file_name = "el_gitlab_dotcom_db_manifest.yaml"
+        file_name = "el_gitlab_dotcom_db_manifest.yaml"
     connection_info_file_name = "el_saas_connection_info.yaml"
     if cloudsql_instance_name is None:
         return f"""
