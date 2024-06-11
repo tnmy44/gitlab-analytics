@@ -155,7 +155,6 @@ filtered_code_suggestion_events AS (
     ultimate_parent_namespace_id,
     dim_installation_id,
     installation_host_name,
-    product_delivery_type, 
     product_deployment_type,
     namespace_is_internal
   FROM code_suggestions_joined_to_fact_and_dim
@@ -169,5 +168,5 @@ filtered_code_suggestion_events AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-06-07"
+    updated_date="2024-06-11"
 ) }}
