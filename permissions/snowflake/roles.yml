@@ -7165,6 +7165,10 @@ users:
       can_login: true
       member_of:
         - rakreddy
+  - rally:
+      can_login: true
+      member_of:
+        - rally
   - rbacovic:
       can_login: true
       member_of:
