@@ -14,7 +14,7 @@ gitlab-snowflake:
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}"
       role: "{{ env_var('SNOWFLAKE_LOAD_ROLE') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_LOAD_ROLE_WAREHOUSE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_LOAD_WAREHOUSE') }}"
       schema: "{{ env_var('SNOWFLAKE_PREPARATION_SCHEMA') }}"
       client_session_keep_alive: True
     prod:
