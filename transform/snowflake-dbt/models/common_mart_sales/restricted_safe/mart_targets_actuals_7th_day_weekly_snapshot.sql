@@ -35,7 +35,7 @@ order_type AS (
 
 final AS (
 
-  SELECT 
+  SELECT
     targets_actuals.*,
 
     dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,

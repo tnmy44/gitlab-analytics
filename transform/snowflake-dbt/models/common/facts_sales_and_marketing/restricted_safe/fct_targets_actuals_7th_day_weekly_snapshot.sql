@@ -29,17 +29,18 @@ spine AS (
 total_targets AS (
 
   SELECT
-    prep_date.fiscal_quarter_name_fy      AS fiscal_quarter_name,
-    prep_date.first_day_of_fiscal_quarter AS fiscal_quarter_date,
-    targets.dim_crm_user_hierarchy_sk     AS dim_crm_current_account_set_hierarchy_sk,
+    prep_date.fiscal_quarter_name_fy                                                     AS fiscal_quarter_name,
+    prep_date.first_day_of_fiscal_quarter                                                AS fiscal_quarter_date,
+    targets.dim_crm_user_hierarchy_sk                                                    AS dim_crm_current_account_set_hierarchy_sk,
     targets.dim_sales_qualified_source_id,
     targets.dim_order_type_id,
-    SUM(daily_allocated_target)           AS total_quarter_target
+    SUM(CASE WHEN kpi_name = 'Net ARR' THEN daily_allocated_target END)                  AS net_arr_total_quarter_target,
+    SUM(CASE WHEN kpi_name = 'Net ARR Pipeline Created' THEN daily_allocated_target END) AS pipeline_created_total_quarter_target
   FROM targets
   LEFT JOIN prep_date
     ON targets.target_date_id = prep_date.date_id
-  WHERE kpi_name = 'Net ARR'
   {{ dbt_utils.group_by(n=5) }}
+
 ),
 
 
@@ -53,10 +54,10 @@ daily_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
-    SUM(booked_net_arr_in_snapshot_quarter)          AS booked_net_arr_in_snapshot_quarter,
-    SUM(open_1plus_net_arr_in_snapshot_quarter)      AS open_1plus_net_arr_in_snapshot_quarter,
-    SUM(open_3plus_net_arr_in_snapshot_quarter)      AS open_3plus_net_arr_in_snapshot_quarter,
-    SUM(open_4plus_net_arr_in_snapshot_quarter)      AS open_4plus_net_arr_in_snapshot_quarter
+    SUM(booked_net_arr_in_snapshot_quarter)     AS booked_net_arr_in_snapshot_quarter,
+    SUM(open_1plus_net_arr_in_snapshot_quarter) AS open_1plus_net_arr_in_snapshot_quarter,
+    SUM(open_3plus_net_arr_in_snapshot_quarter) AS open_3plus_net_arr_in_snapshot_quarter,
+    SUM(open_4plus_net_arr_in_snapshot_quarter) AS open_4plus_net_arr_in_snapshot_quarter
 
   FROM actuals
   {{ dbt_utils.group_by(n=7) }}
@@ -70,42 +71,42 @@ quarterly_actuals AS (
     actuals.dim_crm_current_account_set_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
-    SUM(actuals.booked_net_arr_in_snapshot_quarter)  AS total_booked_net_arr
+    SUM(actuals.booked_net_arr_in_snapshot_quarter) AS total_booked_net_arr
   FROM actuals
   WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
   {{ dbt_utils.group_by(n=5) }}
 
 ),
 
-combined_data AS ( 
+combined_data AS (
 
-    SELECT 
-        dim_crm_current_account_set_hierarchy_sk,
-        dim_sales_qualified_source_id,
-        dim_order_type_id,
-        fiscal_quarter_name,
-        fiscal_quarter_date
-    FROM total_targets
+  SELECT
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    fiscal_quarter_name,
+    fiscal_quarter_date
+  FROM total_targets
 
-    UNION
+  UNION
 
-    SELECT 
-        dim_crm_current_account_set_hierarchy_sk,
-        dim_sales_qualified_source_id,
-        dim_order_type_id,
-        snapshot_fiscal_quarter_name,
-        snapshot_fiscal_quarter_date
-    FROM quarterly_actuals
+  SELECT
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date
+  FROM quarterly_actuals
 
-    UNION 
+  UNION
 
-    SELECT 
-        dim_crm_current_account_set_hierarchy_sk,
-        dim_sales_qualified_source_id,
-        dim_order_type_id,
-        snapshot_fiscal_quarter_name,
-        snapshot_fiscal_quarter_date
-    FROM daily_actuals
+  SELECT
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date
+  FROM daily_actuals
 
 ),
 
@@ -121,17 +122,17 @@ base AS (
     it ensures that even the newly introduced dimensions are accounted for.
   */
 
-  SELECT   
+  SELECT
     combined_data.dim_crm_current_account_set_hierarchy_sk,
     combined_data.dim_sales_qualified_source_id,
-    combined_data.dim_order_type_id,     
+    combined_data.dim_order_type_id,
     spine.date_id,
-    spine.day_7 as date_actual,
+    spine.day_7 AS date_actual,
     combined_data.fiscal_quarter_date,
     combined_data.fiscal_quarter_name
   FROM combined_data
   INNER JOIN spine
-      ON combined_data.fiscal_quarter_name = spine.fiscal_quarter_name
+    ON combined_data.fiscal_quarter_name = spine.fiscal_quarter_name
 
 ),
 
@@ -146,12 +147,13 @@ final AS (
     base.dim_crm_current_account_set_hierarchy_sk,
     base.dim_order_type_id,
     base.dim_sales_qualified_source_id,
-    SUM(total_targets.total_quarter_target)                   AS total_quarter_target,
-    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)     AS coverage_booked_net_arr,
-    SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter) AS coverage_open_1plus_net_arr,
-    SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter) AS coverage_open_3plus_net_arr,
-    SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter) AS coverage_open_4plus_net_arr,
-    SUM(quarterly_actuals.total_booked_net_arr)               AS total_booked_net_arr
+    SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
+    SUM(total_targets.net_arr_total_quarter_target)                         AS net_arr_total_quarter_target,
+    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)                   AS coverage_booked_net_arr,
+    SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter)               AS coverage_open_1plus_net_arr,
+    SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter)               AS coverage_open_3plus_net_arr,
+    SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter)               AS coverage_open_4plus_net_arr,
+    SUM(quarterly_actuals.total_booked_net_arr)                             AS total_booked_net_arr
   FROM base
   LEFT JOIN total_targets
     ON base.fiscal_quarter_name = total_targets.fiscal_quarter_name
