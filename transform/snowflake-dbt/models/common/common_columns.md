@@ -2896,6 +2896,14 @@ Source where the suggestion is retrieved from. This can be either the cache or n
 
 {% enddocs %}
 
+{% docs code_suggestions_delivery_type %}
+
+This is the delivery type of GitLab to include either SaaS or Self-Managed.
+
+To derive this attribute, we join the instance information (`instance_id`, `host_name`) sent in the Code Suggestions context to find the delivery type from the installation that sent the event. We coalesce this delivery type with the `realm` (delivery type) sent in the context. This adjusts for the `Dedicated` instances that are labeled as Self-Managed in the context, but are considered to be SaaS delivery types.
+
+{% enddocs %}
+
 {% docs ide_extension_version_context %}
 
 IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).

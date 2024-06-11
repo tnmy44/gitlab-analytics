@@ -9524,7 +9524,7 @@ models:
     - name: language
       description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type
-      description: '{{ doc("product_delivery_type") }}'
+      description: '{{ doc("code_suggestions_delivery_type") }}'
       accepted_values:
         values: ['Self-Managed', 'SaaS']
     - name: api_status_code
@@ -9585,6 +9585,8 @@ models:
       description: ' {{ doc("code_suggestions_options_count") }} '
     - name: accepted_option
       description: ' {{ doc("code_suggestions_accepted_option") }} '
+    - name: product_deployment_type
+      description: ' {{ doc("product_deployment_type") }} '
 
   - name: fct_behavior_structured_event_ide_extension_version
     description: '{{ doc("fct_behavior_structured_event_ide_extension_version") }}'
