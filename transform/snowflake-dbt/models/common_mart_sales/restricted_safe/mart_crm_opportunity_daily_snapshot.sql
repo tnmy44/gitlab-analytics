@@ -217,6 +217,7 @@ final AS (
     -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
     fct_crm_opportunity.opportunity_owner_user_segment,
     fct_crm_opportunity.report_geo,
+    fct_crm_opportunity.report_segment,
     fct_crm_opportunity.report_region,
     fct_crm_opportunity.report_area,
     fct_crm_opportunity.report_role_level_1,
