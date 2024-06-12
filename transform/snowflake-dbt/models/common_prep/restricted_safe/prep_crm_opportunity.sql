@@ -332,9 +332,6 @@
   --Opp Data  
 
     sfdc_opportunity.sales_accepted_date,
-    -- account_history_final.abm_tier_1_date,
-    -- account_history_final.abm_tier_2_date,
-    -- account_history_final.abm_tier,
     CASE 
       WHEN sfdc_opportunity.is_edu_oss = 0
           AND sfdc_opportunity.stage_name != '10-Duplicate'
@@ -1120,7 +1117,7 @@ LEFT JOIN cw_base
       IFF(CONTAINS(sfdc_opportunity.competitors, 'AWS'),1,0) AS competitors_aws_flag,
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_sales_segment, sfdc_opportunity.crm_opp_owner_sales_segment_stamped)
-      )                                                     AS report_segment,
+      ) AS report_segment,
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_geo, sfdc_opportunity.crm_opp_owner_geo_stamped)
       ) AS report_geo,
