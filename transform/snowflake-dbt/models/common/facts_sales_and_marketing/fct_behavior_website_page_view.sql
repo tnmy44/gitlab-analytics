@@ -43,7 +43,12 @@
       page_url,
       referer_url,
       page_url_scheme,
-      referer_url_scheme
+      referer_url_scheme,
+      IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
+      IFNULL(geo_country, 'Unknown')::VARCHAR                                       AS user_country,
+      IFNULL(geo_region, 'Unknown')::VARCHAR                                        AS user_region,
+      IFNULL(geo_region_name, 'Unknown')::VARCHAR                                   AS user_region_name,
+      IFNULL(geo_timezone, 'Unknown')::VARCHAR                                      AS user_timezone_name
     FROM page_views
 
     {% if is_incremental() %}
@@ -61,13 +66,19 @@
       -- Foreign Keys
       {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
       {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
+      {{ dbt_utils.generate_surrogate_key([
+        'user_city',
+        'user_country',
+        'user_region',
+        'user_timezone_name'
+        ]) }}                                                                                    AS dim_user_location_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
       --Time Attributes
       page_views_w_clean_url.page_view_start_at,
       page_views_w_clean_url.page_view_end_at,
-      page_views_w_clean_url.page_view_start_at                                         AS behavior_at,
+      page_views_w_clean_url.page_view_start_at                                                  AS behavior_at,
 
       -- Natural Keys
       page_views_w_clean_url.session_id,
@@ -85,13 +96,20 @@
       page_views_w_clean_url.gsc_namespace_id,
       page_views_w_clean_url.gsc_project_id,
 
+      -- User Location Attributes
+      page_views_w_clean_url.user_city, 
+      page_views_w_clean_url.user_country,
+      page_views_w_clean_url.user_region,
+      page_views_w_clean_url.user_region_name,
+      page_views_w_clean_url.user_timezone_name,
+
       -- Attributes
       page_views_w_clean_url.page_url_path,
       page_views_w_clean_url.page_url,
       page_views_w_clean_url.page_url_host,
       page_views_w_clean_url.referer_url_path,
       page_views_w_clean_url.event_name,
-      NULL                                                                          AS sf_formid,
+      NULL                                                                                       AS sf_formid,
       page_views_w_clean_url.engaged_seconds,
       page_views_w_clean_url.page_load_time_in_ms,
       page_views_w_clean_url.page_view_index,
@@ -103,7 +121,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-07-22",
-    updated_date="2024-05-03"
+    updated_date="2024-06-12"
 ) }}
