@@ -315,9 +315,9 @@ tables:
         END AS description
       , contacted_at
       , active
-      , version
-      , revision
-      , platform
+      , NULL AS version
+      , NULL AS revision
+      , NULL AS platform
       , run_untagged
       , locked
       , access_level
