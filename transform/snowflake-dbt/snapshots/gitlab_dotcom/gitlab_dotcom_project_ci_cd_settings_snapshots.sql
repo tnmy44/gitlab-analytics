@@ -25,6 +25,5 @@
     
     SELECT *       
     FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
     
 {% endsnapshot %}
