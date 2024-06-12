@@ -4582,7 +4582,7 @@ users:
       - General All Access
   - user_name: eurie
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
