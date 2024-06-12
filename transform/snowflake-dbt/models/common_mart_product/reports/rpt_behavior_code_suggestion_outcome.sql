@@ -155,9 +155,8 @@ suggestion_level AS (
     requested.language_server_version,
     requested.is_invoked,
     requested.has_advanced_context,
-    requested.is_direct_connection,
 
-    --model_engine, model_name, accepted_option, suggestion_source, and options_count are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
+    --model_engine, model_name, accepted_option, suggestion_source, and options_count, is_direct_connection are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
     accepted.accepted_option,
     COALESCE(loaded.model_engine, shown.model_engine, 
       accepted.model_engine, rejected.model_engine, 
@@ -171,6 +170,9 @@ suggestion_level AS (
     COALESCE(loaded.options_count, shown.options_count, 
       accepted.options_count, rejected.options_count, 
       cancelled.options_count, not_provided.options_count)                                          AS options_count,
+    COALESCE(loaded.is_direct_connection, shown.is_direct_connection, 
+      accepted.is_direct_connection, rejected.is_direct_connection, 
+      cancelled.is_direct_connection)                                                               AS is_direct_connection,
 
     --Timestamps
     requested.behavior_at                                                                           AS requested_at,
@@ -238,6 +240,6 @@ suggestion_level AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-05-28"
+    updated_date="2024-06-12"
 ) }}
 
