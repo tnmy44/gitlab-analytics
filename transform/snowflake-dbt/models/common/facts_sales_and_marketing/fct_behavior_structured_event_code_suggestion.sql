@@ -42,7 +42,9 @@ code_suggestion_context AS (
     fct_behavior_structured_event.suggestion_source,
     fct_behavior_structured_event.is_invoked,
     fct_behavior_structured_event.options_count,
-    fct_behavior_structured_event.accepted_option
+    fct_behavior_structured_event.accepted_option,
+    fct_behavior_structured_event.has_advanced_context,
+    fct_behavior_structured_event.is_direct_connection
   FROM fct_behavior_structured_event
   WHERE fct_behavior_structured_event.behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
     AND fct_behavior_structured_event.has_code_suggestions_context = TRUE

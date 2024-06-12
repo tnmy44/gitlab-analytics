@@ -1541,5 +1541,9 @@ models:
       description: ' {{ doc("code_suggestions_options_count") }} '
     - name: accepted_option
       description: ' {{ doc("code_suggestions_accepted_option") }} '
+    - name: has_advanced_context
+      description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+    - name: is_direct_connection
+      description: ' {{ doc("code_suggestions_is_direct_connection") }} '
     - name: product_deployment_type
       description: ' {{ doc("product_deployment_type") }} '

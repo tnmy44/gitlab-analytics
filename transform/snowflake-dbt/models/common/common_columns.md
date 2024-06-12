@@ -2184,6 +2184,24 @@ The closed lost renewal opportunity, where applicable, mapped mapped to a subscr
 
 {% enddocs %}
 
+{% docs dim_oldest_crm_account_in_cohort_id %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the Account ID from SFDC identifing the customer for the oldest subscription in a lineage.
+
+{% enddocs %}
+
+{% docs oldest_subscription_start_date %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date for the oldest subscription in a lineage. This date can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
+{% docs oldest_subscription_cohort_month %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date month for the oldest subscription in a lineage. This cohort month can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
 {% docs dim_plan_sk %}
 
 The surrogate key for joining to the `dim_plan` table
@@ -2887,6 +2905,18 @@ The total number of options provided for the current suggestion. A user can sele
 {% docs code_suggestions_accepted_option %}
 
 When the suggestion is accepted, this field indicates the option number which was chosen by the user out of the possible options provided. This is a 1-based index.
+
+{% enddocs %}
+
+{% docs code_suggestions_has_advanced_context %}
+
+Flag indicating whether the suggestion was requested with additional context. NULL means that the feature flags for the advanced context feature are not enabled
+
+{% enddocs %}
+
+{% docs code_suggestions_is_direct_connection %}
+
+Flag indicating whether the suggestion request was sent to monolith or directly to AI gateway.
 
 {% enddocs %}
 
