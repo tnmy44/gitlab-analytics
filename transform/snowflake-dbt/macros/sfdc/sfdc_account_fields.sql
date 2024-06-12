@@ -547,6 +547,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.gs_first_value_date,
       {{ get_date_id('sfdc_account.gs_last_csm_activity_date') }}         AS gs_last_csm_activity_date_id,
       sfdc_account.gs_last_csm_activity_date,
+      sfdc_account.bdr_recycle_date,
+      sfdc_account.actively_working_start_date,
 
 
       --measures
