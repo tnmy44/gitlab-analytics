@@ -428,6 +428,10 @@ WITH map_merged_crm_account AS (
       sfdc_account.last_at_risk_update_comments,
       sfdc_account.bdr_prospecting_status,
       sfdc_account.gs_health_csm_sentiment,
+      sfdc_account.bdr_next_steps,
+      sfdc_account.bdr_account_research,
+      sfdc_account.bdr_account_strategy,
+      sfdc_account.account_bdr_assigned_user_role,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
