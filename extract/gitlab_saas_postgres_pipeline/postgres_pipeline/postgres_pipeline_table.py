@@ -60,7 +60,7 @@ class PostgresPipelineTable:
         return not self.is_incremental()
 
     def do_scd(
-        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool, database_type: str
     ) -> bool:
         if not self.is_scd():
             logging.info("Not SCD load, aborting...")
@@ -112,7 +112,7 @@ class PostgresPipelineTable:
         )
 
     def do_trusted_data_pgp(
-        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool, database_type: str
     ) -> bool:
         """
         The function is used for trusted data extract and load.
@@ -345,7 +345,7 @@ class PostgresPipelineTable:
                 "trusted_data": self.do_trusted_data_pgp,
             }
             loaded = remaining_load_types[load_type](
-                source_engine, target_engine, is_schema_addition
+                source_engine, target_engine, is_schema_addition, database_type
             )
 
         # If temp table, swap it, for SCD schema change
