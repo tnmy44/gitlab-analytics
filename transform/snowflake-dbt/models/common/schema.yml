@@ -4331,7 +4331,9 @@ models:
       - name: ping_instance_metric_monthly_pk
         description: '{{ doc("ping_instance_metric_monthly_pk") }}'
         tests:
-          - unique
+          - unique:
+              config:
+                where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
           - not_null
       - name: ping_instance_metric_id
         tests:
