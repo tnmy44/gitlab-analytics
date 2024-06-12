@@ -123,6 +123,7 @@ tables:
     is_incremental: True
     database_type: ci
     export_schema: 'gitlab_com'
+    export_table: ci_job_artifacts
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
