@@ -6877,6 +6877,7 @@ users:
       can_login: true
       member_of:
         - jsingh
+        - securityadmin
   - jslaughter:
       can_login: true
       member_of:
