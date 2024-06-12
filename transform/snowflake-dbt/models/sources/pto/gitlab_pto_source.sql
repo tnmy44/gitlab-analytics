@@ -34,7 +34,8 @@ each_pto_day AS (
     jsontext['ooo_type']['group_type']::VARCHAR         AS pto_group_type,
     jsontext['ooo_type']['is_pto']::BOOLEAN             AS is_pto,
     jsontext['ooo_type']['name']::VARCHAR               AS pto_type_name,
-    jsontext['ooo_type']['uuid']::VARCHAR               AS pto_type_uuid
+    jsontext['ooo_type']['uuid']::VARCHAR               AS pto_type_uuid,
+    jsontext['created_at']::TIMESTAMP                   AS pto_created_at
   FROM deduped,
     LATERAL FLATTEN(INPUT => jsontext['ooo_days']::ARRAY) AS ooo_days
 

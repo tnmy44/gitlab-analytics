@@ -64,4 +64,6 @@ models:
           description: '{{ doc("gitlab_pto_pto_type_name") }}'
         - name: pto_type_uuid
           description: '{{ doc("gitlab_pto_pto_type_uuid") }}'
+        - name: pto_created_at
+          description: '{{ doc("gitlab_pto_pto_created_at") }}'
         
