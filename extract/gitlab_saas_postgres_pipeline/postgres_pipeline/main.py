@@ -56,7 +56,7 @@ def main(
 
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
-            load_type, postgres_engine, snowflake_engine, metadata_engine
+            load_type, postgres_engine, snowflake_engine, metadata_engine, database_type
         )
         if loaded:
             logging.info(f"Finished upload for table: {table}")

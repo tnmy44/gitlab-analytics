@@ -279,7 +279,11 @@ class PostgresPipelineTable:
         return loaded
 
     def do_test(
-        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+        self,
+        source_engine: Engine,
+        target_engine: Engine,
+        is_schema_addition: bool,
+        database_type: str,
     ) -> bool:
         if not is_schema_addition:
             logging.info(
@@ -293,6 +297,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            database_type,
         )
         return loaded
 
@@ -302,6 +307,7 @@ class PostgresPipelineTable:
         source_engine: Engine,
         target_engine: Engine,
         metadata_engine: Engine,
+        database_type: str,
     ) -> bool:
         """
         Handles the following:
