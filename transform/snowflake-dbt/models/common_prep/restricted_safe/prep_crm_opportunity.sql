@@ -1132,7 +1132,7 @@ LEFT JOIN cw_base
       ) AS report_area,
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_role_level_1, sfdc_opportunity.crm_opp_owner_role_level_1)
-      )                                                     AS report_role_level_1,
+      ) AS report_role_level_1,
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.crm_account_owner_role_level_2, sfdc_opportunity.crm_opp_owner_role_level_2)
       ) AS report_role_level_2,
