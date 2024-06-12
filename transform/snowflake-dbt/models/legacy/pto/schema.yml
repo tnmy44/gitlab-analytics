@@ -49,3 +49,5 @@ models:
         - name: pto_type_uuid
           meta:
             masking_policy: analyst_people_sensitive
+        - name: pto_created_at
+          description: '{{ doc("gitlab_pto_pto_created_at") }}'

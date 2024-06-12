@@ -6119,12 +6119,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: kbockrath
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: kbray
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9729,7 +9723,7 @@ users:
       - General All Access
   - user_name: vbertil
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
@@ -10243,7 +10237,7 @@ users:
       - General SAFE Access
   - user_name: sbitters
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
