@@ -3379,8 +3379,6 @@ tables:
     import_query: |-
       SELECT id
       , root_namespace_id
-      SELECT id
-      , root_namespace_id
       , search
       , created_at
       , updated_at
