@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_arr_all','mart_arr_all'),
+    ('mart_arr_all','mart_arr_with_zero_dollar_charges'),
     ('mart_ping_instance', 'mart_ping_instance'),
     ('dim_subscription', 'dim_subscription'),
     ('gitlab_dotcom_subscription_user_add_on_assignments', 'gitlab_dotcom_subscription_user_add_on_assignments'),
