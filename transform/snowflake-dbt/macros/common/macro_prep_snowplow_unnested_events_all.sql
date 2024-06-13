@@ -169,6 +169,8 @@ SELECT
   is_invoked                                                                                                        AS is_invoked,
   options_count                                                                                                     AS options_count,
   accepted_option                                                                                                   AS accepted_option,
+  has_advanced_context                                                                                              AS has_advanced_context,
+  is_direct_connection                                                                                              AS is_direct_connection,
   gitlab_service_ping_context                                                                                       AS gitlab_service_ping_context,
   redis_event_name                                                                                                  AS redis_event_name,
   key_path                                                                                                          AS key_path,
