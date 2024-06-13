@@ -15,7 +15,7 @@ Closes
     * [ ] 🚂`Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed:
         * [ ] `el_saas_gitlab_ops_db_manifest.yaml`
         * [ ] `el_saas_gitlab_ops_scd_db_manifest.yaml`
-* Enter the `database_type` of the modified table in the above manifests(ci, main, ops) 
+* Enter the `database_type` of the modified table in the above manifests(ci, main, ops, customers)
 
 It should pass properly to move forward.
 
