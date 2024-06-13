@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: commonroom
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: commonroom
+    loader: Snowflake task
+    loaded_at_field: _uploaded_at
+    description: Common Room data [Original Issue](https://gitlab.com/gitlab-data/analytics/-/issues/19690)
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+    - name: activities
+    - name: community_member
+    - name: organization

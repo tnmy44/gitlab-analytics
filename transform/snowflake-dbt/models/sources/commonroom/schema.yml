@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: commonroom_activities_source
+    description: '{{ doc("commonroom_activities_source") }}'
+    columns:
+      - name: activity_timestamp
+        tests:
+          - not_null
+      - name: activity_type
+        tests:
+          - not_null
+      - name: first_activity_date
+      - name: full_name
+        tests:
+          - not_null
+      - name: member_token
+      - name: profiles
+      - name: service_name
+        tests:
+          - not_null
+      - name: _uploaded_at
+  - name: commonroom_community_member_source
+    description: '{{ doc("commonroom_community_member_source") }}'
+    columns:
+      - name: first_activity_date
+      - name: first_activity_source
+      - name: full_name
+        tests:
+          - not_null
+      - name: impact_points_all_time
+        tests:
+          - not_null
+      - name: last_activity_date
+      - name: location
+      - name: member_tokens
+      - name: primary_email
+      - name: profiles
+      - name: segment_names
+      - name: tags
+      - name: _uploaded_at
+  - name: commonroom_organization_source
+    description: '{{ doc("commonroom_organization_source") }}'
+    columns:
+      - name: approx_revenue_max
+      - name: approx_revenue_min
+      - name: domain
+        tests:
+          - not_null
+      - name: employee_count
+        tests:
+          - not_null
+      - name: first_seen_date
+      - name: first_seen_source
+      - name: last_seen_date
+      - name: location
+      - name: member_count
+        tests:
+          - not_null
+      - name: organization_name
+        tests:
+          - not_null
+      - name: _uploaded_at
