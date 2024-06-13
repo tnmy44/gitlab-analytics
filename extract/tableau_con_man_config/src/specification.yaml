@@ -7666,14 +7666,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: nkhanna
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - Customer Success All Access
-      - General All Access
-      - General SAFE Access
   - user_name: nklick
     user_name_domain: gitlab.com
     site_role: Unlicensed
