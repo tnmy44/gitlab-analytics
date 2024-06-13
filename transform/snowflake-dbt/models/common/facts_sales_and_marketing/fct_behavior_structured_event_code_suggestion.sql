@@ -30,7 +30,7 @@ code_suggestion_context AS (
     fct_behavior_structured_event.prefix_length,
     fct_behavior_structured_event.suffix_length,
     fct_behavior_structured_event.language,
-    fct_behavior_structured_event.delivery_type,
+    fct_behavior_structured_event.delivery_type     AS code_suggestions_context_delivery_type,
     fct_behavior_structured_event.api_status_code,
     fct_behavior_structured_event.duo_namespace_ids,
     fct_behavior_structured_event.saas_namespace_ids,
@@ -240,30 +240,11 @@ code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm AS (
 combined AS (
 
   SELECT
-    code_suggestion_context.behavior_structured_event_pk                                                                                                                                                                                 AS behavior_structured_event_pk,
-    code_suggestion_context.behavior_at                                                                                                                                                                                                  AS behavior_at,
-    code_suggestion_context.code_suggestions_context                                                                                                                                                                                     AS code_suggestions_context,
-    code_suggestion_context.model_engine                                                                                                                                                                                                 AS model_engine,
-    code_suggestion_context.model_name                                                                                                                                                                                                   AS model_name,
-    code_suggestion_context.prefix_length                                                                                                                                                                                                AS prefix_length,
-    code_suggestion_context.suffix_length                                                                                                                                                                                                AS suffix_length,
-    code_suggestion_context.language                                                                                                                                                                                                     AS language,
+    code_suggestion_context.*
     COALESCE(
       IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_product_delivery_types = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_delivery_types, 0)::VARCHAR, NULL),
-      code_suggestion_context.delivery_type
+      code_suggestion_context.code_suggestions_context_delivery_type
     )                                                                                                                                                                                                                                    AS delivery_type,
-    code_suggestion_context.api_status_code                                                                                                                                                                                              AS api_status_code,
-    code_suggestion_context.duo_namespace_ids                                                                                                                                                                                            AS duo_namespace_ids,
-    code_suggestion_context.saas_namespace_ids                                                                                                                                                                                           AS saas_namespace_ids,
-    code_suggestion_context.namespace_ids                                                                                                                                                                                                AS namespace_ids,
-    code_suggestion_context.instance_id                                                                                                                                                                                                  AS instance_id,
-    code_suggestion_context.host_name                                                                                                                                                                                                    AS host_name,
-    code_suggestion_context.is_streaming                                                                                                                                                                                                 AS is_streaming,
-    code_suggestion_context.gitlab_global_user_id                                                                                                                                                                                        AS gitlab_global_user_id,
-    code_suggestion_context.suggestion_source                                                                                                                                                                                            AS suggestion_source,
-    code_suggestion_context.is_invoked                                                                                                                                                                                                   AS is_invoked,
-    code_suggestion_context.options_count                                                                                                                                                                                                AS options_count,
-    code_suggestion_context.accepted_option                                                                                                                                                                                              AS accepted_option,
     COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids, [])                                                                                                                         AS ultimate_parent_namespace_ids,
     COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.subscription_names, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.subscription_names), [])                                       AS subscription_names,
     COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids), [])                                     AS dim_crm_account_ids,
