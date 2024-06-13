@@ -16,6 +16,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "some_table",
             "export_table_primary_key": "id",
+            "database_type": "main"
         }
         self.pipeline_table = PostgresPipelineTable(table_config)
         # Create a mock source/self.target_engine
@@ -35,6 +36,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "some_table",
             "export_table_primary_key": "id",
+            "database_type": "main"
         }
         pipeline_table2 = PostgresPipelineTable(table_config2)
         is_scd = pipeline_table2.is_scd()
@@ -56,6 +58,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "ci_builds",
             "export_table_primary_key": "id",
+            "database_type": "ci"
         }
         pipeline_table2 = PostgresPipelineTable(table_config2)
         actual_source_table_name = pipeline_table2.source_table_name
@@ -150,7 +153,7 @@ class TestPostgresPipelineTable:
 
         mock_check_backfill_metadata.return_value = True, datetime.utcnow(), -1
         self.pipeline_table.do_load(
-            load_type, source_engine, target_engine, metadata_engine
+            load_type, source_engine, target_engine, metadata_engine, database_type
         )
         mock_check_is_new_table_or_schema_addition.assert_not_called()
         mock_swap_temp_table_on_schema_change.assert_not_called()
@@ -190,7 +193,7 @@ class TestPostgresPipelineTable:
         mock_load_incremental.return_value = loaded
 
         self.pipeline_table.do_load(
-            load_type, source_engine, target_engine, metadata_engine
+            load_type, source_engine, target_engine, metadata_engine, database_type
         )
         mock_check_is_new_table_or_schema_addition.assert_called_once_with(
             source_engine, target_engine
@@ -241,7 +244,7 @@ class TestPostgresPipelineTable:
         self.pipeline_table.incremental_type = "load_by_date"
 
         loaded = self.pipeline_table.do_load(
-            load_type, source_engine, target_engine, metadata_engine
+            load_type, source_engine, target_engine, metadata_engine, database_type
         )
         assert not loaded
         mock_check_is_new_table_or_schema_addition.assert_called_once_with(
@@ -285,7 +288,7 @@ class TestPostgresPipelineTable:
         mock_do_scd.return_value = loaded
 
         self.pipeline_table.do_load(
-            load_type, source_engine, target_engine, metadata_engine
+            load_type, source_engine, target_engine, metadata_engine, database_type
         )
         mock_check_is_new_table_or_schema_addition.assert_called_once_with(
             source_engine, target_engine
