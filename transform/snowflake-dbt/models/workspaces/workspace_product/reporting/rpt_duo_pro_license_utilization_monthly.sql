@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_arr','mart_arr'),
+    ('mart_arr_all','mart_arr_with_zero_dollar_charges'),
     ('mart_ping_instance', 'mart_ping_instance'),
     ('dim_subscription', 'dim_subscription'),
     ('gitlab_dotcom_subscription_user_add_on_assignments', 'gitlab_dotcom_subscription_user_add_on_assignments'),
@@ -20,18 +20,22 @@
 all_duo_pro_monthly_seats AS (
 
 SELECT 
-  mart_arr.arr_month 
+  arr_month 
     AS reporting_month,
-  mart_arr.subscription_name,
-  mart_arr.dim_subscription_id,
-  mart_arr.crm_account_name,
-  mart_arr.dim_crm_account_id,
-  mart_arr.dim_parent_crm_account_id,
-  mart_arr.product_deployment_type
+  subscription_name,
+  dim_subscription_id,
+  crm_account_name,
+  dim_crm_account_id,
+  dim_parent_crm_account_id,
+  product_deployment_type
     AS product_deployment,
-  SUM(mart_arr.quantity) 
-    AS dp_paid_seats
-FROM mart_arr
+  SUM(quantity) 
+    AS dp_seats,
+  SUM(arr)
+    AS dp_arr,
+  IFF(dp_arr > 0, TRUE, FALSE)
+    AS is_dp_subscription_paid
+FROM mart_arr_all
 WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
   AND LOWER(product_rate_plan_name) LIKE '%duo pro%'
 GROUP BY ALL
@@ -47,7 +51,7 @@ SELECT
   IFF(paired_tier IN ('Premium, Ultimate', 'Ultimate, Premium'), 'Premium & Ultimate', paired_tier)
     AS clean_paired_tier, -- not able to sort within group while using SPLIT_PART function - using this method for standard results
 FROM all_duo_pro_monthly_seats AS duo_pro
-LEFT JOIN mart_arr AS tier -- joining to get tier occuring within same month as add on
+LEFT JOIN mart_arr_all AS tier -- joining to get tier occuring within same month as add on
   ON duo_pro.reporting_month = tier.arr_month
   AND duo_pro.dim_crm_account_id = tier.dim_crm_account_id
   AND LOWER(tier.product_rate_plan_name) NOT LIKE '%duo pro%'
@@ -70,7 +74,7 @@ sm_dedicated_duo_pro_monthly_seats AS ( -- duo pro monthly seats associated enti
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo_pro.dp_paid_seats)
+    MAX(duo_pro.dp_seats)
       AS duo_pro_seats -- max because left join can result in duplicate records
   FROM duo_pro_and_paired_tier AS duo_pro
   LEFT JOIN mart_ping_instance AS m -- joining to get installation id because that identifier is not in mart_arr
@@ -97,7 +101,7 @@ dotcom_duo_pro_monthly_seats AS ( -- duo pro monthly seats and associated entiti
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo_pro.dp_paid_seats)
+    MAX(duo_pro.dp_seats)
       AS duo_pro_seats -- max because left join can result in duplicate records
   FROM duo_pro_and_paired_tier AS duo_pro
   INNER JOIN dim_subscription AS s -- joining to get namespace id because that identifier is not in mart_arr
@@ -263,7 +267,7 @@ all_monthly_duo_pro_seats AS (
 
 final AS (
 
---Grain: dim_crm_account_id, reporting month, deployment, tier
+--Grain: dim_crm_account_id, dim_subscription_id, reporting_month
 --Because some SM and Dedicated installations can have multiple dim_crm_account_id values in mart_arr, including product_entity_id in the final model could lead to over counting seats purchased in a few cases
 
   SELECT
@@ -278,6 +282,7 @@ final AS (
     a.clean_paired_tier  
       AS paired_tier,                                                                          
     a.is_product_entity_associated_w_subscription,
+    a.is_dp_subscription_paid,
     MAX(a.major_minor_version_id)                                                                  
       AS major_minor_version_id,
     ZEROIFNULL(MAX(a.duo_pro_seats))                                                               
