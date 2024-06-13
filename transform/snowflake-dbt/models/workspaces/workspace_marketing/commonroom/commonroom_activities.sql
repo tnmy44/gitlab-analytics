@@ -1,8 +1,8 @@
 WITH source AS
 (
 
- SELECT *
-   FROM {{ ref('commonroom_activities_source') }}
+  SELECT *
+  FROM {{ ref('commonroom_activities_source') }}
 
 )
 
