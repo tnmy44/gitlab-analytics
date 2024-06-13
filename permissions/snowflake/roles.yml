@@ -5160,11 +5160,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - nkhanna:
-      member_of:
-        - reporter
-      warehouses:
-        - dev_xs
   - nmcavinue:
       member_of:
         - adaptive
@@ -7103,10 +7098,6 @@ users:
       can_login: true
       member_of:
         - niskhakova
-  - nkhanna:
-      can_login: true
-      member_of:
-        - nkhanna
   - nmcavinue:
       can_login: true
       member_of:
