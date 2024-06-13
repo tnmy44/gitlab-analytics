@@ -1,13 +1,136 @@
-connection_info:
-  postgres_source_connection:
-    database: GITLAB_COM_DB_NAME
-    host: GITLAB_COM_DB_HOST
-    pass: GITLAB_COM_DB_PASS
-    port: GITLAB_COM_SCD_PG_PORT
-    user: GITLAB_COM_DB_USER
 tables:
+  ci_builds_runner_session:
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_builds_runner_session
+    export_table_primary_key: build_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT build_id
+      FROM ci_builds_runner_session
+  ci_build_trace_chunks:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_build_trace_chunks
+    export_table_primary_key: build_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT build_id
+      , chunk_index
+      , data_store
+      FROM ci_build_trace_chunks
+  ci_job_token_project_scope_links:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: 'ci_job_token_project_scope_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , source_project_id
+      , target_project_id
+      , added_by_id
+      , created_at
+      , direction
+      FROM ci_job_token_project_scope_links
+  ci_namespace_monthly_usages:
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_namespace_monthly_usages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , date
+      , amount_used
+      , notification_level
+      , shared_runners_duration
+      , created_at
+      FROM ci_namespace_monthly_usages
+  ci_pipeline_chat_data:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_pipeline_chat_data
+    export_table_primary_key: pipeline_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT pipeline_id
+      , chat_name_id
+      FROM ci_pipeline_chat_data
+  ci_pipeline_metadata_internal_only:
+    additional_filtering: WHERE project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_pipeline_metadata_internal_only
+    export_table_primary_key: pipeline_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , pipeline_id
+      , name
+      FROM ci_pipeline_metadata
+  ci_project_monthly_usages:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_project_monthly_usages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , date
+      , amount_used
+      , shared_runners_duration
+      , created_at
+      FROM ci_project_monthly_usages
+  ci_sources_pipelines:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_sources_pipelines
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , pipeline_id
+      , source_project_id
+      , source_pipeline_id
+      , source_job_id
+      FROM ci_sources_pipelines
+  ci_variables:
+    export_schema: 'gitlab_com'    
+    is_incremental: False
+    database_type: ci
+    export_table: ci_variables
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , protected
+      , masked
+      , variable_type
+      FROM ci_variables
+
   alert_management_alert_assignees:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'alert_management_alert_assignees'
     export_table_primary_key: id
@@ -18,6 +141,8 @@ tables:
       , alert_id
       FROM alert_management_alert_assignees
   approval_merge_request_rule_sources:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: approval_merge_request_rule_sources
     export_table_primary_key: id
@@ -28,6 +153,8 @@ tables:
       , approval_project_rule_id
       FROM approval_merge_request_rule_sources
   approval_project_rules_groups:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: approval_project_rules_groups
     export_table_primary_key: id
@@ -38,6 +165,8 @@ tables:
       , group_id
       FROM approval_project_rules_groups
   approval_project_rules_protected_branches:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: approval_project_rules_protected_branches
     export_table_primary_key: approval_project_rule_id
@@ -47,6 +176,8 @@ tables:
       , protected_branch_id
       FROM approval_project_rules_protected_branches
   approval_project_rules_users:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: approval_project_rules_users
     export_table_primary_key: id
@@ -57,6 +188,8 @@ tables:
       , user_id
       FROM approval_project_rules_users
   award_emoji:
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'award_emoji'
     export_table_primary_key: id
@@ -70,6 +203,8 @@ tables:
       FROM award_emoji
   board_assignees:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'board_assignees'
     export_table_primary_key: id
@@ -81,6 +216,8 @@ tables:
       FROM board_assignees
   bulk_import_entities:
     advanced_metadata: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: bulk_import_entities
     export_table_primary_key: id
@@ -99,6 +236,8 @@ tables:
       FROM bulk_import_entities
   board_labels:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'board_labels'
     export_table_primary_key: id
@@ -111,6 +250,8 @@ tables:
   catalog_resources:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'catalog_resources'
     export_table_primary_key: id
@@ -132,6 +273,8 @@ tables:
   catalog_resource_versions:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'catalog_resource_versions'
     export_table_primary_key: id
@@ -150,6 +293,8 @@ tables:
       from catalog_resource_versions
   cluster_groups:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'cluster_groups'
     export_table_primary_key: id
@@ -162,6 +307,8 @@ tables:
     import_schema: information_schema
   clusters_integration_prometheus:
     advanced_metadata: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'clusters_integration_prometheus'
     export_table_primary_key: cluster_id
@@ -175,6 +322,8 @@ tables:
       FROM clusters_integration_prometheus
   deployment_merge_requests:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'deployment_merge_requests'
     export_table_primary_key: CONCAT(deployment_id,'_',merge_request_id)
@@ -186,6 +335,8 @@ tables:
       FROM deployment_merge_requests
   design_management_designs:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'design_management_designs'
     export_table_primary_key: CONCAT(issue_id,'_',filename)
@@ -197,6 +348,8 @@ tables:
       FROM design_management_designs
   design_management_designs_versions:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'design_management_designs_versions'
     export_table_primary_key: CONCAT(design_id,'_', version_id)
@@ -209,6 +362,8 @@ tables:
       FROM design_management_designs_versions
   design_management_versions:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'design_management_versions'
     export_table_primary_key: CONCAT(sha,'_', issue_id)
@@ -225,6 +380,8 @@ tables:
     # see https://gitlab.com/gitlab-data/analytics/-/issues/5463#note_387839921
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'elasticsearch_indexed_namespaces'
     export_table_primary_key: namespace_id
@@ -236,6 +393,8 @@ tables:
       FROM elasticsearch_indexed_namespaces
   epic_issues:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'epic_issues'
     export_table_primary_key: id
@@ -248,6 +407,8 @@ tables:
       FROM epic_issues
   fork_network_members:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'fork_network_members'
     export_table_primary_key: id
@@ -260,6 +421,8 @@ tables:
       FROM fork_network_members
   gitlab_subscription_histories:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'gitlab_subscription_histories'
     export_table_primary_key: id
@@ -285,6 +448,8 @@ tables:
     advanced_metadata: true
     dbt_snapshots: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'gitlab_subscriptions'
     export_table_primary_key: id
@@ -309,6 +474,8 @@ tables:
   group_group_links:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'group_group_links'
     export_table_primary_key: id
@@ -324,6 +491,8 @@ tables:
       FROM group_group_links
   group_import_states:
     advanced_metadata: true
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: group_import_states
     export_table_primary_key: group_id
@@ -337,6 +506,8 @@ tables:
       FROM group_import_states
   issuable_severities:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'issuable_severities'
     export_table_primary_key: id
@@ -348,6 +519,8 @@ tables:
       FROM issuable_severities
   issue_assignees:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'issue_assignees'
     export_table_primary_key: user_id
@@ -359,6 +532,8 @@ tables:
   issue_links:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'issue_links'
     export_table_primary_key: id
@@ -373,6 +548,8 @@ tables:
   jira_connect_installations:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'jira_connect_installations'
     export_table_primary_key: id
@@ -386,6 +563,8 @@ tables:
       FROM jira_connect_installations
   keys:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'keys'
     export_table_primary_key: id
@@ -402,6 +581,8 @@ tables:
   label_links:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'label_links'
     export_table_primary_key: id
@@ -416,6 +597,8 @@ tables:
       FROM label_links
   lfs_file_locks:
     advanced_metadata: true
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: lfs_file_locks
     export_table_primary_key: id
@@ -431,6 +614,8 @@ tables:
     advanced_metadata: true
     dbt_snapshots: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'members'
     export_table_primary_key: id
@@ -457,6 +642,8 @@ tables:
   merge_request_diff_commit_users:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diff_commit_users'
     export_table_primary_key: id
@@ -470,6 +657,8 @@ tables:
     advanced_metadata: true
     dbt_snapshots: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'merge_request_reviewers'
     export_table_primary_key: 'id'
@@ -483,6 +672,8 @@ tables:
       FROM merge_request_reviewers
   milestone_releases:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'milestone_releases'
     export_table_primary_key: milestone_id
@@ -493,6 +684,8 @@ tables:
       FROM milestone_releases
   namespace_limits:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'namespace_limits'
     export_table_primary_key: namespace_id
@@ -509,6 +702,8 @@ tables:
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'namespace_statistics'
     export_table_primary_key: id
@@ -521,6 +716,8 @@ tables:
       FROM namespace_statistics
   oauth_access_tokens:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'oauth_access_tokens'
     export_table_primary_key: id
@@ -536,6 +733,8 @@ tables:
       FROM oauth_access_tokens
   pages_domains:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'pages_domains'
     export_table_primary_key: id
@@ -554,6 +753,8 @@ tables:
       FROM pages_domains
   path_locks:
     advanced_metadata: true
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: path_locks
     export_table_primary_key: id
@@ -568,6 +769,8 @@ tables:
       FROM path_locks
   plans:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'plans'
     export_table_primary_key: id
@@ -580,6 +783,8 @@ tables:
       , title
       FROM plans
   pool_repositories:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: pool_repositories
     export_table_primary_key: id
@@ -593,6 +798,8 @@ tables:
       FROM pool_repositories
   programming_languages:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'programming_languages'
     export_table_primary_key: id
@@ -602,6 +809,8 @@ tables:
       , name
       FROM programming_languages
   project_ci_cd_settings:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: project_ci_cd_settings
     export_table_primary_key: id
@@ -624,6 +833,8 @@ tables:
       , inbound_job_token_scope_enabled
       FROM project_ci_cd_settings
   project_compliance_framework_settings:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings
     export_table_primary_key: project_id
@@ -633,6 +844,8 @@ tables:
       , framework_id
       FROM project_compliance_framework_settings
   project_error_tracking_settings:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: project_error_tracking_settings
     export_table_primary_key: project_id
@@ -645,6 +858,8 @@ tables:
       , NULL AS organization_name
       FROM project_error_tracking_settings
   project_feature_usages:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: project_feature_usages
     export_table_primary_key: project_id
@@ -657,6 +872,8 @@ tables:
   project_group_links:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_group_links'
     export_table_primary_key: id
@@ -672,6 +889,8 @@ tables:
       FROM project_group_links
   project_import_data:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_import_data'
     export_table_primary_key: id
@@ -681,6 +900,8 @@ tables:
       , project_id
       FROM project_import_data
   project_incident_management_settings:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: project_incident_management_settings
     export_table_primary_key: project_id
@@ -697,6 +918,8 @@ tables:
       FROM project_incident_management_settings
   project_mirror_data:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_mirror_data'
     export_table_primary_key: id
@@ -710,6 +933,8 @@ tables:
       , next_execution_timestamp
       FROM project_mirror_data
   project_repositories:
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_repositories'
     export_table_primary_key: id
@@ -721,6 +946,8 @@ tables:
       , project_id
       FROM project_repositories
   project_repository_storage_moves:
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_repository_storage_moves'
     export_table_primary_key: id
@@ -737,6 +964,8 @@ tables:
   project_statistics:
     dbt_snapshots: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_statistics'
     export_table_primary_key: id
@@ -761,6 +990,8 @@ tables:
   repository_languages:
     advanced_metadata: true
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'repository_languages'
     export_table_primary_key: CONCAT(project_id, '_', programming_language_id)
@@ -774,6 +1005,8 @@ tables:
   requirements:
     advanced_metadata: false
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'requirements'
     export_table_primary_key: id
@@ -789,6 +1022,8 @@ tables:
       FROM requirements
   reviews:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'reviews'
     export_table_primary_key: id
@@ -802,6 +1037,8 @@ tables:
       FROM reviews
   saml_providers:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'saml_providers'
     export_table_primary_key: id
@@ -818,6 +1055,8 @@ tables:
       , default_membership_role
       FROM saml_providers
   sentry_issues:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: sentry_issues
     export_table_primary_key: id
@@ -829,6 +1068,8 @@ tables:
       FROM sentry_issues
   service_desk_settings:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'service_desk_settings'
     export_table_primary_key: project_id
@@ -838,6 +1079,8 @@ tables:
       , custom_email_enabled
       FROM service_desk_settings
   shards:
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'shards'
     export_table_primary_key: id
@@ -847,6 +1090,8 @@ tables:
       , NULL AS name
       FROM shards
   suggestions:
+    is_incremental: False
+    database_type: main
     export_schema: "gitlab_com"
     export_table: suggestions
     export_table_primary_key: id
@@ -865,6 +1110,8 @@ tables:
       FROM suggestions
   user_credit_card_validations:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'user_credit_card_validations'
     export_table_primary_key: 'user_id'
@@ -875,6 +1122,8 @@ tables:
       FROM user_credit_card_validations
   user_details:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'user_details'
     export_table_primary_key: user_id
@@ -892,6 +1141,8 @@ tables:
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'users_security_dashboard_projects'
     export_table_primary_key: user_id
@@ -902,6 +1153,8 @@ tables:
       FROM users_security_dashboard_projects
   vulnerability_reads:
     dbt_source_model: true
+    is_incremental: False
+    database_type: main
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_reads'
     export_table_primary_key: id
@@ -918,4 +1171,3 @@ tables:
       , state
       , dismissal_reason
       FROM vulnerability_reads
-

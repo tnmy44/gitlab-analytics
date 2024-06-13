@@ -138,6 +138,8 @@ filtered_code_suggestion_events AS (
     is_invoked,
     options_count,
     accepted_option,
+    has_advanced_context,
+    is_direct_connection,
     namespace_ids,
     ultimate_parent_namespace_ids,
     dim_installation_ids,
@@ -167,5 +169,5 @@ filtered_code_suggestion_events AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-05-28"
+    updated_date="2024-06-07"
 ) }}
