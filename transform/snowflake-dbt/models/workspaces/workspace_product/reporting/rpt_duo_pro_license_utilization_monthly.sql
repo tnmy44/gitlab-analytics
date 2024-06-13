@@ -30,7 +30,11 @@ SELECT
   product_deployment_type
     AS product_deployment,
   SUM(quantity) 
-    AS dp_seats
+    AS dp_seats,
+  SUM(arr)
+    AS dp_arr,
+  IFF(dp_arr > 0, TRUE, FALSE)
+    AS is_dp_subscription_paid
 FROM mart_arr_all
 WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
   AND LOWER(product_rate_plan_name) LIKE '%duo pro%'
@@ -278,6 +282,7 @@ final AS (
     a.clean_paired_tier  
       AS paired_tier,                                                                          
     a.is_product_entity_associated_w_subscription,
+    a.is_dp_subscription_paid,
     MAX(a.major_minor_version_id)                                                                  
       AS major_minor_version_id,
     ZEROIFNULL(MAX(a.duo_pro_seats))                                                               
