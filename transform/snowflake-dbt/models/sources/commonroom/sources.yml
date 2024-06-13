@@ -15,5 +15,5 @@ sources:
 
     tables:
     - name: activities
-    - name: community_member
-    - name: organization
+    - name: community_members
+    - name: organizations

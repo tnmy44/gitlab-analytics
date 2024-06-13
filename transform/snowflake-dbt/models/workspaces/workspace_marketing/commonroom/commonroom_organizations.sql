@@ -12,7 +12,7 @@ SELECT approx_revenue_max::NUMBER     AS approx_revenue_max,
        member_count::NUMBER           AS member_count,
        organization_name::VARCHAR     AS organization_name,
        _uploaded_at::TIMESTAMP        AS _uploaded_at
-   FROM {{ source('commonroom', 'organization') }}
+   FROM {{ ref('commonroom_organizations_source') }}
 
 )
 

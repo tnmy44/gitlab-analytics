@@ -13,7 +13,7 @@ SELECT first_activity_date::TIMESTAMP_NTZ AS first_activity_date,
        segment_names::VARCHAR             AS segment_names,
        tags::VARCHAR                      AS tags,
        _uploaded_at::TIMESTAMP            AS _uploaded_at
-   FROM {{ source('commonroom', 'community_member') }}
+   FROM {{ ref('commonroom_community_members_source') }}
 
 )
 
