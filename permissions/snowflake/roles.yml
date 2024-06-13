@@ -2941,6 +2941,16 @@ roles:
         - transforming_s
         - transforming_l
         - transforming_xl
+  - airflow_test:
+      warehouses:
+        - dev_l
+        - gitlab_postgres
+        - loading
+        - loading_xl
+        - transforming_xs
+        - transforming_s
+        - transforming_l
+        - transforming_xl
   - abhaskar:
       member_of:
         - reporter
@@ -6486,6 +6496,17 @@ users:
       can_login: true
       member_of:
         - airflow
+        - loader
+        - reporter
+        - sysadmin
+        - transformer
+        - data_science_loader
+        - sales_analytics
+        - reporter
+  - airflow_test:
+      can_login: true
+      member_of:
+        - airflow_test
         - loader
         - reporter
         - sysadmin
