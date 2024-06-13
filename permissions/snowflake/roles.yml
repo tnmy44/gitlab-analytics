@@ -6459,6 +6459,16 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - plopez:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - eludaway:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7493,6 +7503,14 @@ users:
       can_login: true
       member_of:
         - jaltherr
+  - plopez:
+      can_login: true
+      member_of:
+        - plopez
+  - eludaway:
+      can_login: true
+      member_of:
+        - eludaway
 warehouses:
   - admin:
       size: x-small
