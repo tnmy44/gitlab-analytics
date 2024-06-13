@@ -6333,7 +6333,11 @@ roles:
         - dev_xs
   - fmcwilliams:
       member_of:
-        - snowflake_analyst
+        - analyst_sales
+        - xactly
+        - restricted_safe
+        - clari
+        - zendesk
       warehouses:
         - dev_xs
   - nleonard:
