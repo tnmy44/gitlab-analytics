@@ -221,7 +221,10 @@ class UsagePing:
         except (KeyError, ValueError):
             metrics_data = 0
 
-        except (SQLAlchemyError, TypeError) as e:
+        except TypeError as e:
+            error_data = str(e)
+
+        except SQLAlchemyError as e:
             error_data = str(e.__dict__["orig"])
 
         return metrics_data, error_data
