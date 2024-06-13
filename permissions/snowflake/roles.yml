@@ -6466,7 +6466,7 @@ roles:
         - dev_xs
   - eludaway:
       member_of:
-        - snowflake_analyst
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
 users:
