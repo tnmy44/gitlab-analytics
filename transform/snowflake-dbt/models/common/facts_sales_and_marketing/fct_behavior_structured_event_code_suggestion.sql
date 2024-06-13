@@ -240,7 +240,7 @@ code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm AS (
 combined AS (
 
   SELECT
-    code_suggestion_context.*
+    code_suggestion_context.*,
     COALESCE(
       IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_product_delivery_types = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.product_delivery_types, 0)::VARCHAR, NULL),
       code_suggestion_context.code_suggestions_context_delivery_type
