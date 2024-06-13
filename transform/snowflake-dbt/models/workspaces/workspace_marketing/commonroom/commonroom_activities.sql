@@ -1,7 +1,7 @@
 WITH source AS
 (
 
-SELECT *
+ SELECT *
    FROM {{ ref('commonroom_activities_source') }}
 
 )
