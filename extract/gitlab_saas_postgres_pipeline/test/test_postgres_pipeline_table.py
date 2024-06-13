@@ -16,7 +16,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "some_table",
             "export_table_primary_key": "id",
-            "database_type": "main"
+            "database_type": "main",
         }
         self.pipeline_table = PostgresPipelineTable(table_config)
         # Create a mock source/self.target_engine
@@ -36,7 +36,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "some_table",
             "export_table_primary_key": "id",
-            "database_type": "main"
+            "database_type": "main",
         }
         pipeline_table2 = PostgresPipelineTable(table_config2)
         is_scd = pipeline_table2.is_scd()
@@ -58,7 +58,7 @@ class TestPostgresPipelineTable:
             "import_db": "some_database",
             "export_table": "ci_builds",
             "export_table_primary_key": "id",
-            "database_type": "ci"
+            "database_type": "ci",
         }
         pipeline_table2 = PostgresPipelineTable(table_config2)
         actual_source_table_name = pipeline_table2.source_table_name
