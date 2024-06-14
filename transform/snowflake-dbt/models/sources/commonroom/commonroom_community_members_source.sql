@@ -15,6 +15,12 @@ SELECT first_activity_date::TIMESTAMP_NTZ AS first_activity_date,
        _uploaded_at::TIMESTAMP            AS _uploaded_at
    FROM {{ source('commonroom', 'community_members') }}
 
+  {% if is_incremental() %}
+
+    WHERE _uploaded_at > (SELECT MAX(_uploaded_at) FROM {{ this }})
+
+  {% endif %}
+
 )
 
 SELECT *

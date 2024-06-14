@@ -11,6 +11,12 @@ SELECT activity_timestamp::TIMESTAMP_NTZ  AS activity_timestamp,
        _uploaded_at::TIMESTAMP            AS _uploaded_at,
    FROM {{ source('commonroom', 'activities') }}
 
+  {% if is_incremental() %}
+
+    WHERE _uploaded_at > (SELECT MAX(_uploaded_at) FROM {{ this }})
+
+  {% endif %}
+
 )
 
 SELECT *

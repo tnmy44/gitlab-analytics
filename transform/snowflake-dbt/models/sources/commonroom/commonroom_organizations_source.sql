@@ -14,6 +14,11 @@ SELECT approx_revenue_max::NUMBER     AS approx_revenue_max,
        _uploaded_at::TIMESTAMP        AS _uploaded_at
    FROM {{ source('commonroom', 'organizations') }}
 
+  {% if is_incremental() %}
+
+    WHERE _uploaded_at > (SELECT MAX(_uploaded_at) FROM {{ this }})
+
+  {% endif %}
 )
 
 SELECT *
