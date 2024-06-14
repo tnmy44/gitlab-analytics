@@ -10,7 +10,7 @@ WITH source AS
 
 ), source_pii AS (
 
-    SELECT {{ nohash_sensitive_columns('commonroom_activities_source', 'member_token') }}
+    SELECT {{ nohash_sensitive_columns('commonroom_activities_source', 'full_name') }}
     FROM source
 )
 

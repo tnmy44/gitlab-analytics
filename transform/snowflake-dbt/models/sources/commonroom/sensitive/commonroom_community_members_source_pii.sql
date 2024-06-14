@@ -6,11 +6,11 @@ WITH source AS
 (
 
     SELECT *
-    FROM {{ ref('commonroom_activities_source') }}
+    FROM {{ ref('commonroom_community_members_source') }}
 
 ), source_pii AS (
 
-    SELECT {{ nohash_sensitive_columns('commonroom_community_members_source', 'member_token') }}
+    SELECT {{ nohash_sensitive_columns('commonroom_community_members_source', 'full_name') }}
     FROM source
 
 )

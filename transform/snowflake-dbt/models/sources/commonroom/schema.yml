@@ -12,6 +12,8 @@ models:
           - not_null
       - name: first_activity_date
       - name: full_name
+        meta:
+          sensitive: true
         tests:
           - not_null
         meta:
@@ -20,6 +22,8 @@ models:
         meta:
           sensitive: true
       - name: profiles
+        meta:
+          sensitive: true
       - name: service_name
         tests:
           - not_null
@@ -47,6 +51,8 @@ models:
         meta:
           sensitive: true
       - name: profiles
+        meta:
+          sensitive: true
       - name: segment_names
       - name: tags
       - name: _uploaded_at

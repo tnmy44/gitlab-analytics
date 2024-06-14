@@ -10,7 +10,7 @@ models:
   - name: commonroom_community_members_source_pii
     description: '{{ doc("commonroom_community_members_source") }}'
     columns:
-      - name: member_tokens
+      - name: full_name
         tests:
           - not_null
   - name: commonroom_organizations_source_pii

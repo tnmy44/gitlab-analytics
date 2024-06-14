@@ -6,7 +6,7 @@ WITH source AS
 (
 
     SELECT *
-    FROM {{ ref('commonroom_activities_source') }}
+    FROM {{ ref('commonroom_organizations_source') }}
 
 ), source_pii AS (
 
