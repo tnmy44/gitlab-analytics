@@ -18,4 +18,4 @@ SELECT first_activity_date::TIMESTAMP_NTZ AS first_activity_date,
 )
 
 SELECT *
-  FROM base;
+  FROM source

@@ -17,4 +17,4 @@ SELECT approx_revenue_max::NUMBER     AS approx_revenue_max,
 )
 
 SELECT *
-  FROM base;
+  FROM source

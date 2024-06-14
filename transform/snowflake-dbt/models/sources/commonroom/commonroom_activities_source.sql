@@ -14,4 +14,4 @@ SELECT activity_timestamp::TIMESTAMP_NTZ  AS activity_timestamp,
 )
 
 SELECT *
-  FROM base;
+  FROM source
