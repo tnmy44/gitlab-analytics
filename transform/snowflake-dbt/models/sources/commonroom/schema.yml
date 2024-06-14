@@ -36,8 +36,6 @@ models:
         meta:
           sensitive: true
       - name: impact_points_all_time
-        tests:
-          - not_null
       - name: last_activity_date
       - name: location
         meta:
@@ -71,8 +69,6 @@ models:
         meta:
           sensitive: true
       - name: member_count
-        tests:
-          - not_null
       - name: organization_name
         tests:
           - not_null

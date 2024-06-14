@@ -180,7 +180,6 @@ models:
         +schema: clari
 
       commonroom:
-        +materialized: incremental
         +schema: commonroom
         +tags: ["commonroom"]
 
