@@ -14,7 +14,11 @@ models:
       - name: full_name
         tests:
           - not_null
+        meta:
+          sensitive: true
       - name: member_token
+        meta:
+          sensitive: true
       - name: profiles
       - name: service_name
         tests:
@@ -29,13 +33,21 @@ models:
       - name: full_name
         tests:
           - not_null
+        meta:
+          sensitive: true
       - name: impact_points_all_time
         tests:
           - not_null
       - name: last_activity_date
       - name: location
+        meta:
+          sensitive: true
       - name: member_tokens
+        meta:
+          sensitive: true
       - name: primary_email
+        meta:
+          sensitive: true
       - name: profiles
       - name: segment_names
       - name: tags
@@ -56,6 +68,8 @@ models:
       - name: first_seen_source
       - name: last_seen_date
       - name: location
+        meta:
+          sensitive: true
       - name: member_count
         tests:
           - not_null
