@@ -70,6 +70,8 @@ models:
           sensitive: true
       - name: member_count
       - name: organization_name
+        meta:
+          sensitive: true
         tests:
           - not_null
       - name: _uploaded_at

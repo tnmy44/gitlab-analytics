@@ -1,3 +1,7 @@
+{{ config(
+    tags=["commonroom"]
+) }}
+
 WITH source AS
 (
 
