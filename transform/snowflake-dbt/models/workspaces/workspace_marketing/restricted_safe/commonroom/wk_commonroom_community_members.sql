@@ -1,5 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='table',
+    tags=["commonroom"]
 ) }}
 
 WITH source AS
@@ -8,6 +9,12 @@ WITH source AS
 
     SELECT {{ hash_sensitive_columns('commonroom_community_members_source') }}
     FROM {{ ref('commonroom_community_members_source') }}
+
+  {% if is_incremental() %}
+
+    AND _uploaded_at > (SELECT MAX(_uploaded_at) FROM {{this}})
+
+  {% endif %}
 
 ), final AS (
 
