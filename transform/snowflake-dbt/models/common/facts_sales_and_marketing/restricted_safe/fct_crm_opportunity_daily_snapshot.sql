@@ -218,7 +218,7 @@ final AS (
     prep_crm_opportunity.probability,
     prep_crm_opportunity.professional_services_value,
     prep_crm_opportunity.edu_services_value,
-    prep_crm_opportunity.investment_services_value
+    prep_crm_opportunity.investment_services_value,
     prep_crm_opportunity.pushed_count,
     prep_crm_opportunity.reason_for_loss,
     prep_crm_opportunity.reason_for_loss_details,
