@@ -83,7 +83,7 @@ SELECT
 p.gsc_pseudonymized_user_id,
 f.event_label,
 i.internal_or_external,
-plan.plan AS plan_name,
+plans.plan AS plan_name,
 p.current_week,
 p.next_week,
 p.current_month,
