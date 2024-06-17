@@ -5155,11 +5155,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - nkhanna:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - nmcavinue:
       member_of:
         - adaptive
