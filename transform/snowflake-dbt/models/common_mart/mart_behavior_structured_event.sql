@@ -50,7 +50,6 @@ structured_behavior AS (
     dim_behavior_operating_system_sk,
     dim_behavior_browser_sk,
     dim_plan_sk,
-    dim_user_location_sk,
     user_region,
     user_region_name,
     user_city,
@@ -94,7 +93,6 @@ report AS (
     structured_behavior.has_gitlab_service_ping_context,
     structured_behavior.has_gitlab_experiment_context,
     structured_behavior.has_customer_standard_context,
-    structured_behavior.dim_user_location_sk,
     structured_behavior.user_region,
     structured_behavior.user_region_name,
     structured_behavior.user_city,
@@ -142,5 +140,5 @@ report AS (
     created_by="@pempey",
     updated_by="@utkarsh060",
     created_date="2023-02-22",
-    updated_date="2024-06-12"
+    updated_date="2024-06-17"
 ) }}

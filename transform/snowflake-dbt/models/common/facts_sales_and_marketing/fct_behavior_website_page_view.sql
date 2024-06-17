@@ -66,12 +66,6 @@
       -- Foreign Keys
       {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
       {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
-      {{ dbt_utils.generate_surrogate_key([
-        'user_city',
-        'user_country',
-        'user_region',
-        'user_timezone_name'
-        ]) }}                                                                                    AS dim_user_location_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
@@ -123,5 +117,5 @@
     created_by="@chrissharp",
     updated_by="@utkarsh060",
     created_date="2022-07-22",
-    updated_date="2024-06-12"
+    updated_date="2024-06-17"
 ) }}
