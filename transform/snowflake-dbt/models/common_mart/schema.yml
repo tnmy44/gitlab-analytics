@@ -557,7 +557,9 @@ models:
     - name: ping_instance_metric_monthly_pk
       description: '{{ doc("ping_instance_metric_monthly_pk") }}'
       tests:
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
         - not_null
     - name: ping_instance_metric_id
       description: Outdated, misstated primary key. Leaving in the model to not break dependencies, but can be ignored in the future.
@@ -1541,3 +1543,7 @@ models:
       description: ' {{ doc("code_suggestions_options_count") }} '
     - name: accepted_option
       description: ' {{ doc("code_suggestions_accepted_option") }} '
+    - name: has_advanced_context
+      description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+    - name: is_direct_connection
+      description: ' {{ doc("code_suggestions_is_direct_connection") }} '

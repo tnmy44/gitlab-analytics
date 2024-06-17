@@ -131,7 +131,9 @@ WITH filtered_source as (
             {'field':'suggestion_source'},
             {'field':'is_invoked', 'data_type':'boolean'},
             {'field':'options_count', 'formula':"NULLIF(context_data['options_count']::VARCHAR, 'null')", 'data_type':'number', 'alias':'options_count'},
-            {'field':'accepted_option', 'data_type':'int'}
+            {'field':'accepted_option', 'data_type':'int'},
+            {'field':'has_advanced_context', 'data_type':'boolean'},
+            {'field':'is_direct_connection', 'data_type':'boolean'}
             ]
         )
       }},
@@ -268,6 +270,8 @@ SELECT
   MAX(column_selection.is_invoked)                            AS is_invoked,
   MAX(column_selection.options_count)                         AS options_count,
   MAX(column_selection.accepted_option)                       AS accepted_option,
+  MAX(column_selection.has_advanced_context)                  AS has_advanced_context,
+  MAX(column_selection.is_direct_connection)                  AS is_direct_connection,
 
   MAX(column_selection.ide_extension_version_context)         AS ide_extension_version_context,
   MAX(column_selection.ide_extension_version_context_schema)  AS ide_extension_version_context_schema,

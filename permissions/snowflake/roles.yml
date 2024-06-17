@@ -2338,7 +2338,7 @@ roles:
         tables:
           read:
             - prod.pumps_sensitive.*
-  - rally_source:
+  - rally:
       warehouses:
         - dev_xs
       privileges:
@@ -2356,6 +2356,7 @@ roles:
             - raw.rally_initial_export.*
             - raw.rally_webhook_stitch.*
             - prep.sensitive.rally_optouts
+            - prep.sensitive.rally_marketing_list
   - restricted_safe:
       warehouses:
         - reporting
@@ -2937,6 +2938,16 @@ roles:
       warehouses:
         - dev_xs
   - airflow:
+      warehouses:
+        - dev_l
+        - gitlab_postgres
+        - loading
+        - loading_xl
+        - transforming_xs
+        - transforming_s
+        - transforming_l
+        - transforming_xl
+  - airflow_test:
       warehouses:
         - dev_l
         - gitlab_postgres
@@ -5035,7 +5046,7 @@ roles:
       member_of:
         - snowflake_analyst_safe
       warehouses:
-        - dev_xs 
+        - dev_xs
       owns:
         databases:
           - mxiao_prep
@@ -6221,7 +6232,8 @@ roles:
   - wleidheiser:
       member_of:
         - snowflake_analyst_safe
-        - rally_source
+        - rally
+        - gitlab_dotcom
       warehouses:
         - dev_xs
   - wlin:
@@ -6312,7 +6324,11 @@ roles:
         - dev_xs
   - fmcwilliams:
       member_of:
-        - snowflake_analyst
+        - analyst_sales
+        - xactly
+        - restricted_safe
+        - clari
+        - zendesk
       warehouses:
         - dev_xs
   - nleonard:
@@ -6433,6 +6449,21 @@ roles:
         - data_team_analyst
       warehouses:
         - dev_xs
+  - jaltherr:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - plopez:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - eludaway:
+      member_of:
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -6446,6 +6477,17 @@ users:
       can_login: true
       member_of:
         - airflow
+        - loader
+        - reporter
+        - sysadmin
+        - transformer
+        - data_science_loader
+        - sales_analytics
+        - reporter
+  - airflow_test:
+      can_login: true
+      member_of:
+        - airflow_test
         - loader
         - reporter
         - sysadmin
@@ -6846,6 +6888,7 @@ users:
       can_login: true
       member_of:
         - jsingh
+        - securityadmin
   - jslaughter:
       can_login: true
       member_of:
@@ -7071,10 +7114,6 @@ users:
       can_login: true
       member_of:
         - niskhakova
-  - nkhanna:
-      can_login: true
-      member_of:
-        - nkhanna
   - nmcavinue:
       can_login: true
       member_of:
@@ -7134,6 +7173,10 @@ users:
       can_login: true
       member_of:
         - rakreddy
+  - rally:
+      can_login: true
+      member_of:
+        - rally
   - rbacovic:
       can_login: true
       member_of:
@@ -7466,6 +7509,18 @@ users:
       can_login: true
       member_of:
         - nscoville
+  - jaltherr:
+      can_login: true
+      member_of:
+        - jaltherr
+  - plopez:
+      can_login: true
+      member_of:
+        - plopez
+  - eludaway:
+      can_login: true
+      member_of:
+        - eludaway
 warehouses:
   - admin:
       size: x-small
