@@ -32,8 +32,8 @@ WITH all_namespaces AS (
     project_creation_level::NUMBER                     AS project_creation_level,
     push_rule_id::INTEGER                              AS push_rule_id,
     shared_runners_enabled:BOOLEAN                     AS shared_runners_enabled,
-    PARSE_JSON('[' || TRIM(traversal_ids,'{}') || ']') AS linage,
-    linage[0]::NUMBER                                  AS ultimate_parent_id 
+    PARSE_JSON('[' || TRIM(traversal_ids,'{}') || ']') AS lineage,
+    lineage[0]::NUMBER                                 AS ultimate_parent_id 
   FROM {{ ref('gitlab_dotcom_namespaces_dedupe_source') }}
 
 ),
@@ -78,7 +78,7 @@ combined AS (
     all_namespaces.project_creation_level                 AS project_creation_level,
     all_namespaces.push_rule_id                           AS push_rule_id,
     all_namespaces.shared_runners_enabled                 AS shared_runners_enabled,
-    all_namespaces.linage                                 AS lineage,
+    all_namespaces.lineage                                 AS lineage,
     all_namespaces.ultimate_parent_id                     AS ultimate_parent_id
   FROM all_namespaces
   LEFT JOIN internal_namespaces
