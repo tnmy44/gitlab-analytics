@@ -76,7 +76,7 @@ SELECT
   )                                    AS valid_to,
   MD5(
     COALESCE(id::VARCHAR, 'null_text')
-    || COALESCE(vaid_from::VARCHAR, 'null_text')
+    || COALESCE(valid_from::VARCHAR, 'null_text')
     || COALESCE(valid_to::VARCHAR, 'null_text')
   )                                    AS project_ci_cd_settings_snapshot_pk
 FROM base
