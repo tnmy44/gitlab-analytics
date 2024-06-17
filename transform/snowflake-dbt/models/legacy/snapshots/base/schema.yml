@@ -97,12 +97,17 @@ models:
 
   - name: gitlab_dotcom_project_ci_cd_settings_snapshots_base
     description: Base model for Gitlab.com project ci cd settings snapshot
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - project_ci_cd_settings_snapshot_id
+          - valid_from
+          - valid_to
     columns:
       - name: project_ci_cd_settings_snapshot_id
         description: Auto-generated primary key when building the snapshot with dbt
         tests:
           - not_null
-          - unique
       - name: project_ci_cd_settings_id
         tests:
           - not_null
