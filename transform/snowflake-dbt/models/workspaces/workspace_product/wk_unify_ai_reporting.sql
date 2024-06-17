@@ -44,13 +44,14 @@ SELECT
 (
 SELECT
 DISTINCT 
-plan 
+plan_name AS plan 
 FROM 
 dotcom_prep
 UNION ALL 
 SELECT
 'All'
-), int_ext_all AS (
+), int_ext_all AS 
+(
 SELECT
 DISTINCT 
 internal_or_external 
