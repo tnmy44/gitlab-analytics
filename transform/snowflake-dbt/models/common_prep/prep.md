@@ -871,3 +871,9 @@ Unioned monthly partitions for all Snowplow sessions.
 
 {% enddocs %}
 
+{% docs prep_crm_case %}
+
+This table contains data about SFDC case objects.
+
+{% enddocs %}
+
