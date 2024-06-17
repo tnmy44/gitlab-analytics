@@ -40,7 +40,7 @@ dotcom_prep
 UNION ALL 
 SELECT
 'All'
-), 
+), plans AS 
 (
 SELECT
 DISTINCT 
@@ -88,6 +88,8 @@ LEFT JOIN
 int_ext_all i 
 ON 
 p.internal_or_external = i.internal_or_external OR i.internal_or_external = 'All' 
+LEFT JOIN 
+plans ON plans.plan = p.plan OR plans.plan = 'All'
 ), DAU AS (
 
   SELECT
