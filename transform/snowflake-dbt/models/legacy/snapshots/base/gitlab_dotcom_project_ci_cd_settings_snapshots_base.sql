@@ -1,9 +1,10 @@
-{{ config({
-    "alias": "gitlab_dotcom_project_ci_cd_settings_snapshot",
-    "materialized":"incremental",
-    "unique_key":"record_checksum"
+{{ config(
+
+    materialized='incremental',
+    unique_key='project_ci_cd_settings_snapshot_pk',
+    alias='gitlab_dotcom_project_ci_cd_settings_snapshot'
   )
-    })
+
 }}
 
 WITH source AS (
@@ -27,7 +28,7 @@ WITH source AS (
       || COALESCE(separated_caches::VARCHAR, 'null_text')
       || COALESCE(allow_fork_pipelines_to_run_in_parent_project::VARCHAR, 'null_text')
       || COALESCE(inbound_job_token_scope_enabled::VARCHAR, 'null_text')
-    ) AS record_checksum
+    )                                                     AS record_checksum
   FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
   {% if is_incremental() %}
 
@@ -72,6 +73,11 @@ SELECT
   IFF(
     MAX(COALESCE(next_uploaded_at, 9999999999) = 9999999999),
     NULL, TO_TIMESTAMP(MAX(next_uploaded_at)::INT)
-  )                                    AS valid_to
+  )                                    AS valid_to,
+  MD5(
+    COALESCE(id::VARCHAR, 'null_text')
+    || COALESCE(vaid_from::VARCHAR, 'null_text')
+    || COALESCE(valid_to::VARCHAR, 'null_text')
+  )                                    AS project_ci_cd_settings_snapshot_pk
 FROM base
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, checksum_group
