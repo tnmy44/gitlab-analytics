@@ -109,7 +109,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     plan_name,
     internal_or_external,
     'DAU' AS metric,
-    COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
+    COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
   WHERE
   behavior_date < CURRENT_DATE
