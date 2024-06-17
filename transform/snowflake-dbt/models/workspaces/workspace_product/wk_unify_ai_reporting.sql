@@ -62,7 +62,8 @@ SELECT
 'All'
 ), metric_prep AS (
   
-  SELECT *
+  SELECT 
+  *
   FROM
     {{ ref('mart_ping_instance_metric') }}
   WHERE major_minor_version_id >= 1611
@@ -78,7 +79,15 @@ SELECT
 ), prep AS 
 (
 SELECT
-*
+
+p.gsc_pseudonymized_user_id,
+f.event_label,
+i.internal_or_external,
+plan.plan AS plan_name,
+p.current_week,
+p.next_week,
+p.current_month,
+p.next_month
 FROM
 dotcom_prep p 
 LEFT JOIN 
@@ -90,13 +99,13 @@ int_ext_all i
 ON 
 p.internal_or_external = i.internal_or_external OR i.internal_or_external = 'All' 
 LEFT JOIN 
-plans ON plans.plan = p.plan OR plans.plan = 'All'
+plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 ), DAU AS (
 
   SELECT
     behavior_date           AS _date,
     event_label,
-    plan,
+    plan_name,
     internal_or_external,
     'DAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
@@ -110,7 +119,7 @@ plans ON plans.plan = p.plan OR plans.plan = 'All'
   SELECT
     DATE_TRUNC(WEEK, behavior_date)           AS _date,
     event_label,
-    plan,
+    plan_name,
     internal_or_external,
     'WAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
@@ -124,7 +133,7 @@ plans ON plans.plan = p.plan OR plans.plan = 'All'
   SELECT
     DATE_TRUNC(MONTH, behavior_date)           AS _date,
     event_label,
-    plan,
+    plan_name,
     internal_or_external,
     'MAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
@@ -206,7 +215,7 @@ unify AS (
   SELECT
     dim_date.date_day::DATE       AS date_day,
     metrics.event_label           AS ai_feature,
-    metrics.plan,
+    metrics.plan_name,
     metrics.internal_or_external,
     'Gitlab.com'                  AS delivery_type,
     metrics.metric_value,
