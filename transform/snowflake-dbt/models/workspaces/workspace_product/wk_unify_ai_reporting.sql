@@ -489,7 +489,7 @@ dedup AS (
   SELECT
     date_day,
     ai_feature,
-    plan,
+    plan_name,
     internal_or_external,
     delivery_type,
     SUM(metric_value) AS metric_value,
