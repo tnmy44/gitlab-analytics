@@ -953,7 +953,6 @@ tables:
       , NULL AS environment_type
       , state
       , tier
-      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1510,33 +1509,19 @@ tables:
       , created_at
       , updated_at
       , base_access_level
-      , read_code
-      , read_vulnerability
-      , admin_vulnerability
-      , read_dependency
-      , admin_merge_request
-      , admin_group_member
-      , manage_project_access_tokens
-      , archive_project
-      , manage_group_access_tokens
-      , remove_project
-      , admin_terraform_state
-      , admin_cicd_variables
-      , remove_group
-      , occupies_seat
-      , permissions
-      , read_vulnerability
-      , admin_vulnerability
-      , read_dependency
-      , admin_merge_request
-      , admin_group_member
-      , manage_project_access_tokens
-      , archive_project
-      , manage_group_access_tokens
-      , remove_project
-      , admin_terraform_state
-      , admin_cicd_variables
-      , remove_group
+      , NULL AS read_code
+      , NULL AS read_vulnerability
+      , NULL AS admin_vulnerability
+      , NULL AS read_dependency
+      , NULL AS admin_merge_request
+      , NULL AS admin_group_member
+      , NULL AS manage_project_access_tokens
+      , NULL AS archive_project
+      , NULL AS manage_group_access_tokens
+      , NULL AS remove_project
+      , NULL AS admin_terraform_state
+      , NULL AS admin_cicd_variables
+      , NULL AS remove_group
       , occupies_seat
       , permissions
       FROM member_roles
@@ -2070,28 +2055,6 @@ tables:
       SELECT id
       , user_id
       , source_id
-      , source_type
-      , level
-      , new_note
-      , new_issue
-      , reopen_issue
-      , close_issue
-      , reassign_issue
-      , new_merge_request
-      , reopen_merge_request
-      , close_merge_request
-      , reassign_merge_request
-      , merge_merge_request
-      , failed_pipeline
-      , success_pipeline
-      , push_to_merge_request
-      , issue_due
-      , new_epic
-      , fixed_pipeline
-      , new_release
-      , moved_project
-      , change_reviewer_merge_request
-      , merge_when_pipeline_succeeds
       , source_type
       , level
       , new_note
