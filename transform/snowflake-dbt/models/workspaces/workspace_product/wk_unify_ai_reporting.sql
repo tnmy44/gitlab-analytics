@@ -102,7 +102,7 @@ plans ON plans.plan = p.plan OR plans.plan = 'All'
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
   FROM prep
   WHERE
-
+  behavior_date < CURRENT_DATE
   GROUP BY ALL
 
 ), WAU AS (
