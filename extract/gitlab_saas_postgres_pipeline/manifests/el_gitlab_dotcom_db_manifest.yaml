@@ -953,7 +953,6 @@ tables:
       , NULL AS environment_type
       , state
       , tier
-      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1523,8 +1522,6 @@ tables:
       , NULL AS admin_terraform_state
       , NULL AS admin_cicd_variables
       , NULL AS remove_group
-      , occupies_seat
-      , permissions
       , occupies_seat
       , permissions
       FROM member_roles
