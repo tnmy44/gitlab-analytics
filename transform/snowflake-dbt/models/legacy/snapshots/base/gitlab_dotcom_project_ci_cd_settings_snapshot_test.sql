@@ -11,6 +11,7 @@ WITH source AS (
 
   SELECT
     *,
+    DATEADD('sec', _uploaded_at, '1970-01-01')::TIMESTAMP AS uploaded_at,
     -- This is a replication of the surrogate key function
     MD5(
       COALESCE(project_id::VARCHAR, 'null_text')
@@ -31,7 +32,7 @@ WITH source AS (
   FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
   {% if is_incremental() %}
 
-  WHERE _uploaded_at > (SELECT MAX(record_checked_at) FROM {{ this }} )
+  WHERE uploaded_at > (SELECT MAX(record_checked_at) FROM {{ this }} )
     AND record_checksum not in (SELECT record_checksum FROM {{ this }} WHERE valid_to is null )
 
   {% endif %}
