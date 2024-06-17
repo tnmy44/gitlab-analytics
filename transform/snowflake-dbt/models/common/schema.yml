@@ -6386,8 +6386,6 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
-      - name: dim_user_location_sk
-        description: '{{ doc("dim_user_location_sk") }}'
       - name: user_city
         description: '{{ doc("user_city") }}'
       - name: user_country
