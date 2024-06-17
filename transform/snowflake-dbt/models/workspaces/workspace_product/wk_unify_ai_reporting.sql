@@ -481,25 +481,6 @@ unify AS (
   WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
   GROUP BY ALL
 
-  UNION ALL
-
-  SELECT
-    dim_date.date_day::DATE       AS date_day,
-    metrics.event_label           AS ai_feature,
-    metrics.plan,
-    metrics.internal_or_external,
-    'All'                         AS delivery_type,
-    metrics.metric_value,
-    metrics.metric
-  FROM dim_date
-  LEFT JOIN metrics 
-    ON dim_date.date_day = metrics._date
-  WHERE dim_date.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
-    AND metrics.plan = 'All'
-    AND metrics.internal_or_external = 'All'
-    AND metrics.event_label = 'chat'
-    AND metrics.metric IN ('MAU', 'WAU')
-
 
 ),
 
