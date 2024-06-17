@@ -193,68 +193,6 @@
       fct_crm_opportunity.is_abm_tier_sao,
       fct_crm_opportunity.is_abm_tier_closed_won,
 
-      -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
-      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
-      dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
-      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
-
-      -- crm opp owner/account owner stamped fields stamped at close date
-      dim_crm_opportunity.crm_opp_owner_stamped_name,
-      dim_crm_opportunity.crm_account_owner_stamped_name,
-      dim_crm_user_hierarchy.crm_user_business_unit                                         AS crm_opp_owner_business_unit_stamped,
-      dim_crm_user_hierarchy.crm_user_sales_segment                                         AS crm_opp_owner_sales_segment_stamped,
-      dim_crm_user_hierarchy.crm_user_sales_segment_grouped                                 AS crm_opp_owner_sales_segment_stamped_grouped,
-      dim_crm_user_hierarchy.crm_user_geo                                                   AS crm_opp_owner_geo_stamped,
-      dim_crm_user_hierarchy.crm_user_region                                                AS crm_opp_owner_region_stamped,
-      dim_crm_user_hierarchy.crm_user_area                                                  AS crm_opp_owner_area_stamped,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy.crm_user_sales_segment',
-        'dim_crm_user_hierarchy.crm_user_geo', 'dim_crm_user_hierarchy.crm_user_region') }}
-                                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
-      dim_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
-      dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
-      dim_crm_user_hierarchy.crm_user_role_level_1                                          AS crm_opp_owner_role_level_1,
-      dim_crm_user_hierarchy.crm_user_role_level_2                                          AS crm_opp_owner_role_level_2,
-      dim_crm_user_hierarchy.crm_user_role_level_3                                          AS crm_opp_owner_role_level_3,
-      dim_crm_user_hierarchy.crm_user_role_level_4                                          AS crm_opp_owner_role_level_4,
-      dim_crm_user_hierarchy.crm_user_role_level_5                                          AS crm_opp_owner_role_level_5,
-
-      -- crm owner/sales rep live fields
-      dim_crm_user_hierarchy_live.crm_user_business_unit,
-      dim_crm_user_hierarchy_live.crm_user_sales_segment,
-      dim_crm_user_hierarchy_live.crm_user_sales_segment_grouped,
-      dim_crm_user_hierarchy_live.crm_user_geo,
-      dim_crm_user_hierarchy_live.crm_user_region,
-      dim_crm_user_hierarchy_live.crm_user_area,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live.crm_user_sales_segment',
-        'dim_crm_user_hierarchy_live.crm_user_geo', 'dim_crm_user_hierarchy_live.crm_user_region') }}
-                                                                           AS crm_user_sales_segment_region_grouped,
-      dim_crm_user_hierarchy_live.crm_user_role_level_1,
-      dim_crm_user_hierarchy_live.crm_user_role_level_2,
-      dim_crm_user_hierarchy_live.crm_user_role_level_3,
-      dim_crm_user_hierarchy_live.crm_user_role_level_4,
-      dim_crm_user_hierarchy_live.crm_user_role_level_5,
-
-      
-       -- crm account owner/sales rep live fields
-      dim_crm_user_hierarchy_account_owner.crm_user_business_unit                                                       AS crm_account_user_business_unit,
-      dim_crm_user_hierarchy_account_owner.crm_user_sales_segment                                                       AS crm_account_user_sales_segment,
-      dim_crm_user_hierarchy_account_owner.crm_user_sales_segment_grouped                                               AS crm_account_user_sales_segment_grouped,
-      dim_crm_user_hierarchy_account_owner.crm_user_geo                                                                 AS crm_account_user_geo,
-      dim_crm_user_hierarchy_account_owner.crm_user_region                                                              AS crm_account_user_region,
-      dim_crm_user_hierarchy_account_owner.crm_user_area                                                                AS crm_account_user_area,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_account_owner.crm_user_sales_segment',
-        'dim_crm_user_hierarchy_account_owner.crm_user_geo', 'dim_crm_user_hierarchy_account_owner.crm_user_region') }}
-                                                                                                                        AS crm_account_user_sales_segment_region_grouped,
-      dim_crm_user_hierarchy_account_owner.crm_user_role_level_1                                                        AS crm_account_user_role_level_1,
-      dim_crm_user_hierarchy_account_owner.crm_user_role_level_2                                                        AS crm_account_user_role_level_2,
-      dim_crm_user_hierarchy_account_owner.crm_user_role_level_3                                                        AS crm_account_user_role_level_3,
-      dim_crm_user_hierarchy_account_owner.crm_user_role_level_4                                                        AS crm_account_user_role_level_4,
-      dim_crm_user_hierarchy_account_owner.crm_user_role_level_5                                                        AS crm_account_user_role_level_5,
-
       -- Key Reporting Fields
       dim_crm_opportunity.report_segment,
       dim_crm_opportunity.report_geo,
@@ -580,9 +518,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rakhireddy",
+    updated_by="@chrissharp",
     created_date="2020-12-07",
-    updated_date="2024-06-12"
+    updated_date="2024-06-13"
   ) }}
 
 
