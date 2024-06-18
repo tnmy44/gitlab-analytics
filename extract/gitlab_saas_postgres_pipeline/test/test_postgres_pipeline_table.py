@@ -301,7 +301,7 @@ class TestPostgresPipelineTable:
             source_engine, target_engine
         )
         mock_do_scd.assert_called_once_with(
-            source_engine, target_engine, is_schema_addition
+            source_engine, target_engine, is_schema_addition, database_type
         )
         mock_swap_temp_table_on_schema_change.assert_called_once_with(
             is_schema_addition, loaded, target_engine
