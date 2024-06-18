@@ -8,14 +8,14 @@
 {% for db in production_databases %}
     {%- if target.name in production_targets -%}
 
-    CREATE OR REPLACE FUNCTION "{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(input_object VARIANT)
+    CREATE OR REPLACE FUNCTION "{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(V VARIANT)
 
     {%- else -%}
 
-    CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(input_object VARIANT)
+    CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(V VARIANT)
 
     {% endif %}
-    RETURNS string
+    RETURNS variant
     LANGUAGE JAVASCRIPT
     AS 
     $$
