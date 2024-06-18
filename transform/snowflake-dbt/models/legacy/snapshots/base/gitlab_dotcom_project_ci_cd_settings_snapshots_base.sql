@@ -35,8 +35,8 @@ WITH source AS (
   FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
   {% if is_incremental() %}
 
-  WHERE uploaded_at > (SELECT MAX(record_checked_at) FROM {{ this }} )
-    AND record_checksum not in (SELECT record_checksum FROM {{ this }} WHERE valid_to is null )
+  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }} )
+    OR record_checksum IN (SELECT record_checksum FROM {{ this}} WHERE valid_to IS NULL)
 
   {% endif %}
 
@@ -73,7 +73,7 @@ grouped AS (
     allow_fork_pipelines_to_run_in_parent_project,
     inbound_job_token_scope_enabled,
     record_checksum,
-    CURRENT_TIMESTAMP                    AS record_checked_at,
+    uploaded_at,
     TO_TIMESTAMP(MIN(_uploaded_at)::INT) AS valid_from,
     IFF(
       MAX(COALESCE(next_uploaded_at, 9999999999) = 9999999999),
@@ -90,8 +90,7 @@ SELECT
       dbt_utils.generate_surrogate_key(
         [
           'project_ci_cd_settings_snapshot_id',
-          'valid_from',
-          'valid_to'
+          'valid_from'
         ]
       ) 
   }}                                              AS project_ci_cd_settings_snapshot_pk
