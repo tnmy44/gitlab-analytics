@@ -286,7 +286,7 @@ unify AS (
     plan,
     internal_or_external,
     delivery_type,
-    metric_value
+    metric_value,
     metric
   FROM sm_expanded
 
@@ -298,7 +298,7 @@ unify AS (
     plan,
     internal_or_external,
     'All' AS delivery_type,
-    metric_value
+    metric_value,
     metric
   FROM sm_expanded
 
