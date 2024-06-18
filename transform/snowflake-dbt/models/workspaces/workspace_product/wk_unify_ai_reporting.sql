@@ -226,7 +226,7 @@ metrics AS (
   SELECT
     ping_created_date_month::DATE       AS date_day,
     f.event_label AS ai_feature,
-    ping_product_tier            AS plan,
+    plans.plan,
     i.internal_or_external,
     ping_deployment_type                AS delivery_type,
     SUM(COALESCE(metric_value, 0)::INT) AS metric_value,
@@ -241,9 +241,7 @@ metrics AS (
   ON 
   f.event_label = 'chat' OR f.event_label = 'All' 
   LEFT JOIN 
-  int_ext_all i 
-  ON 
-  i.internal_or_external = 'External' OR i.internal_or_external = 'All' 
+  int_ext_all i ON  i.internal_or_external = 'External' OR i.internal_or_external = 'All' 
   LEFT JOIN 
   plans ON plans.plan = metric_prep.ping_product_tier OR plans.plan = 'All'
   GROUP BY ALL
@@ -253,7 +251,7 @@ unify AS (
   SELECT
     dim_date.date_day::DATE       AS date_day,
     metrics.event_label           AS ai_feature,
-    metrics.plan_name,
+    metrics.plan_name AS plan,
     metrics.internal_or_external,
     'Gitlab.com'                  AS delivery_type,
     metrics.metric_value,
@@ -309,7 +307,7 @@ dedup AS (
   SELECT
     date_day,
     ai_feature,
-    plan_name,
+    plan,
     internal_or_external,
     delivery_type,
     SUM(metric_value) AS metric_value,
