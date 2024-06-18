@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    })
+}}
+
 WITH source AS (
 
   SELECT *
