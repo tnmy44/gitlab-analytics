@@ -2724,7 +2724,7 @@ users:
       - People All Access
   - user_name: ameza
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -3045,7 +3045,7 @@ users:
       - General All Access
   - user_name: awolff
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
