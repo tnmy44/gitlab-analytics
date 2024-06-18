@@ -5109,7 +5109,7 @@ roles:
   - nhertz:
       member_of:
         - snowflake_analyst
-        - rally_source
+        - rally
       warehouses:
         - dev_xs
   - nhervas:
