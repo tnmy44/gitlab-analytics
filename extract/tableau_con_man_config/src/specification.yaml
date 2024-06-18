@@ -11549,3 +11549,15 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: awolff
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: ameza
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
