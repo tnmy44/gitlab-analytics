@@ -11,6 +11,7 @@ dotcom_prep AS (
 
   SELECT
     event_label,
+    
     plan_name_modified                                  AS plan_name,
     CASE
       WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') 
@@ -44,7 +45,18 @@ SELECT
 (
 SELECT
 DISTINCT 
-plan_name AS plan 
+CASE
+WHEN plan_name = 'opensource' THEN 'Free'
+WHEN plan_name = 'free' THEN 'Free'
+WHEN plan_name = 'premium' THEN 'Premium'
+WHEN plan_name = 'ultimate_trial' THEN 'Trial'
+WHEN plan_name = 'ultimate' THEN 'Ultimate'
+WHEN plan_name = 'All' THEN 'All'
+WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial'
+WHEN plan_name = 'premium_trial' THEN 'Trial'
+WHEN plan_name = 'starter' THEN 'Starter'
+WHEN plan_name = 'default' THEN 'Free'
+END AS plan 
 FROM 
 dotcom_prep
 UNION ALL 
@@ -60,22 +72,6 @@ dotcom_prep
 UNION ALL 
 SELECT
 'All'
-), metric_prep AS (
-  
-  SELECT 
-  *
-  FROM
-    {{ ref('mart_ping_instance_metric') }}
-  WHERE major_minor_version_id >= 1611
-    AND metric_value > 0
-    AND is_last_ping_of_month = TRUE
-    AND ping_created_date_month > '2024-01-01'
-    AND ping_deployment_type != 'GitLab.com'
-    AND  metrics_path IN  (
-    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' ,
-    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-    )
-
 ), prep AS 
 (
 SELECT
@@ -209,8 +205,49 @@ metrics AS (
 
   SELECT *
   FROM monthly_retention_grouped
-),
+), metric_prep AS (
+  
+  SELECT 
+  *
+  FROM
+    {{ ref('mart_ping_instance_metric') }}
+  WHERE major_minor_version_id >= 1611
+    AND metric_value > 0
+    AND is_last_ping_of_month = TRUE
+    AND ping_created_date_month > '2024-01-01'
+    AND ping_deployment_type != 'GitLab.com'
+    AND  metrics_path IN  (
+    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' ,
+    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
+    )
 
+), sm_expanded AS 
+(
+  SELECT
+    ping_created_date_month::DATE       AS date_day,
+    f.event_label AS ai_feature,
+    ping_product_tier            AS plan,
+    i.internal_or_external,
+    ping_deployment_type                AS delivery_type,
+    SUM(COALESCE(metric_value, 0)::INT),
+    CASE 
+    WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' THEN 'MAU'
+    WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' THEN 'WAU'
+    ELSE NULL END
+                                    AS metric
+  FROM metric_prep
+  LEFT JOIN 
+  ai_features f 
+  ON 
+  f.event_label = 'chat' OR f.event_label = 'All' 
+  LEFT JOIN 
+  int_ext_all i 
+  ON 
+  i.internal_or_external = 'External' OR i.internal_or_external = 'All' 
+  LEFT JOIN 
+  plans ON plans.plan = metric_prep.ping_product_tier OR plans.plan = 'All'
+  GROUP BY ALL
+),
 unify AS (
 
   SELECT
@@ -229,258 +266,41 @@ unify AS (
   UNION ALL
 
   SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    LOWER(ping_product_tier)            AS plan,
-    'External'                          AS internal_or_external,
-    ping_deployment_type                AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
+    dim_date.date_day::DATE       AS date_day,
+    metrics.event_label           AS ai_feature,
+    metrics.plan_name,
+    metrics.internal_or_external,
+    'All'                  AS delivery_type,
+    metrics.metric_value,
+    metrics.metric
+  FROM dim_date
+  LEFT JOIN metrics 
+    ON dim_date.date_day = metrics._date
+  WHERE dim_date.date_day BETWEEN '2023-04-21' AND CURRENT_DATE
 
   UNION ALL
 
   SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    LOWER(ping_product_tier)                          AS plan,
-    'External'                                        AS internal_or_external,
-    ping_deployment_type                              AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep 
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
+    date_day,
+    ai_feature,
+    plan,
+    internal_or_external,
+    delivery_type,
+    metric_value
+    metric
+  FROM sm_expanded
 
   UNION ALL
-
+  
   SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    LOWER(ping_product_tier)            AS plan,
-    'All'                               AS internal_or_external,
-    ping_deployment_type                AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM
-   metric_prep 
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE  AS date_day,
-    'chat'                                          AS ai_feature,
-    LOWER(ping_product_tier)                        AS plan,
-    'All'                                           AS internal_or_external,
-    ping_deployment_type                            AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                           AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-  UNION ALL
-
-  SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    'All'                               AS plan,
-    'All'                               AS internal_or_external,
-    'All'                               AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM
-    metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    'All'                                             AS plan,
-    'All'                                             AS internal_or_external,
-    'All'                                             AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
-  -- START OF ALL COMBINATIONS
-
-  UNION ALL
-
-  SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    LOWER(ping_product_tier)            AS plan,
-    'External'                          AS internal_or_external,
-    'All'                               AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    LOWER(ping_product_tier)                          AS plan,
-    'External'                                        AS internal_or_external,
-    'All'                                             AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    LOWER(ping_product_tier)                          AS plan,
-    'All'                                             AS internal_or_external,
-    'All'                                             AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    ping_created_date_month::DATE         AS date_day,
-    'chat'                                AS ai_feature,
-    'All'                                 AS plan,
-    'External'                            AS internal_or_external,
-    ping_deployment_type                  AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                                 AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    'All'                                             AS plan,
-    'External'                                        AS internal_or_external,
-    ping_deployment_type                              AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-  UNION ALL
-
-  SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    'All'                               AS plan,
-    'All'                               AS internal_or_external,
-    ping_deployment_type                AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    'All'                                             AS plan,
-    'All'                                             AS internal_or_external,
-    ping_deployment_type                              AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    ping_created_date_month::DATE       AS date_day,
-    'chat'                              AS ai_feature,
-    'All'                               AS plan,
-    'External'                          AS internal_or_external,
-    'All'                               AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_date_week)::DATE    AS date_day,
-    'chat'                                            AS ai_feature,
-    'All'                                             AS plan,
-    'External'                                        AS internal_or_external,
-    'All'                                             AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                             AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(MONTH, ping_created_date_month)::DATE    AS date_day,
-    'chat'                                              AS ai_feature,
-    LOWER(ping_product_tier)                            AS plan,
-    'External'                                          AS internal_or_external,
-    'All'                                               AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(MONTH, ping_created_date_month)::DATE    AS date_day,
-    'chat'                                              AS ai_feature,
-    LOWER(ping_product_tier)                            AS plan,
-    'All'                                               AS internal_or_external,
-    'All'                                               AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'MAU'                                               AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly'
-  GROUP BY ALL
-
-  UNION ALL
-
-  SELECT
-    DATE_TRUNC(WEEK, ping_created_at)::DATE     AS date_day,
-    'chat'                                      AS ai_feature,
-    LOWER(ping_product_tier)                    AS plan,
-    'All'                                       AS internal_or_external,
-    'All'                                       AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
-    'WAU'                                       AS metric
-  FROM metric_prep
-  WHERE metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
-  GROUP BY ALL
-
+    date_day,
+    ai_feature,
+    plan,
+    internal_or_external,
+    'All' AS delivery_type,
+    metric_value
+    metric
+  FROM sm_expanded
 
 ),
 
