@@ -115,7 +115,7 @@ WITH dim_date AS (
         ELSE FALSE
       END                                                               AS is_excluded_from_disc_analysis,
       dim_product_detail.annual_billing_list_price                      AS annual_billing_list_price,
-      dim_crm_opportunity.opportunity_owner_user_segment                AS opportunity_owner_user_segment,
+      dim_crm_opportunity.report_segment                                AS report_segment,
       dim_crm_opportunity.report_geo                                    AS report_geo,
       dim_crm_opportunity.report_region                                 AS report_region,
       dim_crm_opportunity.report_area                                   AS report_area,
