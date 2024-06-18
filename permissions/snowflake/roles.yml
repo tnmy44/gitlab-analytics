@@ -3659,9 +3659,6 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
-  - eguo:
-      member_of:
-        - snowflake_analyst
       warehouses:
         - dev_xs
   - eneuberger:
@@ -6716,10 +6713,6 @@ users:
       can_login: true
       member_of:
         - eboyd
-  - eguo:
-      can_login: true
-      member_of:
-        - eguo
   - eneuberger:
       can_login: true
       member_of:
