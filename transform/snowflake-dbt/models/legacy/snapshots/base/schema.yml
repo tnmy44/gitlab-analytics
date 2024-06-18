@@ -106,9 +106,6 @@ models:
         description: Auto-generated primary key when building the snapshot with dbt
         tests:
           - not_null
-      - name: project_ci_cd_settings_id
-        tests:
-          - not_null
       - name: project_id
         tests:
           - not_null
