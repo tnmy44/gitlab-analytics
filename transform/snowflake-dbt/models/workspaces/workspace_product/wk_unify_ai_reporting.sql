@@ -229,7 +229,7 @@ metrics AS (
     ping_product_tier            AS plan,
     i.internal_or_external,
     ping_deployment_type                AS delivery_type,
-    SUM(COALESCE(metric_value, 0)::INT),
+    SUM(COALESCE(metric_value, 0)::INT) AS metric_value,
     CASE 
     WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' THEN 'MAU'
     WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' THEN 'WAU'
