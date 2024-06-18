@@ -63,12 +63,10 @@ class TestCheckDeletes:
         - Create test metdata table
         - Create a mock PostgresPipelineTable object
         """
-        manifest_file_path = "extract/gitlab_saas_postgres_pipeline/manifests/el_gitlab_dotcom_db_manifest.yaml"
         manifest_connection_info_file_path = "extract/gitlab_saas_postgres_pipeline/manifests/el_saas_connection_info.yaml"
         manifest_dict_connection_info = manifest_reader(
             manifest_connection_info_file_path
         )
-        manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
 
         # Create a mock source/self.target_engine
