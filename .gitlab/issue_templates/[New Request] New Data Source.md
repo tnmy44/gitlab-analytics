@@ -25,6 +25,8 @@ To support the new data source triage process, try to complete the below checkli
  
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://handbook.gitlab.com/handbook/security/data-classification-standard/#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
+* [ ] Please list and describe any data from this source that is personal data and if so, if it needs to be extracted Y/N?
+ - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
    * [ ] How often does the data need to be refreshed?
  
