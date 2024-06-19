@@ -10184,7 +10184,7 @@ users:
       - General All Access
   - user_name: jslaughter
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -11493,9 +11493,17 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: lzhao
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: awerner
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  
