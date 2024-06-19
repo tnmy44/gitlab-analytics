@@ -11,7 +11,7 @@ dotcom_prep AS (
 
   SELECT
     event_label,
-    
+    behavior_structured_event_pk,
     plan_name_modified                                  AS plan_name,
     CASE
       WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') 
@@ -77,6 +77,7 @@ SELECT
 SELECT
 
 p.gsc_pseudonymized_user_id,
+p.behavior_structured_event_pk,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
@@ -176,6 +177,48 @@ monthly_retention_grouped AS (
   GROUP BY ALL
   HAVING COUNT(DISTINCT prep.gsc_pseudonymized_user_id) > 0
 
+), daily_event AS (
+
+  SELECT
+    behavior_date           AS _date,
+    event_label,
+    plan_name,
+    internal_or_external,
+    'Daily Event Count' AS metric,
+    COUNT(DISTINCT behavior_structured_event_pk,) AS metric_value
+  FROM prep
+  WHERE
+  behavior_date < CURRENT_DATE
+  GROUP BY ALL
+
+), weekly_event AS (
+
+  SELECT
+    DATE_TRUNC(WEEK, behavior_date)           AS _date,
+    event_label,
+    plan_name,
+    internal_or_external,
+    'Weekly Event Count' AS metric,
+    COUNT(DISTINCT behavior_structured_event_pk,) AS user_count
+  FROM prep
+  WHERE
+  DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
+  GROUP BY ALL
+
+), monthly_event AS (
+
+  SELECT
+    DATE_TRUNC(MONTH, behavior_date)           AS _date,
+    event_label,
+    plan_name,
+    internal_or_external,
+    'Monthly Event Count' AS metric,
+    COUNT(DISTINCT behavior_structured_event_pk,) AS user_count
+  FROM prep
+  WHERE
+  DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
+  GROUP BY ALL
+
 ),
 
 metrics AS (
@@ -205,6 +248,25 @@ metrics AS (
 
   SELECT *
   FROM monthly_retention_grouped
+
+  UNION ALL 
+  
+  SELECT
+    *
+  FROM daily_event
+  
+  UNION ALL
+
+  SELECT
+    *
+  FROM weekly_event
+  
+  UNION ALL
+
+  SELECT
+    *
+  FROM monthly_event
+
 ), metric_prep AS (
   
   SELECT 
