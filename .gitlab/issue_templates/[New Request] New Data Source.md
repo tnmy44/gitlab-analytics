@@ -69,7 +69,8 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] Security (Security Risk Management Officer)
     - [ ] Privacy (Lead Legal Counsel - Privacy)
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
-* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with privacy and legal team to obtain approval. 
+* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with privacy team to obtain approval. The following approval is required:
+    - [ ] Privacy (Lead Legal Counsel - Privacy)
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
