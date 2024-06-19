@@ -20,6 +20,8 @@ To support the new data source triage process, try to complete the below checkli
   - [ ] Low - S4
 * [ ] Who will be using this data, and where (dashboards, snowflake UI, etc.)?
   - `      `
+* [ ] How much data needs to be loaded in the initial run? (All time, 12 months, 24 months lookback etc.) The data team adheres to [data minimization principle](https://handbook.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#data-minimisation).
+  - `      `
  
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://handbook.gitlab.com/handbook/security/data-classification-standard/#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
