@@ -92,6 +92,8 @@ WITH source AS (
         campaignid                                                                          AS primary_campaign_source_id,
         probability                                                                         AS probability,
         professional_services_value__c                                                      AS professional_services_value,
+        edu_services_value__c                                                               AS edu_services_value,
+        investment_services_value__c                                                        AS investment_services_value,
         push_counter__c                                                                     AS pushed_count,
         reason_for_lost__c                                                                  AS reason_for_loss,
         reason_for_lost_details__c                                                          AS reason_for_loss_details,

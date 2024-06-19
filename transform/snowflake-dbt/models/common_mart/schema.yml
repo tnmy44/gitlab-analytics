@@ -1456,7 +1456,7 @@ models:
     - name: language
       description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type
-      description: '{{ doc("product_delivery_type") }}'
+      description: '{{ doc("code_suggestions_delivery_type") }}'
       accepted_values:
         values: ['Self-Managed', 'SaaS']
     - name: model_engine
@@ -1547,3 +1547,5 @@ models:
       description: ' {{ doc("code_suggestions_has_advanced_context") }} '
     - name: is_direct_connection
       description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+    - name: product_deployment_type
+      description: ' {{ doc("product_deployment_type") }} '

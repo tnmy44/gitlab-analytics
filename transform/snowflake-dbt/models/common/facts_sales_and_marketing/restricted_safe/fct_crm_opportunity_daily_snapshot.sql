@@ -228,6 +228,8 @@ final AS (
     prep_crm_opportunity.primary_campaign_source_id,
     prep_crm_opportunity.probability,
     prep_crm_opportunity.professional_services_value,
+    prep_crm_opportunity.edu_services_value,
+    prep_crm_opportunity.investment_services_value,
     prep_crm_opportunity.pushed_count,
     prep_crm_opportunity.reason_for_loss,
     prep_crm_opportunity.reason_for_loss_details,
@@ -637,7 +639,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@lisvinueza",
+    updated_by="@rakhireddy",
     created_date="2022-02-23",
-    updated_date="2024-05-20"
+    updated_date="2024-06-13"
 ) }}

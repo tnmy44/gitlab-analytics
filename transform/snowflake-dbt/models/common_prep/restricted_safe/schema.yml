@@ -213,6 +213,17 @@ models:
       - name: order_type_grouped_live
         description: >
           Order type (stamped) grouped from the live data 
+      - name: professional_services_value
+        description: >
+          Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: >
+          Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: >
+          Amount on an opportunity that is from Investment Services only
+
+
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'
     columns:

@@ -22,3 +22,13 @@ models:
         description: Marks the end date for a location factor used for an employee
         tests:
           - not_null
+
+  - name: sfdc_opportunity_snapshots_source
+    description: This captures changes in SFDC Opportunities. 
+    columns:
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
