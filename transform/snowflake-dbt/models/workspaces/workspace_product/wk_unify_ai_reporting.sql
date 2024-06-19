@@ -185,7 +185,7 @@ monthly_retention_grouped AS (
     plan_name,
     internal_or_external,
     'Daily Event Count' AS metric,
-    COUNT(DISTINCT behavior_structured_event_pk,) AS metric_value
+    COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
   WHERE
   behavior_date < CURRENT_DATE
@@ -199,7 +199,7 @@ monthly_retention_grouped AS (
     plan_name,
     internal_or_external,
     'Weekly Event Count' AS metric,
-    COUNT(DISTINCT behavior_structured_event_pk,) AS user_count
+    COUNT(DISTINCT behavior_structured_event_pk) AS user_count
   FROM prep
   WHERE
   DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
@@ -213,7 +213,7 @@ monthly_retention_grouped AS (
     plan_name,
     internal_or_external,
     'Monthly Event Count' AS metric,
-    COUNT(DISTINCT behavior_structured_event_pk,) AS user_count
+    COUNT(DISTINCT behavior_structured_event_pk) AS user_count
   FROM prep
   WHERE
   DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
