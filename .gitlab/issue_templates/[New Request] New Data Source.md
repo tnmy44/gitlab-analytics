@@ -64,11 +64,12 @@ use contact the Data Engineer assigned below for confirmation.
 **Triage**
 * [ ] Determine the extraction solution via decision [diagram](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#extraction-solution):
 * [ ] Estimate the [issue points](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#issue-pointing), based on the current information* 
-* [ ] This new data source is lised in the [tech_stack.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/tech_stack.yml) and does not have `data_classification: Red`. If the data source does have `data_classification: Red`, the following approvals are required:
+* [ ] This new data source is listed in the [tech_stack.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/tech_stack.yml) and does not have `data_classification: Red`. If the data source does have `data_classification: Red`, the following approvals are required:
     - [ ] BT/Data VP-level
     - [ ] Security (Security Risk Management Officer)
     - [ ] Privacy (Lead Legal Counsel - Privacy)
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
+* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with privacy and legal team to obtain approval. 
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
