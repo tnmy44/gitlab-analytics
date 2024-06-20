@@ -1,8 +1,8 @@
 {%- macro utm_campaign_parsing(utm_column_name) -%}
 
 CASE 
-    WHEN REGEXP_COUNT({{utm_column_name}}, '_') >= 6  
-    THEN SPLIT_PART({{utm_column_name}} , '_', 1) 
+    WHEN REGEXP_COUNT(utm_campaign, '_') >= 6 AND REGEXP_LIKE(utm_campaign, '.*(20[0-9]{6}).*')
+    THEN SPLIT_PART(utm_campaign , '_', 1) 
 END AS utm_campaign_date,
 CASE 
     WHEN REGEXP_COUNT({{utm_column_name}}, '_') >= 6  
