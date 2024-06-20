@@ -1,13 +1,13 @@
 WITH jp_ss AS (
   SELECT *
-  FROM {{ source('workday', 'job_profiles_snapshots_source') }}
+  FROM {{ source('snapshots', 'job_profiles_snapshots') }}
   WHERE NOT _fivetran_deleted
     AND job_workday_id IS NOT NULL
 ),
 
 jp_hist AS (
   SELECT *
-  FROM {{ source('workday', 'job_profiles_historical_source') }}
+  FROM {{ ref('job_profiles_historical_source') }}
 ),
 
 jp_stage AS (
@@ -19,7 +19,7 @@ jp_stage AS (
     management_level,
     job_level,
     job_family,
-    is_job_profile_active
+    IFF(inactive::BOOLEAN = 0, TRUE, FALSE) AS is_job_profile_active
   FROM jp_ss
   WHERE jp_ss.report_effective_date > (
       SELECT MAX(jp_hist.report_effective_date) AS max_hist_date
@@ -58,7 +58,7 @@ jp AS (
     management_level,
     job_level::FLOAT                                              AS job_level,
     job_family,
-    inactive                                                      AS is_job_profile_active
+    is_job_profile_active                                                      AS is_job_profile_active
   FROM jp_stage
 )
 
