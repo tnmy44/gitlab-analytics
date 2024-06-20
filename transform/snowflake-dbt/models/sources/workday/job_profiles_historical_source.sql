@@ -1,0 +1,19 @@
+WITH source AS (
+
+  SELECT *
+  FROM {{ source('sheetload', 'job_profiles_historical') }}
+
+),
+WITH final AS (
+	SELECT report_effective_date::DATE AS report_effective_date,
+		job_workday_id,
+		job_code,
+		job_profile,
+		management_level,
+		job_level::FLOAT AS job_level,
+		job_family,
+		IFF(inactive::BOOLEAN = 0, TRUE, FALSE) AS is_job_profile_active
+	FROM jp_hist
+)
+SELECT *
+FROM source
