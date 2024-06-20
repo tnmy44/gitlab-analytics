@@ -34,7 +34,7 @@
     ELSE 'No' END AS is_ramp,
     MULTIYEARDEALSUBSCRIPTIONLINKAGE__C AS myb_opportunity_id,---Equivalent to SSP ID in SF, deprecated now, used for identifying Legacy ramps,only the first year of ramp can ve identified by this opp_id
     sub.opportunityid__c                AS opportunity_id
-  FROM {{ source('zuora', 'subscription') }} su
+  FROM {{ source('zuora', 'subscription') }} sub
 
 ---Legacy Zuora Ramps 
 ---Historical Ramp Deals for data >= Sep 2021
