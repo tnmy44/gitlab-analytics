@@ -7,7 +7,7 @@
   ]) 
 }}
 
-cohort_base AS (
+, cohort_base AS (
 
     SELECT DISTINCT
         dim_crm_person_id,
