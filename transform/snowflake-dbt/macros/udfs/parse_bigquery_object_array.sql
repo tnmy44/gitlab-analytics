@@ -8,11 +8,11 @@
 {% for db in production_databases %}
     {%- if target.name in production_targets -%}
 
-    CREATE OR REPLACE FUNCTION "{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(V VARIANT)
+    CREATE OR REPLACE FUNCTION "{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(input_array VARIANT)
 
     {%- else -%}
 
-    CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(V VARIANT)
+    CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(input_array VARIANT)
 
     {% endif %}
     RETURNS variant
@@ -20,15 +20,15 @@
     AS 
     $$
     var result = {};
-    for (const x of V) {
-    if (x.value){
-        for (const [key, value] of Object.entries(x.value)) {
+    for (const array_member of input_array) {
+    if (array_member.value){
+        for (const [key, value] of Object.entries(array_member.value)) {
         if ( key != 'set_timestamp_micros') {
-            result[x.key] = value;
+            result[array_member.key] = value;
         }
         }
     } else {
-        result[x.key] = null;
+        result[array_member.key] = null;
     }
     }
     return result
