@@ -7,7 +7,28 @@
 
 }}
 
-WITH source AS (
+WITH project_ci_cd_settings AS (
+
+  SELECT *
+  FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
+
+{% if is_incremental() %}
+
+),
+
+id_uploaded_date AS (
+
+  SELECT 
+    project_ci_cd_settings_snapshot_id,
+    valid_from
+  FROM {{ this }}
+  WHERE valid_to IS NULL
+
+{% endif %}
+
+),
+
+source AS (
 
   SELECT
     *,
@@ -32,11 +53,13 @@ WITH source AS (
            ]
          ) 
     }}                                                                      AS record_checksum
-  FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
+  FROM project_ci_cd_settings
   {% if is_incremental() %}
-
+  LEFT JOIN id_uploaded_date
+    ON project_ci_cd_settings.id =  id_uploaded_date.project_ci_cd_settings_snapshot_id
+      AND TO_TIMESTAMP(project_ci_cd_settings._uploaded_at::INT) = id_uploaded_date.valid_from
   WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }} )
-    OR record_checksum IN (SELECT record_checksum FROM {{ this}} WHERE valid_to IS NULL)
+   OR id_uploaded_date.project_ci_cd_settings_snapshot_id IS NOT NULL
 
   {% endif %}
 
@@ -73,14 +96,14 @@ grouped AS (
     allow_fork_pipelines_to_run_in_parent_project,
     inbound_job_token_scope_enabled,
     record_checksum,
-    uploaded_at,
-    TO_TIMESTAMP(MIN(_uploaded_at)::INT) AS valid_from,
+    MIN(uploaded_at)                        AS uploaded_at,
+    TO_TIMESTAMP(MIN(_uploaded_at)::INT)    AS valid_from,
     IFF(
       MAX(COALESCE(next_uploaded_at, 9999999999) = 9999999999),
       NULL, TO_TIMESTAMP(MAX(next_uploaded_at)::INT)
-    )                                    AS valid_to
+    )                                       AS valid_to
   FROM base
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, checksum_group
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, checksum_group
 
 )
 
