@@ -15,12 +15,12 @@
     CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_{{ db | trim }}".{{target.schema}}.parse_bigquery_object_array(V VARIANT)
 
     {% endif %}
-    RETURNS string
+    RETURNS variant
     LANGUAGE JAVASCRIPT
     AS 
     $$
     var result = {};
-    for (const x of input_object) {
+    for (const x of V) {
     if (x.value){
         for (const [key, value] of Object.entries(x.value)) {
         if ( key != 'set_timestamp_micros') {
