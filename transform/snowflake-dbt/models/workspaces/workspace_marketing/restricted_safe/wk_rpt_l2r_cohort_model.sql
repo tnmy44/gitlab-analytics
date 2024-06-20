@@ -119,7 +119,7 @@
             ELSE NULL
         END AS sao_to_close_days        
     FROM cohort_base
-    {{dbt_utils.group_by(n=37)}}
+    {{dbt_utils.group_by(n=38)}}
 
 ) 
 
