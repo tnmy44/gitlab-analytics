@@ -127,6 +127,7 @@ WITH prep_crm_opportunity AS (
 ), final AS (
 
     SELECT DISTINCT 
+        sales_dev_rep_user_id as dim_crm_user_id,
         sales_dev_rep_employee_number,
         sales_dev_rep_role_name, 
         sales_dev_rep_full_name, 
@@ -146,5 +147,5 @@ WITH prep_crm_opportunity AS (
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2024-06-11",
-    updated_date="2024-06-11"
+    updated_date="2024-06-20"
 ) }}
