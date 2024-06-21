@@ -70,7 +70,9 @@ final AS (
       dates.date_actual > DATE_TRUNC('day', issues.closed_at), DATEDIFF('day', issues.created_at, issues.closed_at),
       DATEDIFF('day', issues.created_at, dates.date_actual)
     )                                                                                                                      AS issue_open_age_in_days,
-    DATEDIFF('day', severity.label_added_at, dates.date_actual)                                                            AS severity_label_age_in_days,
+    IFF(
+      dates.date_actual > DATE_TRUNC('day', issues.closed_at), DATEDIFF('day', severity.label_added_at, issues.closed_at),
+      DATEDIFF('day', severity.label_added_at, dates.date_actual))                                                            AS severity_label_age_in_days,
     assigend_users.assigned_usernames,
     IFF(assigend_users.assigned_usernames IS NULL, TRUE, FALSE)                                                            AS is_issue_unassigned,
     issues.group_label,
