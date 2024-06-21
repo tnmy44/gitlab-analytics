@@ -932,6 +932,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.common_prep
+            - prod.common_mapping
             - prod.legacy
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
@@ -967,6 +968,7 @@ roles:
             - prep.sfdc.*
             - prod.common.*
             - prod.common_prep.*
+            - prod.common_mapping.*
             - prod.legacy.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
