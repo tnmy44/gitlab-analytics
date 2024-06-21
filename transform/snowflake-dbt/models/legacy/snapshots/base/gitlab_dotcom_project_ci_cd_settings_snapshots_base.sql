@@ -97,7 +97,6 @@ grouped AS (
     separated_caches,
     allow_fork_pipelines_to_run_in_parent_project,
     inbound_job_token_scope_enabled,
-    record_checksum,
     MIN(uploaded_at)                        AS uploaded_at,
     TO_TIMESTAMP(MIN(_uploaded_at)::INT)    AS valid_from,
     IFF(
@@ -105,7 +104,7 @@ grouped AS (
       NULL, TO_TIMESTAMP(MAX(next_uploaded_at)::INT)
     )                                       AS valid_to
   FROM base
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, checksum_group
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, checksum_group
 
 )
 
