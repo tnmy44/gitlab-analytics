@@ -3410,6 +3410,7 @@ roles:
   - dcharukulvanich:
       member_of:
         - analyst_marketing
+        - analyst_marketing_sensitive
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
