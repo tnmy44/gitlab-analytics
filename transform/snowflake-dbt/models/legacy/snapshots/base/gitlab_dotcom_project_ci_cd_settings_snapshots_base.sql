@@ -54,7 +54,9 @@ source AS (
          ) 
     }}                                                                      AS record_checksum
   FROM project_ci_cd_settings
+  
   {% if is_incremental() %}
+  
   LEFT JOIN id_uploaded_date
     ON project_ci_cd_settings.id =  id_uploaded_date.project_ci_cd_settings_snapshot_id
       AND TO_TIMESTAMP(project_ci_cd_settings._uploaded_at::INT) = id_uploaded_date.valid_from
