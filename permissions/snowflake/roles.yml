@@ -6453,9 +6453,9 @@ roles:
         - dev_xs
   - devo:
       member_of:
-        - snowflake_analyst
+        - snowflake_db
       warehouses:
-        - dev_xs
+        - reporting
 users:
   - aadesanya:
       can_login: true
