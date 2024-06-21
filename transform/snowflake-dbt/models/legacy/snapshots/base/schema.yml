@@ -96,7 +96,7 @@ models:
       - name: valid_to
 
   - name: gitlab_dotcom_project_ci_cd_settings_snapshots_base
-    description: Base model for Gitlab.com project ci cd settings snapshot
+    description: '{{ doc("gitlab_dotcom_project_ci_cd_settings_snapshots_base") }}'
     columns:
       - name: project_ci_cd_settings_snapshot_pk
         tests:
