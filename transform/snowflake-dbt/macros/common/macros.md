@@ -53,12 +53,12 @@ For example, the `prep_snowplow_unnested_events_all` model requires 800 days of 
 
 {% docs utm_campaign_parsing %}
 
-Parses the new Marketing utm_campaign parameter into its consituent pieces, to be used in marketing reporting. 
+Parses the new Marketing utm_campaign parameter into its consituent pieces, to be used in marketing reporting.
 
 {% enddocs %}
 
 {% docs utm_content_parsing %}
 
-Parses the new Marketing utm_content parameter into its consituent pieces, to be used in marketing reporting. 
+Parses the new Marketing utm_content parameter into its consituent pieces, to be used in marketing reporting.
 
 {% enddocs %}
