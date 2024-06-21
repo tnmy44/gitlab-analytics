@@ -254,6 +254,10 @@ models:
       google_ads:
         +schema: google_ads
 
+      google_analytics_4:
+        +materialized: incremental
+        +schema: google_analytics_4
+
       google_analytics_360:
         +materialized: table
         +schema: google_analytics_360

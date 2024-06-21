@@ -2184,6 +2184,24 @@ The closed lost renewal opportunity, where applicable, mapped mapped to a subscr
 
 {% enddocs %}
 
+{% docs dim_oldest_crm_account_in_cohort_id %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the Account ID from SFDC identifing the customer for the oldest subscription in a lineage.
+
+{% enddocs %}
+
+{% docs oldest_subscription_start_date %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date for the oldest subscription in a lineage. This date can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
+{% docs oldest_subscription_cohort_month %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the start date month for the oldest subscription in a lineage. This cohort month can be used to know when customers first started paying and can be utilized for different use cases such as reporting on `Time to X Value`.
+
+{% enddocs %}
+
 {% docs dim_plan_sk %}
 
 The surrogate key for joining to the `dim_plan` table
@@ -2872,6 +2890,50 @@ Pseudonymised combination of instance id and user id sent in Code Suggestions ev
 
 {% enddocs %}
 
+{% docs code_suggestions_is_invoked %}
+
+Flag to indicate whether the request for a suggestion was triggered automatically while the user was typing or invoked by the user hovering over the suggestion to get more options.
+
+{% enddocs %}
+
+{% docs code_suggestions_options_count %}
+ 
+The total number of options provided for the current suggestion. A user can select from one of these options.
+
+{% enddocs %}
+
+{% docs code_suggestions_accepted_option %}
+
+When the suggestion is accepted, this field indicates the option number which was chosen by the user out of the possible options provided. This is a 1-based index.
+
+{% enddocs %}
+
+{% docs code_suggestions_has_advanced_context %}
+
+Flag indicating whether the suggestion was requested with additional context. NULL means that the feature flags for the advanced context feature are not enabled
+
+{% enddocs %}
+
+{% docs code_suggestions_is_direct_connection %}
+
+Flag indicating whether the suggestion request was sent to monolith or directly to AI gateway.
+
+{% enddocs %}
+
+{% docs code_suggestions_suggestion_source %}
+
+Source where the suggestion is retrieved from. This can be either the cache or network.
+
+{% enddocs %}
+
+{% docs code_suggestions_delivery_type %}
+
+This is the delivery type of GitLab to include either SaaS or Self-Managed.
+
+To derive this attribute, we join the instance information (`instance_id`, `host_name`) sent in the Code Suggestions context to find the delivery type from the installation that sent the event. We coalesce this delivery type with the `realm` (delivery type) sent in the context. This adjusts for the `Dedicated` instances that are labeled as Self-Managed in the context, but are considered to be SaaS delivery types.
+
+{% enddocs %}
+
 {% docs ide_extension_version_context %}
 
 IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
@@ -3374,6 +3436,12 @@ Flag to indicate a project has turned on the [Merge Trains](https://docs.gitlab.
 {% docs cost_factor %}
  
 For Shared Runners, whenever a user runs jobs on a specific machine type the cost to GitLab needs to be multiplied by a cost factor as the larger the machine the more expensive it is to run.
+
+{% enddocs %}
+
+{% docs ping_instance_metric_monthly_pk %}
+ 
+Primary key for the model, consisting of dim_installation_id, metrics_path, and ping_created_date_month
 
 {% enddocs %}
 
