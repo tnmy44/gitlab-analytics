@@ -12,9 +12,9 @@ WITH project_ci_cd_settings AS (
   SELECT *
   FROM {{ source('gitlab_dotcom', 'project_ci_cd_settings') }}
 
-{% if is_incremental() %}
-
 ),
+
+{% if is_incremental() %}
 
 id_uploaded_date AS (
 
@@ -24,9 +24,9 @@ id_uploaded_date AS (
   FROM {{ this }}
   WHERE valid_to IS NULL
 
-{% endif %}
-
 ),
+
+{% endif %}
 
 source AS (
 
