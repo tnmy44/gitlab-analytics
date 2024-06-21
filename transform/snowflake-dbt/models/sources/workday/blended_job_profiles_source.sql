@@ -19,7 +19,7 @@ jp_stage AS (
     management_level,
     job_level,
     job_family,
-    IFF(inactive::BOOLEAN = 0, TRUE, FALSE) AS is_job_profile_active
+    IFF(inactive::BOOLEAN = 1, FALSE, TRUE) AS is_job_profile_active
   FROM jp_ss
   WHERE jp_ss.report_effective_date > (
       SELECT MAX(jp_hist.report_effective_date) AS max_hist_date

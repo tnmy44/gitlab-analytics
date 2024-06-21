@@ -12,7 +12,7 @@ final AS (
 		management_level,
 		job_level::FLOAT AS job_level,
 		job_family,
-		IFF(inactive::BOOLEAN = 0, TRUE, FALSE) AS is_job_profile_active
+		IFF(inactive::BOOLEAN = 1, FALSE, TRUE) AS is_job_profile_active
 	FROM source
 )
 SELECT *
