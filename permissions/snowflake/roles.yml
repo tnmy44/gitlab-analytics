@@ -6459,6 +6459,21 @@ roles:
         - snowflake_db
       warehouses:
         - reporting
+  - ttavares:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kli:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - mvanremmerden:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7516,6 +7531,18 @@ users:
       can_login: true
       member_of:
         - devo
+  - ttavares:
+      can_login: true
+      member_of:
+        - ttavares
+  - kli:
+      can_login: true
+      member_of:
+        - kli
+  - mvanremmerden:
+      can_login: true
+      member_of:
+        - mvanremmerden
 warehouses:
   - admin:
       size: x-small
