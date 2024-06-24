@@ -25,6 +25,7 @@
         account_demographics_upa_country,
         account_demographics_territory,
         person_order_type,
+        is_mql,
         dim_crm_opportunity_id,
         opp_order_type,
         sales_qualified_source_name,
@@ -71,6 +72,7 @@
         account_demographics_upa_country,
         account_demographics_territory,
         person_order_type,
+        is_mql,
         dim_crm_opportunity_id,
         opp_order_type,
         sales_qualified_source_name,
@@ -121,7 +123,7 @@
             ELSE NULL
         END AS sao_to_close_days        
     FROM cohort_base
-    {{dbt_utils.group_by(n=39)}}
+    {{dbt_utils.group_by(n=40)}}
 
 ) 
 
