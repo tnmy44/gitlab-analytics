@@ -6393,6 +6393,16 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
       - name: page_url_path
         description: '{{ doc("page_url_path") }}'
       - name: referer_url_path
