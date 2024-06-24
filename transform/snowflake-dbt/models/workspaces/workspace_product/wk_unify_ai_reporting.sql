@@ -309,7 +309,7 @@ metrics AS (
     CASE 
     WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' 
     THEN 
-    DATE_TRUNC(WEEK,ping_created_date::DATE)
+    DATE_TRUNC(WEEK,ping_created_date_week::DATE)
     ELSE 
     ping_created_date_month::DATE
     END AS date_day,
