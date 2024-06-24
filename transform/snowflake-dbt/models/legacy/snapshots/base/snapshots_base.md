@@ -1,6 +1,6 @@
 {% docs gitlab_dotcom_project_ci_cd_settings_snapshots_base %}
 
-The source model `RAW.raw.tap_postgres.gitlab_db_project_ci_cd_settings` snapshots the state of each projects' CI CD settings twice per day. When the settings change, there is no `updated_at` date provided to indicate when the settings were adjusted.
+The source model `raw.tap_postgres.gitlab_db_project_ci_cd_settings` snapshots the state of each projects' CI CD settings twice per day. When the settings change, there is no `updated_at` date provided to indicate when the settings were adjusted.
 
 In order to transform this data into a slowly-changing dimension, this model:
 
