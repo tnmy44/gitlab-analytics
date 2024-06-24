@@ -12,7 +12,18 @@ dotcom_prep AS (
   SELECT
     event_label,
     behavior_structured_event_pk,
-    plan_name_modified                                  AS plan_name,
+    CASE
+    WHEN plan_name = 'opensource' THEN 'Free'
+    WHEN plan_name = 'free' THEN 'Free'
+    WHEN plan_name = 'premium' THEN 'Premium'
+    WHEN plan_name = 'ultimate_trial' THEN 'Trial'
+    WHEN plan_name = 'ultimate' THEN 'Ultimate'
+    WHEN plan_name = 'All' THEN 'All'
+    WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial'
+    WHEN plan_name = 'premium_trial' THEN 'Trial'
+    WHEN plan_name = 'starter' THEN 'Starter'
+    WHEN plan_name = 'default' THEN 'Free'
+    END                                  AS plan_name,
     CASE
       WHEN gsc_is_gitlab_team_member IN ('false', 'e08c592bd39b012f7c83bbc0247311b238ee1caa61be28ccfd412497290f896a') 
         THEN 'External'
@@ -58,7 +69,7 @@ WHEN plan_name = 'starter' THEN 'Starter'
 WHEN plan_name = 'default' THEN 'Free'
 END AS plan 
 FROM 
-dotcom_prep
+{{ ref('dim_plan') }}
 UNION ALL 
 SELECT
 'All'
@@ -154,9 +165,13 @@ weekly_retention_grouped AS (
     ON e2.event_label = prep.event_label 
       AND e2.gsc_pseudonymized_user_id = prep.gsc_pseudonymized_user_id 
       AND e2.current_week = prep.next_week
-  WHERE prep.next_week < DATE_TRUNC(WEEK, CURRENT_DATE())
+      AND e2.plan_name = prep.plan_name
+      AND e2.internal_or_external = prep.internal_or_external
+  WHERE 
+  prep.next_week < DATE_TRUNC(WEEK, CURRENT_DATE())
+  AND
+  prep.gsc_pseudonymized_user_id IS NOT NULL
   GROUP BY ALL
-  HAVING COUNT(DISTINCT prep.gsc_pseudonymized_user_id) > 0
 
 ),
 
@@ -173,9 +188,13 @@ monthly_retention_grouped AS (
     ON e2.event_label = prep.event_label 
       AND e2.gsc_pseudonymized_user_id = prep.gsc_pseudonymized_user_id 
       AND e2.current_month = prep.next_month
-  WHERE prep.next_month < DATE_TRUNC(MONTH, CURRENT_DATE())
+      AND e2.plan_name = prep.plan_name
+      AND e2.internal_or_external = prep.internal_or_external
+  WHERE 
+  prep.next_month < DATE_TRUNC(MONTH, CURRENT_DATE())
+  AND
+  prep.gsc_pseudonymized_user_id IS NOT NULL
   GROUP BY ALL
-  HAVING COUNT(DISTINCT prep.gsc_pseudonymized_user_id) > 0
 
 ), daily_event AS (
 
@@ -275,12 +294,13 @@ metrics AS (
     {{ ref('mart_ping_instance_metric') }}
   WHERE major_minor_version_id >= 1611
     AND metric_value > 0
-    AND is_last_ping_of_month = TRUE
     AND ping_created_date_month > '2024-01-01'
     AND ping_deployment_type != 'GitLab.com'
-    AND  metrics_path IN  (
-    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' ,
-    'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly'
+    AND  
+    (
+    (metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_monthly' AND is_last_ping_of_month = TRUE)
+    OR
+    (metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' AND is_last_ping_of_week = TRUE)
     )
 
 ), sm_expanded AS 
