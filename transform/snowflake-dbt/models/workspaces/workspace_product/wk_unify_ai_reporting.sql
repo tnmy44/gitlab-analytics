@@ -19,7 +19,7 @@ dotcom_prep AS (
     WHEN plan_name = 'ultimate_trial' THEN 'Trial'
     WHEN plan_name = 'ultimate' THEN 'Ultimate'
     WHEN plan_name = 'All' THEN 'All'
-    WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial'
+    WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial by Paid Customer'
     WHEN plan_name = 'premium_trial' THEN 'Trial'
     WHEN plan_name = 'starter' THEN 'Starter'
     WHEN plan_name = 'default' THEN 'Free'
@@ -63,7 +63,7 @@ WHEN plan_name = 'premium' THEN 'Premium'
 WHEN plan_name = 'ultimate_trial' THEN 'Trial'
 WHEN plan_name = 'ultimate' THEN 'Ultimate'
 WHEN plan_name = 'All' THEN 'All'
-WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial'
+WHEN plan_name = 'ultimate_trial_paid_customer' THEN 'Trial by Paid Customer'
 WHEN plan_name = 'premium_trial' THEN 'Trial'
 WHEN plan_name = 'starter' THEN 'Starter'
 WHEN plan_name = 'default' THEN 'Free'
@@ -131,7 +131,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     plan_name,
     internal_or_external,
     'WAU' AS metric,
-    COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
+    COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
   WHERE
   DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
@@ -145,7 +145,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     plan_name,
     internal_or_external,
     'MAU' AS metric,
-    COUNT(DISTINCT gsc_pseudonymized_user_id) AS user_count
+    COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
   WHERE
   DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
@@ -218,7 +218,7 @@ monthly_retention_grouped AS (
     plan_name,
     internal_or_external,
     'Weekly Event Count' AS metric,
-    COUNT(DISTINCT behavior_structured_event_pk) AS user_count
+    COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
   WHERE
   DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
@@ -232,7 +232,7 @@ monthly_retention_grouped AS (
     plan_name,
     internal_or_external,
     'Monthly Event Count' AS metric,
-    COUNT(DISTINCT behavior_structured_event_pk) AS user_count
+    COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
   WHERE
   DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
