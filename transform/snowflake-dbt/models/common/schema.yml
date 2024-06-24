@@ -1876,10 +1876,6 @@ models:
         description: '{{ doc("ci_builds_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: audit_features_28_days_user
-        description: '{{ doc("audit_features_28_days_user_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: groups_all_time_event
         description: '{{ doc("groups_all_time_event_desc") }}'
         tests:
@@ -4009,10 +4005,6 @@ models:
           - dbt_utils.at_least_one
       - name: ci_builds_28_days_event
         description: '{{ doc("ci_builds_28_days_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
-      - name: audit_features_28_days_user
-        description: '{{ doc("audit_features_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: groups_all_time_event
@@ -6401,6 +6393,16 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
       - name: page_url_path
         description: '{{ doc("page_url_path") }}'
       - name: referer_url_path
