@@ -145,8 +145,10 @@ quarterly_actuals AS (
     actuals.snapshot_fiscal_quarter_name,
     actuals.snapshot_fiscal_quarter_date,
     actuals.dim_crm_current_account_set_hierarchy_sk,
-    actuals.targets_id,
-    actuals.targets_id,
+    actuals.sales_qualified_source,
+    actuals.sales_qualified_source_grouped,
+    actuals.order_type,
+    actuals.order_type_grouped,
     SUM(actuals.booked_net_arr_in_snapshot_quarter) AS total_booked_net_arr
   FROM actuals
   WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
