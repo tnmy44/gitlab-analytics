@@ -4174,11 +4174,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - jpetr:
-      member_of:
-        - analyst_sales
-      warehouses:
-        - dev_xs
   - jrubi:
       member_of:
         - snowflake_analyst
@@ -6882,10 +6877,6 @@ users:
       can_login: true
       member_of:
         - jpereira
-  - jpetr:
-      can_login: true
-      member_of:
-        - jpetr
   - jrubi:
       can_login: true
       member_of:
