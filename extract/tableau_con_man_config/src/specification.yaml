@@ -11213,6 +11213,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: dhazarika
     user_name_domain: gitlab.com
     site_role: Viewer
