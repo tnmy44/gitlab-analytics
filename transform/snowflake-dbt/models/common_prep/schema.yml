@@ -2839,7 +2839,7 @@ models:
     description: '{{ doc("prep_snowplow_sessions_all") }}'
 
   - name: prep_crm_case
-    description: '{{ doc("PREP_CRM_CASE") }}'
+    description: '{{ doc("prep_crm_case") }}'
     columns:
       - name: case_id
       - name: dim_crm_case_sk
