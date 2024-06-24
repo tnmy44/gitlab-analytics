@@ -306,7 +306,13 @@ metrics AS (
 ), sm_expanded AS 
 (
   SELECT
-    ping_created_date_month::DATE       AS date_day,
+    CASE 
+    WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' 
+    THEN 
+    ping_created_date_week::DATE
+    ELSE 
+    ping_created_date_month::DATE
+    END AS date_day,
     f.event_label AS ai_feature,
     plans.plan,
     i.internal_or_external,
