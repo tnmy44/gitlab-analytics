@@ -932,6 +932,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.common_prep
+            - prod.common_mapping
             - prod.legacy
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
@@ -967,6 +968,7 @@ roles:
             - prep.sfdc.*
             - prod.common.*
             - prod.common_prep.*
+            - prod.common_mapping.*
             - prod.legacy.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
@@ -1444,7 +1446,7 @@ roles:
             - prep.sensitive.customers_db_customers_pii
   - prod_reporting:
       member_of:
-        - boneyard 
+        - boneyard
       privileges:
         databases:
           read:
@@ -1509,9 +1511,6 @@ roles:
             - prod.restricted_safe_workspace_finance
             - prod.restricted_safe_workspace_marketing
             - prod.restricted_safe_workspace_sales
-
-
-
         tables:
           read:
             - prod.restricted_safe_common.*
@@ -3411,6 +3410,7 @@ roles:
   - dcharukulvanich:
       member_of:
         - analyst_marketing
+        - analyst_marketing_sensitive
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
@@ -3657,8 +3657,6 @@ roles:
   - eboyd:
       member_of:
         - snowflake_analyst_safe
-      warehouses:
-        - dev_xs
       warehouses:
         - dev_xs
   - eneuberger:
@@ -4174,11 +4172,6 @@ roles:
   - jpereira:
       member_of:
         - snowflake_analyst
-      warehouses:
-        - dev_xs
-  - jpetr:
-      member_of:
-        - analyst_sales
       warehouses:
         - dev_xs
   - jrubi:
@@ -6456,6 +6449,26 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
+  - devo:
+      member_of:
+        - snowflake_db
+      warehouses:
+        - reporting
+  - ttavares:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kli:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - mvanremmerden:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -6864,10 +6877,6 @@ users:
       can_login: true
       member_of:
         - jpereira
-  - jpetr:
-      can_login: true
-      member_of:
-        - jpetr
   - jrubi:
       can_login: true
       member_of:
@@ -7509,6 +7518,22 @@ users:
       can_login: true
       member_of:
         - eludaway
+  - devo:
+      can_login: true
+      member_of:
+        - devo
+  - ttavares:
+      can_login: true
+      member_of:
+        - ttavares
+  - kli:
+      can_login: true
+      member_of:
+        - kli
+  - mvanremmerden:
+      can_login: true
+      member_of:
+        - mvanremmerden
 warehouses:
   - admin:
       size: x-small
