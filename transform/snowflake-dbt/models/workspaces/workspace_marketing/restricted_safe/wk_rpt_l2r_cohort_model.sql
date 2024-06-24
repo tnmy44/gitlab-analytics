@@ -12,6 +12,7 @@
     SELECT DISTINCT
         dim_crm_person_id,
         sfdc_record_id,
+        email_hash,
         sfdc_record_type,
         person_first_country,
         source_buckets,
@@ -57,6 +58,7 @@
     SELECT
         dim_crm_person_id,
         sfdc_record_id,
+        email_hash,
         sfdc_record_type,
         person_first_country,
         source_buckets,
@@ -119,7 +121,7 @@
             ELSE NULL
         END AS sao_to_close_days        
     FROM cohort_base
-    {{dbt_utils.group_by(n=38)}}
+    {{dbt_utils.group_by(n=39)}}
 
 ) 
 
@@ -128,5 +130,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2024-06-20",
-    updated_date="2024-06-20",
+    updated_date="2024-06-24",
 ) }}
