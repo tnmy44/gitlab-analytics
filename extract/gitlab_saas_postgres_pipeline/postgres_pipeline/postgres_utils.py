@@ -266,6 +266,7 @@ def chunk_and_upload(
     target_engine: Engine,
     target_table: str,
     source_table: str,
+    database_type: str,
     advanced_metadata: bool = False,
     backfill: bool = False,  # this is needed for scd load
 ) -> None:
@@ -278,7 +279,12 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    prefix = f"staging/regular/{target_table}/{target_table}_chunk".lower()
+    if database_type == "cells":
+        prefix = (
+            prefix
+        ) = f"staging/regular/{target_table}/{target_table}_{database_type}_chunk".lower()
+    else:
+        prefix = f"staging/regular/{target_table}/{target_table}_chunk".lower()
     extension = ".parquet.gzip"
     regular_csv_chunksize = 1_000_000
 

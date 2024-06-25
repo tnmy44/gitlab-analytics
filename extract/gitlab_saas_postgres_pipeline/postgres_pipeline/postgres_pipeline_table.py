@@ -80,6 +80,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            database_type,
         )
 
         return loaded
@@ -95,6 +96,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_schema_addition: bool,
+        database_type: str,
     ) -> bool:
         if (is_schema_addition) or (not self.is_incremental()):
             logging.info("Aborting... because schema_change OR non_incremental_load")
@@ -113,6 +115,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            database_type,
         )
 
     def do_trusted_data_pgp(
@@ -133,6 +136,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            database_type,
         )
 
     def _do_load_by_id(
@@ -179,7 +183,7 @@ class PostgresPipelineTable:
 
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
-    ) -> bool: ## edit this for cells iteration 2
+    ) -> bool:  ## edit this for cells iteration 2
         load_by_id_export_type = "backfill"
         (
             is_backfill_needed,
