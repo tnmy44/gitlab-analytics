@@ -18,6 +18,7 @@ WITH prep_crm_opportunity AS (
 
     SELECT *
     FROM {{ref('prep_team_member')}}
+    WHERE is_current
 
 ), sales_dev_opps AS (
 
@@ -127,7 +128,8 @@ WITH prep_crm_opportunity AS (
 
 ), final AS (
 
-    SELECT *
+    SELECT DISTINCT
+        sales_dev_hierarchy.*
     FROM sales_dev_hierarchy 
 
 )
