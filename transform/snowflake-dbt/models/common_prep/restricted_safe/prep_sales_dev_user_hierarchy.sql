@@ -85,7 +85,7 @@ WITH prep_crm_opportunity AS (
 ), sales_dev_hierarchy AS (
 
     SELECT DISTINCT 
-        sales_dev_hierarchy_prep.sales_dev_rep_user_id, 
+        sales_dev_hierarchy_prep.sales_dev_rep_user_id AS dim_crm_user_id,
         sales_dev_hierarchy_prep.sales_dev_rep_role_name,
         sales_dev_hierarchy_prep.sales_dev_rep_email,
         COALESCE(rep.first_name || ' ' || rep.last_name, sales_dev_hierarchy_prep.sales_dev_rep_user_name) AS sales_dev_rep_full_name,
@@ -127,17 +127,7 @@ WITH prep_crm_opportunity AS (
 ), final AS (
 
     SELECT DISTINCT 
-        sales_dev_rep_user_id as dim_crm_user_id,
-        sales_dev_rep_employee_number,
-        sales_dev_rep_role_name, 
-        sales_dev_rep_full_name, 
-        sales_dev_manager_employee_number,
-        sales_dev_manager_user_role_name, 
-        sales_dev_manager_full_name, 
-        sales_dev_leader_employee_number,
-        sales_dev_leader_user_role_name, 
-        sales_dev_leader_full_name,
-        snapshot_date
+        sales_dev_hierarchy.*
     FROM sales_dev_hierarchy 
 
 )
@@ -147,5 +137,5 @@ WITH prep_crm_opportunity AS (
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2024-06-11",
-    updated_date="2024-06-20"
+    updated_date="2024-06-25"
 ) }}
