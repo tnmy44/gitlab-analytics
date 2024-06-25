@@ -34,6 +34,7 @@ renamed AS (
     id                                                                               AS opportunity_id,
     name                                                                             AS opportunity_name,
     ownerid                                                                          AS owner_id,
+    contract_reset_opportunity__c                                                    AS contract_reset_opportunity_id,
 
     -- logistical information
     isclosed                                                                         AS is_closed,
