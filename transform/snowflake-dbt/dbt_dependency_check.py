@@ -1,0 +1,86 @@
+import os
+import csv
+import pandas as pd
+from dbt.cli.main import dbtRunner, dbtRunnerResult
+
+def dbt_model_dependencies_list(model_names: list):
+    # create empty lists to hold models
+    model_dependencies = []
+
+    # initialize dbt invoke
+    dbt = dbtRunner()
+
+    # for each create CLI args as a list of strings
+    for model in model_names:
+        cli_args_model = ["list", "--select", f"{model}+", "--resource-type=model"]
+
+        # run the command for models
+        res_models: dbtRunnerResult = dbt.invoke(cli_args_model)
+
+        # get counts
+        if res_models.result is not None:
+            count_dependencies = len(res_models.result)
+        else:
+            count_dependencies = 0
+
+        # append results in table for models
+        model_dependencies.append({'model_name': f'{model}', 'dependencies': res_models.result, 'count_dependencies': count_dependencies})
+
+    return(model_dependencies)
+
+
+def dbt_model_exposures_list(model_names: list):
+    # create empty lists to hold exposures
+    model_exposures = []
+
+    # initialize dbt invoke
+    dbt = dbtRunner()
+
+    # for each create CLI args as a list of strings
+    for model in model_names:
+        cli_args_exposure = ["list", "--select", f"{model}+", "--resource-type=exposure"]
+
+        # run the command for exposures
+        res_exposures: dbtRunnerResult = dbt.invoke(cli_args_exposure)
+
+        # get counts
+        if res_exposures.result is not None:
+            count_exposures = len(res_exposures.result)
+        else:
+            count_exposures = 0
+
+        # append results in table for exposures
+        model_exposures.append({'model_name': f'{model}', 'exposures': res_exposures.result, 'count_exposures':count_exposures})
+
+    return(model_exposures)
+
+# future improvement: make this list an input from either a seed file or the CLI
+# responses should be of the form 
+# full/path/from/home/directory/to/file/my_read_and_write_files.txt
+# fileToReadPath = input("Provide the full path to your read file: ")
+# fileToWritePath = input("Provide the full path to your write file: ")
+
+# with open(fileToReadPath, 'r') as readFile, open(fileToWritePath, 'w') as writeFile:
+#     # do stuff with your files here!
+#     # e.g. copy line by line from readFile to writeFile
+#     for line in readFile:
+#         writeFile.write(line)
+
+model_list = [
+'mart_behavior_structured_event_code_suggestion'
+]
+
+# generate results
+models_with_dependencies = dbt_model_dependencies_list(model_list)
+models_with_exposures = dbt_model_exposures_list(model_list)
+
+# convert lists to dataframes in order to merge
+models_with_dependencies_df = pd.DataFrame(models_with_dependencies)
+models_with_exposures_df = pd.DataFrame(models_with_exposures)
+
+# merge
+models_with_dependencies_and_exposures = pd.merge(models_with_dependencies_df, models_with_exposures_df, on='model_name')
+
+# create csv
+with open("models_with_dependencies.csv", 'w') as csvfile:
+   models_with_dependencies_and_exposures.to_csv('models_with_dependencies.csv', index=False)
