@@ -37,6 +37,16 @@ final AS (
     order_type_live,
     order_type_grouped_live,
 
+    report_segment,
+    report_geo,
+    report_region,
+    report_area,
+    report_role_level_1,
+    report_role_level_2,
+    report_role_level_3,
+    report_role_level_4,
+    report_role_level_5,
+
     --dates
     snapshot_id,
     snapshot_date,
