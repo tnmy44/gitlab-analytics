@@ -12,6 +12,7 @@ WITH prep_crm_opportunity AS (
 
     SELECT *
     FROM {{ref('prep_crm_user_daily_snapshot')}}
+    WHERE snapshot_date >= '2023-02-01'
 
 ), prep_team_member AS (
 
@@ -126,8 +127,7 @@ WITH prep_crm_opportunity AS (
 
 ), final AS (
 
-    SELECT DISTINCT 
-        sales_dev_hierarchy.*
+    SELECT *
     FROM sales_dev_hierarchy 
 
 )
