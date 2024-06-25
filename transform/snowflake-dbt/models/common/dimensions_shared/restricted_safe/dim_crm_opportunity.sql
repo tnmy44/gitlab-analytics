@@ -60,6 +60,8 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.is_ps_opp,
       prep_crm_opportunity.probability,
       prep_crm_opportunity.professional_services_value,
+      prep_crm_opportunity.edu_services_value,
+      prep_crm_opportunity.investment_services_value,
       prep_crm_opportunity.reason_for_loss,
       prep_crm_opportunity.reason_for_loss_details,
       prep_crm_opportunity.reason_for_loss_staged,
@@ -249,7 +251,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@rakhireddy",
     created_date="2020-11-20",
-    updated_date="2024-06-06"
+    updated_date="2024-06-12"
 ) }}

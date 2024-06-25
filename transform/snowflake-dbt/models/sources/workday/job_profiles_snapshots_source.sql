@@ -2,6 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snapshots', 'job_profiles_snapshots') }}
+  WHERE NOT _fivetran_deleted
 
 ),
 

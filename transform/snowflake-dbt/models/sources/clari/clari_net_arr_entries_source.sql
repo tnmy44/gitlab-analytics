@@ -13,6 +13,8 @@ source AS (
 
 intermediate AS (
   SELECT
+    -- in older payloads, `api_forecast_id` was missing, default to `net_arr`
+    COALESCE(jsontext['api_forecast_id'], 'net_arr') AS forecast_id,
     d.value,
     source.uploaded_at
   FROM
@@ -26,6 +28,7 @@ intermediate AS (
 parsed AS (
   SELECT
 
+    forecast_id,
     -- foreign keys
     REPLACE(value['timePeriodId'], '_', '-')::VARCHAR          AS fiscal_quarter,
     -- add fiscal_quarter to unique key: can be dup timeFrameId across quarters

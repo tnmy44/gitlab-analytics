@@ -5,7 +5,7 @@
 {% set unique_key_column = unique_key %}
 
 {{ config.set('materialized', 'incremental') }}
-{{ config.set('unique_key', unique_key_column) }}
+
 SELECT *
 FROM (
 SELECT *,

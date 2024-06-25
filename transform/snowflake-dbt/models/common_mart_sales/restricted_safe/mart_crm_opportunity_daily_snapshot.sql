@@ -63,6 +63,8 @@ final AS (
     fct_crm_opportunity.fpa_master_bookings_flag,
     fct_crm_opportunity.sales_path,
     fct_crm_opportunity.professional_services_value,
+    fct_crm_opportunity.edu_services_value,
+    fct_crm_opportunity.investment_services_value,
     fct_crm_opportunity.primary_solution_architect,
     fct_crm_opportunity.product_details,
     fct_crm_opportunity.product_category,
@@ -570,7 +572,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@snalamaru",
+    updated_by="@rakhireddy",
     created_date="2022-05-05",
-    updated_date="2024-04-16"
+    updated_date="2024-06-13"
   ) }}

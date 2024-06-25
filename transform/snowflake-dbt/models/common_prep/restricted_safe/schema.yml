@@ -186,6 +186,17 @@ models:
       - name: closed_net_arr_in_snapshot_quarter
         description: >
           Sum of ARR from all closed opportunities (lost and won)
+      - name: professional_services_value
+        description: >
+          Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: >
+          Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: >
+          Amount on an opportunity that is from Investment Services only
+
+
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'
     columns:

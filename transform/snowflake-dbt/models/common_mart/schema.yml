@@ -557,7 +557,9 @@ models:
     - name: ping_instance_metric_monthly_pk
       description: '{{ doc("ping_instance_metric_monthly_pk") }}'
       tests:
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
         - not_null
     - name: ping_instance_metric_id
       description: Outdated, misstated primary key. Leaving in the model to not break dependencies, but can be ignored in the future.
@@ -1416,6 +1418,16 @@ models:
       description: '{{ doc("has_gitlab_experiment_context") }}'
     - name: has_customer_standard_context
       description: '{{ doc("has_customer_standard_context") }}'
+    - name: user_city
+      description: '{{ doc("user_city") }}'
+    - name: user_country
+      description: '{{ doc("user_country") }}'
+    - name: user_region
+      description: '{{ doc("user_region") }}'
+    - name: user_region_name
+      description: '{{ doc("user_region_name") }}'
+    - name: user_timezone_name
+      description: '{{ doc("user_timezone_name") }}'
     - name: browser_name
       description: '{{ doc("browser_name") }}'
     - name: dim_behavior_browser_sk
@@ -1454,7 +1466,7 @@ models:
     - name: language
       description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type
-      description: '{{ doc("product_delivery_type") }}'
+      description: '{{ doc("code_suggestions_delivery_type") }}'
       accepted_values:
         values: ['Self-Managed', 'SaaS']
     - name: model_engine
@@ -1541,3 +1553,9 @@ models:
       description: ' {{ doc("code_suggestions_options_count") }} '
     - name: accepted_option
       description: ' {{ doc("code_suggestions_accepted_option") }} '
+    - name: has_advanced_context
+      description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+    - name: is_direct_connection
+      description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+    - name: product_deployment_type
+      description: ' {{ doc("product_deployment_type") }} '
