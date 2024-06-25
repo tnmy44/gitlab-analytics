@@ -1,8 +1,6 @@
 WITH jp_ss AS (
   SELECT *
-  FROM {{ source('snapshots', 'job_profiles_snapshots') }}
-  WHERE NOT _fivetran_deleted
-    AND job_workday_id IS NOT NULL
+  FROM {{ ref('job_profiles_snapshots_source') }}
 ),
 
 jp_hist AS (
@@ -56,9 +54,9 @@ jp AS (
     job_code,
     job_profile,
     management_level,
-    job_level::FLOAT                                              AS job_level,
+    job_level                                                     AS job_level,
     job_family,
-    is_job_profile_active                                                      AS is_job_profile_active
+    is_job_profile_active                                         AS is_job_profile_active
   FROM jp_stage
 )
 
