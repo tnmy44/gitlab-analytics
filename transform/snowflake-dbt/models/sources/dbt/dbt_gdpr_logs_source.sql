@@ -6,7 +6,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('dbt', 'gdpr_delete_logs') }}
+    FROM {{ source('dbt', 'gdpr_logs') }}
 
     ), flattened AS (
 
