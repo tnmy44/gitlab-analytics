@@ -30,6 +30,7 @@ renamed AS (
     recordtypeid AS record_type_id,
     ultimate_parent_account_id__c AS ultimate_parent_id,
     partner_vat_tax_id__c AS partner_vat_tax_id,
+    contract_reset_opportunity__c   AS contract_reset_opportunity_id,
 
 
     -- key people GL side
