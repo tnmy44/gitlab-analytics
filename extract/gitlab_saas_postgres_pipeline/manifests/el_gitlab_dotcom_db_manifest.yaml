@@ -2201,6 +2201,22 @@ tables:
       FROM project_features
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  project_security_settings:
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: "gitlab_com"
+    export_table: project_security_settings
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , created_at
+      , updated_at
+      , pre_receive_secret_detection_enabled
+      FROM project_security_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_settings:
     deletes_exempt: True
     is_incremental: True
