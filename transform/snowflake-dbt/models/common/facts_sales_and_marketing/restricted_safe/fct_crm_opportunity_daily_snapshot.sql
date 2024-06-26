@@ -532,6 +532,7 @@ final AS (
     prep_crm_opportunity.competitors_circleci_flag,
     prep_crm_opportunity.competitors_bamboo_flag,
     prep_crm_opportunity.competitors_aws_flag,
+    prep_crm_opportunity.report_role_name,
     prep_crm_opportunity.report_role_level_1,
     prep_crm_opportunity.report_role_level_2,
     prep_crm_opportunity.report_role_level_3,

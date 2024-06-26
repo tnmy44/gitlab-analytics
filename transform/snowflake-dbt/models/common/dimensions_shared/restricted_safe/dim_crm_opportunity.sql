@@ -191,6 +191,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.report_geo,
       prep_crm_opportunity.report_region,
       prep_crm_opportunity.report_area,
+      prep_crm_opportunity.report_role_name,
       prep_crm_opportunity.report_role_level_1,
       prep_crm_opportunity.report_role_level_2,
       prep_crm_opportunity.report_role_level_3,

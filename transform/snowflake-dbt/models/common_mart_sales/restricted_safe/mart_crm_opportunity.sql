@@ -198,6 +198,7 @@
       dim_crm_opportunity.report_geo,
       dim_crm_opportunity.report_region,
       dim_crm_opportunity.report_area,
+      dim_crm_opportunity.report_role_name,
       dim_crm_opportunity.report_role_level_1,
       dim_crm_opportunity.report_role_level_2,
       dim_crm_opportunity.report_role_level_3,

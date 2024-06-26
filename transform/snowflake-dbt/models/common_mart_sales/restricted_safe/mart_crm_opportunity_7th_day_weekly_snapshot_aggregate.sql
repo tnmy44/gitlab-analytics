@@ -25,6 +25,7 @@ final AS (
     fct_crm_opportunity.report_geo,
     fct_crm_opportunity.report_region,
     fct_crm_opportunity.report_area,
+    fct_crm_opportunity.report_role_name,
     fct_crm_opportunity.report_role_level_1,
     fct_crm_opportunity.report_role_level_2,
     fct_crm_opportunity.report_role_level_3,

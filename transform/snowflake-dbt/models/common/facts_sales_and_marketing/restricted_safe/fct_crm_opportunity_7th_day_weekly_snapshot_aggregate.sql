@@ -45,6 +45,7 @@ final AS (
     report_geo,
     report_region,
     report_area,
+    report_role_name,
     report_role_level_1,
     report_role_level_2,
     report_role_level_3,
