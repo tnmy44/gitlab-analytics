@@ -23,5 +23,10 @@ final AS (
 
 )
 
-SELECT * 
-FROM final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@lisvinueza",
+    updated_by="@lisvinueza",
+    created_date="2024-05-09",
+    updated_date="2024-05-09"
+) }}

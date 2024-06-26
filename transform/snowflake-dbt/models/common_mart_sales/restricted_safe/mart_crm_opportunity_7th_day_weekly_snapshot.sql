@@ -120,6 +120,10 @@ final AS (
     fct_crm_opportunity.opportunity_owner,
     fct_crm_opportunity.dim_crm_user_id AS owner_id,
     fct_crm_opportunity.resale_partner_name,
+    fct_crm_opportunity.investment_services_value,
+    fct_crm_opportunity.edu_services_value,
+    fct_crm_opportunity.xdr_net_arr_stage_1,
+    fct_crm_opportunity.xdr_net_arr_stage_3,
 
     -- flags
     fct_crm_opportunity.is_won,
@@ -373,6 +377,7 @@ final AS (
     dim_date.current_day_of_fiscal_year,
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
+    dim_date.current_week_of_fiscal_quarter,
     fct_crm_opportunity.landing_quarter_relative_to_arr_created_date,
     fct_crm_opportunity.landing_quarter_relative_to_snapshot_date,
     fct_crm_opportunity.snapshot_to_close_diff,
