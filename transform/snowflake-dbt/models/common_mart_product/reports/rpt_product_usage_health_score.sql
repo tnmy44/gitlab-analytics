@@ -347,5 +347,5 @@ from
     created_by="@snalamaru",
     updated_by="@jonglee1218",
     created_date="2023-12-10",
-    updated_date="2024-06-10"
+    updated_date="2024-06-26"
 ) }}
