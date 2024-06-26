@@ -288,7 +288,7 @@ qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instan
 
 ),
 
-final_product_usage as (
+final as (
 
 select
    *,
@@ -336,22 +336,7 @@ order by
 from
    joined
 
-),
-
-final as (
-    select
-        final_product_usage.* exclude snapshot_month,
-        mart_arr_all.arr_month as snapshot_month,
-        CASE WHEN final_product_usage.weighted_ci_adoption_child_account > 0.33 THEN 'Green'
-                  WHEN final_product_usage.weighted_ci_adoption_child_account >= 0.1 AND final_product_usage.weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
-                  WHEN final_product_usage.weighted_ci_adoption_child_account < 0.1 THEN 'Red'
-                  ELSE 'NO DATA AT ALL' END AS ci_color_child_account
-                          
-    from mart_arr_all
-    LEFT JOIN final_product_usage 
-        ON mart_arr_all.dim_subscription_id_original = final_product_usage.dim_subscription_id_original
-                AND mart_arr_all.arr_month = final_product_usage.snapshot_month
-                AND mart_arr_all.product_delivery_type = final_product_usage.delivery_type)
+)
 
 {{ dbt_audit(
     cte_ref="final",
