@@ -6,7 +6,7 @@ SELECT
     rpt_product_usage_health_score.*,
     mart_arr_all.arr_month,
     mart_arr_all.arr as subscription_arr,
-    mart_arr_all.arr_child_account_base_arr,
+    mart_arr_all.child_account_base_arr,
         CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 88
                   WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 63
                   WHEN weighted_ci_adoption_child_account < 0.1 THEN 25
