@@ -6043,6 +6043,11 @@ roles:
         - xactly
       warehouses:
         - dev_xs
+  - lanzures:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - trizzi:
       member_of:
         - snowflake_analyst
@@ -6263,6 +6268,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - vshushlin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ateclemariam:
       member_of:
         - analyst_sales
@@ -6322,6 +6332,11 @@ roles:
       warehouses:
         - dev_xs
   - seanhall:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ballam:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7475,6 +7490,10 @@ users:
       can_login: true
       member_of:
         - kvasireddy
+  - ballam:
+      can_login: true
+      member_of:
+        - ballam
   - zapier:
       can_login: true
       member_of:
@@ -7495,10 +7514,18 @@ users:
       can_login: true
       member_of:
         - aevans
+  - vshushlin:
+      can_login: true
+      member_of:
+        - vshushlin
   - tmccaslin:
       can_login: true
       member_of:
         - tmccaslin
+  - lanzures:
+      can_login: true
+      member_of:
+        - lanzures
   - jdleon:
       can_login: true
       member_of:
