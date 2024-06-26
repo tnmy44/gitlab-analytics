@@ -7,8 +7,7 @@ SELECT
         CASE WHEN ci_pipeline_utilization > 0.33 THEN 88
                   WHEN ci_pipeline_utilization >= 0.1 AND ci_pipeline_utilization <=0.33 THEN 63
                   WHEN ci_pipeline_utilization < 0.1 THEN 25
-                  ELSE NULL END AS ci_pipeline_utilization_score,
-  DIV0NULL(yearlies_actual.actuals_raw,yearlies_target.targets_raw) AS target_attainment
+                  ELSE NULL END AS ci_pipeline_utilization_score
 FROM
   {{ ref('mart_arr_with_zero_dollar_charges') }} AS mart_arr_all
   LEFT JOIN {{ ref('rpt_product_usage_health_score') }} AS rpt_product_usage_health_score
