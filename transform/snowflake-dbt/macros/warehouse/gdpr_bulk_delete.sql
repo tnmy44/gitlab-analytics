@@ -24,9 +24,6 @@
             WHERE  SHA2(TRIM(LOWER(email_address))) = '{{data_row[0]}}'
         {%- endcall -%}
 
-
-
-
       {% endfor %}
     {%- endif -%}
 
