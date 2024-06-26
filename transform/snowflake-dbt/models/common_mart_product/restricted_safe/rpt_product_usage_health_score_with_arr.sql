@@ -15,7 +15,7 @@ FROM
     ON rpt_product_usage_health_score.dim_subscription_id_original = mart_arr_all.dim_subscription_id_original
     AND rpt_product_usage_health_score.snapshot_month = mart_arr_all.arr_month
     AND rpt_product_usage_health_score.delivery_type = mart_arr_all.product_delivery_type
-),
+)
 
 SELECT 
   *
