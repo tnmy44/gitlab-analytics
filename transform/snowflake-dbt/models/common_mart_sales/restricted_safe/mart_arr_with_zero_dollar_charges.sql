@@ -275,6 +275,26 @@
       END                                        AS arr_band_calc
     FROM parent_arr
 
+), child_arr_base_products as (
+
+    SELECT
+      arr_month,
+      dim_crm_account_id,
+      SUM(arr)                                   AS child_account_base_arr
+    FROM joined
+    WHERE  product_category = 'Base Products' 
+    AND dim_crm_account_id <> '0016100001TBkZNAA1'
+    {{ dbt_utils.group_by(n=2) }}
+
+), top_100_child_arr_calc AS (
+
+    SELECT
+      arr_month,
+      dim_crm_account_id,
+      ROW_NUMBER() OVER (PARTITION BY arr_month ORDER BY child_account_base_arr desc) AS child_arr_rank,
+      IFF(child_arr_rank <= 100, true, false) AS is_top_100_child_account_by_arr_month
+    FROM child_arr_base_products
+
 ), final_table AS (
 
     SELECT
@@ -384,18 +404,23 @@
       cohort_diffs.months_since_subscription_cohort_start,
       cohort_diffs.quarters_since_subscription_cohort_start,
       parent_arr_band_calc.arr_band_calc
+      top_100_child_arr_calc.child_arr_rank,
+      top_100_child_arr_calc.is_top_100_child_account_by_arr_month
 
     FROM cohort_diffs
     LEFT JOIN parent_arr_band_calc
       ON cohort_diffs.arr_month = parent_arr_band_calc.arr_month
       AND cohort_diffs.dim_parent_crm_account_id = parent_arr_band_calc.dim_parent_crm_account_id
-
+    LEFT JOIN top_100_child_arr_calc
+      ON cohort_diffs.arr_month = top_100_child_arr_calc.arr_month
+      AND cohort_diffs.dim_crm_account_id = top_100_child_arr_calc.dim_crm_account_id
 )
 
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@snalamaru",
-    updated_by="@rakhireddy",
+    updated_by="@jonglee1218",
     created_date="2023-12-01",
-    updated_date="2024-06-01"
+    updated_date="2024-06-25"
 ) }}
+
