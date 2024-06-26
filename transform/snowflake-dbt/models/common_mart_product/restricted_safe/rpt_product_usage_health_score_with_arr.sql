@@ -4,6 +4,7 @@ WITH final as (
 
 SELECT
     rpt_product_usage_health_score.*,
+    mart_arr_all.arr_month,
     mart_arr_all.arr as subscription_arr,
     mart_arr_all.arr_child_account_base_arr,
         CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 88
