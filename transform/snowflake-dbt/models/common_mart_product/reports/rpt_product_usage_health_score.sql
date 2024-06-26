@@ -14,7 +14,7 @@
 , joined AS (
 
     SELECT
-        mart_arr_all.arr_month as snapshot_month
+        mart_arr_all.arr_month as snapshot_month,
         paid_user_metrics.primary_key,
         dim_crm_account.crm_account_name,
         paid_user_metrics.dim_crm_account_id,
