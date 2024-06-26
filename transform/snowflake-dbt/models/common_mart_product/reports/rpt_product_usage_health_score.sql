@@ -100,7 +100,7 @@
         paid_user_metrics.ci_runners_all_time_event,
         paid_user_metrics.ci_builds_28_days_event,
         (ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollars,
-        ci_utilization_dollars / child_account_base_arr AS weighted_ci_adoption_child_account,
+        div0(ci_utilization_dollars, mart_arr_all.child_account_base_arr) AS weighted_ci_adoption_child_account,
         CASE WHEN ci_pipeline_utilization IS NULL THEN NULL
             WHEN ci_pipeline_utilization < .25 THEN 25
             WHEN ci_pipeline_utilization >= .25 and ci_pipeline_utilization < .50 THEN 63
