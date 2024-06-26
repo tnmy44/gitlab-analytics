@@ -6045,6 +6045,7 @@ roles:
         - dev_xs
   - lanzures:
       member_of:
+        - snowflake_account_usage
         - snowflake_analyst
       warehouses:
         - dev_xs
@@ -6338,6 +6339,7 @@ roles:
         - dev_xs
   - ballam:
       member_of:
+        - snowflake_account_usage
         - snowflake_analyst
       warehouses:
         - dev_xs
