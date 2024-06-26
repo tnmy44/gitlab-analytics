@@ -104,10 +104,6 @@
                   WHEN ci_pipeline_utilization >= 0.1 AND ci_pipeline_utilization <=0.33 THEN 63
                   WHEN ci_pipeline_utilization < 0.1 THEN 25
                   ELSE NULL END AS ci_pipeline_utilization_score,
-        CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 'Green'
-                  WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
-                  WHEN weighted_ci_adoption_child_account < 0.1 THEN 'Red'
-                  ELSE 'NO DATA AT ALL' END AS ci_color_child_account,
         CASE WHEN ci_pipeline_utilization_score IS NULL THEN NULL
             WHEN ci_pipeline_utilization_score = 25 THEN 'Red'
             WHEN ci_pipeline_utilization_score = 63 THEN 'Yellow'
@@ -282,7 +278,7 @@
 FROM paid_user_metrics
 LEFT JOIN dim_crm_account
     ON paid_user_metrics.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-RIGHT JOIN mart_arr_all
+LEFT JOIN mart_arr_all
     ON paid_user_metrics.dim_subscription_id_original = mart_arr_all.dim_subscription_id_original
     AND paid_user_metrics.snapshot_month = mart_arr_all.arr_month
     AND paid_user_metrics.delivery_type = mart_arr_all.product_delivery_type
@@ -292,7 +288,7 @@ qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instan
 
 ),
 
-final as (
+final_product_usage as (
 
 select
    *,
@@ -340,7 +336,21 @@ order by
 from
    joined
 
-)
+),
+
+final as (
+    select
+        final_product_usage.*,
+        CASE WHEN final_product_usage.weighted_ci_adoption_child_account > 0.33 THEN 'Green'
+                  WHEN final_product_usage.weighted_ci_adoption_child_account >= 0.1 AND final_product_usage.weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
+                  WHEN final_product_usage.weighted_ci_adoption_child_account < 0.1 THEN 'Red'
+                  ELSE 'NO DATA AT ALL' END AS ci_color_child_account
+                          
+    from mart_arr_all
+    LEFT JOIN final_product_usage 
+        ON mart_arr_all.dim_subscription_id_original = final_product_usage.dim_subscription_id_original
+                AND mart_arr_all.arr_month = final_product_usage.snapshot_month
+                AND mart_arr_all.product_delivery_type = final_product_usage.delivery_type)
 
 {{ dbt_audit(
     cte_ref="final",
