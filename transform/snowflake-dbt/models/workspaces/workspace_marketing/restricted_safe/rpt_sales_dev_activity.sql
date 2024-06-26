@@ -492,12 +492,12 @@ LEFT JOIN sales_dev_hierarchy
     opps_missing_link.is_net_arr_pipeline_created,
     opps_missing_link.is_eligible_age_analysis,
     opps_missing_link.is_eligible_open_pipeline,
-    opp_to_lead.bdr_next_steps,
-    opp_to_lead.bdr_account_research,
-    opp_to_lead.bdr_account_strategy,
-    opp_to_lead.account_bdr_assigned_user_role,
-    opp_to_lead.bdr_recycle_date,
-    opp_to_lead.actively_working_start_date,
+    opps_missing_link.bdr_next_steps,
+    opps_missing_link.bdr_account_research,
+    opps_missing_link.bdr_account_strategy,
+    opps_missing_link.account_bdr_assigned_user_role,
+    opps_missing_link.bdr_recycle_date,
+    opps_missing_link.actively_working_start_date,
     sales_dev_hierarchy.*
   FROM opps_missing_link
   LEFT JOIN sales_dev_hierarchy 
@@ -510,5 +510,5 @@ LEFT JOIN sales_dev_hierarchy
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2024-06-25",
+    updated_date="2024-06-26",
   ) }}
