@@ -212,6 +212,7 @@ WITH dim_billing_account AS (
     SELECT
       arr_month,
       dim_crm_account_id,
+      child_account_base_arr,
       ROW_NUMBER() OVER (PARTITION BY arr_month ORDER BY child_account_base_arr desc) AS child_arr_rank,
       IFF(child_arr_rank <= 100, true, false) AS is_top_100_child_account_by_arr_month
     FROM child_arr_base_products
@@ -221,6 +222,7 @@ WITH dim_billing_account AS (
     SELECT
       cohort_diffs.*,
       arr_band_calc,
+      child_account_base_arr,
       child_arr_rank,
       is_top_100_child_account_by_arr_month
     FROM cohort_diffs
