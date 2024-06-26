@@ -707,6 +707,24 @@ models:
           description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
         - name: bizible_most_recent_marketing_channel_path
           description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
+        - name: is_renewal
+          description: Boolean flag from the Opportunity in SFDC - indicates if it is a renewal. 
+        - name: is_eligible_open_pipeline
+          description: Boolean flag from the Opportunity in SFDC - indicates if it is eligible to be counted as pipeline. 
+        - name: pipeline_created_date
+          description: Date from the Opportunity in SFDC - indicates the date that pipeline was added to the opp.
+        - name: opportunity_category
+          description: Text field from the Opportunity in SFDC - indicates the current category of the opp.
+        - name: stage_name
+          description: Text field from the Opportunity in SFDC - indicates the current stage of the opp. 
+        - name: is_jihu_account
+          description: Boolean flag from the Account in SFDC - indicates if it is a JIHU account.
+        - name: is_edu_oss
+          description: Boolean flag from the Opportunity in SFDC - indicates if it is an edu/oss opp.
+        - name: stage_1_discovery_date
+          description: Date field from the Opportunity in SFDC - indicates the date that the opp reached stage 1.
+        - name: crm_account_type
+          description: Text field from the Account in SFDC - indicates the Type of the account.  
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
