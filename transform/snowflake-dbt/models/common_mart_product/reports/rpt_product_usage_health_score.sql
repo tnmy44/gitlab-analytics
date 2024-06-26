@@ -340,7 +340,8 @@ from
 
 final as (
     select
-        final_product_usage.*,
+        final_product_usage.* exclude snapshot_month,
+        mart_arr_all.arr_month as snapshot_month,
         CASE WHEN final_product_usage.weighted_ci_adoption_child_account > 0.33 THEN 'Green'
                   WHEN final_product_usage.weighted_ci_adoption_child_account >= 0.1 AND final_product_usage.weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
                   WHEN final_product_usage.weighted_ci_adoption_child_account < 0.1 THEN 'Red'
