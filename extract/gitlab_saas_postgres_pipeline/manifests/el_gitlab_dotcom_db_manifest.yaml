@@ -1509,19 +1509,6 @@ tables:
       , created_at
       , updated_at
       , base_access_level
-      , NULL AS read_code
-      , NULL AS read_vulnerability
-      , NULL AS admin_vulnerability
-      , NULL AS read_dependency
-      , NULL AS admin_merge_request
-      , NULL AS admin_group_member
-      , NULL AS manage_project_access_tokens
-      , NULL AS archive_project
-      , NULL AS manage_group_access_tokens
-      , NULL AS remove_project
-      , NULL AS admin_terraform_state
-      , NULL AS admin_cicd_variables
-      , NULL AS remove_group
       , occupies_seat
       , permissions
       FROM member_roles
@@ -2212,6 +2199,22 @@ tables:
       , environments_access_level
       , releases_access_level
       FROM project_features
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  project_security_settings:
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: "gitlab_com"
+    export_table: project_security_settings
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , created_at
+      , updated_at
+      , pre_receive_secret_detection_enabled
+      FROM project_security_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   project_settings:
