@@ -405,7 +405,7 @@
       cohort_diffs.months_since_subscription_cohort_start,
       cohort_diffs.quarters_since_subscription_cohort_start,
       parent_arr_band_calc.arr_band_calc,
-      top_100_child_arr_calc.child_account_base_arr
+      top_100_child_arr_calc.child_account_base_arr,
       top_100_child_arr_calc.child_arr_rank,
       top_100_child_arr_calc.is_top_100_child_account_by_arr_month
 
