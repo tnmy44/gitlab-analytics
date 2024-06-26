@@ -99,12 +99,11 @@
         paid_user_metrics.ci_builds_all_time_event,
         paid_user_metrics.ci_runners_all_time_event,
         paid_user_metrics.ci_builds_28_days_event,
-        (ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollars,
-        div0(ci_utilization_dollars, mart_arr_all.child_account_base_arr) AS weighted_ci_adoption_child_account,
-        CASE WHEN ci_pipeline_utilization IS NULL THEN NULL
-            WHEN ci_pipeline_utilization < .25 THEN 25
-            WHEN ci_pipeline_utilization >= .25 and ci_pipeline_utilization < .50 THEN 63
-            WHEN ci_pipeline_utilization >= .50 THEN 88 end AS ci_pipeline_utilization_score,
+        div0((ci_pipeline_utilization) * (mart_arr_all.arr), mart_arr_all.child_account_base_arr) AS weighted_ci_adoption_child_account,
+        CASE WHEN ci_pipeline_utilization > 0.33 THEN 88
+                  WHEN ci_pipeline_utilization >= 0.1 AND ci_pipeline_utilization <=0.33 THEN 63
+                  WHEN ci_pipeline_utilization < 0.1 THEN 25
+                  ELSE NULL END AS ci_pipeline_utilization_score,
         CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 'Green'
                   WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
                   WHEN weighted_ci_adoption_child_account < 0.1 THEN 'Red'
