@@ -283,7 +283,7 @@
 FROM paid_user_metrics
 LEFT JOIN dim_crm_account
     ON paid_user_metrics.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-LEFT JOIN mart_arr_all
+RIGHT JOIN mart_arr_all
     ON paid_user_metrics.dim_subscription_id_original = mart_arr_all.dim_subscription_id_original
     AND paid_user_metrics.snapshot_month = mart_arr_all.arr_month
     AND paid_user_metrics.delivery_type = mart_arr_all.product_delivery_type
