@@ -16,7 +16,7 @@
         {{ gdpr_delete(data_row[0], run_queries='True')}}
         {% endif %}
         {% if data_row[1] == 'gitlab' %}
-        {{ gdpr_gitlab_delete(data_row[0], run_queries='True')}}
+        {{ gdpr_delete_gitlab_dotcom(data_row[0], run_queries='True')}}
         {% endif %}
 
         {%- call statement('remove_data', fetch_result=True) %}
