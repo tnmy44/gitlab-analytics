@@ -113,6 +113,7 @@ SELECT
     mart_arr_all.child_account_base_arr,
     mart_arr_all.child_arr_rank,
     mart_arr_all.is_top_100_child_account_by_arr_month,
+    mart_arr_all.is_top_100_child_account_fy25_start,
 
 -- product_usage_primary_instance columns
     product_usage_primary_instance.snapshot_month,
