@@ -258,6 +258,7 @@ SELECT
     product_usage_primary_instance.cd_color_previous_3_month,
     product_usage_primary_instance.security_color_previous_month,
     product_usage_primary_instance.security_color_previous_3_month,
+    product_usage_primary_instance.is_primary_instance_subscription
 
 --Ci Score Roll Up
     (product_usage_primary_instance.ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollar,
