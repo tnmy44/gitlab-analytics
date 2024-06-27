@@ -15,7 +15,7 @@ reseller AS (
 /* Assign reseller as channel */
 
   SELECT
-    DATE(DATE_TRUNC('month', driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
+    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
     driveload_invoice_aging_detail.account_balance_impact                                AS balance,
     CASE
       WHEN dim_billing_account.ssp_channel = 'Reseller'
@@ -37,7 +37,7 @@ non_reseller AS (
 /* Assign non-reseller as channel */
 
   SELECT
-    DATE(DATE_TRUNC('month', driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
+    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
     driveload_invoice_aging_detail.account_balance_impact                                AS balance,
     CASE
       WHEN dim_billing_account.ssp_channel = 'Non-Reseller'
@@ -58,7 +58,7 @@ alliance AS (
 /* Assign alliance as channel */
 
   SELECT
-    DATE(DATE_TRUNC('month', driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
+    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
     driveload_invoice_aging_detail.account_balance_impact                                AS balance,
     CASE
       WHEN dim_billing_account.ssp_channel = 'Reseller'
@@ -109,7 +109,7 @@ total AS (
 /* Determine the total balances for all open invoices monthly */
 
   SELECT
-    DATE(DATE_TRUNC('month', driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
+    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
     SUM(account_balance_impact)                                                          AS total_all_balance,
     COUNT(account_balance_impact)                                                        AS count_all_open_invoices
   FROM driveload_invoice_aging_detail
