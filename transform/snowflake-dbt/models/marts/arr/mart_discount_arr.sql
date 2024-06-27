@@ -146,7 +146,7 @@ WITH dim_date AS (
     LEFT JOIN dim_crm_opportunity 
       ON dim_subscription.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     WHERE dim_crm_account_subscription.is_jihu_account != 'TRUE'
-    {{ dbt_utils.group_by(n=40) }}
+    {{ dbt_utils.group_by(n=46) }}
     ORDER BY 3 DESC
 
 ), final AS (
