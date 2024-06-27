@@ -99,8 +99,8 @@
         paid_user_metrics.ci_builds_all_time_event,
         paid_user_metrics.ci_runners_all_time_event,
         paid_user_metrics.ci_builds_28_days_event,
-        div0((ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollar,
-        sum(ci_utilization_dollar) OVER (PARTITION BY mart_arr_all.arr_month,mart_arr_all.dim_crm_account_id) as total_account_ci_utilization_dollar,
+        (ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollar,
+        sum(ci_utilization_dollar) OVER (PARTITION BY mart_arr_all.arr_month, mart_arr_all.dim_crm_account_id) as total_account_ci_utilization_dollar,
         div0(total_account_ci_utilization_dollar,child_account_base_arr) as weighted_ci_adoption_child_account,
         CASE WHEN ci_pipeline_utilization > 0.33 THEN 88
                   WHEN ci_pipeline_utilization >= 0.1 AND ci_pipeline_utilization <=0.33 THEN 63
@@ -293,7 +293,7 @@ qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instan
 final as (
 
 select
-   * exclude ci_utilization_dollar, ci_utilization_dollar,
+   * EXCLUDE(ci_utilization_dollar, total_account_ci_utilization_dollar),
    CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type, instance_type, is_oss_program ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1
               and instance_type = 'Production' and is_oss_program = false
              THEN True 
