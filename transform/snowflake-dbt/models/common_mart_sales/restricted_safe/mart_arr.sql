@@ -217,6 +217,15 @@ WITH dim_billing_account AS (
       IFF(child_arr_rank <= 100, true, false) AS is_top_100_child_account_by_arr_month
     FROM child_arr_base_products
 
+), top_100_child_fy25_snapshot AS (
+
+    SELECT
+      dim_crm_account_id,
+      true as is_top_100_child_account_fy25_start
+    FROM top_100_child_arr_calc
+    WHERE is_top_100_child_account_by_arr_month = true 
+    AND arr_month = '2024-01-01'
+
 ), final_table AS (
 
     SELECT
@@ -224,7 +233,9 @@ WITH dim_billing_account AS (
       arr_band_calc,
       child_account_base_arr,
       child_arr_rank,
-      is_top_100_child_account_by_arr_month
+      is_top_100_child_account_by_arr_month,
+      IFF(is_top_100_child_account_fy25_start = true, true, false) as is_top_100_child_account_fy25_start
+
     FROM cohort_diffs
     LEFT JOIN parent_arr_band_calc
       ON cohort_diffs.arr_month = parent_arr_band_calc.arr_month
@@ -232,6 +243,8 @@ WITH dim_billing_account AS (
     LEFT JOIN top_100_child_arr_calc
       ON cohort_diffs.arr_month = top_100_child_arr_calc.arr_month
       AND cohort_diffs.dim_crm_account_id = top_100_child_arr_calc.dim_crm_account_id
+    LEFT JOIN top_100_child_fy25_snapshot
+      AND cohort_diffs.dim_crm_account_id = top_100_child_fy25_snapshot.dim_crm_account_id
 )
 
 {{ dbt_audit(
