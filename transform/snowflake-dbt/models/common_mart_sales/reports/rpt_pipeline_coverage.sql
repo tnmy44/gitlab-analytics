@@ -16,8 +16,7 @@ spine AS (
 total_targets AS (
 
   SELECT
-    targets.fiscal_quarter_name,
-    targets.fiscal_year,
+    targets.fiscal_quarter_name_fy,
     targets.dim_crm_user_hierarchy_sk,
     targets.order_type_name,
     targets.order_type_grouped,
@@ -35,7 +34,6 @@ daily_actuals AS (
   SELECT
     actuals.snapshot_fiscal_quarter_name,
     actuals.snapshot_date,
-    actuals.snapshot_id,
     actuals.dim_crm_current_account_set_hierarchy_sk,
     actuals.sales_qualified_source_name,
     actuals.sales_qualified_source_grouped,
@@ -85,7 +83,7 @@ combined_data AS (
     sales_qualified_source_grouped,
     order_type_name,
     order_type_grouped,
-    fiscal_quarter_name
+    fiscal_quarter_name_fy
   FROM total_targets
 
   UNION
@@ -165,55 +163,55 @@ final AS (
     dim_date.current_first_day_of_week,
     dim_date.current_week_of_fiscal_quarter_normalised,
     dim_date.current_week_of_fiscal_quarter,
-    dim_date.snapshot_day,
-    dim_date.snapshot_date,
-    dim_date.snapshot_month,
-    dim_date.snapshot_fiscal_year,
-    dim_date.snapshot_fiscal_quarter_name,
-    dim_date.snapshot_fiscal_quarter_date,
-    dim_date.snapshot_day_of_fiscal_quarter_normalised,
-    dim_date.snapshot_day_of_fiscal_year_normalised,
-    dim_date.snapshot_day_name, 
-    dim_date.snapshot_day_of_week,
-    dim_date.snapshot_first_day_of_week,
-    dim_date.snapshot_week_of_year,
-    dim_date.snapshot_day_of_month,
-    dim_date.snapshot_day_of_quarter,
-    dim_date.snapshot_day_of_year,
-    dim_date.snapshot_fiscal_quarter,
-    dim_date.snapshot_day_of_fiscal_quarter,
-    dim_date.snapshot_day_of_fiscal_year,
-    dim_date.snapshot_month_name,
-    dim_date.snapshot_first_day_of_month,
-    dim_date.snapshot_last_day_of_month,
-    dim_date.snapshot_first_day_of_year,
-    dim_date.snapshot_last_day_of_year,
-    dim_date.snapshot_first_day_of_quarter,
-    dim_date.snapshot_last_day_of_quarter,
-    dim_date.snapshot_first_day_of_fiscal_quarter,
-    dim_date.snapshot_last_day_of_fiscal_quarter,
-    dim_date.snapshot_first_day_of_fiscal_year,
-    dim_date.snapshot_last_day_of_fiscal_year,
-    dim_date.snapshot_week_of_fiscal_year,
-    dim_date.snapshot_month_of_fiscal_year,
-    dim_date.snapshot_last_day_of_week,
-    dim_date.snapshot_quarter_name,
-    dim_date.snapshot_fiscal_quarter_name_fy,
-    dim_date.snapshot_fiscal_quarter_number_absolute,
-    dim_date.snapshot_fiscal_month_name,
-    dim_date.snapshot_fiscal_month_name_fy,
-    dim_date.snapshot_holiday_desc,
-    dim_date.snapshot_is_holiday,
-    dim_date.snapshot_last_month_of_fiscal_quarter,
-    dim_date.snapshot_is_first_day_of_last_month_of_fiscal_quarter,
-    dim_date.snapshot_last_month_of_fiscal_year,
-    dim_date.snapshot_is_first_day_of_last_month_of_fiscal_year,
-    dim_date.snapshot_days_in_month_count,
-    dim_date.snapshot_week_of_month_normalised,
-    dim_date.snapshot_week_of_fiscal_quarter_normalised,
-    dim_date.snapshot_is_first_day_of_fiscal_quarter_week,
-    dim_date.snapshot_days_until_last_day_of_month,
-    dim_date.snapshot_week_of_fiscal_quarter,
+    dim_date.date_day                                                       AS snapshot_day,
+    dim_date.date_actual                                                    AS snapshot_date,
+    dim_date.day_name                                                       AS snapshot_day_name,
+    dim_date.day_of_week                                                    AS snapshot_day_of_week,
+    dim_date.first_day_of_week                                              AS snapshot_first_day_of_week,
+    dim_date.week_of_year                                                   AS snapshot_week_of_year,
+    dim_date.day_of_month                                                   AS snapshot_day_of_month,
+    dim_date.day_of_quarter                                                 AS snapshot_day_of_quarter,
+    dim_date.day_of_year                                                    AS snapshot_day_of_year,
+    dim_date.fiscal_quarter                                                 AS snapshot_fiscal_quarter,
+    dim_date.fiscal_year                                                    AS snapshot_fiscal_year,
+    dim_date.day_of_fiscal_quarter                                          AS snapshot_day_of_fiscal_quarter,
+    dim_date.day_of_fiscal_year                                             AS snapshot_day_of_fiscal_year,
+    dim_date.first_day_of_month                                             AS snapshot_month,
+    dim_date.month_name                                                     AS snapshot_month_name,
+    dim_date.first_day_of_month                                             AS snapshot_first_day_of_month,
+    dim_date.last_day_of_month                                              AS snapshot_last_day_of_month,
+    dim_date.first_day_of_year                                              AS snapshot_first_day_of_year,
+    dim_date.last_day_of_year                                               AS snapshot_last_day_of_year,
+    dim_date.first_day_of_quarter                                           AS snapshot_first_day_of_quarter,
+    dim_date.last_day_of_quarter                                            AS snapshot_last_day_of_quarter,
+    dim_date.first_day_of_fiscal_quarter                                    AS snapshot_first_day_of_fiscal_quarter,
+    dim_date.last_day_of_fiscal_quarter                                     AS snapshot_last_day_of_fiscal_quarter,
+    dim_date.first_day_of_fiscal_year                                       AS snapshot_first_day_of_fiscal_year,
+    dim_date.last_day_of_fiscal_year                                        AS snapshot_last_day_of_fiscal_year,
+    dim_date.week_of_fiscal_year                                            AS snapshot_week_of_fiscal_year,
+    dim_date.month_of_fiscal_year                                           AS snapshot_month_of_fiscal_year,
+    dim_date.last_day_of_week                                               AS snapshot_last_day_of_week,
+    dim_date.quarter_name                                                   AS snapshot_quarter_name,
+    dim_date.fiscal_quarter_name_fy                                         AS snapshot_fiscal_quarter_name,
+    dim_date.fiscal_quarter_name_fy                                         AS snapshot_fiscal_quarter_name_fy,
+    dim_date.first_day_of_fiscal_quarter                                    AS snapshot_fiscal_quarter_date,
+    dim_date.fiscal_quarter_number_absolute                                 AS snapshot_fiscal_quarter_number_absolute,
+    dim_date.fiscal_month_name                                              AS snapshot_fiscal_month_name,
+    dim_date.fiscal_month_name_fy                                           AS snapshot_fiscal_month_name_fy,
+    dim_date.holiday_desc                                                   AS snapshot_holiday_desc,
+    dim_date.is_holiday                                                     AS snapshot_is_holiday,
+    dim_date.last_month_of_fiscal_quarter                                   AS snapshot_last_month_of_fiscal_quarter,
+    dim_date.is_first_day_of_last_month_of_fiscal_quarter                   AS snapshot_is_first_day_of_last_month_of_fiscal_quarter,
+    dim_date.last_month_of_fiscal_year                                      AS snapshot_last_month_of_fiscal_year,
+    dim_date.is_first_day_of_last_month_of_fiscal_year                      AS snapshot_is_first_day_of_last_month_of_fiscal_year,
+    dim_date.days_in_month_count                                            AS snapshot_days_in_month_count,
+    dim_date.week_of_month_normalised                                       AS snapshot_week_of_month_normalised,
+    dim_date.week_of_fiscal_quarter_normalised                              AS snapshot_week_of_fiscal_quarter_normalised,
+    dim_date.is_first_day_of_fiscal_quarter_week                            AS snapshot_is_first_day_of_fiscal_quarter_week,
+    dim_date.days_until_last_day_of_month                                   AS snapshot_days_until_last_day_of_month,
+    dim_date.week_of_fiscal_quarter                                         AS snapshot_week_of_fiscal_quarter,
+    dim_date.day_of_fiscal_quarter_normalised                               AS snapshot_day_of_fiscal_quarter_normalised,
+    dim_date.day_of_fiscal_year_normalised                                  AS snapshot_day_of_fiscal_year_normalised,
     'targets_actuals'                                                       AS source,
     SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
     SUM(total_targets.net_arr_total_quarter_target)                         AS net_arr_total_quarter_target,
@@ -224,14 +222,14 @@ final AS (
     SUM(quarterly_actuals.total_booked_net_arr)                             AS total_booked_net_arr
   FROM base
   LEFT JOIN total_targets
-    ON base.snapshot_fiscal_quarter_name = total_targets.fiscal_quarter_name
+    ON base.snapshot_fiscal_quarter_name = total_targets.fiscal_quarter_name_fy
       AND base.sales_qualified_source_name = total_targets.sales_qualified_source_name
       AND base.sales_qualified_source_grouped = total_targets.sales_qualified_source_grouped
       AND base.dim_crm_current_account_set_hierarchy_sk = total_targets.dim_crm_user_hierarchy_sk
       AND base.order_type = total_targets.order_type_name
       AND base.order_type_grouped = total_targets.order_type_grouped
   LEFT JOIN daily_actuals
-    ON base.date_id = daily_actuals.snapshot_id
+    ON base.date_actual = daily_actuals.snapshot_date
       AND base.sales_qualified_source_name = daily_actuals.sales_qualified_source_name
       AND base.sales_qualified_source_grouped = daily_actuals.sales_qualified_source_grouped
       AND base.dim_crm_current_account_set_hierarchy_sk = daily_actuals.dim_crm_current_account_set_hierarchy_sk
