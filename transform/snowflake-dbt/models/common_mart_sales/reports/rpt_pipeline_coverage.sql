@@ -1,16 +1,11 @@
-WITH targets AS (
+{{ simple_cte([
+    ('targets', 'mart_sales_funnel_target_daily'),
+    ('actuals', 'mart_crm_opportunity_7th_day_weekly_snapshot'),
+    ('dim_date', 'dim_date'),
+    ('hierarchy', 'dim_crm_user_hierarchy')
+    ])
 
-  SELECT *
-  FROM {{ ref('mart_sales_funnel_target_daily') }}
-
-),
-
-actuals AS (
-
-  SELECT *
-  FROM {{ ref('mart_crm_opportunity_7th_day_weekly_snapshot') }}
-
-),
+}},
 
 spine AS (
 
@@ -124,7 +119,6 @@ base AS (
     combined_data.sales_qualified_source_grouped,
     combined_data.order_type,
     combined_data.order_type_grouped,
-    spine.date_id,
     spine.day_7 AS date_actual,
     combined_data.snapshot_fiscal_quarter_name
   FROM combined_data
@@ -144,81 +138,82 @@ final AS (
     base.order_type_grouped,
 
     -- hierarchy fields
-    actuals.crm_current_account_set_sales_segment,
-    actuals.crm_current_account_set_geo,
-    actuals.crm_current_account_set_region,
-    actuals.crm_current_account_set_area,
-    actuals.crm_current_account_set_business_unit,
-    actuals.crm_current_account_set_role_name,
-    actuals.crm_current_account_set_role_level_1,
-    actuals.crm_current_account_set_role_level_2,
-    actuals.crm_current_account_set_role_level_3,
-    actuals.crm_current_account_set_role_level_4,
-    actuals.crm_current_account_set_role_level_5,
+
+    hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,
+    hierarchy.crm_user_geo                                     AS crm_current_account_set_geo,
+    hierarchy.crm_user_region                                  AS crm_current_account_set_region,
+    hierarchy.crm_user_area                                    AS crm_current_account_set_area,
+    hierarchy.crm_user_business_unit                           AS crm_current_account_set_business_unit,
+    hierarchy.crm_user_role_name                               AS crm_current_account_set_role_name,
+    hierarchy.crm_user_role_level_1                            AS crm_current_account_set_role_level_1,
+    hierarchy.crm_user_role_level_2                            AS crm_current_account_set_role_level_2,
+    hierarchy.crm_user_role_level_3                            AS crm_current_account_set_role_level_3,
+    hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
+    hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
 
     --Dates
-    actuals.current_day_name,
-    actuals.current_date_actual,
-    actuals.current_fiscal_year,
-    actuals.current_first_day_of_fiscal_year,
-    actuals.current_fiscal_quarter_name_fy,
-    actuals.current_first_day_of_month,
-    actuals.current_first_day_of_fiscal_quarter,
-    actuals.current_day_of_month,
-    actuals.current_day_of_fiscal_quarter,
-    actuals.current_day_of_fiscal_year,
-    actuals.current_first_day_of_week,
-    actuals.current_week_of_fiscal_quarter_normalised,
-    actuals.current_week_of_fiscal_quarter,
-    actuals.snapshot_day,
-    actuals.snapshot_date,
-    actuals.snapshot_month,
-    actuals.snapshot_fiscal_year,
-    actuals.snapshot_fiscal_quarter_name,
-    actuals.snapshot_fiscal_quarter_date,
-    actuals.snapshot_day_of_fiscal_quarter_normalised,
-    actuals.snapshot_day_of_fiscal_year_normalised,
-    actuals.snapshot_day_name, 
-    actuals.snapshot_day_of_week,
-    actuals.snapshot_first_day_of_week,
-    actuals.snapshot_week_of_year,
-    actuals.snapshot_day_of_month,
-    actuals.snapshot_day_of_quarter,
-    actuals.snapshot_day_of_year,
-    actuals.snapshot_fiscal_quarter,
-    actuals.snapshot_day_of_fiscal_quarter,
-    actuals.snapshot_day_of_fiscal_year,
-    actuals.snapshot_month_name,
-    actuals.snapshot_first_day_of_month,
-    actuals.snapshot_last_day_of_month,
-    actuals.snapshot_first_day_of_year,
-    actuals.snapshot_last_day_of_year,
-    actuals.snapshot_first_day_of_quarter,
-    actuals.snapshot_last_day_of_quarter,
-    actuals.snapshot_first_day_of_fiscal_quarter,
-    actuals.snapshot_last_day_of_fiscal_quarter,
-    actuals.snapshot_first_day_of_fiscal_year,
-    actuals.snapshot_last_day_of_fiscal_year,
-    actuals.snapshot_week_of_fiscal_year,
-    actuals.snapshot_month_of_fiscal_year,
-    actuals.snapshot_last_day_of_week,
-    actuals.snapshot_quarter_name,
-    actuals.snapshot_fiscal_quarter_name_fy,
-    actuals.snapshot_fiscal_quarter_number_absolute,
-    actuals.snapshot_fiscal_month_name,
-    actuals.snapshot_fiscal_month_name_fy,
-    actuals.snapshot_holiday_desc,
-    actuals.snapshot_is_holiday,
-    actuals.snapshot_last_month_of_fiscal_quarter,
-    actuals.snapshot_is_first_day_of_last_month_of_fiscal_quarter,
-    actuals.snapshot_last_month_of_fiscal_year,
-    actuals.snapshot_is_first_day_of_last_month_of_fiscal_year,
-    actuals.snapshot_days_in_month_count,
-    actuals.snapshot_week_of_month_normalised,
-    actuals.snapshot_week_of_fiscal_quarter_normalised,
-    actuals.snapshot_is_first_day_of_fiscal_quarter_week,
-    actuals.snapshot_days_until_last_day_of_month,
-    actuals.snapshot_week_of_fiscal_quarter,
+    dim_date.current_day_name,
+    dim_date.current_date_actual,
+    dim_date.current_fiscal_year,
+    dim_date.current_first_day_of_fiscal_year,
+    dim_date.current_fiscal_quarter_name_fy,
+    dim_date.current_first_day_of_month,
+    dim_date.current_first_day_of_fiscal_quarter,
+    dim_date.current_day_of_month,
+    dim_date.current_day_of_fiscal_quarter,
+    dim_date.current_day_of_fiscal_year,
+    dim_date.current_first_day_of_week,
+    dim_date.current_week_of_fiscal_quarter_normalised,
+    dim_date.current_week_of_fiscal_quarter,
+    dim_date.snapshot_day,
+    dim_date.snapshot_date,
+    dim_date.snapshot_month,
+    dim_date.snapshot_fiscal_year,
+    dim_date.snapshot_fiscal_quarter_name,
+    dim_date.snapshot_fiscal_quarter_date,
+    dim_date.snapshot_day_of_fiscal_quarter_normalised,
+    dim_date.snapshot_day_of_fiscal_year_normalised,
+    dim_date.snapshot_day_name, 
+    dim_date.snapshot_day_of_week,
+    dim_date.snapshot_first_day_of_week,
+    dim_date.snapshot_week_of_year,
+    dim_date.snapshot_day_of_month,
+    dim_date.snapshot_day_of_quarter,
+    dim_date.snapshot_day_of_year,
+    dim_date.snapshot_fiscal_quarter,
+    dim_date.snapshot_day_of_fiscal_quarter,
+    dim_date.snapshot_day_of_fiscal_year,
+    dim_date.snapshot_month_name,
+    dim_date.snapshot_first_day_of_month,
+    dim_date.snapshot_last_day_of_month,
+    dim_date.snapshot_first_day_of_year,
+    dim_date.snapshot_last_day_of_year,
+    dim_date.snapshot_first_day_of_quarter,
+    dim_date.snapshot_last_day_of_quarter,
+    dim_date.snapshot_first_day_of_fiscal_quarter,
+    dim_date.snapshot_last_day_of_fiscal_quarter,
+    dim_date.snapshot_first_day_of_fiscal_year,
+    dim_date.snapshot_last_day_of_fiscal_year,
+    dim_date.snapshot_week_of_fiscal_year,
+    dim_date.snapshot_month_of_fiscal_year,
+    dim_date.snapshot_last_day_of_week,
+    dim_date.snapshot_quarter_name,
+    dim_date.snapshot_fiscal_quarter_name_fy,
+    dim_date.snapshot_fiscal_quarter_number_absolute,
+    dim_date.snapshot_fiscal_month_name,
+    dim_date.snapshot_fiscal_month_name_fy,
+    dim_date.snapshot_holiday_desc,
+    dim_date.snapshot_is_holiday,
+    dim_date.snapshot_last_month_of_fiscal_quarter,
+    dim_date.snapshot_is_first_day_of_last_month_of_fiscal_quarter,
+    dim_date.snapshot_last_month_of_fiscal_year,
+    dim_date.snapshot_is_first_day_of_last_month_of_fiscal_year,
+    dim_date.snapshot_days_in_month_count,
+    dim_date.snapshot_week_of_month_normalised,
+    dim_date.snapshot_week_of_fiscal_quarter_normalised,
+    dim_date.snapshot_is_first_day_of_fiscal_quarter_week,
+    dim_date.snapshot_days_until_last_day_of_month,
+    dim_date.snapshot_week_of_fiscal_quarter,
     'targets_actuals'                                                       AS source,
     SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
     SUM(total_targets.net_arr_total_quarter_target)                         AS net_arr_total_quarter_target,
@@ -228,19 +223,6 @@ final AS (
     SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter)               AS coverage_open_4plus_net_arr,
     SUM(quarterly_actuals.total_booked_net_arr)                             AS total_booked_net_arr
   FROM base
-  LEFT JOIN actuals
-    ON actuals.snapshot_date = base.date_actual
-      AND base.sales_qualified_source_name = actuals.sales_qualified_source_name
-      AND base.sales_qualified_source_grouped = actuals.sales_qualified_source_grouped
-      AND base.dim_crm_current_account_set_hierarchy_sk = actuals.dim_crm_current_account_set_hierarchy_sk
-      AND base.order_type = actuals.order_type 
-      AND base.order_type_grouped = actuals.order_type_grouped 
-  LEFT JOIN targets
-    ON targets.target_date = base.date_actual
-      AND base.sales_qualified_source_grouped = targets.sales_qualified_source_grouped
-      AND base.dim_crm_current_account_set_hierarchy_sk = targets.dim_crm_user_hierarchy_sk
-      AND base.order_type = targets.order_type_name
-      AND base.order_type_grouped = targets.order_type_grouped 
   LEFT JOIN total_targets
     ON base.snapshot_fiscal_quarter_name = total_targets.fiscal_quarter_name
       AND base.sales_qualified_source_name = total_targets.sales_qualified_source_name
@@ -262,6 +244,10 @@ final AS (
       AND base.dim_crm_current_account_set_hierarchy_sk = quarterly_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.order_type = quarterly_actuals.order_type
       AND base.order_type_grouped = quarterly_actuals.order_type_grouped
+  LEFT JOIN hierarchy
+    ON base.dim_crm_current_account_set_hierarchy_sk = hierarchy.dim_crm_user_hierarchy_sk 
+  LEFT JOIN dim_date
+    ON base.date_actual = dim_date.date_actual 
   GROUP BY ALL
 
 )
