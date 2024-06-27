@@ -71,7 +71,7 @@ gitlab_team_members AS (
 
 final AS (
 
-  SELECT
+  SELECT DISTINCT
     stale_dev_db_tables.table_name,
     stale_dev_db_tables.table_schema,
     stale_dev_db_tables.table_catalog,
@@ -88,3 +88,4 @@ final AS (
 
 SELECT *
 FROM final
+ORDER BY gitlab_username
