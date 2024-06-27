@@ -29,6 +29,7 @@
       fct_crm_opportunity.dim_crm_user_id,
       dim_crm_opportunity.dim_parent_crm_opportunity_id,
       dim_crm_opportunity.duplicate_opportunity_id,
+      dim_crm_opportunity.contract_reset_opportunity_id,
       fct_crm_opportunity.merged_crm_opportunity_id,
       fct_crm_opportunity.record_type_id,
       fct_crm_opportunity.ssp_id,
