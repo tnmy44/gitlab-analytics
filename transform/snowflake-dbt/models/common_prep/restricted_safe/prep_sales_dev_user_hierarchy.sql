@@ -12,7 +12,7 @@ WITH prep_crm_opportunity AS (
 
     SELECT *
     FROM {{ref('prep_crm_user_daily_snapshot')}}
-    WHERE snapshot_date >= '2023-02-01'
+    WHERE snapshot_date >= '2022-10-11'
 
 ), prep_team_member AS (
 
@@ -41,9 +41,21 @@ WITH prep_crm_opportunity AS (
     LEFT JOIN prep_date stage_1_discovery_date
         ON prep_crm_opportunity.stage_1_discovery_date_id=stage_1_discovery_date.date_id
     WHERE sdr_bdr_user_id IS NOT NULL 
-        AND opp_created_date >= '2023-02-01'
+        AND opp_created_date >= '2022-10-11'
   
-), sales_dev_hierarchy_prep AS (
+),
+
+    last_user_employee_id AS ( 
+    SELECT
+    dim_crm_user_id,
+    LAST_VALUE(employee_number IGNORE NULLS) OVER (PARTITION BY DIM_CRM_USER_ID ORDER BY snapshot_date)  AS last_e_number
+    FROM 
+    prep_crm_user_daily_snapshot
+    ),
+
+
+
+ sales_dev_hierarchy_prep AS (
   
     SELECT
         sales_dev_rep.dim_crm_user_id AS sales_dev_rep_user_id, 
@@ -60,29 +72,35 @@ WITH prep_crm_opportunity AS (
         sales_dev_rep.crm_user_geo,
         sales_dev_rep.crm_user_region,
         sales_dev_rep.crm_user_area,
-        sales_dev_rep.employee_number AS sales_dev_rep_employee_number,
+        rep_employee_id.last_e_number AS sales_dev_leader_employee_number,
         sales_dev_rep.snapshot_date,
         manager.department AS sales_dev_manager_department,
         manager.user_role_name AS sales_dev_manager_user_role_name,
         manager.team AS sales_dev_manager_team,
-        manager.employee_number AS sales_dev_manager_employee_number,
+        manager_employee_id.last_e_number AS sales_dev_manager_employee_number,
         manager.user_email AS sales_dev_manager_email,
         leader.department AS sales_dev_leader_department,
         leader.dim_crm_user_id AS sales_dev_leader_id,
         leader.user_name AS sales_dev_leader_name,
         leader.user_role_name AS sales_dev_leader_user_role_name,
         leader.team AS sales_dev_leader_team,
-        leader.employee_number AS sales_dev_leader_employee_number,
+        leader_employee_id.last_e_number AS sales_dev_leader_employee_number,
         leader.user_email AS sales_dev_leader_email
     FROM prep_crm_user_daily_snapshot AS sales_dev_rep
     INNER JOIN sales_dev_opps
         ON sales_dev_rep.dim_crm_user_id = sales_dev_opps.sdr_bdr_user_id
+    LEFT JOIN last_user_employee_id rep_employee_id 
+        ON sales_dev_rep.dim_crm_user_id = rep_employee_id.dim_crm_user_id
     LEFT JOIN prep_crm_user_daily_snapshot AS manager
         ON sales_dev_rep.manager_id = manager.dim_crm_user_id 
             AND sales_dev_rep.snapshot_date = manager.snapshot_date
+    LEFT JOIN last_user_employee_id manager_employee_id 
+        ON sales_dev_rep.manager_id = manager_employee_id.dim_crm_user_id
     LEFT JOIN prep_crm_user_daily_snapshot AS leader
         ON manager.manager_id = leader.dim_crm_user_id 
             AND manager.snapshot_date = leader.snapshot_date
+    LEFT JOIN last_user_employee_id leader_employee_id 
+        ON manager.manager_id = leader_employee_id.dim_crm_user_id
 
 ), sales_dev_hierarchy AS (
 
@@ -134,10 +152,5 @@ WITH prep_crm_opportunity AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@rkohnke",
-    updated_by="@rkohnke",
-    created_date="2024-06-11",
-    updated_date="2024-06-25"
-) }}
+select * from final
+
