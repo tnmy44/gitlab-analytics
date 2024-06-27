@@ -245,7 +245,6 @@ SELECT
     product_usage_primary_instance.total_use_cases_adopted,
     product_usage_primary_instance.adopted_use_case_names_array,
     product_usage_primary_instance.adopted_use_case_names_string,
-    product_usage_primary_instance.is_primary_instance_subscription,
     product_usage_primary_instance.ci_color_previous_month,
     product_usage_primary_instance.ci_color_previous_3_month,
     product_usage_primary_instance.ci_pipeline_utilization_previous_month,
