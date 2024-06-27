@@ -244,7 +244,7 @@ SELECT
     rpt_product_usage_health_score.cd_color_previous_3_month,
     rpt_product_usage_health_score.security_color_previous_month,
     rpt_product_usage_health_score.security_color_previous_3_month,
-    
+
 --Ci Score Roll Up
     CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 88
          WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 63
@@ -257,7 +257,7 @@ SELECT
 
 FROM
   {{ ref('mart_arr_with_zero_dollar_charges') }} AS     mart_arr_all
-  LEFT JOIN {{ ref('    rpt_product_usage_health_score') }} AS  rpt_product_usage_health_score
+  LEFT JOIN {{ ref('rpt_product_usage_health_score') }} AS  rpt_product_usage_health_score
     ON  rpt_product_usage_health_score.dim_subscription_id_original =    mart_arr_all.dim_subscription_id_original
     AND     rpt_product_usage_health_score.snapshot_month =     mart_arr_all.arr_month
     AND     rpt_product_usage_health_score.delivery_type =  mart_arr_all.product_delivery_type
