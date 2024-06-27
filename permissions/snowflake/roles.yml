@@ -2973,6 +2973,7 @@ roles:
         - data_manager
         - marketo
         - orgadmin
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -3807,6 +3808,7 @@ roles:
         - data_team_analyst
         - data_manager
         - marketo
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -5785,17 +5787,6 @@ roles:
         - workday_hcm
       warehouses:
         - dev_xs
-  - smishra:
-      member_of:
-        - adaptive
-        - analyst_finance
-        - customers_db
-        - analyst_marketing
-        - data_team_analyst
-        - snowflake_analyst_safe
-        - xactly
-      warehouses:
-        - dev_xs
   - snalamaru:
       member_of:
         - analytics_engineer_core
@@ -6240,6 +6231,11 @@ roles:
       warehouses:
         - dev_xs
   - aluis:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - mek:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7271,10 +7267,6 @@ users:
       can_login: true
       member_of:
         - smccormack
-  - smishra:
-      can_login: true
-      member_of:
-        - smishra
   - snalamaru:
       can_login: true
       member_of:
@@ -7500,6 +7492,10 @@ users:
       can_login: true
       member_of:
         - zapier
+  - mek:
+      can_login: true
+      member_of:
+        - mek
   - gsodhi:
       can_login: true
       member_of:

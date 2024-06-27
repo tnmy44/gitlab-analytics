@@ -153,6 +153,7 @@
       mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      opp.contract_reset_opportunity_id,
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
     
     --Opp Data
@@ -414,6 +415,7 @@
       COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
       dim_crm_user_id,
       opp_dim_crm_user_id,
+      contract_reset_opportunity_id,
   
   --Person Data
       email_hash,
