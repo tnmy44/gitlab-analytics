@@ -64,7 +64,7 @@ final AS (
 
   SELECT
     --Primary key
-    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date))               AS period,
+    DATE_TRUNC('month', DATE(balance_per_purchase_path.accounting_period_end_date))                    AS period,
 
     --Dates
     dim_date.fiscal_year                                                                               AS fiscal_year,
