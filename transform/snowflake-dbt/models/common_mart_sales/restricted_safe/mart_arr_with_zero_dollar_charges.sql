@@ -427,7 +427,7 @@
       ON cohort_diffs.arr_month = top_100_child_arr_calc.arr_month
       AND cohort_diffs.dim_crm_account_id = top_100_child_arr_calc.dim_crm_account_id
     LEFT JOIN top_100_child_fy25_snapshot
-      AND cohort_diffs.dim_crm_account_id = top_100_child_fy25_snapshot.dim_crm_account_id
+      ON cohort_diffs.dim_crm_account_id = top_100_child_fy25_snapshot.dim_crm_account_id
 )
 
 {{ dbt_audit(
