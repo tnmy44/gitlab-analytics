@@ -2973,6 +2973,7 @@ roles:
         - data_manager
         - marketo
         - orgadmin
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -3807,6 +3808,7 @@ roles:
         - data_team_analyst
         - data_manager
         - marketo
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -6244,6 +6246,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - mek:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - rchanila:
       member_of:
         - snowflake_analyst
@@ -7500,6 +7507,10 @@ users:
       can_login: true
       member_of:
         - zapier
+  - mek:
+      can_login: true
+      member_of:
+        - mek
   - gsodhi:
       can_login: true
       member_of:
