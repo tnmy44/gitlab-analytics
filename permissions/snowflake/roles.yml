@@ -2973,6 +2973,7 @@ roles:
         - data_manager
         - marketo
         - orgadmin
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -3807,6 +3808,7 @@ roles:
         - data_team_analyst
         - data_manager
         - marketo
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
