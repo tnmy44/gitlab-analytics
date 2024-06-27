@@ -141,7 +141,6 @@ SELECT
     rpt_product_usage_health_score.ci_builds_all_time_event,
     rpt_product_usage_health_score.ci_runners_all_time_event,
     rpt_product_usage_health_score.ci_builds_28_days_event,
-    rpt_product_usage_health_score.weighted_ci_adoption_child_account,
     rpt_product_usage_health_score.ci_pipeline_utilization_score,
     rpt_product_usage_health_score.ci_pipeline_utilization_color,
     rpt_product_usage_health_score.ci_score,
