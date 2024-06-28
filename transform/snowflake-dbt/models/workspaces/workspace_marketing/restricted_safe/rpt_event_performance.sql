@@ -601,8 +601,6 @@ final AS (
     campaigns.campaign_budgeted_cost,
     campaigns.campaign_actual_cost,
   --Opportunity dimensions
-    opportunity_snapshot_base.order_type,
-    opportunity_snapshot_base.sales_qualified_source_name,
     opportunity_snapshot_base.snapshot_stage_name,
     opportunity_snapshot_base.live_stage_name,
     opportunity_snapshot_base.opportunity_stage_progression,
