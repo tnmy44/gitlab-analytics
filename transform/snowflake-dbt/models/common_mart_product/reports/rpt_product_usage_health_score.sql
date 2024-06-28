@@ -99,7 +99,7 @@
         paid_user_metrics.ci_builds_all_time_event,
         paid_user_metrics.ci_runners_all_time_event,
         paid_user_metrics.ci_builds_28_days_event,
-        CASE WHEN ci_pipeline_utilization > 0.33 THEN 88
+        CASE WHEN ci_pipeline_utilization > 0.333 THEN 88
                   WHEN ci_pipeline_utilization > 0.1 AND ci_pipeline_utilization <= 0.333 THEN 63
                   WHEN ci_pipeline_utilization <= 0.1 THEN 25
                   ELSE NULL END AS ci_pipeline_utilization_score,
