@@ -6,7 +6,8 @@ WITH source AS
 (
 
     SELECT *
-    FROM {{ ref('commonroom_organizations_source') }}
+    FROM {{ source('commonroom', 'organizations') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY domain, organization_name ORDER BY _uploaded_at DESC, _file_name DESC) = 1
 
 ), source_pii AS (
 

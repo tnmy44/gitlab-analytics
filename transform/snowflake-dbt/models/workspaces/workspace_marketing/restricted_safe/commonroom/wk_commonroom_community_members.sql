@@ -26,6 +26,6 @@ WITH source AS
     cte_ref="final",
     created_by="@rbacovic",
     updated_by="@rbacovic",
-    created_date="2024-06-14",
-    updated_date="2024-06-14",
+    created_date="2024-06-28",
+    updated_date="2024-06-28",
   ) }}

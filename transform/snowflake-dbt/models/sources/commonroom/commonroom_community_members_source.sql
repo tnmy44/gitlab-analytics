@@ -4,22 +4,30 @@
 
 WITH source AS
 (
+  SELECT *
+  FROM {{ source('commonroom', 'community_members') }}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY profiles, primary_email, full_name, location ORDER BY _uploaded_at DESC, _file_name DESC) = 1
 
-    SELECT first_activity_date::TIMESTAMP_NTZ AS first_activity_date,
-           first_activity_source::VARCHAR     AS first_activity_source,
-           full_name::VARCHAR                 AS full_name,
-           impact_points_all_time::NUMBER     AS impact_points_all_time,
-           last_activity_date::TIMESTAMP_NTZ  AS last_activity_date,
-           location::VARCHAR                  AS location,
-           member_tokens::VARCHAR             AS member_tokens,
-           primary_email::VARCHAR             AS primary_email,
-           profiles::VARCHAR                  AS profiles,
-           segment_names::VARCHAR             AS segment_names,
-           tags::VARCHAR                      AS tags,
-           _uploaded_at::TIMESTAMP            AS _uploaded_at
-    FROM {{ source('commonroom', 'community_members') }}
+), dedupe AS
+(
+
+    SELECT {{ dbt_utils.generate_surrogate_key(['profiles', 'primary_email','full_name', 'location']) }} AS primary_key,
+           first_activity_date::TIMESTAMP_NTZ                                                AS first_activity_date,
+           first_activity_source::VARCHAR                                                    AS first_activity_source,
+           full_name::VARCHAR                                                                AS full_name,
+           impact_points_all_time::NUMBER                                                    AS impact_points_all_time,
+           last_activity_date::TIMESTAMP_NTZ                                                 AS last_activity_date,
+           location::VARCHAR                                                                 AS location,
+           member_tokens::VARCHAR                                                            AS member_tokens,
+           primary_email::VARCHAR                                                            AS primary_email,
+           profiles::VARCHAR                                                                 AS profiles,
+           segment_names::VARCHAR                                                            AS segment_names,
+           tags::VARCHAR                                                                     AS tags,
+           _uploaded_at::TIMESTAMP                                                           AS _uploaded_at,
+           _file_name::VARCHAR                                                               AS file_name
+    FROM source
 
 )
 
 SELECT *
-  FROM source
+  FROM dedupe

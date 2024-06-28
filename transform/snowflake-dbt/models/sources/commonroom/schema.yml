@@ -4,6 +4,10 @@ models:
   - name: commonroom_activities_source
     description: '{{ doc("commonroom_activities_source") }}'
     columns:
+      - name: primary_key
+        tests:
+            - unique
+            - not_null
       - name: activity_timestamp
         tests:
           - not_null
@@ -32,6 +36,10 @@ models:
   - name: commonroom_community_members_source
     description: '{{ doc("commonroom_community_members_source") }}'
     columns:
+      - name: primary_key
+        tests:
+            - unique
+            - not_null
       - name: first_activity_date
       - name: first_activity_source
       - name: full_name
@@ -53,6 +61,8 @@ models:
       - name: profiles
         meta:
           sensitive: true
+        tests:
+          - not_null
       - name: segment_names
       - name: tags
       - name: _uploaded_at
@@ -60,6 +70,10 @@ models:
   - name: commonroom_organizations_source
     description: '{{ doc("commonroom_organizations_source") }}'
     columns:
+      - name: primary_key
+        tests:
+            - unique
+            - not_null
       - name: approx_revenue_max
       - name: approx_revenue_min
       - name: domain
