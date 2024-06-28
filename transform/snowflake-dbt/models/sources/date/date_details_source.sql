@@ -99,6 +99,7 @@ WITH date_spine AS (
       DATEADD('day',4,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa_fifth,
       DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings,
       COUNT(date_actual) OVER (PARTITION BY first_day_of_month)                               AS days_in_month_count,
+      COUNT(date_actual) OVER (PARTITION BY fiscal_quarter_name_fy)                           AS days_in_fiscal_quarter_count,
       
       90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)                             AS day_of_fiscal_quarter_normalised,
       12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))                    AS week_of_fiscal_quarter_normalised,
@@ -191,6 +192,7 @@ WITH date_spine AS (
       calculated.snapshot_date_fpa_fifth,
       calculated.snapshot_date_billings,
       calculated.days_in_month_count,
+      calculated.days_in_fiscal_quarter_count,
       calculated.week_of_month_normalised,
       calculated.day_of_fiscal_quarter_normalised,
       calculated.week_of_fiscal_quarter_normalised,
