@@ -347,7 +347,11 @@ class PostgresPipelineTable:
                 "deletes": self.do_deletes,
             }
             loaded = load_types[load_type](
-                source_engine, target_engine, metadata_engine, is_schema_addition, database_type
+                source_engine,
+                target_engine,
+                metadata_engine,
+                is_schema_addition,
+                database_type,
             )
 
         else:
