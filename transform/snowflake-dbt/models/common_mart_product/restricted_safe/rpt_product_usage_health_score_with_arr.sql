@@ -264,7 +264,7 @@ SELECT
     (product_usage_primary_instance.ci_pipeline_utilization) * (mart_arr_all.arr) AS ci_utilization_dollar,
     sum(ci_utilization_dollar) OVER (PARTITION BY mart_arr_all.arr_month, mart_arr_all.dim_crm_account_id) as total_account_ci_utilization_dollar,
     div0(total_account_ci_utilization_dollar,child_account_base_arr) as weighted_ci_adoption_child_account,
-    CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 88
+    CASE WHEN weighted_ci_adoption_child_account > 0.333 THEN 88
          WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 63
          WHEN weighted_ci_adoption_child_account < 0.1 THEN 25
          ELSE NULL END AS ci_score_child_account,
