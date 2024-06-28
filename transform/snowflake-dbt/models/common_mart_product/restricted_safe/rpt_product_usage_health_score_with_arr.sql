@@ -270,7 +270,7 @@ SELECT
          ELSE NULL END AS ci_score_child_account,
     CASE WHEN weighted_ci_adoption_child_account > 0.333 THEN 'Green'
          WHEN weighted_ci_adoption_child_account > 0.1 AND weighted_ci_adoption_child_account <=0.333 THEN 'Yellow'
-         WHEN weighted_ci_adoption_child_account < 0.1 THEN 'Red'
+         WHEN weighted_ci_adoption_child_account <= 0.1 THEN 'Red'
          ELSE 'NO DATA AT ALL' END AS ci_color_child_account
 FROM
   mart_arr_all
