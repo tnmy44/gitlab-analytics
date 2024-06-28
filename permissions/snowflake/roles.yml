@@ -6284,6 +6284,11 @@ roles:
         - zendesk
       warehouses:
         - dev_xs
+  - alejandro:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - jblevins:
       member_of:
         - snowflake_analyst_safe
@@ -7412,6 +7417,10 @@ users:
       can_login: true
       member_of:
         - workato
+  - alejandro:
+      can_login: true
+      member_of:
+        - alejandro
   - aluis:
       can_login: true
       member_of:
