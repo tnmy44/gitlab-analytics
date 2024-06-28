@@ -122,7 +122,7 @@ config_dict: Dict[Any, Any] = {
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
         ],
-        "start_date": datetime(2024, 6, 28),
+        "start_date": datetime(2023, 10, 3),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
