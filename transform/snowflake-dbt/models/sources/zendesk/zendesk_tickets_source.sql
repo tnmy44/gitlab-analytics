@@ -35,6 +35,7 @@ renamed AS (
       IFF(custom_fields::VARCHAR = '[{}]' , NULL ,  custom_fields::VARCHAR )                AS ticket_custom_field_values,
       --dates
       updated_at::DATE                        AS date_updated,
+      organization_fields:org_region          AS organization_region,
       created_at                              AS ticket_created_at
 
     FROM source
