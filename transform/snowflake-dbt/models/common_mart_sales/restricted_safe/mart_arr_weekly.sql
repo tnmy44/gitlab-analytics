@@ -6,15 +6,32 @@
     ('dim_crm_account', 'dim_crm_account')
 ]) }}
 
-, joined AS (
+, fct_mrr_agg AS (
+
+  SELECT
+    dim_date_id,
+    date_actual,
+    dim_subscription_id,
+    dim_product_detail_id,
+    dim_billing_account_id,
+    dim_crm_account_id,
+    SUM(mrr)                                                                      AS mrr,
+    SUM(arr)                                                                      AS arr,
+    SUM(quantity)                                                                 AS quantity,
+    ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
+  FROM fct_mrr_weekly
+  WHERE subscription_status IN ('Active', 'Cancelled')
+  {{ dbt_utils.group_by(n=6) }}
+
+) , joined AS (
 
     SELECT
       --primary_key
-      {{ dbt_utils.generate_surrogate_key(['fct_mrr_weekly.dim_date_id', 'dim_subscription.subscription_name', 'fct_mrr_weekly.dim_product_detail_id']) }}
+      {{ dbt_utils.generate_surrogate_key(['fct_mrr_agg.dim_date_id', 'dim_subscription.subscription_name', 'fct_mrr_agg.dim_product_detail_id']) }}
                                                                                       AS primary_key,
 
       --date info
-      fct_mrr_weekly.date_actual                                                      AS arr_week,
+      fct_mrr_agg.date_actual                                                         AS arr_week,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
       dim_subscription.subscription_end_month                                         AS subscription_end_month,
 
@@ -100,19 +117,17 @@
       dim_product_detail.is_arpu                                                      AS is_arpu,
 
       -- MRR values
-      --  not needed as all charges in fct_mrr are recurring
-      --  fct_mrr.charge_type,
-      fct_mrr_weekly.unit_of_measure                                                         AS unit_of_measure,
-      fct_mrr_weekly.mrr                                                                     AS mrr,
-      fct_mrr_weekly.arr                                                                     AS arr,
-      fct_mrr_weekly.quantity                                                                AS quantity
-    FROM fct_mrr_weekly
+      fct_mrr_agg.unit_of_measure                                                     AS unit_of_measure,
+      fct_mrr_agg.mrr                                                                 AS mrr,
+      fct_mrr_agg.arr                                                                 AS arr,
+      fct_mrr_agg.quantity                                                            AS quantity
+    FROM fct_mrr_agg
     INNER JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr_weekly.dim_subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr_agg.dim_subscription_id
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr_weekly.dim_product_detail_id
+      ON dim_product_detail.dim_product_detail_id = fct_mrr_agg.dim_product_detail_id
     INNER JOIN dim_billing_account
-      ON dim_billing_account.dim_billing_account_id = fct_mrr_weekly.dim_billing_account_id
+      ON dim_billing_account.dim_billing_account_id = fct_mrr_agg.dim_billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
