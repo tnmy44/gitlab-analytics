@@ -268,7 +268,7 @@ SELECT
          WHEN weighted_ci_adoption_child_account > 0.1 AND weighted_ci_adoption_child_account <=0.333 THEN 63
          WHEN weighted_ci_adoption_child_account <= 0.1 THEN 25
          ELSE NULL END AS ci_score_child_account,
-    CASE WHEN weighted_ci_adoption_child_account > 0.33 THEN 'Green'
+    CASE WHEN weighted_ci_adoption_child_account > 0.333 THEN 'Green'
          WHEN weighted_ci_adoption_child_account >= 0.1 AND weighted_ci_adoption_child_account <=0.33 THEN 'Yellow'
          WHEN weighted_ci_adoption_child_account < 0.1 THEN 'Red'
          ELSE 'NO DATA AT ALL' END AS ci_color_child_account
