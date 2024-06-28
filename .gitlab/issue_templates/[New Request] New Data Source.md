@@ -69,7 +69,7 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] Security (Security Risk Management Officer)
     - [ ] Privacy (Lead Legal Counsel - Privacy)
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
-* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with privacy team to obtain approval. The following approval is required:
+* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with our Legal Privacy team and or People team to obtain approval:
     - [ ] Privacy (Lead Legal Counsel - Privacy)
  
 **Admin**
