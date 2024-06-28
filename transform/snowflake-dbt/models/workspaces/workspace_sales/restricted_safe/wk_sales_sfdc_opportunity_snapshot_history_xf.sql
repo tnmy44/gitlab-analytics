@@ -954,3 +954,4 @@ WITH date_details AS (
 
 SELECT *
 FROM temp_calculations
+
