@@ -188,6 +188,18 @@ models:
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
+  - name: sfdc_case_history_source
+    description: Source model for SFDC Case History
+    columns:
+      - name: case_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: case_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_bizible_attribution_touchpoint_source
     description: Attribution touchpoints are on opportunities.
     columns:
@@ -443,6 +455,12 @@ models:
         description: The net arr related to the GitLab Duo element of the opportunity.
       - name: partner_margin_percentage
         description: The percentage of the opportunity net arr to which the partner is entitled.
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
 
   - name: sfdc_opportunity_history_source
     description: Source model for SFDC Opportunity History

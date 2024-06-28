@@ -209,7 +209,6 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_pipelines:
     dbt_source_model: true
-    deletes_exempt: True
     is_incremental: True
     database_type: ci
     export_schema: 'gitlab_com'
@@ -953,7 +952,6 @@ tables:
       , NULL AS environment_type
       , state
       , tier
-      , tier
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1181,7 +1179,6 @@ tables:
     additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC') AND author_id NOT IN (8311087)
     dbt_snapshots: true
     dbt_source_model: true
-    deletes_exempt: True
     is_incremental: True
     database_type: main
     export_schema: 'gitlab_com'
@@ -1510,33 +1507,6 @@ tables:
       , created_at
       , updated_at
       , base_access_level
-      , read_code
-      , read_vulnerability
-      , admin_vulnerability
-      , read_dependency
-      , admin_merge_request
-      , admin_group_member
-      , manage_project_access_tokens
-      , archive_project
-      , manage_group_access_tokens
-      , remove_project
-      , admin_terraform_state
-      , admin_cicd_variables
-      , remove_group
-      , occupies_seat
-      , permissions
-      , read_vulnerability
-      , admin_vulnerability
-      , read_dependency
-      , admin_merge_request
-      , admin_group_member
-      , manage_project_access_tokens
-      , archive_project
-      , manage_group_access_tokens
-      , remove_project
-      , admin_terraform_state
-      , admin_cicd_variables
-      , remove_group
       , occupies_seat
       , permissions
       FROM member_roles
@@ -1662,7 +1632,6 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   merge_requests:
     dbt_source_model: true
-    deletes_exempt: True
     is_incremental: True
     database_type: main
     export_schema: 'gitlab_com'
@@ -1879,7 +1848,6 @@ tables:
   namespaces:
     dbt_snapshots: true
     dbt_source_model: true
-    deletes_exempt: True
     is_incremental: True
     database_type: main
     export_schema: 'gitlab_com'
@@ -1980,7 +1948,6 @@ tables:
   notes:
     additional_filtering: AND created_at NOT IN ( '2746-07-23 18:16:42.925+00 BC')
     dbt_source_model: true
-    deletes_exempt: True
     is_incremental: True
     database_type: main
     export_schema: 'gitlab_com'
@@ -2070,28 +2037,6 @@ tables:
       SELECT id
       , user_id
       , source_id
-      , source_type
-      , level
-      , new_note
-      , new_issue
-      , reopen_issue
-      , close_issue
-      , reassign_issue
-      , new_merge_request
-      , reopen_merge_request
-      , close_merge_request
-      , reassign_merge_request
-      , merge_merge_request
-      , failed_pipeline
-      , success_pipeline
-      , push_to_merge_request
-      , issue_due
-      , new_epic
-      , fixed_pipeline
-      , new_release
-      , moved_project
-      , change_reviewer_merge_request
-      , merge_when_pipeline_succeeds
       , source_type
       , level
       , new_note
@@ -2249,6 +2194,22 @@ tables:
       , environments_access_level
       , releases_access_level
       FROM project_features
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  project_security_settings:
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: "gitlab_com"
+    export_table: project_security_settings
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , created_at
+      , updated_at
+      , pre_receive_secret_detection_enabled
+      FROM project_security_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   project_settings:
@@ -3298,6 +3259,7 @@ tables:
       , author_id
       , vulnerability_id
       , dismissal_reason
+      , to_state
       FROM vulnerability_state_transitions
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
