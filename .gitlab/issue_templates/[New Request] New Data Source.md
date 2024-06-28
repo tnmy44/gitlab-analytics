@@ -70,7 +70,8 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] Privacy (Lead Legal Counsel - Privacy)
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
 * [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with our Legal Privacy team and or People team to obtain approval:
-    - [ ] Privacy (Lead Legal Counsel - Privacy)
+    - [ ] Legal Privacy (Lead Legal Counsel - Privacy)
+    - [ ] People (? - People)
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
