@@ -24,7 +24,7 @@ WITH source AS
            segment_names::VARCHAR                                                            AS segment_names,
            tags::VARCHAR                                                                     AS tags,
            _uploaded_at::TIMESTAMP                                                           AS _uploaded_at,
-           _file_name::VARCHAR                                                               AS file_name
+           _file_name::VARCHAR                                                               AS _file_name
     FROM source
 
 )

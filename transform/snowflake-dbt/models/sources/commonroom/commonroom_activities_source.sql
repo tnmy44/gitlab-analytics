@@ -21,7 +21,7 @@ WITH source AS
            profiles::VARCHAR                                                                                 AS profiles,
            service_name::VARCHAR                                                                             AS service_name,
            _uploaded_at::TIMESTAMP                                                                           AS _uploaded_at,
-           _file_name::VARCHAR                                                                               AS file_name
+           _file_name::VARCHAR                                                                               AS _file_name
     FROM source
 
 )
