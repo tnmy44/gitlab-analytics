@@ -76,7 +76,6 @@
 
 ),
 
-
 campaign_members AS (
   SELECT
 
@@ -136,7 +135,6 @@ campaign_members AS (
 
 ),
 
-
 account_open_pipeline_live AS (
   SELECT
     mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id,
@@ -149,7 +147,6 @@ account_open_pipeline_live AS (
   {{dbt_utils.group_by(n=1)}}
 
 ),
-
 
 account_summary AS (
   SELECT 
@@ -300,7 +297,6 @@ opportunity_snapshot_base AS (
   WHERE snapshot.dim_crm_account_id != '0014M00001kGcORQA0'  -- test account
 ),
 
-
 opportunity_campaign_snapshot_prep AS (
   SELECT
     account_summary.dim_crm_account_id,
@@ -375,7 +371,6 @@ eligible_open_pipeline_opps AS (
     FROM opportunity_campaign_snapshot_prep
 ),
 
-
 opportunity_campaign_snapshot_base AS (
     SELECT DISTINCT
     opportunity_campaign_snapshot_prep.*,
@@ -403,10 +398,6 @@ opportunity_campaign_snapshot_base AS (
     OR opportunity_campaign_snapshot_prep.dim_crm_opportunity_id IS NULL
 ),
 
---select * from opportunity_campaign_snapshot_base where dim_crm_opportunity_id is not null/*  --(open_pipeline_at_event_date_flag = FALSE AND sourced_pipeline_post_event_flag = FALSE) /* 
-
-
-
 attribution_touchpoint_snapshot_base AS (
   SELECT 
     snapshot_dates.date_day                                                                AS touchpoint_snapshot_date,
@@ -425,9 +416,6 @@ attribution_touchpoint_snapshot_base AS (
     ) 
     AND sfdc_bizible_attribution_touchpoint_snapshots_source.campaign_id = snapshot_dates.dim_campaign_id
 ),
-
-
-
 -- TOUCHPOINT GRAIN COMBINED MODEL WITH OPP INFORMATION
 
 combined_models AS (
@@ -528,7 +516,6 @@ combined_models AS (
 
 ),
 
-
 aggregated_opportunity_influenced_performance AS (
   SELECT
     combined_models.dim_campaign_id,
@@ -544,11 +531,7 @@ aggregated_opportunity_influenced_performance AS (
 
 ),
 
-
 final AS (
-
-
-
   SELECT 
   --IDs
     opportunity_campaign_snapshot_base.dim_crm_account_id,
@@ -648,7 +631,8 @@ final AS (
     opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created,
     opportunity_snapshot_base.snapshot_is_booked_net_arr,
     opportunity_campaign_snapshot_base.open_pipeline_at_event_date_flag,
-  --ACCOUNT LEVEL METRICS
+    opportunity_campaign_snapshot_base.sourced_pipeline_post_event_flag,
+  --Account level metrics
     opportunity_campaign_snapshot_base.open_pipeline_live,
     opportunity_campaign_snapshot_base.registered_leads,
     opportunity_campaign_snapshot_base.attended_leads,
