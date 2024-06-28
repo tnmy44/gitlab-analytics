@@ -23,9 +23,9 @@ To support the new data source triage process, try to complete the below checkli
 * [ ] How much data needs to be loaded in the initial run? (All time, 12 months, 24 months lookback etc.) The data team adheres to [data minimization principle](https://handbook.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#data-minimisation).
   - `      `
  
-* [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://handbook.gitlab.com/handbook/security/data-classification-standard/#data-classification-levels))?
+* [ ] Please list and describe any data from this source that are confidential (Classified as Red or Orange in our [Data Classification Policy](https://handbook.gitlab.com/handbook/security/data-classification-standard/#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
-* [ ] Please list and describe any data from this source that is personal data and if so, if it needs to be extracted Y/N?
+* [ ] Please list the exact data elements from this source that would be defined as [Personal Data](https://handbook.gitlab.com/handbook/legal/privacy/#privacy-terms) and please clarify if Personal Data is required to be extracted Y/N?
  - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
    * [ ] How often does the data need to be refreshed?
@@ -69,9 +69,11 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] Security (Security Risk Management Officer)
     - [ ] Privacy (Lead Legal Counsel - Privacy)
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
-* [ ] If it is indicated that the data source contains personal data and is needed to get extracted, work with our Legal Privacy team and or People team to obtain approval:
-    - [ ] Legal Privacy (Lead Legal Counsel).
-    - [ ] People (?) applicable if it contains sensitive people data.
+* [ ] If it is indicated that the data source contains Personal Data and the data is intended to be extracted, work with our Legal Privacy team to obtain approval:
+    - [ ] Legal Privacy (@emccrann).
+* [ ] Will the Personal Data to be extracted include "sensitive Personal Data," which is data related to race/ethnicity, health or medical details, biometric or genetic data, religion, political affiliation or philosophy, sexual orientation, or trade unions. Sensitive Personal Data may be prohibited from being processed under certain privacy legislation. If checked, the following approvals are required:
+    - [ ] Legal Privacy (@emccrann)
+    - [ ] People Operations, if sensitive Personal Data related to Team Members (@mpatel8).
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
