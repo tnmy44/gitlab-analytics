@@ -1,9 +1,27 @@
-{%- macro dedupe_and_union_aws_source(source_tables, schema='aws_billing', condition_column='metadata$file_last_modified', unique_key='id') -%}
+/*
+For each source_table in source_tables:
+- SELECT certain columns
+- Then UNION with the next source table
+*/
+{%- macro dedupe_and_union_aws_source(source_tables, schema='aws_billing') -%}
 
 {% set all_raw_sql %}
     {% for source_table in source_tables %}
-            {{ dedupe_aws_source(source_table, schema, condition_column, unique_key) }}
-        {% if not loop.last %}UNION ALL{% endif %}
+
+      SELECT
+        DATE(line_item_usage_start_date) AS date_day, --date
+        bill_payer_account_id AS billing_account_id, -- acount id
+        bill_billing_period_end_date AS billing_period_end, --invoice month
+        line_item_usage_account_id AS sub_account_id, -- project.id eq
+        line_item_product_code AS service_name,
+        line_item_line_item_description AS charge_description, --sku desc
+        line_item_usage_amount AS pricing_quantity, --usage amount in proicing unit
+        pricing_unit AS pricing_unit,
+        line_item_net_unblended_cost AS billed_cost,
+        pricing_public_on_demand_cost AS list_cost
+      FROM {{ source(schema, source_table) }}
+
+      {% if not loop.last %}UNION ALL{% endif %}
     {% endfor %}
 {% endset %}
 
