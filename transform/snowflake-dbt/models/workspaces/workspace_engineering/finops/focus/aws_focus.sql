@@ -5,4 +5,4 @@
     'legacy_gitlab_0347',
     'services_org_6953'] %}
 
-{{ dedupe_and_union_aws_source(source_tables, 'aws_billing' )}}
+{{ union_aws_source(source_tables, 'aws_billing' )}}
