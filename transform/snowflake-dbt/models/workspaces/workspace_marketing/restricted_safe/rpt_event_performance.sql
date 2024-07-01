@@ -82,6 +82,7 @@ campaign_members AS (
     -- id's
     mart_crm_person.dim_crm_person_id,
     sfdc_campaign_member.campaign_id                           AS dim_campaign_id,
+    sfdc_campaign_member.lead_or_contact_id,
     mart_crm_person.marketo_lead_id,
 
     -- member
@@ -94,35 +95,35 @@ campaign_members AS (
     campaigns.campaign_name,
 
     -- person
-    mart_crm_person.dim_crm_user_id                            AS person_owner_id,
-    mart_crm_person.dim_crm_account_id                         AS person_account_id,
-    mart_crm_person.sfdc_record_id                             AS person_sfdc_record_id,
+    mart_crm_person.dim_crm_user_id                               AS person_owner_id,
+    COALESCE(mart_crm_person.dim_crm_account_id, 'No Account ID') AS person_account_id,
+    mart_crm_person.sfdc_record_id                                AS person_sfdc_record_id,
     mart_crm_person.mql_date_latest,
-    mart_crm_person.created_date                               AS person_created_date,
+    mart_crm_person.created_date                                  AS person_created_date,
     mart_crm_person.inquiry_date,
-    mart_crm_person.accepted_date                              AS person_accepted_date,
+    mart_crm_person.accepted_date                                 AS person_accepted_date,
     mart_crm_person.email_domain_type,
-    mart_crm_person.status                                     AS person_status,
+    mart_crm_person.status                                        AS person_status,
     mart_crm_person.lead_source,
-    mart_crm_person.crm_partner_id                             AS person_crm_person_id,
-    mart_crm_person.is_partner_recalled                        AS person_is_partner_recalled,
-    mart_crm_person.prospect_share_status                      AS person_prospect_share_status,
-    mart_crm_person.partner_prospect_status                    AS person_partner_prospect_status,
-    mart_crm_person.partner_prospect_owner_name                AS person_partner_prospect_owner_name,
-    mart_crm_person.partner_prospect_id                        AS person_partner_prospect_id,
+    mart_crm_person.crm_partner_id                                AS person_crm_person_id,
+    mart_crm_person.is_partner_recalled                           AS person_is_partner_recalled,
+    mart_crm_person.prospect_share_status                         AS person_prospect_share_status,
+    mart_crm_person.partner_prospect_status                       AS person_partner_prospect_status,
+    mart_crm_person.partner_prospect_owner_name                   AS person_partner_prospect_owner_name,
+    mart_crm_person.partner_prospect_id                           AS person_partner_prospect_id,
     mart_crm_person.is_mql,
     mart_crm_person.is_inquiry,
-    mart_crm_person.is_first_order_person                      AS person_is_first_order,
-    mart_crm_person.account_demographics_sales_segment         AS person_account_demographics_sales_segment,
-    mart_crm_person.account_demographics_sales_segment_grouped AS person_account_demographics_sales_segment_grouped,
-    mart_crm_person.account_demographics_geo                   AS person_account_demographics_geo,
-    mart_crm_person.account_demographics_region                AS person_account_demographics_region,
-    mart_crm_person.account_demographics_area                  AS person_account_demographics_area,
+    mart_crm_person.is_first_order_person                         AS person_is_first_order,
+    mart_crm_person.account_demographics_sales_segment            AS person_account_demographics_sales_segment,
+    mart_crm_person.account_demographics_sales_segment_grouped    AS person_account_demographics_sales_segment_grouped,
+    mart_crm_person.account_demographics_geo                      AS person_account_demographics_geo,
+    mart_crm_person.account_demographics_region                   AS person_account_demographics_region,
+    mart_crm_person.account_demographics_area                     AS person_account_demographics_area,
 
     -- partner from the campaign
-    campaign_partner_account.crm_account_name                  AS campaign_partner_crm_account_name,
-    campaign_partner_account.parent_crm_account_name           AS campaign_partner_parent_crm_account_name,
-    campaign_partner_account.crm_account_owner                 AS campaign_partner_crm_account_owner
+    campaign_partner_account.crm_account_name                     AS campaign_partner_crm_account_name,
+    campaign_partner_account.parent_crm_account_name              AS campaign_partner_parent_crm_account_name,
+    campaign_partner_account.crm_account_owner                    AS campaign_partner_crm_account_owner
 
   FROM sfdc_campaign_member
   INNER JOIN campaigns 
@@ -301,6 +302,7 @@ opportunity_campaign_snapshot_prep AS (
   SELECT
     account_summary.dim_crm_account_id,
     account_summary.dim_campaign_id,
+    account_summary.campaign_name,
     opportunity_snapshot_base.dim_crm_opportunity_id,
     opportunity_snapshot_base.snapshot_is_eligible_open_pipeline,
     opportunity_snapshot_base.pipeline_created_date,
@@ -357,46 +359,45 @@ opportunity_campaign_snapshot_prep AS (
   {{dbt_utils.group_by(n=15)}}
 ),
 
-eligible_open_pipeline_opps AS (
+eligible_opps AS (
     SELECT DISTINCT
     opportunity_campaign_snapshot_prep.dim_crm_opportunity_id,
     opportunity_campaign_snapshot_prep.dim_campaign_id,
     opportunity_campaign_snapshot_prep.dim_crm_account_id,
     CASE 
       WHEN event_snapshot_type = 'Event Date' AND 
-        snapshot_is_eligible_open_pipeline = TRUE 
+      snapshot_is_eligible_open_pipeline = TRUE 
       THEN TRUE 
       ELSE FALSE 
-    END AS open_pipeline_at_event_date_flag 
+    END AS open_pipeline_at_event_date_flag,
+    CASE 
+      WHEN opportunity_campaign_snapshot_prep.pipeline_created_date >= opportunity_campaign_snapshot_prep.true_event_date AND 
+      opportunity_campaign_snapshot_prep.snapshot_is_net_arr_pipeline_created
+      THEN TRUE 
+      ELSE FALSE  
+      END AS sourced_pipeline_post_event_flag,      
     FROM opportunity_campaign_snapshot_prep
 ),
 
 opportunity_campaign_snapshot_base AS (
     SELECT DISTINCT
     opportunity_campaign_snapshot_prep.*,
-    COALESCE(eligible_open_pipeline_opps.open_pipeline_at_event_date_flag,FALSE) AS open_pipeline_at_event_date_flag,
-    CASE 
-     WHEN opportunity_campaign_snapshot_prep.pipeline_created_date >= opportunity_campaign_snapshot_prep.true_event_date AND 
-      opportunity_campaign_snapshot_prep.snapshot_is_net_arr_pipeline_created
-     THEN TRUE 
-     ELSE FALSE  
-    END 
-    AS sourced_pipeline_post_event_flag
+    eligible_opps.open_pipeline_at_event_date_flag,
+    eligible_opps.sourced_pipeline_post_event_flag
     FROM 
     opportunity_campaign_snapshot_prep
     LEFT JOIN 
-    eligible_open_pipeline_opps
+    eligible_opps
     ON 
-    opportunity_campaign_snapshot_prep.dim_crm_opportunity_id = eligible_open_pipeline_opps.dim_crm_opportunity_id
+    opportunity_campaign_snapshot_prep.dim_crm_opportunity_id = eligible_opps.dim_crm_opportunity_id
     AND 
-    opportunity_campaign_snapshot_prep.dim_crm_account_id = eligible_open_pipeline_opps.dim_crm_account_id
+    opportunity_campaign_snapshot_prep.dim_crm_account_id = eligible_opps.dim_crm_account_id
     AND 
-    opportunity_campaign_snapshot_prep.dim_campaign_id = eligible_open_pipeline_opps.dim_campaign_id
+    opportunity_campaign_snapshot_prep.dim_campaign_id = eligible_opps.dim_campaign_id
     WHERE 
-    (eligible_open_pipeline_opps.open_pipeline_at_event_date_flag = TRUE 
-    OR (opportunity_campaign_snapshot_prep.pipeline_created_date >= opportunity_campaign_snapshot_prep.true_event_date AND snapshot_is_net_arr_pipeline_created = 1)) 
-    OR opportunity_campaign_snapshot_prep.dim_crm_opportunity_id IS NULL
+    eligible_opps.open_pipeline_at_event_date_flag = TRUE OR eligible_opps.sourced_pipeline_post_event_flag = TRUE 
 ),
+
 
 attribution_touchpoint_snapshot_base AS (
   SELECT 
@@ -532,17 +533,19 @@ aggregated_opportunity_influenced_performance AS (
 ),
 
 final AS (
+
+
   SELECT 
   --IDs
-    opportunity_campaign_snapshot_base.dim_crm_account_id,
+    account_summary.dim_crm_account_id,
     mart_crm_account.dim_parent_crm_account_id,
-    opportunity_campaign_snapshot_base.dim_campaign_id,
+    account_summary.dim_campaign_id,
     campaigns.dim_parent_campaign_id,
     opportunity_campaign_snapshot_base.dim_crm_opportunity_id,
   --DATES
-    opportunity_campaign_snapshot_base.true_event_date,
-    opportunity_campaign_snapshot_base.event_snapshot_type,
-    opportunity_campaign_snapshot_base.snapshot_date,
+    account_summary.true_event_date,
+    snapshot_dates.event_snapshot_type,
+    snapshot_dates.date_day as snapshot_date,
     opportunity_campaign_snapshot_base.pipeline_created_date,
   --ACCOUNT FIELDS 
     opportunity_campaign_snapshot_base.account_has_attended_flag,
@@ -601,6 +604,8 @@ final AS (
     campaigns.campaign_budgeted_cost,
     campaigns.campaign_actual_cost,
   --Opportunity dimensions
+    opportunity_snapshot_base.order_type,
+    opportunity_snapshot_base.sales_qualified_source_name,
     opportunity_snapshot_base.snapshot_stage_name,
     opportunity_snapshot_base.live_stage_name,
     opportunity_snapshot_base.opportunity_stage_progression,
@@ -629,11 +634,10 @@ final AS (
     opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created,
     opportunity_snapshot_base.snapshot_is_booked_net_arr,
     opportunity_campaign_snapshot_base.open_pipeline_at_event_date_flag,
-    opportunity_campaign_snapshot_base.sourced_pipeline_post_event_flag,
-  --Account level metrics
-    opportunity_campaign_snapshot_base.open_pipeline_live,
-    opportunity_campaign_snapshot_base.registered_leads,
-    opportunity_campaign_snapshot_base.attended_leads,
+  --ACCOUNT LEVEL METRICS
+    account_summary.open_pipeline_live,
+    account_summary.registered_leads,
+    account_summary.attended_leads,
   --Pipeline/Opp Metrics
     opportunity_campaign_snapshot_base.sourced_pipeline_post_event,
     opportunity_campaign_snapshot_base.sourced_opps_post_event,
@@ -642,20 +646,33 @@ final AS (
     opportunity_snapshot_base.opp_net_arr,
     aggregated_opportunity_influenced_performance.influenced_pipeline
 
-    FROM 
-    opportunity_campaign_snapshot_base
+  --
+    FROM account_summary
 
-    LEFT JOIN campaigns
-      ON opportunity_campaign_snapshot_base.dim_campaign_id = campaigns.dim_campaign_id 
+    LEFT JOIN snapshot_dates 
+    ON account_summary.dim_campaign_id = snapshot_dates.dim_campaign_id 
+
+    LEFT JOIN 
+    opportunity_campaign_snapshot_base
+    ON account_summary.dim_campaign_id = opportunity_campaign_snapshot_base.dim_campaign_id
+    AND account_summary.dim_crm_account_id = opportunity_campaign_snapshot_base.dim_crm_account_id
+    AND snapshot_dates.date_day = opportunity_campaign_snapshot_base.snapshot_date
+    AND snapshot_dates.event_snapshot_type = opportunity_campaign_snapshot_base.event_snapshot_type 
+
+
+    LEFT JOIN 
+    campaigns
+    ON account_summary.dim_campaign_id = campaigns.dim_campaign_id 
 
     LEFT JOIN opportunity_snapshot_base 
-      ON opportunity_campaign_snapshot_base.dim_crm_opportunity_id = opportunity_snapshot_base.dim_crm_opportunity_id
-      AND opportunity_campaign_snapshot_base.snapshot_date = opportunity_snapshot_base.opportunity_snapshot_date
+    ON opportunity_campaign_snapshot_base.dim_crm_opportunity_id = opportunity_snapshot_base.dim_crm_opportunity_id
+    AND opportunity_campaign_snapshot_base.snapshot_date = opportunity_snapshot_base.opportunity_snapshot_date
 
     LEFT JOIN aggregated_opportunity_influenced_performance 
-      ON opportunity_campaign_snapshot_base.dim_crm_opportunity_id = aggregated_opportunity_influenced_performance.dim_crm_opportunity_id
-      AND opportunity_campaign_snapshot_base.dim_campaign_id = aggregated_opportunity_influenced_performance.dim_campaign_id
-      AND opportunity_campaign_snapshot_base.snapshot_date = aggregated_opportunity_influenced_performance.opportunity_snapshot_date  
+    ON opportunity_campaign_snapshot_base.dim_crm_opportunity_id = aggregated_opportunity_influenced_performance.dim_crm_opportunity_id
+    AND opportunity_campaign_snapshot_base.dim_campaign_id = aggregated_opportunity_influenced_performance.dim_campaign_id
+    AND opportunity_campaign_snapshot_base.true_event_date = aggregated_opportunity_influenced_performance.true_event_date 
+    AND opportunity_campaign_snapshot_base.snapshot_date = aggregated_opportunity_influenced_performance.opportunity_snapshot_date  
 
     LEFT JOIN mart_crm_account
     ON opportunity_campaign_snapshot_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
@@ -667,5 +684,5 @@ final AS (
     created_by="@dmicovic",
     updated_by="@dmicovic",
     created_date="2024-04-23",
-    updated_date="2024-06-28",
+    updated_date="2024-07-01",
   ) }}
