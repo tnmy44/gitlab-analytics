@@ -310,7 +310,7 @@ opportunity_campaign_snapshot_prep AS (
     opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created,
     account_summary.true_event_date,
     snapshot_dates.event_snapshot_type,
-    snapshot_dates.date_day as snapshot_date,
+    snapshot_dates.date_day AS snapshot_date,
     COALESCE(attended_leads > 0 AND account_summary.dim_crm_account_id IS NOT NULL, FALSE)  AS account_has_attended_flag,          
     --METRICS 
     account_summary.registered_leads,
@@ -634,6 +634,7 @@ final AS (
     opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created,
     opportunity_snapshot_base.snapshot_is_booked_net_arr,
     opportunity_campaign_snapshot_base.open_pipeline_at_event_date_flag,
+    opportunity_campaign_snapshot_base.sourced_pipeline_post_event_flag,
   --ACCOUNT LEVEL METRICS
     account_summary.open_pipeline_live,
     account_summary.registered_leads,
