@@ -1,6 +1,6 @@
 WITH team_member AS (
 
-  SELECT distinct
+  SELECT DISTINCT
     dim_team_member_sk,
     employee_id,
     nationality,
@@ -12,7 +12,7 @@ WITH team_member AS (
     work_email,
     date_of_birth,
     age_calculated,
-    age_cohort, 
+    age_cohort,
     gitlab_username,
     team_id,
     country,
@@ -32,21 +32,22 @@ WITH team_member AS (
   FROM {{ ref('dim_team_member') }}
 
 ),
+
 team_member_absence AS (
 
-  SELECT 
-    dim_team_member_sk                                                                            AS dim_team_member_sk,
-    dim_team_sk                                                                                   AS dim_team_sk,
-    employee_id                                                                                   AS employee_id,
-    team_id                                                                                       AS team_id,
-    job_code                                                                                      AS job_code,
-    position                                                                                      AS position,
-    job_family                                                                                    AS job_family,
-    job_specialty_single                                                                          AS job_specialty_single,
-    job_specialty_multi                                                                           AS job_specialty_multi,
-    management_level                                                                              AS management_level,
-    job_grade                                                                                     AS job_grade,
-    entity                                                                                        AS entity,
+  SELECT
+    dim_team_member_sk   AS dim_team_member_sk,
+    dim_team_sk          AS dim_team_sk,
+    employee_id          AS employee_id,
+    team_id              AS team_id,
+    job_code             AS job_code,
+    position             AS position,
+    job_family           AS job_family,
+    job_specialty_single AS job_specialty_single,
+    job_specialty_multi  AS job_specialty_multi,
+    management_level     AS management_level,
+    job_grade            AS job_grade,
+    entity               AS entity,
     is_position_active,
     is_current_team_member_position,
     absence_date,
@@ -67,11 +68,12 @@ team_member_absence AS (
     model_created_date,
     model_updated_date,
     dbt_updated_at,
-    dbt_created_at    
+    dbt_created_at
   FROM {{ ref('fct_team_member_absence') }}
-), 
+),
+
 final AS (
-  SELECT 
+  SELECT
 
     -- Surrogate keys
     team_member.dim_team_member_sk,
@@ -130,8 +132,9 @@ final AS (
     team_member.valid_to
   FROM team_member
   INNER JOIN team_member_absence
-    ON team_member_absence.employee_id = team_member.employee_id 
+    ON team_member.employee_id = team_member_absence.employee_id
 )
+
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rakhireddy",
