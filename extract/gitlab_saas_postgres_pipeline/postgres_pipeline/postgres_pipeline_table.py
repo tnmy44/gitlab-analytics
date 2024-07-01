@@ -247,6 +247,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_schema_addition: bool,
+        database_type: str,
     ) -> bool:
         """Incrementally load delete data which is the PK of the table"""
 
