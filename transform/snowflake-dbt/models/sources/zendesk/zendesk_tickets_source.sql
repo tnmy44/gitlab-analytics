@@ -2,8 +2,7 @@ WITH source AS (
 
     SELECT parse_json(via) as via,
            try_parse_json(satisfaction_rating) satisfaction_rating,
-           parse_json(organization_fields) as organization_fields,
-           * exclude(via, satisfaction_rating, organization_fields)
+           * exclude(via, satisfaction_rating)
     FROM {{ ref('zendesk_tickets_dedupe_source') }}
 ),
 
@@ -36,7 +35,6 @@ renamed AS (
       IFF(custom_fields::VARCHAR = '[{}]' , NULL ,  custom_fields::VARCHAR )                          AS ticket_custom_field_values,
       --dates
       updated_at::DATE                                                                                AS date_updated,
-      organization_fields:org_region::VARCHAR                                                         AS organization_region,
       created_at                                                                                      AS ticket_created_at
 
     FROM source
