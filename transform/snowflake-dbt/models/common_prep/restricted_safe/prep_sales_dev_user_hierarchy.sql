@@ -12,7 +12,7 @@ WITH prep_crm_opportunity AS (
 
     SELECT *
     FROM {{ref('prep_crm_user_daily_snapshot')}}
-    WHERE snapshot_date >= '2022-10-11'
+    WHERE snapshot_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
 
 ), prep_team_member AS (
 
@@ -41,7 +41,7 @@ WITH prep_crm_opportunity AS (
     LEFT JOIN prep_date stage_1_discovery_date
         ON prep_crm_opportunity.stage_1_discovery_date_id=stage_1_discovery_date.date_id
     WHERE sdr_bdr_user_id IS NOT NULL 
-        AND opp_created_date >= '2022-10-11'
+        AND opp_created_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
   
 ),
 
@@ -72,7 +72,7 @@ WITH prep_crm_opportunity AS (
         sales_dev_rep.crm_user_geo,
         sales_dev_rep.crm_user_region,
         sales_dev_rep.crm_user_area,
-        rep_employee_id.last_e_number AS sales_dev_leader_employee_number,
+        rep_employee_id.last_e_number AS sales_dev_rep_employee_number,
         sales_dev_rep.snapshot_date,
         manager.department AS sales_dev_manager_department,
         manager.user_role_name AS sales_dev_manager_user_role_name,
@@ -138,11 +138,11 @@ WITH prep_crm_opportunity AS (
         END                                                            AS sales_dev_leader
     FROM sales_dev_hierarchy_prep
     LEFT JOIN prep_team_member AS rep
-        ON sales_dev_rep_email = rep.work_email
+        ON sales_dev_rep_employee_number = rep.employee_id
     LEFT JOIN prep_team_member AS manager 
-        ON sales_dev_manager_email = manager.work_email
+        ON sales_dev_manager_employee_number = manager.employee_id
     LEFT JOIN prep_team_member AS leader
-        ON sales_dev_leader_email = leader.work_email
+        ON sales_dev_leader_employee_number = leader.employee_id
 
 ), final AS (
 
