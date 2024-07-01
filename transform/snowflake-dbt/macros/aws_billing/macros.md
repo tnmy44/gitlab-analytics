@@ -6,10 +6,9 @@ This macro is designed to run an incremental delete+strategy on each passed in t
 
 ## Fields:
 
-* source_table: (Required) The name of the source table in your AWS billing schema.
-* source_schema: (Optional, default: 'aws_billing') The schema containing the source table.
-* condition_column: (Optional, default: 'metadata$file_last_modified') The column used to determine the latest record for each unique key.
-* unique_key_column: (Optional, default: 'year_mo_partition') The column that identifies which record(s) to delete and then insert.
+* `source_table`: (Required) The name of the source table in your AWS billing schema.
+* `source_schema`: (Optional, default: 'aws_billing') The schema containing the source table.
+* `delete_insert_key`: (Optional, default: `year_mo_partition`) Column to use for dbt incremental delete+insert. If using 'year_mo_partition', this means that any existing year_mo_partitions that are part of the incremental batch are first deleted before being re-inserted incrementally.
 
 **Example Usage:**
 

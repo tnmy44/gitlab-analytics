@@ -10,12 +10,9 @@ macros:
       - name: source_schema
         type: string
         description: Name of the source table (from schema.yml file). Default value is AWS_BILLING.
-      - name: condition_column
+      - name: delete_insert_key
         type: string
-        description: Name of the column for data deduplication. Default value is `metadata$file_last_modified`.
-      - name: unique_key_column
-        type: string
-        description: Unique column (pseudo primary key). Default value is `year_mo_partition`
+        description: Column to use for dbt incremental delete+insert. Default is `year_mo_partition`, which means that any existing year_mo_partitions that are part of the incremental batch are first deleted before being re-inserted incrementally.
   - name: union_aws_source
     description: '{{ doc("union_aws_source") }}'
     arguments:

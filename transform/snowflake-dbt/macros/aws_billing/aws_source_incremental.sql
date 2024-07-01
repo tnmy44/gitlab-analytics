@@ -1,10 +1,10 @@
-{%- macro aws_source_incremental(source_table, source_schema='aws_billing', condition_column='metadata$file_last_modified', unique_key_column='year_mo_partition') -%}
+{%- macro aws_source_incremental(source_table, source_schema='aws_billing', delete_insert_key='year_mo_partition') -%}
 
 {% set source_table_name = source_table %}
 {% set source_schema_name = source_schema %}
 
 {{ config.set('materialized', 'incremental') }}
-{{ config.set('unique_key', unique_key_column) }}
+{{ config.set('unique_key', delete_insert_key) }}
 {{ config.set('incremental_strategy', 'delete+insert') }}
 
 
