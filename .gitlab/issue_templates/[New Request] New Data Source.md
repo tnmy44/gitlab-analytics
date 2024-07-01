@@ -71,9 +71,9 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] Not applicable - this data source is already extracted and it concerns extending the current pipeline
 * [ ] If it is indicated that the data source contains Personal Data and the data is intended to be extracted, work with our Legal Privacy team to obtain approval:
     - [ ] Legal Privacy (@emccrann).
-* [ ] Will the Personal Data to be extracted include "sensitive Personal Data," which is data related to race/ethnicity, health or medical details, biometric or genetic data, religion, political affiliation or philosophy, sexual orientation, or trade unions. Sensitive Personal Data may be prohibited from being processed under certain privacy legislation. If checked, the following approvals are required:
+* [ ] Will the Personal Data to be extracted include "sensitive Personal Data," which is data related to race/ethnicity, health or medical details, biometric or genetic data, religion, political affiliation or philosophy, sexual orientation, criminal offenses, citizenship/immigraion, or trade unions. Sensitive Personal Data may be prohibited from being processed under certain privacy legislation. If checked, the following approvals are required:
     - [ ] Legal Privacy (@emccrann)
-    - [ ] People Operations, if sensitive Personal Data related to Team Members (@mpatel8).
+    - [ ] People Operations, if sensitive Personal Data is related to Team Members (@mpatel8).
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
