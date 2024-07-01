@@ -170,6 +170,14 @@ models:
             - not_null
           tags: [ "tdf", "mart", "arr" ]
 
+  - name: mart_arr_weekly
+    description: A version of mart_arr aggregated by arr_week. This allows more frequent updates to the arr and quantity fields for 
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+
   - name: mart_charge
     description: Model combining Subscription related objects such as product details and rate plan charge details into a mart.
     columns:

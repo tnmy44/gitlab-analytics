@@ -5780,6 +5780,16 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_mrr_weekly
+    description: One row represents Monthly Recurring Revenue per day, by rate plan charge. Excludes charges with $0 MRR.
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "mrr"]
+
   - name: fct_mrr_with_zero_dollar_charges
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.
     columns:
