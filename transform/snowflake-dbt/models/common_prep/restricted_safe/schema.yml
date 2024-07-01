@@ -575,7 +575,10 @@ models:
       - name: dim_crm_user_id
         description: The SFDC User id
         tests:
-          - not_null
+        - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - dim_crm_user_id
+            - snapshot_date
       - name: sales_dev_rep_employee_number
         description: The Sales Dev Rep's employee number
       - name: sales_dev_rep_role_name
