@@ -1116,34 +1116,34 @@ LEFT JOIN cw_base
       IFF(CONTAINS(sfdc_opportunity.competitors, 'Bamboo'),1,0) AS competitors_bamboo_flag,
       IFF(CONTAINS(sfdc_opportunity.competitors, 'AWS'),1,0) AS competitors_aws_flag,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_sales_segment, sfdc_opportunity_live.crm_opp_owner_sales_segment_stamped)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_sales_segment, sfdc_opportunity_live.crm_opp_owner_sales_segment_stamped)
       ) AS report_segment,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_geo, sfdc_opportunity_live.crm_opp_owner_geo_stamped)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_geo, sfdc_opportunity_live.crm_opp_owner_geo_stamped)
       ) AS report_geo,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_region, sfdc_opportunity_live.crm_opp_owner_region_stamped)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_region, sfdc_opportunity_live.crm_opp_owner_region_stamped)
       ) AS report_region,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_area, sfdc_opportunity_live.crm_opp_owner_area_stamped)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_area, sfdc_opportunity_live.crm_opp_owner_area_stamped)
       ) AS report_area,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role, sfdc_opportunity_live.opportunity_owner_role)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role, sfdc_opportunity_live.opportunity_owner_role)
       ) AS report_role_name,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_1, sfdc_opportunity_live.crm_opp_owner_role_level_1)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_1, sfdc_opportunity_live.crm_opp_owner_role_level_1)
       ) AS report_role_level_1,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_2, sfdc_opportunity_live.crm_opp_owner_role_level_2)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_2, sfdc_opportunity_live.crm_opp_owner_role_level_2)
       ) AS report_role_level_2,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_3, sfdc_opportunity_live.crm_opp_owner_role_level_3)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_3, sfdc_opportunity_live.crm_opp_owner_role_level_3)
       ) AS report_role_level_3,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_4, sfdc_opportunity_live.crm_opp_owner_role_level_4)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_4, sfdc_opportunity_live.crm_opp_owner_role_level_4)
       ) AS report_role_level_4,
       UPPER(
-        IFF(sfdc_opportunity_live.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_5, sfdc_opportunity_live.crm_opp_owner_role_level_5)
+        IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_role_level_5, sfdc_opportunity_live.crm_opp_owner_role_level_5)
       ) AS report_role_level_5,
       CASE
         WHEN close_fiscal_year < 2024
