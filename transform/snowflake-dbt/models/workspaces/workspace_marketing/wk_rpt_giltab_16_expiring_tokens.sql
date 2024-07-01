@@ -85,7 +85,7 @@
     INNER JOIN days_since_first_ping_on_16
     ON days_since_first_ping_on_16.dim_installation_id = days_since_first_ping_on_16.dim_installation_id
     WHERE 
-    days_since_first_ping_on_16.ping_deployment_type != 'GitLab.com' -- Our organization manages version upgrades for the Gitlab.com deployment
+    all_installations_on_16.ping_deployment_type != 'GitLab.com' -- Our organization manages version upgrades for the Gitlab.com deployment
     and days_since_first_ping_sent_on_1600_or_higher BETWEEN 335 AND 365
 
 ),staging AS (
