@@ -28,7 +28,7 @@ renamed AS (
 
         --time
         time_zone,
-        USER_FIELDS__USER_REGION::VARCHAR               AS user_region
+        USER_FIELDS__USER_REGION::VARCHAR               AS user_region,
         created_at,
         updated_at
 
