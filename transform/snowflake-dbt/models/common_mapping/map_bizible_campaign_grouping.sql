@@ -390,12 +390,12 @@ WITH bizible_touchpoints AS (
 
   WHEN (bizible_touchpoint_type = 'Web Form'
       AND (contains(bizible_ad_campaign_name, 'aisdlc')
-      OR lower(campaign.gtm_motion) = 'trading off speed for security')
+      OR lower(campaign.gtm_motion) = 'trading off speed for security'))
     THEN 'Trading off Speed for Security'
   
   WHEN (bizible_touchpoint_type = 'Web Form'
       AND (contains(bizible_ad_campaign_name, 'speedsecurity')
-      OR lower(campaign.gtm_motion) = 'ai throughout the sdlc')
+      OR lower(campaign.gtm_motion) = 'ai throughout the sdlc'))
     THEN 'AI throughout the SDLC' 
 
   ELSE 'None' END AS bizible_integrated_campaign_grouping,
