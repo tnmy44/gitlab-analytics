@@ -152,6 +152,7 @@
       mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      opp.contract_reset_opportunity_id,
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
     
     --Opp Data
@@ -387,7 +388,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=90)}}
+    {{dbt_utils.group_by(n=91)}}
     
 ), cohort_base_combined AS (
   
@@ -404,6 +405,7 @@
       COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
       dim_crm_user_id,
       opp_dim_crm_user_id,
+      contract_reset_opportunity_id,
   
   --Person Data
       email_hash,
@@ -671,5 +673,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-05-30",
+    updated_date="2024-06-06",
   ) }}

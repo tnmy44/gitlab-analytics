@@ -883,3 +883,8 @@ This table contains data about SFDC case objects.
 
 {% enddocs %}
 
+{% docs prep_crm_case_history %}
+
+This table contains all changes to SFDC Case fields if field history tracking is enabled for that field within SFDC settings.
+
+{% enddocs %}

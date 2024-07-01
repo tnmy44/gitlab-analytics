@@ -36,7 +36,8 @@ stale_dev_db_tables AS (
     dev_databases.database_owner
   FROM snowflake_tables
   INNER JOIN dev_databases ON snowflake_tables.table_catalog_id = dev_databases.database_id
-  WHERE table_schema != 'INFORMATION_SCHEMA'
+  WHERE snowflake_tables.deleted IS NULL
+    AND table_schema != 'INFORMATION_SCHEMA'
     AND snowflake_tables.table_type = 'BASE TABLE'
     AND snowflake_tables.last_altered <= DATEADD(D, {{ var('dev_db_object_expiration') }}, CURRENT_TIMESTAMP())
   ORDER BY dev_databases.database_owner
@@ -70,7 +71,7 @@ gitlab_team_members AS (
 
 final AS (
 
-  SELECT
+  SELECT DISTINCT
     stale_dev_db_tables.table_name,
     stale_dev_db_tables.table_schema,
     stale_dev_db_tables.table_catalog,
@@ -87,3 +88,4 @@ final AS (
 
 SELECT *
 FROM final
+ORDER BY gitlab_username

@@ -6067,6 +6067,7 @@ roles:
         - analytics_engineer_core
         - analyst_engineering
         - analyst_growth
+        - customers_db
         - data_team_analyst
         - gainsight_customer_success
         - snowflake_analyst_safe
@@ -6282,6 +6283,11 @@ roles:
         - gitlab_dotcom
         - snowflake_analyst
         - zendesk
+      warehouses:
+        - dev_xs
+  - alejandro:
+      member_of:
+        - snowflake_analyst
       warehouses:
         - dev_xs
   - jblevins:
@@ -7412,6 +7418,10 @@ users:
       can_login: true
       member_of:
         - workato
+  - alejandro:
+      can_login: true
+      member_of:
+        - alejandro
   - aluis:
       can_login: true
       member_of:

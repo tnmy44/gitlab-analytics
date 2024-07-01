@@ -133,8 +133,6 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     'WAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
-  WHERE
-  DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
   GROUP BY ALL
 
 ), MAU AS (
@@ -147,8 +145,6 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     'MAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
-  WHERE
-  DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
   GROUP BY ALL
 
 ), 
@@ -220,8 +216,6 @@ monthly_retention_grouped AS (
     'Weekly Event Count' AS metric,
     COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
-  WHERE
-  DATE_TRUNC(WEEK, behavior_date) < DATE_TRUNC(WEEK, CURRENT_DATE)  
   GROUP BY ALL
 
 ), monthly_event AS (
@@ -234,8 +228,6 @@ monthly_retention_grouped AS (
     'Monthly Event Count' AS metric,
     COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
-  WHERE
-  DATE_TRUNC(MONTH, behavior_date) < DATE_TRUNC(MONTH, CURRENT_DATE) 
   GROUP BY ALL
 
 ),
