@@ -3,7 +3,7 @@ For each source_table in source_tables:
 - SELECT certain columns
 - Then UNION with the next source table
 */
-{%- macro union_aws_source(source_tables, source_schema='aws_billing') -%}
+{%- macro union_aws_source(source_tables) -%}
 
 {% set all_raw_sql %}
     {% for source_table in source_tables %}
@@ -19,7 +19,7 @@ For each source_table in source_tables:
         pricing_unit AS pricing_unit,
         line_item_net_unblended_cost AS billed_cost,
         pricing_public_on_demand_cost AS list_cost
-      FROM {{ source(source_schema, source_table) }}
+      FROM {{ ref(source_table) }}
 
       {% if not loop.last %}UNION ALL{% endif %}
     {% endfor %}

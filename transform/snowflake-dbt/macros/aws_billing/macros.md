@@ -47,7 +47,6 @@ This macro unions data from multiple AWS billing source tables
 ## Fields:
 
 * `source_tables` (**required**): A list of the names of your AWS source tables (e.g., `['table1', 'table2', 'table3']`).
-* `source_schema` (optional, default: 'aws_billing'): The schema where your source tables are located.
 
 **Example Usage:**
 {% raw %}
@@ -59,7 +58,7 @@ This macro unions data from multiple AWS billing source tables
     'legacy_gitlab_0347',
     'services_org_6953'] %}
 
-{{ union_aws_source(source_tables, 'aws_billing' )}}
+{{ union_aws_source(source_tables)}}
 ```
 {% endraw %}
 ## Generated SQL:

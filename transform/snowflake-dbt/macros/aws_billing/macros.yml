@@ -19,6 +19,3 @@ macros:
       - name: source_tables
         type: comma separated list between brackets
         description: Name of the source table (from schema.yml file).
-      - name: source_schema
-        type: string
-        description: Name of the source table (from schema.yml file). Default value is AWS_BILLING.
