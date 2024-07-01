@@ -4773,6 +4773,18 @@ models:
         description: The name of the manager for the tehchnical account manager who manages the account.
       - name: executive_sponsor
         description: executive sponsor of this account
+      - name: bdr_next_steps
+        description: Outlines the next steps that connect to the prospecting strategy for this account.
+      - name: bdr_account_research
+        description: Displays the research that was made on account to justify the account's addition to a prospecting list.
+      - name: bdr_account_strategy
+        description: Aggregates the path for approaching the account into some more general buckets
+      - name: account_bdr_assigned_user_role
+        description: The region and segment specific role of the BDR assigned to an account.
+      - name: bdr_recycle_date
+        description: Automatically populates two months out from the actively working start date to indicate when an outbound account should be considered for removal from the outbound pipeline.
+      - name: actively_working_start_date
+        description: Automatically datestamps the date and time that an account was moved to a BDRs outbound prospecting list.
 
 
 
@@ -5175,8 +5187,8 @@ models:
         description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date
@@ -5514,8 +5526,8 @@ models:
         description: The ratio of incremental annual contract value to net ARR assigned to this opportunity based on its segment and order type. This field is a helper used to map old IACV values to new net ARR values, which were updated for all opportunities closed prior to 2021-02-01.
       - name: dim_order_type_id
         description: '{{ doc("order_type") }}'
-      - name: dim_order_type_live_id
-        description: '{{ doc("order_type_live") }}'
+      - name: dim_order_type_current_id
+        description: '{{ doc("order_type_current") }}'
       - name: pre_military_invasion_arr
         description: '{{ doc("pre_military_invasion_arr") }}'
       - name: won_arr_basis_for_clari
@@ -5767,6 +5779,16 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_mrr_weekly
+    description: One row represents Monthly Recurring Revenue per day, by rate plan charge. Excludes charges with $0 MRR.
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "mrr"]
 
   - name: fct_mrr_with_zero_dollar_charges
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.

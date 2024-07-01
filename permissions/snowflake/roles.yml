@@ -2973,6 +2973,7 @@ roles:
         - data_manager
         - marketo
         - orgadmin
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -3807,6 +3808,7 @@ roles:
         - data_team_analyst
         - data_manager
         - marketo
+        - snowflake_analyst
         - snowflake_analyst_safe
         - salesforce_sandbox
         - xactly
@@ -5785,17 +5787,6 @@ roles:
         - workday_hcm
       warehouses:
         - dev_xs
-  - smishra:
-      member_of:
-        - adaptive
-        - analyst_finance
-        - customers_db
-        - analyst_marketing
-        - data_team_analyst
-        - snowflake_analyst_safe
-        - xactly
-      warehouses:
-        - dev_xs
   - snalamaru:
       member_of:
         - analytics_engineer_core
@@ -6043,6 +6034,12 @@ roles:
         - xactly
       warehouses:
         - dev_xs
+  - lanzures:
+      member_of:
+        - snowflake_account_usage
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - trizzi:
       member_of:
         - snowflake_analyst
@@ -6070,6 +6067,7 @@ roles:
         - analytics_engineer_core
         - analyst_engineering
         - analyst_growth
+        - customers_db
         - data_team_analyst
         - gainsight_customer_success
         - snowflake_analyst_safe
@@ -6238,6 +6236,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - mek:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - rchanila:
       member_of:
         - snowflake_analyst
@@ -6263,6 +6266,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - vshushlin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ateclemariam:
       member_of:
         - analyst_sales
@@ -6275,6 +6283,11 @@ roles:
         - gitlab_dotcom
         - snowflake_analyst
         - zendesk
+      warehouses:
+        - dev_xs
+  - alejandro:
+      member_of:
+        - snowflake_analyst
       warehouses:
         - dev_xs
   - jblevins:
@@ -6323,6 +6336,12 @@ roles:
         - dev_xs
   - seanhall:
       member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ballam:
+      member_of:
+        - snowflake_account_usage
         - snowflake_analyst
       warehouses:
         - dev_xs
@@ -7254,10 +7273,6 @@ users:
       can_login: true
       member_of:
         - smccormack
-  - smishra:
-      can_login: true
-      member_of:
-        - smishra
   - snalamaru:
       can_login: true
       member_of:
@@ -7403,6 +7418,10 @@ users:
       can_login: true
       member_of:
         - workato
+  - alejandro:
+      can_login: true
+      member_of:
+        - alejandro
   - aluis:
       can_login: true
       member_of:
@@ -7475,10 +7494,18 @@ users:
       can_login: true
       member_of:
         - kvasireddy
+  - ballam:
+      can_login: true
+      member_of:
+        - ballam
   - zapier:
       can_login: true
       member_of:
         - zapier
+  - mek:
+      can_login: true
+      member_of:
+        - mek
   - gsodhi:
       can_login: true
       member_of:
@@ -7495,10 +7522,18 @@ users:
       can_login: true
       member_of:
         - aevans
+  - vshushlin:
+      can_login: true
+      member_of:
+        - vshushlin
   - tmccaslin:
       can_login: true
       member_of:
         - tmccaslin
+  - lanzures:
+      can_login: true
+      member_of:
+        - lanzures
   - jdleon:
       can_login: true
       member_of:
