@@ -11,7 +11,6 @@
 
 {{ simple_cte([
     ('mart_ping_instance','mart_ping_instance'),
-    ('mart_ping_instance', 'mart_ping_instance'),
     ('mart_arr', 'mart_arr'),
     ('sfdc_contact_source', 'sfdc_contact_source')
 ]) }}
@@ -91,10 +90,10 @@
 ),staging AS (
     SELECT DISTINCT 
         final.*, 
-        arr.DIM_CRM_ACCOUNT_ID
+        mart_arr.DIM_CRM_ACCOUNT_ID
     FROM final
     LEFT JOIN mart_arr
-        ON marr.DIM_SUBSCRIPTION_ID = f.LATEST_SUBSCRIPTION_ID
+        ON mart_arr.DIM_SUBSCRIPTION_ID = final.LATEST_SUBSCRIPTION_ID
         and ARR_MONTH = date_trunc('month', current_date)
     WHERE PING_PRODUCT_TIER <> 'Free'
         AND IS_PAID_SUBSCRIPTION
@@ -113,7 +112,7 @@ LEFT join sfdc_contact_source
         on sfdc_contact_source.account_id = staging.DIM_CRM_ACCOUNT_ID 
         AND contains(contact_role,'Gitlab Admin')
 left join raw.driveload.MARKETING_DNC_LIST 
-        on lower(c.contact_email) = lower(MARKETING_DNC_LIST.address)
+        on lower(sfdc_contact_source.contact_email) = lower(MARKETING_DNC_LIST.address)
 where lower(MARKETING_DNC_LIST.address) is null
 and contact_email is not null
 ORDER BY 2
