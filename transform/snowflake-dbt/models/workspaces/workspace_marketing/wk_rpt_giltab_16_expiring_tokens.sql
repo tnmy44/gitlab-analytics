@@ -74,22 +74,31 @@ WITH latest_ping_sent AS (
 ), final AS (
 
     SELECT DISTINCT 
-        combine_ctes.*, 
-        mart_arr.dim_crm_account_id
-    FROM combine_ctes
-    LEFT JOIN {{ ref('mart_arr') }}
-        ON mart_arr.dim_subscription_id = combine_ctes.latest_subscription_id
-        AND arr_month = DATE_TRUNC('MONTH', current_date)
-    WHERE ping_product_tier <> 'Free'
-        AND is_paid_subscription
+        final.*, 
+        arr.DIM_CRM_ACCOUNT_ID
+    FROM final
+    LEFT JOIN mart_arr
+        ON marr.DIM_SUBSCRIPTION_ID = f.LATEST_SUBSCRIPTION_ID
+        and ARR_MONTH = date_trunc('month', current_date)
+    WHERE PING_PRODUCT_TIER <> 'Free'
+        AND IS_PAID_SUBSCRIPTION
 )
 
 SELECT DISTINCT
-    final.dim_crm_account_id,
-    mart_crm_person.sfdc_record_id,
-    mart_crm_person.inactive_contact,
-    mart_crm_person.contact_role
-FROM final
-LEFT JOIN {{ ref('mart_crm_person') }}
-    ON mart_crm_person.account_id = final.dim_crm_account_id 
-        AND CONTAINS(LOWER(person_role),'%gitlab admin%')
+    staging.DIM_CRM_ACCOUNT_ID,
+    -- DIM_CRM_ACCOUNT.CRM_ACCOUNT_NAME,
+    inactive_contact,
+    sfdc_contact_source.contact_first_name,
+    sfdc_contact_source.contact_last_name,
+    sfdc_contact_source.contact_email,
+    sfdc_contact_source.contact_role,
+    sfdc_contact_source.mobile_phone
+FROM staging
+LEFT join sfdc_contact_source
+        on sfdc_contact_source.account_id = staging.DIM_CRM_ACCOUNT_ID 
+        AND contains(contact_role,'Gitlab Admin')
+left join raw.driveload.MARKETING_DNC_LIST 
+        on lower(c.contact_email) = lower(MARKETING_DNC_LIST.address)
+where lower(MARKETING_DNC_LIST.address) is null
+and contact_email is not null
+ORDER BY 2
