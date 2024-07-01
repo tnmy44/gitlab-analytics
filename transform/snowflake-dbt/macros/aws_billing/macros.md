@@ -43,8 +43,6 @@ parsed AS (
 
 ## Unioning Multiple AWS Sources
 
-`union_aws_source`
-
 This macro unions data from multiple AWS billing source tables
 
 ## Fields:

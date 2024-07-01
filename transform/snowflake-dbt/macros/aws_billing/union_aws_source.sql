@@ -3,7 +3,7 @@ For each source_table in source_tables:
 - SELECT certain columns
 - Then UNION with the next source table
 */
-{%- macro dedupe_and_union_aws_source(source_tables, source_schema='aws_billing') -%}
+{%- macro union_aws_source(source_tables, source_schema='aws_billing') -%}
 
 {% set all_raw_sql %}
     {% for source_table in source_tables %}
