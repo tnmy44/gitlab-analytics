@@ -2,7 +2,8 @@ WITH source AS (
 
     SELECT parse_json(via) as via,
            try_parse_json(satisfaction_rating) satisfaction_rating,
-           * exclude(via, satisfaction_rating)
+           parse_json(organization_fields) as organization_fields,
+           * exclude(via, satisfaction_rating, organization_fields)
     FROM {{ ref('zendesk_tickets_dedupe_source') }}
 ),
 
