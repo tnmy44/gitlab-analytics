@@ -1,26 +1,6 @@
 version: 2
   
 models:
-  - name: gitlab_dotcom_ci_minutes_ui_namespace_replication
-    description: '{{ doc("gitlab_dotcom_ci_minutes_ui_namespace_replication") }}'
-    columns:
-      - name: snapshot_month
-        tests:
-          - not_null
-      - name: namespace_id
-        tests:
-          - not_null
-      - name: CONCAT(snapshot_month, namespace_id)
-        tests:
-          - unique
-
-  - name: gitlab_dotcom_clusters_xf
-    columns:
-      - name: cluster_id
-        tests:
-          - not_null
-          - unique
-
   - name: gitlab_dotcom_user_custom_attributes
     columns:
       - name: user_id
@@ -49,28 +29,6 @@ models:
       - name: project_id
         tests:
           - not_null
-                
-  - name: gitlab_dotcom_gitlab_internal_sprints
-    description: '{{ doc("gitlab_dotcom_gitlab_internal_sprints") }}'
-    columns:
-        - name: cached_markdown_version
-        - name: created_at
-        - name: due_date
-        - name: group_id
-        - name: project_id
-        - name: sprint_description
-        - name: sprint_description_html
-        - name: sprint_id
-          tests:
-            - not_null
-            - unique
-        - name: sprint_iid
-        - name: sprint_state_enum
-        - name: sprint_title
-        - name: sprint_title_html
-        - name: start_date
-        - name: updated_at
-        
 
   - name: gitlab_dotcom_gitlab_user_requests
     description: '{{ doc("gitlab_dotcom_gitlab_user_requests") }}'
@@ -124,13 +82,6 @@ models:
         tests:
           - accepted_values:
                       values: ['Commit', 'Epic', 'Issue', 'MergeRequest', 'Snippet', 'Wiki', 'DesignManagement::Design']
-
-  - name: gitlab_dotcom_label_states_xf
-    description: Represents the latest state (added or removed) for each label on Epics/Issues/Merge Requests. Should be phased out in favor of `label_links`.
-    columns:
-      - name: label_id
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_labels_xf
     description: '{{ doc("gitlab_dotcom_labels_xf") }}'
@@ -466,22 +417,3 @@ models:
         description: days between user creation and last activity
       - name: account_age_cohort
         description: cohorting of time between last dbt run and user creation date.
-
-  - name: recruiting_diversity_effort
-    description: This tracks the recruiting teams weekly check-ins to understand how they are progressing on their OKR for a diverse team.
-    columns:     
-    - name: issue_title
-      tests:
-        - not_null
-    - name: issue_IID
-      tests:
-        - not_null
-    - name: issue_created_at
-    - name: issue_created_week
-    - name: issue_closed_at
-    - name: issue_closed_week
-    - name: is_issue_closed
-    - name: issue_state
-    - name: assignee
-    - name: issue_description
-    - name: used_diversity_string
