@@ -28,7 +28,7 @@ WITH prep_crm_opportunity AS (
         employee_number,
         user_role_name,
         user_email,
-        user_email,
+        user_name,
         title,
         department,
         team,
