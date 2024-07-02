@@ -393,6 +393,12 @@ ADAPTIVE_PASSWORD = Secret(
     "ADAPTIVE_PASSWORD",
 )
 
+KANTATA_OAUTH_TOKEN = Secret(
+    "env",
+    "KANTATA_OAUTH_TOKEN",
+    "airflow",
+    "KANTATA_OAUTH_TOKEN",
+)
 ## OCI Usage Extraction
 
 OCI_FINGERPRINT = Secret("env", "OCI_FINGERPRINT", "airflow", "OCI_FINGERPRINT")
