@@ -9,22 +9,6 @@ models:
         tests:
           - not_null
           - unique
-  - name: gitlab_dotcom_alert_management_alerts_source
-    description: Base model for Gitlab.com alert_management_alerts
-    columns:
-      - name: alert_management_alert_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_application_settings_source
     description: Base model for Gitlab.com application settings data
     columns:
@@ -32,22 +16,6 @@ models:
         tests:
           - not_null
           - unique
-  - name: gitlab_dotcom_approval_merge_request_rules_source
-    description: Base model for Gitlab.com approval_merge_request_rules
-    columns:
-      - name: approval_merge_request_rule_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_approvals_source
     description: Base model for Gitlab.com approvals
     columns:
@@ -338,26 +306,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_platform_metrics_source
-    description: Source model for Gitlab.com ci_platform_metrics
-    columns:
-      - name: metric_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: platform_target
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: recorded_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: target_count
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_ci_runner_projects_source
     description: Base model for Gitlab.com ci_runner_projects
     columns:
@@ -635,45 +583,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_design_management_designs_versions_source
-    description: Base model for GitLab.com designs_versions.
-    columns:
-      - name: design_version_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: design_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: version_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
-  - name: gitlab_dotcom_design_management_designs_source
-    description: Base model for GitLab.com designs.
-    columns:
-      - name: design_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          -  not_null
-      - name: issue_id
-
-  - name: gitlab_dotcom_design_management_versions_source
-    description: Base model for GitLab.com versions.
-    columns:
-      - name: version_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
   - name: gitlab_dotcom_elasticsearch_indexed_namespaces_source
     description: Base model for GitLab.com elasticsearch indexed namespaces.
     columns:
@@ -705,19 +614,6 @@ models:
         tests:
           - not_null
       - name: updated_at
-
-  - name: gitlab_dotcom_experiment_subjects_source
-    description: Base model for GitLab.com experiment_subjects.
-    columns:
-      - name: experiment_subject_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: experiment_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_environments_source
     description: Base model for GitLab.com environments.
@@ -768,19 +664,6 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_experiments_source
-    columns:
-      - name: experiment_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: experiment_name
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-
   - name: gitlab_dotcom_fork_network_members_source
     description: A base model for Gitlab.com fork_network_members.
     columns:
@@ -789,21 +672,6 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: gitlab_dotcom_gitlab_subscription_histories_source
-    description: A log table tracking all changes to a gitlab_subscription.
-    columns:
-      - name: gitlab_subscription_history_id
-        description: The unique identifier of the history row.
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: gitlab_subscription_id
-        description: The namespace associated with the gitlab_subscription.
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_gpg_signatures_source
     description: Base model for Gitlab.com ssh_signatures
@@ -929,23 +797,6 @@ models:
       - name: issue_description
         description: '{{ doc("visibility_documentation") }}'
 
-  - name: gitlab_dotcom_keys_source
-    description: Base model for Gitlab.com keys. All sensitive fields are not included in the manifest.
-    columns:
-      - name: key_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_label_priorities_source
     description: Base model for Gitlab.com label priorities
     columns:
@@ -982,24 +833,6 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_lfs_objects_projects_source
-    description: Base model for Gitlab.com lfs_objects_projects
-    columns:
-      - name: lfs_object_project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: lfs_object_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
-
   - name: gitlab_dotcom_lists_source
     description: Base model for Gitlab.com lists
     columns:
@@ -1016,15 +849,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-
-  - name: gitlab_dotcom_merge_request_blocks_source
-    description: Base model for GitLab.com merge request blocks table
-    columns:
-      - name: merge_request_blocks_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
 
   - name: gitlab_dotcom_merge_request_diffs_source
     description: Base model for Gitlab.com request diffs
@@ -1103,33 +927,6 @@ models:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4]
-  - name: gitlab_dotcom_merge_requests_closing_issues_source
-    description: Base model for Gitlab.com merge requests closing issues
-    columns:
-      - name: merge_request_issue_relation_id
-        description: >-
-          unique id created with an md5 hash of `issue_id`, `merge_request_id`,
-          and `created_at`
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: merge_request_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: issue_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_milestones_source
     description: Base model for Gitlab.com milestones
@@ -1266,23 +1063,6 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_onboarding_progresses_source
-    description: >-
-      A base model for Gitlab.com onboarding_progresses.
-    columns:
-      - name: onboarding_progress_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_plans_source
     description: >-
       A base model for Gitlab.com plans.
@@ -1420,14 +1200,6 @@ models:
         tests:
           - unique
 
-  - name: gitlab_dotcom_project_repository_storage_moves_source
-    description: Base model for Gitlab.com project repository moves
-    columns:
-      - name: project_repository_storage_move_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
   - name: gitlab_dotcom_project_settings_source
     description: Base model for Gitlab.com project settings
     columns:
@@ -1520,16 +1292,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_protected_branches_source
-    description: >-
-      A base model for Gitlab.com Gitlab.com protected_branches.
-    columns:
-      - name: protected_branch_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-
   - name: gitlab_dotcom_protected_branch_merge_access_levels_source
     description: A base model for Gitlab.com Gitlab.com protected_branch_merge_access_levels.
     columns:
@@ -1543,16 +1305,6 @@ models:
     description: A base model for Gitlab.com Gitlab.com protected_branch_push_access_levels.
     columns:
       - name: protected_branch_push_access_levels_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-
-  - name: gitlab_dotcom_push_rules_source
-    description: >-
-      A base model for Gitlab.com Gitlab.com push_rules.
-    columns:
-      - name: push_rule_id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
@@ -1680,15 +1432,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_shards_source
-    description: Base model for Gitlab.com repo shards
-    columns:
-      - name: shard_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-
   - name: gitlab_dotcom_snippets_source
     description: Base model for Gitlab.com snippets
     columns:
@@ -1707,23 +1450,6 @@ models:
           - not_null
       - name: updated_at
         tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
-  - name: gitlab_dotcom_sprints_source
-    description: Base model for Gitlab.com sprints
-    columns:
-      - name: sprint_id
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tests:
-          - not_null
-      - name: updated_at
-        tests:
-          - not_null
-      - name: sprint_iid
         tests:
           - not_null
 
@@ -1848,15 +1574,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-
-  - name: gitlab_dotcom_user_credit_card_validations_source
-    description: Base model for Gitlab.com user credit card validations
-    columns:
-      - name: user_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
 
   - name: gitlab_dotcom_user_custom_attributes_source
     description: Base model for Gitlab.com user custom attributes
