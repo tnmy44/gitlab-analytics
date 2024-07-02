@@ -42,8 +42,8 @@ models:
       - name: milestone
       - name: is_default_enabled
 
-  - name: flaky_data_tests_historical
-    description: This is the base table built on the snapshots of all flaky data_tests
+  - name: flaky_tests_historical
+    description: This is the base table built on the snapshots of all flaky tests
     columns:
       - name: hash
         data_tests:
@@ -59,8 +59,8 @@ models:
       - name: last_flaky_at
       - name: feature_category
 
-  - name: flaky_data_tests_latest
-    description: This is the latest version of all existing flaky data_tests
+  - name: flaky_tests_latest
+    description: This is the latest version of all existing flaky tests
     columns:
       - name: hash
         data_tests:
@@ -178,4 +178,4 @@ models:
     columns:
       -   name: snapshot_date
           data_tests:
-            - not_null  
+            - not_null
