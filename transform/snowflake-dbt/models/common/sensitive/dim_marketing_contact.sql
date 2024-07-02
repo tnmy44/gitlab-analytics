@@ -111,6 +111,7 @@ sfdc AS (
     END                                                                                                             AS company_name,
     crm_person.title                                                                                                AS job_title,
     crm_person.it_job_title_hierarchy,
+    crm_person.contact_role,
     crm_account.parent_crm_account_sales_segment                                                                    AS parent_crm_account_sales_segment,
     crm_account.parent_crm_account_region                                                                           AS parent_crm_account_region,
     crm_person.account_demographics_geo                                                                             AS crm_person_region,
