@@ -1,13 +1,15 @@
 WITH team_status_dup AS (
   SELECT *
-  FROM {{ref('fct_team_status')}}
+  FROM {{ ref('fct_team_status') }}
 ),
+
 pto AS (
   SELECT *
-  FROM {{ref('prep_pto')}}
+  FROM {{ ref('prep_pto') }}
 ),
+
 team_status AS (
-  SELECT 
+  SELECT
     dim_team_member_sk,
     dim_team_sk,
     employee_id,
@@ -22,11 +24,12 @@ team_status AS (
     entity,
     is_position_active,
     is_current
-    FROM team_status_dup
-    WHERE is_current=TRUE --To consider only latest status of the team member
+  FROM team_status_dup
+  WHERE is_current = TRUE --To consider only latest status of the team member
 ),
+
 combined_sources AS (
-  SELECT 
+  SELECT
     team_status.dim_team_member_sk,
     team_status.dim_team_sk,
     team_status.employee_id,
@@ -39,23 +42,23 @@ combined_sources AS (
     team_status.management_level,
     team_status.job_grade,
     team_status.entity,
-    team_status.is_position_active,  
+    team_status.is_position_active,
     team_status.is_current AS is_current_team_member_position,
-    pto.start_date AS absence_start,
-    pto.end_date AS absence_end,
-    pto.pto_date AS absence_date,
-    pto.is_pto AS is_pto,
-    pto.is_holiday AS is_holiday,
-    pto.pto_uuid AS pto_uuid,
-    pto.pto_type_uuid AS pto_type_uuid,
-    pto.pto_status AS pto_status,
-    pto.pto_status_name AS pto_status_name,
-    pto.total_hours AS total_hours,
-    pto.recorded_hours AS recorded_hours,
+    pto.start_date         AS absence_start,
+    pto.end_date           AS absence_end,
+    pto.pto_date           AS absence_date,
+    pto.is_pto             AS is_pto,
+    pto.is_holiday         AS is_holiday,
+    pto.pto_uuid           AS pto_uuid,
+    pto.pto_type_uuid      AS pto_type_uuid,
+    pto.pto_status         AS pto_status,
+    pto.pto_status_name    AS pto_status_name,
+    pto.total_hours        AS total_hours,
+    pto.recorded_hours     AS recorded_hours,
     pto.absence_status,
     pto.employee_day_length
   FROM team_status
-  INNER JOIN pto ON pto.hr_employee_id=team_status.employee_id
+  INNER JOIN pto ON team_status.employee_id = pto.hr_employee_id
 ),
 
 final AS (

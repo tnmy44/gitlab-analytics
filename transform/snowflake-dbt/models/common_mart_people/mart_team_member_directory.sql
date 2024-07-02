@@ -6,41 +6,41 @@ WITH cost_center AS (
   initial cost_center afterwards
   */
 
-  SELECT 
+  SELECT
     employee_id,
     cost_center,
     DATE(valid_from)                                                                                           AS valid_from,
     DATE(valid_to)                                                                                             AS valid_to,
     LAG(cost_center, 1, NULL) OVER (PARTITION BY employee_id ORDER BY valid_from)                              AS lag_cost_center,
     CONDITIONAL_TRUE_EVENT(cost_center != lag_cost_center) OVER (PARTITION BY employee_id ORDER BY valid_from) AS cost_center_group,
-    LEAD(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from)                                     AS next_entry
-  FROM {{ ref('workday_employee_mapping_source') }} 
-  
+    LEAD(valid_from, 1) OVER (PARTITION BY employee_id ORDER BY valid_from)                                    AS next_entry
+  FROM {{ ref('workday_employee_mapping_source') }}
+
 ),
 
 cost_center_group AS (
 
-  SELECT 
-    employee_id, 
-    cost_center, 
-    cost_center_group, 
-    MIN(valid_from)                                                                                            AS valid_from,
-    MAX(valid_to)                                                                                              AS valid_to 
+  SELECT
+    employee_id,
+    cost_center,
+    cost_center_group,
+    MIN(valid_from) AS valid_from,
+    MAX(valid_to)   AS valid_to
   FROM cost_center
-  {{ dbt_utils.group_by(n=3)}}
-  
+  {{ dbt_utils.group_by(n=3) }}
+
 ),
 
 team_member AS (
 
-  SELECT 
+  SELECT
     dim_team_member_sk,
     employee_id,
     nationality,
     ethnicity,
     first_name,
     last_name,
-    first_name || ' ' || last_name                                                                  AS full_name,
+    first_name || ' ' || last_name AS full_name,
     gender,
     work_email,
     date_of_birth,
@@ -68,50 +68,50 @@ team_member AS (
 
 team_member_position AS (
 
-  SELECT 
-    dim_team_member_sk                                                                            AS dim_team_member_sk,
-    dim_team_sk                                                                                   AS dim_team_sk,
-    employee_id                                                                                   AS employee_id,
-    COALESCE(team_id,'Unknown Team ID')                                                           AS team_id,
-    manager                                                                                       AS manager,
-    COALESCE(suporg,'Unknown Supervisory Organization')                                           AS suporg,
-    COALESCE(job_code,'Unknown Job Code')                                                         AS job_code,
-    position                                                                                      AS position,
-    COALESCE(job_family,'Unknown Job Family')                                                     AS job_family,
-    job_specialty_single                                                                          AS job_specialty_single,
-    job_specialty_multi                                                                           AS job_specialty_multi,
-    COALESCE(management_level,'Unknown Management Level')                                         AS management_level,
-    COALESCE(job_grade,'Unknown Job Grade')                                                       AS job_grade,
-    department                                                                                    AS department,
-    division                                                                                      AS division,
-    entity                                                                                        AS entity,
-    valid_from                                                                                    AS valid_from,
-    valid_to                                                                                      AS valid_to
+  SELECT
+    dim_team_member_sk                                     AS dim_team_member_sk,
+    dim_team_sk                                            AS dim_team_sk,
+    employee_id                                            AS employee_id,
+    COALESCE(team_id, 'Unknown Team ID')                   AS team_id,
+    manager                                                AS manager,
+    COALESCE(suporg, 'Unknown Supervisory Organization')   AS suporg,
+    COALESCE(job_code, 'Unknown Job Code')                 AS job_code,
+    position                                               AS position,
+    COALESCE(job_family, 'Unknown Job Family')             AS job_family,
+    job_specialty_single                                   AS job_specialty_single,
+    job_specialty_multi                                    AS job_specialty_multi,
+    COALESCE(management_level, 'Unknown Management Level') AS management_level,
+    COALESCE(job_grade, 'Unknown Job Grade')               AS job_grade,
+    department                                             AS department,
+    division                                               AS division,
+    entity                                                 AS entity,
+    valid_from                                             AS valid_from,
+    valid_to                                               AS valid_to
   FROM {{ ref('fct_team_member_position') }}
 
 
-), 
+),
 
 unioned_dates AS (
 
-  SELECT 
-    employee_id, 
+  SELECT
+    employee_id,
     NULL AS team_id,
     valid_from
   FROM cost_center_group
-  
+
   UNION
 
-  SELECT 
-    employee_id, 
+  SELECT
+    employee_id,
     team_id,
     valid_from
   FROM team_member
-  
+
   UNION
 
-  SELECT 
-    employee_id, 
+  SELECT
+    employee_id,
     team_id,
     valid_from
   FROM team_member_position
@@ -120,23 +120,23 @@ unioned_dates AS (
 
 date_range AS (
 
-  SELECT 
+  SELECT
     employee_id,
     team_id,
     valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to,
-    IFF(valid_to = {{var('tomorrow')}}, TRUE, FALSE) AS is_current
+    LEAD(valid_from, 1, {{ var('tomorrow') }}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to,
+    IFF(valid_to = {{ var('tomorrow') }}, TRUE, FALSE)                                             AS is_current
   FROM unioned_dates
-  
+
 ),
 
 final AS (
 
-  SELECT 
+  SELECT
 
     -- Surrogate keys
     team_member.dim_team_member_sk,
-    {{ dbt_utils.generate_surrogate_key(['team_member.team_id']) }}                AS dim_team_sk,
+    {{ dbt_utils.generate_surrogate_key(['team_member.team_id']) }}                                                          AS dim_team_sk,
 
     --Natural keys
     team_member.employee_id,
@@ -150,9 +150,9 @@ final AS (
     team_member.gender,
     team_member.work_email,
     team_member.date_of_birth,
-    team_member.age_calculated                                            AS age,
+    team_member.age_calculated                                                                                                                                AS age,
     team_member.age_cohort,
-    COALESCE(cost_center_group.cost_center,'Unknown Cost Center')         AS cost_center,
+    COALESCE(cost_center_group.cost_center, 'Unknown Cost Center')                                                                                            AS cost_center,
     team_member.gitlab_username,
     team_member.country,
     team_member.region,
@@ -167,10 +167,10 @@ final AS (
     team_member.is_current_team_member,
     team_member.is_rehire,
     team_member.team_id,
-    team_member_position.manager                                          AS team_manager_name,
-    team_member_position.department                                       AS department,
-    LAST_VALUE(team_member_position.division IGNORE NULLS) OVER (PARTITION BY date_range.employee_id ORDER BY date_range.valid_from ROWS UNBOUNDED PRECEDING)           
-                                                                          AS division,
+    team_member_position.manager                                                                                                                              AS team_manager_name,
+    team_member_position.department                                                                                                                           AS department,
+    LAST_VALUE(team_member_position.division IGNORE NULLS) OVER (PARTITION BY date_range.employee_id ORDER BY date_range.valid_from ROWS UNBOUNDED PRECEDING)
+      AS division,
     team_member_position.suporg,
     team_member_position.job_code,
     team_member_position.position,
@@ -185,18 +185,24 @@ final AS (
     date_range.is_current
   FROM team_member
   INNER JOIN date_range
-    ON date_range.employee_id = team_member.employee_id 
+    ON team_member.employee_id = date_range.employee_id
       AND date_range.valid_from != date_range.valid_to
-        AND NOT (team_member.valid_to <= date_range.valid_from
-          OR team_member.valid_from >= date_range.valid_to)
+      AND NOT (
+        team_member.valid_to <= date_range.valid_from
+        OR team_member.valid_from >= date_range.valid_to
+      )
   LEFT JOIN cost_center_group
-    ON date_range.employee_id = cost_center_group.employee_id 
-      AND NOT (cost_center_group.valid_to <= date_range.valid_from
-          OR cost_center_group.valid_from >= date_range.valid_to)
+    ON date_range.employee_id = cost_center_group.employee_id
+      AND NOT (
+        date_range.valid_from >= cost_center_group.valid_to
+        OR date_range.valid_to <= cost_center_group.valid_from
+      )
   LEFT JOIN team_member_position
-    ON date_range.employee_id = team_member_position.employee_id 
-      AND NOT (team_member_position.valid_to <= date_range.valid_from
-          OR team_member_position.valid_from >= date_range.valid_to)
+    ON date_range.employee_id = team_member_position.employee_id
+      AND NOT (
+        date_range.valid_from >= team_member_position.valid_to
+        OR date_range.valid_to <= team_member_position.valid_from
+      )
 
 )
 
