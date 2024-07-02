@@ -26,6 +26,19 @@ WITH prep_crm_opportunity AS (
     SELECT 
         dim_crm_user_id,
         employee_number,
+        user_role_name,
+        user_email,
+        user_email,
+        title,
+        department,
+        team,
+        manager_id,
+        manager_name,
+        is_active,
+        crm_user_sales_segment,
+        crm_user_geo,
+        crm_user_region,
+        crm_user_area,
         snapshot_date
     FROM {{ref('prep_crm_user_daily_snapshot')}}
     WHERE snapshot_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
