@@ -317,35 +317,39 @@ opportunity_campaign_snapshot_prep AS (
     account_summary.attended_leads,
     account_summary.open_pipeline_live,
     opportunity_snapshot_base.opp_net_arr,
-    SUM(
-      CASE 
+    CASE 
       WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND 
       opportunity_snapshot_base.is_net_arr_pipeline_created 
       THEN opp_net_arr 
-      END
-    ) AS sourced_pipeline_post_event,
-    COUNT(
-      DISTINCT 
-      CASE 
+    END
+    AS sourced_pipeline_post_event,
+    CASE 
       WHEN opportunity_snapshot_base.pipeline_created_date > true_event_date AND 
       opportunity_snapshot_base.is_net_arr_pipeline_created 
       THEN opportunity_snapshot_base.dim_crm_opportunity_id 
-      END
-    ) AS sourced_opps_post_event,
-    SUM(
-      CASE 
-      WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 
+    END
+    AS sourced_opps_post_event,
+
+    CASE 
+      WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 AND 
+      opportunity_snapshot_base.is_net_arr_pipeline_created 
       THEN opp_net_arr 
-      END
-    ) AS open_pipeline,
-    COUNT(
-      DISTINCT 
-      CASE 
+    END
+    AS open_pipeline, 
+    CASE 
       WHEN opportunity_snapshot_base.snapshot_is_eligible_open_pipeline = 1 AND 
       opportunity_snapshot_base.is_net_arr_pipeline_created 
       THEN opportunity_snapshot_base.dim_crm_opportunity_id 
-      END
-    )  AS open_pipeline_opps
+    END
+    AS open_pipeline_opps,
+    CASE 
+      WHEN opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created = 1 
+      THEN opp_net_arr 
+    END AS snapshot_pipeline_created,
+    CASE 
+      WHEN opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created = 1 
+      THEN opportunity_snapshot_base.dim_crm_opportunity_id 
+    END AS snapshot_pipeline_created_opps
   FROM
     account_summary
   LEFT JOIN
@@ -356,7 +360,6 @@ opportunity_campaign_snapshot_prep AS (
     ON account_summary.dim_crm_account_id = opportunity_snapshot_base.dim_crm_account_id
       AND snapshot_dates.date_day = opportunity_snapshot_base.opportunity_snapshot_date
  
-  {{dbt_utils.group_by(n=16)}}
 ),
 
 eligible_opps AS (
@@ -366,13 +369,14 @@ eligible_opps AS (
     opportunity_campaign_snapshot_prep.dim_crm_account_id,
     CASE 
       WHEN event_snapshot_type = 'Event Date' AND 
-      snapshot_is_eligible_open_pipeline = TRUE 
+      snapshot_is_eligible_open_pipeline = TRUE AND 
+      is_net_arr_pipeline_created = TRUE 
       THEN TRUE 
       ELSE FALSE 
     END AS open_pipeline_at_event_date_flag,
     CASE 
       WHEN opportunity_campaign_snapshot_prep.pipeline_created_date >= opportunity_campaign_snapshot_prep.true_event_date AND 
-      opportunity_campaign_snapshot_prep.snapshot_is_net_arr_pipeline_created
+      opportunity_campaign_snapshot_prep.is_net_arr_pipeline_created
       THEN TRUE 
       ELSE FALSE  
       END AS sourced_pipeline_post_event_flag,      
@@ -642,6 +646,8 @@ final AS (
     opportunity_campaign_snapshot_base.sourced_opps_post_event,
     opportunity_campaign_snapshot_base.open_pipeline,
     opportunity_campaign_snapshot_base.open_pipeline_opps,
+    opportunity_campaign_snapshot_base.snapshot_pipeline_created,
+    opportunity_campaign_snapshot_base.snapshot_pipeline_created_opps,
     opportunity_snapshot_base.opp_net_arr,
     aggregated_opportunity_influenced_performance.influenced_pipeline
 
@@ -683,5 +689,5 @@ final AS (
     created_by="@dmicovic",
     updated_by="@dmicovic",
     created_date="2024-04-23",
-    updated_date="2024-07-01",
+    updated_date="2024-07-02",
   ) }}
