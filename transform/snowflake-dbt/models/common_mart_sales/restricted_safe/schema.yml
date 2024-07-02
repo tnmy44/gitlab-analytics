@@ -434,8 +434,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -535,8 +535,8 @@ models:
           - not_null
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -602,8 +602,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr

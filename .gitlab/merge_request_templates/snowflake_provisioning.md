@@ -8,7 +8,8 @@
 
 ##### Reviewer Steps
 
-1. [ ] Approve MR after checking against linked Access Request
+1. [ ] Approve MR after checking against linked Access Request.
+    - If the user requests a role outside of `snowflake_analyst`, manually update `roles.yml`
 1. [ ] Manually trigger new CI pipeline to unlock CI jobs:
     - [ ] Run CI job: Stage :snake: Python `snowflake_provisioning_snowflake_users`
     - [ ] Run CI job: Stage :snake: Python: `🧊permifrost_spec_test`

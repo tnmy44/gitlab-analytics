@@ -2892,3 +2892,19 @@ models:
       - name: last_modified_by_id
       - name: last_modified_date
       - name: systemmodstamp
+
+  - name: prep_crm_case_history
+    description: '{{ doc("prep_crm_case_history") }}'
+    columns:
+      - name: case_history_id
+        description: primary key for the field value change
+      - name: case_id
+        description: id of the SFDC case that had a tracked field value change
+      - name: created_by_id
+        description: SFDC user id of the user that made the change
+      - name: case_field
+      - name: data_type
+      - name: new_value
+      - name: old_value
+      - name: is_deleted
+      

@@ -73,7 +73,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.partner_initiated_opportunity,
       prep_crm_opportunity.user_segment,
       prep_crm_opportunity.order_type,
-      prep_crm_opportunity.order_type_live,
+      prep_crm_opportunity.order_type_current,
       prep_crm_opportunity.opportunity_category,
       prep_crm_opportunity.opportunity_health,
       prep_crm_opportunity.risk_type,
