@@ -152,5 +152,11 @@ WITH prep_crm_opportunity AS (
 
 )
 
-select * from final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@rkohnke",
+    updated_by="@rkohnke",
+    created_date="2024-07-02",
+    updated_date="2024-07-02"
+) }}
 
