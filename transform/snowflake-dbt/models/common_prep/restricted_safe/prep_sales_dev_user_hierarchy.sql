@@ -1,22 +1,41 @@
 WITH prep_crm_opportunity AS (
 
-    SELECT *
+    SELECT
+        dim_crm_account_id,
+        dim_crm_opportunity_id,
+        created_date_id,
+        sales_accepted_date_id,
+        stage_1_discovery_date_id,
+        is_sao,
+        net_arr,
+        order_type,
+        is_net_arr_closed_deal,
+        opportunity_business_development_representative,
+        opportunity_sales_development_representative
     FROM {{ref('prep_crm_opportunity')}}
 
 ), prep_date AS (
 
-    SELECT *
+    SELECT
+        date_id,
+        date_actual
     FROM {{ref('prep_date')}}
 
 ), prep_crm_user_daily_snapshot AS (
 
-    SELECT *
+    SELECT 
+        dim_crm_user_id,
+        employee_number,
+        snapshot_date
     FROM {{ref('prep_crm_user_daily_snapshot')}}
     WHERE snapshot_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
 
 ), prep_team_member AS (
 
-    SELECT *
+    SELECT
+        employee_id,
+        first_name,
+        last_name
     FROM {{ref('prep_team_member')}}
     WHERE is_current
 
@@ -43,19 +62,14 @@ WITH prep_crm_opportunity AS (
     WHERE sdr_bdr_user_id IS NOT NULL 
         AND opp_created_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
   
-),
+), last_user_employee_id AS ( 
 
-    last_user_employee_id AS ( 
     SELECT
-    dim_crm_user_id,
-    LAST_VALUE(employee_number IGNORE NULLS) OVER (PARTITION BY DIM_CRM_USER_ID ORDER BY snapshot_date)  AS last_e_number
-    FROM 
-    prep_crm_user_daily_snapshot
-    ),
+        dim_crm_user_id,
+        LAST_VALUE(employee_number IGNORE NULLS) OVER (PARTITION BY dim_crm_user_id ORDER BY snapshot_date) AS last_e_number
+    FROM prep_crm_user_daily_snapshot
 
-
-
- sales_dev_hierarchy_prep AS (
+), sales_dev_hierarchy_prep AS (
   
     SELECT
         sales_dev_rep.dim_crm_user_id AS sales_dev_rep_user_id, 
@@ -130,11 +144,11 @@ WITH prep_crm_opportunity AS (
         sales_dev_hierarchy_prep.sales_dev_leader_employee_number,
         sales_dev_hierarchy_prep.sales_dev_leader_email,
         CASE
-        WHEN sales_dev_leader_full_name = 'Meaghan Leonard' THEN 'Meaghan Thatcher'
-        WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Brian Tabbert' THEN 'Brian Tabbert'
-        WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Elsje Smart' THEN 'Elsje Smart'
-        WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Robin Falkowski' THEN 'Robin Falkowski'
-        ELSE sales_dev_leader_full_name
+            WHEN sales_dev_leader_full_name = 'Meaghan Leonard' THEN 'Meaghan Thatcher'
+            WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Brian Tabbert' THEN 'Brian Tabbert'
+            WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Elsje Smart' THEN 'Elsje Smart'
+            WHEN sales_dev_leader_full_name = 'Jean-Baptiste Larramendy' AND sales_dev_manager_full_name = 'Robin Falkowski' THEN 'Robin Falkowski'
+            ELSE sales_dev_leader_full_name
         END                                                            AS sales_dev_leader
     FROM sales_dev_hierarchy_prep
     LEFT JOIN prep_team_member AS rep
@@ -146,8 +160,7 @@ WITH prep_crm_opportunity AS (
 
 ), final AS (
 
-    SELECT DISTINCT
-        sales_dev_hierarchy.*
+    SELECT *
     FROM sales_dev_hierarchy 
 
 )
