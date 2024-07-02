@@ -320,6 +320,7 @@ final AS (
     sfdc.sfdc_record_id,
     sfdc.dim_crm_account_id,
     sfdc.sfdc_lead_contact,
+    sfdc.contact_role,
     COALESCE(marketo_lead.mobile_phone, sfdc.mobile_phone)                                                                           AS mobile_phone,
     sfdc.sfdc_created_date                                                                                                           AS sfdc_created_date,
     sfdc.opted_out_salesforce                                                                                                        AS is_sfdc_opted_out,
