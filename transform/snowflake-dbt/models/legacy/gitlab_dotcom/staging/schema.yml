@@ -60,7 +60,7 @@ models:
           The plan_id of the namespace's ultimate parent namespace. This is inheritted downwards,
           meaning a namespace's ultimate_parent_plan_id will supersede its own plan_id whenever its plan
           is higher (ex: a Silver ultimate parent plan will override a namespace's Bronze plan.)
-  
+
   - name: gitlab_dotcom_namespace_lineage_historical_daily
     columns:
       - name: snapshot_day_namespace_id
@@ -68,7 +68,7 @@ models:
         data_tests:
           - not_null
           # - unique manually tested during development (2021-11-16) and found to pass.  Times out on XS warehouse.
-  
+
   - name: gitlab_dotcom_namespace_lineage_historical_monthly
 
   - name: gitlab_dotcom_namespace_statistics_historical_monthly
@@ -86,7 +86,7 @@ models:
           - unique
 
   - name: gitlab_dotcom_namespace_subscription_plan_scd
-    description: >- 
+    description: >-
       A table that combines the namespace, namespace lineage, and subscription histories with the plan data.  
       The table is at the grain of namespace_id and a valid from `DATE`.  Note that the valid_from and valid_to
       fields are truncated from `TIMESTAMP` to `DATE`.

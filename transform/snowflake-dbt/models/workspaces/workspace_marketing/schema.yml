@@ -27,7 +27,7 @@ models:
   - name: wk_bizible_crm_events
   - name: wk_bizible_crm_tasks
   - name: wk_bizible_currencies
-  - name: wk_bizible_customer_ab_data_tests
+  - name: wk_bizible_customer_ab_tests
   - name: wk_bizible_email_to_visitor_ids
   - name: wk_bizible_facts
   - name: wk_bizible_form_submits
