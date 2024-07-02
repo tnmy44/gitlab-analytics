@@ -286,10 +286,10 @@
     campaign_members_with_campaigns.campaign_member_response_date,
     campaign_members_with_campaigns.campaign_member_status,
     campaign_members_with_campaigns.campaign_member_created_date,
-    campaign_members_with_campaigns.utm_campaign,
-    campaign_members_with_campaigns.utm_medium,
-    campaign_members_with_campaigns.utm_source,
-    campaign_members_with_campaigns.last_form_submission_page,
+    campaign_members_with_campaigns.utm_campaign AS campaign_member_utm_campaign,
+    campaign_members_with_campaigns.utm_medium AS campaign_member_utm_medium,
+    campaign_members_with_campaigns.utm_source AS campaign_member_utm_source,
+    campaign_members_with_campaigns.last_form_submission_page AS campaign_member_last_form_submission_page,
 
     -- Marketo Info
     marketo_form_fills.form_submit_date,
@@ -338,5 +338,5 @@
     created_by="@degan",
     updated_by="@rkohnke",
     created_date="2024-05-09",
-    updated_date="2024-06-20",
+    updated_date="2024-07-02",
 ) }}
