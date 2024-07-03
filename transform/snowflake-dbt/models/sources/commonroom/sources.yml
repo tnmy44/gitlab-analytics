@@ -21,7 +21,7 @@ sources:
         - name: activity_type
         - name: first_activity_date
         - name: full_name
-        - name: member_token
+        - name: member_id
         - name: profiles
         - name: service_name
         - name: _uploaded_at
@@ -34,7 +34,8 @@ sources:
         - name: impact_points_all_time
         - name: last_activity_date
         - name: location
-        - name: member_tokens
+        - name: member_ids
+          description: '{{ doc("commonroom_member_ids") }}'
         - name: primary_email
         - name: profiles
         - name: segment_names

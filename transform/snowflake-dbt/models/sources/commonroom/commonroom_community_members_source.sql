@@ -18,7 +18,7 @@ WITH source AS
            impact_points_all_time::NUMBER                                                    AS impact_points_all_time,
            last_activity_date::TIMESTAMP_NTZ                                                 AS last_activity_date,
            location::VARCHAR                                                                 AS location,
-           member_tokens::VARCHAR                                                            AS member_tokens,
+           member_ids::VARCHAR                                                               AS member_ids,
            primary_email::VARCHAR                                                            AS primary_email,
            profiles::VARCHAR                                                                 AS profiles,
            segment_names::VARCHAR                                                            AS segment_names,

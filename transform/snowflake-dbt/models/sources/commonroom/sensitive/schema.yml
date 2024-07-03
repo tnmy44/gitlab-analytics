@@ -3,10 +3,6 @@ version: 2
 models:
   - name: commonroom_activities_source_pii
     description: '{{ doc("commonroom_activities_source") }}'
-    columns:
-      - name: member_token
-        tests:
-          - not_null
   - name: commonroom_community_members_source_pii
     description: '{{ doc("commonroom_community_members_source") }}'
     columns:

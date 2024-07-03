@@ -5,6 +5,7 @@ models:
     description: '{{ doc("commonroom_activities_source") }}'
     columns:
       - name: primary_key
+        description: '{{ doc("commonroom_primary_key") }}'
         tests:
             - unique
             - not_null
@@ -22,9 +23,7 @@ models:
           - not_null
         meta:
           sensitive: true
-      - name: member_token
-        meta:
-          sensitive: true
+      - name: member_id
       - name: profiles
         meta:
           sensitive: true
@@ -52,9 +51,8 @@ models:
       - name: location
         meta:
           sensitive: true
-      - name: member_tokens
-        meta:
-          sensitive: true
+      - name: member_ids
+        description: '{{ doc("commonroom_member_ids") }}'
       - name: primary_email
         meta:
           sensitive: true
