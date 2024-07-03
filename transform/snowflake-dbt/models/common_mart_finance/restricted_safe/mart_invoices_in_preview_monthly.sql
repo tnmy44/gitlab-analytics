@@ -11,7 +11,7 @@ WITH basis AS (
     DATE_TRUNC('month', (DATE(invoice_start_date))) AS period,
     SUM(invoice_amount)                             AS pending_invoice_amount,
     COUNT(invoice_amount)                           AS pending_invoice_count
-  FROM {{ ref('driveload_pending_invoices_report') }}
+  FROM {{ ref('driveload_pending_invoices_report_source') }}
   GROUP BY period
   ORDER BY period
 
@@ -45,5 +45,5 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-05-07",
-updated_date="2024-06-27"
+updated_date="2024-07-03"
 ) }}

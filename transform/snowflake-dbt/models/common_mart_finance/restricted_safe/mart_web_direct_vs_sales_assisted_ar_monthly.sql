@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('driveload_invoice_aging_detail', 'driveload_invoice_aging_detail'),
+    ('driveload_invoice_aging_detail_source', 'driveload_invoice_aging_detail_source'),
     ('dim_invoice', 'dim_invoice'),
     ('dim_date', 'dim_date')
 ]) }},
@@ -14,9 +14,9 @@ purchase_path AS (
 /* Determine purchase path of open invoices monthly */
 
   SELECT
-    driveload_invoice_aging_detail.dim_invoice_id,
-    driveload_invoice_aging_detail.accounting_period_end_date,
-    driveload_invoice_aging_detail.account_balance_impact,
+    driveload_invoice_aging_detail_source.dim_invoice_id,
+    driveload_invoice_aging_detail_source.accounting_period_end_date,
+    driveload_invoice_aging_detail_source.account_balance_impact,
     CASE
       WHEN dim_invoice.created_by_id = '2c92a0fd55822b4d015593ac264767f2'
         THEN 'CDot'
@@ -24,9 +24,9 @@ purchase_path AS (
         THEN 'CDot'
       ELSE 'Sales Assisted'
     END AS purchase_path
-  FROM driveload_invoice_aging_detail
+  FROM driveload_invoice_aging_detail_source
   LEFT JOIN dim_invoice 
-    ON driveload_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+    ON driveload_invoice_aging_detail_source.dim_invoice_id = dim_invoice.dim_invoice_id
 
 ),
 
@@ -53,7 +53,7 @@ total AS (
     accounting_period_end_date    AS period,
     SUM(account_balance_impact)   AS total_all_balance,
     COUNT(account_balance_impact) AS count_all_open_invoices
-  FROM driveload_invoice_aging_detail
+  FROM driveload_invoice_aging_detail_source
   GROUP BY period
 
 ),
@@ -92,5 +92,5 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-05-08",
-updated_date="2024-06-27"
+updated_date="2024-07-03"
 ) }}

@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('driveload_invoice_aging_detail', 'driveload_invoice_aging_detail'),
+    ('driveload_invoice_aging_detail_source', 'driveload_invoice_aging_detail_source'),
     ('dim_invoice', 'dim_invoice'),
     ('dim_date', 'dim_date')
 ]) }},
@@ -15,14 +15,14 @@ final AS (
 
   SELECT
     --Primary key
-    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail.accounting_period_end_date)) AS period,
+    DATE_TRUNC('month', DATE(driveload_invoice_aging_detail_source.accounting_period_end_date)) AS period,
 
     --Dates
     dim_date.fiscal_year                                                                 AS fiscal_year,
     dim_date.fiscal_quarter_name_fy                                                      AS fiscal_quarter,
 
     --Aggregated amounts
-    driveload_invoice_aging_detail.account_balance_impact                                AS balance,
+    driveload_invoice_aging_detail_source.account_balance_impact                                AS balance,
 
     --Additive fields
     DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date)                        AS payment_terms,
@@ -42,9 +42,9 @@ final AS (
       ELSE 'n/a'
     END                                                                                 AS aging_bucket
     
-  FROM driveload_invoice_aging_detail
+  FROM driveload_invoice_aging_detail_source
   LEFT JOIN dim_invoice 
-    ON driveload_invoice_aging_detail.dim_invoice_id = dim_invoice.dim_invoice_id
+    ON driveload_invoice_aging_detail_source.dim_invoice_id = dim_invoice.dim_invoice_id
   LEFT JOIN dim_date 
     ON dim_date.date_actual = period
 
@@ -55,5 +55,5 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-05-09",
-updated_date="2024-06-27"
+updated_date="2024-07-03"
 ) }}
