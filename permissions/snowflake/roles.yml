@@ -4559,6 +4559,7 @@ roles:
         - analyst_engineering
       warehouses:
         - dev_xs
+        - reporting
       owns:
         databases:
           - lmai_prep
