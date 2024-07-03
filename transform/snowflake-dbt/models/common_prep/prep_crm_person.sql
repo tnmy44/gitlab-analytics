@@ -146,6 +146,7 @@ WITH biz_person AS (
       person_score,
       behavior_score,
       contact_title                                 AS title,
+      contact_role                                  AS person_role,
       it_job_title_hierarchy,
       has_opted_out_email,
       email_bounced_date,
@@ -313,6 +314,7 @@ WITH biz_person AS (
       person_score,
       behavior_score,
       title,
+      NULL                                       AS person_role,
       it_job_title_hierarchy,
       has_opted_out_email,
       email_bounced_date,
@@ -521,5 +523,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-05-21"
+    updated_date="2024-07-03"
 ) }}
