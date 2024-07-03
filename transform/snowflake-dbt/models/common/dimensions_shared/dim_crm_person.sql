@@ -37,7 +37,7 @@ WITH crm_person AS (
       behavior_score,
       title,
       country,
-      contact_role,
+      person_role,
       state,
       has_opted_out_email,
       email_bounced_date,
