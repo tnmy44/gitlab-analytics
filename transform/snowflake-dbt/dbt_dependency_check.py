@@ -54,21 +54,18 @@ def dbt_model_exposures_list(model_names: list):
 
     return(model_exposures)
 
-# future improvement: make this list an input from either a seed file or the CLI
+model_names = []
+
 # responses should be of the form 
-# full/path/from/home/directory/to/file/my_read_and_write_files.txt
-# fileToReadPath = input("Provide the full path to your read file: ")
-# fileToWritePath = input("Provide the full path to your write file: ")
+# full/path/from/home/directory/to/file/my_read_and_write_files.csv
+fileToReadPath = input("Provide the full path to your read file: ")
 
-# with open(fileToReadPath, 'r') as readFile, open(fileToWritePath, 'w') as writeFile:
-#     # do stuff with your files here!
-#     # e.g. copy line by line from readFile to writeFile
-#     for line in readFile:
-#         writeFile.write(line)
+with open(fileToReadPath, 'r', newline='') as readFile:
+    reader = csv.reader(readFile, skipinitialspace=True,delimiter=',', quoting=csv.QUOTE_NONE)
+    for row in reader:
+        model_names.append(row)
 
-model_list = [
-'mart_behavior_structured_event_code_suggestion'
-]
+model_list = model_names[0]
 
 # generate results
 models_with_dependencies = dbt_model_dependencies_list(model_list)
@@ -84,3 +81,6 @@ models_with_dependencies_and_exposures = pd.merge(models_with_dependencies_df, m
 # create csv
 with open("models_with_dependencies.csv", 'w') as csvfile:
    models_with_dependencies_and_exposures.to_csv('models_with_dependencies.csv', index=False)
+
+# potential future improvement: choose where to write output
+#fileToWritePath = input("Provide the full path to your write file: ")
