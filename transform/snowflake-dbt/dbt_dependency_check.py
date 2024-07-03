@@ -81,6 +81,3 @@ models_with_dependencies_and_exposures = pd.merge(models_with_dependencies_df, m
 # create csv
 with open("models_with_dependencies.csv", 'w') as csvfile:
    models_with_dependencies_and_exposures.to_csv('models_with_dependencies.csv', index=False)
-
-# potential future improvement: choose where to write output
-#fileToWritePath = input("Provide the full path to your write file: ")
