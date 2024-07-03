@@ -18,14 +18,14 @@ final AS (
     DATE_TRUNC('month', DATE(driveload_invoice_aging_detail_source.accounting_period_end_date)) AS period,
 
     --Dates
-    dim_date.fiscal_year                                                                 AS fiscal_year,
-    dim_date.fiscal_quarter_name_fy                                                      AS fiscal_quarter,
+    dim_date.fiscal_year                                                                        AS fiscal_year,
+    dim_date.fiscal_quarter_name_fy                                                             AS fiscal_quarter,
 
     --Aggregated amounts
     driveload_invoice_aging_detail_source.account_balance_impact                                AS balance,
 
     --Additive fields
-    DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date)                        AS payment_terms,
+    DATEDIFF(DAY, dim_invoice.invoice_date, dim_invoice.due_date)                               AS payment_terms,
     CASE
       WHEN days_overdue <= 0
         THEN '1 -- Current'
@@ -40,7 +40,7 @@ final AS (
       WHEN days_overdue > 120
         THEN '6 -- More than 120 days past due'
       ELSE 'n/a'
-    END                                                                                 AS aging_bucket
+    END                                                                                         AS aging_bucket
     
   FROM driveload_invoice_aging_detail_source
   LEFT JOIN dim_invoice 

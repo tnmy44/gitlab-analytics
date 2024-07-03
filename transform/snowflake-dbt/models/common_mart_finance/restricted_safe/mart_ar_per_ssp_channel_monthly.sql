@@ -21,7 +21,7 @@ reseller AS (
       WHEN dim_billing_account.ssp_channel = 'Reseller'
         THEN 'Reseller'
       ELSE 'n/a'
-    END                                                                                  AS channel
+    END                                                                                         AS channel
   FROM driveload_invoice_aging_detail_source
   LEFT JOIN fct_invoice 
     ON driveload_invoice_aging_detail_source.dim_invoice_id = fct_invoice.dim_invoice_id
@@ -43,7 +43,7 @@ non_reseller AS (
       WHEN dim_billing_account.ssp_channel = 'Non-Reseller'
         THEN 'Non-Reseller'
       ELSE 'n/a'
-    END                                                                                  AS channel
+    END                                                                                         AS channel
   FROM driveload_invoice_aging_detail_source
   LEFT JOIN fct_invoice 
     ON driveload_invoice_aging_detail_source.dim_invoice_id = fct_invoice.dim_invoice_id
@@ -64,7 +64,7 @@ alliance AS (
       WHEN dim_billing_account.ssp_channel = 'Reseller'
         THEN 'Alliance'
       ELSE 'n/a'
-    END                                                                                  AS channel
+    END                                                                                         AS channel
   FROM driveload_invoice_aging_detail_source
   LEFT JOIN fct_invoice 
     ON driveload_invoice_aging_detail_source.dim_invoice_id = fct_invoice.dim_invoice_id
@@ -110,8 +110,8 @@ total AS (
 
   SELECT
     DATE_TRUNC('month', DATE(driveload_invoice_aging_detail_source.accounting_period_end_date)) AS period,
-    SUM(account_balance_impact)                                                          AS total_all_balance,
-    COUNT(account_balance_impact)                                                        AS count_all_open_invoices
+    SUM(account_balance_impact)                                                                 AS total_all_balance,
+    COUNT(account_balance_impact)                                                               AS count_all_open_invoices
   FROM driveload_invoice_aging_detail_source
   GROUP BY accounting_period_end_date
 

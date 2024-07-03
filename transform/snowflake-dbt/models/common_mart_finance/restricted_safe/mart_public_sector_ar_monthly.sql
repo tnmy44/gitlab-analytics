@@ -22,7 +22,7 @@ segment AS (
       WHEN dim_crm_opportunity.user_segment = 'PUBSEC'
         THEN 'PubSec'
       ELSE 'Non-PubSec'
-    END                                                                                   AS segment
+    END                                                                                          AS segment
   FROM driveload_invoice_aging_detail_source
   LEFT JOIN dim_invoice 
     ON driveload_invoice_aging_detail_source.dim_invoice_id = dim_invoice.dim_invoice_id
@@ -52,8 +52,8 @@ total AS (
 
   SELECT
     DATE_TRUNC('month', DATE(driveload_invoice_aging_detail_source.accounting_period_end_date))  AS period,
-    SUM(account_balance_impact)                                                           AS total_all_balance,
-    COUNT(account_balance_impact)                                                         AS count_all_open_invoices
+    SUM(account_balance_impact)                                                                  AS total_all_balance,
+    COUNT(account_balance_impact)                                                                AS count_all_open_invoices
   FROM driveload_invoice_aging_detail_source
   GROUP BY period
 
