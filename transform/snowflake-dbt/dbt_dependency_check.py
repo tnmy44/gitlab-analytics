@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 from dbt.cli.main import dbtRunner, dbtRunnerResult
 
+
 def dbt_model_dependencies_list(model_names: list):
     # create empty lists to hold models
     model_dependencies = []
@@ -24,9 +25,15 @@ def dbt_model_dependencies_list(model_names: list):
             count_dependencies = 0
 
         # append results in table for models
-        model_dependencies.append({'model_name': f'{model}', 'dependencies': res_models.result, 'count_dependencies': count_dependencies})
+        model_dependencies.append(
+            {
+                "model_name": f"{model}",
+                "dependencies": res_models.result,
+                "count_dependencies": count_dependencies,
+            }
+        )
 
-    return(model_dependencies)
+    return model_dependencies
 
 
 def dbt_model_exposures_list(model_names: list):
@@ -38,7 +45,12 @@ def dbt_model_exposures_list(model_names: list):
 
     # for each create CLI args as a list of strings
     for model in model_names:
-        cli_args_exposure = ["list", "--select", f"{model}+", "--resource-type=exposure"]
+        cli_args_exposure = [
+            "list",
+            "--select",
+            f"{model}+",
+            "--resource-type=exposure",
+        ]
 
         # run the command for exposures
         res_exposures: dbtRunnerResult = dbt.invoke(cli_args_exposure)
@@ -50,18 +62,27 @@ def dbt_model_exposures_list(model_names: list):
             count_exposures = 0
 
         # append results in table for exposures
-        model_exposures.append({'model_name': f'{model}', 'exposures': res_exposures.result, 'count_exposures':count_exposures})
+        model_exposures.append(
+            {
+                "model_name": f"{model}",
+                "exposures": res_exposures.result,
+                "count_exposures": count_exposures,
+            }
+        )
 
-    return(model_exposures)
+    return model_exposures
+
 
 model_names = []
 
-# responses should be of the form 
+# responses should be of the form
 # full/path/from/home/directory/to/file/my_read_and_write_files.csv
 fileToReadPath = input("Provide the full path to your read file: ")
 
-with open(fileToReadPath, 'r', newline='') as readFile:
-    reader = csv.reader(readFile, skipinitialspace=True,delimiter=',', quoting=csv.QUOTE_NONE)
+with open(fileToReadPath, "r", newline="") as readFile:
+    reader = csv.reader(
+        readFile, skipinitialspace=True, delimiter=",", quoting=csv.QUOTE_NONE
+    )
     for row in reader:
         model_names.append(row)
 
@@ -76,8 +97,12 @@ models_with_dependencies_df = pd.DataFrame(models_with_dependencies)
 models_with_exposures_df = pd.DataFrame(models_with_exposures)
 
 # merge
-models_with_dependencies_and_exposures = pd.merge(models_with_dependencies_df, models_with_exposures_df, on='model_name')
+models_with_dependencies_and_exposures = pd.merge(
+    models_with_dependencies_df, models_with_exposures_df, on="model_name"
+)
 
 # create csv
-with open("models_with_dependencies.csv", 'w') as csvfile:
-   models_with_dependencies_and_exposures.to_csv('models_with_dependencies.csv', index=False)
+with open("models_with_dependencies.csv", "w") as csvfile:
+    models_with_dependencies_and_exposures.to_csv(
+        "models_with_dependencies.csv", index=False
+    )
