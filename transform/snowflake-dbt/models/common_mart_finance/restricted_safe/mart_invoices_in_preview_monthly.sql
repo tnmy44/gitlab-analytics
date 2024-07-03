@@ -45,5 +45,5 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-05-07",
-updated_date="2024-07-03"
+updated_date="2024-05-07"
 ) }}
