@@ -21,7 +21,7 @@ An organization reflects real organizations _(and the Contacts within them)_ in 
 
 {% enddocs %}
 
-`{% docs` _uploaded_at %}
+{% docs _uploaded_at %}
 
 A moment when the record was uploaded into Snowflake. Stored in the `TIMESTAMP` format.
 
