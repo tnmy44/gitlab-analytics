@@ -9,7 +9,7 @@ def run():
     """
     data_classification = DataClassification(tagging_type="full", mnpi_raw_file="safe_models.json")
     data_classification.identify_mnpi_data()
-    print(data_classification.scope)
+    # print(data_classification.scope)
 
 if __name__ == '__main__':
     run()

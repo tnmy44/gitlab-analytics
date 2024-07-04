@@ -1,13 +1,36 @@
 version: '1.0'
 data_classification:
-  mnpi:
+  MNPI:
     description: "MNPI data classification"
+    include:
+      databases:
+        - PREP
+        - RAW
+      schemas:
+        - PREP.GAINSIGHT_CUSTOMER_SUCCESS
+        - RAW.*
+      tables:
+        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
+        - RAW.SCHEMA_TEST.*
+    exclude:
+      databases:
+        - PROD
+        - RAW
+      schemas:
+        - RAW.*
+        - PROD.*
+      tables:
+        - RAW.*.*
+        - PROD.*.*
+
+  PII:
+    description: "PII data classification"
     include:
       databases:
         - RAW
         - PREP
       schemas:
-        - RAW.*
+        - RAW.*.*
       tables:
         - RAW.*.*
     exclude:
@@ -19,24 +42,4 @@ data_classification:
         - PROD.*
       tables:
         - PREP.*.*
-        - PROD.*.*
-    pii:
-      description: "PII data classification"
-  include:
-    databases:
-      - RAW
-      - PREP
-    schemas:
-      - RAW.*
-    tables:
-      - RAW.*.*
-  exclude:
-    databases:
-      - PREP
-      - PROD
-    schemas:
-      - PREP.*
-      - PROD.*
-    tables:
-      - PREP.*.*
-      - PROD.*.*.*
+        - PROD.*.*.*

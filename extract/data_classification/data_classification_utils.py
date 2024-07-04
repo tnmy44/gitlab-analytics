@@ -3,6 +3,7 @@
 """
 
 import json
+
 import yaml
 
 
@@ -24,11 +25,13 @@ class DataClassification:
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
 
-        extract_full_path = (
-            lambda x: f"{x.get('config').get('database')}."
-            f"{x.get('config').get('schema')}."
-            f"{x.get('name')}".upper()
-        )
+        def extract_full_path(x: str) -> list:
+            return [
+                x.get("config").get("database"),
+                x.get("config").get("schema"),
+                x.get("name"),
+            ]
+
         return [extract_full_path(x) for x in mnpi_list]
 
     # TODO: rbacovic identify PII data
@@ -47,11 +50,70 @@ class DataClassification:
             for row in sorted(data):
                 file.write(f"{row},\n")
 
+    def filter_data(self, mnpi_data: list, section: str = "MNPI"):
+        res = []
+        scope_include = (
+            self.scope.get("data_classification").get(section).get("include")
+        )
+        scope_exclude = (
+            self.scope.get("data_classification").get(section).get("exclude")
+        )
+
+        for row in mnpi_data:
+            include, exclude = False, False
+            databases = scope_include.get("databases")
+            schemas = scope_include.get("schemas")
+            tables = scope_include.get("tables")
+
+            # handling include part
+            database_name = str(row[0]).upper()
+            schema_name = str(row[1]).upper()
+            table_name = str(row[2]).upper()
+
+            if database_name in databases:
+                if (
+                    f"{database_name}.{schema_name}" in schemas
+                    or f"{database_name}.*" in schemas
+                ):
+                    full_name = f"{database_name}.{schema_name}.{table_name}"
+
+                    if (
+                        full_name in tables
+                        or f"{database_name}.{schema_name}.*" in tables
+                        or f"{database_name}.*.*" in tables
+                    ):
+                        include = True
+
+            # handling exclude part
+            # databases = scope_exclude.get("databases")
+            # schemas = scope_exclude.get("schemas")
+            # tables = scope_exclude.get("tables")
+            #
+            # if database_name in databases:
+            #     if (
+            #         f"{database_name}.{schema_name}" in schemas
+            #         or f"{database_name}.*" in schemas
+            #     ):
+            #         full_name = f"{database_name}.{schema_name}.{table_name}"
+            #
+            #         if (
+            #             full_name in tables
+            #             or f"{database_name}.{schema_name}.*" in tables
+            #         ):
+            #             exclude = True
+            #             include = False
+            #
+            #
+            if include and not exclude:
+                res.append(full_name)
+        return res
+
     # TODO: rbacovic identify MNPI data
     def identify_mnpi_data(self):
         mnpi_list = self.load_mnpi_list()
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        self.save_to_file(data=mnpi_data)
+        mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
+        self.save_to_file(data=mnpi_data_filtered)
 
     def identify(self):
         self.identify_pii_data()
