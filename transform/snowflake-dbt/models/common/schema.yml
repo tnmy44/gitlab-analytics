@@ -410,6 +410,34 @@ models:
         description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of `AMER, APAC, EMEA, LATAM.`
       - name: is_partner_recalled
         description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+      - name: bizible_mql_touchpoint_id
+        description: The bizible touchpoint id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_touchpoint_date
+        description: The bizible touchpoint date, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_form_url
+        description: The bizible touchpoint form url, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_sfdc_campaign_id
+        description: The sfdc campaign id, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_ad_campaign_name
+        description: The bizible touchpoint ad campaign name, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_marketing_channel
+        description: The bizible touchpoint marketing channel, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_mql_marketing_channel_path
+        description: The bizible touchpoint marketing channel path, of the touchpoint directly preceding the person's Marketo MQL Date. 
+      - name: bizible_most_recent_touchpoint_id
+        description: The bizible touchpoint id, of the most recent touchpoint.  
+      - name: bizible_most_recent_touchpoint_date
+        description: The bizible touchpoint date, of the most recent touchpoint.  
+      - name: bizible_most_recent_form_url
+        description: The bizible touchpoint form url,of the most recent touchpoint. 
+      - name: bizible_most_recent_sfdc_campaign_id
+        description: The sfdc campaign id, of the most recent touchpoint. 
+      - name: bizible_most_recent_ad_campaign_name
+        description: The bizible touchpoint ad campaign name, of the most recent touchpoint.
+      - name: bizible_most_recent_marketing_channel
+        description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
+      - name: bizible_most_recent_marketing_channel_path
+        description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -501,6 +529,28 @@ models:
         description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
       - name: touchpoint_offer_type_grouped
         description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
+      - name: utm_campaign_date
+        description: The date portion of the new utm_campaign structure.
+      - name: utm_campaign_region
+        description: The region portion of the new utm_campaign structure.
+      - name: utm_campaign_budget
+        description: The budget portion of the new utm_campaign structure.
+      - name: utm_campaign_type
+        description: The campaign type portion of the new utm_campaign structure.
+      - name: utm_campaign_gtm
+        description: The gtm portion of the new utm_campaign structure.
+      - name: utm_campaign_language
+        description: The language portion of the new utm_campaign structure.
+      - name: utm_campaign_name
+        description: The name portion of the new utm_campaign structure.
+      - name: utm_campaign_agency
+        description: The agency portion of the new utm_campaign structure.
+      - name: utm_content_offer
+        description: The offer portion of the new utm_content structure.
+      - name: utm_content_asset_type
+        description: The asset type portion of the new utm_content structure.
+      - name: utm_content_industry
+        description: The industry portion of the new utm_content structure.
         
   - name: dim_date
     description: '{{ doc("dim_date") }}'
@@ -1094,6 +1144,9 @@ models:
         description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan.
       - name: product_category
         description: Categorizes Zuora Products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce.
+
 
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
@@ -1303,6 +1356,14 @@ models:
         description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
       - name: dim_crm_opportunity_id_closed_lost_renewal
         description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
+      - name: dim_oldest_subscription_in_cohort_id
+        description: '{{ doc("dim_oldest_subscription_in_cohort_id") }}'
+      - name: dim_oldest_crm_account_in_cohort_id
+        description: '{{ doc("dim_oldest_crm_account_in_cohort_id") }}'
+      - name: oldest_subscription_start_date
+        description: '{{ doc("oldest_subscription_start_date") }}'
+      - name: oldest_subscription_cohort_month
+        description: '{{ doc("oldest_subscription_cohort_month") }}'
 
   - name: dim_app_release_major_minor
     description: '{{ doc("dim_app_release_major_minor") }}'
@@ -1835,10 +1896,6 @@ models:
           - dbt_utils.at_least_one
       - name: ci_builds_28_days_event
         description: '{{ doc("ci_builds_28_days_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
-      - name: audit_features_28_days_user
-        description: '{{ doc("audit_features_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: groups_all_time_event
@@ -2689,6 +2746,8 @@ models:
       - name: ci_runner_type_summary
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+      - name: cost_factor
+        description: '{{ doc("cost_factor") }}'
 
   - name: dim_ci_stage
     description: '{{ doc("dim_ci_stage") }}'
@@ -3970,10 +4029,6 @@ models:
         description: '{{ doc("ci_builds_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: audit_features_28_days_user
-        description: '{{ doc("audit_features_28_days_user_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: groups_all_time_event
         description: '{{ doc("groups_all_time_event_desc") }}'
         tests:
@@ -4287,6 +4342,13 @@ models:
   - name: fct_ping_instance_metric_monthly
     description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
     columns:
+      - name: ping_instance_metric_monthly_pk
+        description: '{{ doc("ping_instance_metric_monthly_pk") }}'
+        tests:
+          - unique:
+              config:
+                where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
+          - not_null
       - name: ping_instance_metric_id
         tests:
           - not_null
@@ -4341,6 +4403,8 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_weekly
     description: ' {{ doc("fct_ping_instance_metric_weekly") }} '
@@ -4403,6 +4467,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_current_ping
+        description: An administrative column used for filtering the table.
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
@@ -4729,6 +4795,18 @@ models:
         description: The name of the manager for the tehchnical account manager who manages the account.
       - name: executive_sponsor
         description: executive sponsor of this account
+      - name: bdr_next_steps
+        description: Outlines the next steps that connect to the prospecting strategy for this account.
+      - name: bdr_account_research
+        description: Displays the research that was made on account to justify the account's addition to a prospecting list.
+      - name: bdr_account_strategy
+        description: Aggregates the path for approaching the account into some more general buckets
+      - name: account_bdr_assigned_user_role
+        description: The region and segment specific role of the BDR assigned to an account.
+      - name: bdr_recycle_date
+        description: Automatically populates two months out from the actively working start date to indicate when an outbound account should be considered for removal from the outbound pipeline.
+      - name: actively_working_start_date
+        description: Automatically datestamps the date and time that an account was moved to a BDRs outbound prospecting list.
 
 
 
@@ -5131,8 +5209,8 @@ models:
         description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date
@@ -5176,6 +5254,12 @@ models:
         description: This field contains the predicted amount of ARR after renewal, generated by a machine learning model when the subscription is within 6 months of renewal date.
       - name: ptc_predicted_renewal_risk_category
         description: This field contains the predicted renewal risk category, generated by a machine learning model when the subscription is within 6 months of renewal date.
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -5464,8 +5548,8 @@ models:
         description: The ratio of incremental annual contract value to net ARR assigned to this opportunity based on its segment and order type. This field is a helper used to map old IACV values to new net ARR values, which were updated for all opportunities closed prior to 2021-02-01.
       - name: dim_order_type_id
         description: '{{ doc("order_type") }}'
-      - name: dim_order_type_live_id
-        description: '{{ doc("order_type_live") }}'
+      - name: dim_order_type_current_id
+        description: '{{ doc("order_type_current") }}'
       - name: pre_military_invasion_arr
         description: '{{ doc("pre_military_invasion_arr") }}'
       - name: won_arr_basis_for_clari
@@ -5492,10 +5576,29 @@ models:
         description: The percentage of the opportunity net arr to which the partner is entitled.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+      - name: valid_deal_count
+        description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
       
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
+        
+
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot") }}'
     columns:
       - name: crm_opportunity_snapshot_id
         description: Unique identifier of a crm opportunity in the daily snapshot models
@@ -5503,6 +5606,24 @@ models:
           - not_null
           - unique
         tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+
+  - name: fct_crm_opportunity_7th_day_weekly_snapshot_aggregate
+    description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot_aggregate") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: opportunity_weekly_snapshot_aggregate_pk
+        tests:
+          - not_null
+          - unique
+  
+  - name: fct_targets_actuals_7th_day_weekly_snapshot
+    description: '{{ doc("fct_targets_actuals_7th_day_weekly_snapshot") }}'
+    tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
+    columns: 
+      - name: targets_actuals_weekly_snapshot_pk
+        tests:
+          - not_null
+          - unique
 
   - name: fct_credit_balance_adjustment
     description: '{{ doc("fct_credit_balance_adjustment") }}'
@@ -5680,6 +5801,16 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_mrr_weekly
+    description: One row represents Monthly Recurring Revenue per day, by rate plan charge. Excludes charges with $0 MRR.
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "mrr"]
 
   - name: fct_mrr_with_zero_dollar_charges
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.
@@ -5936,6 +6067,9 @@ models:
           combination_of_columns:
             - metrics_path
             - redis_event
+    columns:
+      - name: is_health_scoring_metric
+        description: '{{ doc("is_health_score_metric") }}'
 
   - name: fct_crm_event
     description: The Events portion of Activities from SFDC. 
@@ -6109,6 +6243,8 @@ models:
         description: The Date the event was last modified. 
       - name: systemmodstamp
         description: The time/date stamp from SFDC when this record was created. 
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
 
   - name: dim_crm_task
@@ -6126,6 +6262,8 @@ models:
       - name: task_subject
         meta:
            masking_policy: data_science_sensitive
+      - name: partner_marketing_task_subject
+        description: A non-pii field with the type of subject.
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
@@ -6299,6 +6437,16 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: gsc_is_gitlab_team_member
         description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
       - name: page_url_path
         description: '{{ doc("page_url_path") }}'
       - name: referer_url_path
@@ -6600,9 +6748,21 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
+      - name: has_advanced_context
+        description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+      - name: is_direct_connection
+        description: ' {{ doc("code_suggestions_is_direct_connection") }} '
 
   - name: fct_behavior_structured_event_30
-    description: '{{ doc("fct_behavior_structured_event") }}'
+    description: '{{ doc("fct_behavior_structured_event_30") }}'
     columns: 
       - name: behavior_structured_event_pk
         tests:
@@ -6841,6 +7001,271 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
+      - name: has_advanced_context
+        description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+      - name: is_direct_connection
+        description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+
+  - name: fct_behavior_structured_event_90
+    description: '{{ doc("fct_behavior_structured_event_90") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_user_location_sk
+        description: '{{ doc("dim_user_location_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_label
+        description: '{{ doc("event_label") }}'
+      - name: clean_event_label
+        description: '{{ doc("clean_event_label") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: is_staging_event
+        description: '{{ doc("is_staging_event") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'
+      - name: gsc_is_gitlab_team_member
+        description: '{{ doc("gsc_is_gitlab_team_member") }}'
+      - name: gsc_feature_enabled_by_namespace_ids
+        description: ' {{ doc("gsc_feature_enabled_by_namespace_ids") }} '
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: gitlab_standard_context
+        description: ' {{ doc("gitlab_standard_context") }} '
+      - name: gitlab_standard_context_schema
+        description: ' {{ doc("gitlab_standard_context_schema") }} '
+      - name: has_gitlab_standard_context
+        description: ' {{ doc("has_gitlab_standard_context") }} '
+      - name: is_gitlab_team_member
+        description: ' {{ doc("gsc_is_gitlab_team_member") }} '
+      - name: web_page_context
+        description: ' {{ doc("web_page_context") }} '
+      - name: web_page_context_schema
+        description: ' {{ doc("web_page_context_schema") }} '
+      - name: has_web_page_context
+        description: ' {{ doc("has_web_page_context") }} '
+      - name: web_page_id
+        description: ' {{ doc("web_page_id") }} '
+      - name: gitlab_experiment_context
+        description: ' {{ doc("gitlab_experiment_context") }} '
+      - name: gitlab_experiment_context_schema
+        description: ' {{ doc("gitlab_experiment_context_schema") }} '
+      - name: has_gitlab_experiment_context
+        description: ' {{ doc("has_gitlab_experiment_context") }} '
+      - name: experiment_name
+        description: ' {{ doc("experiment_name") }} '
+      - name: experiment_context_key
+        description: ' {{ doc("experiment_context_key") }} '
+      - name: experiment_variant
+        description: ' {{ doc("experiment_variant") }} '
+      - name: experiment_migration_keys
+        description: ' {{ doc("experiment_migration_keys") }} '
+      - name: code_suggestions_context
+        description: ' {{ doc("code_suggestions_context") }} '
+      - name: code_suggestions_context_schema
+        description: ' {{ doc("code_suggestions_context_schema") }} '
+      - name: has_code_suggestions_context
+        description: ' {{ doc("has_code_suggestions_context") }} '
+      - name: model_engine
+        description: ' {{ doc("code_suggestions_model_engine") }} '
+      - name: model_name
+        description: ' {{ doc("code_suggestions_model_name") }} '
+      - name: prefix_length
+        description: ' {{ doc("code_suggestions_prefix_length") }} '
+      - name: suffix_length
+        description: ' {{ doc("code_suggestions_suffix_length") }} '
+      - name: language
+        description: ' {{ doc("code_suggestions_language") }} '
+      - name: user_agent
+        description: ' {{ doc("code_suggestions_user_agent") }} '
+      - name: delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+        accepted_values:
+          values: ['Self-Managed', 'SaaS']
+      - name: api_status_code
+        description: ' {{ doc("code_suggestions_api_status_code") }} '
+      - name: duo_namespace_ids
+        description: ' {{ doc("code_suggestions_duo_namespace_ids") }}'
+      - name: saas_namespace_ids
+        description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
+      - name: namespace_ids
+        description: ' {{ doc("code_suggestions_namespace_ids") }} '
+      - name: instance_id
+        description: ' {{ doc("dim_instance_id") }} '
+      - name: host_name
+        description: ' {{ doc("host_name") }} '
+      - name: is_streaming
+        description: ' {{ doc("code_suggestions_is_streaming") }} '
+      - name: gitlab_global_user_id
+        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+      - name: ide_extension_version_context
+        description: ' {{ doc("ide_extension_version_context") }} '
+      - name: ide_extension_version_context_schema
+        description: ' {{ doc("ide_extension_version_context_schema") }} '
+      - name: has_ide_extension_version_context
+        description: ' {{ doc("has_ide_extension_version_context") }} '
+      - name: extension_name
+        description: ' {{ doc("extension_name") }} '
+      - name: extension_version
+        description: ' {{ doc("extension_version") }} '
+      - name: ide_name
+        description: ' {{ doc("ide_name") }} '
+      - name: ide_vendor
+        description: ' {{ doc("ide_vendor") }} '
+      - name: ide_version
+        description: ' {{ doc("ide_version") }} '
+      - name: language_server_version
+        description: ' {{ doc("language_server_version") }} '
+      - name: gitlab_service_ping_context
+        description: ' {{ doc("gitlab_service_ping_context") }} '
+      - name: gitlab_service_ping_context_schema
+        description: ' {{ doc("gitlab_service_ping_context_schema") }} '
+      - name: has_gitlab_service_ping_context
+        description: ' {{ doc("has_gitlab_service_ping_context") }} '
+      - name: redis_event_name
+        description: ' {{ doc("redis_event_name") }} '
+      - name: key_path
+        description: ' {{ doc("service_ping_key_path") }} '
+      - name: data_source
+        description: ' {{ doc("service_ping_data_source") }} '
+      - name: performance_timing_context
+        description: ' {{ doc("performance_timing_context") }} '
+      - name: performance_timing_context_schema
+        description: ' {{ doc("performance_timing_context_schema") }} '
+      - name: has_performance_timing_context
+        description: ' {{ doc("has_performance_timing_context") }} '
+      - name: connect_end
+        description: ' {{ doc("connect_end") }} '
+      - name: connect_start
+        description: ' {{ doc("connect_start") }} '
+      - name: dom_complete
+        description: ' {{ doc("dom_complete") }} '
+      - name: dom_content_loaded_event_end
+        description: ' {{ doc("dom_content_loaded_event_end") }} '
+      - name: dom_content_loaded_event_start
+        description: ' {{ doc("dom_content_loaded_event_start") }} '
+      - name: dom_interactive
+        description: ' {{ doc("dom_interactive") }} '
+      - name: dom_loading
+        description: ' {{ doc("dom_loading") }} '
+      - name: domain_lookup_end
+        description: ' {{ doc("domain_lookup_end") }} '
+      - name: domain_lookup_start
+        description: ' {{ doc("domain_lookup_start") }} '
+      - name: fetch_start
+        description: ' {{ doc("fetch_start") }} '
+      - name: load_event_end
+        description: ' {{ doc("load_event_end") }} '
+      - name: load_event_start
+        description: ' {{ doc("load_event_start") }} '
+      - name: navigation_start
+        description: ' {{ doc("navigation_start") }} '
+      - name: redirect_end
+        description: ' {{ doc("redirect_end") }} '
+      - name: redirect_start
+        description: ' {{ doc("redirect_start") }} '
+      - name: request_start
+        description: ' {{ doc("request_start") }} '
+      - name: response_end
+        description: ' {{ doc("response_end") }} '
+      - name: response_start
+        description: ' {{ doc("response_start") }} '
+      - name: secure_connection_start
+        description: ' {{ doc("secure_connection_start") }} '
+      - name: unload_event_end
+        description: ' {{ doc("unload_event_end") }} '
+      - name: unload_event_start
+        description: ' {{ doc("unload_event_start") }} '
+      - name: suggestion_source
+        description: ' {{ doc("code_suggestions_suggestion_source") }} '
+      - name: is_invoked
+        description: ' {{ doc("code_suggestions_is_invoked") }} '
+      - name: options_count
+        description: ' {{ doc("code_suggestions_options_count") }} '
+      - name: accepted_option
+        description: ' {{ doc("code_suggestions_accepted_option") }} '
+      - name: has_advanced_context
+        description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+      - name: is_direct_connection
+        description: ' {{ doc("code_suggestions_is_direct_connection") }} '
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
@@ -9180,7 +9605,7 @@ models:
     - name: language
       description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type
-      description: '{{ doc("product_delivery_type") }}'
+      description: '{{ doc("code_suggestions_delivery_type") }}'
       accepted_values:
         values: ['Self-Managed', 'SaaS']
     - name: api_status_code
@@ -9233,6 +9658,20 @@ models:
       description: '{{ doc("code_suggestions_installation_host_name") }}'
     - name: namespace_is_internal
       description: '{{ doc("code_suggestions_namespace_is_internal") }}'
+    - name: suggestion_source
+      description: ' {{ doc("code_suggestions_suggestion_source") }} '
+    - name: is_invoked
+      description: ' {{ doc("code_suggestions_is_invoked") }} '
+    - name: options_count
+      description: ' {{ doc("code_suggestions_options_count") }} '
+    - name: accepted_option
+      description: ' {{ doc("code_suggestions_accepted_option") }} '
+    - name: has_advanced_context
+      description: ' {{ doc("code_suggestions_has_advanced_context") }} '
+    - name: is_direct_connection
+      description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+    - name: product_deployment_type
+      description: ' {{ doc("product_deployment_type") }} '
 
   - name: fct_behavior_structured_event_ide_extension_version
     description: '{{ doc("fct_behavior_structured_event_ide_extension_version") }}'

@@ -34,6 +34,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
+BUCKET_NAME_CELLS = os.environ.get("GITLAB_BACKFILL_BUCKET_CELLS")
 
 TARGET_EXTRACT_SCHEMA = "tap_postgres"
 TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
@@ -161,12 +162,11 @@ def postgres_engine_factory(
     """
 
     # Set the Vars
-    user = env[connection_dict["user"]]
     password = env[connection_dict["pass"]]
     host = env[connection_dict["host"]]
     database = env[connection_dict["database"]]
     port = env[connection_dict["port"]]
-
+    user = env[connection_dict["user"]]
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
@@ -782,16 +782,19 @@ def id_query_generator(
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine]:
+def get_engines(
+    connection_dict: Dict[Any, Any], database_type: str
+) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    postgres_engine = postgres_engine_factory(
-        connection_dict["postgres_source_connection"], env
-    )
+    logging.info(f"Reading from {database_type} db")
+    connection_info_var = f"postgres_source_connection_{database_type}"
+
+    postgres_engine = postgres_engine_factory(connection_dict[connection_info_var], env)
 
     snowflake_engine = snowflake_engine_factory(
         env,
@@ -805,6 +808,7 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         )
     else:
         metadata_engine = None
+
     return postgres_engine, snowflake_engine, metadata_engine
 
 

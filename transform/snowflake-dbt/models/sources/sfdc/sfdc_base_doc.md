@@ -30,6 +30,12 @@ The case source table represents a case, which is a customer issue or problem. [
 
 {% enddocs %}
 
+{% docs sfdc_case_history_source %}
+
+The case history table includes any updates to Case fields with field history tracking enabled. [Link to Documentation](https://developer.salesforce.com/docs/atlas.en-us.234.0.object_reference.meta/object_reference/sforce_api_objects_casehistory.htm)
+
+{% enddocs %}
+
 {% docs sfdc_contact_source %}
 
 The contact source table contains info about your contacts, who are individuals associated with accounts in your Salesforce instance. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#contact)
@@ -269,5 +275,17 @@ Source model for SFDC MDF Funds Requests
 {% docs sfdc_user_territory_association_source  %}
 
 Source model for SFDC user territory association
+
+{% enddocs %}
+
+{% docs sfdc_zqu_product_rate_plan_source  %}
+
+Source model for SFDC custom object product rate plan source representing a product rate plan from Zuora
+
+{% enddocs %}
+
+{% docs sfdc_zqu_zproduct_source  %}
+
+Source model for SFDC custom object product source representing a product from Zuora
 
 {% enddocs %}

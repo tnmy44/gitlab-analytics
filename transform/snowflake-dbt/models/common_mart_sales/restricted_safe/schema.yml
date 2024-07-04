@@ -77,6 +77,8 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce.
 
   - name: mart_arr_jihu
     description: '{{ doc("mart_arr_jihu") }}'
@@ -167,6 +169,14 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "arr" ]
+
+  - name: mart_arr_weekly
+    description: A version of mart_arr aggregated by arr_week. This allows more frequent updates to the arr and quantity fields for 
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
 
   - name: mart_charge
     description: Model combining Subscription related objects such as product details and rate plan charge details into a mart.
@@ -326,6 +336,9 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other)
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce.
+
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
@@ -396,6 +409,18 @@ models:
         description: The name of the manager of the crm account owner
       - name: executive_sponsor
         description: executive sponsor of this account
+      - name: bdr_next_steps
+        description: Outlines the next steps that connect to the prospecting strategy for this account.
+      - name: bdr_account_research
+        description: Displays the research that was made on account to justify the account's addition to a prospecting list.
+      - name: bdr_account_strategy
+        description: Aggregates the path for approaching the account into some more general buckets
+      - name: account_bdr_assigned_user_role
+        description: The region and segment specific role of the BDR assigned to an account.
+      - name: bdr_recycle_date
+        description: Automatically populates two months out from the actively working start date to indicate when an outbound account should be considered for removal from the outbound pipeline.
+      - name: actively_working_start_date
+        description: Automatically datestamps the date and time that an account was moved to a BDRs outbound prospecting list.
 
   - name: mart_crm_opportunity
     description:  >-
@@ -409,8 +434,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -482,7 +507,14 @@ models:
         description: The percentage of the opportunity net arr to which the partner is entitled.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
-
+      - name: valid_deal_count
+        description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
 
   - name: mart_crm_opportunity_daily_snapshot
     description: Model with single pane of glass sales and marketing metrics, snapshotted daily.
@@ -491,6 +523,9 @@ models:
         tests:
             - not_null
             - unique
+            - relationships:
+                to: ref('fct_crm_opportunity_daily_snapshot')
+                field: crm_opportunity_snapshot_id
         tags: ["tdf", "mart", "sales_funnel"]
       - name: dim_crm_opportunity_id
         tests:
@@ -500,8 +535,8 @@ models:
           - not_null
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -544,6 +579,13 @@ models:
         description: The XDR influenced value of an Opportunity's Net ARR as of Stage 3 in SFDC.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+      - name: professional_services_value
+        description: Amount on an opportunity that is from Professional Services only
+      - name: edu_services_value
+        description: Amount on an opportunity that is from Educational Services only
+      - name: investment_services_value
+        description: Amount on an opportunity that is from Investment Services only
+
           
 
   - name: mart_crm_opportunity_stamped_hierarchy_hist
@@ -560,8 +602,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -615,6 +657,8 @@ models:
         description: The XDR influenced value of an Opportunity's Net ARR as of Stage 3 in SFDC.
       - name: net_arr_stage_1
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+      - name: valid_deal_count
+        description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
 
   - name: mart_sales_funnel_target
     description: Model with Sales targets used for planning the go to market Sales and Marketing motion.
@@ -867,4 +911,37 @@ models:
         description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_category
         description: Categorizes Zuora products as either Add On Services or Base Products
+      - name: product_rate_plan_category
+        description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce.
+
+  
+  - name: mart_targets_actuals_7th_day_weekly_snapshot
+    columns: 
+      - name: targets_actuals_weekly_snapshot_pk
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_targets_actuals_7th_day_weekly_snapshot')
+              field: targets_actuals_weekly_snapshot_pk
+
+  - name: mart_crm_opportunity_7th_day_weekly_snapshot
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_crm_opportunity_7th_day_weekly_snapshot')
+              field: crm_opportunity_snapshot_id
+  - name: mart_crm_opportunity_7th_day_weekly_snapshot_aggregate
+    columns:
+      - name: opportunity_weekly_snapshot_aggregate_pk
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fct_crm_opportunity_7th_day_weekly_snapshot_aggregate')
+              field: opportunity_weekly_snapshot_aggregate_pk
 

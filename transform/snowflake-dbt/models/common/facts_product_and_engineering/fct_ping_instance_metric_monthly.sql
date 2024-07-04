@@ -3,8 +3,10 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "ping_instance_metric_id",
-    on_schema_change="sync_all_columns"
+    unique_key = "ping_instance_metric_monthly_pk",
+    on_schema_change="sync_all_columns",
+    incremental_strategy="delete+insert",
+    post_hook=["DELETE FROM {{ this }} WHERE is_current_ping = FALSE "]
 ) }}
 
 {{ simple_cte([
@@ -13,6 +15,7 @@
     ])
 
 }},
+
 
 fct_ping_instance_metric AS (
 
@@ -30,14 +33,21 @@ fct_ping_instance_metric AS (
 filtered_fct_ping_instance_metric AS (
   SELECT
     fct_ping_instance_metric.*,
-    dim_ping_metric.time_frame
+    dim_ping_metric.time_frame,
+    dim_ping_instance.is_last_ping_of_month AS is_current_ping,
+    dim_ping_instance.ping_created_date_month
   FROM fct_ping_instance_metric
   INNER JOIN dim_ping_metric
     ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
   INNER JOIN dim_ping_instance
     ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
   WHERE dim_ping_metric.time_frame IN ('28d', 'all')
+    {% if is_incremental() %}
+    AND dim_ping_instance.next_ping_uploaded_at > '{{ filter_date }}'
+    {% else %}
+    -- Only filtered on a full refresh as the post_hook DELETE step applies the filter during an incremental build
     AND dim_ping_instance.is_last_ping_of_month = TRUE
+    {% endif %}
     AND fct_ping_instance_metric.has_timed_out = FALSE
     AND fct_ping_instance_metric.metric_value IS NOT NULL
 ),
@@ -66,6 +76,7 @@ time_frame_all_time_metrics AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.generate_surrogate_key(['dim_installation_id', 'metrics_path', 'ping_created_date_month']) }} AS ping_instance_metric_monthly_pk,
     ping_instance_metric_id,
     dim_ping_instance_id,
     dim_product_tier_id,
@@ -87,12 +98,14 @@ final AS (
     ping_created_at,
     umau_value,
     data_source,
-    uploaded_at
+    uploaded_at,
+    is_current_ping
   FROM time_frame_28_day_metrics
 
   UNION ALL
 
   SELECT
+    {{ dbt_utils.generate_surrogate_key(['dim_installation_id', 'metrics_path', 'ping_created_date_month']) }} AS ping_instance_metric_monthly_pk,
     ping_instance_metric_id,
     dim_ping_instance_id,
     dim_product_tier_id,
@@ -114,7 +127,8 @@ final AS (
     ping_created_at,
     umau_value,
     data_source,
-    uploaded_at
+    uploaded_at,
+    is_current_ping
   FROM time_frame_all_time_metrics
 
 )
@@ -122,7 +136,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@pempey",
+    updated_by="@mdrussell",
     created_date="2022-05-09",
-    updated_date="2024-05-09"
+    updated_date="2024-05-21"
 ) }}

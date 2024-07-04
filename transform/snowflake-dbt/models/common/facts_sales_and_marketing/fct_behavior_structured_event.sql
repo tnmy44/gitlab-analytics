@@ -103,6 +103,12 @@ structured_event_renamed AS (
       host_name,
       is_streaming,
       gitlab_global_user_id,
+      suggestion_source,
+      is_invoked,
+      options_count,
+      accepted_option,
+      has_advanced_context,
+      is_direct_connection,
       gitlab_service_ping_context,
       redis_event_name,
       key_path,
@@ -243,6 +249,12 @@ structured_events_w_dim AS (
       events_with_plan.host_name,
       events_with_plan.is_streaming,
       events_with_plan.gitlab_global_user_id,
+      events_with_plan.suggestion_source,
+      events_with_plan.is_invoked,
+      events_with_plan.options_count,
+      events_with_plan.accepted_option,
+      events_with_plan.has_advanced_context,
+      events_with_plan.is_direct_connection,
 
       -- Degenerate Dimensions (Service Ping)
       events_with_plan.gitlab_service_ping_context,
@@ -298,7 +310,7 @@ structured_events_w_dim AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-05-09"
+    updated_date="2024-06-07"
 ) }}

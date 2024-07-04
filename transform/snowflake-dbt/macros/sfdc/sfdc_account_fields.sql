@@ -330,6 +330,7 @@ WITH map_merged_crm_account AS (
 
       sfdc_account.account_max_family_employee                            AS parent_crm_account_max_family_employee,
       sfdc_account.account_upa_country                                    AS parent_crm_account_upa_country,
+      sfdc_account.account_upa_country_name                               AS parent_crm_account_upa_country_name,
       sfdc_account.account_upa_state                                      AS parent_crm_account_upa_state,
       sfdc_account.account_upa_city                                       AS parent_crm_account_upa_city,
       sfdc_account.account_upa_street                                     AS parent_crm_account_upa_street,
@@ -427,6 +428,10 @@ WITH map_merged_crm_account AS (
       sfdc_account.last_at_risk_update_comments,
       sfdc_account.bdr_prospecting_status,
       sfdc_account.gs_health_csm_sentiment,
+      sfdc_account.bdr_next_steps,
+      sfdc_account.bdr_account_research,
+      sfdc_account.bdr_account_strategy,
+      sfdc_account.account_bdr_assigned_user_role,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
@@ -542,6 +547,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.gs_first_value_date,
       {{ get_date_id('sfdc_account.gs_last_csm_activity_date') }}         AS gs_last_csm_activity_date_id,
       sfdc_account.gs_last_csm_activity_date,
+      sfdc_account.bdr_recycle_date,
+      sfdc_account.actively_working_start_date,
 
 
       --measures
