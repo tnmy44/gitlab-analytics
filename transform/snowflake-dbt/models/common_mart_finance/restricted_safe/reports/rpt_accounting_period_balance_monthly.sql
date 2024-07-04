@@ -284,7 +284,7 @@ final AS (
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-05-17",
-updated_date="2024-05-17"
+created_date="2024-07-04",
+updated_date="2024-07-04"
 ) }}
 
