@@ -1,4 +1,4 @@
-WITH product_mrs AS (
+WITH internal_mrs AS (
 
   SELECT * EXCLUDE (merge_request_description)
   FROM {{ ref('internal_merge_requests_enhanced') }}
@@ -23,7 +23,7 @@ first_non_author_assignment AS (
     0                    AS review_requests,
     0                    AS reviewer_count,
     MIN(note_created_at) AS first_review_date
-  FROM product_mrs AS mrs
+  FROM internal_mrs AS mrs
   INNER JOIN {{ ref('gitlab_dotcom_merge_request_assignment_events') }} AS asevs ON mrs.merge_request_id = asevs.merge_request_id AND mrs.author_id != asevs.event_user_id
   WHERE asevs.event IN ('assigned', 'reassigned')
   GROUP BY 1
@@ -67,7 +67,7 @@ agg AS (
       COALESCE(MIN(reviewer_requested_at_creation.created_at), '9999-12-31')
     )                                                                                                                                     AS first_review_date,
     GREATEST(MAX(extracted_usernames.last_note_date), MAX(mrs.merged_at))                                                                 AS last_reported_date
-  FROM product_mrs AS mrs
+  FROM internal_mrs AS mrs
   LEFT JOIN extracted_usernames ON mrs.merge_request_id = extracted_usernames.merge_request_id
   LEFT JOIN first_non_author_assignment ON mrs.merge_request_id = first_non_author_assignment.merge_request_id
   LEFT JOIN {{ ref('gitlab_dotcom_merge_request_reviewers') }} AS reviewer_requested_at_creation ON mrs.merge_request_id = reviewer_requested_at_creation.merge_request_id
@@ -83,7 +83,7 @@ first_review_date AS (
     review_requests,
     first_review_date,
     last_reported_date
-  FROM product_mrs AS mrs
+  FROM internal_mrs AS mrs
   INNER JOIN agg ON mrs.merge_request_id = agg.merge_request_id
   WHERE (merge_request_state = 'opened' AND mrs.merged_at IS NULL)
     OR (merge_request_state != 'opened' AND last_reported_date IS NOT NULL)
