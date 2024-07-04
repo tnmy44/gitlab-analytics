@@ -20,7 +20,7 @@ data_classification:
         - RAW.*
         - PROD.*
       tables:
-        - RAW.*.*
+        - RAW.SCHEMA_TEST.RADOVAN_TEST_EXCLUDE
         - PROD.*.*
 
   PII:

@@ -17,7 +17,7 @@ class DataClassification:
         self.specification_file = "specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
-        self.scope = self.get_scope()
+        self.scope = self.get_scope_file()
 
     def load_mnpi_list(self) -> list:
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
@@ -27,9 +27,9 @@ class DataClassification:
 
         def extract_full_path(x: str) -> list:
             return [
-                x.get("config").get("database"),
-                x.get("config").get("schema"),
-                x.get("name"),
+                x.get("config").get("database").upper(),
+                x.get("config").get("schema").upper(),
+                x.get("name").upper(),
             ]
 
         return [extract_full_path(x) for x in mnpi_list]
@@ -50,62 +50,48 @@ class DataClassification:
             for row in sorted(data):
                 file.write(f"{row},\n")
 
+    def get_scope(self, section: str, type: str, row: list) -> bool:
+
+        scope = self.scope.get("data_classification").get(section).get(type)
+
+        databases = scope.get("databases")
+        schemas = scope.get("schemas")
+        tables = scope.get("tables")
+
+        # handling include part
+        database_name = str(row[0]).upper()
+        schema_name = str(row[1]).upper()
+        table_name = str(row[2]).upper()
+
+        if database_name in databases:
+            if (
+                f"{database_name}.{schema_name}" in schemas
+                or f"{database_name}.*" in schemas
+            ):
+                full_name = f"{database_name}.{schema_name}.{table_name}"
+
+                if (
+                    full_name in tables
+                    or f"{database_name}.{schema_name}.*" in tables
+                    or f"{database_name}.*.*" in tables
+                ):
+
+                    return True
+
+        return False
+
     def filter_data(self, mnpi_data: list, section: str = "MNPI"):
         res = []
-        scope_include = (
-            self.scope.get("data_classification").get(section).get("include")
-        )
-        scope_exclude = (
-            self.scope.get("data_classification").get(section).get("exclude")
-        )
 
+        #
         for row in mnpi_data:
             include, exclude = False, False
-            databases = scope_include.get("databases")
-            schemas = scope_include.get("schemas")
-            tables = scope_include.get("tables")
 
-            # handling include part
-            database_name = str(row[0]).upper()
-            schema_name = str(row[1]).upper()
-            table_name = str(row[2]).upper()
+            include = self.get_scope(section=section, type="include", row=row)
+            exclude = self.get_scope(section=section, type="exclude", row=row)
 
-            if database_name in databases:
-                if (
-                    f"{database_name}.{schema_name}" in schemas
-                    or f"{database_name}.*" in schemas
-                ):
-                    full_name = f"{database_name}.{schema_name}.{table_name}"
-
-                    if (
-                        full_name in tables
-                        or f"{database_name}.{schema_name}.*" in tables
-                        or f"{database_name}.*.*" in tables
-                    ):
-                        include = True
-
-            # handling exclude part
-            # databases = scope_exclude.get("databases")
-            # schemas = scope_exclude.get("schemas")
-            # tables = scope_exclude.get("tables")
-            #
-            # if database_name in databases:
-            #     if (
-            #         f"{database_name}.{schema_name}" in schemas
-            #         or f"{database_name}.*" in schemas
-            #     ):
-            #         full_name = f"{database_name}.{schema_name}.{table_name}"
-            #
-            #         if (
-            #             full_name in tables
-            #             or f"{database_name}.{schema_name}.*" in tables
-            #         ):
-            #             exclude = True
-            #             include = False
-            #
-            #
             if include and not exclude:
-                res.append(full_name)
+                res.append(f"{row[0]}.{row[1]}.{row[2]}")
         return res
 
     # TODO: rbacovic identify MNPI data
@@ -120,7 +106,7 @@ class DataClassification:
         self.identify_mnpi_data()
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
-    def get_scope(self):
+    def get_scope_file(self):
         with open(
             file=self.specification_file, mode="r", encoding=self.encoding
         ) as file:
