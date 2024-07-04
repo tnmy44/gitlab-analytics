@@ -4559,6 +4559,7 @@ roles:
         - analyst_engineering
       warehouses:
         - dev_xs
+        - reporting
       owns:
         databases:
           - lmai_prep
@@ -6057,6 +6058,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ahohenner:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - tzallmann:
       member_of:
         - snowflake_analyst
@@ -6130,6 +6136,11 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
+  - gyoung:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - vmairet:
       member_of:
         - snowflake_analyst
@@ -6187,6 +6198,11 @@ roles:
           write:
             - vprakash_prep.*.*
             - vprakash_prod.*.*
+  - bwilkerson:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - vtatarintev:
       member_of:
         - snowflake_analyst
@@ -6212,6 +6228,21 @@ roles:
   - whaber:
       member_of: []
       warehouses: []
+  - nprabakaran:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jroodnick:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jbaumgardner:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - wleidheiser:
       member_of:
         - snowflake_analyst_safe
@@ -6241,6 +6272,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - rchong:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - rchanila:
       member_of:
         - snowflake_analyst
@@ -6257,6 +6293,11 @@ roles:
       warehouses:
         - dev_xs
   - bleducmills:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - dchevalier:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -6286,6 +6327,21 @@ roles:
       warehouses:
         - dev_xs
   - alejandro:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ddavison:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jmcdonnell:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - acunskis:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -6430,6 +6486,21 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ichernikov:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - amcdonald:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - trea:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - jdleon:
       member_of:
         - adaptive
@@ -6473,7 +6544,22 @@ roles:
         - snowflake_db
       warehouses:
         - reporting
+  - wmeek:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - nwestbury:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ttavares:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - vpatel:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7462,6 +7548,10 @@ users:
       can_login: true
       member_of:
         - kshirazi
+  - gyoung:
+      can_login: true
+      member_of:
+        - gyoung
   - sguyon:
       can_login: true
       member_of:
@@ -7474,6 +7564,10 @@ users:
       can_login: true
       member_of:
         - kkloss
+  - vpatel:
+      can_login: true
+      member_of:
+        - vpatel
   - mdunleavy:
       can_login: true
       member_of:
@@ -7490,10 +7584,22 @@ users:
       can_login: true
       member_of:
         - seanhall
+  - ahohenner:
+      can_login: true
+      member_of:
+        - ahohenner
+  - ichernikov:
+      can_login: true
+      member_of:
+        - ichernikov
   - kvasireddy:
       can_login: true
       member_of:
         - kvasireddy
+  - jroodnick:
+      can_login: true
+      member_of:
+        - jroodnick
   - ballam:
       can_login: true
       member_of:
@@ -7506,14 +7612,26 @@ users:
       can_login: true
       member_of:
         - mek
+  - ddavison:
+      can_login: true
+      member_of:
+        - ddavison
   - gsodhi:
       can_login: true
       member_of:
         - gsodhi
+  - acunskis:
+      can_login: true
+      member_of:
+        - acunskis
   - avpfestin:
       can_login: true
       member_of:
         - avpfestin
+  - trea:
+      can_login: true
+      member_of:
+        - trea
   - acook:
       can_login: true
       member_of:
@@ -7522,6 +7640,18 @@ users:
       can_login: true
       member_of:
         - aevans
+  - wmeek:
+      can_login: true
+      member_of:
+        - wmeek
+  - rchong:
+      can_login: true
+      member_of:
+        - rchong
+  - nwestbury:
+      can_login: true
+      member_of:
+        - nwestbury
   - vshushlin:
       can_login: true
       member_of:
@@ -7530,6 +7660,10 @@ users:
       can_login: true
       member_of:
         - tmccaslin
+  - bwilkerson:
+      can_login: true
+      member_of:
+        - bwilkerson
   - lanzures:
       can_login: true
       member_of:
@@ -7538,6 +7672,14 @@ users:
       can_login: true
       member_of:
         - jdleon
+  - nprabakaran:
+      can_login: true
+      member_of:
+        - nprabakaran
+  - amcdonald:
+      can_login: true
+      member_of:
+        - amcdonald
   - testtableau:
       can_login: true
       member_of:
@@ -7550,6 +7692,10 @@ users:
       can_login: true
       member_of:
         - jaltherr
+  - dchevalier:
+      can_login: true
+      member_of:
+        - dchevalier
   - plopez:
       can_login: true
       member_of:
@@ -7558,6 +7704,10 @@ users:
       can_login: true
       member_of:
         - eludaway
+  - jbaumgardner:
+      can_login: true
+      member_of:
+        - jbaumgardner
   - devo:
       can_login: true
       member_of:
@@ -7574,6 +7724,10 @@ users:
       can_login: true
       member_of:
         - mvanremmerden
+  - jmcdonnell:
+      can_login: true
+      member_of:
+        - jmcdonnell
   - bparkhomchuk:
       can_login: true
       member_of:
