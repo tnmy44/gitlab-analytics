@@ -17,5 +17,5 @@
     
     SELECT * 
     FROM {{ source('workday','job_profiles') }}
-     QUALIFY ROW_NUMBER() OVER(PARTITION BY job_workday_id ORDER BY _fivetran_deleted ASC) = 1
+     WHERE _fivetran_deleted >='2024-06-01'
 {% endsnapshot %}
