@@ -21,6 +21,9 @@ class DataClassification:
         self.mnpi_raw_file = mnpi_raw_file
         self.scope = self.get_scope_file()
 
+    @staticmethod
+    def quoted(input_str: str) -> str:
+        return "'" + input_str + "'"
     def load_mnpi_list(self) -> list:
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             return [json.loads(line.rstrip()) for line in file]
@@ -44,11 +47,10 @@ class DataClassification:
         schemas = scope.get("schemas")
         tables = scope.get("tables")
 
-        def quoted(input_str: str) -> str:
-            return "'" + input_str + "'"
+
 
         if databases:
-             res = f" AND (table_catalog IN ({', '.join(quoted(x) for x in databases)}))"
+             res = f" AND (table_catalog IN ({', '.join(self.quoted(x) for x in databases)}))"
 
 
         if schemas:
@@ -57,9 +59,9 @@ class DataClassification:
                 schema_list = schema.split(".")
 
                 if "*" in schema_list:
-                    res += f" (table_catalog = {quoted(schema_list[0])} AND table_schema ILIKE {quoted('%')})"
+                    res += f" (table_catalog = {self.quoted(schema_list[0])} AND table_schema ILIKE {self.quoted('%')})"
                 else:
-                    res += f" (table_catalog = {quoted(schema_list[0])} AND table_schema = {quoted(schema_list[1])})"
+                    res += f" (table_catalog = {self.quoted(schema_list[0])} AND table_schema = {self.quoted(schema_list[1])})"
 
                 if i < len(schemas):
                     res += " OR"
@@ -69,15 +71,15 @@ class DataClassification:
                 table_list = table.split(".")
 
                 if "*" in table_list:
-                    res += f" (table_catalog = {quoted(table_list[0])} AND"
+                    res += f" (table_catalog = {self.quoted(table_list[0])} AND"
                     if table_list.count("*") == 1:
                         res += (
-                            f" table_schema = {quoted(table_list[1])} and table_name ILIKE {quoted('%')})"
+                            f" table_schema = {self.quoted(table_list[1])} and table_name ILIKE {self.quoted('%')})"
                         )
                     if table_list.count("*") == 2:
-                        res += f" table_schema ILIKE {quoted('%')} and table_name ILIKE {quoted('%')})"
+                        res += f" table_schema ILIKE {self.quoted('%')} and table_name ILIKE {self.quoted('%')})"
                 else:
-                    res += f" (table_catalog = {quoted(table_list[0])} AND table_schema = {quoted(table_list[1])} and table_name = {quoted(table_list[2])})"
+                    res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema = {self.quoted(table_list[1])} and table_name = {self.quoted(table_list[2])})"
 
                 if i < len(tables):
                     res += " OR"
@@ -90,15 +92,15 @@ class DataClassification:
         insert_statement = (
             f"INSERT INTO {self.database_name}.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
             f"WITH base AS ("
-            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"SELECT {self.quoted(scope_type)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM raw.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
-            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"SELECT {self.quoted(scope_type)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM prep.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
-            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"SELECT {self.quoted(scope_type)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM prod.information_schema.tables"
             f" WHERE table_schema != 'INFORMATION_SCHEMA') "
             f"SELECT *"
