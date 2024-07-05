@@ -24,6 +24,7 @@ class DataClassification:
     @staticmethod
     def quoted(input_str: str) -> str:
         return "'" + input_str + "'"
+
     def load_mnpi_list(self) -> list:
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             return [json.loads(line.rstrip()) for line in file]
@@ -41,20 +42,21 @@ class DataClassification:
 
     def get_pii_scope(self, section: str, scope_type: str) -> str:
 
-        scope = self.scope.get("data_classification").get(section).get(scope_type)
         res = ""
+        scope = self.scope.get("data_classification").get(section).get(scope_type)
         databases = scope.get("databases")
         schemas = scope.get("schemas")
         tables = scope.get("tables")
-
-
-
+        exclude_statement = "NOT" if scope_type == "exclude" else ""
         if databases:
-             res = f" AND (table_catalog IN ({', '.join(self.quoted(x) for x in databases)}))"
-
+            res = f" (table_catalog {exclude_statement} IN ({', '.join(self.quoted(x) for x in databases)}))"
 
         if schemas:
             res += " AND"
+
+            if exclude_statement:
+                res += f" {exclude_statement}"
+
             for i, schema in enumerate(schemas, start=1):
                 schema_list = schema.split(".")
 
@@ -67,27 +69,27 @@ class DataClassification:
                     res += " OR"
         if tables:
             res += " AND"
+            if exclude_statement:
+                res += f" {exclude_statement}"
             for i, table in enumerate(tables, start=1):
                 table_list = table.split(".")
 
                 if "*" in table_list:
                     res += f" (table_catalog = {self.quoted(table_list[0])} AND"
                     if table_list.count("*") == 1:
-                        res += (
-                            f" table_schema = {self.quoted(table_list[1])} and table_name ILIKE {self.quoted('%')})"
-                        )
+                        res += f" table_schema = {self.quoted(table_list[1])} AND table_name ILIKE {self.quoted('%')})"
                     if table_list.count("*") == 2:
-                        res += f" table_schema ILIKE {self.quoted('%')} and table_name ILIKE {self.quoted('%')})"
+                        res += f" table_schema ILIKE {self.quoted('%')} AND table_name ILIKE {self.quoted('%')})"
                 else:
                     res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema = {self.quoted(table_list[1])} and table_name = {self.quoted(table_list[2])})"
 
                 if i < len(tables):
                     res += " OR"
 
-        return res
+        return f"AND ({res})"
 
-    # TODO: rbacovic identify PII data
-    def identify_pii_data(self):
+    @property
+    def pii_query(self) -> str:
         scope_type = "PII"
         insert_statement = (
             f"INSERT INTO {self.database_name}.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
@@ -108,8 +110,17 @@ class DataClassification:
             f" WHERE 1=1 "
         )
 
-        where_clause = self.get_pii_scope(section=scope_type, scope_type="include")
-        print(insert_statement+where_clause)
+        where_clause_include = self.get_pii_scope(
+            section=scope_type, scope_type="include"
+        )
+        where_clause_exclude = self.get_pii_scope(
+            section=scope_type, scope_type="exclude"
+        )
+        return f"{insert_statement}{where_clause_include}{where_clause_exclude}"
+
+    # TODO: rbacovic identify PII data
+    def identify_pii_data(self):
+        pass
 
     def save_to_file(self, data: list):
         with open(

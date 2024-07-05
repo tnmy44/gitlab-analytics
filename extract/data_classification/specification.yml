@@ -36,7 +36,6 @@ data_classification:
       tables:
         - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
         - RAW.*.*
-        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.my_table
     exclude:
       databases:
         - PROD
