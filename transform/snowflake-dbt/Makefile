@@ -18,7 +18,7 @@ DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone --select $(D
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
 build-changes:
-	@echo "\n***** Fetching Referernce *******\n"
+	@echo "\n***** Fetching Reference *******\n"
 	@"$(DBT_REFERENCE)"
 
 	@echo "\n***** User Input *******\n"
@@ -38,9 +38,9 @@ build-changes:
 	@echo Vars: $(DBT_DEV_VARS)
 	@echo Target: $(DBT_DEV_TARGET)
 
-	@echo "\n***** Cloneing Selection *******\n"
+	@echo "\n***** Cloning Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
-	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
+  #@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
+  #@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
