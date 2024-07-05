@@ -27,19 +27,23 @@ data_classification:
     description: "PII data classification"
     include:
       databases:
-        - RAW
         - PREP
+        - RAW
       schemas:
-        - RAW.*.*
+        - PREP.GAINSIGHT_CUSTOMER_SUCCESS
+        - RAW.*
+        - RAW.SOME_SCHEMA
       tables:
+        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
         - RAW.*.*
+        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.my_table
     exclude:
       databases:
-        - PREP
         - PROD
+        - RAW
       schemas:
-        - PREP.*
+        - RAW.*
         - PROD.*
       tables:
-        - PREP.*.*
-        - PROD.*.*.*
+        - RAW.SCHEMA_TEST.RADOVAN_TEST_EXCLUDE
+        - PROD.*.*

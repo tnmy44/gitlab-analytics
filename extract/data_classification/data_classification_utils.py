@@ -10,6 +10,8 @@ import yaml
 class DataClassification:
     def __init__(self, tagging_type: str, mnpi_raw_file: str):
         self.encoding = "utf8"
+        self.database_name = "rbacovic_prep"
+        self.schema_name = "benchmark_pii"
         self.mnpi_file_name = {
             "MNPI": "mnpi_table_list.csv",
             "PII": "pii_table_list.csv",
@@ -34,12 +36,78 @@ class DataClassification:
 
         return [extract_full_path(x) for x in mnpi_list]
 
+    def get_pii_scope(self, section: str, scope_type: str) -> str:
+
+        scope = self.scope.get("data_classification").get(section).get(scope_type)
+        res = ""
+        databases = scope.get("databases")
+        schemas = scope.get("schemas")
+        tables = scope.get("tables")
+
+        def quoted(input_str: str) -> str:
+            return "'" + input_str + "'"
+
+        if databases:
+             res = f" AND (table_catalog IN ({', '.join(quoted(x) for x in databases)}))"
+
+
+        if schemas:
+            res += " AND"
+            for i, schema in enumerate(schemas, start=1):
+                schema_list = schema.split(".")
+
+                if "*" in schema_list:
+                    res += f" (table_catalog = {quoted(schema_list[0])} AND table_schema ILIKE {quoted('%')})"
+                else:
+                    res += f" (table_catalog = {quoted(schema_list[0])} AND table_schema = {quoted(schema_list[1])})"
+
+                if i < len(schemas):
+                    res += " OR"
+        if tables:
+            res += " AND"
+            for i, table in enumerate(tables, start=1):
+                table_list = table.split(".")
+
+                if "*" in table_list:
+                    res += f" (table_catalog = {quoted(table_list[0])} AND"
+                    if table_list.count("*") == 1:
+                        res += (
+                            f" table_schema = {quoted(table_list[1])} and table_name ILIKE {quoted('%')})"
+                        )
+                    if table_list.count("*") == 2:
+                        res += f" table_schema ILIKE {quoted('%')} and table_name ILIKE {quoted('%')})"
+                else:
+                    res += f" (table_catalog = {quoted(table_list[0])} AND table_schema = {quoted(table_list[1])} and table_name = {quoted(table_list[2])})"
+
+                if i < len(tables):
+                    res += " OR"
+
+        return res
+
     # TODO: rbacovic identify PII data
     def identify_pii_data(self):
-        pass
-        # load
-        # prepare
-        # save
+        scope_type = "PII"
+        insert_statement = (
+            f"INSERT INTO {self.database_name}.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
+            f"WITH base AS ("
+            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"  FROM raw.information_schema.tables "
+            f" WHERE table_schema != 'INFORMATION_SCHEMA' "
+            f" UNION "
+            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"  FROM prep.information_schema.tables "
+            f" WHERE table_schema != 'INFORMATION_SCHEMA' "
+            f" UNION "
+            f"SELECT {scope_type} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
+            f"  FROM prod.information_schema.tables"
+            f" WHERE table_schema != 'INFORMATION_SCHEMA') "
+            f"SELECT *"
+            f"  FROM base"
+            f" WHERE 1=1 "
+        )
+
+        where_clause = self.get_pii_scope(section=scope_type, scope_type="include")
+        print(insert_statement+where_clause)
 
     def save_to_file(self, data: list):
         with open(
@@ -50,15 +118,14 @@ class DataClassification:
             for row in sorted(data):
                 file.write(f"{row},\n")
 
-    def get_scope(self, section: str, type: str, row: list) -> bool:
+    def get_scope(self, section: str, scope_type: str, row: list) -> bool:
 
-        scope = self.scope.get("data_classification").get(section).get(type)
+        scope = self.scope.get("data_classification").get(section).get(scope_type)
 
         databases = scope.get("databases")
         schemas = scope.get("schemas")
         tables = scope.get("tables")
 
-        # handling include part
         database_name = str(row[0]).upper()
         schema_name = str(row[1]).upper()
         table_name = str(row[2]).upper()
@@ -83,7 +150,6 @@ class DataClassification:
     def filter_data(self, mnpi_data: list, section: str = "MNPI"):
         res = []
 
-        #
         for row in mnpi_data:
             include, exclude = False, False
 

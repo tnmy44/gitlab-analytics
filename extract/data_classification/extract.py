@@ -8,7 +8,7 @@ def run():
     Run process
     """
     data_classification = DataClassification(tagging_type="full", mnpi_raw_file="safe_models.json")
-    data_classification.identify_mnpi_data()
+    data_classification.identify_pii_data()
     # print(data_classification.scope)
 
 if __name__ == '__main__':
