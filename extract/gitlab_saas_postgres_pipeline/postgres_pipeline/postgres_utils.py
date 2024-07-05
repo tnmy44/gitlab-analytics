@@ -381,16 +381,22 @@ def get_initial_load_prefix(initial_load_start_date):
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}".lower()
     return initial_load_prefix
 
+def get_db_type_for_file_name(db_type):
+    if db_type == "cells":
+        return db_type
+    else:
+        return ""
 
 def get_upload_file_name(
     load_by_id_export_type: str,
     table: str,
     initial_load_start_date: datetime,
     upload_date: datetime,
+    database_type: str,
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
+    filename_template: str = "{timestamp}_{table}{datbase_type}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
 
@@ -415,7 +421,7 @@ def get_upload_file_name(
         table=table,
         initial_load_prefix=initial_load_prefix,
     )
-
+    database_type = get_db_type_for_file_name(database_type)
     # Format filename
     timestamp = upload_date.isoformat(timespec="milliseconds")
     if version is None:
@@ -425,6 +431,7 @@ def get_upload_file_name(
     filename = filename_template.format(
         timestamp=timestamp,
         table=table,
+        database_type=database_type,
         version=version,
         filetype=filetype,
         compression=compression,
@@ -557,6 +564,7 @@ def upload_to_snowflake_after_extraction(
 def chunk_and_upload_metadata(
     query: str,
     primary_key: str,
+    database_type: str,
     max_source_id: int,
     initial_load_start_date: datetime,
     database_kwargs: Dict[Any, Any],
@@ -604,6 +612,7 @@ def chunk_and_upload_metadata(
                 database_kwargs["real_target_table"],
                 initial_load_start_date,
                 upload_date,
+                database_type,
             )
 
             if row_count > 0:

@@ -245,6 +245,7 @@ def load_ids(
     load_by_id_export_type,
     extract_chunksize,
     csv_chunksize,
+    database_type: str,
 ) -> bool:
     """Load a query by chunks of IDs instead of all at once."""
 
@@ -287,6 +288,7 @@ def load_ids(
         initial_load_start_date = chunk_and_upload_metadata(
             filtered_query,
             primary_key,
+            database_type,
             max_pk,
             initial_load_start_date,
             database_kwargs,
