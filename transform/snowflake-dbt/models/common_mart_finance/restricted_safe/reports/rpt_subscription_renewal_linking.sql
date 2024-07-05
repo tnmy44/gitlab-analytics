@@ -96,7 +96,7 @@ last_version_non_cancelled AS (
     mart_crm_opportunity.record_type_name
   FROM sub_version
   LEFT JOIN cancelled_sub ON sub_version.subscription_name = cancelled_sub.subscription_name
-  LEFT JOIN prod.restricted_safe_common_mart_sales.mart_crm_opportunity ON sub_version.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
+  LEFT JOIN mart_crm_opportunity ON sub_version.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
   WHERE cancelled_sub.subscription_name IS NULL
     AND sub_version.row_num = 1
     AND mart_crm_opportunity.record_type_name = 'Standard'
