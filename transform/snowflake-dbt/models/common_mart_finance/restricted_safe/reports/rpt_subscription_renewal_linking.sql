@@ -1,7 +1,21 @@
+{{ config(
+    materialized="table",
+    tags=["mnpi"]
+) }}
+
+{{ simple_cte([
+    ('dim_subscription', 'dim_subscription'),
+    ('dim_billing_account', 'dim_billing_account'),
+    ('mart_crm_opportunity', 'mart_crm_opportunity'),
+    ('fct_quote', 'fct_quote'),
+    ('dim_quote', 'dim_quote')
+
+]) }},
+
 -- PREPARATION STEPS
 -- subscription data preparation
 
-WITH sub_version AS (
+sub_version AS (
 
 -- marking the last version with row number
 
@@ -36,7 +50,7 @@ cancelled_sub AS (
 
 -- in last versions determine subscriptions cancelled per start date
 
-  SELECT *
+  SELECT last_sub_version.*
   FROM last_sub_version
   WHERE last_sub_version.subscription_start_date = last_sub_version.subscription_end_date
 
@@ -313,7 +327,6 @@ final AS (
 
   SELECT *
   FROM new_business
-  ORDER BY new_business.renewal_subscription_name
 
 )
 
@@ -321,6 +334,6 @@ final AS (
 cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
-created_date="2024-07-04",
-updated_date="2024-07-04"
+created_date="2024-07-05",
+updated_date="2024-07-05"
 ) }}
