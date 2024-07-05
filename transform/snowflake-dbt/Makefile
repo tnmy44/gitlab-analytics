@@ -20,7 +20,7 @@ DBT_DEV_FAIL_FAST= $$(if [ -z "$(FAIL_FAST)" ]; then echo "--fail-fast"; fi)
 DBT_DEV_EXCLUDE= $$(if [ ! -z "$(EXCLUDE)" ]; then echo "--exclude $(EXCLUDE)"; fi)
 DBT_DEV_FULL_REFRESH=$$(if [ ! -z "$(FULL_REFRESH)" ]; then echo "--full-refresh"; fi)
 DBT_DEV_VARS= $$(if [ ! -z "$(VARS)" ]; then echo "--vars {$(VARS)}"; fi)
-DBT_DEV_TARGET= $$(if [ ! -z "$(TARGET)" ]; then echo "--target $(TARGET)"; fi)
+DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
 SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql')
 
@@ -32,7 +32,7 @@ SQLFLUFF_LINT_CHANGES_COMMAND=sqlfluff lint $(SQLFLUFF_DEV_CHANGES)
 SQLFLUFF_FIX_CHANGES_COMMAND=sqlfluff fix $(SQLFLUFF_DEV_CHANGES)
 
 build-changes-make:
-	@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+  #@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 
 	@echo "\n***** User Input *******\n"
