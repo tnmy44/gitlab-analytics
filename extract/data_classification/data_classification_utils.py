@@ -140,7 +140,7 @@ class DataClassification:
 
         where_clause_include = self.get_pii_scope(section=section, scope_type="include")
         where_clause_exclude = self.get_pii_scope(section=section, scope_type="exclude")
-        
+
         res = f"{insert_statement}{where_clause_include}{where_clause_exclude}"
         return res
 
