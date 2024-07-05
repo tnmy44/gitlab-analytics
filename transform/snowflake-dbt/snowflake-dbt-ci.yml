@@ -135,7 +135,7 @@
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - if [ ! -z "$RAW_DB" ]; then SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - make build-changes DOWNSTREAM="+1" FULL_REFRESH="True" TARGET="dev_xl" VARS="key":"value" EXCLUDE="test_model"
+    - make build-changes OVERRIDE_REFERENCE="True" DOWNSTREAM="+1" FULL_REFRESH="True" TARGET="dev_xl" VARS="key":"value" EXCLUDE="test_model"
 
 🎛️custom_invocation:
   <<: *snowflake_dbt_jobs

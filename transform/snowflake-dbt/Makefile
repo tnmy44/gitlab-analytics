@@ -25,15 +25,15 @@ DBT_DEV_TARGET= $$(if [ ! -z "$(TARGET)" ]; then echo "--target $(TARGET)"; fi)
 SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql')
 
 ## Commands
-DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE)
+DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) #$(DBT_DEV_STATE)
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
 SQLFLUFF_LINT_CHANGES_COMMAND=sqlfluff lint $(SQLFLUFF_DEV_CHANGES)
 SQLFLUFF_FIX_CHANGES_COMMAND=sqlfluff fix $(SQLFLUFF_DEV_CHANGES)
 
 build-changes-make:
-	@echo "\n***** Fetching Reference *******\n"
-	@"$(DBT_REFERENCE)"
+	@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -54,7 +54,7 @@ build-changes-make:
 
 	@echo "\n***** Cloning Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
-  #@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
+	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 1)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
   #@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
