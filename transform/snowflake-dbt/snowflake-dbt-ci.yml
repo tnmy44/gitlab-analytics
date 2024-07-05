@@ -125,6 +125,18 @@
     - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_FULL_REFRESH --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
     - if [ $FAILED ]; then echo "Build process failed" && exit 5; fi
 
+🏗️🏭build_change_make:
+  <<: *snowflake_dbt_jobs
+  script:
+    - set +e
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XL_WAREHOUSE}
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Build can execute snapshots
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - if [ ! -z "$RAW_DB" ]; then SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
+    - echo $SNOWFLAKE_LOAD_DATABASE
+    - make build-changes DOWNSTREAM="+1" FULL_REFRESH="True" TARGET="dev_xl" VARS="key":"value" EXCLUDE="test_model"
+
 🎛️custom_invocation:
   <<: *snowflake_dbt_jobs
   script:
