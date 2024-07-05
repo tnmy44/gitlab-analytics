@@ -31,8 +31,8 @@ sub_version AS (
     ROW_NUMBER() OVER (PARTITION BY dim_subscription.subscription_name ORDER BY dim_subscription.subscription_version DESC) AS row_num,
     dim_billing_account.crm_entity,
     dim_billing_account.dim_billing_account_id
-  FROM dim_subscription
-  LEFT JOIN dim_billing_account ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+  FROM {{ ref('dim_subscription') }}
+  LEFT JOIN {{ ref('dim_billing_account') }} ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
 
 ),
 
@@ -96,7 +96,7 @@ last_version_non_cancelled AS (
     mart_crm_opportunity.record_type_name
   FROM sub_version
   LEFT JOIN cancelled_sub ON sub_version.subscription_name = cancelled_sub.subscription_name
-  LEFT JOIN mart_crm_opportunity ON sub_version.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
+  LEFT JOIN {{ ref('mart_crm_opportunity') }} ON sub_version.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
   WHERE cancelled_sub.subscription_name IS NULL
     AND sub_version.row_num = 1
     AND mart_crm_opportunity.record_type_name = 'Standard'
@@ -122,9 +122,9 @@ opportunity_basis_renewal AS (
     first_version_non_cancelled.dim_crm_account_id,
     first_version_non_cancelled.subscription_version,
     first_version_non_cancelled.row_num
-  FROM mart_crm_opportunity
-  LEFT JOIN fct_quote ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
-  LEFT JOIN dim_quote ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
+  FROM {{ ref('mart_crm_opportunity') }}
+  LEFT JOIN {{ ref('fct_quote') }} ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
+  LEFT JOIN {{ ref('dim_quote') }} ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
   LEFT JOIN first_version_non_cancelled ON mart_crm_opportunity.dim_crm_opportunity_id = first_version_non_cancelled.dim_crm_opportunity_id
   WHERE mart_crm_opportunity.is_won = TRUE
     AND mart_crm_opportunity.is_web_portal_purchase = FALSE
@@ -195,9 +195,9 @@ opportunity_basis_new_business AS (
     first_version_non_cancelled.dim_crm_account_id,
     first_version_non_cancelled.subscription_version,
     first_version_non_cancelled.row_num
-  FROM mart_crm_opportunity
-  LEFT JOIN fct_quote ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
-  LEFT JOIN dim_quote ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
+  FROM {{ ref('mart_crm_opportunity') }}
+  LEFT JOIN {{ ref('fct_quote') }} ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
+  LEFT JOIN {{ ref('dim_quote') }} ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
   LEFT JOIN first_version_non_cancelled ON mart_crm_opportunity.dim_crm_opportunity_id = first_version_non_cancelled.dim_crm_opportunity_id
   WHERE mart_crm_opportunity.is_won = TRUE
     AND mart_crm_opportunity.is_web_portal_purchase = FALSE
@@ -270,9 +270,9 @@ opportunity_basis_entity AS (
     last_version_non_cancelled.subscription_end_date,
     last_version_non_cancelled.subscription_version  AS previous_subscription_version,
     mart_crm_opportunity.sales_type
-  FROM mart_crm_opportunity
-  LEFT JOIN fct_quote ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
-  LEFT JOIN dim_quote ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
+  FROM {{ ref('mart_crm_opportunity') }}
+  LEFT JOIN {{ ref('fct_quote') }} ON mart_crm_opportunity.dim_crm_opportunity_id = fct_quote.dim_crm_opportunity_id
+  LEFT JOIN {{ ref('dim_quote') }} ON fct_quote.dim_quote_id = dim_quote.dim_quote_id
   LEFT JOIN last_version_non_cancelled ON fct_quote.quote_exist_subscription_id = last_version_non_cancelled.dim_subscription_id
   LEFT JOIN first_version_non_cancelled ON mart_crm_opportunity.dim_crm_opportunity_id = first_version_non_cancelled.dim_crm_opportunity_id
   WHERE mart_crm_opportunity.is_won = TRUE
