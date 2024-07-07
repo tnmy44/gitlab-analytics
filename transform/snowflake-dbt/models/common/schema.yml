@@ -9742,6 +9742,8 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current_team_member_position
         description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_valid_from
+      - name: position_valid_to
       - name: absence_start
         description: The team member's absence start date
         tests: 

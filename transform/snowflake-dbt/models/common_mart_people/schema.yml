@@ -132,7 +132,7 @@ models:
              - dim_team_member_sk
              - absence_date
              - pto_uuid
-             - valid_from
+  
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member
