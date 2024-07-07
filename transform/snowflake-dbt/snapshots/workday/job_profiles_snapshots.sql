@@ -17,5 +17,5 @@
     
     SELECT * 
     FROM {{ source('workday','job_profiles') }}
-     WHERE _fivetran_deleted >='2024-06-21'
+     WHERE _fivetran_synced >='2024-06-21'
 {% endsnapshot %}
