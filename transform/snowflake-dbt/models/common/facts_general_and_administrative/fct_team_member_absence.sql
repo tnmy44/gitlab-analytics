@@ -23,9 +23,10 @@ team_status AS (
     job_grade,
     entity,
     is_position_active,
-    is_current
+    is_current,
+    valid_from AS position_valid_from,
+    valid_to   AS position_valid_to
   FROM team_status_dup
-  WHERE is_current = TRUE --To consider only latest status of the team member
 ),
 
 combined_sources AS (
@@ -44,6 +45,8 @@ combined_sources AS (
     team_status.entity,
     team_status.is_position_active,
     team_status.is_current AS is_current_team_member_position,
+    team_status.position_valid_from,
+    team_status.position_valid_to,
     pto.start_date         AS absence_start,
     pto.end_date           AS absence_end,
     pto.pto_date           AS absence_date,
@@ -59,6 +62,10 @@ combined_sources AS (
     pto.employee_day_length
   FROM team_status
   INNER JOIN pto ON team_status.employee_id = pto.hr_employee_id
+    AND NOT (
+      team_status.position_valid_to <= absence_start
+      OR team_status.position_valid_from >= absence_end
+    )
 ),
 
 final AS (

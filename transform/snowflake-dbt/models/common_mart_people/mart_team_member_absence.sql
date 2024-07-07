@@ -73,8 +73,7 @@ team_member_absence AS (
 ),
 
 final AS (
-  SELECT
-
+  SELECT DISTINCT
     -- Surrogate keys
     team_member.dim_team_member_sk,
     team_member_absence.dim_team_sk,
@@ -127,18 +126,21 @@ final AS (
     team_member_absence.total_hours,
     team_member_absence.recorded_hours,
     team_member_absence.absence_status,
-    team_member_absence.employee_day_length,
-    team_member.valid_from,
-    team_member.valid_to
-  FROM team_member
-  INNER JOIN team_member_absence
-    ON team_member.employee_id = team_member_absence.employee_id
+    team_member_absence.employee_day_length
+  FROM team_member_absence
+  INNER JOIN team_member
+    ON team_member_absence.employee_id = team_member.employee_id
+      AND NOT (
+        team_member_absence.absence_start >= team_member.valid_to
+        OR team_member_absence.absence_end <= team_member.valid_from
+      )
 )
+
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rakhireddy",
     updated_by="@rakhireddy",
     created_date="2024-05-15",
-    updated_date="2024-05-15"
+    updated_date="2024-07-06"
 ) }}
