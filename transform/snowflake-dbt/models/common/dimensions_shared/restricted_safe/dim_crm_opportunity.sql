@@ -28,6 +28,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.lead_source,
       prep_crm_opportunity.merged_opportunity_id,
       prep_crm_opportunity.duplicate_opportunity_id,
+      prep_crm_opportunity.contract_reset_opportunity_id,
       prep_crm_opportunity.net_new_source_categories,
       prep_crm_opportunity.primary_campaign_source_id,
       prep_crm_opportunity.sales_path,
