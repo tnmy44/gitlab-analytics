@@ -2395,6 +2395,26 @@ roles:
             - prod.restricted_safe_common_mart_product.*
             - prod.workspace_data_science.*
             - prod.workspace_sales.*
+  - restricted_safe_devrel:
+      warehouses:
+        - reporting
+      privileges:
+        databases:
+          read:
+            - prep
+            - prod
+        schemas:
+          read:
+            - prep.commonroom
+            - prod.restricted_safe_workspace_marketing
+        tables:
+          read:
+            - prep.commonroom.commonroom_activities_source_pii
+            - prep.commonroom.commonroom_community_members_source_pii
+            - prep.commonroom.commonroom_organizations_source_pii
+            - prod.restricted_safe_workspace_marketing.wk_commonroom_activities
+            - prod.restricted_safe_workspace_marketing.wk_commonroom_community_members
+            - prod.restricted_safe_workspace_marketing.wk_commonroom_organizations
   - restricted_workspace_people:
       warehouses:
         - reporting
