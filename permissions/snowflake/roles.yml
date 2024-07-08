@@ -3571,6 +3571,43 @@ roles:
         - linkedin_ads
       warehouses:
         - dev_xs
+  - dmurphy:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - dmurphy_prep
+          - dmurphy_prod
+        schemas:
+          - dmurphy_prep.*
+          - dmurphy_prod.*
+        tables:
+          - dmurphy_prep.*.*
+          - dmurphy_prod.*.*
+      privileges:
+        databases:
+          read:
+            - dmurphy_prep
+            - dmurphy_prod
+          write:
+            - dmurphy_prep
+            - dmurphy_prod
+        schemas:
+          read:
+            - dmurphy_prep.*
+            - dmurphy_prod.*
+          write:
+            - dmurphy_prep.*
+            - dmurphy_prod.*
+        tables:
+          read:
+            - dmurphy_prep.*.*
+            - dmurphy_prod.*.*
+          write:
+            - dmurphy_prep.*.*
+            - dmurphy_prod.*.*
   - dpeterson:
       member_of:
         - analyst_growth
@@ -4046,6 +4083,43 @@ roles:
           write:
             - jclapper_prep.*.*
             - jclapper_prod.*.*
+  - jcoghlan:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - jcoghlan_prep
+          - jcoghlan_prod
+        schemas:
+          - jcoghlan_prep.*
+          - jcoghlan_prod.*
+        tables:
+          - jcoghlan_prep.*.*
+          - jcoghlan_prod.*.*
+      privileges:
+        databases:
+          read:
+            - jcoghlan_prep
+            - jcoghlan_prod
+          write:
+            - jcoghlan_prep
+            - jcoghlan_prod
+        schemas:
+          read:
+            - jcoghlan_prep.*
+            - jcoghlan_prod.*
+          write:
+            - jcoghlan_prep.*
+            - jcoghlan_prod.*
+        tables:
+          read:
+            - jcoghlan_prep.*.*
+            - jcoghlan_prod.*.*
+          write:
+            - jcoghlan_prep.*.*
+            - jcoghlan_prod.*.*
   - jcolyer:
       member_of:
         - gitlab_dotcom
