@@ -5255,6 +5255,43 @@ roles:
           write:
             - nraisinghani_prep.*.*
             - nraisinghani_prod.*.*
+  - nveenhof:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - nveenhof_prep
+          - nveenhof_prod
+        schemas:
+          - nveenhof_prep.*
+          - nveenhof_prod.*
+        tables:
+          - nveenhof_prep.*.*
+          - nveenhof_prod.*.*
+      privileges:
+        databases:
+          read:
+            - nveenhof_prep
+            - nveenhof_prod
+          write:
+            - nveenhof_prep
+            - nveenhof_prod
+        schemas:
+          read:
+            - nveenhof_prep.*
+            - nveenhof_prod.*
+          write:
+            - nveenhof_prep.*
+            - nveenhof_prod.*
+        tables:
+          read:
+            - nveenhof_prep.*.*
+            - nveenhof_prod.*.*
+          write:
+            - nveenhof_prep.*.*
+            - nveenhof_prod.*.*
   - nwingfield:
       member_of:
         - analyst_sales
