@@ -34,7 +34,7 @@ first_non_author_assignment AS (
 notes AS (
 
   SELECT
-    created_at                                           AS review_requested_at,
+    created_at,
     noteable_id                                          AS merge_request_id,
     note,
     MAX(created_at) OVER (PARTITION BY merge_request_id) AS last_note_date
@@ -46,13 +46,24 @@ notes AS (
 
 extracted_usernames AS (
   SELECT
-    review_requested_at,
+    created_at                                                  AS review_requested_at,
     merge_request_id,
     REPLACE(REGEXP_SUBSTR(TRIM(value), '@([^\\s,]+)'), '@', '') AS username,
     last_note_date
   FROM notes,
     LATERAL SPLIT_TO_TABLE(note, ',')
   WHERE notes.note LIKE '%requested review from%'
+
+),
+
+marked_ready AS (
+
+  SELECT
+    merge_request_id,
+    MIN(created_at) AS marked_ready_at
+  FROM notes
+  WHERE notes.note = 'marked this merge request as **ready**'
+  GROUP BY 1
 
 ),
 
@@ -66,11 +77,13 @@ agg AS (
       COALESCE(MIN(extracted_usernames.review_requested_at), '9999-12-31'), COALESCE(MIN(first_non_author_assignment.first_review_date), '9999-12-31'),
       COALESCE(MIN(reviewer_requested_at_creation.created_at), '9999-12-31')
     )                                                                                                                                     AS first_review_date,
-    GREATEST(MAX(extracted_usernames.last_note_date), MAX(mrs.merged_at))                                                                 AS last_reported_date
+    GREATEST(MAX(extracted_usernames.last_note_date), MAX(mrs.merged_at))                                                                 AS last_reported_date,
+    MAX(marked_ready.marked_ready_at)                                                                                                     AS marked_ready_at
   FROM internal_mrs AS mrs
   LEFT JOIN extracted_usernames ON mrs.merge_request_id = extracted_usernames.merge_request_id
   LEFT JOIN first_non_author_assignment ON mrs.merge_request_id = first_non_author_assignment.merge_request_id
   LEFT JOIN {{ ref('gitlab_dotcom_merge_request_reviewers') }} AS reviewer_requested_at_creation ON mrs.merge_request_id = reviewer_requested_at_creation.merge_request_id
+  LEFT JOIN marked_ready ON mrs.merge_request_id = marked_ready.merge_request_id
   GROUP BY 1
 
 ),
@@ -82,7 +95,8 @@ first_review_date AS (
     reviewer_count,
     review_requests,
     first_review_date,
-    last_reported_date
+    last_reported_date,
+    marked_ready_at
   FROM internal_mrs AS mrs
   INNER JOIN agg ON mrs.merge_request_id = agg.merge_request_id
   WHERE (merge_request_state = 'opened' AND mrs.merged_at IS NULL)
@@ -106,6 +120,7 @@ add_old_flag AS (
     first_review_date.*,
     CASE WHEN DATEADD('day', -365, date_actual) >= created_at AND merged_at IS NULL THEN 1 ELSE 0 END AS old_1yr_flag,
     DATEDIFF('day', created_at, date_spine.date_actual)                                               AS days_open,
+    DATEDIFF('day', marked_ready_at, first_review_date)                                               AS days_from_marked_ready_to_review,
     ROUND(DATEDIFF('day', created_at, first_review_date), 2)                                          AS days_to_review,
     ROUND(DATEDIFF('day', first_review_date, date_spine.date_actual), 2)                              AS days_in_review,
     PERCENT_RANK() OVER (PARTITION BY date_actual ORDER BY days_open)                                 AS days_open_p95
