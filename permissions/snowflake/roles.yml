@@ -3746,6 +3746,43 @@ roles:
           write:
             - raw.netsuite_fivetran.*
             - raw.workday_hcm.*
+  - fkhalid:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - fkhalid_prep
+          - fkhalid_prod
+        schemas:
+          - fkhalid_prep.*
+          - fkhalid_prod.*
+        tables:
+          - fkhalid_prep.*.*
+          - fkhalid_prod.*.*
+      privileges:
+        databases:
+          read:
+            - fkhalid_prep
+            - fkhalid_prod
+          write:
+            - fkhalid_prep
+            - fkhalid_prod
+        schemas:
+          read:
+            - fkhalid_prep.*
+            - fkhalid_prod.*
+          write:
+            - fkhalid_prep.*
+            - fkhalid_prod.*
+        tables:
+          read:
+            - fkhalid_prep.*.*
+            - fkhalid_prod.*.*
+          write:
+            - fkhalid_prep.*.*
+            - fkhalid_prod.*.*
   - fpitino:
       member_of:
         - snowflake_analyst
