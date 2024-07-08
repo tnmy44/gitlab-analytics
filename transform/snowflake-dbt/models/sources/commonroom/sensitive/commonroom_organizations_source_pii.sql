@@ -15,5 +15,5 @@ WITH source AS
     FROM source
 )
 
-SELECT *
+SELECT DISTINCT *
   FROM source_pii
