@@ -47,7 +47,7 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 1)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-  #@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
+	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
 
 lint-changes:
 	@echo $(SQLFLUFF_LINT_CHANGES_COMMAND)
