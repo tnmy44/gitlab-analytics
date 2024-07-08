@@ -2410,7 +2410,7 @@ roles:
         tables:
           read:
             - raw.commonroom.*
-            - prod.commonroom.*
+            - prep.commonroom.*
   - restricted_workspace_people:
       warehouses:
         - reporting
