@@ -2395,26 +2395,22 @@ roles:
             - prod.restricted_safe_common_mart_product.*
             - prod.workspace_data_science.*
             - prod.workspace_sales.*
-  - restricted_safe_devrel:
+  - commonroom_sensitive:
       warehouses:
         - reporting
       privileges:
         databases:
           read:
+            - raw
             - prep
-            - prod
         schemas:
           read:
-            - prep.commonroom
-            - prod.restricted_safe_workspace_marketing
+            - raw.commonroom
+            - prod.commonroom
         tables:
           read:
-            - prep.commonroom.commonroom_activities_source_pii
-            - prep.commonroom.commonroom_community_members_source_pii
-            - prep.commonroom.commonroom_organizations_source_pii
-            - prod.restricted_safe_workspace_marketing.wk_commonroom_activities
-            - prod.restricted_safe_workspace_marketing.wk_commonroom_community_members
-            - prod.restricted_safe_workspace_marketing.wk_commonroom_organizations
+            - raw.commonroom.*
+            - prod.commonroom.*
   - restricted_workspace_people:
       warehouses:
         - reporting
@@ -3573,7 +3569,8 @@ roles:
         - dev_xs
   - dmurphy:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - dpeterson:
@@ -3753,7 +3750,8 @@ roles:
             - raw.workday_hcm.*
   - fkhalid:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - fpitino:
@@ -4021,7 +4019,8 @@ roles:
             - jclapper_prod.*.*
   - jcoghlan:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - jcolyer:
@@ -4635,7 +4634,8 @@ roles:
       warehouses: []
   - ltickett:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - lvinueza:
@@ -5078,6 +5078,7 @@ roles:
   - mxiao:
       member_of:
         - snowflake_analyst_safe
+        - commonroom_sensitive
       warehouses:
         - dev_xs
       owns:
@@ -5277,7 +5278,8 @@ roles:
             - nraisinghani_prod.*.*
   - nveenhof:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - nwingfield:
@@ -5592,7 +5594,8 @@ roles:
         - dev_xs
   - rhook:
       member_of:
-        - restricted_safe_devrel
+        - commonroom_sensitive
+        - snowflake_analyst
       warehouses:
         - reporting
   - rkohnke:
