@@ -2406,7 +2406,7 @@ roles:
         schemas:
           read:
             - raw.commonroom
-            - prod.commonroom
+            - prep.commonroom
         tables:
           read:
             - raw.commonroom.*
