@@ -2397,7 +2397,7 @@ roles:
             - prod.workspace_sales.*
   - commonroom_sensitive:
       warehouses:
-        - reporting
+        - dev_xs
       privileges:
         databases:
           read:
