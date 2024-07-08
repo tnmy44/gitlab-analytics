@@ -5676,6 +5676,43 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - rhook:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - rhook_prep
+          - rhook_prod
+        schemas:
+          - rhook_prep.*
+          - rhook_prod.*
+        tables:
+          - rhook_prep.*.*
+          - rhook_prod.*.*
+      privileges:
+        databases:
+          read:
+            - rhook_prep
+            - rhook_prod
+          write:
+            - rhook_prep
+            - rhook_prod
+        schemas:
+          read:
+            - rhook_prep.*
+            - rhook_prod.*
+          write:
+            - rhook_prep.*
+            - rhook_prod.*
+        tables:
+          read:
+            - rhook_prep.*.*
+            - rhook_prod.*.*
+          write:
+            - rhook_prep.*.*
+            - rhook_prod.*.*
   - rkohnke:
       member_of:
         - analyst_marketing
