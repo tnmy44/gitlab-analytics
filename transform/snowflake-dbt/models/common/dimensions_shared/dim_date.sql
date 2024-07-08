@@ -10,7 +10,7 @@ WITH dates AS (
            except=['CREATED_BY','UPDATED_BY','MODEL_CREATED_DATE','MODEL_UPDATED_DATE','DBT_UPDATED_AT','DBT_CREATED_AT']
            ) 
       }}
-  FROM {{ ref('prep_date') }} 
+  FROM {{ ref('prep_date') }}
 
 )
 
