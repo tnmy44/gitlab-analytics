@@ -144,7 +144,7 @@ notes AS (
 
 extracted_usernames AS (
   SELECT
-    created_at                                           AS review_requested_at,
+    created_at                                                  AS review_requested_at,
     merge_request_id,
     REPLACE(REGEXP_SUBSTR(TRIM(value), '@([^\\s,]+)'), '@', '') AS username,
     last_note_date
@@ -273,7 +273,8 @@ base AS (
     internal_merge_requests.is_part_of_product,
     ROUND(TIMESTAMPDIFF(HOURS, first_commit.first_commit_created_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                        AS days_from_first_commit_to_merge,
     ROUND(TIMESTAMPDIFF(HOURS, internal_merge_requests.created_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                        AS days_from_creation_to_first_review_date,
-    ROUND(TIMESTAMPDIFF(HOURS, first_review_date.marked_ready_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                        AS days_from_marked_ready_to_first_review_date
+    ROUND(TIMESTAMPDIFF(HOURS, first_review_date.marked_ready_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                         AS days_from_marked_ready_to_first_review_date,
+    ROUND(TIMESTAMPDIFF(HOURS, first_review_date.marked_ready_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                           AS days_from_marked_ready_to_merge
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON internal_merge_requests.target_project_id = projects.dim_project_id
