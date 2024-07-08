@@ -5077,8 +5077,8 @@ roles:
         - dev_xs
   - mxiao:
       member_of:
-        - snowflake_analyst_safe
         - commonroom_sensitive
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
       owns:
