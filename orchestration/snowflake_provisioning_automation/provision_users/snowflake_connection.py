@@ -13,18 +13,26 @@ from typing import Any, List, Tuple
 class SnowflakeConnection:
     """Class to connect to Snowflake"""
 
-    def __init__(self, config_dict: dict, role: str, is_test_run: bool = True):
+    def __init__(
+        self,
+        user: str,
+        password: str,
+        account: str,
+        role: str,
+        warehouse: str,
+        is_test_run: bool = True,
+    ):
         self.is_test_run = is_test_run
 
         # only create engine if NOT test run
         if not self.is_test_run:
             self.engine = create_engine(
                 URL(
-                    user=config_dict["SNOWFLAKE_PROVISIONER_USER"],
-                    password=config_dict["SNOWFLAKE_PROVISIONER_PW"],
-                    account=config_dict["SNOWFLAKE_ACCOUNT"],
+                    user=user,
+                    password=password,
+                    account=account,
                     role=role,  # needs to be passed in, can be securityadmin/sysadmin
-                    warehouse=config_dict["SNOWFLAKE_PROVISIONER_WAREHOUSE"],
+                    warehouse=warehouse,
                 )
             )
 

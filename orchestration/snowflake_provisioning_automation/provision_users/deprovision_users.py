@@ -141,6 +141,11 @@ def main():
     logging.info(f"is_test_run: {is_test_run}")
     time.sleep(5)  # give user a chance to abort
 
+    user = config_dict["PERMISSION_BOT_USER"]
+    password = config_dict["PERMISSION_BOT_PASSWORD"]
+    account = config_dict["SNOWFLAKE_ACCOUNT"]
+    warehouse = config_dict["PERMISSION_BOT_WAREHOUSE"]
+
     # if users are passed in to remove, remove those users
     if users_to_remove_arg:
         users_to_remove = users_to_remove_arg
@@ -149,7 +154,7 @@ def main():
     # then check if any snowflake_users are missing in roles.yml
     else:
         account_usage_connection = SnowflakeConnection(
-            config_dict, "SYSADMIN", is_test_run=False
+            user, password, account, "SYSADMIN", warehouse, is_test_run=False
         )
         users_to_remove = get_users_to_remove(account_usage_connection)
         account_usage_connection.dispose_engine()
@@ -157,7 +162,7 @@ def main():
     logging.info(f"users_to_remove: {users_to_remove}")
 
     securityadmin_connection = SnowflakeConnection(
-        config_dict, "SECURITYADMIN", is_test_run
+        user, password, account, "SECURITYADMIN", warehouse, is_test_run
     )
     deprovision_users(securityadmin_connection, users_to_remove)
     securityadmin_connection.dispose_engine()
