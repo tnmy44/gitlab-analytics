@@ -4655,6 +4655,43 @@ roles:
   - lstahlman:
       member_of: []
       warehouses: []
+  - ltickett:
+      member_of:
+        - restricted_safe_devrel
+      warehouses:
+        - reporting
+      owns:
+        databases:
+          - ltickett_prep
+          - ltickett_prod
+        schemas:
+          - ltickett_prep.*
+          - ltickett_prod.*
+        tables:
+          - ltickett_prep.*.*
+          - ltickett_prod.*.*
+      privileges:
+        databases:
+          read:
+            - ltickett_prep
+            - ltickett_prod
+          write:
+            - ltickett_prep
+            - ltickett_prod
+        schemas:
+          read:
+            - ltickett_prep.*
+            - ltickett_prod.*
+          write:
+            - ltickett_prep.*
+            - ltickett_prod.*
+        tables:
+          read:
+            - ltickett_prep.*.*
+            - ltickett_prod.*.*
+          write:
+            - ltickett_prep.*.*
+            - ltickett_prod.*.*
   - lvinueza:
       member_of:
         - analyst_finance
