@@ -33,7 +33,7 @@ def get_list_of_stale_dev_tables(engine: Engine) -> List[str]:
     try:
         logging.info("Getting list of stale dev tables...")
         connection = engine.connect()
-        stale_tables = [row[0] for row in connection.execute(query).fetchall()]
+        stale_tables = [row for row in connection.execute(query).fetchall()]
     except:
         logging.info("Failed to get list of stale tables...")
     finally:
