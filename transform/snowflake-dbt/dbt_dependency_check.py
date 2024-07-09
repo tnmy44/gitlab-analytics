@@ -4,6 +4,8 @@ from dbt.cli.main import dbtRunner, dbtRunnerResult
 
 
 def dbt_model_dependencies_list(model_names: list):
+    '''Takes in a list of models, returns the model and its dependencies'''
+
     # create empty lists to hold models
     model_dependencies = []
 
@@ -36,6 +38,8 @@ def dbt_model_dependencies_list(model_names: list):
 
 
 def dbt_model_exposures_list(model_names: list):
+    '''Takes in a list of models, returns the model and its data science exposures'''
+
     # create empty lists to hold exposures
     model_exposures = []
 
@@ -78,7 +82,7 @@ model_names = []
 # full/path/from/home/directory/to/file/my_read_and_write_files.csv
 fileToReadPath = input("Provide the full path to your read file: ")
 
-with open(fileToReadPath, "r", newline="") as readFile:
+with open(fileToReadPath, "r", newline="", encoding="utf-8") as readFile:
     reader = csv.reader(
         readFile, skipinitialspace=True, delimiter=",", quoting=csv.QUOTE_NONE
     )
@@ -101,7 +105,7 @@ models_with_dependencies_and_exposures = pd.merge(
 )
 
 # create csv
-with open("models_with_dependencies.csv", "w") as csvfile:
+with open("models_with_dependencies.csv", "w", encoding="utf-8") as csvfile:
     models_with_dependencies_and_exposures.to_csv(
         "models_with_dependencies.csv", index=False
     )
