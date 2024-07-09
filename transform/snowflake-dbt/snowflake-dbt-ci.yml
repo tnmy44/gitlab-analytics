@@ -295,9 +295,11 @@
         config.schema:restricted_safe_common_prep
         config.schema:restricted_safe_legacy
         config.schema:restricted_safe_workspace_finance
+        config.schema:restricted_safe_workspace_sales
         config.schema:restricted_safe_workspace_marketing
         config.schema:restricted_safe_workspace_engineering
-      --output json
+      --output json > safe_models.json
+    - python3 safe_model_check.py
 
 # ======
 # Macro name Check
