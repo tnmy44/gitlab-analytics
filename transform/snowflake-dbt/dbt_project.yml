@@ -217,6 +217,10 @@ models:
         +materialized: table
         +schema: driveload
         +tags: ["driveload"]
+      
+      influx_db:
+        +materialized: table
+        +schema: influx_db
 
       elastic_billing:
         +materialized: table

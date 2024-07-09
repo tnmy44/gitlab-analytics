@@ -1,7 +1,7 @@
 WITH source AS (
 
    SELECT *
-   FROM {{ source('e2e_metrics','all_test_stats') }}
+   FROM {{ source('e2e_metrics','main_test_stats') }}
  
 ), final AS (
 

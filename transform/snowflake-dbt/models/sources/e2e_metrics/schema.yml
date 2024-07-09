@@ -1,0 +1,10 @@
+version: 2
+ 
+models:
+ - name: all_fabrication_stats_source
+   description: Base model for all_fabrication_stats
+   columns:
+     - name: time
+       description: Time when the test was run.
+       tests:
+         - not_null
