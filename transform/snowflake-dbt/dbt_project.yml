@@ -218,9 +218,9 @@ models:
         +schema: driveload
         +tags: ["driveload"]
       
-      influx_db:
+      e2e_metrics:
         +materialized: table
-        +schema: influx_db
+        +schema: e2e_metrics
 
       elastic_billing:
         +materialized: table
