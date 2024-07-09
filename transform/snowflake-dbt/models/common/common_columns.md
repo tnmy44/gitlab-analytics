@@ -3445,3 +3445,14 @@ Primary key for the model, consisting of dim_installation_id, metrics_path, and 
 
 {% enddocs %}
 
+{% docs is_deleted %}
+ 
+The flag indicating if the record has been deleted
+
+{% enddocs %}
+
+{% docs is_deleted_updated_at %}
+ 
+The timestamp of when the `is_deleted` flag has been updated
+
+{% enddocs %}
