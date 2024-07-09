@@ -16,9 +16,9 @@ def get_list_of_dbs_to_keep(yaml_path="analytics/permissions/snowflake/roles.yml
         return [list(db.keys())[0].lower() for db in role_dict["databases"]]
 
 
-def get_list_of_dev_schemas(engine: Engine) -> List[str]:
+def get_list_of_stale_dev_tables(engine: Engine) -> List[str]:
     """
-    Get a list of tables in development databases that are beyond the retention period defined in dbt_project.yml.
+    Get a list of tables in development tables that are beyond the retention period defined in dbt_project.yml.
     This will make sure sensitive data is not hanging around.
     """
 
@@ -31,11 +31,11 @@ def get_list_of_dev_schemas(engine: Engine) -> List[str]:
     """
 
     try:
-        logging.info("Getting list of schemas...")
+        logging.info("Getting list of stale dev tables...")
         connection = engine.connect()
         stale_tables = [row[0] for row in connection.execute(query).fetchall()]
     except:
-        logging.info("Failed to get list of schemas...")
+        logging.info("Failed to get list of stale tables...")
     finally:
         connection.close()
         engine.dispose()
@@ -96,20 +96,20 @@ def drop_databases() -> None:
             engine.dispose()
 
 
-def drop_dev_schemas() -> None:
+def drop_stale_dev_tables() -> None:
     """
     Drop each of the stale tables
     """
 
-    logging.info("Preparing to drop schemas...")
+    logging.info("Preparing to drop stale dev tables...")
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
-    stale_tables = get_list_of_dev_schemas(engine)
+    stale_tables = get_list_of_stale_dev_tables(engine)
     logging.info(f"Dropping {len(stale_tables)} stale tables...")
 
-    for database, schema, table in schemas:
+    for database, schema, table in stale_tables:
         fully_qualified_table_name = f'"{database}"."{schema}"."{table}"'
         drop_cmd = f"DROP TABLE {fully_qualified_table_name};"
         logging.info(f"Running: {drop_cmd}")
@@ -127,5 +127,5 @@ def drop_dev_schemas() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire({"drop_dev_schemas": drop_dev_schemas, "drop_databases": drop_databases})
+    Fire({"drop_stale_dev_tables": drop_stale_dev_tables, "drop_databases": drop_databases})
     logging.info("Complete.")
