@@ -82,6 +82,8 @@ model_names = []
 
 # responses should be of the form
 # full/path/from/home/directory/to/file/my_read_and_write_files.csv
+# file should contain a comma-separated list of models to test with no header
+
 fileToReadPath = input("Provide the full path to your read file: ")
 
 with open(fileToReadPath, "r", newline="", encoding="utf-8") as readFile:
