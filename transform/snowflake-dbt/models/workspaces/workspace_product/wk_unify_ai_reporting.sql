@@ -36,7 +36,8 @@ dotcom_prep AS (
     DATE_TRUNC(WEEK, behavior_date)                     AS current_week,
     DATE_TRUNC(WEEK, DATEADD(DAY, 7, behavior_date))    AS next_week,
     DATE_TRUNC(MONTH, behavior_date)                    AS current_month,
-    DATE_TRUNC(MONTH, DATEADD(MONTH, 1, behavior_date)) AS next_month
+    DATE_TRUNC(MONTH, DATEADD(MONTH, 1, behavior_date)) AS next_month,
+    REPLACE(contexts:data[0]:data:extra['requestId'],'"','') AS request_id
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE event_action = 'execute_llm_method'
     AND behavior_date BETWEEN '2023-04-21' AND CURRENT_DATE
@@ -83,6 +84,36 @@ dotcom_prep
 UNION ALL 
 SELECT
 'All'
+), client_mapper AS 
+(
+SELECT
+e.event_property,
+REPLACE(SPLIT(SPLIT(event_category,'Gitlab::Llm::')[1],'::Client')[0],'"','') AS client
+FROM
+PROD.common_mart.mart_behavior_structured_event e 
+WHERE
+e.event_action IN 
+    ('tokens_per_user_request_prompt',
+    'tokens_per_user_request_response')
+AND
+e.behavior_date > DATEADD(MONTH,-12,CURRENT_DATE)
+AND
+e.event_category != 'code_suggestions'
+AND
+e.event_property IS NOT NULL
+), clients AS 
+(
+SELECT 
+DISTINCT 
+client 
+FROM 
+client_mapper  
+UNION ALL
+SELECT
+'All'
+UNION ALL 
+SELECT
+'Unknown Client'
 ), prep AS 
 (
 SELECT
@@ -92,6 +123,8 @@ p.behavior_structured_event_pk,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
+COALESCE(clients.client, 'Unknown Client') AS client,
+p.request_id,
 p.behavior_date,
 p.current_week,
 p.next_week,
@@ -109,6 +142,10 @@ ON
 p.internal_or_external = i.internal_or_external OR i.internal_or_external = 'All' 
 LEFT JOIN 
 plans ON plans.plan = p.plan_name OR plans.plan = 'All'
+LEFT JOIN 
+client_mapper c ON c.event_property = p.request_id
+LEFT JOIN 
+clients ON clients.client = c.client OR clients.client = 'All'
 ), DAU AS (
 
   SELECT
@@ -116,6 +153,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'DAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
@@ -130,6 +168,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'WAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
@@ -142,6 +181,7 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'MAU' AS metric,
     COUNT(DISTINCT gsc_pseudonymized_user_id) AS metric_value
   FROM prep
@@ -154,6 +194,7 @@ weekly_retention_grouped AS (
     prep.event_label,
     prep.plan_name,
     prep.internal_or_external,
+    client,
     'Weekly Retention' AS metric,
     (COUNT(DISTINCT e2.gsc_pseudonymized_user_id) / COUNT(DISTINCT prep.gsc_pseudonymized_user_id)) AS retention_rate
   FROM prep
@@ -163,6 +204,7 @@ weekly_retention_grouped AS (
       AND e2.current_week = prep.next_week
       AND e2.plan_name = prep.plan_name
       AND e2.internal_or_external = prep.internal_or_external
+      AND e2.client = e.client
   WHERE 
   prep.next_week < DATE_TRUNC(WEEK, CURRENT_DATE())
   AND
@@ -177,6 +219,7 @@ monthly_retention_grouped AS (
     prep.event_label,
     prep.plan_name,
     prep.internal_or_external,
+    client,
     'Monthly Retention' AS metric,
     (COUNT(DISTINCT e2.gsc_pseudonymized_user_id) / COUNT(DISTINCT prep.gsc_pseudonymized_user_id)) AS retention_rate
   FROM prep
@@ -186,6 +229,7 @@ monthly_retention_grouped AS (
       AND e2.current_month = prep.next_month
       AND e2.plan_name = prep.plan_name
       AND e2.internal_or_external = prep.internal_or_external
+      AND e2.client = e.client
   WHERE 
   prep.next_month < DATE_TRUNC(MONTH, CURRENT_DATE())
   AND
@@ -199,6 +243,7 @@ monthly_retention_grouped AS (
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'Daily Event Count' AS metric,
     COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
@@ -213,6 +258,7 @@ monthly_retention_grouped AS (
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'Weekly Event Count' AS metric,
     COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
@@ -225,6 +271,7 @@ monthly_retention_grouped AS (
     event_label,
     plan_name,
     internal_or_external,
+    client,
     'Monthly Event Count' AS metric,
     COUNT(DISTINCT behavior_structured_event_pk) AS metric_value
   FROM prep
@@ -301,13 +348,14 @@ metrics AS (
     CASE 
     WHEN metrics_path = 'redis_hll_counters.count_distinct_user_id_from_request_duo_chat_response_weekly' 
     THEN 
-    DATE_TRUNC(WEEK,ping_created_date_week::DATE)
+    DATE_TRUNC(WEEK,ping_created_date::DATE)
     ELSE 
-    ping_created_date_month::DATE
+    ping_created_date_month
     END AS date_day,
     f.event_label AS ai_feature,
     plans.plan,
     i.internal_or_external,
+    clients.client,
     ping_deployment_type                AS delivery_type,
     SUM(COALESCE(metric_value, 0)::INT) AS metric_value,
     CASE 
@@ -324,6 +372,8 @@ metrics AS (
   int_ext_all i ON  i.internal_or_external = 'External' OR i.internal_or_external = 'All' 
   LEFT JOIN 
   plans ON plans.plan = metric_prep.ping_product_tier OR plans.plan = 'All'
+  LEFT JOIN 
+  clients ON clients.client = 'Unknown Client' OR clients.client = 'All'
   GROUP BY ALL
 ),
 unify AS (
@@ -333,6 +383,7 @@ unify AS (
     metrics.event_label           AS ai_feature,
     metrics.plan_name AS plan,
     metrics.internal_or_external,
+    metrics.client,
     'Gitlab.com'                  AS delivery_type,
     metrics.metric_value,
     metrics.metric
@@ -348,6 +399,7 @@ unify AS (
     metrics.event_label           AS ai_feature,
     metrics.plan_name,
     metrics.internal_or_external,
+    metrics.client,
     'All'                  AS delivery_type,
     metrics.metric_value,
     metrics.metric
@@ -363,6 +415,7 @@ unify AS (
     ai_feature,
     plan,
     internal_or_external,
+    client,
     delivery_type,
     metric_value,
     metric
@@ -375,6 +428,7 @@ unify AS (
     ai_feature,
     plan,
     internal_or_external,
+    client,
     'All' AS delivery_type,
     metric_value,
     metric
@@ -389,6 +443,7 @@ dedup AS (
     ai_feature,
     plan,
     internal_or_external,
+    client,
     delivery_type,
     SUM(metric_value) AS metric_value,
     metric
