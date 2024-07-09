@@ -51,3 +51,66 @@ zuora_renewal_subscription_name - the renewal subscription field on the suggeste
 use_case - use case type
 
 {% enddocs %}
+
+{% docs rpt_accounting_period_balance_monthly %}
+
+The report mirrors Zuora accounting period monthly balances.
+
+The  following columns are included:
+
+### Fiscal Year
+
+### Fiscal Quarter
+
+### Period
+
+### Starting Accounts Receivable 
+Ending Accounts Receivable from previous month
+
+### Total Billings 
+Total billed in a month including tax
+
+### Payments
+All payments received in the month regardless whether applied or not applied to invoices. The amount may vary from Zuora if payments were backdated as Zuora takes a snapshot of this information for the accounting period but if payments are made after the snapshot was taken the payments will not flow in. The variance will be in favor of GitLab
+
+### Overpayments 
+Payments that were not applied to invoices
+
+### Refunds 
+All refunds made from invoices and accounts
+
+### Adjustments 
+Invoice item adjustments made to invoices
+
+### Ending Accounts Receivable = Starting Accounts Receivable + Total Billings - Payments minus Overpayments + Refunds - Adjustments
+
+### Invoice Aging Buckets which are as follows:
+
+Current - current due date open invoices balances
+
+Further buckets: 1 to 30 days past due, 31 to 60 days past due, 61 to 90 days past due, 91 to 120 days past due, more than 120 days past due
+
+### Total Invoice Aging Balance 
+Total of all aging buckets
+
+### Variance between Ending Accounts Receivable and Total Invoice Aging Balance
+
+### Credit Balance (Customer Refunds) 
+Credit balance adjustments running total for the month
+
+### Payments or Refunds on Future Dated Invoices
+
+### Final Check 
+The variance between Ending Accounts Receivable and Total Invoice Aging Balance is taken less Credit Balance and Payments or Refunds on Future Dated Invoices - this should show a 0 variance however it is possible that due to backdated payment application this amount will not balance out to 0
+
+{% enddocs %}
+
+{% docs rpt_booking_billing_collections_monthly %}
+
+Booking - total booking amount of booked opportunities in the month
+
+Billing - total billing, billing exclusive the tax amount and tax amount of the invoicing in the month
+
+Collections - total of payments applied to invoices in the month
+
+{% enddocs %}
