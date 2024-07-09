@@ -218,19 +218,32 @@ table_basis AS (
     COALESCE(credit_balance.credit_balance, 0)                                          AS credit_balance,
     COALESCE(future_dated_refunds_payments.payments_refunds_against_future_invoices, 0) AS payments_refunds_against_future_invoices
   FROM invoice_amounts
-  FULL OUTER JOIN payment_amounts ON invoice_amounts.period = payment_amounts.period
-  FULL OUTER JOIN overpayments ON invoice_amounts.period = overpayments.period
-  FULL OUTER JOIN refund_amounts ON invoice_amounts.period = refund_amounts.period
-  FULL OUTER JOIN iia_amounts ON invoice_amounts.period = iia_amounts.period
-  FULL OUTER JOIN aging_bucket_1 ON invoice_amounts.period = aging_bucket_1.period
-  FULL OUTER JOIN aging_bucket_2 ON invoice_amounts.period = aging_bucket_2.period
-  FULL OUTER JOIN aging_bucket_3 ON invoice_amounts.period = aging_bucket_3.period
-  FULL OUTER JOIN aging_bucket_4 ON invoice_amounts.period = aging_bucket_4.period
-  FULL OUTER JOIN aging_bucket_5 ON invoice_amounts.period = aging_bucket_5.period
-  FULL OUTER JOIN aging_bucket_6 ON invoice_amounts.period = aging_bucket_6.period
-  FULL OUTER JOIN aging_bucket_total ON invoice_amounts.period = aging_bucket_total.period
-  FULL OUTER JOIN credit_balance ON invoice_amounts.period = credit_balance.period
-  FULL OUTER JOIN future_dated_refunds_payments ON invoice_amounts.period = future_dated_refunds_payments.period
+  FULL OUTER JOIN payment_amounts 
+    ON invoice_amounts.period = payment_amounts.period
+  FULL OUTER JOIN overpayments 
+    ON invoice_amounts.period = overpayments.period
+  FULL OUTER JOIN refund_amounts 
+    ON invoice_amounts.period = refund_amounts.period
+  FULL OUTER JOIN iia_amounts 
+    ON invoice_amounts.period = iia_amounts.period
+  FULL OUTER JOIN aging_bucket_1 
+    ON invoice_amounts.period = aging_bucket_1.period
+  FULL OUTER JOIN aging_bucket_2 
+    ON invoice_amounts.period = aging_bucket_2.period
+  FULL OUTER JOIN aging_bucket_3 
+    ON invoice_amounts.period = aging_bucket_3.period
+  FULL OUTER JOIN aging_bucket_4 
+    ON invoice_amounts.period = aging_bucket_4.period
+  FULL OUTER JOIN aging_bucket_5 
+    ON invoice_amounts.period = aging_bucket_5.period
+  FULL OUTER JOIN aging_bucket_6 
+    ON invoice_amounts.period = aging_bucket_6.period
+  FULL OUTER JOIN aging_bucket_total 
+    ON invoice_amounts.period = aging_bucket_total.period
+  FULL OUTER JOIN credit_balance 
+    ON invoice_amounts.period = credit_balance.period
+  FULL OUTER JOIN future_dated_refunds_payments 
+    ON invoice_amounts.period = future_dated_refunds_payments.period
   WHERE total_billing > 0
   ORDER BY invoice_amounts.period
 
@@ -276,7 +289,8 @@ final AS (
     ending_ar.credit_balance,
     ending_ar.payments_refunds_against_future_invoices
   FROM ending_ar
-  LEFT JOIN dim_date ON ending_ar.period = dim_date.date_actual
+  LEFT JOIN dim_date 
+    ON ending_ar.period = dim_date.date_actual
 
 )
 
@@ -285,6 +299,6 @@ cte_ref="final",
 created_by="@apiaseczna",
 updated_by="@apiaseczna",
 created_date="2024-07-04",
-updated_date="2024-07-04"
+updated_date="2024-07-09"
 ) }}
 

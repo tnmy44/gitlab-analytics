@@ -71,6 +71,16 @@ models:
           - not_null
           - unique
 
+  - name: rpt_subscription_renewal_linking
+    description: ' {{ doc("rpt_subscription_renewal_linking") }} '
+    columns:
+      - name: renewal_subscription_name
+        tests:
+          - not_null
+      - name: previous_term_subscription_name
+        tests:
+          - not_null
+
   - name: rpt_accounting_period_balance_monthly 
     description: ' {{ doc("rpt_accounting_period_balance_monthly") }} '
     columns:
@@ -97,7 +107,5 @@ models:
       - name: total_current_collected
         description:  is total amount collected in the period - all columns described in ' {{ doc("rpt_booking_billing_collections_monthly") }} '
       - name: variance_booking_billing 
-        description: Subtraction
-
-
+        description: Subtraction          
 
