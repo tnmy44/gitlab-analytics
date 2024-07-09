@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.4
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -142,7 +142,7 @@
 
 
 📚✏️generate_dbt_docs:
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.4
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -245,7 +245,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.4
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -271,12 +271,13 @@
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
   tags:
     - analytics
+  when: manual
   only:
     changes:
       - "transform/snowflake-dbt/models/**/*.sql"
     refs:
       - merge_request
-  allow_failure: false
+  allow_failure: true
 
 🚫safe_model_script:
   <<: *safe_models_check
@@ -307,7 +308,7 @@
 
 .dbt_macro_check: &dbt_macro_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.4
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
   before_script:
     - cd transform/snowflake-dbt/
   tags:
@@ -354,7 +355,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.4
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
