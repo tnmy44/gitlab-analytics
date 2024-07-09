@@ -185,9 +185,9 @@ def check_response_for_tableau_dependencies(
                 f"{node['objectType']} : {node['displayName']} - "
             )
 
-            output_dict[
-                object_type_resource_name
-            ] = f"https://getmontecarlo.com/assets/{node['mcon']}"
+            output_dict[object_type_resource_name] = (
+                f"https://getmontecarlo.com/assets/{node['mcon']}"
+            )
 
             dependency_list.append(output_dict)
 
