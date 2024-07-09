@@ -350,6 +350,7 @@ roles:
         - covid19
         - dbt_analytics
         - driveload
+        - e2e_metrics
         - engineering_extracts
         - gainsight
         - gcp_billing
@@ -1680,6 +1681,20 @@ roles:
           read:
             - prep.driveload.*
             - raw.driveload.*
+  - e2e_metrics:
+      privileges:
+        databases:
+          read:
+            - prep
+            - raw
+        schemas:
+          read:
+            - prep.e2e_metrics
+            - raw.e2e_metrics
+        tables:
+          read:
+            - prep.e2e_metrics.*
+            - raw.e2e_metrics.*
   - elasticsearch_billing:
       warehouses:
         - dev_xs
