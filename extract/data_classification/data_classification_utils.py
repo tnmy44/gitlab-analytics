@@ -3,9 +3,9 @@
 """
 
 import json
-
 import yaml
-
+from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+import pandas as pd
 
 class DataClassification:
     """
@@ -21,6 +21,8 @@ class DataClassification:
         self.encoding = "utf8"
         self.database_name = "rbacovic_prep"
         self.schema_name = "benchmark_pii"
+        self.processing_role = "LOADER"
+        self.loader_engine = None
         self.mnpi_file_name = {
             "MNPI": "mnpi_table_list.csv",
             "PII": "pii_table_list.csv",
@@ -29,6 +31,27 @@ class DataClassification:
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
         self.scope = self.get_scope_file()
+
+    def connect(self):
+        """
+        Connect to engine factory, return connection object
+        """
+        self.loader_engine = snowflake_engine_factory(
+            self.config_vars, self.processing_role
+        )
+
+        return self.loader_engine.connect()
+
+    def upload_to_snowflake(self, table_name: str, data: pd.DataFrame) -> None:
+        """
+        Upload dataframe to Snowflake
+        """
+        dataframe_uploader(
+            dataframe=data,
+            engine=self.loader_engine,
+            table_name=table_name,
+            schema=self.schema_name,
+        )
 
     @staticmethod
     def quoted(input_str: str) -> str:

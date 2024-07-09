@@ -529,6 +529,28 @@ models:
         description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
       - name: touchpoint_offer_type_grouped
         description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
+      - name: utm_campaign_date
+        description: The date portion of the new utm_campaign structure.
+      - name: utm_campaign_region
+        description: The region portion of the new utm_campaign structure.
+      - name: utm_campaign_budget
+        description: The budget portion of the new utm_campaign structure.
+      - name: utm_campaign_type
+        description: The campaign type portion of the new utm_campaign structure.
+      - name: utm_campaign_gtm
+        description: The gtm portion of the new utm_campaign structure.
+      - name: utm_campaign_language
+        description: The language portion of the new utm_campaign structure.
+      - name: utm_campaign_name
+        description: The name portion of the new utm_campaign structure.
+      - name: utm_campaign_agency
+        description: The agency portion of the new utm_campaign structure.
+      - name: utm_content_offer
+        description: The offer portion of the new utm_content structure.
+      - name: utm_content_asset_type
+        description: The asset type portion of the new utm_content structure.
+      - name: utm_content_industry
+        description: The industry portion of the new utm_content structure.
         
   - name: dim_date
     description: '{{ doc("dim_date") }}'
