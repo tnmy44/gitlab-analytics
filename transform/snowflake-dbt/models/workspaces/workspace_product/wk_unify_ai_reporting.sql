@@ -96,7 +96,7 @@ e.event_action IN
     ('tokens_per_user_request_prompt',
     'tokens_per_user_request_response')
 AND
-e.behavior_date > DATEADD(MONTH,-12,CURRENT_DATE)
+e.behavior_date > DATEADD(MONTH,-24,CURRENT_DATE)
 AND
 e.event_category != 'code_suggestions'
 AND
