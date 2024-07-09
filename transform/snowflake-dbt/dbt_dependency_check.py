@@ -1,3 +1,5 @@
+"""Module returning a csv with downstream dbt dependencies and data science exposures for a list of model provided by the user."""
+
 import csv
 import pandas as pd
 from dbt.cli.main import dbtRunner, dbtRunnerResult
