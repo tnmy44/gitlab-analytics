@@ -3,7 +3,7 @@ import pandas as pd
 from dbt.cli.main import dbtRunner, dbtRunnerResult
 
 
-def dbt_model_dependencies_list(model_names: list):
+def dbt_model_dependencies_list(model_name_list: list):
     '''Takes in a list of models, returns the model and its dependencies'''
 
     # create empty lists to hold models
@@ -13,7 +13,7 @@ def dbt_model_dependencies_list(model_names: list):
     dbt = dbtRunner()
 
     # for each create CLI args as a list of strings
-    for model in model_names:
+    for model in model_name_list:
         cli_args_model = ["list", "--select", f"{model}+", "--resource-type=model"]
 
         # run the command for models
@@ -37,7 +37,7 @@ def dbt_model_dependencies_list(model_names: list):
     return model_dependencies
 
 
-def dbt_model_exposures_list(model_names: list):
+def dbt_model_exposures_list(model_name_list: list):
     '''Takes in a list of models, returns the model and its data science exposures'''
 
     # create empty lists to hold exposures
@@ -47,7 +47,7 @@ def dbt_model_exposures_list(model_names: list):
     dbt = dbtRunner()
 
     # for each create CLI args as a list of strings
-    for model in model_names:
+    for model in model_name_list:
         cli_args_exposure = [
             "list",
             "--select",
