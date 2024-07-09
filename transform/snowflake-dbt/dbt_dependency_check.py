@@ -5,7 +5,7 @@ import pandas as pd
 from dbt.cli.main import dbtRunner, dbtRunnerResult
 
 
-def dbt_model_dependencies_list(model_name_list: list):
+def dbt_model_dependencies_list(model_name_list: list) -> list:
     """Takes in a list of models, returns the model and its dependencies"""
 
     # create empty lists to hold models
@@ -39,7 +39,7 @@ def dbt_model_dependencies_list(model_name_list: list):
     return model_dependencies
 
 
-def dbt_model_exposures_list(model_name_list: list):
+def dbt_model_exposures_list(model_name_list: list) -> list:
     """Takes in a list of models, returns the model and its data science exposures"""
 
     # create empty lists to hold exposures
