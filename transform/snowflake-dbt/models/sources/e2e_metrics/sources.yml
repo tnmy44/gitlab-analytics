@@ -15,5 +15,3 @@ sources:
  
    tables:
      - name: fabrication_stats
-     - name: all_test_stats
-     - name: main_test_stats
