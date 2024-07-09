@@ -3,19 +3,10 @@
     tags=["mnpi"]
 ) }}
 
-{{ simple_cte([
-    ('dim_subscription', 'dim_subscription'),
-    ('dim_billing_account', 'dim_billing_account'),
-    ('mart_crm_opportunity', 'mart_crm_opportunity'),
-    ('fct_quote', 'fct_quote'),
-    ('dim_quote', 'dim_quote')
-
-]) }},
-
 -- PREPARATION STEPS
 -- subscription data preparation
 
-sub_version AS (
+WITH sub_version AS (
 
 -- marking the last version with row number
 
