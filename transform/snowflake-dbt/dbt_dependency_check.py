@@ -1,4 +1,3 @@
-import os
 import csv
 import pandas as pd
 from dbt.cli.main import dbtRunner, dbtRunnerResult
