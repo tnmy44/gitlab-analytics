@@ -8,10 +8,5 @@ sources:
    loader: Snowpipe
    description: e2e metrics data [Original Epic](https://gitlab.com/groups/gitlab-data/-/epics/1225)
  
-   quoting:
-     database: true
-     schema: false
-     identifier: false
- 
    tables:
      - name: fabrication_stats

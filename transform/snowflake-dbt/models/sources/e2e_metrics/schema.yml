@@ -6,5 +6,5 @@ models:
    columns:
      - name: time
        description: Time when the test was run.
-       tests:
+       data_tests:
          - not_null
