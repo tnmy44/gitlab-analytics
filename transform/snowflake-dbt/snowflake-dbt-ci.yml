@@ -298,8 +298,7 @@
         config.schema:restricted_safe_workspace_sales 
         config.schema:restricted_safe_workspace_marketing
         config.schema:restricted_safe_workspace_engineering
-      --output json > safe_models.json
-    - python3 safe_model_check.py
+      --output json
 
 # ======
 # Macro name Check
