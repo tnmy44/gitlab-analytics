@@ -271,7 +271,6 @@
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
   tags:
     - analytics
-  when: manual
   only:
     changes:
       - "transform/snowflake-dbt/models/**/*.sql"
