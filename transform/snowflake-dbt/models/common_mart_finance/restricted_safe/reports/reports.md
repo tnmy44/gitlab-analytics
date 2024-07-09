@@ -23,3 +23,31 @@ The inverse of the above. The `is_available_to_renew` flag went from true to fal
 A new `subscription_name` has appeared this month, limited to top 10 by arr.
 
 {% enddocs %}
+
+{% docs rpt_subscription_renewal_linking %}
+
+This report suggests previous term subscription for renewal use cases where the subscription is continued in a new subscription and not via amendment on the existing one. There are 3 use cases with sub-use cases covered by this model. The first use case is where the opportunity is a renewal and quote is new subscrption; the sub cases here are the renewal starting immediately after previous subscription ends and a late renewal. The second use case is where both the opportunity and the quote are built as new business/subscription but are in fact continuation of one another, e.g. legacy ramps. The third use case is the change of entity.
+
+This is a functional report meaning that it is used for an upload of the renewal data where the renewal fields were not already populated. This report should not be used as a list of all linked subscription as it only contains not linked subscription or suggestion for new linking e.g. after debook and rebook.
+
+renewal_close_month - the month the related opportunity was closed
+
+renewal_dim_crm_opportunity_id - the opportunity for the renewal
+
+renewal_subscription_name - subscription name created for the renewal opportunity
+
+renewal_subscription_start_date - the start date of the renewal subscription
+
+previous_term_dim_crm_account_id - CRM ID of the suggested previous term subscription
+
+previous_term_subscription_name - the name of the suggested previous subscription
+
+previous_term_subscription_id - previous subscription ID, last subscription version ID available in Snowflake
+
+previous_term_subscription_end_date - the end date of the suggested previous term
+
+zuora_renewal_subscription_name - the renewal subscription field on the suggested previous subscription
+
+use_case - use case type
+
+{% enddocs %}
