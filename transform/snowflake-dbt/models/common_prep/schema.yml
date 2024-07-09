@@ -186,8 +186,8 @@ models:
   - name: prep_bizible_touchpoint_information
     description: Touchpoint information from key marketing and sales milestones.
     columns:
-      - name: bizible_person_id
-        description: Primary key for Bizible person records and the primary key for this dimension
+      - name: sfdc_record_id
+        description: Primary key for Salesforce person records and the primary key for this dimension
         tests:
           - unique
           - not_null
