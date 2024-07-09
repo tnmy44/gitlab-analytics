@@ -1,4 +1,6 @@
-
+{{ config(
+    tags=["mnpi_exception"]
+) }}
 
 WITH prep_issue_user_request AS (
 
