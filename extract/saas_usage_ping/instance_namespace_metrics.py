@@ -270,7 +270,9 @@ class InstanceNamespaceMetrics:
 
         for instance_namespace_query in queries:
             if metrics_filter(instance_namespace_query):
-                self.process_namespace_ping(
+                def process_namespace_ping(self, query_dict, connection) -> None:
+
+                    self.process_namespace_ping(
                     query_dict=instance_namespace_query, connection=connection
                 )
 

@@ -1,11 +1,15 @@
 """
-    Util unit for data classification
+Util unit for data classification
 """
 
 import json
+import os
+import sys
 import yaml
 from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
 import pandas as pd
+from logging import info, error
+
 
 class DataClassification:
     """
@@ -19,18 +23,19 @@ class DataClassification:
         Define parameters
         """
         self.encoding = "utf8"
+        self.connected = False
         self.database_name = "rbacovic_prep"
         self.schema_name = "benchmark_pii"
+        self.table_name = "sensitive_objects_classification"
         self.processing_role = "LOADER"
         self.loader_engine = None
-        self.mnpi_file_name = {
-            "MNPI": "mnpi_table_list.csv",
-            "PII": "pii_table_list.csv",
-        }
+        self.mnpi_file_name = "mnpi_table_list.csv"
         self.specification_file = "specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
         self.scope = self.get_scope_file()
+        self.config_dict = os.environ.copy()
+
 
     def connect(self):
         """
@@ -39,19 +44,31 @@ class DataClassification:
         self.loader_engine = snowflake_engine_factory(
             self.config_vars, self.processing_role
         )
-
+        self.connected = True
         return self.loader_engine.connect()
 
-    def upload_to_snowflake(self, table_name: str, data: pd.DataFrame) -> None:
+    def dispose(self) -> None:
+        """
+        Dispose from engine factory
+        """
+        if self.connected:
+            self.connected = False
+            self.loader_engine.dispose()
+
+    def upload_to_snowflake(self) -> None:
         """
         Upload dataframe to Snowflake
         """
-        dataframe_uploader(
-            dataframe=data,
-            engine=self.loader_engine,
-            table_name=table_name,
-            schema=self.schema_name,
-        )
+        try:
+            dataframe_uploader(
+                dataframe=self.identify_mnpi_data,
+                engine=self.loader_engine,
+                table_name=self.table_name,
+                schema=self.schema_name,
+            )
+        except Exception as e:
+            error(f"Error uploading to Snowflake: {e}")
+            sys.exit(1)
 
     @staticmethod
     def quoted(input_str: str) -> str:
@@ -179,7 +196,7 @@ class DataClassification:
         Save MNPI data to file
         """
         with open(
-            file=self.mnpi_file_name.get("MNPI"),
+            file=self.mnpi_file_name,
             mode="w",
             encoding=self.encoding,
         ) as file:
@@ -218,7 +235,7 @@ class DataClassification:
 
         return False
 
-    def filter_data(self, mnpi_data: list, section: str = "MNPI"):
+    def filter_data(self, mnpi_data: list, section: str = "MNPI") -> list:
         """
         filtering data based on the configuration
         """
@@ -234,25 +251,39 @@ class DataClassification:
             )
 
             if include and not exclude:
-                res.append(f"{row[0]}.{row[1]}.{row[2]}")
+                row = [section, " ", " ", " ", row[0], row[1], row[2], "TABLE"]
+                res.append(row)
         return res
 
     # TODO: rbacovic identify MNPI data
-    def identify_mnpi_data(self):
+    @property
+    def identify_mnpi_data(self) -> pd.DataFrame:
         """
         Entry point to identify MNPI data
         """
         mnpi_list = self.load_mnpi_list()
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
-        self.save_to_file(data=mnpi_data_filtered)
+        columns = [
+            "classification_type",
+            "created",
+            "last_altered",
+            "last_ddl",
+            "database_name",
+            "schema_name",
+            "table_name",
+            "table_type",
+        ]
+        # self.save_to_file(data=mnpi_data_filtered)
+        return pd.DataFrame(data=mnpi_data_filtered, columns=columns)
 
     def identify(self):
         """
         Routine to identify objects needed for tagging
         """
-        self.identify_pii_data()
-        self.identify_mnpi_data()
+        # self.identify_pii_data()
+        # self.identify_mnpi_data()
+        pass
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
     def get_scope_file(self):
@@ -312,3 +343,26 @@ class DataClassification:
         """
         self.clear_pii_tags()
         self.clear_mnpi_tags()
+
+    def upload_pii_data(self):
+        """
+        Upload PII data
+        """
+        connection = self.connect()
+        connection.execute(self.pii_query)
+        self.dispose()
+
+    def upload_mnpi_data(self):
+        """
+        Upload MNPI data
+        """
+        self.connect()
+        self.upload_to_snowflake()
+        self.dispose()
+
+    def upload(self):
+        """
+        Routine to identify objects needed for tagging
+        """
+        self.upload_pii_data()
+        self.upload_mnpi_data()

@@ -15,8 +15,8 @@ def run():
         tagging_type="full", mnpi_raw_file="safe_models.json"
     )
     data_classification.identify()
-    data_classification.tag()
-    print(data_classification.pii_query)
+
+    print(data_classification.identify_mnpi_data)
 
 
 if __name__ == "__main__":
