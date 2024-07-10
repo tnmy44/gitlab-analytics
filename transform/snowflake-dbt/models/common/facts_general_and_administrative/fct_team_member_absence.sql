@@ -31,6 +31,7 @@ team_status AS (
 
 combined_sources AS (
   SELECT
+  distinct
     team_status.dim_team_member_sk,
     team_status.dim_team_sk,
     team_status.employee_id,
@@ -45,8 +46,6 @@ combined_sources AS (
     team_status.entity,
     team_status.is_position_active,
     team_status.is_current AS is_current_team_member_position,
-    team_status.position_valid_from,
-    team_status.position_valid_to,
     pto.start_date         AS absence_start,
     pto.end_date           AS absence_end,
     pto.pto_date           AS absence_date,
@@ -63,8 +62,8 @@ combined_sources AS (
   FROM team_status
   INNER JOIN pto ON team_status.employee_id = pto.hr_employee_id
     AND NOT (
-      team_status.position_valid_to <= absence_start
-      OR team_status.position_valid_from >= absence_end
+      team_status.position_valid_to <= absence_date
+      OR team_status.position_valid_from >= absence_date
     )
 ),
 
@@ -81,5 +80,5 @@ final AS (
     created_by='@rakhireddy',
     updated_by='@rakhireddy',
     created_date='2024-05-15',
-    updated_date='2024-05-15',
+    updated_date='2024-07-10',
 ) }}

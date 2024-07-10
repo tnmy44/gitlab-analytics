@@ -131,8 +131,8 @@ final AS (
   INNER JOIN team_member
     ON team_member_absence.employee_id = team_member.employee_id
       AND NOT (
-        team_member_absence.absence_start >= team_member.valid_to
-        OR team_member_absence.absence_end <= team_member.valid_from
+        team_member_absence.absence_date >= team_member.valid_to
+        OR team_member_absence.absence_date <= team_member.valid_from
       )
 )
 
