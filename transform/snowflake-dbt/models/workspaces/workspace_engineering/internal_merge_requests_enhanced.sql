@@ -271,11 +271,13 @@ base AS (
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                               AS is_infradev,
     ARRAY_CONTAINS('customer'::VARIANT, internal_merge_requests.labels)                                                                                                                                                                                                                                                 AS is_customer_related,
     internal_merge_requests.is_part_of_product,
+    first_review_date.reviewer_count,
+    first_review_date.review_requests,
     first_review_date.first_review_date,
+    first_review_date.last_reported_date,
     first_review_date.marked_ready_at,
     ROUND(TIMESTAMPDIFF(HOURS, first_commit.first_commit_created_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                        AS days_from_first_commit_to_merge,
     ROUND(TIMESTAMPDIFF(HOURS, internal_merge_requests.created_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                        AS days_from_creation_to_first_review_date,
-    ROUND(TIMESTAMPDIFF(HOURS, first_review_date.marked_ready_at, first_review_date.first_review_date) / 24, 2)                                                                                                                                                                                                         AS days_from_marked_ready_to_first_review_date,
     ROUND(TIMESTAMPDIFF(HOURS, first_review_date.marked_ready_at, internal_merge_requests.merged_at) / 24, 2)                                                                                                                                                                                                           AS days_from_marked_ready_to_merge
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
