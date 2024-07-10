@@ -40,7 +40,7 @@ class TestPostgresUtils:
         staging_or_processed = "staging"
         load_by_id_export_type = "backfill"
         table = "alerts"
-        database_type = "cells"
+        database_type = "main"
         table = table.upper()  # test when passed in table is UPPER
         initial_load_prefix = datetime(2023, 1, 1).strftime("%Y-%m-%d")
 
