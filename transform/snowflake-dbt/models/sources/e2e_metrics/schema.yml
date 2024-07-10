@@ -8,3 +8,7 @@ models:
        description: Time when the test was run.
        data_tests:
          - not_null
+ - name: main_test_stats_e2e_source
+   description: Base model for main_test_stats
+ - name: test_stats_e2e_source
+   description: Base model for all_test_stats and test_metrics

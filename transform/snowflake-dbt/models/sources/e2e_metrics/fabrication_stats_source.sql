@@ -3,7 +3,7 @@ WITH source AS (
    SELECT 
         parse_json(payload) as payload,
         uploaded_at
-   FROM {{ source('e2e_metrics','fabrication_method') }}
+   FROM {{ source('e2e_metrics','fabrication_stats') }}
  
 ), final AS (
 
