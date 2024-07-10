@@ -366,12 +366,20 @@ def write_metadata(
 
 
 def get_prefix(
-    staging_or_processed, load_by_id_export_type, table, initial_load_prefix
+    staging_or_processed,
+    load_by_id_export_type,
+    table,
+    initial_load_prefix,
+    database_type,
 ) -> str:
     """
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
+    if database_type == "cells":
+        return (
+            f"{staging_or_processed}/{load_by_id_export_type}/{database_type}/{table}/{initial_load_prefix}"
+        ).lower()
     return (
         f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
     ).lower()
@@ -381,11 +389,13 @@ def get_initial_load_prefix(initial_load_start_date):
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}".lower()
     return initial_load_prefix
 
+
 def get_db_type_for_file_name(db_type):
     if db_type == "cells":
         return db_type
     else:
         return ""
+
 
 def get_upload_file_name(
     load_by_id_export_type: str,
@@ -396,7 +406,7 @@ def get_upload_file_name(
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    filename_template: str = "{timestamp}_{table}{datbase_type}{version}.{filetype}.{compression}",
+    filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
 
@@ -420,8 +430,8 @@ def get_upload_file_name(
         load_by_id_export_type=load_by_id_export_type,
         table=table,
         initial_load_prefix=initial_load_prefix,
+        database_type=database_type,
     )
-    database_type = get_db_type_for_file_name(database_type)
     # Format filename
     timestamp = upload_date.isoformat(timespec="milliseconds")
     if version is None:
@@ -431,7 +441,6 @@ def get_upload_file_name(
     filename = filename_template.format(
         timestamp=timestamp,
         table=table,
-        database_type=database_type,
         version=version,
         filetype=filetype,
         compression=compression,

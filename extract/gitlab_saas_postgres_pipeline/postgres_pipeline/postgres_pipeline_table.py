@@ -96,7 +96,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_schema_addition: bool,
-        database_type: str
+        database_type: str,
     ) -> bool:
         if (is_schema_addition) or (not self.is_incremental()):
             logging.info("Aborting... because schema_change OR non_incremental_load")
@@ -115,7 +115,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
-            database_type
+            database_type,
         )
 
     def do_trusted_data_pgp(
@@ -259,7 +259,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_schema_addition: bool,
-        database_type: str
+        database_type: str,
     ) -> bool:
         """Incrementally load delete data which is the PK of the table"""
 
@@ -290,7 +290,7 @@ class PostgresPipelineTable:
                 start_pk,
                 DELETES_EXTRACT_CHUNKSIZE,
                 DELETES_CSV_CHUNKSIZE,
-                database_type
+                database_type,
             )
 
             update_is_deleted_field(
@@ -364,7 +364,7 @@ class PostgresPipelineTable:
                 target_engine,
                 metadata_engine,
                 is_schema_addition,
-                database_type
+                database_type,
             )
 
         else:
