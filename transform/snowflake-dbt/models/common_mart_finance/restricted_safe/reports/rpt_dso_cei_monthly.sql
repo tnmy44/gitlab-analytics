@@ -9,14 +9,14 @@ WITH dso_basis AS (
 
   SELECT
     dim_date.fiscal_year,
-    dim_date.fiscal_quarter_name_fy                                                                                                                      AS fiscal_quarter,
+    dim_date.fiscal_quarter_name_fy                                                                                                             AS fiscal_quarter,
     rpt_accounting_period_balance_monthly.period,
     rpt_accounting_period_balance_monthly.starting_total_invoice_aging_balance,
     rpt_accounting_period_balance_monthly.total_invoice_aging_balance,
-    (rpt_accounting_period_balance_monthly.starting_total_invoice_aging_balance + rpt_accounting_period_balance_monthly.total_invoice_aging_balance) / 2 AS average_ar,
+    (rpt_accounting_period_balance_monthly.starting_accounts_receivable + rpt_accounting_period_balance_monthly.ending_accounts_receivable) / 2 AS average_ar,
     rpt_accounting_period_balance_monthly.total_billing,
     dim_date.days_in_month_count,
-    (average_ar / rpt_accounting_period_balance_monthly.total_billing) * dim_date.days_in_month_count                                                    AS dso
+    (average_ar / rpt_accounting_period_balance_monthly.total_billing) * dim_date.days_in_month_count                                           AS dso
   FROM {{ ref('rpt_accounting_period_balance_monthly') }}
   LEFT JOIN {{ ref('dim_date') }}
     ON rpt_accounting_period_balance_monthly.period = dim_date.date_actual
