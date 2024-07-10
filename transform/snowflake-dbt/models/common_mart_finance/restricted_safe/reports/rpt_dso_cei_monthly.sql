@@ -20,7 +20,6 @@ WITH dso_basis AS (
   FROM {{ ref('rpt_accounting_period_balance_monthly') }}
   LEFT JOIN {{ ref('dim_date') }}
     ON rpt_accounting_period_balance_monthly.period = dim_date.date_actual
-  ORDER BY rpt_accounting_period_balance_monthly.period
 
 ),
 
@@ -31,9 +30,10 @@ dso AS (
   SELECT
     dso_basis.fiscal_year,
     dso_basis.fiscal_quarter,
-    dso_basis.period        AS metric_month,
+    dso_basis.period,
     ROUND(dso_basis.dso, 0) AS dso
   FROM dso_basis
+  ORDER BY dso_basis.period
 
 ),
 
@@ -53,7 +53,6 @@ cei_basis AS (
   FROM {{ ref('rpt_accounting_period_balance_monthly') }}
   LEFT JOIN {{ ref('dim_date') }}
     ON rpt_accounting_period_balance_monthly.period = dim_date.date_actual
-  ORDER BY rpt_accounting_period_balance_monthly.period
 
 ),
 
@@ -62,9 +61,10 @@ cei AS (
 /* Round CEI */
 
   SELECT
-    cei_basis.period        AS metric_month,
+    cei_basis.period,
     ROUND(cei_basis.cei, 2) AS cei
   FROM cei_basis
+  ORDER BY cei_basis.period
 
 ),
 
@@ -73,12 +73,12 @@ final AS (
   SELECT
     dso.fiscal_year,
     dso.fiscal_quarter,
-    dso.metric_month,
+    dso.period,
     dso.dso,
     cei.cei
   FROM dso
   LEFT JOIN cei
-    ON dso.metric_month = cei.metric_month
+    ON dso.period = cei.period
 
 )
 
