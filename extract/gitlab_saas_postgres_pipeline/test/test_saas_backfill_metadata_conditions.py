@@ -361,7 +361,9 @@ class TestCheckBackfill:
         assert initial_load_start_date is None
         assert start_pk == 1
         mock_remove_files_from_gcs.assert_called_once_with(
-            load_by_id_export_type, self.pipeline_table.get_target_table_name()
+            load_by_id_export_type,
+            self.pipeline_table.get_target_table_name(),
+            database_type,
         )
 
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
