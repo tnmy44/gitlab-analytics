@@ -280,7 +280,7 @@ def chunk_and_upload(
 
     rows_uploaded = 0
     if database_type == "cells":
-        prefix = f"staging/regular/{target_table}/{target_table}_{database_type}_chunk".lower()
+        prefix = f"staging/regular/cells/{target_table}/{target_table}_chunk".lower()
     else:
         prefix = f"staging/regular/{target_table}/{target_table}_chunk".lower()
     extension = ".parquet.gzip"
