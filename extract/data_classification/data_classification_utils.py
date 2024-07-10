@@ -5,10 +5,11 @@ Util unit for data classification
 import json
 import os
 import sys
+from logging import error, info
+
+import pandas as pd
 import yaml
 from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
-import pandas as pd
-from logging import info, error
 
 
 class DataClassification:
@@ -35,7 +36,6 @@ class DataClassification:
         self.mnpi_raw_file = mnpi_raw_file
         self.scope = self.get_scope_file()
         self.config_dict = os.environ.copy()
-
 
     def connect(self):
         """
