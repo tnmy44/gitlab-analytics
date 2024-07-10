@@ -226,6 +226,7 @@ class TestCheckBackfill:
         # Create a mock self.source_engine and metadata_engine objects
         metadata_engine = MagicMock(spec=Engine)
         load_by_id_export_type = "backfill"
+        database_type = "main"
 
         mock_is_resume_export.return_value = False, None, 1
         mock_check_is_new_table_or_schema_addition.return_value = True
@@ -240,6 +241,7 @@ class TestCheckBackfill:
             metadata_engine,
             self.test_metadata_backfill_table,
             load_by_id_export_type,
+            database_type,
         )
 
         # Assert that remove_files_from_gcs was called with the correct arguments
@@ -264,7 +266,7 @@ class TestCheckBackfill:
 
         # Create a mock self.source_engine and metadata_engine objects
         load_by_id_export_type = "backfill"
-
+        database_type = "main"
         mock_check_is_new_table_or_schema_addition.return_value = False
 
         metadata = {
@@ -294,6 +296,7 @@ class TestCheckBackfill:
             self.metadata_engine,
             self.test_metadata_backfill_table,
             load_by_id_export_type,
+            database_type,
         )
 
         # Verify results
@@ -317,6 +320,7 @@ class TestCheckBackfill:
         """
 
         load_by_id_export_type = "backfill"
+        database_type = "main"
         metadata = {
             "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
@@ -347,6 +351,7 @@ class TestCheckBackfill:
             self.metadata_engine,
             self.test_metadata_backfill_table,
             load_by_id_export_type,
+            database_type,
         )
 
         # Verify results
@@ -375,6 +380,7 @@ class TestCheckBackfill:
         load_by_id_export_type = "backfill"
         last_extracted_id = 10
         initial_load_start_date = datetime(2023, 2, 1)
+        database_type = "main"
         # Arrange metadata table
         metadata = {
             "real_target_table": self.pipeline_table.get_target_table_name(),
@@ -405,6 +411,7 @@ class TestCheckBackfill:
             self.metadata_engine,
             self.test_metadata_backfill_table,
             load_by_id_export_type,
+            database_type,
         )
 
         # Verify results
@@ -427,6 +434,7 @@ class TestCheckBackfill:
         - resume_export is False (since is_export_completed=True)
         """
         load_by_id_export_type = "backfill"
+        database_type = "main"
         # Update metdata table
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
@@ -455,6 +463,7 @@ class TestCheckBackfill:
             self.metadata_engine,
             self.test_metadata_backfill_table,
             load_by_id_export_type,
+            database_type,
         )
 
         # Verify results
