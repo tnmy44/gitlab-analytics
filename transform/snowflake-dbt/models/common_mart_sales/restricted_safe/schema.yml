@@ -170,6 +170,14 @@ models:
             - not_null
           tags: [ "tdf", "mart", "arr" ]
 
+  - name: mart_arr_weekly
+    description: A version of mart_arr aggregated by arr_week. This allows more frequent updates to the arr and quantity fields for 
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+
   - name: mart_charge
     description: Model combining Subscription related objects such as product details and rate plan charge details into a mart.
     columns:
@@ -426,8 +434,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -527,8 +535,8 @@ models:
           - not_null
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
@@ -594,8 +602,8 @@ models:
         tags: ["tdf", "mart", "sales_funnel"]
       - name: order_type
         description: '{{ doc("order_type") }}'
-      - name: order_type_live
-        description: '{{ doc("order_type_live") }}'
+      - name: order_type_current
+        description: '{{ doc("order_type_current") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
       - name: vsa_start_date_net_arr
