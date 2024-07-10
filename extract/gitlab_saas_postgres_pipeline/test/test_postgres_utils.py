@@ -40,6 +40,7 @@ class TestPostgresUtils:
         staging_or_processed = "staging"
         load_by_id_export_type = "backfill"
         table = "alerts"
+        database_type="cells"
         table = table.upper()  # test when passed in table is UPPER
         initial_load_prefix = datetime(2023, 1, 1).strftime("%Y-%m-%d")
 
@@ -48,6 +49,7 @@ class TestPostgresUtils:
             load_by_id_export_type=load_by_id_export_type,
             table=table,
             initial_load_prefix=initial_load_prefix,
+            database_type=database_type
         )
         expected = f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}".lower()
         assert actual == expected
@@ -66,12 +68,13 @@ class TestPostgresUtils:
     def test_get_upload_file_name(self):
         load_by_id_export_type = "backfill"
         table = "alerts"
+        database_type = "main"
         table = table.upper()  # test when passed in table is UPPER
         initial_load_start_date = datetime.utcnow()
         upload_date = datetime.utcnow()
 
         actual = get_upload_file_name(
-            load_by_id_export_type, table, initial_load_start_date, upload_date
+            load_by_id_export_type, table, initial_load_start_date, upload_date, database_type
         )
 
         initial_load_start_date_iso = initial_load_start_date.isoformat(
@@ -86,8 +89,9 @@ class TestPostgresUtils:
     def test_seed_and_upload_snowflake(self):
         """Test that non-temp tables are aborted"""
         database_kwargs = {"target_table": "alerts"}
+        database_type = "main"
         with pytest.raises(ValueError):
-            seed_and_upload_snowflake(None, None, database_kwargs, None, None, None)
+            seed_and_upload_snowflake(None, None, database_kwargs, None, None, None, database_type)
 
     @patch("postgres_utils.write_metadata")
     @patch("postgres_utils.upload_to_snowflake_after_extraction")
@@ -123,10 +127,12 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
+        database_type="main"
 
         returned_initial_load_start_date = chunk_and_upload_metadata(
             query,
             primary_key,
+            database_type,
             max_source_id,
             initial_load_start_date,
             database_kwargs,
@@ -183,10 +189,11 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
-
+        database_type="main"
         returned_initial_load_start_date = chunk_and_upload_metadata(
             query,
             primary_key,
+            database_type,
             max_source_id,
             initial_load_start_date,
             database_kwargs,
