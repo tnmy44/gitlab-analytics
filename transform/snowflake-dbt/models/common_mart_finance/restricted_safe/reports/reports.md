@@ -119,7 +119,9 @@ Collections - total of payments applied to invoices in the month
 
 Days Sales Outstanding
 
-DSO = (Total Invoice Aging Balance / Total Billing) * Number of Days in Period
+Averag AR = (Starting Accounts Receivable / Ending Accounts Receivable) / 2
+
+DSO = (Average AR / Total Billing) * Number of Days in Period
 
 Collection Effectiveness Index
 
