@@ -127,5 +127,10 @@ def drop_stale_dev_tables() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire({"drop_stale_dev_tables": drop_stale_dev_tables, "drop_databases": drop_databases})
+    Fire(
+        {
+            "drop_stale_dev_tables": drop_stale_dev_tables,
+            "drop_databases": drop_databases,
+        }
+    )
     logging.info("Complete.")
