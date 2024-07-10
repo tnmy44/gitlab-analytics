@@ -175,6 +175,7 @@ class TestPostgresPipelineTable:
         mock_check_and_handle_schema_removal,
         mock_load_incremental,
         mock_swap_temp_table_on_schema_change,
+        database_type
     ):
         """Test that on incremental load,
         1. check_is_new_table_or_schema_addition() is called
