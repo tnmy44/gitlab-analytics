@@ -455,6 +455,7 @@ def upload_initial_load_prefix_to_snowflake(
     database_kwargs,
     load_by_id_export_type,
     initial_load_start_date,
+    database_type,
     purge: bool = True,
 ):
     """
@@ -466,6 +467,7 @@ def upload_initial_load_prefix_to_snowflake(
         load_by_id_export_type=load_by_id_export_type,
         table=database_kwargs["real_target_table"],
         initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
+        database_type=database_type,
     )
     logging.info(
         f"Beginning COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
@@ -489,6 +491,7 @@ def seed_and_upload_snowflake(
     load_by_id_export_type,
     advanced_metadata,
     initial_load_start_date,
+    database_type,
 ):
     """
     Seed (create a new table in Snowflake with correct schema)
@@ -512,7 +515,11 @@ def seed_and_upload_snowflake(
     )
 
     upload_initial_load_prefix_to_snowflake(
-        target_engine, database_kwargs, load_by_id_export_type, initial_load_start_date
+        target_engine,
+        database_kwargs,
+        load_by_id_export_type,
+        initial_load_start_date,
+        database_type,
     )
 
     if load_by_id_export_type == "backfill":
@@ -534,6 +541,7 @@ def upload_to_snowflake_after_extraction(
     load_by_id_export_type,
     initial_load_start_date,
     advanced_metadata,
+    database_type,
 ):
     schema = (
         TARGET_DELETES_SCHEMA
@@ -555,6 +563,7 @@ def upload_to_snowflake_after_extraction(
             database_kwargs,
             load_by_id_export_type,
             initial_load_start_date,
+            database_type,
         )
     else:
         # else need to create 'temp' table first
@@ -565,6 +574,7 @@ def upload_to_snowflake_after_extraction(
             load_by_id_export_type,
             advanced_metadata,
             initial_load_start_date,
+            database_type,
         )
     database_kwargs["source_engine"].dispose()
     target_engine.dispose()
@@ -638,6 +648,7 @@ def chunk_and_upload_metadata(
                 load_by_id_export_type,
                 initial_load_start_date,
                 advanced_metadata,
+                database_type,
             )
         # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
         write_metadata(
@@ -961,7 +972,9 @@ def is_delete_export_needed(
     return True
 
 
-def remove_files_from_gcs(load_by_id_export_type: str, target_table: str):
+def remove_files_from_gcs(
+    load_by_id_export_type: str, target_table: str, database_type: str
+):
     """
     Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
@@ -973,6 +986,7 @@ def remove_files_from_gcs(load_by_id_export_type: str, target_table: str):
         load_by_id_export_type=load_by_id_export_type,
         table=target_table,
         initial_load_prefix="initial_load_start_",
+        database_type=database_type,
     )
 
     blobs = bucket.list_blobs(prefix=prefix)
