@@ -34,7 +34,6 @@ class DataClassification:
         self.specification_file = "specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
-        self.scope = self.get_scope_file()
         self.config_dict = os.environ.copy()
 
     def connect(self):
@@ -286,7 +285,8 @@ class DataClassification:
         pass
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
-    def get_scope_file(self):
+    @property
+    def scope(self):
         """
         Open and load specification file with the definition what to include and what to exclude
         on DATABASE, SCHEMA and TABLE level
@@ -366,3 +366,6 @@ class DataClassification:
         """
         self.upload_pii_data()
         self.upload_mnpi_data()
+
+# generate test cases for above functions and class using pytest library
+
