@@ -107,5 +107,17 @@ models:
       - name: total_current_collected
         description:  is total amount collected in the period - all columns described in ' {{ doc("rpt_booking_billing_collections_monthly") }} '
       - name: variance_booking_billing 
-        description: Subtraction          
+        description: Subtraction  
+
+  - name: rpt_dso_cei_monthly 
+    description:  ' {{ doc("rpt_dso_cei_monthly") }} '
+    columns:
+      - name: period
+        description: Calendar month and year for which the metric is calculated
+        tests:
+          - not_null
+          - unique
+      - name: dso and cei
+        description: all columns described in ' {{ doc("rpt_dso_cei_monthly") }} '
+        
 
