@@ -455,5 +455,6 @@ dedup AS (
 
 )
 
-SELECT *
+SELECT 
+*
 FROM dedup
