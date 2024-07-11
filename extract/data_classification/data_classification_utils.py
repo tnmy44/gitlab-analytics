@@ -40,11 +40,12 @@ class DataClassification:
         """
         Connect to engine factory, return connection object
         """
-        self.loader_engine = snowflake_engine_factory(
-            self.config_vars, self.processing_role
-        )
-        self.connected = True
-        return self.loader_engine.connect()
+        if not self.connected:
+            self.loader_engine = snowflake_engine_factory(
+                self.config_vars, self.processing_role
+            )
+            self.connected = True
+            return self.loader_engine.connect()
 
     def dispose(self) -> None:
         """
@@ -159,7 +160,7 @@ class DataClassification:
         """
         section = "PII"
         insert_statement = (
-            f"INSERT INTO RAW.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
+            f"INSERT INTO {self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
             f"WITH base AS ("
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM raw.information_schema.tables "
@@ -354,7 +355,8 @@ class DataClassification:
         try:
             info(".... START upload_pii_data.")
             connection = self.connect()
-            connection.execute(self.pii_query)
+            res = connection.execute(self.pii_query)
+            info(F".... RESULT: {res}")
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
         finally:
