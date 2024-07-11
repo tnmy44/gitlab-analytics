@@ -238,7 +238,7 @@ class DataClassification:
             "       sensitive_objects_classification.last_ddl     = full_table_list.last_ddl,"
             "       sensitive_objects_classification.table_type   = full_table_list.table_type"
         )
-
+        info(F"QUERY: {res}")
         return res
 
     # TODO: rbacovic identify PII data
