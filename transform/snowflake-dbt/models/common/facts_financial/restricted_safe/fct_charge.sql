@@ -40,6 +40,7 @@ WITH prep_charge AS (
       prep_charge.arr,
       prep_charge.previous_arr,
       prep_charge.delta_arr,
+      prep_charge.delta_mrc,
       prep_charge.quantity,
       prep_charge.previous_quantity,
       prep_charge.delta_quantity,
