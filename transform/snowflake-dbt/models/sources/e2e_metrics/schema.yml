@@ -28,8 +28,6 @@ models:
    description: Base model for main_test_stats
    columns:
      - name: main_test_stats_id
-       data_tests:
-         - not_null
      - name: tags_testcase
        description: Url of the testcase in the gitlab project.
      - name: tags_file_path
@@ -75,8 +73,6 @@ models:
    columns:
      - name: test_stats_id
        description: Unique id to identify a testcase in RSpec.
-       data_tests:
-         - not_null
      - name: tags_testcase
        description: Url of the testcase in the gitlab project.
      - name: tags_file_path
