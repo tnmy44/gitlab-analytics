@@ -1,43 +1,47 @@
 WITH source AS (
 
-   SELECT 
-        parse_json(payload) as payload,
-        uploaded_at
-   FROM {{ source('e2e_metrics','all_test_stats') }}
- 
-), final AS (
+  SELECT
+    PARSE_JSON(payload) AS payload,
+    uploaded_at
+  FROM {{ source('e2e_metrics','all_test_stats') }}
 
-    SELECT
-        payload:fields.api_fabrication::NUMBER as api_fabrication,
-        payload:fields.failure_exception::VARCHAR as failure_exception,
-        payload:fields.id::VARCHAR as id,
-        payload:fields.job_id::VARCHAR as job_id,
-        payload:fields.import_time::VARCHAR as import_time, --coalesce
-        payload:fields.job_url::VARCHAR as job_url,
-        payload:fields.pipeline_id::VARCHAR as pipeline_id,
-        payload:fields.pipeline_url::VARCHAR as pipeline_url,
-        payload:fields.run_time::NUMBER as run_time,
-        payload:fields.total_fabrication::NUMBER as total_fabrication,
-        payload:fields.ui_fabrication::NUMBER as ui_fabrication,
-        payload:name::VARCHAR as name,
-        payload:time::VARCHAR as time,
-        payload:tags.blocking::VARCHAR as blocking, -- coalesce
-        payload:tags.file_path::VARCHAR as file_path,
-        payload:tags.import_repo::VARCHAR as import_repo, -- coalesce
-        payload:tags.import_type::VARCHAR as import_type, -- coalesce
-        payload:tags.merge_request::VARCHAR as merge_request,
-        payload:tags.job_name::VARCHAR as job_name,
-        payload:tags.name::VARCHAR as tags_name, -- ask sanad the name for it
-        payload:tags.product_group::VARCHAR as product_group,
-        payload:tags.quarantined::VARCHAR as quarantined,
-        payload:tags.run_type::VARCHAR as run_type,
-        payload:tags.smoke::VARCHAR as smoke,
-        payload:tags.stage::VARCHAR as stage,
-        payload:tags.status::VARCHAR as status,
-        payload:tags.testcase::VARCHAR as testcase,
-        uploaded_at as uploaded_at
-       FROM source
+),
+
+final AS (
+
+  SELECT
+    payload:fields.api_fabrication::NUMBER    AS api_fabrication,
+    payload:fields.failure_exception::VARCHAR AS failure_exception,
+    payload:fields.id::VARCHAR                AS test_stats_id,
+    payload:fields.job_id::VARCHAR            AS job_id,
+    payload:fields.import_time::VARCHAR       AS import_time,
+    payload:fields.job_url::VARCHAR           AS job_url,
+    payload:fields.pipeline_id::VARCHAR       AS pipeline_id,
+    payload:fields.pipeline_url::VARCHAR      AS pipeline_url,
+    payload:fields.run_time::NUMBER           AS run_time,
+    payload:fields.total_fabrication::NUMBER  AS total_fabrication,
+    payload:fields.ui_fabrication::NUMBER     AS ui_fabrication,
+    payload:name::VARCHAR                     AS name,
+    payload:time::VARCHAR                     AS time,
+    payload:tags.blocking::VARCHAR            AS tags_blocking,
+    payload:tags.file_path::VARCHAR           AS tags_file_path,
+    payload:tags.import_repo::VARCHAR         AS tags_import_repo,
+    payload:tags.import_type::VARCHAR         AS tags_import_type,
+    payload:tags.merge_request::VARCHAR       AS tags_merge_request,
+    payload:tags.job_name::VARCHAR            AS tags_job_name,
+    payload:tags.name::VARCHAR                AS tags_tags_name,
+    payload:tags.product_group::VARCHAR       AS tags_product_group,
+    payload:tags.quarantined::VARCHAR         AS tags_quarantined,
+    payload:tags.run_type::VARCHAR            AS tags_run_type,
+    payload:tags.smoke::VARCHAR               AS tags_smoke,
+    payload:tags.stage::VARCHAR               AS tags_stage,
+    payload:tags.status::VARCHAR              AS tags_status,
+    payload:tags.testcase::VARCHAR            AS tags_testcase,
+    uploaded_at                               AS uploaded_at,
+    {{ dbt_utils.generate_surrogate_key(['ID', 'TAGS_TESTCASE', 'TAGS_FILE_PATH', 'NAME', 'TAGS_PRODUCT_GROUP', 'TAGS_STAGE', 'JOB_ID', 'TAGS_JOB_NAME', 'JOB_URL', 'PIPELINE_ID', 'PIPELINE_URL', 'TAGS_MERGE_REQUEST', 'TAGS_SMOKE', 'TAGS_QUARANTINED', 'RUN_TIME', 'TAGS_RUN_TYPE', 'TAGS_STATUS', 'UI_FABRICATION', 'API_FABRICATION', 'TOTAL_FABRICATION', 'UPLOADED_AT']) }} AS combined_composite_keys
+  FROM source
 )
 
 SELECT *
 FROM final
+QUALIFY ROW_NUMBER() OVER (PARTITION BY combined_composite_keys ORDER BY uploaded_at DESC) = 1
