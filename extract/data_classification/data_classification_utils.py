@@ -250,7 +250,7 @@ class DataClassification:
             )
 
             if include and not exclude:
-                row = [section, " ", " ", " ", row[0], row[1], row[2], "TABLE"]
+                row = [section, "NULL", "NULL", "NULL", row[0], row[1], row[2], "TABLE"]
                 res.append(row)
         return res
 

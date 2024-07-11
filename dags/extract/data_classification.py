@@ -21,6 +21,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
 )
@@ -38,7 +39,7 @@ secrets = [
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_USER,
 ]
 
@@ -70,7 +71,7 @@ dag = DAG(
     DAG_NAME,
     default_args=default_args,
     schedule_interval="0 7 * * 1",
-    concurrency=2,
+    concurrency=1,
     description=DAG_DESCRIPTION,
     catchup=False,
 )
