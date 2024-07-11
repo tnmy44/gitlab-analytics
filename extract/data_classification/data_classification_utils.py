@@ -184,6 +184,63 @@ class DataClassification:
         res = f"{insert_statement}{where_clause_include}{where_clause_exclude}"
         return res
 
+    @property
+    def mnpi_metadata_update_query(self) -> str:
+        """
+        Generate update statement for MNPI metadata
+        """
+        res = (
+            f"MERGE INTO {self.schema_name}.{self.table_name} USING ("
+            "WITH database_list AS (SELECT DISTINCT database_name FROM sensitive_objects_classification))"
+            "SELECT 'MNPI' AS classification_type, "
+            "       created,"
+            "       last_altered, "
+            "       last_ddl, "
+            "       table_catalog, "
+            "       table_schema, "
+            "       table_name, "
+            "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type"
+            "  FROM raw.information_schema.tables"
+            " WHERE table_schema != 'INFORMATION_SCHEMA'"
+            "   AND table_catalog IN (SELECT database_name FROM database_list)"
+            " UNION"
+            "SELECT 'MNPI' AS classification_type, "
+            "       created,last_altered, "
+            "       last_ddl, "
+            "       table_catalog, "
+            "       table_schema, "
+            "       table_name, "
+            "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type"
+            "  FROM prep.information_schema.tables"
+            " WHERE table_schema != 'INFORMATION_SCHEMA'"
+            "   AND table_catalog IN (SELECT database_name FROM database_list)"
+            " UNION"
+            "SELECT 'MNPI' AS classification_type, "
+            "       created,"
+            "       last_altered, "
+            "       last_ddl, "
+            "       table_catalog, "
+            "       table_schema, "
+            "       table_name, "
+            "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type"
+            "  FROM prod.information_schema.tables"
+            " WHERE table_schema != 'INFORMATION_SCHEMA'"
+            "   AND table_catalog IN (SELECT database_name FROM database_list)) AS full_table_list"
+            " ON full_table_list.classification_type                  = sensitive_objects_classification.classification_type"
+            "AND full_table_list.table_catalog                        = sensitive_objects_classification.database_name"
+            "AND full_table_list.table_schema                         = sensitive_objects_classification.schema_name"
+            "AND full_table_list.table_name                           = sensitive_objects_classification.table_name"
+            "AND sensitive_objects_classification.classification_type = 'MNPI'"
+            "WHEN MATCHED THEN"
+            "UPDATE"
+            "   SET sensitive_objects_classification.created      = full_table_list.created,"
+            "       sensitive_objects_classification.last_altered = full_table_list.last_altered,"
+            "       sensitive_objects_classification.last_ddl     = full_table_list.last_ddl,"
+            "       sensitive_objects_classification.table_type   = full_table_list.table_type"
+        )
+
+        return res
+
     # TODO: rbacovic identify PII data
     def identify_pii_data(self):
         """
@@ -252,7 +309,16 @@ class DataClassification:
 
             if include and not exclude:
                 null_value = None
-                row = [section, null_value, null_value, null_value, row[0], row[1], row[2], null_value]
+                row = [
+                    section,
+                    null_value,
+                    null_value,
+                    null_value,
+                    row[0],
+                    row[1],
+                    row[2],
+                    null_value,
+                ]
                 res.append(row)
         return res
 
@@ -286,7 +352,6 @@ class DataClassification:
         # self.identify_pii_data()
         # self.identify_mnpi_data()
         info("END identifying.")
-
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
     @property
@@ -348,7 +413,7 @@ class DataClassification:
         self.clear_pii_tags()
         self.clear_mnpi_tags()
 
-    def execute_query(self, query:str):
+    def execute_query(self, query: str):
         """
         Execute SQL query
         """
@@ -371,8 +436,13 @@ class DataClassification:
 
     def delete_data(self):
         info(".... START deleting data.")
-        self.execute_query(query=F"DELETE FROM {self.schema_name}.{self.table_name}")
+        self.execute_query(query=f"DELETE FROM {self.schema_name}.{self.table_name}")
         info(".... END deleting data.")
+
+    def update_mnpi_metadata(self):
+        info(".... START update MNPI metadata.")
+        self.execute_query(query=self.mnpi_metadata_update_query)
+        info(".... END update MNPI metadata.")
 
     def upload_mnpi_data(self):
         """
@@ -381,6 +451,7 @@ class DataClassification:
         info(".... START upload_mnpi_data.")
         self.connect()
         self.upload_to_snowflake()
+        self.update_mnpi_metadata()
         self.dispose()
         info(".... START upload_mnpi_data.")
 
@@ -393,5 +464,3 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END upload.")
-
-
