@@ -107,7 +107,7 @@ SELECT
 DISTINCT 
 client 
 FROM 
-client_mapper  
+dotcom_prep  
 UNION ALL
 SELECT
 'All'
