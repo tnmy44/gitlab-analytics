@@ -191,7 +191,7 @@ class DataClassification:
         """
         res = (
             f"MERGE INTO {self.schema_name}.{self.table_name} USING ( "
-            "WITH database_list AS (SELECT DISTINCT database_name FROM sensitive_objects_classification)) "
+            f"WITH database_list AS (SELECT DISTINCT database_name FROM  {self.schema_name}.{self.table_name}) "
             "SELECT 'MNPI' AS classification_type, "
             "       created, "
             "       last_altered, "
@@ -226,17 +226,17 @@ class DataClassification:
             "  FROM prod.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list)) AS full_table_list "
-            " ON full_table_list.classification_type                  = sensitive_objects_classification.classification_type "
-            "AND full_table_list.table_catalog                        = sensitive_objects_classification.database_name "
-            "AND full_table_list.table_schema                         = sensitive_objects_classification.schema_name "
-            "AND full_table_list.table_name                           = sensitive_objects_classification.table_name "
-            "AND sensitive_objects_classification.classification_type = 'MNPI' "
+            f" ON full_table_list.classification_type                  = {self.table_name}.classification_type "
+            f"AND full_table_list.table_catalog                        = {self.table_name}.database_name "
+            f"AND full_table_list.table_schema                         = {self.table_name}.schema_name "
+            f"AND full_table_list.table_name                           = {self.table_name}.table_name "
+            f"AND {self.table_name}.classification_type = 'MNPI' "
             "WHEN MATCHED THEN "
             "UPDATE "
-            "   SET sensitive_objects_classification.created      = full_table_list.created, "
-            "       sensitive_objects_classification.last_altered = full_table_list.last_altered, "
-            "       sensitive_objects_classification.last_ddl     = full_table_list.last_ddl, "
-            "       sensitive_objects_classification.table_type   = full_table_list.table_type"
+            f"   SET {self.table_name}.created      = full_table_list.created, "
+            f"       {self.table_name}.last_altered = full_table_list.last_altered, "
+            f"       {self.table_name}.last_ddl     = full_table_list.last_ddl, "
+            f"       {self.table_name}.table_type   = full_table_list.table_type"
         )
 
         return res
@@ -441,7 +441,6 @@ class DataClassification:
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
-        info(F"QUERY: {self.mnpi_metadata_update_query}")
         self.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
