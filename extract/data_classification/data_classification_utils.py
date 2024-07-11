@@ -366,24 +366,22 @@ class DataClassification:
         """
         Upload PII data
         """
-        try:
-            info(".... START upload_pii_data.")
-            connection = self.connect()
-            res = connection.execute(self.pii_query)
-            info(F".... RESULT: {res.fetchall()}")
-        except Exception as programming_error:
-            error(f".... ERROR with: {programming_error}")
-        finally:
-            self.dispose()
+        info(".... START upload_pii_data.")
+        self.execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
-
+    def delete_data(self):
+        info(".... START deleting data.")
+        self.execute_query(query=F"DELETE FROM {self.schema_name}.{self.table_name}")
+        info(".... END deleting data.")
+        
     def upload_mnpi_data(self):
         """
         Upload MNPI data
         """
         info(".... START upload_mnpi_data.")
         self.connect()
+        self.delete_data()
         self.upload_to_snowflake()
         self.dispose()
         info(".... START upload_mnpi_data.")
