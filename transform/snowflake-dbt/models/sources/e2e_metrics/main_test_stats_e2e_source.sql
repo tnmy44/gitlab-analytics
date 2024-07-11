@@ -35,7 +35,7 @@ final AS (
     payload:tags.status::VARCHAR              AS tags_status,
     payload:tags.testcase::VARCHAR            AS tags_testcase,
     uploaded_at                               AS uploaded_at,
-    {{ dbt_utils.generate_surrogate_key(['ID', 'TAGS_TESTCASE', 'TAGS_FILE_PATH', 'NAME', 'TAGS_PRODUCT_GROUP', 'TAGS_STAGE', 'JOB_ID', 'TAGS_JOB_NAME', 'JOB_URL', 'PIPELINE_ID', 'PIPELINE_URL', 'TAGS_MERGE_REQUEST', 'TAGS_SMOKE', 'TAGS_QUARANTINED', 'RUN_TIME', 'TAGS_RUN_TYPE', 'TAGS_STATUS', 'UI_FABRICATION', 'API_FABRICATION', 'TOTAL_FABRICATION', 'UPLOADED_AT']) }} AS combined_composite_keys
+    {{ dbt_utils.generate_surrogate_key(['MAIN_TEST_STATS_ID', 'TAGS_TESTCASE', 'TAGS_FILE_PATH', 'NAME', 'TAGS_PRODUCT_GROUP', 'TAGS_STAGE', 'JOB_ID', 'TAGS_JOB_NAME', 'JOB_URL', 'PIPELINE_ID', 'PIPELINE_URL', 'TAGS_MERGE_REQUEST', 'TAGS_SMOKE', 'TAGS_QUARANTINED', 'RUN_TIME', 'TAGS_RUN_TYPE', 'TAGS_STATUS', 'UI_FABRICATION', 'API_FABRICATION', 'TOTAL_FABRICATION', 'UPLOADED_AT']) }} AS combined_composite_keys
   FROM source
 )
 
