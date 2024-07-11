@@ -241,7 +241,7 @@ class DataClassification:
 
         return res
 
-   @property
+    @property
     def delete_data_query(self) -> str:
         """
         Query to delete data from table
@@ -448,7 +448,7 @@ class DataClassification:
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
-        info(F"PREPARED QUERY: {self.mnpi_metadata_update_query}")
+        info(f"PREPARED QUERY: {self.mnpi_metadata_update_query}")
         self.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
