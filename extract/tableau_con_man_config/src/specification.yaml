@@ -12074,20 +12074,20 @@ users:
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access       
+      - General All Access
   - user_name: alanski
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access  
-      - General SAFE Access  
+      - General All Access
+      - General SAFE Access
   - user_name: lburrows
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access  
+      - General All Access
       - General SAFE Access
   - user_name: jruiz-fernandez
     user_name_domain: gitlab.com
@@ -12103,3 +12103,22 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: bslee
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: pcunningham
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: nklick
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
