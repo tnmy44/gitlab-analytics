@@ -6599,11 +6599,6 @@ users:
       can_login: true
       member_of:
         - snalamaru
-  - snowflake_provisioner:
-      can_login: true
-      member_of:
-        - sysadmin
-        - securityadmin
   - sranasinghe:
       can_login: true
       member_of:
