@@ -246,13 +246,6 @@ class DataClassification:
         """
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
-    # TODO: rbacovic identify PII data
-    def identify_pii_data(self):
-        """
-        Entry point to identify PII data
-        """
-        pass
-
     def save_to_file(self, data: list) -> None:
         """
         Save MNPI data to file
@@ -327,7 +320,6 @@ class DataClassification:
                 res.append(row)
         return res
 
-    # TODO: rbacovic identify MNPI data
     @property
     def identify_mnpi_data(self) -> pd.DataFrame:
         """
@@ -349,16 +341,6 @@ class DataClassification:
         # self.save_to_file(data=mnpi_data_filtered)
         return pd.DataFrame(data=mnpi_data_filtered, columns=columns)
 
-    def identify(self):
-        """
-        Routine to identify objects needed for tagging
-        """
-        info("START identifying.")
-        # self.identify_pii_data()
-        # self.identify_mnpi_data()
-        info("END identifying.")
-
-    # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
     @property
     def scope(self):
         """

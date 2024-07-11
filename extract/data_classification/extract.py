@@ -17,7 +17,6 @@ def run():
     data_classification = DataClassification(
         tagging_type="full", mnpi_raw_file="safe_models.json"
     )
-    data_classification.identify()
     data_classification.upload()
 
 
