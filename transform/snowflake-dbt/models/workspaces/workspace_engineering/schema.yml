@@ -804,3 +804,12 @@ models:
 
   - name: influx_db_main_test_stats
     description: A model containing data for main_test_stats generated from influx db.
+  
+  - name: fabrication_stats_e2e_metrics
+    description: A model containing data for fabrication_stats generated from end-to-end test metrics .
+
+  - name: test_stats_e2e_metrics
+    description: A model containing data for test_stats and test_metrics data generated from end-to-end tests.
+
+  - name: main_test_stats_e2e_metrics
+    description: A model containing data for main_test_stats generated from end-to-end test metrics.
