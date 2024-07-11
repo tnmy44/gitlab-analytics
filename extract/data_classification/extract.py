@@ -20,6 +20,6 @@ def run():
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
-    info("Starting data classification.")
+    info("START data classification.")
     Fire(run())
-    info("Done with data classification.")
+    info("END with data classification.")

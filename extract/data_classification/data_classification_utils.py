@@ -351,11 +351,14 @@ class DataClassification:
         """
         Upload PII data
         """
-        info(".... START upload_pii_data.")
-        connection = self.connect()
-        info(self.pii_query)
-        connection.execute(self.pii_query)
-        self.dispose()
+        try:
+            info(".... START upload_pii_data.")
+            connection = self.connect()
+            connection.execute(self.pii_query)
+        except Exception as programming_error:
+            error(f"ERROR with: {programming_error}")
+        finally:
+            self.dispose()
         info(".... END upload_pii_data.")
 
     def upload_mnpi_data(self):
