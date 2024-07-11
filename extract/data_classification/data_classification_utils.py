@@ -28,7 +28,7 @@ class DataClassification:
 
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
-        self.processing_role = "LOADER"
+        self.processing_role = "SYSADMIN"
         self.loader_engine = None
         self.mnpi_file_name = "mnpi_table_list.csv"
         self.specification_file = "specification.yml"
