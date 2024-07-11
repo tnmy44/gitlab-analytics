@@ -43,3 +43,5 @@
     {% endif %}
 
     FROM {{ cte_ref }}
+
+{%- endmacro -%}
