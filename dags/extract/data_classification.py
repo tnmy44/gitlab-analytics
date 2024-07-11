@@ -60,8 +60,8 @@ def get_command(task: str):
     """
     commands = {
         # "extract_classification": f"""{dbt_install_deps_cmd} && dbt --profiles-dir profile --target prod --quiet ls --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > safe_models.json; ret=$?;""",
-        "extract_classification":f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py"""
-        "execute_classification": "",
+        "extract_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py""",
+        "execute_classification": ""
     }
     return commands[task]
 
