@@ -5696,6 +5696,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - gengel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - jbaumgardner:
       member_of:
         - snowflake_analyst
@@ -6868,6 +6873,10 @@ users:
       can_login: true
       member_of:
         - lanzures
+  - gengel:
+      can_login: true
+      member_of:
+        - gengel
   - jdleon:
       can_login: true
       member_of:
