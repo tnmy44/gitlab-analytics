@@ -354,7 +354,7 @@ class DataClassification:
         connection = self.connect()
         connection.execute(self.pii_query)
         self.dispose()
-        info(".... END upload_pii_data."
+        info(".... END upload_pii_data.")
 
     def upload_mnpi_data(self):
         """
