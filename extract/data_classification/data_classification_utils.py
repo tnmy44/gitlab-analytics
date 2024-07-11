@@ -374,14 +374,13 @@ class DataClassification:
         info(".... START deleting data.")
         self.execute_query(query=F"DELETE FROM {self.schema_name}.{self.table_name}")
         info(".... END deleting data.")
-        
+
     def upload_mnpi_data(self):
         """
         Upload MNPI data
         """
         info(".... START upload_mnpi_data.")
         self.connect()
-        self.delete_data()
         self.upload_to_snowflake()
         self.dispose()
         info(".... START upload_mnpi_data.")
@@ -391,6 +390,7 @@ class DataClassification:
         Routine to identify objects needed for tagging
         """
         info("START upload.")
+        self.delete_data()
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END upload.")
