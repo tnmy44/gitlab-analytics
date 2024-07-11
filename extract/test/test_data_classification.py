@@ -27,15 +27,15 @@ def test_quoted():
 #         assert result == [{"name": "test"}, {"name": "test2"}]
 #
 #
-# def test_transform_mnpi_list(data_classification):
-#     input_list = [
-#         {"config": {"database": "db", "schema": "sch"}, "name": "table"},
-#         {"config": {"database": "db2", "schema": "sch2"}, "name": "table2"}
-#     ]
-#     expected_output = [["DB", "SCH", "TABLE"], ["DB2", "SCH2", "TABLE2"]]
-#     assert data_classification.transform_mnpi_list(input_list) == expected_output
-#
-#
+def test_transform_mnpi_list(data_classification):
+    input_list = [
+        {"config": {"database": "db", "schema": "sch"}, "name": "table"},
+        {"config": {"database": "db2", "schema": "sch2"}, "name": "table2"}
+    ]
+    expected_output = [["DB", "SCH", "TABLE"], ["DB2", "SCH2", "TABLE2"]]
+    assert data_classification.transform_mnpi_list(input_list) == expected_output
+
+
 # @pytest.mark.parametrize("section,scope_type,expected", [
 #     ("PII", "include", " AND ((table_catalog IN ('DB1', 'DB2')))"),
 #     ("PII", "exclude", " AND (NOT (table_catalog IN ('DB3', 'DB4')))"),
@@ -50,8 +50,8 @@ def test_quoted():
 #         }
 #     }
 #     assert data_classification.get_pii_scope(section, scope_type) == expected
-#
-#
+
+
 # def test_pii_query(data_classification):
 #     data_classification.get_pii_scope = Mock(return_value=" AND (condition)")
 #     query = data_classification.pii_query
