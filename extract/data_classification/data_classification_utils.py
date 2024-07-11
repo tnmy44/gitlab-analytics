@@ -34,7 +34,7 @@ class DataClassification:
         self.specification_file = "specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
-        self.config_dict = os.environ.copy()
+        self.config_vars = os.environ.copy()
 
     def connect(self):
         """
