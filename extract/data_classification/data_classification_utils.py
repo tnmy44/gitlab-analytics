@@ -424,8 +424,7 @@ class DataClassification:
         """
         try:
             connection = self.connect()
-            info(f".... PREPARED QUERY: {query}")
-            connection.execute(query)
+            connection.execute(statement=query)
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
             error(f".... QUERY: {query}")
