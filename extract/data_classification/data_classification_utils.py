@@ -159,7 +159,7 @@ class DataClassification:
         """
         section = "PII"
         insert_statement = (
-            f"INSERT INTO {self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
+            f"INSERT INTO RAW.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
             f"WITH base AS ("
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM raw.information_schema.tables "
@@ -356,7 +356,7 @@ class DataClassification:
             connection = self.connect()
             connection.execute(self.pii_query)
         except Exception as programming_error:
-            error(f"ERROR with: {programming_error}")
+            error(f".... ERROR with: {programming_error}")
         finally:
             self.dispose()
         info(".... END upload_pii_data.")
