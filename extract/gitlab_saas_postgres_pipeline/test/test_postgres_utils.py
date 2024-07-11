@@ -27,6 +27,7 @@ from postgres_utils import (
 )
 
 CSV_CHUNKSIZE = 500
+database_types = ["main", "cells", "ci"]
 
 
 class TestPostgresUtils:
@@ -40,7 +41,7 @@ class TestPostgresUtils:
         staging_or_processed = "staging"
         load_by_id_export_type = "backfill"
         table = "alerts"
-        database_types = ["main", "cells", "ci"]
+
         table = table.upper()  # test when passed in table is UPPER
         initial_load_prefix = datetime(2023, 1, 1).strftime("%Y-%m-%d")
 
@@ -72,7 +73,6 @@ class TestPostgresUtils:
     def test_get_upload_file_name(self):
         load_by_id_export_type = "backfill"
         table = "alerts"
-        database_types = ["main", "cells", "ci"]
         table = table.upper()  # test when passed in table is UPPER
         initial_load_start_date = datetime.utcnow()
         upload_date = datetime.utcnow()
@@ -100,7 +100,6 @@ class TestPostgresUtils:
     def test_seed_and_upload_snowflake(self):
         """Test that non-temp tables are aborted"""
         database_kwargs = {"target_table": "alerts"}
-        database_types = ["main", "cells", "ci"]
         for database_type in database_types:
             with pytest.raises(ValueError):
                 seed_and_upload_snowflake(
@@ -141,7 +140,6 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
-        database_types = ["main", "cells", "ci"]
 
         for database_type in database_types:
             returned_initial_load_start_date = chunk_and_upload_metadata(
@@ -204,7 +202,6 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
-        database_types = ["main", "cells", "ci"]
 
         for database_type in database_types:
             returned_initial_load_start_date = chunk_and_upload_metadata(

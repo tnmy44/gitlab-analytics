@@ -8,6 +8,8 @@ from sqlalchemy.engine.base import Engine
 
 from postgres_pipeline_table import PostgresPipelineTable
 
+database_types = ["main", "cells", "ci"]
+
 
 class TestPostgresPipelineTable:
     def setup(self):
@@ -186,7 +188,6 @@ class TestPostgresPipelineTable:
         and swap_temp_table_on_schema_change() is called
         """
         load_type = "incremental"
-        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = False
         loaded = True
@@ -242,7 +243,6 @@ class TestPostgresPipelineTable:
         4. swap_temp_table_on_schema_change() is called
         """
         load_type = "incremental"
-        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = True
 
@@ -286,7 +286,6 @@ class TestPostgresPipelineTable:
         swap_temp_table_on_schema_change() is called
         """
         load_type = "scd"
-        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = False
         loaded = True

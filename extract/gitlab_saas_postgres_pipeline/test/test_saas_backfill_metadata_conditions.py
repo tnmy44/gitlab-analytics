@@ -42,6 +42,8 @@ from postgres_utils import (
     manifest_reader,
 )
 
+database_types = ["main", "cells", "ci"]
+
 
 def insert_into_metadata_db(metadata_engine, full_table_path, metadata):
     insert_query = f"""
@@ -226,7 +228,6 @@ class TestCheckBackfill:
         # Create a mock self.source_engine and metadata_engine objects
         metadata_engine = MagicMock(spec=Engine)
         load_by_id_export_type = "backfill"
-        database_types = ["main", "cells", "ci"]
 
         mock_is_resume_export.return_value = False, None, 1
         mock_check_is_new_table_or_schema_addition.return_value = True
@@ -269,7 +270,6 @@ class TestCheckBackfill:
 
         # Create a mock self.source_engine and metadata_engine objects
         load_by_id_export_type = "backfill"
-        database_types = ["main", "cells", "ci"]
         mock_check_is_new_table_or_schema_addition.return_value = False
 
         metadata = {
@@ -324,7 +324,7 @@ class TestCheckBackfill:
         """
 
         load_by_id_export_type = "backfill"
-        database_types = ["main", "cells", "ci"]
+
         metadata = {
             "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
@@ -387,7 +387,7 @@ class TestCheckBackfill:
         load_by_id_export_type = "backfill"
         last_extracted_id = 10
         initial_load_start_date = datetime(2023, 2, 1)
-        database_types = ["main", "cells", "ci"]
+
         # Arrange metadata table
         metadata = {
             "real_target_table": self.pipeline_table.get_target_table_name(),
@@ -442,7 +442,7 @@ class TestCheckBackfill:
         - resume_export is False (since is_export_completed=True)
         """
         load_by_id_export_type = "backfill"
-        database_types = ["main", "cells", "ci"]
+
         # Update metdata table
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
