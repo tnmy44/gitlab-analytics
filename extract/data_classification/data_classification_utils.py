@@ -187,7 +187,7 @@ class DataClassification:
     @property
     def mnpi_metadata_update_query(self) -> str:
         """
-        Generate update statement for MNPI metadata
+        Generate update statement for the MNPI metadata
         """
         return (
             f"MERGE INTO {self.schema_name}.{self.table_name} USING ( "
@@ -446,7 +446,7 @@ class DataClassification:
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
-        self.execute_query(query=self.delete_data_query)#mnpi_metadata_update_query)
+        self.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
     def upload_mnpi_data(self):
@@ -454,10 +454,8 @@ class DataClassification:
         Upload MNPI data
         """
         info(".... START upload_mnpi_data.")
-        self.connect()
         self.upload_to_snowflake()
         self.update_mnpi_metadata()
-        self.dispose()
         info(".... START upload_mnpi_data.")
 
     def upload(self):
