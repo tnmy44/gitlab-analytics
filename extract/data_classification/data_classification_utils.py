@@ -281,8 +281,8 @@ class DataClassification:
         Routine to identify objects needed for tagging
         """
         info("Starting identifying.")
-        self.identify_pii_data()
-        self.identify_mnpi_data()
+        # self.identify_pii_data()
+        # self.identify_mnpi_data()
         info("End identifying.")
 
 
