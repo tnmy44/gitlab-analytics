@@ -348,6 +348,20 @@ class DataClassification:
         self.clear_pii_tags()
         self.clear_mnpi_tags()
 
+    def execute_query(self, query:str):
+        """
+        Execute SQL query
+        """
+        try:
+            info(".... START upload_pii_data.")
+            connection = self.connect()
+            connection.execute(query)
+        except Exception as programming_error:
+            error(f".... ERROR with: {programming_error}")
+        finally:
+            self.dispose()
+        info(".... END upload_pii_data.")
+
     def upload_pii_data(self):
         """
         Upload PII data
@@ -356,12 +370,13 @@ class DataClassification:
             info(".... START upload_pii_data.")
             connection = self.connect()
             res = connection.execute(self.pii_query)
-            info(F".... RESULT: {res}")
+            info(F".... RESULT: {res.fetchall()}")
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
         finally:
             self.dispose()
         info(".... END upload_pii_data.")
+
 
     def upload_mnpi_data(self):
         """
