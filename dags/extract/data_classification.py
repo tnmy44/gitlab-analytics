@@ -34,15 +34,20 @@ DAG_NAME = "data_classification"
 DAG_DESCRIPTION = "This DAG run to identify data classification for MNPI and PII data."
 
 
+# secrets = [
+#     SNOWFLAKE_ACCOUNT,
+#     SNOWFLAKE_LOAD_ROLE,
+#     SNOWFLAKE_LOAD_USER,
+#     SNOWFLAKE_LOAD_PASSWORD,
+#     SNOWFLAKE_LOAD_WAREHOUSE,
+#     SNOWFLAKE_USER,
+# ]
 secrets = [
-    SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_USER,
+    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_LOAD_WAREHOUSE,
 ]
-
 default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
