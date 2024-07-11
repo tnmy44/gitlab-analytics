@@ -446,7 +446,7 @@ class DataClassification:
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
-        self.execute_query(query=self.mnpi_metadata_update_query)
+        self.execute_query(query=self.delete_data_query)#mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
     def upload_mnpi_data(self):
