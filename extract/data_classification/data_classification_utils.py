@@ -36,7 +36,7 @@ class DataClassification:
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()
 
-    def connect(self):
+    def __connect(self):
         """
         Connect to engine factory, return connection object
         """
@@ -47,7 +47,7 @@ class DataClassification:
             self.connected = True
             return self.loader_engine.connect()
 
-    def dispose(self) -> None:
+    def __dispose(self) -> None:
         """
         Dispose from engine factory
         """
@@ -418,35 +418,42 @@ class DataClassification:
         self.clear_pii_tags()
         self.clear_mnpi_tags()
 
-    def execute_query(self, query: str):
+    def __execute_query(self, query: str):
         """
         Execute SQL query
         """
         try:
-            connection = self.connect()
+            connection = self.__connect()
             connection.execute(statement=query)
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
             error(f".... QUERY: {query}")
         finally:
-            self.dispose()
+            self.__dispose()
 
     def upload_pii_data(self):
         """
         Upload PII data
         """
         info(".... START upload_pii_data.")
-        self.execute_query(query=self.pii_query)
+        self.__execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
     def delete_data(self):
+        """
+        Delete data from the table
+        """
         info(".... START deleting data.")
-        self.execute_query(query=self.delete_data_query)
+        self.__execute_query(query=self.delete_data_query)
         info(".... END deleting data.")
 
     def update_mnpi_metadata(self):
+        """
+        Update timestamp data for MNPI
+        as initially we do not have it
+        """
         info(".... START update MNPI metadata.")
-        self.execute_query(query=self.mnpi_metadata_update_query)
+        self.__execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
     def upload_mnpi_data(self):

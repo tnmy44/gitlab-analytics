@@ -3,10 +3,13 @@
     - PII
     - MNPI
 """
-from fire import Fire
-from data_classification_utils import DataClassification
-from logging import basicConfig, info
 import sys
+from logging import basicConfig, info
+
+from data_classification_utils import DataClassification
+from fire import Fire
+
+
 def run():
     """
     Run process
