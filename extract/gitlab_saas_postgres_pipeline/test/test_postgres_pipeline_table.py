@@ -186,7 +186,7 @@ class TestPostgresPipelineTable:
         and swap_temp_table_on_schema_change() is called
         """
         load_type = "incremental"
-        database_type = ["main", "cells", "ci"]
+        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = False
         loaded = True
@@ -195,27 +195,26 @@ class TestPostgresPipelineTable:
         self.pipeline_table.incremental_type = "load_by_date"
         mock_load_incremental.return_value = loaded
 
-        for db in database_type:
+        for database_type in database_types:
             self.pipeline_table.do_load(
-                load_type, source_engine, target_engine, metadata_engine, db
+                load_type, source_engine, target_engine, metadata_engine, database_type
             )
-        mock_check_is_new_table_or_schema_addition.assert_called_once_with(
-            source_engine, target_engine
-        )
-        mock_check_and_handle_schema_removal.assert_called_once_with(
-            source_engine, target_engine
-        )
-        for db in database_type:
-            mock_load_incremental.assert_called_once_with(
+            mock_load_incremental.assert_called_with(
                 source_engine,
                 target_engine,
                 self.pipeline_table.source_table_name,
                 self.pipeline_table.table_dict,
                 self.pipeline_table.get_target_table_name(),
-                db,
+                database_type,
             )
+        mock_check_is_new_table_or_schema_addition.assert_called_with(
+            source_engine, target_engine
+        )
+        mock_check_and_handle_schema_removal.assert_called_with(
+            source_engine, target_engine
+        )
 
-        mock_swap_temp_table_on_schema_change.assert_called_once_with(
+        mock_swap_temp_table_on_schema_change.assert_called_with(
             is_schema_addition, loaded, target_engine
         )
 
@@ -243,24 +242,24 @@ class TestPostgresPipelineTable:
         4. swap_temp_table_on_schema_change() is called
         """
         load_type = "incremental"
-        database_type = ["main", "cells", "ci"]
+        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = True
 
         mock_check_is_new_table_or_schema_addition.return_value = is_schema_addition
         self.pipeline_table.incremental_type = "load_by_date"
 
-        for db in database_type:
+        for database_type in database_types:
             loaded = self.pipeline_table.do_load(
-                load_type, source_engine, target_engine, metadata_engine, db
+                load_type, source_engine, target_engine, metadata_engine, database_type
             )
-        assert not loaded
-        mock_check_is_new_table_or_schema_addition.assert_called_once_with(
+            assert not loaded
+        mock_check_is_new_table_or_schema_addition.assert_called_with(
             source_engine, target_engine
         )
         mock_check_and_handle_schema_removal.assert_not_called()
         mock_load_incremental.assert_not_called()
-        mock_swap_temp_table_on_schema_change.assert_called_once_with(
+        mock_swap_temp_table_on_schema_change.assert_called_with(
             is_schema_addition, loaded, target_engine
         )
 
@@ -300,16 +299,15 @@ class TestPostgresPipelineTable:
             self.pipeline_table.do_load(
                 load_type, source_engine, target_engine, metadata_engine, database_type
             )
-        mock_check_is_new_table_or_schema_addition.assert_called_once_with(
-            source_engine, target_engine
-        )
-        mock_check_and_handle_schema_removal.assert_called_once_with(
-            source_engine, target_engine
-        )
-        for database_type in database_types:
-            mock_do_scd.assert_called_once_with(
-                source_engine, target_engine, is_schema_addition, db
+            mock_do_scd.assert_called_with(
+                source_engine, target_engine, is_schema_addition, database_type
             )
-        mock_swap_temp_table_on_schema_change.assert_called_once_with(
+        mock_check_is_new_table_or_schema_addition.assert_called_with(
+            source_engine, target_engine
+        )
+        mock_check_and_handle_schema_removal.assert_called_with(
+            source_engine, target_engine
+        )
+        mock_swap_temp_table_on_schema_change.assert_called_with(
             is_schema_addition, loaded, target_engine
         )
