@@ -189,7 +189,7 @@ class DataClassification:
         """
         Generate update statement for MNPI metadata
         """
-        res = (
+        return (
             f"MERGE INTO {self.schema_name}.{self.table_name} USING ( "
             f"WITH database_list AS (SELECT DISTINCT database_name FROM  {self.schema_name}.{self.table_name}) "
             "SELECT 'MNPI' AS classification_type, "
@@ -238,8 +238,6 @@ class DataClassification:
             f"       {self.table_name}.last_ddl     = full_table_list.last_ddl, "
             f"       {self.table_name}.table_type   = full_table_list.table_type"
         )
-
-        return res
 
     @property
     def delete_data_query(self) -> str:
@@ -426,6 +424,7 @@ class DataClassification:
         """
         try:
             connection = self.connect()
+            info(f".... PREPARED QUERY: {query}")
             connection.execute(query)
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
@@ -448,7 +447,6 @@ class DataClassification:
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
-        info(f"PREPARED QUERY: {self.mnpi_metadata_update_query}")
         self.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
