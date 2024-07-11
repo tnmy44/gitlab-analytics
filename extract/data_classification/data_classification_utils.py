@@ -25,8 +25,8 @@ class DataClassification:
         """
         self.encoding = "utf8"
         self.connected = False
-        self.database_name = "rbacovic_prep"
-        self.schema_name = "benchmark_pii"
+        self.database_name = "RAW"
+        self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
         self.processing_role = "LOADER"
         self.loader_engine = None
@@ -280,9 +280,11 @@ class DataClassification:
         """
         Routine to identify objects needed for tagging
         """
-        # self.identify_pii_data()
-        # self.identify_mnpi_data()
-        pass
+        info("Starting identifying.")
+        self.identify_pii_data()
+        self.identify_mnpi_data()
+        info("End identifying.")
+
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
     @property
@@ -364,8 +366,9 @@ class DataClassification:
         """
         Routine to identify objects needed for tagging
         """
+        info("Starting upload.")
         self.upload_pii_data()
         self.upload_mnpi_data()
+        info("End upload.")
 
-# generate test cases for above functions and class using pytest library
 

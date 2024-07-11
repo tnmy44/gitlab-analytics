@@ -3,10 +3,10 @@
     - PII
     - MNPI
 """
-
+from fire import Fire
 from data_classification_utils import DataClassification
-
-
+from logging import basicConfig, info
+import sys
 def run():
     """
     Run process
@@ -15,9 +15,11 @@ def run():
         tagging_type="full", mnpi_raw_file="safe_models.json"
     )
     data_classification.identify()
-
-    print(data_classification.identify_mnpi_data)
+    data_classification.upload()
 
 
 if __name__ == "__main__":
-    run()
+    basicConfig(stream=sys.stdout, level=20)
+    info("Starting data classification.")
+    Fire(run())
+    info("Done with data classification.")
