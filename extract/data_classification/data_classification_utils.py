@@ -353,14 +353,13 @@ class DataClassification:
         Execute SQL query
         """
         try:
-            info(".... START upload_pii_data.")
             connection = self.connect()
             connection.execute(query)
         except Exception as programming_error:
             error(f".... ERROR with: {programming_error}")
+            error(f".... QUERY: {query}")
         finally:
             self.dispose()
-        info(".... END upload_pii_data.")
 
     def upload_pii_data(self):
         """
