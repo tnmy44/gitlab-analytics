@@ -40,19 +40,20 @@ class TestPostgresUtils:
         staging_or_processed = "staging"
         load_by_id_export_type = "backfill"
         table = "alerts"
-        database_type = "main"
+        database_type = ["main","cells","ci"]
         table = table.upper()  # test when passed in table is UPPER
         initial_load_prefix = datetime(2023, 1, 1).strftime("%Y-%m-%d")
 
-        actual = get_prefix(
-            staging_or_processed=staging_or_processed,
-            load_by_id_export_type=load_by_id_export_type,
-            table=table,
-            initial_load_prefix=initial_load_prefix,
-            database_type=database_type,
-        )
-        expected = f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}".lower()
-        assert actual == expected
+        for db in database_type:
+            actual = get_prefix(
+                staging_or_processed=staging_or_processed,
+                load_by_id_export_type=load_by_id_export_type,
+                table=table,
+                initial_load_prefix=initial_load_prefix,
+                database_type=db,
+            )
+            expected = f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}".lower()
+            assert actual == expected
 
     def test_get_initial_load_prefix(self):
         """
@@ -68,36 +69,40 @@ class TestPostgresUtils:
     def test_get_upload_file_name(self):
         load_by_id_export_type = "backfill"
         table = "alerts"
-        database_type = "main"
+        database_type = ["main","cells","ci"]
         table = table.upper()  # test when passed in table is UPPER
         initial_load_start_date = datetime.utcnow()
         upload_date = datetime.utcnow()
 
-        actual = get_upload_file_name(
-            load_by_id_export_type,
-            table,
-            initial_load_start_date,
-            upload_date,
-            database_type,
-        )
+        for db in database_type:
+            actual = get_upload_file_name(
+                load_by_id_export_type,
+                table,
+                initial_load_start_date,
+                upload_date,
+                db,
+            )
 
-        initial_load_start_date_iso = initial_load_start_date.isoformat(
-            timespec="milliseconds"
-        )
-        upload_date_iso = upload_date.isoformat(timespec="milliseconds")
-        expected = f"staging/{load_by_id_export_type}/{table}/initial_load_start_{initial_load_start_date_iso}/{upload_date_iso}_{table}.parquet.gzip".lower()
-
-        upload_date_iso = upload_date.isoformat(timespec="milliseconds")
-        assert actual == expected
+            initial_load_start_date_iso = initial_load_start_date.isoformat(
+                timespec="milliseconds"
+            )
+            upload_date_iso = upload_date.isoformat(timespec="milliseconds")
+            if db == "cells":
+                expected = f"staging/{load_by_id_export_type}/cells/{table}/initial_load_start_{initial_load_start_date_iso}/{upload_date_iso}_{table}.parquet.gzip".lower()
+            else:
+                expected = f"staging/{load_by_id_export_type}/{table}/initial_load_start_{initial_load_start_date_iso}/{upload_date_iso}_{table}.parquet.gzip".lower()
+            upload_date_iso = upload_date.isoformat(timespec="milliseconds")
+            assert actual == expected
 
     def test_seed_and_upload_snowflake(self):
         """Test that non-temp tables are aborted"""
         database_kwargs = {"target_table": "alerts"}
-        database_type = "main"
-        with pytest.raises(ValueError):
-            seed_and_upload_snowflake(
-                None, None, database_kwargs, None, None, None, database_type
-            )
+        database_type = ["main","cells","ci"]
+        for db in database_type:
+            with pytest.raises(ValueError):
+                seed_and_upload_snowflake(
+                    None, None, database_kwargs, None, None, None, db
+                )
 
     @patch("postgres_utils.write_metadata")
     @patch("postgres_utils.upload_to_snowflake_after_extraction")
@@ -133,21 +138,22 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
-        database_type = "main"
+        database_type = ["main","cells","ci"]
 
-        returned_initial_load_start_date = chunk_and_upload_metadata(
-            query,
-            primary_key,
-            database_type,
-            max_source_id,
-            initial_load_start_date,
-            database_kwargs,
-            CSV_CHUNKSIZE,
-            load_by_id_export_type,
-        )
+        for db in database_type:
+            returned_initial_load_start_date = chunk_and_upload_metadata(
+                query,
+                primary_key,
+                db,
+                max_source_id,
+                initial_load_start_date,
+                database_kwargs,
+                CSV_CHUNKSIZE,
+                load_by_id_export_type,
+            )
 
-        mock_upload_to_snowflake_after_extraction.assert_not_called()
-        assert returned_initial_load_start_date == initial_load_start_date
+            mock_upload_to_snowflake_after_extraction.assert_not_called()
+            assert returned_initial_load_start_date == initial_load_start_date
 
     @patch("postgres_utils.write_metadata")
     @patch("postgres_utils.upload_to_snowflake_after_extraction")
@@ -195,23 +201,25 @@ class TestPostgresUtils:
             "metadata_table": INCREMENTAL_METADATA_TABLE,
         }
         load_by_id_export_type = INCREMENTAL_LOAD_TYPE_BY_ID
-        database_type = "main"
-        returned_initial_load_start_date = chunk_and_upload_metadata(
-            query,
-            primary_key,
-            database_type,
-            max_source_id,
-            initial_load_start_date,
-            database_kwargs,
-            CSV_CHUNKSIZE,
-            load_by_id_export_type,
-        )
+        database_type = ["main","cells","ci"]
 
-        assert mock_upload_to_gcs.call_count == 4
-        mock_write_metadata.assert_called_once()
-        mock_upload_to_snowflake_after_extraction.assert_called_once()
+        for db in database_type:
+            returned_initial_load_start_date = chunk_and_upload_metadata(
+                query,
+                primary_key,
+                db,
+                max_source_id,
+                initial_load_start_date,
+                database_kwargs,
+                CSV_CHUNKSIZE,
+                load_by_id_export_type,
+            )
 
-        assert returned_initial_load_start_date == initial_load_start_date
+            assert mock_upload_to_gcs.call_count == 4
+            mock_write_metadata.assert_called_once()
+            mock_upload_to_snowflake_after_extraction.assert_called_once()
+
+            assert returned_initial_load_start_date == initial_load_start_date
 
     '''
     @patch("postgres_utils.snowflake_engine_factory")
