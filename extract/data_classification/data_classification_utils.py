@@ -250,7 +250,8 @@ class DataClassification:
             )
 
             if include and not exclude:
-                row = [section, "NULL", "NULL", "NULL", row[0], row[1], row[2], "TABLE"]
+                null_value = None
+                row = [section, null_value, null_value, null_value, row[0], row[1], row[2], "TABLE"]
                 res.append(row)
         return res
 
@@ -360,9 +361,11 @@ class DataClassification:
         """
         Upload MNPI data
         """
+        info(".... START upload_mnpi_data.")
         self.connect()
         self.upload_to_snowflake()
         self.dispose()
+        info(".... START upload_mnpi_data.")
 
     def upload(self):
         """
