@@ -241,6 +241,13 @@ class DataClassification:
 
         return res
 
+   @property
+    def delete_data_query(self) -> str:
+        """
+        Query to delete data from table
+        """
+        return f"DELETE FROM {self.schema_name}.{self.table_name}"
+
     # TODO: rbacovic identify PII data
     def identify_pii_data(self):
         """
@@ -436,11 +443,12 @@ class DataClassification:
 
     def delete_data(self):
         info(".... START deleting data.")
-        self.execute_query(query=f"DELETE FROM {self.schema_name}.{self.table_name}")
+        self.execute_query(query=self.delete_data_query)
         info(".... END deleting data.")
 
     def update_mnpi_metadata(self):
         info(".... START update MNPI metadata.")
+        info(F"PREPARED QUERY: {self.mnpi_metadata_update_query}")
         self.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
