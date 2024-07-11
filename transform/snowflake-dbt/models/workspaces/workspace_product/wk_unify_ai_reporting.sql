@@ -204,7 +204,7 @@ weekly_retention_grouped AS (
       AND e2.current_week = prep.next_week
       AND e2.plan_name = prep.plan_name
       AND e2.internal_or_external = prep.internal_or_external
-      AND e2.client = e.client
+      AND e2.client = prep.client
   WHERE 
   prep.next_week < DATE_TRUNC(WEEK, CURRENT_DATE())
   AND
@@ -229,7 +229,7 @@ monthly_retention_grouped AS (
       AND e2.current_month = prep.next_month
       AND e2.plan_name = prep.plan_name
       AND e2.internal_or_external = prep.internal_or_external
-      AND e2.client = e.client
+      AND e2.client = prep.client
   WHERE 
   prep.next_month < DATE_TRUNC(MONTH, CURRENT_DATE())
   AND
