@@ -54,8 +54,8 @@ e.event_property IS NOT NULL
     DATE_TRUNC(MONTH, DATEADD(MONTH, 1, behavior_date)) AS next_month,
     REPLACE(contexts:data[0]:data:extra['requestId'],'"','') AS request_id,
     COALESCE(client_mapper.client,'Unknown Client') AS client
-  FROM {{ ref('mart_behavior_structured_event') }}
-  LEFT JOIN client_mapper ON client_mapper.event_property = prep.request_id
+  FROM {{ ref('mart_behavior_structured_event') }} 
+  LEFT JOIN client_mapper ON client_mapper.event_property = request_id
   WHERE event_action = 'execute_llm_method'
     AND behavior_date BETWEEN '2023-04-21' AND CURRENT_DATE
     AND event_category = 'Llm::ExecuteMethodService'
