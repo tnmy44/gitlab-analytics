@@ -287,7 +287,7 @@ class TestPostgresPipelineTable:
         swap_temp_table_on_schema_change() is called
         """
         load_type = "scd"
-        database_type = ["main", "cells", "ci"]
+        database_types = ["main", "cells", "ci"]
         source_engine = target_engine = metadata_engine = self.engine
         is_schema_addition = False
         loaded = True
@@ -296,9 +296,9 @@ class TestPostgresPipelineTable:
         self.pipeline_table.incremental_type = "load_by_date"
         mock_do_scd.return_value = loaded
 
-        for db in database_type:
+        for database_type in database_types:
             self.pipeline_table.do_load(
-                load_type, source_engine, target_engine, metadata_engine, db
+                load_type, source_engine, target_engine, metadata_engine, database_type
             )
         mock_check_is_new_table_or_schema_addition.assert_called_once_with(
             source_engine, target_engine
@@ -306,9 +306,9 @@ class TestPostgresPipelineTable:
         mock_check_and_handle_schema_removal.assert_called_once_with(
             source_engine, target_engine
         )
-        for db in database_type:
+        for database_type in database_types:
             mock_do_scd.assert_called_once_with(
-                source_engine, target_engine, is_schema_addition, dbv
+                source_engine, target_engine, is_schema_addition, db
             )
         mock_swap_temp_table_on_schema_change.assert_called_once_with(
             is_schema_addition, loaded, target_engine
