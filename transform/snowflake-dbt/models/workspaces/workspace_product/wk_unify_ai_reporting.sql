@@ -5,9 +5,24 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date')
-]) }},
-
-dotcom_prep AS (
+]) }}, client_mapper AS 
+(
+SELECT
+e.event_property,
+REPLACE(SPLIT(SPLIT(event_category,'Gitlab::Llm::')[1],'::Client')[0],'"','') AS client
+FROM
+PROD.common_mart.mart_behavior_structured_event e 
+WHERE
+e.event_action IN 
+    ('tokens_per_user_request_prompt',
+    'tokens_per_user_request_response')
+AND
+e.behavior_date > DATEADD(MONTH,-24,CURRENT_DATE)
+AND
+e.event_category != 'code_suggestions'
+AND
+e.event_property IS NOT NULL
+), dotcom_prep AS (
 
   SELECT
     event_label,
@@ -37,8 +52,10 @@ dotcom_prep AS (
     DATE_TRUNC(WEEK, DATEADD(DAY, 7, behavior_date))    AS next_week,
     DATE_TRUNC(MONTH, behavior_date)                    AS current_month,
     DATE_TRUNC(MONTH, DATEADD(MONTH, 1, behavior_date)) AS next_month,
-    REPLACE(contexts:data[0]:data:extra['requestId'],'"','') AS request_id
+    REPLACE(contexts:data[0]:data:extra['requestId'],'"','') AS request_id,
+    COALESCE(client_mapper.client,'Unknown Client') AS client
   FROM {{ ref('mart_behavior_structured_event') }}
+  LEFT JOIN client_mapper ON client_mapper.request_id = prep.request_id
   WHERE event_action = 'execute_llm_method'
     AND behavior_date BETWEEN '2023-04-21' AND CURRENT_DATE
     AND event_category = 'Llm::ExecuteMethodService'
@@ -84,23 +101,6 @@ dotcom_prep
 UNION ALL 
 SELECT
 'All'
-), client_mapper AS 
-(
-SELECT
-e.event_property,
-REPLACE(SPLIT(SPLIT(event_category,'Gitlab::Llm::')[1],'::Client')[0],'"','') AS client
-FROM
-PROD.common_mart.mart_behavior_structured_event e 
-WHERE
-e.event_action IN 
-    ('tokens_per_user_request_prompt',
-    'tokens_per_user_request_response')
-AND
-e.behavior_date > DATEADD(MONTH,-24,CURRENT_DATE)
-AND
-e.event_category != 'code_suggestions'
-AND
-e.event_property IS NOT NULL
 ), clients AS 
 (
 SELECT 
@@ -111,9 +111,6 @@ client_mapper
 UNION ALL
 SELECT
 'All'
-UNION ALL 
-SELECT
-'Unknown Client'
 ), prep AS 
 (
 SELECT
@@ -123,7 +120,7 @@ p.behavior_structured_event_pk,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
-COALESCE(clients.client, 'Unknown Client') AS client,
+clients.client,
 p.request_id,
 p.behavior_date,
 p.current_week,
@@ -143,9 +140,7 @@ p.internal_or_external = i.internal_or_external OR i.internal_or_external = 'All
 LEFT JOIN 
 plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
-client_mapper c ON c.event_property = p.request_id
-LEFT JOIN 
-clients ON clients.client = c.client OR clients.client = 'All'
+clients ON clients.client = p.client OR clients.client = 'All'
 ), DAU AS (
 
   SELECT
