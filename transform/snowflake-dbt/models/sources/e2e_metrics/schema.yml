@@ -22,13 +22,13 @@ models:
        description: Name of the CI Job where tests are run.
      - name: combined_composite_keys
        description: Combined Composite Keys for all columns
-       tests:
+       data_tests:
          - unique
  - name: main_test_stats_e2e_source
    description: Base model for main_test_stats
    columns:
      - name: main_test_stats_id
-       tests:
+       data_tests:
          - not_null
      - name: tags_testcase
        description: Url of the testcase in the gitlab project.
@@ -68,14 +68,14 @@ models:
        description: Total number of milliseconds to finish fabrication of test resources via API and UI.0
      - name: combined_composite_keys
        description: Combined Composite Keys for all columns
-       tests:
+       data_tests:
          - unique
  - name: test_stats_e2e_source
    description: Base model for all_test_stats and test_metrics
    columns:
      - name: test_stats_id
        description: Unique id to identify a testcase in RSpec.
-       tests:
+       data_tests:
          - not_null
      - name: tags_testcase
        description: Url of the testcase in the gitlab project.
@@ -115,5 +115,5 @@ models:
        description: Total number of milliseconds to finish fabrication of test resources via API and UI.0
      - name: combined_composite_keys
        description: Combined Composite Keys for all columns
-       tests:
+       data_tests:
          - unique
