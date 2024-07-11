@@ -3796,7 +3796,6 @@ roles:
         - zuora_stitch_rest_api
         - zuora_revenue
         - zuora_query_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
@@ -4725,7 +4724,6 @@ roles:
         - salesforce_sandbox
         - xactly
         - zuora_stitch_rest_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
