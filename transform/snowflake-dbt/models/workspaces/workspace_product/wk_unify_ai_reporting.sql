@@ -194,7 +194,7 @@ weekly_retention_grouped AS (
     prep.event_label,
     prep.plan_name,
     prep.internal_or_external,
-    client,
+    prep.client,
     'Weekly Retention' AS metric,
     (COUNT(DISTINCT e2.gsc_pseudonymized_user_id) / COUNT(DISTINCT prep.gsc_pseudonymized_user_id)) AS retention_rate
   FROM prep
@@ -219,7 +219,7 @@ monthly_retention_grouped AS (
     prep.event_label,
     prep.plan_name,
     prep.internal_or_external,
-    client,
+    prep.client,
     'Monthly Retention' AS metric,
     (COUNT(DISTINCT e2.gsc_pseudonymized_user_id) / COUNT(DISTINCT prep.gsc_pseudonymized_user_id)) AS retention_rate
   FROM prep
