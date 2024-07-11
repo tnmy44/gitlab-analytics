@@ -25,7 +25,7 @@ class DataClassification:
         """
         self.encoding = "utf8"
         self.connected = False
-        self.database_name = "RAW"
+
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
         self.processing_role = "LOADER"
@@ -159,7 +159,7 @@ class DataClassification:
         """
         section = "PII"
         insert_statement = (
-            f"INSERT INTO {self.database_name}.{self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
+            f"INSERT INTO {self.schema_name}.sensitive_objects_classification (classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
             f"WITH base AS ("
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, table_type "
             f"  FROM raw.information_schema.tables "
@@ -280,10 +280,10 @@ class DataClassification:
         """
         Routine to identify objects needed for tagging
         """
-        info("Starting identifying.")
+        info("START identifying.")
         # self.identify_pii_data()
         # self.identify_mnpi_data()
-        info("End identifying.")
+        info("END identifying.")
 
 
     # TODO: rbacovic define the scope for PII/MNPI data (include/exclude)
@@ -350,9 +350,11 @@ class DataClassification:
         """
         Upload PII data
         """
+        info(".... START upload_pii_data.")
         connection = self.connect()
         connection.execute(self.pii_query)
         self.dispose()
+        info(".... END upload_pii_data."
 
     def upload_mnpi_data(self):
         """
@@ -366,9 +368,9 @@ class DataClassification:
         """
         Routine to identify objects needed for tagging
         """
-        info("Starting upload.")
+        info("START upload.")
         self.upload_pii_data()
         self.upload_mnpi_data()
-        info("End upload.")
+        info("END upload.")
 
 
