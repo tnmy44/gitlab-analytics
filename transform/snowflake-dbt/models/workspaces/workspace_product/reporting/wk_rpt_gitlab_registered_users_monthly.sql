@@ -18,7 +18,7 @@ user_counts AS (
     ping_deployment_type     AS deployment_type,
     SUM(instance_user_count) AS total_user_count
   FROM dim_ping_instance
-  WHERE ping_created_date_month BETWEEN '2022-01-01' AND DATE_TRUNC('month', CURRENT_DATE) --arbitrary date range, exclude current month
+  WHERE ping_created_date_month BETWEEN '2022-01-01' AND DATE_TRUNC('month', CURRENT_DATE) - 1 --arbitrary date range, exclude current month
     AND is_last_ping_of_month = TRUE
   GROUP BY 1, 2, 3
 
@@ -63,10 +63,5 @@ counts_combined AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="counts_combined",
-    created_by="@cbraza",
-    updated_by="@cbraza",
-    created_date="2024-07-11",
-    updated_date="2024-07-11"
-) }}
+SELECT *
+FROM counts_combined
