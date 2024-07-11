@@ -442,7 +442,7 @@ How the product is delivered to the installation (Self-Managed, SaaS). GitLab De
 
 ``` sql
 CASE
-  WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+  WHEN dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS' --dim_instance_id is synonymous with uuid
   WHEN is_saas_dedicated = TRUE THEN 'SaaS' 
   ELSE 'Self-Managed'
 END AS ping_delivery_type
