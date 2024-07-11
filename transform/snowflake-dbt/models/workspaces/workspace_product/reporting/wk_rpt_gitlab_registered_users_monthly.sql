@@ -50,11 +50,11 @@ counts_combined AS (
     user_counts.total_user_count,
     CASE
       WHEN paid_seats.seat_count > user_counts.total_user_count THEN user_counts.total_user_count --handle cases where more seats are sold than there are reported registered users (ex: Dedicated)
-      ELSE paid_seats.seat_count --using seat count to define paid 
+      ELSE IFNULL(paid_seats.seat_count, 0) --using seat count to define paid
     END                                AS paid_user_count,
     total_user_count - paid_user_count AS free_user_count --defining free as total-paid
   FROM user_counts
-  INNER JOIN paid_seats
+  LEFT JOIN paid_seats --LEFT join because the first several months of reported Dedicated users did not have any paid seats
     ON user_counts.reporting_month = paid_seats.arr_month
       AND user_counts.delivery_type = paid_seats.product_delivery_type
       AND user_counts.deployment_type = paid_seats.product_deployment_type
