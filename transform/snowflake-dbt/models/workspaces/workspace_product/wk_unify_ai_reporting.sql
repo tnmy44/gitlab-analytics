@@ -11,7 +11,7 @@ SELECT
 e.event_property,
 REPLACE(SPLIT(SPLIT(event_category,'Gitlab::Llm::')[1],'::Client')[0],'"','') AS client
 FROM
-PROD.common_mart.mart_behavior_structured_event e 
+{{ ref('mart_behavior_structured_event') }}  e 
 WHERE
 e.event_action IN 
     ('tokens_per_user_request_prompt',
@@ -114,7 +114,6 @@ SELECT
 ), prep AS 
 (
 SELECT
-
 p.gsc_pseudonymized_user_id,
 p.behavior_structured_event_pk,
 f.event_label,
