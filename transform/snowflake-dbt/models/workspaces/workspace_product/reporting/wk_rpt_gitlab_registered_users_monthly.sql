@@ -33,7 +33,8 @@ paid_seats AS (
     SUM(quantity) AS seat_count
   FROM mart_arr
   WHERE arr_month BETWEEN '2022-01-01' AND DATE_TRUNC('month', CURRENT_DATE) - 1 --arbitrary date range, exclude current month
-    AND product_category = 'Base Products' --do not pull in add-ons, could cause double-counting of users
+    AND (product_category = 'Base Products' --do not pull in add-ons, could cause double-counting of users
+      OR product_rate_plan_name ILIKE '%enterprise agile planning%') --these seats are incremental on top of base product seats
     AND subscription_status IN ('Active', 'Cancelled')
   GROUP BY 1, 2, 3
 
