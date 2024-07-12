@@ -3796,7 +3796,6 @@ roles:
         - zuora_stitch_rest_api
         - zuora_revenue
         - zuora_query_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
@@ -4725,7 +4724,6 @@ roles:
         - salesforce_sandbox
         - xactly
         - zuora_stitch_rest_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
@@ -5696,6 +5694,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - gengel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - jbaumgardner:
       member_of:
         - snowflake_analyst
@@ -5744,6 +5747,11 @@ roles:
       warehouses:
         - dev_xs
   - vshushlin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - lzhao:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -6599,11 +6607,6 @@ users:
       can_login: true
       member_of:
         - snalamaru
-  - snowflake_provisioner:
-      can_login: true
-      member_of:
-        - sysadmin
-        - securityadmin
   - sranasinghe:
       can_login: true
       member_of:
@@ -6844,6 +6847,10 @@ users:
       can_login: true
       member_of:
         - wmeek
+  - lzhao:
+      can_login: true
+      member_of:
+        - lzhao
   - rchong:
       can_login: true
       member_of:
@@ -6868,6 +6875,10 @@ users:
       can_login: true
       member_of:
         - lanzures
+  - gengel:
+      can_login: true
+      member_of:
+        - gengel
   - jdleon:
       can_login: true
       member_of:
