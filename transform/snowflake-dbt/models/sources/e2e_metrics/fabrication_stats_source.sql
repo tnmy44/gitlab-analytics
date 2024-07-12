@@ -18,11 +18,11 @@ final AS (
     payload:time::VARCHAR                    AS time,
     payload:tags.fabrication_method::VARCHAR AS tags_fabrication_method,
     payload:tags.http_method::VARCHAR        AS tags_http_method,
-    payload:tags.merge_request::VARCHAR      AS tags_merge_request,
+    payload:tags.merge_request::BOOLEAN      AS is_merge_request,
     payload:tags.resource::VARCHAR           AS tags_resource,
     payload:tags.run_type::VARCHAR           AS tags_run_type,
     uploaded_at                              AS uploaded_at,
-    {{ dbt_utils.generate_surrogate_key(['timestamp', 'tags_resource', 'tags_fabrication_method', 'tags_http_method', 'tags_run_type', 'tags_merge_request', 'fabrication_time', 'info', 'job_url', 'uploaded_at']) }} AS combined_composite_keys
+    {{ dbt_utils.generate_surrogate_key(['timestamp', 'tags_resource', 'tags_fabrication_method', 'tags_http_method', 'tags_run_type', 'is_merge_request', 'fabrication_time', 'info', 'job_url', 'uploaded_at']) }} AS combined_composite_keys
   FROM source
 )
 

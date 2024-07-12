@@ -14,7 +14,7 @@ models:
        description: The HTTP method used.
      - name: tags_run_type
        description: Name of the test run in CI.
-     - name: tags_merge_request
+     - name: is_merge_request
        description: Boolean value to idetify if this resource a merge_request?
      - name: info
        description: Any information regarding the resource created.
@@ -48,14 +48,14 @@ models:
        description: Pipeline ID of the CI pipeline that triggered the test.
      - name: pipeline_url
        description: Pipeline URL of the CI pipeline that triggered the test.
-     - name: tags_merge_request
+     - name: is_merge_request
        description: Is this test triggered from a merge request?
-     - name: tags_smoke
+     - name: is_smoke
        description: Is this test part of the smoke tests bucket?
-     - name: tags_quarantined
+     - name: is_quarantined
        description: Is this test currently quarantined?
      - name: tags_run_type
-       description: The test job from whcih the test is triggered.
+       description: The test job from which the test is triggered.
      - name: tags_status
        description: Has the test passed or failed?
      - name: ui_fabrication
@@ -93,14 +93,14 @@ models:
        description: pipeline_id of the CI pipeline that triggered the test.
      - name: pipeline_url
        description: pipeline_url of the CI pipeline that triggered the test.
-     - name: tags_merge_request
+     - name: is_merge_request
        description: Is this test triggered from a merge request?
-     - name: tags_smoke
+     - name: is_smoke
        description: Is this test part of the smoke tests bucket?
-     - name: tags_quarantined
+     - name: is_quarantined
        description: Is this test currently quarantined?
      - name: tags_run_type
-       description: The test job from whcih the test is triggered.
+       description: The test job from which the test is triggered.
      - name: tags_status
        description: Has the test passed or failed?
      - name: ui_fabrication
