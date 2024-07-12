@@ -9798,6 +9798,10 @@ models:
         description: The UUID of this OOO Type.
         meta:
           masking_policy: analyst_people_sensitive
+      - name: pto_group_type
+        description: The group type of the absence.
+        meta:
+          masking_policy: analyst_people_sensitive
       - name: pto_status
         description: Enum:"AP" "RQ" "DN" "CN" 2-character enumeration denoting the status of the OOO Event.
           "AP" = Approved  "RQ" = Requested  "DN" = Denied  "CN" = Cancelled

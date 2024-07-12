@@ -53,6 +53,7 @@ combined_sources AS (
     pto.is_holiday         AS is_holiday,
     pto.pto_uuid           AS pto_uuid,
     pto.pto_type_uuid      AS pto_type_uuid,
+    pto.pto_group_type     AS pto_group_type,
     pto.pto_status         AS pto_status,
     pto.pto_status_name    AS pto_status_name,
     pto.total_hours        AS total_hours,
