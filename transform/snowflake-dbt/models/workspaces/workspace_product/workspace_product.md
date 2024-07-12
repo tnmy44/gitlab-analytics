@@ -61,8 +61,13 @@ the paid user count. Removing this filter could lead to double-counting of users
 from the last ping of the month per installation. 
   * In this case "active" is referring to a user's state (ex. not blocked) as opposed to an indication of user activity with the product
 * `paid_user_count` is defined using the count of paid seats for GitLab base products (i.e., not add-ons) for the given month
-  * There are edge cases where `paid_user_count` is greater than `total_user_count` (ex: more Dedicated licenses were sold than there were registered users). In this case, 
-  we set `paid_user_count` to equal `total_user_count`
+  * There are edge cases where `paid_user_count` is greater than `total_user_count` (ex: more Dedicated licenses were sold than there were registered Dedicated users). In this case, we set `paid_user_count` to equal `total_user_count`.
 * `free_user_count` is defined as `total_user_count - paid_user_count`
+
+**Callouts:**
+
+* Even though Dedicated is a paid-only product, there are only free users in January-March 2022. 
+This is because there were not yet active paid subscriptions for Dedicated.
+* There are edge cases where `paid_user_count` is greater than `total_user_count` (ex: more Dedicated licenses were sold than there were registered Dedicated users). In this case, we set `paid_user_count` to equal `total_user_count`.
 
 {% enddocs %}
