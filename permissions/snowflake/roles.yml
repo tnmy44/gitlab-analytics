@@ -5753,6 +5753,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - lzhao:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ateclemariam:
       member_of:
         - analyst_sales
@@ -6844,6 +6849,10 @@ users:
       can_login: true
       member_of:
         - wmeek
+  - lzhao:
+      can_login: true
+      member_of:
+        - lzhao
   - rchong:
       can_login: true
       member_of:
