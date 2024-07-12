@@ -5988,6 +5988,11 @@ roles:
         - snowflake_db
       warehouses:
         - reporting
+  - nisong:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - wmeek:
       member_of:
         - snowflake_analyst
@@ -6891,6 +6896,10 @@ users:
       can_login: true
       member_of:
         - amcdonald
+  - nisong:
+      can_login: true
+      member_of:
+        - nisong
   - testtableau:
       can_login: true
       member_of:
