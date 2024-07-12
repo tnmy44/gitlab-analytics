@@ -13,8 +13,10 @@ DBT_DEV_FULL_REFRESH=$$(if [ ! -z "$(FULL_REFRESH)" ]; then echo "--full-refresh
 DBT_DEV_VARS= $$(if [ ! -z "$(VARS)" ]; then echo "--vars {$(VARS)}"; fi)
 DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
-SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql')
+SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql\b')
 SQLFLUFF_DEV_MODEL_PATH=$$(find . -name "$(MODEL).sql")
+SQLFLUFF_DEV_MODELS=$$(if [ -z "$(MODEL)" ]; then echo $(SQLFLUFF_DEV_CHANGES); else echo $(SQLFLUFF_DEV_MODEL_PATH); fi)
+SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; fi)
 
 ## Commands
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE)
@@ -22,11 +24,8 @@ DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build --select $(D
 
 DBT_DEV_BUILD_CHANGES_BUILD_SELECTOR_COMMAND= dbt $(DBT_DEV_FAIL_FAST) list --selector in_between_list # $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
+SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS)
 
-SQLFLUFF_LINT_CHANGES_COMMAND=sqlfluff lint $(SQLFLUFF_DEV_CHANGES)
-SQLFLUFF_FIX_CHANGES_COMMAND=sqlfluff fix $(SQLFLUFF_DEV_CHANGES)
-SQLFLUFF_LINT_MODEL_COMMAND=sqlfluff lint $(SQLFLUFF_DEV_MODEL_PATH)
-SQLFLUFF_FIX_MODEL_COMMAND=sqlfluff fix $(SQLFLUFF_DEV_MODEL_PATH)
 
 
 help:
@@ -45,10 +44,9 @@ help:
 		 - TARGET - a dbt target to use that is not the default \n \
 		 - OVERRIDE_REFERENCE - defaults to false, providing any value will cause the reference state to not be downloaded \n \
 		 - PROFILE_TARGET - a combination of profile director and target, used in the CI jobs \n \
-    - lint-changes: will lint all of the changed sql files \n \
-    - lint-fix-changes: will correct available lint errors on all changes sql files \n \
-    - lint-model: will lint the dbt model provided with the MODEL variable \n \
-    - lint-fix-model: will correct available lint errors in the dbt model provided with the MODEL variable \n \
+    - lint-models: will lint or fix all of the changed sql files or the provided model \n \
+     - MODEL: overrides the list of changed files for the provided file name \n \
+     - FIX: defaults to false, providing any value will set to true and make possible changes to files \n \
 	 \n \
 	------------------------------------------------------------"
 
@@ -77,23 +75,11 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 1)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
+	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 1)
 
-lint-changes:
-	@echo $(SQLFLUFF_LINT_CHANGES_COMMAND)
-	@$(SQLFLUFF_LINT_CHANGES_COMMAND)
-
-lint-fix-changes:
-	@echo $(SQLFLUFF_FIX_CHANGES_COMMAND)
-	@$(SQLFLUFF_FIX_CHANGES_COMMAND)
-
-lint-model:
-	@echo $(SQLFLUFF_LINT_MODEL_COMMAND)
-	@$(SQLFLUFF_LINT_MODEL_COMMAND)
-
-lint-fix-model:
-	@echo $(SQLFLUFF_FIX_MODEL_COMMAND)
-	@$(SQLFLUFF_FIX_MODEL_COMMAND)
+lint-models:
+	@echo $(SQLFLUFF_COMMAND)
+	@$(SQLFLUFF_COMMAND)
 
 test-selector:
 	@echo python -c "import development_commands; development_commands.space_separated_to_yaml($(DBT_DEV_SELECTION))"
