@@ -62,13 +62,7 @@ team_member_absence AS (
     total_hours,
     recorded_hours,
     absence_status,
-    employee_day_length,
-    created_by,
-    updated_by,
-    model_created_date,
-    model_updated_date,
-    dbt_updated_at,
-    dbt_created_at
+    employee_day_length
   FROM {{ ref('fct_team_member_absence') }}
 ),
 
