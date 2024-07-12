@@ -22,8 +22,6 @@ SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; f
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE)
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build --select $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
-DBT_DEV_BUILD_CHANGES_BUILD_SELECTOR_COMMAND= dbt $(DBT_DEV_FAIL_FAST) list --selector in_between_list # $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
-
 SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS)
 
 
@@ -80,8 +78,4 @@ build-changes:
 lint-models:
 	@echo $(SQLFLUFF_COMMAND)
 	@$(SQLFLUFF_COMMAND)
-
-test-selector:
-	@echo python -c "import development_commands; development_commands.space_separated_to_yaml($(DBT_DEV_SELECTION))"
-	@python -c "import development_commands; development_commands.space_separated_to_yaml('$(DBT_DEV_SELECTION)')" 
-	@$(DBT_DEV_BUILD_CHANGES_BUILD_SELECTOR_COMMAND)
+	
