@@ -2105,10 +2105,6 @@ models:
       description: '{{ doc("event_category") }}'
     - name: event_action
       description: '{{ doc("event_action") }}'
-    - name: event_label
-      description: '{{ doc("event_label") }}'
-    - name: event_property
-      description: '{{ doc("event_property") }}'
     - name: language
       description: '{{ doc("code_suggestions_language") }}'
     - name: delivery_type

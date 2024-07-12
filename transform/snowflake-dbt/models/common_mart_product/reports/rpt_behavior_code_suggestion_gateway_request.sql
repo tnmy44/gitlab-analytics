@@ -19,8 +19,6 @@ WITH gitlab_ai_gateway_request_events AS (
     app_id,
     event_category,
     event_action,
-    event_label,
-    event_property,
 
     --basic request properties available on the gateway request
     language,
