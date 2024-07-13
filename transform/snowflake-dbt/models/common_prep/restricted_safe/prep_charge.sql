@@ -195,7 +195,8 @@
       zuora_rate_plan_charge.updated_date::DATE                         AS charge_updated_date,
       DATEDIFF(month, zuora_rate_plan_charge.effective_start_month::DATE, zuora_rate_plan_charge.effective_end_month::DATE)
                                                                         AS charge_term,
-zuora_rate_plan_charge.billing_period,
+      zuora_rate_plan_charge.billing_period,
+      
       --Additive Fields
       zuora_rate_plan_charge.mrr,
       LAG(zuora_rate_plan_charge.mrr,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
