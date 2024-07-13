@@ -399,7 +399,7 @@
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@iweeks",
-    updated_by="@chrissharp",
+    updated_by="@apiaseczna",
     created_date="2021-04-28",
-    updated_date="2023-06-13"
+    updated_date="2024-07-13"
 ) }}
