@@ -5,7 +5,8 @@
     ('zuora_order_action_rate_plan','zuora_query_api_order_action_rate_plan_source'),
     ('zuora_order_action', 'zuora_order_action_source'),
     ('revenue_contract_line', 'zuora_revenue_revenue_contract_line_source'),
-    ('zuora_order', 'zuora_order_source')
+    ('zuora_order', 'zuora_order_source'),
+    ('charge_contractual_value', 'zuora_query_api_charge_contractual_value_source')
 ])}}
 
 , sfdc_account AS (
@@ -196,7 +197,7 @@
       DATEDIFF(month, zuora_rate_plan_charge.effective_start_month::DATE, zuora_rate_plan_charge.effective_end_month::DATE)
                                                                         AS charge_term,
       zuora_rate_plan_charge.billing_period,
-      
+
       --Additive Fields
       zuora_rate_plan_charge.mrr,
       LAG(zuora_rate_plan_charge.mrr,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
@@ -219,6 +220,7 @@
       previous_mrr * 12                                                 AS previous_arr,
       zuora_rate_plan_charge.delta_mrc * 12                             AS delta_arc,
       delta_mrr * 12                                                    AS delta_arr,
+      charge_contractual_value.elp                                      AS elp,
       zuora_rate_plan_charge.quantity,
       LAG(zuora_rate_plan_charge.quantity,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
                                                    ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
@@ -256,6 +258,8 @@
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN charge_to_order
       ON zuora_rate_plan_charge.rate_plan_charge_id = charge_to_order.rate_plan_charge_id
+    LEFT JOIN charge_contractual_value
+      ON charge_contractual_value.rate_plan_charge_id = zuora_rate_plan_charge.rate_plan_charge_id
 
  ), manual_charges_prep AS (
   
@@ -334,6 +338,7 @@
       NULL                                                                                  AS previous_arr,
       NULL                                                                                  AS delta_arc,
       NULL                                                                                  AS delta_arr,
+      NULL                                                                                  AS elp,
       0                                                                                     AS quantity,
       NULL                                                                                  AS previous_quantity_calc,
       NULL                                                                                  AS previous_quantity,
