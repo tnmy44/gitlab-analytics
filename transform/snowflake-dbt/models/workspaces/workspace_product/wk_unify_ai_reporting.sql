@@ -301,7 +301,7 @@ APPROX_PERCENTILE(e.event_value,0.5)  AS metric_value
 FROM
 {{ ref('mart_behavior_structured_event') }} e 
 LEFT JOIN 
-client_mapper ON c.event_property = e.event_property
+client_mapper c ON c.event_property = e.event_property
 WHERE 
 e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
@@ -338,7 +338,7 @@ APPROX_PERCENTILE(e.event_value,0.99)  AS metric_value
 FROM
 {{ ref('mart_behavior_structured_event') }} e 
 LEFT JOIN 
-client_mapper ON c.event_property = e.event_property
+client_mapper c ON c.event_property = e.event_property
 WHERE 
 e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
