@@ -111,8 +111,6 @@ def drop_stale_dev_tables() -> None:
 
     try:
         connection = engine.connect()
-    except:
-        logging.info(f"Failed to connect to snowflake")
 
         for database, schema, table in stale_tables:
             fully_qualified_table_name = f'"{database}"."{schema}"."{table}"'
@@ -122,7 +120,8 @@ def drop_stale_dev_tables() -> None:
                 # connection.execute(drop_query)
             except:
                 logging.info(f"Failed to drop table: {fully_qualified_table_name}")
-
+    except:
+        logging.info(f"Failed to connect to snowflake")
     finally:
         connection.close()
         engine.dispose()
