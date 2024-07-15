@@ -345,7 +345,6 @@ AND
 e.event_action = 'ai_response_time'
 GROUP BY ALL
 
-),
 ), weekly_p50_chunk AS (
 
 SELECT
@@ -420,7 +419,6 @@ AND
 e.event_action = 'ai_response_time'
 GROUP BY ALL
 
-),
 ), monthly_p50_chunk AS (
 
 SELECT
