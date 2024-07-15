@@ -20,7 +20,7 @@ where
 SELECT
 
 --mart_arr_all columns
-    COALESCE(mart_arr_all.arr_month,product_usage_primary_instance.snapshot_month) as arr_month,
+    mart_arr_all.arr_month,
     mart_arr_all.dim_billing_account_id,
     mart_arr_all.dim_crm_account_id,
     mart_arr_all.dim_subscription_id,
@@ -276,7 +276,7 @@ FROM
   mart_arr_all
   LEFT JOIN product_usage_primary_instance
     ON  product_usage_primary_instance.dim_subscription_id_original =    mart_arr_all.dim_subscription_id_original
-    AND     product_usage_primary_instance.snapshot_month =   COALESCE(mart_arr_all.arr_month,product_usage_primary_instance.snapshot_month)
+    AND     product_usage_primary_instance.snapshot_month =   mart_arr_all.arr_month
     AND     product_usage_primary_instance.delivery_type =  mart_arr_all.product_delivery_type
 )
 
