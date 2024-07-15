@@ -46,6 +46,7 @@ joined AS (
       WHEN deviation_from_comp_calc <= 0.1 THEN 0.5
       WHEN deviation_from_comp_calc <= 0.15 THEN 0.75
       WHEN deviation_from_comp_calc <= 1 THEN 1
+      ELSE NULL
     END AS weighted_deviated_from_comp_calc
   FROM employee_directory_intermediate
   LEFT JOIN comp_band
