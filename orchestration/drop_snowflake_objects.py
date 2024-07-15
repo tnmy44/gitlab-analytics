@@ -88,7 +88,7 @@ def drop_databases() -> None:
         drop_query = f"""DROP DATABASE "{database}";"""
         try:
             connection = engine.connect()
-            # connection.execute(drop_query)
+            connection.execute(drop_query)
         except:
             logging.info(f"Failed to drop database: {database}")
         finally:
@@ -117,7 +117,7 @@ def drop_stale_dev_tables() -> None:
             drop_query = f"DROP TABLE {fully_qualified_table_name};"
             try:
                 logging.info(f"Running: {drop_query}")
-                # connection.execute(drop_query)
+                connection.execute(drop_query)
             except:
                 logging.info(f"Failed to drop table: {fully_qualified_table_name}")
     except:
