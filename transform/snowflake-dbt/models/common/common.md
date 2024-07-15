@@ -1085,7 +1085,6 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 **Business Logic in this Model:**
 - `is_last_ping_of_month` = last ping created per calendar month per installation (`dim_installation_id`)
 - `is_last_ping_of_week` = last ping created per calendar week per installation (`dim_installation_id`)
-- `ping_delivery_type` = `IFF(uuid/dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f', 'SaaS', 'Self-Managed')`
 - `is_internal` = TRUE WHERE:
   - uuid/dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
   - (OR) installation_type = 'gitlab-development-kit'
