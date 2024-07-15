@@ -220,7 +220,7 @@
       previous_mrr * 12                                                 AS previous_arr,
       zuora_rate_plan_charge.delta_mrc * 12                             AS delta_arc,
       delta_mrr * 12                                                    AS delta_arr,
-      charge_contractual_value.elp                                      AS elp,
+      charge_contractual_value.elp                                      AS extended_list_price,
       zuora_rate_plan_charge.quantity,
       LAG(zuora_rate_plan_charge.quantity,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
                                                    ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
@@ -338,7 +338,7 @@
       NULL                                                                                  AS previous_arr,
       NULL                                                                                  AS delta_arc,
       NULL                                                                                  AS delta_arr,
-      NULL                                                                                  AS elp,
+      NULL                                                                                  AS extended_list_price,
       0                                                                                     AS quantity,
       NULL                                                                                  AS previous_quantity_calc,
       NULL                                                                                  AS previous_quantity,
