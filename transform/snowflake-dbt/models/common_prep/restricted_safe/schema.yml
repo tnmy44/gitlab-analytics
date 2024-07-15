@@ -29,6 +29,8 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+      - name: elp
+        description: Extended List Price
   
   - name: prep_charge_mrr
     description: '{{ doc("prep_charge_mrr") }}'
