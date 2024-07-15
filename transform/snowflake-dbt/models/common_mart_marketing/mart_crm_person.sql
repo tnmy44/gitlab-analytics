@@ -120,6 +120,7 @@
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       is_valuable_signup,
+      dim_crm_person.person_role,
       dim_crm_person.email_hash,
       dim_crm_person.status,
       dim_crm_person.sfdc_record_type,

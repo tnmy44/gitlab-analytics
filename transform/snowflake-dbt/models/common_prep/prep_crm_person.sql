@@ -146,7 +146,9 @@ WITH biz_person AS (
       person_score,
       behavior_score,
       contact_title                                 AS title,
+      contact_role                                  AS person_role,
       it_job_title_hierarchy,
+      contact_role,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
@@ -314,7 +316,9 @@ WITH biz_person AS (
       person_score,
       behavior_score,
       title,
+      NULL                                       AS person_role,
       it_job_title_hierarchy,
+      NULL                                       AS contact_role,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
@@ -509,12 +513,12 @@ WITH biz_person AS (
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
     LEFT JOIN prep_bizible_touchpoint_information
-      ON crm_person_final.bizible_person_id=prep_bizible_touchpoint_information.bizible_person_id
+      ON crm_person_final.sfdc_record_id=prep_bizible_touchpoint_information.sfdc_record_id
     LEFT JOIN prep_location_country
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
       AND LEN(two_letter_person_first_country) = 2
-    WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
+    WHERE crm_person_final.sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
 
