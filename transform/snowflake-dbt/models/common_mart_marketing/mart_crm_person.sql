@@ -124,6 +124,7 @@
       dim_crm_person.status,
       dim_crm_person.sfdc_record_type,
       dim_crm_person.lead_source,
+      dim_crm_person.inactive_contact,
       dim_crm_person.title,
       dim_crm_person.was_converted_lead,
       dim_crm_person.source_buckets,
@@ -321,5 +322,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-05-17",
+    updated_date="2024-07-15",
   ) }}  
