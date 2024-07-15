@@ -2386,6 +2386,22 @@ roles:
             - prod.restricted_safe_common_mart_product.*
             - prod.workspace_data_science.*
             - prod.workspace_sales.*
+  - commonroom_sensitive:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+            - prep
+        schemas:
+          read:
+            - raw.commonroom
+            - prep.commonroom
+        tables:
+          read:
+            - raw.commonroom.*
+            - prep.commonroom.*
   - restricted_workspace_people:
       warehouses:
         - reporting
@@ -3431,6 +3447,12 @@ roles:
         - linkedin_ads
       warehouses:
         - dev_xs
+  - dmurphy:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - dpeterson:
       member_of:
         - analyst_growth
@@ -3576,6 +3598,12 @@ roles:
           write:
             - raw.netsuite_fivetran.*
             - raw.workday_hcm.*
+  - fkhalid:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - frose:
       member_of:
         - snowflake_analyst
@@ -3737,6 +3765,12 @@ roles:
           write:
             - jcaine_prep.*.*
             - jcaine_prod.*.*
+  - jcoghlan:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - jcolyer:
       member_of:
         - gitlab_dotcom
@@ -3811,7 +3845,6 @@ roles:
         - zuora_stitch_rest_api
         - zuora_revenue
         - zuora_query_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
@@ -4263,6 +4296,12 @@ roles:
   - lstahlman:
       member_of: []
       warehouses: []
+  - ltickett:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - lvinueza:
       member_of:
         - analyst_finance
@@ -4622,6 +4661,7 @@ roles:
         - dev_xs
   - mxiao:
       member_of:
+        - commonroom_sensitive
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
@@ -4740,7 +4780,6 @@ roles:
         - salesforce_sandbox
         - xactly
         - zuora_stitch_rest_api
-        - jbare
       warehouses:
         - dev_xs
       owns:
@@ -4815,6 +4854,12 @@ roles:
           write:
             - nraisinghani_prep.*.*
             - nraisinghani_prod.*.*
+  - nveenhof:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - nwingfield:
       member_of:
         - analyst_sales
@@ -5105,6 +5150,12 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - rhook:
+      member_of:
+        - commonroom_sensitive
+        - snowflake_analyst
+      warehouses:
+        - reporting
   - rkohnke:
       member_of:
         - analyst_marketing
@@ -5711,6 +5762,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - gengel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - jbaumgardner:
       member_of:
         - snowflake_analyst
@@ -5759,6 +5815,11 @@ roles:
       warehouses:
         - dev_xs
   - vshushlin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - lzhao:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -5995,6 +6056,11 @@ roles:
         - snowflake_db
       warehouses:
         - reporting
+  - nisong:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - wmeek:
       member_of:
         - snowflake_analyst
@@ -6834,6 +6900,14 @@ users:
       can_login: true
       member_of:
         - acunskis
+  - ltickett:
+      can_login: true
+      member_of:
+        - ltickett
+  - dmurphy:
+      can_login: true
+      member_of:
+        - dmurphy
   - avpfestin:
       can_login: true
       member_of:
@@ -6850,10 +6924,22 @@ users:
       can_login: true
       member_of:
         - aevans
+  - nveenhof:
+      can_login: true
+      member_of:
+        - nveenhof
+  - jcoghlan:
+      can_login: true
+      member_of:
+        - jcoghlan
   - wmeek:
       can_login: true
       member_of:
         - wmeek
+  - lzhao:
+      can_login: true
+      member_of:
+        - lzhao
   - rchong:
       can_login: true
       member_of:
@@ -6878,6 +6964,18 @@ users:
       can_login: true
       member_of:
         - lanzures
+  - gengel:
+      can_login: true
+      member_of:
+        - gengel
+  - rhook:
+      can_login: true
+      member_of:
+        - rhook
+  - fkhalid:
+      can_login: true
+      member_of:
+        - fkhalid
   - jdleon:
       can_login: true
       member_of:
@@ -6890,6 +6988,10 @@ users:
       can_login: true
       member_of:
         - amcdonald
+  - nisong:
+      can_login: true
+      member_of:
+        - nisong
   - testtableau:
       can_login: true
       member_of:

@@ -7099,12 +7099,6 @@ users:
     site_role: Unlicensed
     auth_setting: SAML
     groups: []
-  - user_name: mlancini
-    user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mlake
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -12117,6 +12111,24 @@ users:
     groups:
       - General All Access
   - user_name: nklick
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: rvider
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: apham
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: nisong
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
