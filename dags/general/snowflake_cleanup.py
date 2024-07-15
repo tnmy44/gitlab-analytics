@@ -76,7 +76,7 @@ purge_clones = KubernetesPodOperator(
 # Task 2
 drop_dev_cmd = f"""
     {clone_repo_cmd} &&
-    analytics/orchestration/drop_snowflake_objects.py drop_dev_schemas
+    analytics/orchestration/drop_snowflake_objects.py drop_stale_dev_tables
 """
 purge_dev_schemas = KubernetesPodOperator(
     **gitlab_defaults,

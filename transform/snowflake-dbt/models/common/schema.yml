@@ -2484,6 +2484,10 @@ models:
         description: The number of projects that are presently associated with the namespace.
       - name: has_code_suggestions_enabled
         description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_order_hist
     description: '{{ doc("dim_order_hist") }}'
@@ -2642,6 +2646,10 @@ models:
           - not_null
       - name: masked_label_title
         description: '{{ doc("label_title") }}'
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
@@ -2656,6 +2664,10 @@ models:
           - not_null
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
@@ -2823,6 +2835,10 @@ models:
       - name: dim_plan_sk_at_creation
         data_tests:
           - not_null
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_epic
     description: '{{ doc("dim_epic") }}'
@@ -2854,6 +2870,10 @@ models:
           - not_null
       - name: is_system
         description: boolean flag allowing us to identify if a note is automatically created by the system or if it is a user's action
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_issue_links
     description: '{{ doc("dim_issue_links") }}'
