@@ -6880,6 +6880,14 @@ users:
       can_login: true
       member_of:
         - acunskis
+  - ltickett:
+      can_login: true
+      member_of:
+        - ltickett
+  - dmurphy:
+      can_login: true
+      member_of:
+        - dmurphy
   - avpfestin:
       can_login: true
       member_of:
@@ -6896,6 +6904,14 @@ users:
       can_login: true
       member_of:
         - aevans
+  - nveenhof:
+      can_login: true
+      member_of:
+        - nveenhof
+  - jcoghlan:
+      can_login: true
+      member_of:
+        - jcoghlan
   - wmeek:
       can_login: true
       member_of:
@@ -6932,6 +6948,14 @@ users:
       can_login: true
       member_of:
         - gengel
+  - rhook:
+      can_login: true
+      member_of:
+        - rhook
+  - fkhalid:
+      can_login: true
+      member_of:
+        - fkhalid
   - jdleon:
       can_login: true
       member_of:
