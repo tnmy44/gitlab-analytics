@@ -61,7 +61,7 @@ department_aggregated AS (
     'department_breakout'                  AS breakout_type,
     division_mapped_current                AS division,
     department,
-    {{ lines_to_repeat }}    {{lines_to_repeat}}
+    {{ lines_to_repeat }} 
 
 ),
 
@@ -71,7 +71,7 @@ division_aggregated AS (
     'division_breakout'                    AS breakout_type,
     division_mapped_current                AS division,
     'division_breakout'                    AS department,
-    {{ lines_to_repeat }}    {{lines_to_repeat}}
+    {{ lines_to_repeat }} 
 
 ),
 
@@ -81,7 +81,7 @@ company_aggregated AS (
     'company_breakout'                     AS breakout_type,
     'Company - Overall'                    AS division,
     'company_breakout'                     AS department,
-    {{ lines_to_repeat }}    {{ lines_to_repeat }}
+    {{ lines_to_repeat }} 
 
 ),
 
