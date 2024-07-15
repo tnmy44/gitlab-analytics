@@ -65,7 +65,9 @@ SELECT
     WHEN department in ('Field Marketing', 'Partner Marketing')
       THEN 'Regional Marketing'
     WHEN department in ('Account Based Marketing', 'Campaigns', 'Search Marketing')
-      THEN 'Digital Marketing'      
+      THEN 'Digital Marketing'   
+    WHEN department = 'Community Relations'
+      THEN 'Developer Relations'         
     ELSE department
   END AS modified_department,
   CASE
