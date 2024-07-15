@@ -53,7 +53,7 @@ This model captures the count of total, paid, and free users by month, delivery 
 * The current month is excluded.
 * Only paid seats from GitLab base products (i.e., normal tiers and not add-ons) are included in 
 the paid user count. Removing this filter could lead to double-counting of users.
-  * The exception is Enterprise Agile Planning seats (those _are_ included) since they are 
+  * The exception is [Enterprise Agile Planning seats](https://docs.gitlab.com/ee/subscriptions/gitlab_com/#enterprise-agile-planning) (those _are_ included) since they are 
   incremental seats (and a base product license is not required to use them).
 * Seats are limited to subscriptions with a status of `Active` or `Cancelled`.
 
