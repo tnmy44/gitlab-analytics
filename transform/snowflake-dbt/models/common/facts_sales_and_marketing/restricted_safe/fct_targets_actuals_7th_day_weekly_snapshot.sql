@@ -17,6 +17,12 @@ prep_date AS (
   SELECT *
   FROM {{ ref('prep_date') }}
 
+),
+
+live_actuals AS (
+
+  SELECT *
+  FROM {{ ref('fct_crm_opportunity') }}
 
 ),
 
@@ -43,7 +49,6 @@ total_targets AS (
 
 ),
 
-
 daily_actuals AS (
 
   SELECT
@@ -58,7 +63,6 @@ daily_actuals AS (
     SUM(open_1plus_net_arr_in_snapshot_quarter) AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(open_3plus_net_arr_in_snapshot_quarter) AS open_3plus_net_arr_in_snapshot_quarter,
     SUM(open_4plus_net_arr_in_snapshot_quarter) AS open_4plus_net_arr_in_snapshot_quarter
-
   FROM actuals
   {{ dbt_utils.group_by(n=7) }}
 ),
@@ -66,15 +70,18 @@ daily_actuals AS (
 quarterly_actuals AS (
 
   SELECT
-    actuals.snapshot_fiscal_quarter_name,
-    actuals.snapshot_fiscal_quarter_date,
-    actuals.dim_crm_current_account_set_hierarchy_sk,
-    actuals.dim_sales_qualified_source_id,
-    actuals.dim_order_type_id,
-    SUM(actuals.booked_net_arr_in_snapshot_quarter) AS total_booked_net_arr
-  FROM actuals
-  WHERE snapshot_date = snapshot_last_day_of_fiscal_quarter
+    close_fiscal_quarter_name,
+    close_fiscal_quarter_date,
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    SUM(booked_net_arr)            AS total_booked_net_arr,
+    SUM(open_1plus_net_arr)        AS total_open_1plus_net_arr,
+    SUM(open_3plus_net_arr)        AS total_open_3plus_net_arr,
+    SUM(open_4plus_net_arr)        AS total_open_4plus_net_arr
+  FROM live_actuals
   {{ dbt_utils.group_by(n=5) }}
+
 
 ),
 
@@ -94,8 +101,8 @@ combined_data AS (
     dim_crm_current_account_set_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
-    snapshot_fiscal_quarter_name,
-    snapshot_fiscal_quarter_date
+    close_fiscal_quarter_name,
+    close_fiscal_quarter_date
   FROM quarterly_actuals
 
   UNION
@@ -153,7 +160,10 @@ final AS (
     SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter)               AS coverage_open_1plus_net_arr,
     SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter)               AS coverage_open_3plus_net_arr,
     SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter)               AS coverage_open_4plus_net_arr,
-    SUM(quarterly_actuals.total_booked_net_arr)                             AS total_booked_net_arr
+    SUM(quarterly_actuals.total_booked_net_arr)                      AS total_booked_net_arr,
+    SUM(quarterly_actuals.total_open_1plus_net_arr)        AS total_open_1plus_net_arr,
+    SUM(quarterly_actuals.total_open_3plus_net_arr)        AS total_open_3plus_net_arr,
+    SUM(quarterly_actuals.total_open_4plus_net_arr)        AS total_open_4plus_net_arr
   FROM base
   LEFT JOIN total_targets
     ON base.fiscal_quarter_name = total_targets.fiscal_quarter_name
@@ -166,7 +176,7 @@ final AS (
       AND base.dim_crm_current_account_set_hierarchy_sk = daily_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = daily_actuals.dim_order_type_id
   LEFT JOIN quarterly_actuals
-    ON base.fiscal_quarter_name = quarterly_actuals.snapshot_fiscal_quarter_name
+    ON base.fiscal_quarter_name = quarterly_actuals.close_fiscal_quarter_name
       AND base.dim_sales_qualified_source_id = quarterly_actuals.dim_sales_qualified_source_id
       AND base.dim_crm_current_account_set_hierarchy_sk = quarterly_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = quarterly_actuals.dim_order_type_id
