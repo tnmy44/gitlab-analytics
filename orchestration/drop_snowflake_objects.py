@@ -88,7 +88,7 @@ def drop_databases() -> None:
         drop_query = f"""DROP DATABASE "{database}";"""
         try:
             connection = engine.connect()
-            connection.execute(drop_query)
+            # connection.execute(drop_query)
         except:
             logging.info(f"Failed to drop database: {database}")
         finally:
@@ -109,20 +109,23 @@ def drop_stale_dev_tables() -> None:
     stale_tables = get_list_of_stale_dev_tables(engine)
     logging.info(f"Dropping {len(stale_tables)} stale tables...")
 
-    for database, schema, table in stale_tables:
-        fully_qualified_table_name = f'"{database}"."{schema}"."{table}"'
-        drop_query = f"DROP TABLE {fully_qualified_table_name};"
-        logging.info(f"Running: {drop_query}")
-        try:
-            connection = engine.connect()
-            connection.execute(drop_query)
-        except:
-            logging.info(f"Failed to drop table: {fully_qualified_table_name}")
-        finally:
-            connection.close()
-            engine.dispose()
+    try:
+        connection = engine.connect()
+    except:
+        logging.info(f"Failed to connect to snowflake")
 
-    logging.info("Schemas dropped successfully.")
+        for database, schema, table in stale_tables:
+            fully_qualified_table_name = f'"{database}"."{schema}"."{table}"'
+            drop_query = f"DROP TABLE {fully_qualified_table_name};"
+            try:
+                logging.info(f"Running: {drop_query}")
+                # connection.execute(drop_query)
+            except:
+                logging.info(f"Failed to drop table: {fully_qualified_table_name}")
+
+    finally:
+        connection.close()
+        engine.dispose()
 
 
 if __name__ == "__main__":
