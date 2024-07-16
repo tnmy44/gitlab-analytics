@@ -12,6 +12,7 @@
     SELECT DISTINCT
         dim_crm_person_id,
         sfdc_record_id,
+        email_hash,
         sfdc_record_type,
         person_first_country,
         source_buckets,
@@ -24,6 +25,7 @@
         account_demographics_upa_country,
         account_demographics_territory,
         person_order_type,
+        is_mql,
         dim_crm_opportunity_id,
         opp_order_type,
         sales_qualified_source_name,
@@ -57,6 +59,7 @@
     SELECT
         dim_crm_person_id,
         sfdc_record_id,
+        email_hash,
         sfdc_record_type,
         person_first_country,
         source_buckets,
@@ -69,6 +72,7 @@
         account_demographics_upa_country,
         account_demographics_territory,
         person_order_type,
+        is_mql,
         dim_crm_opportunity_id,
         opp_order_type,
         sales_qualified_source_name,
@@ -119,7 +123,7 @@
             ELSE NULL
         END AS sao_to_close_days        
     FROM cohort_base
-    {{dbt_utils.group_by(n=38)}}
+    {{dbt_utils.group_by(n=40)}}
 
 ) 
 
@@ -128,5 +132,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2024-06-20",
-    updated_date="2024-06-20",
+    updated_date="2024-06-24",
 ) }}
