@@ -3869,7 +3869,6 @@ roles:
         - analyst_finance
         - analyst_marketing
         - analyst_sales
-        - bamboohr
         - customers_db
         - data_team_analyst
         - data_science_sensitive
@@ -3877,13 +3876,9 @@ roles:
         - data_science_readonly
         - gainsight
         - gitlab_dotcom
-        - hightouch_role
-        - netsuite
         - postgres_pipeline
         - snowflake_analyst_safe
         - snowplow
-        - static_admin
-        - workday
         - feature_store
       warehouses:
         - dev_xs
