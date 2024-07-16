@@ -4,6 +4,7 @@
 ) }}
 
 WITH latest_ping_sent AS (
+
     SELECT DISTINCT
         dim_installation_id,
         host_name,
@@ -38,7 +39,7 @@ WITH latest_ping_sent AS (
         dim_parent_crm_account_id,
         ping_deployment_type,
         date_of_latest_ping_sent
-    FROM {{ ref('latest_ping_sent') }}
+    FROM latest_ping_sent
     WHERE latest_major_minor_version >= 1600
     GROUP BY ALL
 
@@ -67,7 +68,7 @@ WITH latest_ping_sent AS (
         days_since_first_ping_on_16.months_since_first_ping_sent_on_1600_or_higher
     FROM all_installations_on_16
     INNER JOIN days_since_first_ping_on_16
-        ON days_since_first_ping_on_16.dim_installation_id = days_since_first_ping_on_16.dim_installation_id
+        ON all_installations_on_16.dim_installation_id = days_since_first_ping_on_16.dim_installation_id
     WHERE all_installations_on_16.ping_deployment_type != 'GitLab.com' -- Our organization manages version upgrades for the Gitlab.com deployment
         AND days_since_first_ping_sent_on_1600_or_higher BETWEEN 335 AND 365
 
