@@ -3007,11 +3007,6 @@ roles:
         - salesforce
       warehouses:
         - dev_xs
-  - aherrero:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - akramer:
       member_of: []
       warehouses: []
@@ -3414,7 +3409,6 @@ roles:
         - analyst_marketing
         - data_team_analyst
         - snowflake_analyst_safe
-        - xactly
       warehouses:
         - dev_xs
   - dmack:
@@ -3875,7 +3869,6 @@ roles:
         - analyst_finance
         - analyst_marketing
         - analyst_sales
-        - bamboohr
         - customers_db
         - data_team_analyst
         - data_science_sensitive
@@ -3883,13 +3876,9 @@ roles:
         - data_science_readonly
         - gainsight
         - gitlab_dotcom
-        - hightouch_role
-        - netsuite
         - postgres_pipeline
         - snowflake_analyst_safe
         - snowplow
-        - static_admin
-        - workday
         - feature_store
       warehouses:
         - dev_xs
@@ -5974,11 +5963,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - aevans:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - tmccaslin:
       member_of:
         - snowflake_analyst
@@ -6131,10 +6115,6 @@ users:
       can_login: true
       member_of:
         - ahan
-  - aherrero:
-      can_login: true
-      member_of:
-        - aherrero
   - akramer:
       can_login: false
       member_of: []
@@ -6906,10 +6886,6 @@ users:
       can_login: true
       member_of:
         - acook
-  - aevans:
-      can_login: true
-      member_of:
-        - aevans
   - nveenhof:
       can_login: true
       member_of:
