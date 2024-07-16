@@ -264,6 +264,10 @@ def slack_succeeded_task(context):
     return slack_alert.execute(context=None)
 
 
+def number_of_dbt_threads_argument(number_of_threads):
+    return f"--threads {number_of_threads}"
+
+
 # GitLab default settings for all DAGs
 gitlab_defaults = dict(
     get_logs=True,
@@ -369,7 +373,3 @@ dbt_install_deps_and_seed_nosha_cmd = f"""
 
 # command to exclude models (for test models) in dbt test command
 run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"
-
-
-def number_of_dbt_threads_argument(number_of_threads):
-    return f"--threads {number_of_threads}"
