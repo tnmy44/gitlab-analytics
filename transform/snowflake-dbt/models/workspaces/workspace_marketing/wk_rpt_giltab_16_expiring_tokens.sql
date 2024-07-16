@@ -89,7 +89,7 @@ SELECT DISTINCT
     final.dim_crm_account_id,
     mart_crm_person.sfdc_record_id,
     mart_crm_person.inactive_contact,
-    mart_crm_person.contact_role
+    mart_crm_person.person_role
 FROM final
 LEFT JOIN {{ ref('mart_crm_person') }}
     ON mart_crm_person.account_id = final.dim_crm_account_id 
