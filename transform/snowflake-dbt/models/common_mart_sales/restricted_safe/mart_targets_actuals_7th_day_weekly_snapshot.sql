@@ -37,18 +37,17 @@ final AS (
 
   SELECT
     targets_actuals.*,
-
-    dim_crm_user_hierarchy.crm_user_sales_segment         AS crm_current_account_set_sales_segment,
-    dim_crm_user_hierarchy.crm_user_geo                   AS crm_current_account_set_geo,
-    dim_crm_user_hierarchy.crm_user_region                AS crm_current_account_set_region,
-    dim_crm_user_hierarchy.crm_user_area                  AS crm_current_account_set_area,
-    dim_crm_user_hierarchy.crm_user_business_unit         AS crm_current_account_set_business_unit,
-    dim_crm_user_hierarchy.crm_user_role_name             AS crm_current_account_set_role_name,
-    dim_crm_user_hierarchy.crm_user_role_level_1          AS crm_current_account_set_role_level_1,
-    dim_crm_user_hierarchy.crm_user_role_level_2          AS crm_current_account_set_role_level_2,
-    dim_crm_user_hierarchy.crm_user_role_level_3          AS crm_current_account_set_role_level_3,
-    dim_crm_user_hierarchy.crm_user_role_level_4          AS crm_current_account_set_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5          AS crm_current_account_set_role_level_5,
+    
+    dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS report_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                                                   AS report_geo,
+    dim_crm_user_hierarchy.crm_user_region                                                                AS report_region,
+    dim_crm_user_hierarchy.crm_user_area                                                                  AS report_area,
+    dim_crm_user_hierarchy.crm_user_role_name                                                             AS report_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                                                          AS report_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                                                          AS report_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                                                          AS report_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                                                          AS report_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                                                          AS report_role_level_5,
 
     -- Dates
     dim_date.current_day_name,
@@ -122,7 +121,7 @@ final AS (
   LEFT JOIN dim_date
     ON targets_actuals.date_actual = dim_date.date_actual
   LEFT JOIN dim_crm_user_hierarchy
-    ON targets_actuals.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+    ON targets_actuals.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
   LEFT JOIN sales_qualified_source
     ON targets_actuals.dim_sales_qualified_source_id = sales_qualified_source.dim_sales_qualified_source_id
   LEFT JOIN order_type
