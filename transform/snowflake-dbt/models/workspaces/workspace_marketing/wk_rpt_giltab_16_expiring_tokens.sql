@@ -92,5 +92,5 @@ SELECT DISTINCT
     mart_crm_person.person_role
 FROM final
 LEFT JOIN {{ ref('mart_crm_person') }}
-    ON mart_crm_person.account_id = final.dim_crm_account_id 
+    ON mart_crm_person.dim_crm_account_id = final.dim_crm_account_id 
         AND CONTAINS(LOWER(person_role),'%gitlab admin%')
