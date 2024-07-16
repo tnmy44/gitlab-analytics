@@ -8692,10 +8692,11 @@ users:
       - General All Access
   - user_name: sfleming
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: sgaudin
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -12123,3 +12124,17 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: msavy
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: rnag
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
