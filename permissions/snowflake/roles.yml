@@ -3007,11 +3007,6 @@ roles:
         - salesforce
       warehouses:
         - dev_xs
-  - aherrero:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - akramer:
       member_of: []
       warehouses: []
@@ -3414,7 +3409,6 @@ roles:
         - analyst_marketing
         - data_team_analyst
         - snowflake_analyst_safe
-        - xactly
       warehouses:
         - dev_xs
   - dmack:
