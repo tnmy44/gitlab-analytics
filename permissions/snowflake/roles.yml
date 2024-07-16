@@ -6125,10 +6125,6 @@ users:
       can_login: true
       member_of:
         - ahan
-  - aherrero:
-      can_login: true
-      member_of:
-        - aherrero
   - akramer:
       can_login: false
       member_of: []
