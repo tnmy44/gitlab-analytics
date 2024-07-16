@@ -30,8 +30,7 @@ final AS (
     fct_crm_opportunity.dim_parent_crm_opportunity_id,
     fct_crm_opportunity.duplicate_opportunity_id,
     fct_crm_opportunity.merged_opportunity_id,
-    fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk,
-    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
+    fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
     fct_crm_opportunity.snapshot_fiscal_year,
@@ -546,8 +545,6 @@ final AS (
   LEFT JOIN dim_crm_user AS account_owner_live
     ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
-  LEFT JOIN dim_crm_user_hierarchy
-    ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
   LEFT JOIN dim_date 
     ON fct_crm_opportunity.snapshot_date = dim_date.date_actual
   LEFT JOIN dim_date created_date

@@ -19,7 +19,7 @@ final AS (
 
   SELECT
     fct_crm_opportunity.opportunity_weekly_snapshot_aggregate_pk,
-    fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
+    fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
 
     dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS crm_current_account_set_sales_segment,
     dim_crm_user_hierarchy.crm_user_geo                                                                   AS crm_current_account_set_geo,
@@ -217,7 +217,7 @@ final AS (
   LEFT JOIN distinct_quarters AS created_date
     ON fct_crm_opportunity.created_fiscal_quarter_date = created_date.first_day_of_fiscal_quarter
   LEFT JOIN dim_crm_user_hierarchy
-    ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+    ON fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
 
 
 )
