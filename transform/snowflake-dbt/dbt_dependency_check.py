@@ -17,12 +17,7 @@ def dbt_model_dependencies_list(model_name_list: list, resource_type: str) -> li
 
     # for each create CLI args as a list of strings
     for model in model_name_list:
-        cli_args = [
-            "list",
-            "--select",
-            f"{model}+",
-            f"--resource-type={resource_type}"
-        ]
+        cli_args = ["list", "--select", f"{model}+", f"--resource-type={resource_type}"]
 
         # run the command for models
         res_models: dbtRunnerResult = dbt.invoke(cli_args)
@@ -43,6 +38,7 @@ def dbt_model_dependencies_list(model_name_list: list, resource_type: str) -> li
         )
 
     return model_dependencies
+
 
 # Find directory name
 dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
