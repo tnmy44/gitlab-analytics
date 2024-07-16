@@ -34,7 +34,6 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_5                                                          AS crm_current_account_set_role_level_5,
 
     --snapshot fields
-
     fct_crm_opportunity.sales_qualified_source,
     fct_crm_opportunity.sales_qualified_source_grouped,
     fct_crm_opportunity.order_type,
