@@ -3,9 +3,9 @@
 ) }}
 
 {{ config({
-    materialized="incremental",
-    unique_key="dim_note_id",
-    on_schema_change="sync_all_columns"
+    "materialized": "incremental",
+    "unique_key": "dim_note_id",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 
