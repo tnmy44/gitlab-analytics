@@ -67,8 +67,8 @@ models_with_dependencies = dbt_model_dependencies_list(model_names, "model")
 models_with_exposures = dbt_model_dependencies_list(model_names, "exposure")
 
 # convert lists to dataframes in order to merge the results into a single output
-models_with_dependencies_df = pd.DataFrame(models_with_dependencies)
-models_with_exposures_df = pd.DataFrame(models_with_exposures)
+models_with_dependencies_df = pd.DataFrame(models_with_dependencies).rename(columns={"model_name": "model_name", "dependencies": "dbt_model_dependencies", "count_dependencies": "dbt_model_dependencies_count"})
+models_with_exposures_df = pd.DataFrame(models_with_exposures).rename(columns={"model_name": "model_name",  "dependencies": "ds_exposure_dependencies", "count_dependencies": "ds_exposure_dependencies_count"})
 
 # merge the two results on model name to get a single output
 models_with_dependencies_and_exposures = pd.merge(
