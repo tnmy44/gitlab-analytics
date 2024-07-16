@@ -46,12 +46,6 @@ The invoice item adjustment source table contains info about the invoice item ad
 
 {% enddocs %}
 
-{% docs zuora_invoice_aging_detail_source %}
-
-This source table contains info about the invoice aging detail. [Link to Documentation](https://knowledgecenter.zuora.com/Zuora_Payments/Zuora_Finance/E_Accounting_Periods/F_View_Accounting_Period_Balances/Accounts_Receivable_Aging#:~:text=nine%20decimal%20places.-,Invoice%20Aging%20Details,click%20%5BDownload%20Aging%20Detail%5D)
-
-{% enddocs %}
-
 {% docs zuora_invoice_payment_source %}
 
 The invoice payment source table contains info about payments made on invoices. [Link to Documentation](https://knowledgecenter.zuora.com/Developer_Platform/API/G_SOAP_API/E1_SOAP_API_Object_Reference/InvoicePayment)
