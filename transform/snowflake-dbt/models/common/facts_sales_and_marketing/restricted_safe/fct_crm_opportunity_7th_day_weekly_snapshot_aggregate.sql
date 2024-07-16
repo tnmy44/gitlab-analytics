@@ -16,7 +16,7 @@ final AS (
 
   SELECT
 
-    {{ dbt_utils.generate_surrogate_key(['snapshot_id', 'dim_crm_current_account_set_hierarchy_sk', 'order_type', 'order_type_grouped', 'stage_name', 'deal_path', 'sales_type', 'sales_qualified_source', 'sales_qualified_source_grouped', 'close_fiscal_quarter_date', 'created_fiscal_quarter_date', 'arr_created_fiscal_quarter_date', 'deal_path_live','sales_qualified_source_live','sales_qualified_source_grouped_live','order_type_live','order_type_grouped_live', 'report_role_name']) }} AS opportunity_weekly_snapshot_aggregate_pk,
+    {{ dbt_utils.generate_surrogate_key(['snapshot_id', 'dim_crm_current_account_set_hierarchy_sk', 'order_type', 'order_type_grouped', 'stage_name', 'deal_path', 'sales_type', 'sales_qualified_source', 'sales_qualified_source_grouped', 'close_fiscal_quarter_date', 'created_fiscal_quarter_date', 'arr_created_fiscal_quarter_date', 'deal_path_live','sales_qualified_source_live','sales_qualified_source_grouped_live','order_type_live','order_type_grouped_live']) }} AS opportunity_weekly_snapshot_aggregate_pk,
 
     -- keys and attributes
     dim_crm_current_account_set_hierarchy_sk,
@@ -36,17 +36,6 @@ final AS (
     sales_qualified_source_grouped_live,
     order_type_live,
     order_type_grouped_live,
-
-    report_segment,
-    report_geo,
-    report_region,
-    report_area,
-    report_role_name,
-    report_role_level_1,
-    report_role_level_2,
-    report_role_level_3,
-    report_role_level_4,
-    report_role_level_5,
 
     --dates
     snapshot_id,
