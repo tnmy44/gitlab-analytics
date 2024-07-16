@@ -15,10 +15,9 @@ WITH dates AS (
 )
 
 {{ dbt_audit(
-    cte_ref="test",
+    cte_ref="dates",
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-06-01",
     updated_date="2023-08-14"
 ) }}
-
