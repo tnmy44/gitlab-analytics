@@ -1,16 +1,21 @@
-WITH jp_ss AS (
+WITH job_profiles_snapshots_source AS (
   SELECT *
   FROM {{ ref('job_profiles_snapshots_source') }}
 ),
 
-jp_hist AS (
+job_profiles_historical_source AS (
   SELECT *
   FROM {{ ref('job_profiles_historical_source') }}
 ),
 
-jp_stage AS (
+max_hist_date_cte AS (
+  SELECT MAX(job_profiles_historical_source.report_effective_date) AS max_hist_date
+  FROM job_profiles_historical_source
+),
+
+job_profiles_stage AS (
   SELECT
-    jp_ss.report_effective_date,
+    job_profiles_snapshots_source.report_effective_date,
     job_workday_id,
     job_code,
     job_profile,
@@ -18,11 +23,9 @@ jp_stage AS (
     job_level,
     job_family,
     IFF(inactive::BOOLEAN = 1, FALSE, TRUE) AS is_job_profile_active
-  FROM jp_ss
-  WHERE jp_ss.report_effective_date > (
-      SELECT MAX(jp_hist.report_effective_date) AS max_hist_date
-      FROM jp_hist
-    )
+  FROM job_profiles_snapshots_source
+  LEFT JOIN max_hist_date_cte 
+    ON job_profiles_snapshots_source.report_effective_date > max_hist_date_cte.max_hist_date
 
   UNION
 
@@ -35,10 +38,10 @@ jp_stage AS (
     job_level,
     job_family,
     is_job_profile_active
-  FROM jp_hist
+  FROM job_profiles_historical_source
 ),
 
-jp AS (
+final AS (
   SELECT
     job_workday_id,
     ROW_NUMBER() OVER (
@@ -57,7 +60,7 @@ jp AS (
     job_level                                                     AS job_level,
     job_family,
     is_job_profile_active                                         AS is_job_profile_active
-  FROM jp_stage
+  FROM job_profiles_stage
 )
 
 SELECT
@@ -70,4 +73,4 @@ SELECT
   is_job_profile_active,
   valid_from,
   valid_to
-FROM jp
+FROM final
