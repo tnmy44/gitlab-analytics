@@ -5968,11 +5968,6 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
-  - aevans:
-      member_of:
-        - snowflake_analyst
-      warehouses:
-        - dev_xs
   - tmccaslin:
       member_of:
         - snowflake_analyst
@@ -6896,10 +6891,6 @@ users:
       can_login: true
       member_of:
         - acook
-  - aevans:
-      can_login: true
-      member_of:
-        - aevans
   - nveenhof:
       can_login: true
       member_of:
