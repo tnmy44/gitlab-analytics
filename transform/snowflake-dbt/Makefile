@@ -52,7 +52,7 @@ SQLFLUFF_DEV_CONFIG=$$(if [ "$(MODE)" == "CI" ] ; then echo "--config .sqlfluff-
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
-DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector unsafe_models --resource-type model --output json > safe_models.json 
+DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector unsafe_models --resource-type model $(DBT_DEV_TARGET) --output json > safe_models.json 
 
 SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS) $(SQLFLUFF_DEV_CONFIG)
 
@@ -110,6 +110,7 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
+	@echo '$(CI_CHANGES)'
 	@echo $(SQLFLUFF_COMMAND)
 	@$(SQLFLUFF_COMMAND)
 
