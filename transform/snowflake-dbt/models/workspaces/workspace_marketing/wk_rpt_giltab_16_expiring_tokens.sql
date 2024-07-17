@@ -3,9 +3,27 @@
     materialized='table'
 ) }}
 
-WITH latest_ping_sent AS (
+WITH mart_ping_instance AS (
 
-    SELECT DISTINCT
+    SELECT
+        dim_installation_id,
+        host_name,
+        is_paid_subscription,
+        major_minor_version_id,
+        latest_subscription_id,
+        crm_account_name,
+        parent_crm_account_name,
+        dim_billing_account_id,
+        dim_parent_crm_account_id,
+        ping_deployment_type,
+        ping_product_tier,
+        ping_edition,
+        ping_created_at
+    FROM {{ ref('mart_ping_instance') }}
+
+), latest_ping_sent AS (
+
+    SELECT
         dim_installation_id,
         host_name,
         is_paid_subscription,
@@ -19,7 +37,7 @@ WITH latest_ping_sent AS (
         ping_product_tier,
         ping_edition,
         ping_created_at::DATE AS date_of_latest_ping_sent
-    FROM {{ ref('mart_ping_instance') }}
+    FROM mart_ping_instance
     WHERE major_minor_version_id != 10000
     QUALIFY RANK() OVER (PARTITION BY dim_installation_id ORDER BY ping_created_at DESC) = 1 --latest ping record
 
@@ -46,20 +64,20 @@ WITH latest_ping_sent AS (
 ), days_since_first_ping_on_16 AS (
 --Not all installations send a ping on every major minor version. It is possible to jump versions or to simply not send a ping while they are on a certain version.
 --This methodology allows us to see the first ping sent on a major minor version at 16.0 or above even if we don't have a ping for all installations that are on 16.0 or higher
-    SELECT DISTINCT
+    SELECT
         dim_installation_id,
         major_minor_version_id,
         ping_created_at::DATE                                                    AS date_of_first_ping_sent_on_1600_or_higher,
         DATEDIFF(DAY, date_of_first_ping_sent_on_1600_or_higher, current_date)   AS days_since_first_ping_sent_on_1600_or_higher,
         DATEDIFF(WEEK, date_of_first_ping_sent_on_1600_or_higher, current_date)  AS weeks_since_first_ping_sent_on_1600_or_higher,
         DATEDIFF(MONTH, date_of_first_ping_sent_on_1600_or_higher, current_date) AS months_since_first_ping_sent_on_1600_or_higher
-    FROM {{ ref('mart_ping_instance') }}
+    FROM mart_ping_instance
     WHERE major_minor_version_id >= 1600
     QUALIFY RANK() OVER (PARTITION BY dim_installation_id ORDER BY ping_created_at ASC) = 1 --first ping record for installations on 1600 or higher
 
 ), combine_ctes AS (
 
-    SELECT DISTINCT
+    SELECT
         all_installations_on_16.*,
         days_since_first_ping_on_16.major_minor_version_id AS first_major_minor_version_sent_on_1600_or_higher,
         days_since_first_ping_on_16.date_of_first_ping_sent_on_1600_or_higher,
@@ -74,7 +92,7 @@ WITH latest_ping_sent AS (
 
 ), final AS (
 
-    SELECT DISTINCT 
+    SELECT 
         combine_ctes.*, 
         mart_arr.dim_crm_account_id
     FROM combine_ctes
