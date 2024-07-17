@@ -38,6 +38,15 @@ each_pto_day AS (
     jsontext['created_at']::TIMESTAMP                   AS pto_created_at
   FROM deduped,
     LATERAL FLATTEN(INPUT => jsontext['ooo_days']::ARRAY) AS ooo_days
+  /*  
+  WHERE CASE
+          WHEN YEAR(end_date) >= '2024'
+            AND uploaded_at::date <= '2024-07-31' --BHR to WD Cutover
+            AND pto_status = 'AP'
+          THEN 0
+          ELSE 1
+          END = 1
+  */        
 
 )
 
