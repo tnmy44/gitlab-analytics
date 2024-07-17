@@ -1215,9 +1215,11 @@ LEFT JOIN cw_base
                     )
         WHEN close_fiscal_year >= 2025
           THEN CONCAT(
-                UPPER(
-                    COALESCE(sfdc_opportunity.opportunity_owner_role, 
-                             sfdc_opportunity.opportunity_account_owner_role)),
+
+                      UPPER(COALESCE(sfdc_opportunity.opportunity_owner_role, sfdc_opportunity.opportunity_account_owner_role)),
+                      '-',
+                      close_fiscal_year
+                      ) 
       END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
 
       DATEDIFF(MONTH, arr_created_fiscal_quarter_date, close_fiscal_quarter_date) AS arr_created_to_close_diff,
