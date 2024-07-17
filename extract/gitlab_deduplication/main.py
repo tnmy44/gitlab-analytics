@@ -70,7 +70,7 @@ def create_backup_table(
     bkp_table_name, original_table_name = create_table_name(
         table_prefix=table_prefix, table_name=table_name
     )
-    query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name}; "
+    query_create_backup_table = f"CREATE OR REPLACE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name}; "
 
     logging.info(f"Backup table DDL : {query_create_backup_table}")
     backup_table = query_executor(snowflake_engine, query_create_backup_table)
