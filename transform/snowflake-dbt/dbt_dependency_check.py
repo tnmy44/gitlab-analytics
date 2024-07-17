@@ -88,8 +88,12 @@ def generate_results(model_names: list) -> None:
     Note: model dependencies count includes the model
     requested + all downstream, so the minimum number of dependencies is 1
     """
-    models_with_dependencies = dbt_model_dependencies_list(model_name_list=model_names, resource_type="model")
-    models_with_exposures = dbt_model_dependencies_list(model_name_list=model_names, resource_type="exposure")
+    models_with_dependencies = dbt_model_dependencies_list(
+        model_name_list=model_names, resource_type="model"
+    )
+    models_with_exposures = dbt_model_dependencies_list(
+        model_name_list=model_names, resource_type="exposure"
+    )
 
     # convert lists to dataframes in order to merge the results into a single output
     models_with_dependencies_df = pd.DataFrame(models_with_dependencies).rename(
@@ -123,8 +127,11 @@ def run():
     Run the dependency check
     """
     file_name = get_file_name()
-    model_names = get_model_names(file_name=file_name)
-    generate_results(model_names=model_names)
+    try:
+        model_names = get_model_names(file_name=file_name)
+        generate_results(model_names=model_names)
+    except FileNotFoundError:
+        print("models_to_check.csv not found. Create file under snowflake-dbt folder.")
 
 
 if __name__ == "__main__":
