@@ -1,10 +1,10 @@
 """ This file contains common operators/functions to be used across multiple DAGs """
 
 import os
-import urllib.parse
 import pathlib
+import urllib.parse
 from datetime import date, timedelta
-from typing import List, Dict
+from typing import Dict, List
 
 from airflow.models import Variable
 from airflow.providers.slack.operators.slack import SlackAPIPostOperator

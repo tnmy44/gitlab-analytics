@@ -11,42 +11,48 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.operators.dummy_operator import DummyOperator
-
 from airflow_utils import (
     DATA_IMAGE_3_10,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
-    slack_failed_task,
     gitlab_pod_env_vars,
+    slack_failed_task,
 )
-
 from kube_secrets import (
+    KANTATA_OAUTH_TOKEN,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    KANTATA_OAUTH_TOKEN,
 )
-
 from kubernetes_helpers import get_affinity, get_toleration
 
 
-def get_task_name(report_name):
+def clean_string(string_input: str) -> str:
     """
     Need to clean the Kantata report name to make it a valid Airflow
-    task name
+    task name:
+    - Replace '-' with '_'
+    - Replace whitespace with '_'
+    - Remove all non-letter/number characters except '_'
+    - Ensure the name doesn't start or end with '_'
     """
-    # Replace '-' with '_'
-    cleaned_name = report_name.replace("-", "_").lower()
-    # Replace whitespace with '_'
-    cleaned_name = re.sub(r"\s+", "_", cleaned_name)
-    cleaned_name = re.sub(r"_+", "_", cleaned_name)
-    # Remove all non-letter/number characters except '_'
-    cleaned_name = re.sub(r"[^a-zA-Z0-9_]", "", cleaned_name)
-    # Ensure the name doesn't start or end with '_'
-    cleaned_name = cleaned_name.strip("_")
-    return cleaned_name
+
+    patterns = {
+        r"-+": "_",
+        r"\s+": "_",
+        r"_+": "_",
+        r"[^a-zA-Z0-9_]": "",
+        r"-": "_",
+    }
+
+    cleaned_string = string_input.lower()
+    for find, replace in patterns.items():
+        cleaned_string = re.sub(find, replace, cleaned_string)
+
+    cleaned_string = cleaned_string.strip("_")
+    return cleaned_string
 
 
 KANTATA_REPORTS = [
@@ -86,7 +92,7 @@ for kantata_report in KANTATA_REPORTS:
         f"{clone_and_setup_extraction_cmd} && "
         f"python kantata/src/kantata.py --reports '{kantata_report}'"
     )
-    kantata_task_name = f"kantata_{get_task_name(kantata_report)}"
+    kantata_task_name = f"kantata_{clean_string(kantata_report)}"
 
     kantata_task = KubernetesPodOperator(
         **gitlab_defaults,

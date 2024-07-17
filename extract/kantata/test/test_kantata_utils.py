@@ -1,22 +1,17 @@
 """ Test kantata_utils.py """
 
-from unittest.mock import patch, MagicMock
-from pytest import raises
-from sqlalchemy.types import (
-    Integer,
-    String,
-    Float,
-    Boolean,
-    DateTime,
-)
+from unittest.mock import MagicMock, patch
+
 import pandas as pd
 from kantata_utils import (
-    convert_pst_to_utc_str,
-    clean_string,
     add_csv_file_extension,
-    map_dtypes,
+    clean_string,
+    convert_pst_to_utc_str,
     has_schema_changed,
+    map_dtypes,
 )
+from pytest import raises
+from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
 
 
 def test_convert_pst_to_utc_str():

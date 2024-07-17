@@ -3,11 +3,10 @@ Functions to call various Kantata API endpoints
 """
 
 from datetime import datetime, time
-from logging import info, error
+from logging import error, info
 from typing import Optional
 
 import requests
-
 from gitlabdata.orchestration_utils import make_request
 from kantata_utils import HEADERS
 

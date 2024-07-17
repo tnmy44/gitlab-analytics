@@ -1,26 +1,22 @@
 """ Various util functions used by kantata.py """
 
 import re
-from os import environ
-from logging import info
 from datetime import datetime
+from logging import info
+from os import environ
 from zoneinfo import ZoneInfo
-from pandas import api as pd_api, DataFrame, read_sql
-from sqlalchemy.types import (
-    Integer,
-    String,
-    Float,
-    Boolean,
-    DateTime,
-)
-from sqlalchemy import Column, Table, func, MetaData
-from sqlalchemy.schema import CreateTable, DropTable
-from sqlalchemy.engine.base import Engine
+
 from gitlabdata.orchestration_utils import (
-    snowflake_stage_load_copy_remove,
-    snowflake_engine_factory,
     query_executor,
+    snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
+from pandas import api as pd_api, DataFrame, read_sql
+from sqlalchemy import Column, MetaData, Table, func
+from sqlalchemy.engine.base import Engine
+from sqlalchemy.schema import CreateTable, DropTable
+from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
+
 from args import parse_arguments
 
 SCHEMA_NAME = "kantata"
@@ -39,40 +35,51 @@ def process_args() -> list:
     )
 
 
-def convert_pst_to_utc_str(dt_pst_str: str) -> str:
+def convert_timezone(
+    input_datetime_str: str, from_tz: str = "US/Pacific", to_tz: str = "UTC"
+) -> str:
     """
-    An example of dt_pst_str: '2024-07-08T09:00:48-07:00'
+    An example of input_datetime_str: '2024-07-08T09:00:48-07:00'
     Kantata response is in PST timezone, need to convert to UTC
     """
 
     # Parse the string using datetime
     try:
-        dt = datetime.fromisoformat(dt_pst_str)
+        dt = datetime.fromisoformat(input_datetime_str)
     except ValueError:
         raise
-    dt_pst = dt.replace(tzinfo=ZoneInfo("US/Pacific"))
-    dt_utc = dt_pst.astimezone(ZoneInfo("UTC"))
-    dt_utc_str = dt_utc.isoformat()
-    return dt_utc_str
+    dt_from_tz = dt.replace(tzinfo=ZoneInfo(from_tz))
+    dt_to_tz = dt_from_tz.astimezone(ZoneInfo(to_tz))
+    return dt_to_tz.isoformat()
 
 
-def clean_string(str_to_clean: str) -> str:
+def clean_string(string_input: str) -> str:
     """
     Clean any string by only keep a-Z, 0-9
     Used for the following:
     - Convert Kantata Report name to Snowflake table name
     - Convert API column names to Snowflake column names
+
+    Cleaning steps:
+    - Replace '-' with '_'
+    - Replace whitespace with '_'
+    - Remove all non-letter/number characters except '_'
+    - Ensure the name doesn't start or end with '_'
     """
-    # Replace '-' with '_'
-    cleaned_str = str_to_clean.replace("-", "_").lower()
-    # Replace whitespace with '_'
-    cleaned_str = re.sub(r"\s+", "_", cleaned_str)
-    cleaned_str = re.sub(r"_+", "_", cleaned_str)
-    # Remove all non-letter/number characters except '_'
-    cleaned_str = re.sub(r"[^a-zA-Z0-9_]", "", cleaned_str)
-    # Ensure the name doesn't start or end with '_'
-    cleaned_str = cleaned_str.strip("_")
-    return cleaned_str
+    patterns = {
+        r"-+": "_",
+        r"\s+": "_",
+        r"_+": "_",
+        r"[^a-zA-Z0-9_]": "",
+        r"-": "_",
+    }
+
+    cleaned_string = string_input.lower()
+    for find, replace in patterns.items():
+        cleaned_string = re.sub(find, replace, cleaned_string)
+
+    cleaned_string = cleaned_string.strip("_")
+    return cleaned_string
 
 
 def add_csv_file_extension(prefix: str) -> str:
@@ -93,7 +100,7 @@ def map_dtypes(dtype):
     return String
 
 
-def has_schema_changed(
+def have_columns_changed(
     snowflake_engine: Engine, df: DataFrame, snowflake_table_name: str
 ) -> bool:
     """
@@ -105,12 +112,10 @@ def has_schema_changed(
         sql=source_query,
         con=snowflake_engine,
     ).columns
-    is_schema_change = sorted(api_columns) != sorted(snowflake_columns)
-    print(f"\nsorted(api_columns): {sorted(api_columns)}")
-    print(f"\nsorted(snowflake_columns): {sorted(snowflake_columns)}")
-    if is_schema_change:
-        info("Schema has changed")
-    return is_schema_change
+    is_column_change = sorted(api_columns) != sorted(snowflake_columns)
+    if is_column_change:
+        info("Column(s) have changed")
+    return is_column_change
 
 
 def seed_kantata_table(
@@ -148,7 +153,7 @@ def upload_kantanta_to_snowflake(
     snowflake_engine = snowflake_engine_factory(
         config_dict, "LOADER", schema=SCHEMA_NAME
     )
-    if not snowflake_engine.has_table(snowflake_table_name) or has_schema_changed(
+    if not snowflake_engine.has_table(snowflake_table_name) or have_columns_changed(
         snowflake_engine, df, snowflake_table_name
     ):
         seed_kantata_table(snowflake_engine, df, snowflake_table_name)

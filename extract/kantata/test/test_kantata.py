@@ -5,10 +5,10 @@ from unittest.mock import patch
 os.environ["data_interval_start"] = "2024-01-01T08:00:00"
 os.environ["data_interval_end"] = "2024-01-02T08:00:00"
 from kantata import (
+    download_report_from_latest_export,
+    has_valid_latest_export,
     retrieve_insight_report_external_identifier,
     retrieve_scheduled_insight_report,
-    has_valid_latest_export,
-    download_report_from_latest_export,
 )
 
 

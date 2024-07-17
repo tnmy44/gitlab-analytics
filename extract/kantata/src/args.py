@@ -7,7 +7,7 @@ import argparse
 
 def parse_arguments() -> argparse.Namespace:
     """
-    The user can pass in the following required arguemnts:
+    The user can pass in the following required arguments:
         --reports
 
     """

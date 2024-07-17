@@ -3,31 +3,29 @@ Runs the main flow to extract data from Kantataa API
 and then upload to Snowflake
 """
 
-import sys
-import io
 import gzip
-import pandas as pd
+import io
+import sys
+from logging import basicConfig, error, getLogger, info
 from typing import Optional
-from logging import info, error, basicConfig, getLogger
-from requests import Response
 
+import pandas as pd
 from endpoints import (
-    get_insight_reports,
-    get_scheduled_insight_reports,
     create_scheduled_insight_report,
+    get_insight_reports,
     get_latest_export,
+    get_scheduled_insight_reports,
 )
-
-from kantata_utils import (
-    process_args,
-    convert_pst_to_utc_str,
-    clean_string,
-    add_csv_file_extension,
-    upload_kantanta_to_snowflake,
-    config_dict,
-)
-
 from gitlabdata.orchestration_utils import make_request
+from kantata_utils import (
+    add_csv_file_extension,
+    clean_string,
+    config_dict,
+    convert_timezone,
+    process_args,
+    upload_kantanta_to_snowflake,
+)
+from requests import Response
 
 
 def retrieve_insight_report_external_identifier(
@@ -72,18 +70,17 @@ def has_valid_latest_export(scheduled_insight_report: dict) -> bool:
     if latest_result.get("status") != "success":
         # Generally this means new scheduled report, but raise error so not missed
         raise ValueError(
-            f"Is this a just-schedueld report? Report_title {report_title} with report_external_identifier {report_external_identifier} cannot be exported because the status is {latest_result.get('status')}, full response: {scheduled_insight_report}"
+            f"Is this a just-scheduled report? Report_title {report_title} with report_external_identifier {report_external_identifier} cannot be exported because the status is {latest_result.get('status')}, full response: {scheduled_insight_report}"
         )
         return False
 
-    latest_created_at = latest_result.get("created_at")
-    latest_created_at_utc = convert_pst_to_utc_str(latest_created_at)
-    print(f"report latest_created_at_utc: {latest_created_at_utc}")
+    latest_created_at = latest_result.get("created_at")  # in PST tz
+    latest_created_at_utc = convert_timezone(latest_created_at)
     if (
         latest_created_at_utc < config_dict["data_interval_start"]
         or latest_created_at_utc >= config_dict["data_interval_end"]
     ):
-        print(
+        info(
             f"report_title {report_title} with report_external_identifier {report_external_identifier} cannot be exported because the latest_created_at_utc {latest_created_at_utc} is not between the Airflow execution_dates {config_dict['data_interval_start']} - {config_dict['data_interval_end']}"
         )
         return False
