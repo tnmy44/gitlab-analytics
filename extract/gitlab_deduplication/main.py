@@ -203,7 +203,8 @@ def main(table_name: str) -> None:
     manifest_dict = get_yaml_file(path=file_name)
 
     # Update database name to the manifest for in case of MR branch.
-    manifest_dict.update({"raw_database": env.copy()["SNOWFLAKE_LOAD_DATABASE"]})
+    raw_database = f'"{env.copy()["SNOWFLAKE_LOAD_DATABASE"]}"'
+    manifest_dict.update({"raw_database": raw_database})
 
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
