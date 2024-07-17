@@ -2,40 +2,44 @@
 # General Variables
 DBT_REFERENCE= "curl https://dbt.gitlabdata.com/manifest.json -o reference_state/manifest.json"
 GIT_BRANCH_BASE = $$(git merge-base --fork-point origin/master)
-#DEV_LOCAL_CHANGES_=$($(GIT_BRANCH_BASE)...HEAD)
-#DEV_LOCAL_CHANGES=$($(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ;)
-#CI_CHANGES=$(${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD)
-
 DBT_DEV_STATE=--state reference_state
 DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
 CI_CHANGES:=$(shell git diff --name-only ${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD )
+
 ## Command Variables
-GIT_CHANGES_ROOT:=$$(if [ -z "$(OVERRIDE_CHANGES)" ] ; then echo "$(DEV_LOCAL_CHANGES)" ; else echo "$(CI_CHANGES)"; fi)
+GIT_CHANGES_ROOT:=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
 #DBT_DEV_CHANGES_DOWNSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',')
 #DBT_DEV_CHANGES_UPSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',')
-DBT_CONTIG_VARS=$$(echo "\"TEST_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"TEST_LIST_A\":\"$(DBT_DEV_CHANGES_UPSTREAM)\"")
+DBT_CONTIG_VARS=$$(if [ ! -z "$(SELECTION)" ]; then echo ""; else echo "\"DOWNSTREAM_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"UPSTREAM_LIST\":\"$(DBT_DEV_CHANGES_UPSTREAM)\""; fi)
 #DBT_DEV_CHANGES=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
 DBT_DEV_CHANGES=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
-DBT_DEV_CHANGES_DOWNSTREAM=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
-DBT_DEV_CHANGES_UPSTREAM=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+DBT_DEV_CHANGES_DOWNSTREAM=$(shell echo $(GIT_CHANGES_ROOT) \
+| xargs -n1 basename \
+| grep '\.sql\|\.csv' \
+| sed -E "s/(.sql|.csv)/+/g" \
+| tr '\n' ',' \
+| sed "s/\(.*\),/\1/g")
+DBT_DEV_CHANGES_UPSTREAM=$(shell echo $(GIT_CHANGES_ROOT) \
+| xargs -n1 basename \
+| grep '\.sql\|\.csv' \
+| sed "s/^/+/g" \
+| sed -E "s/(.sql|.csv)//g" \
+| tr '\n' ',' \
+| sed "s/\(.*\),/\1/g")
 
 
-#TEST_:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
-#TEST_A:=$(shell git diff --name-only ${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD )
-#TEST_IF=$$(if [ -z "$(OVERRIDE_CHANGES)" ] ; then echo "$(TEST_)" ; else echo "$(TEST_A)"; fi)
-#TEST_1=$(shell echo $(TEST_IF) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g" )
-#TEST_2=$(shell echo $(TEST_IF) | xargs -n1 basename | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
-#TEST_3=$(shell echo $(TEST_IF) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
-#TEST_CHANGES_COMMAND=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
-#TEST_CHANGES_DOWNSTREAM_LIST=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
-#TEST_CHANGES_UPSTREAM_LIST=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
-
-DBT_DEV_CONTIG=$$(if [ -z "$(CONTIGUOUS)" ]; then echo "True"; fi)
 DBT_DEV_SELECTION=$$(if [ ! -z "$(SELECTION)" ] ; then echo "--select $(SELECTION)"; elif [ ! -z "$(CONTIGUOUS)" ] ; then echo "--select $(DBT_DEV_CHANGES)"; else echo "--selector contiguous_list"; fi)
 DBT_DEV_FAIL_FAST= $$(if [ -z "$(FAIL_FAST)" ]; then echo "--fail-fast"; fi)
 DBT_DEV_EXCLUDE= $$(if [ ! -z "$(EXCLUDE)" ]; then echo "--exclude $(EXCLUDE)"; fi)
 DBT_DEV_FULL_REFRESH=$$(if [ ! -z "$(FULL_REFRESH)" ]; then echo "--full-refresh"; fi)
-DBT_DEV_VARS= $$(if [ ! -z "$(VARS)" ] && [ -z "$(CONTIGUOUS)" ]; then echo "--vars {$(VARS),$(DBT_CONTIG_VARS)}" ; elif [ -z "$(CONTIGUOUS)" ]; then echo "--vars {$(DBT_CONTIG_VARS)}"; elif [ ! -z "$(VARS)" ]; then echo "--vars {$(VARS)}"; fi)
+DBT_DEV_VARS= $$( \
+	if [ ! -z "$(VARS)" ] && [ -z "$(CONTIGUOUS)" ]; \
+	then echo "--vars {$(VARS),$(DBT_CONTIG_VARS)}" ; \
+	elif [ -z "$(CONTIGUOUS)" ]; \
+	then echo "--vars {$(DBT_CONTIG_VARS)}"; \
+	elif [ ! -z "$(VARS)" ]; \
+	then echo "--vars {$(VARS)}"; fi \
+	)
 DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
 SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql\b')
@@ -47,10 +51,7 @@ SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; f
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
-#DBT_CONTIG_VARS=$$(echo "--vars {\"TEST_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"TEST_LIST_A\":\"$(DBT_DEV_CHANGES_UPSTREAM)\"}")
-DBT_DEV_BUILD_CONTIG_CHANGES_BUILD_COMMAND=dbt list --selector refresh_list --resource-type model $(DBT_CONTIG_VARS)
-
-DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector safe_models --resource-type model --output json > safe_models.json 
+DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector unsafe_models --resource-type model --output json > safe_models.json 
 
 SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS)
 
@@ -63,6 +64,7 @@ help:
 	++ dbt Related ++ \n \
 	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ \n \
     - build-changes: will perform a clone and build of all of the changes sql and csv files accepts the following variables: \n \
+		 - CONTIGUOUS - defaults to true, providing any value will set to false \n \
 		 - DOWNSTREAM - dbt graph operator for including downstream models to the changes \n \
 		 - SELECTION - overrides the list of changed models for the provided dbt selection \n \
 		 - FAIL_FAST - defaults to true, providing any value will set to false \n \
@@ -70,16 +72,17 @@ help:
 		 - FULL_REFRESH - defaults to false, providing any value will set to true \n \
 		 - VARS - list of key value pairs to pass to dbt, must be in the format \"key\":\"value\" \n \
 		 - TARGET - a dbt target to use that is not the default \n \
-		 - OVERRIDE_REFERENCE - defaults to false, providing any value will cause the reference state to not be downloaded \n \
+		 - MODE - defaults to DEV, providing the value of CI will adjust behavior to work within the CI environment  \n \
 		 - PROFILE_TARGET - a combination of profile director and target, used in the CI jobs \n \
     - lint-models: will lint or fix all of the changed sql files or the provided model \n \
      - MODEL: overrides the list of changed files for the provided file name \n \
      - FIX: defaults to false, providing any value will set to true and make possible changes to files \n \
+		- safe-check: will check for models downstream of SAFE data not properly tagged \n \
 	 \n \
 	------------------------------------------------------------"
 
 build-changes:
-#@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+	@if [ ! "$(MODE)" == "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -100,29 +103,16 @@ build-changes:
 
 	@echo "\n***** Cloning Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
-	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 4)
+#@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 4)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
+#@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
 	@echo $(SQLFLUFF_COMMAND)
 	@$(SQLFLUFF_COMMAND)
 
-test-safe:
+safe-check:
 	@echo $(DBT_DEV_SAFE_CHECK_COMMAND)
-	$(DBT_DEV_SAFE_CHECK_COMMAND)
+	$(DBT_DEV_SAFE_CHECK_COMMAND) || (echo "Error collecting non-SAFE list in dbt"; exit 1)
 	@python3 safe_model_check.py
-
-build-contig:
-	@echo $(DBT_DEV_CHANGES_DOWNSTREAM)
-	@echo $(DBT_DEV_CHANGES_UPSTREAM)
-	@echo $(DBT_DEV_BUILD_CONTIG_CHANGES_BUILD_COMMAND)
-	@$(DBT_DEV_BUILD_CONTIG_CHANGES_BUILD_COMMAND)
-
-test:
-	@echo $(TEST_CHANGES_COMMAND)
-#@echo $(DBT_DEV_CHANGES)
-	@echo $(TEST_CHANGES_DOWNSTREAM_LIST)
-#@echo $(DBT_DEV_CHANGES_DOWNSTREAM)
-	@echo $(TEST_CHANGES_UPSTREAM_LIST)
