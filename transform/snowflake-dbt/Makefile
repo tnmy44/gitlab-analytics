@@ -42,10 +42,11 @@ DBT_DEV_VARS= $$( \
 	)
 DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
-SQLFLUFF_DEV_CHANGES=$$(git diff --name-only $(GIT_BRANCH_BASE) | cut -d'/' -f3- | grep '\.sql\b')
+SQLFLUFF_DEV_CHANGES=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 | grep '\.sql\b' | cut -d'/' -f3- ) 
 SQLFLUFF_DEV_MODEL_PATH=$$(find . -name "$(MODEL).sql")
 SQLFLUFF_DEV_MODELS=$$(if [ -z "$(MODEL)" ]; then echo $(SQLFLUFF_DEV_CHANGES); else echo $(SQLFLUFF_DEV_MODEL_PATH); fi)
 SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; fi)
+SQLFLUFF_DEV_CONFIG=$$(if [ "$(MODE)" == "CI" ] ; then echo "--config .sqlfluff-ci" ; else echo ""; fi)
 
 ## Commands
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
@@ -53,7 +54,7 @@ DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build $(DBT_DEV_SE
 
 DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector unsafe_models --resource-type model --output json > safe_models.json 
 
-SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS)
+SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS) $(SQLFLUFF_DEV_CONFIG)
 
 
 
