@@ -135,14 +135,14 @@
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - if [ ! -z "$RAW_DB" ]; then SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - DBT_CI_CHANGES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$DOWNSTREAM/g" )
+    #- DBT_CI_CHANGES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$DOWNSTREAM/g" )
     # Getting the most current reference state from the main branch will include any changes from other merged branches
     # If we can get the reference from the HEAD of the branch this could be solved.
     # - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
-    - export DBT_CI_SELECTION=""
-    - if [ ! -z "$SELECTION" ]; then DBT_CI_SELECTION=$SELECTION; elif [ -z "$CONTIGUOUS"]; then DBT_CI_SELECTION=$DBT_CI_CHANGES; fi
+    #- export DBT_CI_SELECTION=""
+    #- if [ ! -z "$SELECTION" ]; then DBT_CI_SELECTION=$SELECTION; elif [ -z "$CONTIGUOUS"]; then DBT_CI_SELECTION=$DBT_CI_CHANGES; fi
     - dbt deps $CI_PROFILE_TARGET
-    - make build-changes OVERRIDE_REFERENCE="True" SELECTION="$DBT_CI_SELECTION" EXCLUDE="$DBT_CI_EXCLUDE" PROFILE_TARGET="$CI_PROFILE_TARGET" FULL_REFRESH="$DBT_CI_FULL_REFRESH"
+    - make build-changes OVERRIDE_REFERENCE="True" OVERRIDE_CHANGES="True" SELECTION="$SELECTION" EXCLUDE="$EXCLUDE" PROFILE_TARGET="$CI_PROFILE_TARGET" FULL_REFRESH="$FULL_REFRESH" FAIL_FAST="$FAIL_FAST" VARS="$VARS" DOWNSTREAM="$DOWNSTREAM"
 
 🎛️custom_invocation:
   <<: *snowflake_dbt_jobs

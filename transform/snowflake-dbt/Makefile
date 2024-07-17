@@ -2,13 +2,33 @@
 # General Variables
 DBT_REFERENCE= "curl https://dbt.gitlabdata.com/manifest.json -o reference_state/manifest.json"
 GIT_BRANCH_BASE = $$(git merge-base --fork-point origin/master)
-DBT_DEV_STATE=--state reference_state
+#DEV_LOCAL_CHANGES_=$($(GIT_BRANCH_BASE)...HEAD)
+#DEV_LOCAL_CHANGES=$($(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ;)
+#CI_CHANGES=$(${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD)
 
+DBT_DEV_STATE=--state reference_state
+DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
+CI_CHANGES:=$(shell git diff --name-only ${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD )
 ## Command Variables
-DBT_DEV_CHANGES_DOWNSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',')
-DBT_DEV_CHANGES_UPSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',')
+GIT_CHANGES_ROOT:=$$(if [ -z "$(OVERRIDE_CHANGES)" ] ; then echo "$(DEV_LOCAL_CHANGES)" ; else echo "$(CI_CHANGES)"; fi)
+#DBT_DEV_CHANGES_DOWNSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',')
+#DBT_DEV_CHANGES_UPSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',')
 DBT_CONTIG_VARS=$$(echo "\"TEST_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"TEST_LIST_A\":\"$(DBT_DEV_CHANGES_UPSTREAM)\"")
-DBT_DEV_CHANGES=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
+#DBT_DEV_CHANGES=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
+DBT_DEV_CHANGES=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
+DBT_DEV_CHANGES_DOWNSTREAM=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+DBT_DEV_CHANGES_UPSTREAM=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+
+
+#TEST_:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
+#TEST_A:=$(shell git diff --name-only ${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD )
+#TEST_IF=$$(if [ -z "$(OVERRIDE_CHANGES)" ] ; then echo "$(TEST_)" ; else echo "$(TEST_A)"; fi)
+#TEST_1=$(shell echo $(TEST_IF) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g" )
+#TEST_2=$(shell echo $(TEST_IF) | xargs -n1 basename | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+#TEST_3=$(shell echo $(TEST_IF) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+#TEST_CHANGES_COMMAND=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$(DOWNSTREAM)/g")
+#TEST_CHANGES_DOWNSTREAM_LIST=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
+#TEST_CHANGES_UPSTREAM_LIST=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',' | sed "s/\(.*\),/\1/g")
 
 DBT_DEV_CONTIG=$$(if [ -z "$(CONTIGUOUS)" ]; then echo "True"; fi)
 DBT_DEV_SELECTION=$$(if [ ! -z "$(SELECTION)" ] ; then echo "--select $(SELECTION)"; elif [ ! -z "$(CONTIGUOUS)" ] ; then echo "--select $(DBT_DEV_CHANGES)"; else echo "--selector contiguous_list"; fi)
@@ -24,7 +44,7 @@ SQLFLUFF_DEV_MODELS=$$(if [ -z "$(MODEL)" ]; then echo $(SQLFLUFF_DEV_CHANGES); 
 SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; fi)
 
 ## Commands
-DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE)
+DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
 DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
 #DBT_CONTIG_VARS=$$(echo "--vars {\"TEST_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"TEST_LIST_A\":\"$(DBT_DEV_CHANGES_UPSTREAM)\"}")
@@ -59,7 +79,7 @@ help:
 	------------------------------------------------------------"
 
 build-changes:
-	@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+#@if [ -z "$(OVERRIDE_REFERENCE)" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -80,10 +100,10 @@ build-changes:
 
 	@echo "\n***** Cloning Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
-	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 1)
+	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 4)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 1)
+	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
 	@echo $(SQLFLUFF_COMMAND)
@@ -99,3 +119,10 @@ build-contig:
 	@echo $(DBT_DEV_CHANGES_UPSTREAM)
 	@echo $(DBT_DEV_BUILD_CONTIG_CHANGES_BUILD_COMMAND)
 	@$(DBT_DEV_BUILD_CONTIG_CHANGES_BUILD_COMMAND)
+
+test:
+	@echo $(TEST_CHANGES_COMMAND)
+#@echo $(DBT_DEV_CHANGES)
+	@echo $(TEST_CHANGES_DOWNSTREAM_LIST)
+#@echo $(DBT_DEV_CHANGES_DOWNSTREAM)
+	@echo $(TEST_CHANGES_UPSTREAM_LIST)
