@@ -95,10 +95,7 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
                                             ELSE column_name
                                             END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC)
                                             , ' \n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
-                             '\n GROUP BY  \n',
-                                    (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns
-                                    WHERE LOWER(table_name) = ('{original_table_name}')
-                                    AND LOWER(column_name) NOT IN ('_uploaded_at','_task_instance')),');')
+                             '\n GROUP BY ALL);')
                                     from {raw_database}.information_schema.columns
                                     where LOWER(table_name) = '{original_table_name}';"""
 
