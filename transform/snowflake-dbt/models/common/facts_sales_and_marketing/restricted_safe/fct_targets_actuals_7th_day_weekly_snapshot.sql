@@ -31,7 +31,7 @@ total_targets AS (
   SELECT
     prep_date.fiscal_quarter_name_fy                                                     AS fiscal_quarter_name,
     prep_date.first_day_of_fiscal_quarter                                                AS fiscal_quarter_date,
-    targets.dim_crm_user_hierarchy_sk                                                    AS dim_crm_opp_owner_stamped_hierarchy_sk,
+    targets.dim_crm_user_hierarchy_sk                                                    AS dim_crm_current_account_set_hierarchy_sk,
     targets.dim_sales_qualified_source_id,
     targets.dim_order_type_id,
     SUM(CASE WHEN kpi_name = 'Net ARR' THEN daily_allocated_target END)                  AS net_arr_total_quarter_target,
@@ -51,7 +51,7 @@ daily_actuals AS (
     actuals.snapshot_fiscal_quarter_date,
     actuals.snapshot_date,
     actuals.snapshot_id,
-    actuals.dim_crm_opp_owner_stamped_hierarchy_sk,
+    actuals.dim_crm_current_account_set_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
     SUM(booked_net_arr_in_snapshot_quarter)     AS booked_net_arr_in_snapshot_quarter,
@@ -68,7 +68,7 @@ quarterly_actuals AS (
   SELECT
     actuals.snapshot_fiscal_quarter_name,
     actuals.snapshot_fiscal_quarter_date,
-    actuals.dim_crm_opp_owner_stamped_hierarchy_sk,
+    actuals.dim_crm_current_account_set_hierarchy_sk,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
     SUM(actuals.booked_net_arr_in_snapshot_quarter) AS total_booked_net_arr
@@ -81,7 +81,7 @@ quarterly_actuals AS (
 combined_data AS (
 
   SELECT
-    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_current_account_set_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     fiscal_quarter_name,
@@ -91,7 +91,7 @@ combined_data AS (
   UNION
 
   SELECT
-    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_current_account_set_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     snapshot_fiscal_quarter_name,
@@ -101,7 +101,7 @@ combined_data AS (
   UNION
 
   SELECT
-    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_current_account_set_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     snapshot_fiscal_quarter_name,
@@ -123,7 +123,7 @@ base AS (
   */
 
   SELECT
-    combined_data.dim_crm_opp_owner_stamped_hierarchy_sk,
+    combined_data.dim_crm_current_account_set_hierarchy_sk,
     combined_data.dim_sales_qualified_source_id,
     combined_data.dim_order_type_id,
     spine.date_id,
@@ -139,12 +139,12 @@ base AS (
 final AS (
 
   SELECT
-    {{ dbt_utils.generate_surrogate_key(['base.date_id', 'base.dim_crm_opp_owner_stamped_hierarchy_sk', 'base.dim_order_type_id','base.dim_sales_qualified_source_id']) }} AS targets_actuals_weekly_snapshot_pk,
+    {{ dbt_utils.generate_surrogate_key(['base.date_id', 'base.dim_crm_current_account_set_hierarchy_sk', 'base.dim_order_type_id','base.dim_sales_qualified_source_id']) }} AS targets_actuals_weekly_snapshot_pk,
     base.date_id,
     base.date_actual,
     base.fiscal_quarter_name,
     base.fiscal_quarter_date,
-    base.dim_crm_opp_owner_stamped_hierarchy_sk,
+    base.dim_crm_current_account_set_hierarchy_sk,
     base.dim_order_type_id,
     base.dim_sales_qualified_source_id,
     SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
@@ -158,17 +158,17 @@ final AS (
   LEFT JOIN total_targets
     ON base.fiscal_quarter_name = total_targets.fiscal_quarter_name
       AND base.dim_sales_qualified_source_id = total_targets.dim_sales_qualified_source_id
-      AND base.dim_crm_opp_owner_stamped_hierarchy_sk = total_targets.dim_crm_opp_owner_stamped_hierarchy_sk
+      AND base.dim_crm_current_account_set_hierarchy_sk = total_targets.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = total_targets.dim_order_type_id
   LEFT JOIN daily_actuals
     ON base.date_id = daily_actuals.snapshot_id
       AND base.dim_sales_qualified_source_id = daily_actuals.dim_sales_qualified_source_id
-      AND base.dim_crm_opp_owner_stamped_hierarchy_sk = daily_actuals.dim_crm_opp_owner_stamped_hierarchy_sk
+      AND base.dim_crm_current_account_set_hierarchy_sk = daily_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = daily_actuals.dim_order_type_id
   LEFT JOIN quarterly_actuals
     ON base.fiscal_quarter_name = quarterly_actuals.snapshot_fiscal_quarter_name
       AND base.dim_sales_qualified_source_id = quarterly_actuals.dim_sales_qualified_source_id
-      AND base.dim_crm_opp_owner_stamped_hierarchy_sk = quarterly_actuals.dim_crm_opp_owner_stamped_hierarchy_sk
+      AND base.dim_crm_current_account_set_hierarchy_sk = quarterly_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = quarterly_actuals.dim_order_type_id
   {{ dbt_utils.group_by(n=8) }}
 
@@ -176,3 +176,4 @@ final AS (
 
 SELECT *
 FROM final
+
