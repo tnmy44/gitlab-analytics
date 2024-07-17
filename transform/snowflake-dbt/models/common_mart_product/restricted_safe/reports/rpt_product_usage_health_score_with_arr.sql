@@ -20,6 +20,7 @@ where
 SELECT
 
 --mart_arr_all columns
+    mart_arr_all.primary_key,
     mart_arr_all.arr_month,
     mart_arr_all.dim_billing_account_id,
     mart_arr_all.dim_crm_account_id,

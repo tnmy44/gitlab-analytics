@@ -18,8 +18,8 @@ models:
   - name: rpt_product_usage_health_score_with_arr
     description: Joined table between rpt_product_usage_health_score and mart_arr_all to calculate instance attributed ARR. This model powers Account Landscape dashboard in Tableau
     tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - arr_month
-            - dim_subscription_id_original
-            - product_delivery_type
+    columns:
+      - name: primary_key
+        data_tests:
+          - not_null
+          - unique
