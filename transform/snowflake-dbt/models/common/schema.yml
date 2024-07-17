@@ -438,6 +438,8 @@ models:
         description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
       - name: bizible_most_recent_marketing_channel_path
         description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
+      - name: inactive_contact
+        description: A SFDC Contact field that shows whether or not a given contact is still with the company/account they are related to. 
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
