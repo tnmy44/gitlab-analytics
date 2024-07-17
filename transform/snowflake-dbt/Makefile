@@ -103,10 +103,10 @@ build-changes:
 
 	@echo "\n***** Cloning Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND)
-#@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 4)
+	@$(DBT_DEV_BUILD_CHANGES_CLONE_COMMAND) || (echo "Error in Clone"; exit 4)
 	@echo "\n***** Building Selection *******\n"
 	@echo $(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) 
-#@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
+	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
 	@echo $(SQLFLUFF_COMMAND)
