@@ -153,6 +153,19 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
+    def get_role_inheritances(role_name: str, roles_list: list) -> list:
+        role_inheritances = []
+        for role in roles_list:
+          if role.get(role_name):
+            role_inheritances = role[role_name].get('member_of')
+            if role_inheritances:
+              for rec_role in role_inheritances:
+                role_inheritances_extend = get_role_inheritances(rec_role, roles_list)
+                if role_inheritances_extend:
+                  role_inheritances.extend(role_inheritances_extend)
+
+        return role_inheritances
+
     def grant_clones(self, role, database):
         """
         Grant privileges on a clone.
@@ -163,34 +176,19 @@ class SnowflakeManager:
         elif database == "prod":
             clone = self.prod_database
 
+        roles_yaml_url =  "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
+        data = urllib.request.urlopen(roles_yaml_url)
+
+        try:
+            roles_yaml = safe_load(data)
+        except YAMLError as exc:
+            print(exc)
+
+        roles = roles_yaml["roles"]
+
+        inherited_roles = set(self.get_role_inheritances(role, self.roles))
+
         get_grants_query = f"""
-            WITH recursive roles_rec AS (
-
-            SELECT
-              grantee_name,
-              name
-            FROM snowflake.account_usage.grants_to_roles
-            WHERE granted_on = 'ROLE' and granted_to = 'ROLE'
-                AND privilege = 'USAGE' and deleted_on IS NULL
-                AND grantee_name = UPPER('{role}')
-
-            UNION ALL
-
-            SELECT
-              g.grantee_name,
-              g.name
-            FROM snowflake.account_usage.grants_to_roles g
-            JOIN roles_rec r ON g.grantee_name = r.name
-            WHERE g.granted_on = 'ROLE' AND g.granted_to = 'ROLE'
-                AND g.privilege = 'USAGE' AND g.deleted_on IS NULL
-
-            ),  inherited_roles AS (
-
-            SELECT distinct name
-            FROM roles_rec
-
-            )
-
             SELECT
               'GRANT SELECT ON ' ||
               '"{clone}"' ||
@@ -208,13 +206,8 @@ class SnowflakeManager:
                 FROM "{clone}".information_schema.tables
               )
             AND (grantee_name = UPPER('{role}')
-            OR grantee_name in (
-                SELECT
-                  name
-                FROM inherited_roles
-            ))
-
-            ;
+            OR grantee_name in ('{inherited_roles}')
+            );
         """
 
         grant_usage_on_db = f"""
