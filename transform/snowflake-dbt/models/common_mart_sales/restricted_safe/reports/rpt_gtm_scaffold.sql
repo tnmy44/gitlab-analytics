@@ -15,7 +15,7 @@ SELECT
     NULL                            AS sao_net_arr,
     NULL                            AS sao_opportunity_id
 FROM PROD.restricted_safe_common.fct_crm_opportunity
-WHERE LEFT(actual_date,4) BETWEEN 2020 AND 2027
+WHERE LEFT(actual_date,4) BETWEEN 2019 AND 2027
 )
 
 , closed_actuals as (
@@ -42,7 +42,7 @@ SELECT
     NULL                            AS sao_net_arr,
     NULL                            AS sao_opportunity_id
 FROM PROD.restricted_safe_common.fct_crm_opportunity
-WHERE LEFT(actual_date,4) BETWEEN 2020 AND 2027 )
+WHERE LEFT(actual_date,4) BETWEEN 2019 AND 2027 )
 
 , sao_actuals as (
 SELECT
@@ -61,7 +61,7 @@ SELECT
     CASE WHEN is_sao = TRUE
         THEN DIM_CRM_OPPORTUNITY_ID END AS sao_opportunity_id
 FROM PROD.restricted_safe_common.fct_crm_opportunity
-WHERE LEFT(actual_date,4) BETWEEN 2020 AND 2027 )
+WHERE LEFT(actual_date,4) BETWEEN 2019 AND 2027 )
 
 , unioned_actuals AS (
 SELECT *
@@ -89,7 +89,7 @@ LEFT JOIN COMMON.DIM_DATE
 ON unioned_actuals.actual_date = DIM_DATE.DATE_ACTUAL
 LEFT JOIN PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_CRM_OPPORTUNITY
 ON unioned_actuals.DIM_CRM_OPPORTUNITY_ID = MART_CRM_OPPORTUNITY.DIM_CRM_OPPORTUNITY_ID
-WHERE FISCAL_YEAR > 2020
+WHERE FISCAL_YEAR > 2019
 ORDER BY 1 desc
 )
 
@@ -221,4 +221,4 @@ ON scaffold.DATE_ID = DIM_DATE.DATE_ID
 
 SELECT *
 FROM base
-WHERE FISCAL_YEAR BETWEEN 2020 AND 2027
+WHERE FISCAL_YEAR BETWEEN 2019 AND 2027

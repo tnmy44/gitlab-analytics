@@ -1,5 +1,3 @@
-
---TODO: Actuals SQL
 with created_actuals AS (
 SELECT
     DIM_CRM_OPPORTUNITY_ID,
