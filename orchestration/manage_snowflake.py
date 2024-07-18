@@ -155,7 +155,7 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
-    def get_role_inheritances(role_name: str, roles_list: list) -> list:
+    def get_role_inheritances(self, role_name: str, roles_list: list) -> list:
         role_inheritances = next(
             (
                 role[role_name].get("member_of", [])
