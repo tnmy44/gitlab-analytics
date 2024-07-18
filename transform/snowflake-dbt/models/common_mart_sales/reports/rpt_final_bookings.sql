@@ -12,6 +12,20 @@
 
 }},
 
+sales_type AS (
+
+  SELECT DISTINCT sales_type
+  FROM live_actuals
+
+),
+
+stage_name AS (
+
+  SELECT DISTINCT stage_name
+  FROM live_actuals
+
+),
+
 base AS (
 
   SELECT DISTINCT
@@ -45,11 +59,15 @@ base AS (
     dim_sales_qualified_source.sales_qualified_source_grouped,
     dim_order_type.order_type_name,
     dim_order_type.order_type_grouped,
-    dim_deal_path.deal_path_name
+    dim_deal_path.deal_path_name,
+    sales_type.sales_type,
+    stage_name.stage_name
   FROM dim_date
   JOIN dim_sales_qualified_source
   JOIN dim_order_type
   JOIN dim_deal_path
+  JOIN sales_type
+  JOIN stage_name
 
 ),
 
@@ -62,9 +80,11 @@ booked_arr AS (
     order_type,
     order_type_grouped,
     deal_path_name,
+    sales_type,
+    stage_name,
     SUM(booked_net_arr)     AS total_booked_arr
   FROM live_actuals
-  GROUP BY 1,2,3,4,5,6
+  {{ dbt_utils.group_by(n=8)}}
 
 ),
 
@@ -77,9 +97,11 @@ created_arr AS (
     order_type,
     order_type_grouped,
     deal_path_name,
+    sales_type,
+    stage_name,
     SUM(created_arr)        AS total_created_arr
   FROM live_actuals
-  GROUP BY 1,2,3,4,5,6
+  {{ dbt_utils.group_by(n=8)}}
 ), 
 
 final AS (
@@ -108,12 +130,14 @@ final AS (
     base.snapshot_fiscal_quarter_number_absolute,
     base.snapshot_last_month_of_fiscal_quarter,
     base.snapshot_last_month_of_fiscal_year,
-    base.snapshot_days_in_fiscal_quarter_count AS final_day_of_fiscal_quarter, 
+    base.snapshot_days_in_fiscal_quarter_count + 1 AS snapshot_day_of_fiscal_quarter, 
     base.sales_qualified_source_name AS sales_qualified_source_name_live,
     base.sales_qualified_source_grouped AS sales_qualified_source_grouped_live,
     base.order_type_name AS order_type_live,
     base.order_type_grouped AS order_type_grouped_live,
     base.deal_path_name AS deal_path_live,
+    base.sales_type AS sales_type,
+    base.stage_name AS stage_name,
     booked_arr.total_booked_arr,
     created_arr.total_created_arr
   FROM base 
@@ -124,6 +148,8 @@ final AS (
           AND base.order_type_name = created_arr.order_type
             AND base.order_type_grouped = created_arr.order_type_grouped
               AND base.deal_path_name = created_arr.deal_path_name
+               AND base.sales_type = created_arr.sales_type
+               AND base.stage_name = created_arr.stage_name
   LEFT JOIN booked_arr
     ON base.snapshot_fiscal_quarter_date = booked_arr.close_fiscal_quarter_date
       AND base.sales_qualified_source_name = booked_arr.sales_qualified_source_name
@@ -131,8 +157,11 @@ final AS (
           AND base.order_type_name = booked_arr.order_type
             AND base.order_type_grouped = booked_arr.order_type_grouped
               AND base.deal_path_name = booked_arr.deal_path_name
+                AND base.sales_type = booked_arr.sales_type
+                AND base.stage_name = booked_arr.stage_name
   WHERE base.current_first_day_of_fiscal_quarter > base.snapshot_fiscal_quarter_date
     AND base.snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
+      AND (total_booked_arr IS NOT NULL OR total_created_arr IS NOT NULL)
 
 )
 
