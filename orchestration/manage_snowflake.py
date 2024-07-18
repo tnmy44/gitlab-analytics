@@ -189,9 +189,10 @@ class SnowflakeManager:
         try:
             roles_yaml = safe_load(data)
         except YAMLError as exc:
-            print(exc)
+            logging.info(f"yaml error: {exc})
 
         roles = roles_yaml["roles"]
+        logging.info(f"yaml has {len(roles)} roles")
 
         logging.info(f"running for role {role}")
 
