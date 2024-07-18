@@ -167,7 +167,7 @@ class SnowflakeManager:
         return role_inheritances + [
             inherited
             for direct in role_inheritances
-            for inherited in get_role_inheritances(direct, roles_list)
+            for inherited in self.get_role_inheritances(direct, roles_list)
         ]
 
 
