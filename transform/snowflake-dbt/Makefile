@@ -4,7 +4,7 @@ DBT_REFERENCE= "curl https://dbt.gitlabdata.com/manifest.json -o reference_state
 GIT_BRANCH_BASE = $$(git merge-base --fork-point origin/master)
 DBT_DEV_STATE=--state reference_state
 DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
-CI_CHANGES:=$(shell git diff --name-only ${CI_MERGE_REQUEST_DIFF_BASE_SHA}...HEAD )
+CI_CHANGES:=$(shell git diff --name-only $$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD )
 
 ## Command Variables
 GIT_CHANGES_ROOT:=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
@@ -110,11 +110,11 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
-	@echo '$(CI_CHANGES)'
+	@echo $(CI_MERGE_REQUEST_DIFF_BASE_SHA)
 	@echo $(SQLFLUFF_COMMAND)
 	@$(SQLFLUFF_COMMAND)
 
 safe-check:
 	@echo $(DBT_DEV_SAFE_CHECK_COMMAND)
-	$(DBT_DEV_SAFE_CHECK_COMMAND) || (echo "Error collecting non-SAFE list in dbt"; exit 1)
+	@$(DBT_DEV_SAFE_CHECK_COMMAND) || (echo "Error collecting non-SAFE list in dbt"; exit 1)
 	@python3 safe_model_check.py

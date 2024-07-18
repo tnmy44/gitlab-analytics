@@ -300,6 +300,7 @@
 🚫safe_model_script:
   <<: *safe_models_check
   script:
+    - set +e
     - dbt deps $CI_PROFILE_TARGET
     - make safe-check PROFILE_TARGET="$CI_PROFILE_TARGET"
    # - dbt --quiet ls $CI_PROFILE_TARGET --models tag:mnpi+
@@ -412,6 +413,7 @@
 🛃dbt_sqlfluff:
   <<: *dbt_sql_lint
   script:
+    - set +e
     - dbt deps $CI_PROFILE_TARGET
     - make lint-models MODE="CI"
     #- export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
