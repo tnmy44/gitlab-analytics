@@ -7,7 +7,7 @@ DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-fi
 CI_CHANGES:=$(shell git diff --name-only $$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD )
 
 ## Command Variables
-GIT_CHANGES_ROOT=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
+GIT_CHANGES_ROOT=$$(if [ "$(MODE)" = "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
 #DBT_DEV_CHANGES_DOWNSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',')
 #DBT_DEV_CHANGES_UPSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',')
 DBT_CONTIG_VARS=$$(if [ ! -z "$(SELECTION)" ]; then echo ""; else echo "\"DOWNSTREAM_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"UPSTREAM_LIST\":\"$(DBT_DEV_CHANGES_UPSTREAM)\""; fi)
@@ -47,7 +47,7 @@ SQLFLUFF_DEV_CHANGES=$(shell echo $(DEV_LOCAL_CHANGES) | xargs -n1 | grep '\.sql
 SQLFLUFF_DEV_MODEL_PATH=$$(find . -name "$(MODEL).sql")
 SQLFLUFF_DEV_MODELS=$$(if [ -z "$(MODEL)" ]; then echo $(SQLFLUFF_DEV_CHANGES); else echo $(SQLFLUFF_DEV_MODEL_PATH); fi)
 SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; fi)
-SQLFLUFF_DEV_CONFIG=$$(if [ "$(MODE)" == "CI" ] ; then echo "--config .sqlfluff-ci" ; else echo ""; fi)
+SQLFLUFF_DEV_CONFIG=$$(if [ "$(MODE)" = "CI" ] ; then echo "--config .sqlfluff-ci" ; else echo ""; fi)
 
 ## Commands
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
@@ -83,7 +83,7 @@ help:
 	------------------------------------------------------------"
 
 build-changes:
-#@if [ ! "$(MODE)" == "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+#@if [ ! "$(MODE)" = "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -118,7 +118,7 @@ lint-models:
 	@echo dev_models $(SQLFLUFF_DEV_MODELS) 
 	@echo dev_command $(SQLFLUFF_DEV_COMMAND) 
 	@echo dev config $(SQLFLUFF_DEV_CONFIG)
-	@echo command '$(SQLFLUFF_COMMAND)'
+	@echo command $(SQLFLUFF_COMMAND)
 #@$(SQLFLUFF_COMMAND)
 
 safe-check:
