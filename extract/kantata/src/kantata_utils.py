@@ -125,7 +125,7 @@ def seed_kantata_table(
         Creating table: {snowflake_table_name}"
     )
     snowflake_types = [
-        Column(col, map_dtypes(dtype)) for col, dtype in df.dtypes.items()
+        Column(col, String) for col, dtype in df.dtypes.items()
     ]
     snowflake_types.append(
         Column("uploaded_at", DateTime, server_default=func.current_timestamp())
