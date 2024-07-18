@@ -4794,7 +4794,7 @@ models:
       - name: six_sense_account_profile_score
         description: A measure of how similar a company is to the ideal customer profile.
       - name: six_sense_account_buying_stage
-        description: The 6QA buting stage of the account
+        description: The 6QA buying stage of the account
       - name: six_sense_account_numerical_reach_score
         description:  measure of current outreach activities against optimal quality.
       - name: six_sense_account_update_date
