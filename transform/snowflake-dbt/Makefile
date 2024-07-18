@@ -7,7 +7,7 @@ DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-fi
 CI_CHANGES:=$(shell git diff --name-only $$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD )
 
 ## Command Variables
-GIT_CHANGES_ROOT:=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
+GIT_CHANGES_ROOT=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
 #DBT_DEV_CHANGES_DOWNSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed -E "s/(.sql|.csv)/+/g" | tr '\n' ',')
 #DBT_DEV_CHANGES_UPSTREAM=$$({ git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; } | xargs -n1 basename | grep '\.sql\|\.csv' | sed "s/^/+/g" | sed -E "s/(.sql|.csv)//g" | tr '\n' ',')
 DBT_CONTIG_VARS=$$(if [ ! -z "$(SELECTION)" ]; then echo ""; else echo "\"DOWNSTREAM_LIST\":\"$(DBT_DEV_CHANGES_DOWNSTREAM)\",\"UPSTREAM_LIST\":\"$(DBT_DEV_CHANGES_UPSTREAM)\""; fi)
