@@ -148,7 +148,7 @@
       dim_crm_person.propensity_to_purchase_past_score_group,
       fct_crm_person.propensity_to_purchase_score_date,
       fct_crm_person.propensity_to_purchase_days_since_trial_start,
-      dim_crm_person.has_six_sense_6_qa,
+      dim_crm_person.has_account_six_sense_6_qa,
       dim_crm_person.six_sense_account_6_qa_end_date,
       dim_crm_person.six_sense_account_6_qa_start_date,
       dim_crm_person.six_sense_account_buying_stage,
