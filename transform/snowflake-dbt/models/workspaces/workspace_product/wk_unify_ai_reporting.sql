@@ -9,11 +9,13 @@
 (
 SELECT
 e.event_property,
-e.gsc_extra:client AS client
+REPLACE(SPLIT(SPLIT(event_category,'Gitlab::Llm::')[1],'::Client')[0],'"','') AS client
 FROM
 {{ ref('mart_behavior_structured_event') }}  e 
 WHERE
-e.event_action = 'e.gsc_extra:client'
+e.event_action IN 
+    ('tokens_per_user_request_prompt',
+    'tokens_per_user_request_response')
 AND
 e.behavior_date > DATEADD(MONTH,-24,CURRENT_DATE)
 AND
