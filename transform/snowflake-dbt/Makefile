@@ -4,7 +4,7 @@ DBT_REFERENCE= "curl https://dbt.gitlabdata.com/manifest.json -o reference_state
 GIT_BRANCH_BASE = $$(git merge-base --fork-point origin/master)
 DBT_DEV_STATE=--state reference_state
 DEV_LOCAL_CHANGES:=$(shell { git diff --name-only $(GIT_BRANCH_BASE) ; git ls-files --other --exclude-standard ; })
-CI_CHANGES:=$(shell git diff --name-only $$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD )
+CI_CHANGES:=$(shell git diff --name-only $(CI_MERGE_REQUEST_DIFF_BASE_SHA)...HEAD )
 
 ## Command Variables
 GIT_CHANGES_ROOT:=$$(if [ "$(MODE)" == "CI" ] ; then echo "$(CI_CHANGES)" ; else echo "$(DEV_LOCAL_CHANGES)"; fi)
@@ -32,13 +32,14 @@ DBT_DEV_SELECTION=$$(if [ ! -z "$(SELECTION)" ] ; then echo "--select $(SELECTIO
 DBT_DEV_FAIL_FAST= $$(if [ -z "$(FAIL_FAST)" ]; then echo "--fail-fast"; fi)
 DBT_DEV_EXCLUDE= $$(if [ ! -z "$(EXCLUDE)" ]; then echo "--exclude $(EXCLUDE)"; fi)
 DBT_DEV_FULL_REFRESH=$$(if [ ! -z "$(FULL_REFRESH)" ]; then echo "--full-refresh"; fi)
+VARS_QUOTE=$$(echo $(VARS) | xargs -n1 | sed -e "s/^/\"/g" -e "s/:/\":\"/g" -e "s/,/\",\"/g" -e "s/$$/\"/g")
 DBT_DEV_VARS= $$( \
-	if [ ! -z "$(VARS)" ] && [ -z "$(CONTIGUOUS)" ]; \
-	then echo "--vars {$(VARS),$(DBT_CONTIG_VARS)}" ; \
+	if [ ! -z "$(VARS_QUOTE)" ] && [ -z "$(CONTIGUOUS)" ]; \
+	then echo "--vars {$(VARS_QUOTE),$(DBT_CONTIG_VARS)}" ; \
 	elif [ -z "$(CONTIGUOUS)" ]; \
 	then echo "--vars {$(DBT_CONTIG_VARS)}"; \
-	elif [ ! -z "$(VARS)" ]; \
-	then echo "--vars {$(VARS)}"; fi \
+	elif [ ! -z "$(VARS_QUOTE)" ]; \
+	then echo "--vars {$(VARS_QUOTE)}"; fi \
 	)
 DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
@@ -50,12 +51,11 @@ SQLFLUFF_DEV_CONFIG=$$(if [ "$(MODE)" == "CI" ] ; then echo "--config .sqlfluff-
 
 ## Commands
 DBT_DEV_BUILD_CHANGES_CLONE_COMMAND= dbt $(DBT_DEV_FAIL_FAST) clone $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) $(DBT_DEV_STATE) $(DBT_DEV_VARS)
-DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) build $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
+DBT_DEV_BUILD_CHANGES_BUILD_COMMAND= dbt $(DBT_DEV_FAIL_FAST) compile $(DBT_DEV_SELECTION) $(DBT_DEV_EXCLUDE) $(DBT_DEV_TARGET) $(DBT_DEV_FULL_REFRESH) --defer $(DBT_DEV_STATE)  $(DBT_DEV_VARS)
 
 DBT_DEV_SAFE_CHECK_COMMAND= dbt --quiet list --selector unsafe_models --resource-type model $(DBT_DEV_TARGET) --output json > safe_models.json 
 
-SQLFLUFF_COMMAND=sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS) $(SQLFLUFF_DEV_CONFIG)
-
+SQLFLUFF_COMMAND= sqlfluff $(SQLFLUFF_DEV_COMMAND) $(SQLFLUFF_DEV_MODELS) $(SQLFLUFF_DEV_CONFIG)
 
 
 help:
@@ -83,7 +83,7 @@ help:
 	------------------------------------------------------------"
 
 build-changes:
-	@if [ ! "$(MODE)" == "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+#@if [ ! "$(MODE)" == "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -115,6 +115,8 @@ lint-models:
 	@$(SQLFLUFF_COMMAND)
 
 safe-check:
+	@echo "\n***** Getting List of un-SAFE Models *******\n"
 	@echo $(DBT_DEV_SAFE_CHECK_COMMAND)
 	@$(DBT_DEV_SAFE_CHECK_COMMAND) || (echo "Error collecting non-SAFE list in dbt"; exit 1)
+	@echo "\n***** Checking List of un-SAFE Models *******\n"
 	@python3 safe_model_check.py

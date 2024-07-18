@@ -9,6 +9,6 @@ SELECT
   '2022-04-18 01:01:01'::TIMESTAMP AS the_timestamp,
   TRUE::BOOLEAN AS the_boolean
 
-  -- comment
+  -- comment "{{ var('key') }}"
 
   --  {{ source('mock_source','mock_source_table') }}
