@@ -192,14 +192,12 @@ class SnowflakeManager:
             logging.info(f"yaml error: {exc}")
 
         roles = roles_yaml["roles"]
-        logging.info(f"yaml has {len(roles)} roles")
 
         logging.info(f"running for role {role}")
 
 
         inherited_roles =  self.get_role_inheritances(role, roles)
         logging.info(f"found inherited roles: {inherited_roles}")
-
         inherited_roles_in =  "', '".join(inherited_roles)
 
         get_grants_query = f"""
@@ -220,7 +218,7 @@ class SnowflakeManager:
                 FROM "{clone}".information_schema.tables
               )
             AND (grantee_name = UPPER('{role}')
-            OR grantee_name in ('{inherited_roles}')
+            OR grantee_name in ('{inherited_roles_in}')
             );
         """
 
