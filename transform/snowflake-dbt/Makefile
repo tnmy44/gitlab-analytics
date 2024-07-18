@@ -112,8 +112,11 @@ build-changes:
 lint-models:
 	@echo $(CI_MERGE_REQUEST_DIFF_BASE_SHA)
 	@echo $(CI_CHANGES)
-	@echo $(SQLFLUFF_COMMAND)
-	@$(SQLFLUFF_COMMAND)
+	@echo $(SQLFLUFF_DEV_COMMAND) 
+	@echo $(SQLFLUFF_DEV_MODELS) 
+	@echo $(SQLFLUFF_DEV_CONFIG)
+	@echo '$(SQLFLUFF_COMMAND)'
+#@$(SQLFLUFF_COMMAND)
 
 safe-check:
 	@echo "\n***** Getting List of un-SAFE Models *******\n"

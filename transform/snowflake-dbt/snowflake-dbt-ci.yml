@@ -414,6 +414,7 @@
   <<: *dbt_sql_lint
   script:
     - set +e
+    - export CI_MERGE_REQUEST_DIFF_BASE_SHA=$CI_MERGE_REQUEST_DIFF_BASE_SHA
     - dbt deps $CI_PROFILE_TARGET
     - make lint-models MODE="CI"
     #- export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
