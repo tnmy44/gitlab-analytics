@@ -40,11 +40,8 @@ def clean_string(string_input: str) -> str:
     """
 
     patterns = {
-        r"-+": "_",
-        r"\s+": "_",
+        r"[^a-zA-Z0-9_]": "_",
         r"_+": "_",
-        r"[^a-zA-Z0-9_]": "",
-        r"-": "_",
     }
 
     cleaned_string = string_input.lower()
@@ -69,7 +66,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "retries": 1,
+    "retries": 0,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,

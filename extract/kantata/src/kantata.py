@@ -107,7 +107,7 @@ def process_latest_export_response(
 
         with gzip.GzipFile(fileobj=io.BytesIO(content)) as gz:
             df = pd.read_csv(gz, nrows=5)
-            df.rename(columns=lambda x: clean_string(x), inplace=True)
+            # df.rename(columns=lambda x: add_quotes_to_string(x.upper()), inplace=True)
             info(f"Sample of exported data, df.head:\n{df.head}")
             return df
 

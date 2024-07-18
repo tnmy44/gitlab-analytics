@@ -42,6 +42,7 @@ def test_convert_timezone():
 def test_cleaned_string():
     """
     Test1: test a real Kantata report
+    Test1.5: test another real Kantata report
     Test2: Make sure special characters are removed
     Test3: Make sure extra spaces are removed
     """
@@ -49,6 +50,11 @@ def test_cleaned_string():
     str_to_clean = "Verify - Time Entry - Financial"
     cleaned_str = clean_string(str_to_clean)
     assert cleaned_str == "verify_time_entry_financial"
+
+    # Test1.5
+    str_to_clean = "API Download of ! Rev QBR: Details by Project & User"
+    cleaned_str = clean_string(str_to_clean)
+    assert cleaned_str == "api_download_of_rev_qbr_details_by_project_user"
 
     # Test2
     str_to_clean = "~some_&report)"

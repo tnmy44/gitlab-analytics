@@ -1,4 +1,5 @@
 import os
+import unittest
 from unittest.mock import patch
 
 # set env prior to importing kantata.config_dict
@@ -79,8 +80,9 @@ def test_has_valid_latest_export(mock_convert_timezone):
         "title": "Test1",
         "external_report_object_identifier": "some_identifier",
     }
-    is_valid_latest_export1 = has_valid_latest_export(scheduled_insight_report)
-    assert is_valid_latest_export1 is False
+    with unittest.TestCase().assertRaises(ValueError):
+        has_valid_latest_export(scheduled_insight_report)
+    # assert is_valid_latest_export1 is False
 
     # Test2
     scheduled_insight_report = {
@@ -88,8 +90,8 @@ def test_has_valid_latest_export(mock_convert_timezone):
         "latest_result": {"status": "failure"},
         "external_report_object_identifier": "some_identifier",
     }
-    is_valid_latest_export2 = has_valid_latest_export(scheduled_insight_report)
-    assert is_valid_latest_export2 is False
+    with unittest.TestCase().assertRaises(ValueError):
+        has_valid_latest_export(scheduled_insight_report)
 
     # Test3
     scheduled_insight_report = {
@@ -100,14 +102,11 @@ def test_has_valid_latest_export(mock_convert_timezone):
     }
 
     mock_convert_timezone.return_value = "2024-01-01T07:59:59"
-
     is_valid_latest_export3 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export3 is False
 
     # Test4
-
     mock_convert_timezone.return_value = "2024-01-02T08:00:00"
-
     is_valid_latest_export4 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export4 is False
 
@@ -119,7 +118,6 @@ def test_has_valid_latest_export(mock_convert_timezone):
         "created_at": "some_data_that_will_be_mocked",
     }
     mock_convert_timezone.return_value = "2024-01-01T08:00:00"
-
     is_valid_latest_export5 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export5 is True
 

@@ -58,7 +58,6 @@ def clean_string(string_input: str) -> str:
     Clean any string by only keep a-Z, 0-9
     Used for the following:
     - Convert Kantata Report name to Snowflake table name
-    - Convert API column names to Snowflake column names
 
     Cleaning steps:
     - Replace '-' with '_'
@@ -67,11 +66,8 @@ def clean_string(string_input: str) -> str:
     - Ensure the name doesn't start or end with '_'
     """
     patterns = {
-        r"-+": "_",
-        r"\s+": "_",
+        r"[^a-zA-Z0-9_]": "_",
         r"_+": "_",
-        r"[^a-zA-Z0-9_]": "",
-        r"-": "_",
     }
 
     cleaned_string = string_input.lower()
@@ -142,6 +138,12 @@ def seed_kantata_table(
     query_executor(snowflake_engine, CreateTable(table))
 
 
+def get_snowflake_columns_str(columns):
+    """Format the list of columns to a single string for COPY INTO"""
+    columns = [f'"{column}"' for column in columns]
+    return f"({', '.join(columns)})"
+
+
 def upload_kantanta_to_snowflake(
     df: DataFrame, snowflake_table_name: str, upload_file_name: str
 ):
@@ -158,7 +160,7 @@ def upload_kantanta_to_snowflake(
     ):
         seed_kantata_table(snowflake_engine, df, snowflake_table_name)
 
-    snowflake_columns_str = f"({', '.join(df.columns)})"
+    snowflake_columns_str = get_snowflake_columns_str(df.columns)
     file_format_options = (
         """FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1 COMPRESSION = 'GZIP'"""
     )
