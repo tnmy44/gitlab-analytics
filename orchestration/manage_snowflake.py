@@ -3,11 +3,13 @@ import logging
 import sys
 from os import environ as env
 from typing import Dict, List
+import urllib
 
 from fire import Fire
 from snowflake.sqlalchemy import URL
 from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
+from yaml import load, safe_load, YAMLError
 
 from gitlabdata.orchestration_utils import query_executor
 
