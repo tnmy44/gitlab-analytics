@@ -126,7 +126,7 @@ WITH crm_person AS (
       person_first_country,
 
     --6 Sense Fields
-      has_six_sense_6_qa,
+      has_account_six_sense_6_qa,
       six_sense_account_6_qa_end_date,
       six_sense_account_6_qa_start_date,
       six_sense_account_buying_stage,

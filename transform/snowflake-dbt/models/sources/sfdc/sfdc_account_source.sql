@@ -178,7 +178,7 @@ renamed AS (
 
     --Qualified Fields
     days_since_last_activity_qualified__c AS days_since_last_activity_qualified,
-    qualified_active_session_time__c AS qualified_active_session_time,
+    qualified_signals_active_session_time__c AS qualified_signals_active_session_time,
     qualified_signals_bot_conversation_count__c AS qualified_signals_bot_conversation_count,
     q_condition__c AS qualified_condition,
     q_score__c AS qualified_score,

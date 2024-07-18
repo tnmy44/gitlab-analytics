@@ -167,7 +167,7 @@ renamed AS (
     pathfactory_topic_list__c AS pathfactory_topic_list,
 
     --6 Sense Fields
-    x6sense_6qa__c::BOOLEAN AS has_six_sense_6_qa,
+    x6sense_account_6qa__c::BOOLEAN AS has_account_six_sense_6_qa,
     x6sense_account_6qa_end_date__c::DATE AS six_sense_account_6_qa_end_date,
     x6sense_account_6qa_start_date__c::DATE AS six_sense_account_6_qa_start_date,
     x6sense_account_buying_stage__c AS six_sense_account_buying_stage,
