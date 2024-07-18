@@ -154,15 +154,20 @@ class SnowflakeManager:
                 self.clone_stages(create_db, database, schema)
 
     def get_role_inheritances(role_name: str, roles_list: list) -> list:
-        role_inheritances = []
-        for role in roles_list:
-          if role.get(role_name):
-            role_inheritances = role[role_name].get('member_of')
-            if role_inheritances:
-              for rec_role in role_inheritances:
-                role_inheritances_extend = get_role_inheritances(rec_role, roles_list)
-                if role_inheritances_extend:
-                  role_inheritances.extend(role_inheritances_extend)
+        role_inheritances = next(
+            (
+                role[role_name].get("member_of", [])
+                for role in roles_list
+                if role.get(role_name)
+            ),
+            [],
+        )
+        return role_inheritances + [
+            inherited
+            for direct in role_inheritances
+            for inherited in get_role_inheritances(direct, roles_list)
+        ]
+
 
         return role_inheritances
 
