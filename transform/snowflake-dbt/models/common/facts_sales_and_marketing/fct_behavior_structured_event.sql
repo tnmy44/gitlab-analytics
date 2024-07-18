@@ -134,7 +134,8 @@ structured_event_renamed AS (
       response_start,
       secure_connection_start,
       unload_event_end,
-      unload_event_start
+      unload_event_start,
+      gsc_instance_version
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -208,6 +209,7 @@ structured_events_w_dim AS (
       events_with_plan.gsc_source,
       events_with_plan.gsc_is_gitlab_team_member,
       events_with_plan.gsc_feature_enabled_by_namespace_ids,
+      events_with_plan.gsc_instance_version,
 
       -- Degenerate Dimensions (IDE Extension Version Context Attributes)
       events_with_plan.ide_extension_version_context,
@@ -312,5 +314,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-06-07"
+    updated_date="2024-07-17"
 ) }}
