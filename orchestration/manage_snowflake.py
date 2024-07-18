@@ -193,7 +193,13 @@ class SnowflakeManager:
 
         roles = roles_yaml["roles"]
 
-        inherited_roles =  "', '".join(self.get_role_inheritances(role, roles))
+        logging.info(f"running for role {role}")
+
+
+        inherited_roles =  self.get_role_inheritances(role, roles)
+        logging.info(f"found inherited roles: {inherited_roles}")
+
+        inherited_roles_in =  "', '".join(inherited_roles)
 
         get_grants_query = f"""
             SELECT
