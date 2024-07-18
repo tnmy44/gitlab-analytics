@@ -155,6 +155,7 @@ WITH biz_person AS (
       contact_status                                AS status,
       lead_source,
       lead_source_type,
+      inactive_contact,
       was_converted_lead.was_converted_lead         AS was_converted_lead,
       source_buckets,
       net_new_source_categories,
@@ -324,6 +325,7 @@ WITH biz_person AS (
       lead_status                                AS status,
       lead_source,
       lead_source_type,
+      NULL                                       AS inactive_contact,
       0                                          AS was_converted_lead,
       source_buckets,
       net_new_source_categories,
@@ -525,5 +527,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-07-09"
+    updated_date="2024-07-15"
 ) }}
