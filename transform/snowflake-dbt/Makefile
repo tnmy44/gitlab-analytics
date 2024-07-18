@@ -43,7 +43,7 @@ DBT_DEV_VARS= $$( \
 	)
 DBT_DEV_TARGET= $$(if [ ! -z "$(PROFILE_TARGET)" ] ; then echo "$(PROFILE_TARGET)"; elif [ ! -z "$(TARGET)" ] ; then echo "--target $(TARGET)"; fi )
 
-SQLFLUFF_DEV_CHANGES=$(shell echo $(DEV_LOCAL_CHANGES) | xargs -n1 | grep '\.sql\b' | cut -d'/' -f3- ) 
+SQLFLUFF_DEV_CHANGES=$(shell echo $(GIT_CHANGES_ROOT) | xargs -n1 | grep '\.sql\b' | cut -d'/' -f3- ) 
 SQLFLUFF_DEV_MODEL_PATH=$$(find . -name "$(MODEL).sql")
 SQLFLUFF_DEV_MODELS=$$(if [ -z "$(MODEL)" ]; then echo $(SQLFLUFF_DEV_CHANGES); else echo $(SQLFLUFF_DEV_MODEL_PATH); fi)
 SQLFLUFF_DEV_COMMAND=$$(if [ -z "$(FIX)" ]; then echo "lint"; else echo "fix"; fi)
@@ -83,7 +83,7 @@ help:
 	------------------------------------------------------------"
 
 build-changes:
-#@if [ ! "$(MODE)" = "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
+	@if [ ! "$(MODE)" = "CI" ]; then (echo "\n***** Fetching Reference *******\n"; "$(DBT_REFERENCE)";) fi;
 
 	@echo "\n***** User Input *******\n"
 	@echo User Selection: $(SELECTION)
@@ -110,16 +110,8 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
-	@echo sha $(CI_MERGE_REQUEST_DIFF_BASE_SHA)
-	@echo ci_changes $(CI_CHANGES)
-	@echo git_changes_root $(GIT_CHANGES_ROOT)
-	@echo git_changes_root '$(GIT_CHANGES_ROOT)'
-	@echo dev_changes $(SQLFLUFF_DEV_CHANGES)
-	@echo dev_models $(SQLFLUFF_DEV_MODELS) 
-	@echo dev_command $(SQLFLUFF_DEV_COMMAND) 
-	@echo dev config $(SQLFLUFF_DEV_CONFIG)
-	@echo command $(SQLFLUFF_COMMAND)
-#@$(SQLFLUFF_COMMAND)
+	@echo $(SQLFLUFF_COMMAND)
+	@$(SQLFLUFF_COMMAND)
 
 safe-check:
 	@echo "\n***** Getting List of un-SAFE Models *******\n"
