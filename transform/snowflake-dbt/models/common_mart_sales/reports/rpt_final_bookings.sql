@@ -3,7 +3,7 @@
 ) }}
 
 {{ simple_cte([
-    ('live_actuals', 'mart_crm_opportunity_stamped_hierarchy_hist'),
+    ('live_actuals', 'mart_crm_opportunity'),
     ('dim_date', 'dim_date'),
     ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
@@ -137,7 +137,8 @@ final AS (
     base.order_type_grouped                        AS order_type_grouped_live,
     base.deal_path_name                            AS deal_path_live,
     base.sales_type,
-    base.stage_name,
+    base.stage_name, 
+    'final_bookings'                               AS source,
     booked_arr.total_booked_arr                    AS booked_net_arr_in_snapshot_quarter,
     created_arr.total_created_arr                  AS created_arr_in_snapshot_quarter
   FROM base
