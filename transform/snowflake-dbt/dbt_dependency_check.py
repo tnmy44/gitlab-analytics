@@ -68,10 +68,16 @@ def get_model_names(file_name: str) -> set:
     open file and add models to the list
     """
     models = set()
-    with open(file=file_name, mode="r", newline="", encoding=ENCODING) as file:
-        lines = file.readlines()
-        for line in lines:
-            models.add(line.strip().lower())
+    if os.path.exists(file_name):
+        with open(file=file_name, mode="r", newline="", encoding=ENCODING) as file:
+            lines = file.readlines()
+            for line in lines:
+                models.add(line.strip().lower())
+
+    else:
+        raise FileNotFoundError(
+            f"File {file_name} not found! Please create one and fill the data as per instruction"
+        )
     return models
 
 
@@ -127,11 +133,9 @@ def run():
     Run the dependency check
     """
     file_name = get_file_name()
-    try:
-        model_names = get_model_names(file_name=file_name)
-        generate_results(model_names=model_names)
-    except FileNotFoundError:
-        print("models_to_check.csv not found. Create file under snowflake-dbt folder.")
+
+    model_names = get_model_names(file_name=file_name)
+    generate_results(model_names=model_names)
 
 
 if __name__ == "__main__":
