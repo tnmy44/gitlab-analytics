@@ -372,8 +372,6 @@
     ON mart_crm_person.dim_crm_person_id = activity_final.dim_crm_person_id 
   LEFT JOIN opp_to_lead 
     ON mart_crm_person.dim_crm_person_id = opp_to_lead.waterfall_person_id
-  LEFT JOIN sales_dev_hierarchy
-    ON COALESCE(opp_to_lead.sdr_bdr_user_id,activity_final.dim_crm_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
   LEFT JOIN prep_sales_dev_user_hierarchy opportunity_snapshot_hierarchy
     ON opp_to_lead.sdr_bdr_user_id = opportunity_snapshot_hierarchy.dim_crm_user_id 
     AND stage_1_discovery_date = opportunity_snapshot_hierarchy.snapshot_date
