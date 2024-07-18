@@ -6,7 +6,8 @@
     ('live_actuals', 'mart_crm_opportunity_stamped_hierarchy_hist'),
     ('dim_date', 'dim_date'),
     ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
-    ('dim_order_type','dim_order_type')
+    ('dim_order_type','dim_order_type'),
+    ('dim_deal_path', 'dim_deal_path')
     ])
 
 }},
@@ -43,10 +44,12 @@ base AS (
     dim_sales_qualified_source.sales_qualified_source_name,
     dim_sales_qualified_source.sales_qualified_source_grouped,
     dim_order_type.order_type_name,
-    dim_order_type.order_type_grouped
+    dim_order_type.order_type_grouped,
+    dim_deal_path.deal_path_name
   FROM dim_date
   JOIN dim_sales_qualified_source
   JOIN dim_order_type
+  JOIN dim_deal_path
 
 ),
 
@@ -58,9 +61,10 @@ booked_arr AS (
     sales_qualified_source_grouped,
     order_type,
     order_type_grouped,
+    deal_path_name,
     SUM(booked_net_arr)     AS total_booked_arr
   FROM live_actuals
-  GROUP BY 1,2,3,4,5
+  GROUP BY 1,2,3,4,5,6
 
 ),
 
@@ -72,9 +76,10 @@ created_arr AS (
     sales_qualified_source_grouped,
     order_type,
     order_type_grouped,
+    deal_path_name,
     SUM(created_arr)        AS total_created_arr
   FROM live_actuals
-  GROUP BY 1,2,3,4,5
+  GROUP BY 1,2,3,4,5,6
 ), 
 
 final AS (
@@ -104,10 +109,11 @@ final AS (
     base.snapshot_last_month_of_fiscal_quarter,
     base.snapshot_last_month_of_fiscal_year,
     base.snapshot_days_in_fiscal_quarter_count AS final_day_of_fiscal_quarter, 
-    base.sales_qualified_source_name,
-    base.sales_qualified_source_grouped,
-    base.order_type_name,
-    base.order_type_grouped,
+    base.sales_qualified_source_name AS sales_qualified_source_name_live,
+    base.sales_qualified_source_grouped AS sales_qualified_source_grouped_live,
+    base.order_type_name AS order_type_live,
+    base.order_type_grouped AS order_type_grouped_live,
+    base.deal_path_name AS deal_path_live,
     booked_arr.total_booked_arr,
     created_arr.total_created_arr
   FROM base 
@@ -117,12 +123,17 @@ final AS (
         AND base.sales_qualified_source_grouped = created_arr.sales_qualified_source_grouped 
           AND base.order_type_name = created_arr.order_type
             AND base.order_type_grouped = created_arr.order_type_grouped
+              AND base.deal_path_name = created_arr.deal_path_name
   LEFT JOIN booked_arr
     ON base.snapshot_fiscal_quarter_date = booked_arr.close_fiscal_quarter_date
       AND base.sales_qualified_source_name = booked_arr.sales_qualified_source_name
         AND base.sales_qualified_source_grouped = booked_arr.sales_qualified_source_grouped 
           AND base.order_type_name = booked_arr.order_type
             AND base.order_type_grouped = booked_arr.order_type_grouped
+              AND base.deal_path_name = booked_arr.deal_path_name
+  WHERE base.current_first_day_of_fiscal_quarter > base.snapshot_fiscal_quarter_date
+    AND base.snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
+
 )
 
 SELECT * 

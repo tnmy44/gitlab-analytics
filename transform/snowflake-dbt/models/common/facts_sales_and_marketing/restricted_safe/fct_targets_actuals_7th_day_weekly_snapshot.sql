@@ -21,8 +21,13 @@ prep_date AS (
 
 live_actuals AS (
 
-  SELECT *
+  SELECT  
+    fct_crm_opportunity.*,
+    close_date.first_day_of_fiscal_quarter AS close_fiscal_quarter_date,
+    close_date.fiscal_quarter_name_fy AS close_fiscal_quarter_name
   FROM {{ ref('fct_crm_opportunity') }}
+  INNER JOIN prep_date AS close_date
+    ON close_date.date_id = fct_crm_opportunity.close_date_id
 
 ),
 
@@ -70,15 +75,12 @@ daily_actuals AS (
 quarterly_actuals AS (
 
   SELECT
-    close_fiscal_quarter_name,
-    close_fiscal_quarter_date,
-    dim_crm_current_account_set_hierarchy_sk,
-    dim_sales_qualified_source_id,
-    dim_order_type_id,
-    SUM(booked_net_arr)            AS total_booked_net_arr,
-    SUM(open_1plus_net_arr)        AS total_open_1plus_net_arr,
-    SUM(open_3plus_net_arr)        AS total_open_3plus_net_arr,
-    SUM(open_4plus_net_arr)        AS total_open_4plus_net_arr
+    live_actuals.close_fiscal_quarter_name,
+    live_actuals.close_fiscal_quarter_date,
+    live_actuals.dim_crm_current_account_set_hierarchy_sk,
+    live_actuals.dim_sales_qualified_source_id,
+    live_actuals.dim_order_type_id,
+    SUM(live_actuals.booked_net_arr)            AS total_booked_net_arr
   FROM live_actuals
   {{ dbt_utils.group_by(n=5) }}
 
@@ -135,6 +137,7 @@ base AS (
     combined_data.dim_order_type_id,
     spine.date_id,
     spine.day_7 AS date_actual,
+    spine.last_day_of_fiscal_quarter,
     combined_data.fiscal_quarter_date,
     combined_data.fiscal_quarter_name
   FROM combined_data
@@ -149,21 +152,24 @@ final AS (
     {{ dbt_utils.generate_surrogate_key(['base.date_id', 'base.dim_crm_current_account_set_hierarchy_sk', 'base.dim_order_type_id','base.dim_sales_qualified_source_id']) }} AS targets_actuals_weekly_snapshot_pk,
     base.date_id,
     base.date_actual,
+    base.last_day_of_fiscal_quarter,
     base.fiscal_quarter_name,
     base.fiscal_quarter_date,
     base.dim_crm_current_account_set_hierarchy_sk,
     base.dim_order_type_id,
     base.dim_sales_qualified_source_id,
     SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
+
     SUM(total_targets.net_arr_total_quarter_target)                         AS net_arr_total_quarter_target,
-    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)                   AS coverage_booked_net_arr,
+
+    CASE WHEN base.date_actual = base.last_day_of_fiscal_quarter
+      THEN SUM(quarterly_actuals.total_booked_net_arr)
+      ELSE SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)                   
+    END AS coverage_booked_net_arr,
     SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter)               AS coverage_open_1plus_net_arr,
     SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter)               AS coverage_open_3plus_net_arr,
     SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter)               AS coverage_open_4plus_net_arr,
-    SUM(quarterly_actuals.total_booked_net_arr)                      AS total_booked_net_arr,
-    SUM(quarterly_actuals.total_open_1plus_net_arr)        AS total_open_1plus_net_arr,
-    SUM(quarterly_actuals.total_open_3plus_net_arr)        AS total_open_3plus_net_arr,
-    SUM(quarterly_actuals.total_open_4plus_net_arr)        AS total_open_4plus_net_arr
+    SUM(quarterly_actuals.total_booked_net_arr)                             AS total_booked_net_arr
   FROM base
   LEFT JOIN total_targets
     ON base.fiscal_quarter_name = total_targets.fiscal_quarter_name
@@ -180,7 +186,7 @@ final AS (
       AND base.dim_sales_qualified_source_id = quarterly_actuals.dim_sales_qualified_source_id
       AND base.dim_crm_current_account_set_hierarchy_sk = quarterly_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.dim_order_type_id = quarterly_actuals.dim_order_type_id
-  {{ dbt_utils.group_by(n=8) }}
+  {{ dbt_utils.group_by(n=9) }}
 
 )
 
