@@ -6061,6 +6061,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - adwivedi:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - bparkhomchuk:
       member_of:
         - snowflake_analyst
@@ -6918,6 +6923,10 @@ users:
       can_login: true
       member_of:
         - tmccaslin
+  - adwivedi:
+      can_login: true
+      member_of:
+        - adwivedi
   - bwilkerson:
       can_login: true
       member_of:
