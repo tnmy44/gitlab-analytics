@@ -45,6 +45,7 @@ WITH crm_person AS (
       status,
       lead_source,
       lead_source_type,
+      inactive_contact,
       was_converted_lead,
       source_buckets,
       employee_bucket,

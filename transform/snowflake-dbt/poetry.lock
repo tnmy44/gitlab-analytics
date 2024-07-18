@@ -505,20 +505,20 @@ typing-extensions = ">=4.4,<5"
 
 [[package]]
 name = "dbt-snowflake"
-version = "1.8.0"
+version = "1.8.3"
 description = "The Snowflake adapter plugin for dbt"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dbt_snowflake-1.8.0-py3-none-any.whl", hash = "sha256:7f3ba0b69fceae23c31cea205dd23c22133683f502ec21ff2755343f5325fd78"},
-    {file = "dbt_snowflake-1.8.0.tar.gz", hash = "sha256:7bbb8096fb9d0ef6551ba87825f95f88af67093ffd105614c844a2f900384327"},
+    {file = "dbt_snowflake-1.8.3-py3-none-any.whl", hash = "sha256:06cf9dc1fd81b26d9dd4c6dc294e38357ed0135339cc7760d275be47af94dc18"},
+    {file = "dbt_snowflake-1.8.3.tar.gz", hash = "sha256:50bfabb5c49557d5192d5225f6e311f0b4d5d9315bb37a64f4bca7bcf0a3cc17"},
 ]
 
 [package.dependencies]
 agate = "*"
-dbt-adapters = ">=1.1.0rc1,<2.0"
-dbt-common = ">=0.1.0a1,<2.0"
-dbt-core = ">=1.8.0a1"
+dbt-adapters = ">=1.1.1,<2.0"
+dbt-common = ">=1.0.4,<2.0"
+dbt-core = ">=1.8.0"
 snowflake-connector-python = {version = ">=3.0,<4.0", extras = ["secure-local-storage"]}
 
 [[package]]
@@ -2655,4 +2655,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.3"
-content-hash = "eddb91024a4e37fd635023c019f341b35ff23d978963e8f97fa53d82d54866c4"
+content-hash = "dcde822af0c776eeb887b7b092674d7c082c9b182f5f09557e2239a3698dbfcb"
