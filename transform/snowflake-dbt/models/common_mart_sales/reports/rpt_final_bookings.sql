@@ -74,15 +74,15 @@ base AS (
 booked_arr AS (
 
   SELECT
-    close_fiscal_quarter_date,
-    sales_qualified_source_name,
-    sales_qualified_source_grouped,
-    order_type,
-    order_type_grouped,
-    deal_path_name,
-    sales_type,
-    stage_name,
-    SUM(booked_net_arr) AS total_booked_arr
+    live_actuals.close_fiscal_quarter_date,
+    live_actuals.sales_qualified_source_name,
+    live_actuals.sales_qualified_source_grouped,
+    live_actuals.order_type,
+    live_actuals.order_type_grouped,
+    live_actuals.deal_path_name,
+    live_actuals.sales_type,
+    live_actuals.stage_name,
+    SUM(live_actuals.booked_net_arr) AS total_booked_arr
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 
@@ -91,15 +91,15 @@ booked_arr AS (
 created_arr AS (
 
   SELECT
-    arr_created_fiscal_quarter_date,
-    sales_qualified_source_name,
-    sales_qualified_source_grouped,
-    order_type,
-    order_type_grouped,
-    deal_path_name,
-    sales_type,
-    stage_name,
-    SUM(created_arr) AS total_created_arr
+    live_actuals.arr_created_fiscal_quarter_date,
+    live_actuals.sales_qualified_source_name,
+    live_actuals.sales_qualified_source_grouped,
+    live_actuals.order_type,
+    live_actuals.order_type_grouped,
+    live_actuals.deal_path_name,
+    live_actuals.sales_type,
+    live_actuals.stage_name,
+    SUM(live_actuals.created_arr) AS total_created_arr
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 ),
@@ -161,7 +161,7 @@ final AS (
       AND base.stage_name = booked_arr.stage_name
   WHERE base.current_first_day_of_fiscal_quarter > base.snapshot_fiscal_quarter_date
     AND base.snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
-    AND (total_booked_arr IS NOT NULL OR total_created_arr IS NOT NULL)
+    AND (booked_arr.total_booked_arr IS NOT NULL OR created_arr.total_created_arr IS NOT NULL)
 
 )
 
