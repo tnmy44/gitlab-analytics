@@ -13,6 +13,21 @@ from kantata_utils import HEADERS
 BASE_ENDPOINT = "https://api.mavenlink.com/api/v1"
 
 
+def _call_endpoint(
+    endpoint: str,
+    endpoint_purpose: str,
+    is_print_response: bool = False,
+    **make_request_kwargs,
+):
+    url = f"{BASE_ENDPOINT}{endpoint}"
+    info(f"{make_request_kwargs['request_type']} {url} for {endpoint_purpose}")
+    response = make_request(url=url, headers=HEADERS, **make_request_kwargs)
+    if is_print_response:
+        info(response.text)
+
+    return response.json()
+
+
 def get_insight_reports(report_title_to_query: Optional[str] = None) -> dict:
     """
     This endpoint returns a list of all Insight Reports
@@ -20,18 +35,14 @@ def get_insight_reports(report_title_to_query: Optional[str] = None) -> dict:
 
     If an optional `report_title_to_query` arg is passed in, will filter only for matching reports
     """
-    get_insight_reports_endpoint = f"{BASE_ENDPOINT}/insights_reports"
-    if report_title_to_query:
-        query = {"title": report_title_to_query}
-    else:
-        query = {}
-    info(
-        f"Requesting {get_insight_reports_endpoint} to get all possible Insight Reports"
-    )
-    response = make_request(
-        "GET", get_insight_reports_endpoint, headers=HEADERS, params=query
-    )
-    return response.json()
+    endpoint = "/insights_reports"
+    endpoint_purpose = "obtaining all possible Insight reports"
+    query = {"title": report_title_to_query} if report_title_to_query else {}
+    make_request_kwargs = {
+        "request_type": "GET",
+        "params": query,
+    }
+    return _call_endpoint(endpoint, endpoint_purpose, **make_request_kwargs)
 
 
 def get_scheduled_insight_reports() -> dict:
@@ -39,14 +50,10 @@ def get_scheduled_insight_reports() -> dict:
     This endpoint returns a list of all Scheduled Insight Reports
     https://developer.kantata.com/tag/Insights-Reports
     """
-    scheduled_insight_reports_endpoint = (
-        f"{BASE_ENDPOINT}/scheduled_jobs/insights_report_exports"
-    )
-    info(
-        f"Requesting {scheduled_insight_reports_endpoint} to get ALL scheduled report statuses"
-    )
-    response = make_request("GET", scheduled_insight_reports_endpoint, headers=HEADERS)
-    return response.json()
+    endpoint = "/scheduled_jobs/insights_report_exports"
+    endpoint_purpose = "obtaining SCHEDULED Insight Reports"
+    make_request_kwargs = {"request_type": "GET"}
+    return _call_endpoint(endpoint, endpoint_purpose, **make_request_kwargs)
 
 
 def _calculate_scheduled_report_start_time() -> str:
@@ -70,9 +77,9 @@ def create_scheduled_insight_report(
     This endpoint returns a list of all Scheduled Insight Reports
     https://developer.kantata.com/tag/Insights-Reports
     """
-    scheduled_insight_reports_endpoint = (
-        f"{BASE_ENDPOINT}/scheduled_jobs/insights_report_exports"
-    )
+
+    endpoint = "/scheduled_jobs/insights_report_exports"
+    endpoint_purpose = f"creating new scheduled report '{title}'"
     recurrence = {
         "cadence": cadence,
         "start_time": _calculate_scheduled_report_start_time(),
@@ -85,14 +92,11 @@ def create_scheduled_insight_report(
             "recurrence": recurrence,
         }
     }
-    info(
-        f"POST to {scheduled_insight_reports_endpoint} endpoint to create new scheduled report '{title}'"
+
+    make_request_kwargs = {"request_type": "POST", "json": payload}
+    return _call_endpoint(
+        endpoint, endpoint_purpose, is_print_response=True, **make_request_kwargs
     )
-    response = make_request(
-        "POST", scheduled_insight_reports_endpoint, json=payload, headers=HEADERS
-    )
-    info(response.text)
-    return response.json()
 
 
 def get_latest_export(report_id: str) -> dict:
@@ -128,13 +132,12 @@ def get_scheduled_insight_report(report_id: str) -> dict:
     This endpoint returns one insight report based on a report_id
     Not useful in our case, since we don't always know the report_id beforehand
     """
-    scheduled_insight_report_endpoint = (
-        f"{BASE_ENDPOINT}/scheduled_jobs/insights_report_exports/{report_id}"
+    endpoint = "/scheduled_jobs/insights_report_exports/{report_id}"
+    endpoint_purpose = f"getting scheduled report info for report_id {report_id}"
+    make_request_kwargs = {"request_type": "GET"}
+    return _call_endpoint(
+        endpoint,
+        endpoint_purpose,
+        is_print_response=True,
+        **make_request_kwargs,
     )
-
-    info(
-        f"Requesting {scheduled_insight_report_endpoint} to get report info for report_id {report_id}"
-    )
-    response = make_request("GET", scheduled_insight_report_endpoint, headers=HEADERS)
-    info(response.text)
-    return response.json()

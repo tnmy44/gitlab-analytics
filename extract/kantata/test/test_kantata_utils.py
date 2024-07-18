@@ -8,10 +8,8 @@ from kantata_utils import (
     clean_string,
     convert_timezone,
     have_columns_changed,
-    map_dtypes,
 )
 from pytest import raises
-from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
 
 
 def test_convert_timezone():
@@ -54,7 +52,7 @@ def test_cleaned_string():
     # Test1.5
     str_to_clean = "API Download of ! Rev QBR: Details by Project & User"
     cleaned_str = clean_string(str_to_clean)
-    assert cleaned_str == "api_download_of_rev_qbr_details_by_project_user"
+    assert cleaned_str == "rev_qbr_details_by_project_user"
 
     # Test2
     str_to_clean = "~some_&report)"
@@ -72,37 +70,6 @@ def test_add_csv_file_extension():
     prefix = "some_file"
     filename = add_csv_file_extension(prefix)
     assert filename == f"{prefix}.csv.gz"
-
-
-def test_map_dtypes():
-    """
-    Test that column has the expected mapped sql_type
-    i.e 'full_name' is a String
-    """
-    data = {
-        "full_name": ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"],
-        "age": [28, 34, 45, 23],
-        "salary": [75000.00, 85000.50, 95000.75, 65000.25],
-        "is_usa": [True, False, True, False],
-        "move_date": pd.to_datetime(
-            ["2021-07-01", "2020-05-15", "2019-12-23", "2022-01-10"]
-        ),
-    }
-
-    # Create DataFrame
-    df = pd.DataFrame(data)
-    for col, dtype in df.dtypes.items():
-        sql_dtype = map_dtypes(dtype)
-        if col == "full_name":
-            assert sql_dtype == String
-        if col == "age":
-            assert sql_dtype == Integer
-        if col == "salary":
-            assert sql_dtype == Float
-        if col == "is_usa":
-            assert sql_dtype == Boolean
-        if col == "move_date":
-            assert sql_dtype == DateTime
 
 
 @patch("kantata_utils.read_sql")

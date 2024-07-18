@@ -40,6 +40,7 @@ def clean_string(string_input: str) -> str:
     """
 
     patterns = {
+        r"api.*!": "",
         r"[^a-zA-Z0-9_]": "_",
         r"_+": "_",
     }
@@ -53,11 +54,11 @@ def clean_string(string_input: str) -> str:
 
 
 KANTATA_REPORTS = [
-    "Verify - Time Entry - Financial",
+    "API Download: !NC Project Details Table Including Custom Fields",
+    "API Download: !NC Project Budget Details",
     "API Download of ! Rev QBR: Details by Project & User",
     "API Download: ! Forecast: FF + T&M [table] [week]",
-    "API Download: !NC Project Budget Details",
-    "API Download: !NC Project Details Table Including Custom Fields",
+    "API Download: ! Remaining to Forecast",
 ]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 

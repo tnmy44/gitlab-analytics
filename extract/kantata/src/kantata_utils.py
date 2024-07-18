@@ -11,11 +11,11 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
-from pandas import api as pd_api, DataFrame, read_sql
+from pandas import DataFrame, read_sql
 from sqlalchemy import Column, MetaData, Table, func
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
-from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
+from sqlalchemy.types import DateTime, String
 
 from args import parse_arguments
 
@@ -66,6 +66,7 @@ def clean_string(string_input: str) -> str:
     - Ensure the name doesn't start or end with '_'
     """
     patterns = {
+        r"api.*!": "",
         r"[^a-zA-Z0-9_]": "_",
         r"_+": "_",
     }
@@ -81,19 +82,6 @@ def clean_string(string_input: str) -> str:
 def add_csv_file_extension(prefix: str) -> str:
     """Add file extension"""
     return f"{prefix}.csv.gz"
-
-
-def map_dtypes(dtype):
-    """Function to map pandas dtypes to SQLAlchemy types"""
-    if pd_api.types.is_integer_dtype(dtype):
-        return Integer
-    if pd_api.types.is_float_dtype(dtype):
-        return Float
-    if pd_api.types.is_bool_dtype(dtype):
-        return Boolean
-    if pd_api.types.is_datetime64_any_dtype(dtype):
-        return DateTime
-    return String
 
 
 def have_columns_changed(
@@ -124,9 +112,8 @@ def seed_kantata_table(
         f"Either table does not exist, or schema has changed... \
         Creating table: {snowflake_table_name}"
     )
-    snowflake_types = [
-        Column(col, String) for col, dtype in df.dtypes.items()
-    ]
+    # hardcode all raw table columns as String, will cast downstream
+    snowflake_types = [Column(col, String) for col, dtype in df.dtypes.items()]
     snowflake_types.append(
         Column("uploaded_at", DateTime, server_default=func.current_timestamp())
     )  # Add timestamp column with default value
