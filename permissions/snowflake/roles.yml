@@ -485,6 +485,7 @@ roles:
           read:
             - prep.sensitive.mart_marketing_contact
             - prod.pumps_sensitive.pump_marketing_contact
+            - prod.pumps_sensitive.pump_smb_daily_case_automation
   - analyst_people_sensitive:
       warehouses:
         - dev_xs
