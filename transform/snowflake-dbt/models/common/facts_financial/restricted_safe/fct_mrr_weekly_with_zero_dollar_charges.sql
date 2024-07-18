@@ -1,3 +1,7 @@
+{{ config({
+    "alias": "fct_mrr_all_weekly"
+}) }}
+
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_charge', 'prep_charge_mrr'),
