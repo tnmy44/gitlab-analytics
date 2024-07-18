@@ -11,7 +11,7 @@ SELECT
    * 
 FROM
    rpt_product_usage_health_score 
-where
+WHERE
    is_primary_instance_subscription = true
 ) 
 
