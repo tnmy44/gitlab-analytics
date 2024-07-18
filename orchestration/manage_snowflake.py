@@ -195,7 +195,7 @@ class SnowflakeManager:
 
         logging.info(f"running for role {role}")
 
-
+        role = role.lower()
         inherited_roles =  self.get_role_inheritances(role, roles)
         logging.info(f"found inherited roles: {inherited_roles}")
         inherited_roles_in =  "', '".join(inherited_roles)
@@ -218,7 +218,7 @@ class SnowflakeManager:
                 FROM "{clone}".information_schema.tables
               )
             AND (grantee_name = UPPER('{role}')
-            OR grantee_name in ('{inherited_roles_in}')
+            OR LOWER(grantee_name) in ('{inherited_roles_in}')
             );
         """
 
