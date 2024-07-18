@@ -193,7 +193,7 @@ class SnowflakeManager:
 
         roles = roles_yaml["roles"]
 
-        inherited_roles = set(self.get_role_inheritances(role, self.roles))
+        inherited_roles = set(self.get_role_inheritances(role, roles))
 
         get_grants_query = f"""
             SELECT
