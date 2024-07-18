@@ -10,7 +10,8 @@
     ('mart_crm_task','mart_crm_task'),
     ('mart_team_member_directory','mart_team_member_directory'),
     ('bdg_crm_opportunity_contact_role','bdg_crm_opportunity_contact_role'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('prep_sales_dev_user_hierarchy', 'prep_sales_dev_user_hierarchy')
   ]) 
 }}
 
@@ -95,56 +96,6 @@
       ON mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     WHERE sdr_bdr_user_id IS NOT NULL 
       AND stage_1_discovery_date >= '2022-02-01' 
-
-
-), sales_dev_hierarchy AS (
-   SELECT DISTINCT 
-   --Sales Dev Data
-    sales_dev_rep.dim_crm_user_id AS sales_dev_rep_user_id, 
-    sales_dev_rep.user_role_name AS sales_dev_rep_role_name,
-    COALESCE(rep.full_name, sales_dev_rep.user_name)               AS sales_dev_rep_user_name,
-    sales_dev_rep.title AS sales_dev_rep_title,
-    sales_dev_rep.department AS sales_dev_rep_department,
-    sales_dev_rep.team AS sales_dev_rep_team,
-    sales_dev_rep.is_active AS sales_dev_rep_is_active,
-    sales_dev_rep.crm_user_sales_segment,
-    sales_dev_rep.crm_user_geo,
-    sales_dev_rep.crm_user_region,
-    sales_dev_rep.crm_user_area,
-    sales_dev_rep.crm_user_business_unit,
-    sales_dev_rep.employee_number, 
-    sales_dev_rep.user_email AS sales_dev_rep_email,
- -- manager_data 
-    sales_dev_rep.manager_id AS sales_dev_rep_direct_manager_id,
-    COALESCE(manager.full_name, sales_dev_manager.user_name) AS sales_dev_rep_direct_manager_name,
-    sales_dev_manager.user_email AS sales_dev_manager_email,
-    sales_dev_manager.user_role_name AS sales_dev_manager_role_name,
-  --Leader Data
-    sales_dev_manager.manager_id AS sales_dev_rep_manager_id,
-    COALESCE(leader.full_name, sales_dev_leader.user_name) AS sales_dev_rep_manager_name,
-    sales_dev_leader.user_email AS sales_dev_leader_email,
-    sales_dev_leader.user_role_name AS sales_dev_leader_role_name
-
-  FROM dim_crm_user sales_dev_rep
-
-  INNER JOIN sales_dev_opps 
-    ON sales_dev_rep.dim_crm_user_id = sales_dev_opps.sdr_bdr_user_id
-
-  LEFT JOIN dim_crm_user sales_dev_manager 
-    ON sales_dev_rep.manager_id = sales_dev_manager.dim_crm_user_id  
-
-  LEFT JOIN dim_crm_user sales_dev_leader 
-    ON sales_dev_manager.manager_id = sales_dev_leader.dim_crm_user_id 
-
-  LEFT JOIN mart_team_member_directory AS rep 
-    ON sales_dev_rep_email = rep.work_email
-
-  LEFT JOIN mart_team_member_directory AS manager 
-    ON sales_dev_manager_email = manager.work_email
-
-  LEFT JOIN mart_team_member_directory AS leader 
-    ON sales_dev_leader_email = leader.work_email
-
 
 ), merged_person_base AS (
 
@@ -382,7 +333,36 @@
     opp_to_lead.account_bdr_assigned_user_role,
     opp_to_lead.bdr_recycle_date,
     opp_to_lead.actively_working_start_date,
-    sales_dev_hierarchy.*
+    opportunity_snapshot_hierarchy.dim_crm_user_id AS sales_dev_rep_user_id,
+    opportunity_snapshot_hierarchy.sales_dev_rep_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_email,
+    opportunity_snapshot_hierarchy.sales_dev_rep_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_title,
+    opportunity_snapshot_hierarchy.sales_dev_rep_department,
+    opportunity_snapshot_hierarchy.sales_dev_rep_team,
+    opportunity_snapshot_hierarchy.sales_dev_rep_is_active,
+    opportunity_snapshot_hierarchy.crm_user_sales_segment,
+    opportunity_snapshot_hierarchy.crm_user_geo,
+    opportunity_snapshot_hierarchy.crm_user_region,
+    opportunity_snapshot_hierarchy.crm_user_area,
+    opportunity_snapshot_hierarchy.sales_dev_rep_employee_number,
+    opportunity_snapshot_hierarchy.sales_dev_rep_direct_manager_id,
+    opportunity_snapshot_hierarchy.sales_dev_manager_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_manager_email,
+    opportunity_snapshot_hierarchy.sales_dev_manager_employee_number
+    opportunity_snapshot_hierarchy.sales_dev_manager_user_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_id,
+    opportunity_snapshot_hierarchy.sales_dev_leader_user_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_employee_number,
+    opportunity_snapshot_hierarchy.sales_dev_leader_email
+    activity_snapshot_hierarchy.dim_crm_user_id AS activity_sales_dev_rep_user_id,
+    activity_snapshot_hierarchy.sales_dev_rep_role_name AS activity_sales_dev_rep_role_name,
+    activity_snapshot_hierarchy.sales_dev_rep_email AS activity_sales_dev_rep_email,
+    activity_snapshot_hierarchy.sales_dev_rep_full_name AS activity_sales_dev_rep_full_name,
+    activity_snapshot_hierarchy.sales_dev_manager_full_name AS activity_sales_Dev_manager_full_name,
+    activity_snapshot_hierarchy.sales_dev_leader_full_name AS activity_sales_dev_leader_full_name
+
   FROM mart_crm_person
   LEFT JOIN dim_date dim_mql_date
    ON mart_crm_person.mql_date_latest = dim_mql_date.date_day 
@@ -392,8 +372,14 @@
     ON mart_crm_person.dim_crm_person_id = activity_final.dim_crm_person_id 
   LEFT JOIN opp_to_lead 
     ON mart_crm_person.dim_crm_person_id = opp_to_lead.waterfall_person_id
-LEFT JOIN sales_dev_hierarchy
+  LEFT JOIN sales_dev_hierarchy
     ON COALESCE(opp_to_lead.sdr_bdr_user_id,activity_final.dim_crm_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id 
+  LEFT JOIN prep_sales_dev_user_hierarchy opportunity_snapshot_hierarchy
+    ON opp_to_lead.sdr_bdr_user_id = opportunity_snapshot_hierarchy.dim_crm_user_id 
+    AND stage_1_discovery_date = opportunity_snapshot_hierarchy.snapshot_date
+  LEFT JOIN prep_sales_dev_user_hierarchy activity_snapshot_hierarchy
+    ON activity_final.dim_crm_user_id = activity_snapshot_hierarchy.dim_crm_user_id 
+    AND activity_final.activity_date = activity_snapshot_hierarchy.snapshot_date
   WHERE activity_to_sao_days <= 90 OR activity_to_sao_days IS NULL 
   UNION 
   SELECT DISTINCT -- distinct is necessary in order to not duplicate rows as addition of the rule above of activity_to_sao_days >90 might create multiple rows if there are multiple leads that satisfy the condition per opp which is not ideal. 
@@ -498,17 +484,46 @@ LEFT JOIN sales_dev_hierarchy
     opps_missing_link.account_bdr_assigned_user_role,
     opps_missing_link.bdr_recycle_date,
     opps_missing_link.actively_working_start_date,
-    sales_dev_hierarchy.*
+    opportunity_snapshot_hierarchy.dim_crm_user_id AS sales_dev_rep_user_id,
+    opportunity_snapshot_hierarchy.sales_dev_rep_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_email,
+    opportunity_snapshot_hierarchy.sales_dev_rep_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_title,
+    opportunity_snapshot_hierarchy.sales_dev_rep_department,
+    opportunity_snapshot_hierarchy.sales_dev_rep_team,
+    opportunity_snapshot_hierarchy.sales_dev_rep_is_active,
+    opportunity_snapshot_hierarchy.crm_user_sales_segment,
+    opportunity_snapshot_hierarchy.crm_user_geo,
+    opportunity_snapshot_hierarchy.crm_user_region,
+    opportunity_snapshot_hierarchy.crm_user_area,
+    opportunity_snapshot_hierarchy.sales_dev_rep_employee_number,
+    opportunity_snapshot_hierarchy.sales_dev_rep_direct_manager_id,
+    opportunity_snapshot_hierarchy.sales_dev_manager_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_manager_email,
+    opportunity_snapshot_hierarchy.sales_dev_manager_employee_number
+    opportunity_snapshot_hierarchy.sales_dev_manager_user_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_id,
+    opportunity_snapshot_hierarchy.sales_dev_leader_user_role_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_leader_employee_number,
+    opportunity_snapshot_hierarchy.sales_dev_leader_email,
+    NULL AS activity_sales_dev_rep_user_id,
+    NULL AS activity_sales_dev_rep_role_name,
+    NULL AS activity_sales_dev_rep_email,
+    NULL AS activity_sales_dev_rep_full_name,
+    NULL AS activity_sales_Dev_manager_full_name,
+    NULL AS activity_sales_dev_leader_full_name
   FROM opps_missing_link
-  LEFT JOIN sales_dev_hierarchy 
-    ON opps_missing_link.sdr_bdr_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
+  LEFT JOIN prep_sales_dev_user_hierarchy opportunity_snapshot_hierarchy
+    ON opp_to_lead.sdr_bdr_user_id = opportunity_snapshot_hierarchy.dim_crm_user_id 
+    AND stage_1_discovery_date = opportunity_snapshot_hierarchy.snapshot_date
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@dmicovic",
     created_date="2023-09-06",
     updated_date="2024-06-26",
   ) }}
