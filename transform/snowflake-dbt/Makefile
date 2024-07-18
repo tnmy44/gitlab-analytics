@@ -110,12 +110,14 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
-	@echo $(CI_MERGE_REQUEST_DIFF_BASE_SHA)
-	@echo $(CI_CHANGES)
-	@echo $(SQLFLUFF_DEV_COMMAND) 
-	@echo $(SQLFLUFF_DEV_MODELS) 
-	@echo $(SQLFLUFF_DEV_CONFIG)
-	@echo '$(SQLFLUFF_COMMAND)'
+	@echo sha $(CI_MERGE_REQUEST_DIFF_BASE_SHA)
+	@echo ci_changes $(CI_CHANGES)
+	@echo git_changes_root $(GIT_CHANGES_ROOT)
+	@echo dev_changes $(SQLFLUFF_DEV_CHANGES)
+	@echo dev_models $(SQLFLUFF_DEV_MODELS) 
+	@echo dev_command $(SQLFLUFF_DEV_COMMAND) 
+	@echo dev config $(SQLFLUFF_DEV_CONFIG)
+	@echo command '$(SQLFLUFF_COMMAND)'
 #@$(SQLFLUFF_COMMAND)
 
 safe-check:
