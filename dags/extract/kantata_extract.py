@@ -69,6 +69,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
@@ -77,6 +78,7 @@ default_args = {
 # Define the DAG
 dag = DAG(
     "el_kantata_extract",
+    description="Extract data from Kantata API endpoint",
     default_args=default_args,
     # Run shortly before dbt dag which is at 8:45UTC
     schedule_interval="0 8 * * *",

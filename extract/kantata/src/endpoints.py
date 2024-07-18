@@ -51,8 +51,8 @@ def get_scheduled_insight_reports() -> dict:
 
 def _calculate_scheduled_report_start_time() -> str:
     """
-    The scheduled report start_time should be today's date, at 7:15 UTC
-    That way the extract can run at 8UTC, and dbt at 8:45UTC
+    The scheduled report start_time should be today's date, at 7:00 UTC (system rounds down to hour)
+    That way the extract can run at 8:00 UTC, and dbt at 8:45 UTC
     """
     today = datetime.today().date()
     datetime_7_15_am = datetime.combine(today, time(7, 15))
@@ -100,7 +100,7 @@ def get_latest_export(report_id: str) -> dict:
     This endpoint returns the latest export for a particular scheduled report
     """
     try_count, max_try_count = 0, 3
-    latest_export_endpoint = f"https://api.mavenlink.com/api/v1/scheduled_jobs/insights_report_exports/{report_id}/results/latest"
+    latest_export_endpoint = f"{BASE_ENDPOINT}/scheduled_jobs/insights_report_exports/{report_id}/results/latest"
     info(
         f"Requesting {latest_export_endpoint} to get the latest export for report_id {report_id}"
     )

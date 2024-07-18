@@ -64,8 +64,8 @@ def test_retrieve_scheduled_insight_report():
     assert result_d is None
 
 
-@patch("kantata.convert_pst_to_utc_str")
-def test_has_valid_latest_export(mock_convert_pst_to_utc_str):
+@patch("kantata.convert_timezone")
+def test_has_valid_latest_export(mock_convert_timezone):
     """
     Test1: latest_result key doesn't exist
     Test2: latest_result['status'] == 'failure'
@@ -99,14 +99,14 @@ def test_has_valid_latest_export(mock_convert_pst_to_utc_str):
         "created_at": "some_data_that_will_be_mocked",
     }
 
-    mock_convert_pst_to_utc_str.return_value = "2024-01-01T07:59:59"
+    mock_convert_timezone.return_value = "2024-01-01T07:59:59"
 
     is_valid_latest_export3 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export3 is False
 
     # Test4
 
-    mock_convert_pst_to_utc_str.return_value = "2024-01-02T08:00:00"
+    mock_convert_timezone.return_value = "2024-01-02T08:00:00"
 
     is_valid_latest_export4 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export4 is False
@@ -118,7 +118,7 @@ def test_has_valid_latest_export(mock_convert_pst_to_utc_str):
         "external_report_object_identifier": "some_identifier",
         "created_at": "some_data_that_will_be_mocked",
     }
-    mock_convert_pst_to_utc_str.return_value = "2024-01-01T08:00:00"
+    mock_convert_timezone.return_value = "2024-01-01T08:00:00"
 
     is_valid_latest_export5 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export5 is True

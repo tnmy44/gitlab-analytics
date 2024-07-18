@@ -6,15 +6,15 @@ import pandas as pd
 from kantata_utils import (
     add_csv_file_extension,
     clean_string,
-    convert_pst_to_utc_str,
-    has_schema_changed,
+    convert_timezone,
+    have_columns_changed,
     map_dtypes,
 )
 from pytest import raises
 from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
 
 
-def test_convert_pst_to_utc_str():
+def test_convert_timezone():
     """
     Test1: make sure regular date is correctly converted
     Test2: Daylight savings time check
@@ -22,12 +22,12 @@ def test_convert_pst_to_utc_str():
     """
     # Test1
     dt_pst_str = "2022-07-01T09:00:48"
-    res = convert_pst_to_utc_str(dt_pst_str)
+    res = convert_timezone(dt_pst_str)
     assert res == "2022-07-01T16:00:48+00:00"
 
     # Test2
     dt_pst_str = "2022-01-01T08:00:48"
-    res = convert_pst_to_utc_str(dt_pst_str)
+    res = convert_timezone(dt_pst_str)
     assert res == "2022-01-01T16:00:48+00:00"
 
     # Test3
@@ -36,7 +36,7 @@ def test_convert_pst_to_utc_str():
         ValueError,
         match="Invalid isoformat string",
     ):
-        convert_pst_to_utc_str(dt_pst_str)
+        convert_timezone(dt_pst_str)
 
 
 def test_cleaned_string():
@@ -100,7 +100,7 @@ def test_map_dtypes():
 
 
 @patch("kantata_utils.read_sql")
-def test_has_schema_changed(mock_snowflake_read_sql):
+def test_have_columns_changed(mock_snowflake_read_sql):
     """
     Test1: The API and snowflake table has matching columns
     Test2: The API and snowflake table do NOT have matching columns
@@ -117,7 +117,7 @@ def test_has_schema_changed(mock_snowflake_read_sql):
     mock_snowflake_read_sql.return_value["uploaded_at"] = ""
 
     df_api = pd.DataFrame(data)
-    assert has_schema_changed(snowflake_engine, df_api, snowflake_table_name) is False
+    assert have_columns_changed(snowflake_engine, df_api, snowflake_table_name) is False
 
     # Test2
     data2 = {
@@ -125,4 +125,4 @@ def test_has_schema_changed(mock_snowflake_read_sql):
         "last_name": ["Doe", "Smith"],
     }
     df_api2 = pd.DataFrame(data2)
-    assert has_schema_changed(snowflake_engine, df_api2, snowflake_table_name) is True
+    assert have_columns_changed(snowflake_engine, df_api2, snowflake_table_name) is True
