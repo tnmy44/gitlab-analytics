@@ -2023,7 +2023,7 @@ models:
     - name: is_direct_connection
       description: ' {{ doc("code_suggestions_is_direct_connection") }} '
     - name: gitlab_global_user_id
-      description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
+      description: '{{ doc("gitlab_global_user_id") }}'
     - name: ultimate_parent_namespace_ids
       description: '{{ doc("code_suggestions_ultimate_parent_namespace_ids") }}'
     - name: dim_installation_ids
@@ -2120,7 +2120,7 @@ models:
     - name: is_direct_connection
       description: ' {{ doc("code_suggestions_is_direct_connection") }} '
     - name: gitlab_global_user_id
-      description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
+      description: '{{ doc("gitlab_global_user_id") }}'
     - name: instance_id
       description: '{{ doc("dim_instance_id") }}'
     - name: host_name

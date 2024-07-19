@@ -1440,6 +1440,16 @@ models:
       description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
       description: '{{ doc("model_updated_date") }}'
+    - name: dim_instance_id
+      description: '{{ doc("dim_instance_id") }}'
+    - name: host_name
+      description: '{{ doc("host_name") }}'
+    - name: instance_version
+      description: '{{ doc("gsc_instance_version") }}'
+    - name: gitlab_global_user_id
+      description: '{{ doc("gitlab_global_user_id") }}'
+    - name: delivery_type
+      description: '{{ doc("product_delivery_type") }}'
 
 - name: mart_behavior_structured_event_code_suggestion
   description: '{{ doc("mart_behavior_structured_event_code_suggestion") }}'
@@ -1508,7 +1518,7 @@ models:
     - name: is_streaming
       description: '{{ doc("code_suggestions_is_streaming") }}'
     - name: gitlab_global_user_id
-      description: '{{ doc("code_suggestions_gitlab_global_user_id") }}'
+      description: '{{ doc("gitlab_global_user_id") }}'
     - name: namespace_ids
       description: '{{ doc("code_suggestions_namespace_ids") }}'
     - name: ultimate_parent_namespace_ids

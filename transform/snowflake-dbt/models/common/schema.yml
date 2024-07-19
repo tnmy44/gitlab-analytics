@@ -6683,7 +6683,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -6774,6 +6774,8 @@ models:
         description: ' {{ doc("code_suggestions_has_advanced_context") }} '
       - name: is_direct_connection
         description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
   - name: fct_behavior_structured_event_30
     description: '{{ doc("fct_behavior_structured_event_30") }}'
@@ -6936,7 +6938,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -7027,6 +7029,8 @@ models:
         description: ' {{ doc("code_suggestions_has_advanced_context") }} '
       - name: is_direct_connection
         description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
   - name: fct_behavior_structured_event_90
     description: '{{ doc("fct_behavior_structured_event_90") }}'
@@ -7189,7 +7193,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -7280,6 +7284,8 @@ models:
         description: ' {{ doc("code_suggestions_has_advanced_context") }} '
       - name: is_direct_connection
         description: ' {{ doc("code_suggestions_is_direct_connection") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
@@ -7563,7 +7569,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -7642,6 +7648,8 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
   - name: fct_behavior_structured_event_without_assignment_190
     description: '{{ doc("fct_behavior_structured_event_without_assignment_190") }}'
@@ -7804,7 +7812,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -7883,6 +7891,8 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
 
   - name: fct_behavior_structured_event_without_assignment_400
@@ -8046,7 +8056,7 @@ models:
       - name: is_streaming
         description: ' {{ doc("code_suggestions_is_streaming") }} '
       - name: gitlab_global_user_id
-        description: ' {{ doc("code_suggestions_gitlab_global_user_id") }} '
+        description: ' {{ doc("gitlab_global_user_id") }} '
       - name: ide_extension_version_context
         description: ' {{ doc("ide_extension_version_context") }} '
       - name: ide_extension_version_context_schema
@@ -8125,6 +8135,8 @@ models:
         description: ' {{ doc("unload_event_end") }} '
       - name: unload_event_start
         description: ' {{ doc("unload_event_start") }} '
+      - name: gsc_instance_version
+        description: ' {{ doc("gsc_instance_version") }} '
 
   - name: fct_behavior_structured_event_redis_hll_counters
     description: '{{ doc("fct_behavior_structured_event_redis_hll_counters") }}'
@@ -9637,7 +9649,7 @@ models:
     - name: is_streaming
       description: '{{ doc("code_suggestions_is_streaming") }}'
     - name: gitlab_global_user_id
-      description: ' doc("code_suggestions_gitlab_global_user_id") '
+      description: ' doc("gitlab_global_user_id") '
     - name: ultimate_parent_namespace_ids
       description: '{{ doc("code_suggestions_ultimate_parent_namespace_ids") }} '
     - name: subscription_names

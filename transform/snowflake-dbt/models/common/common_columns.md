@@ -432,7 +432,7 @@ The identifier of the host, easily joined to `dim_installation` or `dim_host`. T
 
 {% docs host_name %}
 
-The name (URL) of the host. This appears as `hostname` in the ping payload.
+The name (URL) of the host. This appears as `hostname` in the ping payload. In Snowplow events, this field is coalesced from the GitLab Standard context and the Code Suggestions context.
 
 {% enddocs %}
 
@@ -2735,6 +2735,12 @@ List of namespaces that allow the user to use the tracked feature. This list doe
 
 {% enddocs %}
 
+{% docs gsc_instance_version %}
+
+Version of the GitLab instance where the event comes from.
+
+{% enddocs %}
+
 {% docs web_page_context %}
 
 Web page fields added to Snowplow as defined in the [schema](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0)
@@ -2882,12 +2888,6 @@ Coalesced list of namespace ids from `duo_namespace_ids` and `saas_namespace_ids
 {% docs code_suggestions_is_streaming %}
 
 Code suggestions can be returned to the user in a single response or as a stream (in chunks). This boolean field distinguishes between the streamed and non-streamed responses.
-
-{% enddocs %}
-
-{% docs code_suggestions_gitlab_global_user_id %}
-
-Pseudonymised combination of instance id and user id sent in Code Suggestions events.
 
 {% enddocs %}
 
@@ -3455,5 +3455,11 @@ The flag indicating if the record has been deleted
 {% docs is_deleted_updated_at %}
  
 The timestamp of when the `is_deleted` flag has been updated
+
+{% enddocs %}
+
+{% docs gitlab_global_user_id %}
+
+Pseudonymised combination of instance id and user id coalesced from the `global_user_id` sent in the GitLab Standard Context and the `gitlab_global_user_id` sent in Code Suggestions events.
 
 {% enddocs %}
