@@ -57,7 +57,7 @@ structured_behavior AS (
     user_timezone_name,
     instance_id           AS dim_instance_id,
     host_name,
-    instance_version,
+    gsc_instance_version,
     delivery_type
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE is_staging_event = FALSE
@@ -104,7 +104,7 @@ report AS (
     structured_behavior.user_timezone_name,
     structured_behavior.dim_instance_id,
     structured_behavior.host_name,
-    structured_behavior.instance_version,
+    structured_behavior.gsc_instance_version,
     structured_behavior.delivery_type,
     event.event_category,
     event.event_action,
@@ -138,7 +138,7 @@ report AS (
   LEFT JOIN browser
     ON structured_behavior.dim_behavior_browser_sk = browser.dim_behavior_browser_sk
   LEFT JOIN plan
-    ON structured_behavior.dim_plan_sk = plan.dim_plan_sk
+  ON structured_behavior.dim_plan_sk = plan.dim_plan_sk
   LEFT JOIN dates
     ON{{ get_date_id('structured_behavior.behavior_at') }} = dates.date_id
 )
