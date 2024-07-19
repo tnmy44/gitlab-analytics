@@ -38,6 +38,8 @@ def get_insight_reports(report_title_to_query: Optional[str] = None) -> dict:
     https://developer.kantata.com/tag/Insights-Reports
 
     If an optional `report_title_to_query` arg is passed in, will filter only for matching reports
+    The optional arg isn't currently being used because in main(),
+    it's possible that multiple reports need to be processed
     """
     endpoint = "/insights_reports"
     endpoint_purpose = "obtaining all possible Insight reports"

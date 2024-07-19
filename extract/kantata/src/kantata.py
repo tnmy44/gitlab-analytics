@@ -28,29 +28,53 @@ from kantata_utils import (
 from requests import Response
 
 
+def _retrieve_latest_matching_item(match_str: str, reports: list, match_key: str):
+    """
+    Base function to retrieve the latest, matching dictionary from a list
+    The value of report[match_key] must equal 'match_str'
+    """
+    max_created_at = "1970-01-01"
+    matching_report = {}
+
+    for report_d in reports:
+        if (
+            report_d.get(match_key, "") == match_str
+            and report_d["created_at"] > max_created_at
+        ):
+            max_created_at = report_d["created_at"]
+            matching_report = report_d
+
+    return matching_report
+
+
 def retrieve_insight_report_external_identifier(
     report_name: str, insight_reports: list
 ) -> Optional[str]:
-    """Retrieve the report 'external identifier'"""
-    for report_d in insight_reports:
-        if report_d.get("title", "") == report_name:
-            return report_d["identifier"]
-    return None
+    """
+    Retrieve the report 'external_repoort_identifier'
+    It's possible that there are multiple Insight Reports with
+    the same report_name.
+    In this case, return the latest report based off 'created_at'
+    """
+    latest_insight_report = _retrieve_latest_matching_item(
+        report_name, insight_reports, "title"
+    )
+    return latest_insight_report.get("identifier")
 
 
 def retrieve_scheduled_insight_report(
     report_external_identifier: str, scheduled_insight_reports: list
 ) -> Optional[dict]:
     """
-    Retrieve the scheduled_insight_report json that matches the specified report
+    Retrieve the scheduled_insight_report json that matches the report_external_identifier
+    There can be multiple scheduled reports with same report_external_identifier...
+    in this case, return the latest one
     """
-    for report_d in scheduled_insight_reports:
-        if (
-            report_d.get("external_report_object_identifier", "")
-            == report_external_identifier
-        ):
-            return report_d
-    return None
+    return _retrieve_latest_matching_item(
+        report_external_identifier,
+        scheduled_insight_reports,
+        "external_report_object_identifier",
+    )
 
 
 def has_valid_latest_export(scheduled_insight_report: dict) -> bool:

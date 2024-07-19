@@ -19,36 +19,72 @@ def test_retrieve_insight_report_external_identifier():
     """
     Test1: Test that the correct identifier is returned
     Test2: Test that None is returned when the report title doesn't exist
+    Test3: Test that when there are multiple reports with the same matching title,
+    that the identifier with the most recent created_at is returned
     """
     report_name_to_find = "some_report"
 
     # Test1
     insight_reports = [
-        {"title": "some_report", "identifier": "some_identifier"},
-        {"title": "some_other_report", "identifier": "some_other_identifier"},
+        {
+            "title": "some_report",
+            "identifier": "some_identifier",
+            "created_at": "1999-12-31",
+        },
+        {
+            "title": "some_other_report",
+            "identifier": "some_other_identifier",
+            "created_at": "2024-01-01",
+        },
     ]
     identifier = retrieve_insight_report_external_identifier(
         report_name_to_find, insight_reports
     )
     assert identifier == "some_identifier"
 
-    # Test1
+    # Test2
     insight_reports = [{}]
     identifier = retrieve_insight_report_external_identifier(
         report_name_to_find, insight_reports
     )
     assert identifier is None
 
+    # Test3
+    insight_reports = [
+        {
+            "title": "same_title",
+            "identifier": "correct_identifier",
+            "created_at": "2024-01-01",
+        },
+        {
+            "title": "same_title",
+            "identifier": "wrong_identifier",
+            "created_at": "1999-12-31",
+        },
+        {
+            "title": "other_title",
+            "identifier": "some_identifier",
+            "created_at": "2024-01-01",
+        },
+    ]
+    report_name_to_find = "same_title"
+    identifier = retrieve_insight_report_external_identifier(
+        report_name_to_find, insight_reports
+    )
+    assert identifier == "correct_identifier"
+
 
 def test_retrieve_scheduled_insight_report():
     """
     Test1: Test that the correct report dict is returned
     Test2: Test that None is returned when the identifier doesn't exist
+    Test3: Test that the identifier with the most recent created_at is returned
     """
-    report_d1 = {}
+    report_d1 = {"created_at": "1999-12-31"}
     report_d2 = {
         "external_report_object_identifier": "some_identifier",
         "title": "some_title",
+        "created_at": "2024-01-01",
     }
     scheduled_insight_reports = [report_d1, report_d2]
 
@@ -64,7 +100,31 @@ def test_retrieve_scheduled_insight_report():
     result_d = retrieve_scheduled_insight_report(
         report_external_identifier, scheduled_insight_reports
     )
-    assert result_d is None
+    assert result_d == {}
+
+    # Test3
+    report_d1 = {
+        "external_report_object_identifier": "same_identifier",
+        "title": "correct_dict",
+        "created_at": "2024-01-02",
+    }
+    report_d2 = {
+        "external_report_object_identifier": "same_identifier",
+        "title": "wrong_dict",
+        "created_at": "2024-01-01",
+    }
+    report_d3 = {
+        "external_report_object_identifier": "some_identifier",
+        "title": "some_title",
+        "created_at": "2024-01-02",
+    }
+    scheduled_insight_reports = [report_d1, report_d2, report_d3]
+
+    report_external_identifier = "same_identifier"
+    result_d = retrieve_scheduled_insight_report(
+        report_external_identifier, scheduled_insight_reports
+    )
+    assert result_d == report_d1
 
 
 @patch("kantata.convert_timezone")
