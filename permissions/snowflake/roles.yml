@@ -5728,6 +5728,11 @@ roles:
   - whaber:
       member_of: []
       warehouses: []
+  - ekim:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - nprabakaran:
       member_of:
         - snowflake_analyst
@@ -6895,6 +6900,10 @@ users:
       can_login: true
       member_of:
         - jcoghlan
+  - ekim:
+      can_login: true
+      member_of:
+        - ekim
   - wmeek:
       can_login: true
       member_of:
