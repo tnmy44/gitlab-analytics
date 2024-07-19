@@ -355,12 +355,12 @@
     opportunity_snapshot_hierarchy.sales_dev_leader_user_role_name,
     opportunity_snapshot_hierarchy.sales_dev_leader_full_name,
     opportunity_snapshot_hierarchy.sales_dev_leader_employee_number,
-    opportunity_snapshot_hierarchy.sales_dev_leader_email
+    opportunity_snapshot_hierarchy.sales_dev_leader_email,
     activity_snapshot_hierarchy.dim_crm_user_id AS activity_sales_dev_rep_user_id,
     activity_snapshot_hierarchy.sales_dev_rep_role_name AS activity_sales_dev_rep_role_name,
     activity_snapshot_hierarchy.sales_dev_rep_email AS activity_sales_dev_rep_email,
     activity_snapshot_hierarchy.sales_dev_rep_full_name AS activity_sales_dev_rep_full_name,
-    activity_snapshot_hierarchy.sales_dev_manager_full_name AS activity_sales_Dev_manager_full_name,
+    activity_snapshot_hierarchy.sales_dev_manager_full_name AS activity_sales_dev_manager_full_name,
     activity_snapshot_hierarchy.sales_dev_leader_full_name AS activity_sales_dev_leader_full_name
 
   FROM mart_crm_person
