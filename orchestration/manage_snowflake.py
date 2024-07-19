@@ -160,14 +160,13 @@ class SnowflakeManager:
         """
         retrieves snowflake roles from roles.yml
         """
+
         roles_yaml_url = "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
-        data = urllib.request.urlopen(roles_yaml_url)
-
-        try:
-            roles_yaml = safe_load(data)
-        except YAMLError as exc:
-            logging.info(f"yaml error: {exc}")
-
+        with urllib.request.urlopen(roles_yaml_url) as data:
+            try:
+                roles_yaml = safe_load(data)
+            except YAMLError as exc:
+                logging.info(f"yaml error: {exc}")
         roles = roles_yaml["roles"]
 
         return roles
