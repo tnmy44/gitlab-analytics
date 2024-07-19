@@ -156,6 +156,9 @@ class SnowflakeManager:
                 self.clone_stages(create_db, database, schema)
 
     def get_role_inheritances(self, role_name: str, roles_list: list) -> list:
+        """
+        Traverse list of dictionaries with snowflake roles to compile role inheritances
+        """
         role_inheritances = next(
             (
                 role[role_name].get("member_of", [])
@@ -174,7 +177,7 @@ class SnowflakeManager:
 
     def grant_clones(self, role, database):
         """
-        Grant privileges on a clone.
+        Grant privileges on a clone. Based on existing grants in production databases.
         """
 
         if database == "prep":
