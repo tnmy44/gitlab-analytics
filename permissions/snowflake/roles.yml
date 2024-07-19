@@ -1756,6 +1756,17 @@ roles:
         tables:
           read:
             - feature_store.feast.*
+  - fivetran_log:
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.fivetran_log
+        tables:
+          read:
+            - raw.fivetran_log.*
   - gainsight_pump:
       warehouses:
         - gainsight_xs
@@ -4937,6 +4948,7 @@ roles:
         - analyst_people
         - analyst_sales
         - bamboohr
+        - fivetran_log
         - prometheus
         - pto
         - snowflake_analyst_safe
