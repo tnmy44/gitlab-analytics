@@ -314,5 +314,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-07-17"
+    updated_date="2024-07-19"
 ) }}

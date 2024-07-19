@@ -79,7 +79,8 @@ WITH filtered_source as (
             {'field':'instance_id', 'alias':"gsc_instance_id"},
             {'field':'instance_version'},
             {'field':'host_name', 'alias':"gsc_host_name"},
-            {'field':'realm', 'alias':"gsc_realm"}
+            {'field':'realm', 'alias':"gsc_realm"},
+            {'field':'global_user_id'}
             ]
         )
       }},
@@ -282,7 +283,8 @@ SELECT
   COALESCE(MAX(column_selection.gsc_host_name), MAX(column_selection.host_name))
                                                               AS host_name,
   MAX(column_selection.is_streaming)                          AS is_streaming,
-  MAX(column_selection.gitlab_global_user_id)                 AS gitlab_global_user_id,
+  COALESCE(MAX(column_selected.global_user_id), MAX(column_selection.gitlab_global_user_id))
+                                                              AS gitlab_global_user_id,
   MAX(column_selection.suggestion_source)                     AS suggestion_source,
   MAX(column_selection.is_invoked)                            AS is_invoked,
   MAX(column_selection.options_count)                         AS options_count,

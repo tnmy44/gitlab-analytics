@@ -58,7 +58,8 @@ structured_behavior AS (
     instance_id           AS dim_instance_id,
     host_name,
     gsc_instance_version,
-    delivery_type
+    delivery_type,
+    gitlab_global_user_id
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE is_staging_event = FALSE
   {% if is_incremental() %}
@@ -106,6 +107,7 @@ report AS (
     structured_behavior.host_name,
     structured_behavior.gsc_instance_version,
     structured_behavior.delivery_type,
+    structured_behavior.gitlab_global_user_id,
     event.event_category,
     event.event_action,
     event.event_label,
@@ -148,5 +150,5 @@ report AS (
     created_by="@pempey",
     updated_by="@michellecooper",
     created_date="2023-02-22",
-    updated_date="2024-07-17"
+    updated_date="2024-07-19"
 ) }}
