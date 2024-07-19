@@ -46,6 +46,8 @@ base AS (
     fiscal_quarter_name_fy         AS snapshot_fiscal_quarter_name_fy,
     fiscal_quarter                 AS snapshot_fiscal_quarter,
     fiscal_year                    AS snapshot_fiscal_year,
+    first_day_of_year              AS snapshot_first_day_of_year,
+    last_day_of_year               AS snapshot_last_day_of_year,
     first_day_of_fiscal_quarter    AS snapshot_first_day_of_fiscal_quarter,
     last_day_of_fiscal_quarter     AS snapshot_last_day_of_fiscal_quarter,
     first_day_of_fiscal_year       AS snapshot_first_day_of_fiscal_year,
@@ -68,6 +70,8 @@ base AS (
   INNER JOIN dim_deal_path
   INNER JOIN sales_type
   INNER JOIN stage_name
+  WHERE current_first_day_of_fiscal_quarter > first_day_of_fiscal_quarter
+    AND first_day_of_fiscal_quarter >= DATEADD(QUARTER, -9, CURRENT_DATE())
 
 ),
 
@@ -122,6 +126,8 @@ final AS (
     base.current_week_of_fiscal_quarter,
     base.snapshot_fiscal_quarter,
     base.snapshot_fiscal_year,
+    base.snapshot_first_day_of_year,
+    base.snapshot_last_day_of_year,
     base.snapshot_first_day_of_fiscal_year,
     base.snapshot_last_day_of_fiscal_year,
     base.snapshot_fiscal_quarter_name,
@@ -130,7 +136,7 @@ final AS (
     base.snapshot_fiscal_quarter_number_absolute,
     base.snapshot_last_month_of_fiscal_quarter,
     base.snapshot_last_month_of_fiscal_year,
-    base.snapshot_days_in_fiscal_quarter_count + 1 AS snapshot_day_of_fiscal_quarter,
+    '94'                                           AS snapshot_day_of_fiscal_quarter, 
     base.sales_qualified_source_name               AS sales_qualified_source_name_live,
     base.sales_qualified_source_grouped            AS sales_qualified_source_grouped_live,
     base.order_type_name                           AS order_type_live,
@@ -160,9 +166,7 @@ final AS (
       AND base.deal_path_name = booked_arr.deal_path_name
       AND base.sales_type = booked_arr.sales_type
       AND base.stage_name = booked_arr.stage_name
-  WHERE base.current_first_day_of_fiscal_quarter > base.snapshot_fiscal_quarter_date
-    AND base.snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
-    AND (booked_arr.total_booked_arr IS NOT NULL OR created_arr.total_created_arr IS NOT NULL)
+  WHERE (booked_arr.total_booked_arr IS NOT NULL OR created_arr.total_created_arr IS NOT NULL)
 
 )
 

@@ -21,6 +21,10 @@ prep_date AS (
 
 live_actuals AS (
 
+  /* 
+    Grab final numbers for the quarter from the live data to ensure
+    we capture deals that are closed on the last day of the quarter
+  */
   SELECT
     fct_crm_opportunity.*,
     close_date.first_day_of_fiscal_quarter                                                               AS close_fiscal_quarter_date,
