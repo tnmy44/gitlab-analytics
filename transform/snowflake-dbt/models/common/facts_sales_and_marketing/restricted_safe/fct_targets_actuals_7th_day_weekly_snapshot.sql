@@ -32,6 +32,7 @@ live_actuals AS (
   FROM {{ ref('fct_crm_opportunity') }}
   INNER JOIN prep_date AS close_date
     ON fct_crm_opportunity.close_date_id = close_date.date_id
+  WHERE close_fiscal_quarter_date < current_first_day_of_fiscal_quarter
 
 ),
 
@@ -164,7 +165,6 @@ final AS (
     base.dim_sales_qualified_source_id,
     SUM(total_targets.pipeline_created_total_quarter_target)                                             AS pipeline_created_total_quarter_target,
     SUM(total_targets.net_arr_total_quarter_target)                                                      AS net_arr_total_quarter_target,
-
     CASE WHEN base.date_actual = base.last_day_of_fiscal_quarter
         THEN SUM(quarterly_actuals.total_booked_net_arr)
       ELSE SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)
