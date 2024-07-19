@@ -155,6 +155,22 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
+    def get_roles(self) -> list:
+        """
+        retrieves snowflake roles from roles.yml
+        """
+        roles_yaml_url = "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
+        data = urllib.request.urlopen(roles_yaml_url)
+
+        try:
+            roles_yaml = safe_load(data)
+        except YAMLError as exc:
+            logging.info(f"yaml error: {exc}")
+
+        roles = roles_yaml["roles"]
+
+        return roles
+
     def get_role_inheritances(self, role_name: str, roles_list: list) -> list:
         """
         Traverse list of dictionaries with snowflake roles to compile role inheritances
@@ -185,15 +201,7 @@ class SnowflakeManager:
         elif database == "prod":
             clone = self.prod_database
 
-        roles_yaml_url = "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
-        data = urllib.request.urlopen(roles_yaml_url)
-
-        try:
-            roles_yaml = safe_load(data)
-        except YAMLError as exc:
-            logging.info(f"yaml error: {exc}")
-
-        roles = roles_yaml["roles"]
+        roles = self.get_roles()
 
         logging.info(f"running for role {role}")
 
