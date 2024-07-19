@@ -170,7 +170,6 @@ class SnowflakeManager:
             for inherited in self.get_role_inheritances(direct, roles_list)
         ]
 
-
         return role_inheritances
 
     def grant_clones(self, role, database):
@@ -183,7 +182,7 @@ class SnowflakeManager:
         elif database == "prod":
             clone = self.prod_database
 
-        roles_yaml_url =  "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
+        roles_yaml_url = "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
         data = urllib.request.urlopen(roles_yaml_url)
 
         try:
@@ -196,9 +195,9 @@ class SnowflakeManager:
         logging.info(f"running for role {role}")
 
         role = role.lower()
-        inherited_roles =  self.get_role_inheritances(role, roles)
+        inherited_roles = self.get_role_inheritances(role, roles)
         logging.info(f"found inherited roles: {inherited_roles}")
-        inherited_roles_in =  "', '".join(inherited_roles)
+        inherited_roles_in = "', '".join(inherited_roles)
 
         get_grants_query = f"""
             SELECT
