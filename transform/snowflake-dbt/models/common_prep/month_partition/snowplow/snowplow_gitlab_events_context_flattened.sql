@@ -283,7 +283,7 @@ SELECT
   COALESCE(MAX(column_selection.gsc_host_name), MAX(column_selection.host_name))
                                                               AS host_name,
   MAX(column_selection.is_streaming)                          AS is_streaming,
-  COALESCE(MAX(column_selected.global_user_id), MAX(column_selection.gitlab_global_user_id))
+  COALESCE(MAX(column_selection.global_user_id), MAX(column_selection.gitlab_global_user_id))
                                                               AS gitlab_global_user_id,
   MAX(column_selection.suggestion_source)                     AS suggestion_source,
   MAX(column_selection.is_invoked)                            AS is_invoked,
