@@ -133,7 +133,7 @@ final AS (
     base.snapshot_last_month_of_fiscal_quarter,
     base.snapshot_last_month_of_fiscal_year,
     '94'                                           AS snapshot_day_of_fiscal_quarter, 
-    base.sales_qualified_source_name               AS sales_qualified_source_name_live,
+    base.sales_qualified_source_name               AS sales_qualified_source_live,
     base.sales_qualified_source_grouped            AS sales_qualified_source_grouped_live,
     base.order_type_name                           AS order_type_live,
     base.order_type_grouped                        AS order_type_grouped_live,
