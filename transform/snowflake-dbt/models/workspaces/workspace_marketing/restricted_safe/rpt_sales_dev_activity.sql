@@ -374,7 +374,8 @@
     ON mart_crm_person.dim_crm_person_id = opp_to_lead.waterfall_person_id
   LEFT JOIN prep_sales_dev_user_hierarchy opportunity_snapshot_hierarchy
     ON opp_to_lead.sdr_bdr_user_id = opportunity_snapshot_hierarchy.dim_crm_user_id 
-    AND stage_1_discovery_date = opportunity_snapshot_hierarchy.snapshot_date
+    AND opp_to_lead.stage_1_discovery_date = opportunity_snapshot_hierarchy.snapshot_date
+
   LEFT JOIN prep_sales_dev_user_hierarchy activity_snapshot_hierarchy
     ON activity_final.dim_crm_user_id = activity_snapshot_hierarchy.dim_crm_user_id 
     AND activity_final.activity_date = activity_snapshot_hierarchy.snapshot_date
