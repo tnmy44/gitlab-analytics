@@ -499,7 +499,7 @@
     opportunity_snapshot_hierarchy.sales_dev_rep_direct_manager_id,
     opportunity_snapshot_hierarchy.sales_dev_manager_full_name,
     opportunity_snapshot_hierarchy.sales_dev_manager_email,
-    opportunity_snapshot_hierarchy.sales_dev_manager_employee_number
+    opportunity_snapshot_hierarchy.sales_dev_manager_employee_number,
     opportunity_snapshot_hierarchy.sales_dev_manager_user_role_name,
     opportunity_snapshot_hierarchy.sales_dev_leader_id,
     opportunity_snapshot_hierarchy.sales_dev_leader_user_role_name,
