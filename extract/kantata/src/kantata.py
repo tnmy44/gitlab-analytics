@@ -88,8 +88,8 @@ def has_valid_latest_export(scheduled_insight_report: dict) -> bool:
     return True
 
 
-def process_latest_export_response(
-    latest_export_response: Response, upload_file_name: str
+def process_latest_export(
+    latest_export: dict, upload_file_name: str
 ) -> Optional[pd.DataFrame]:
     """
     If the latest export response is successful
@@ -99,8 +99,17 @@ def process_latest_export_response(
             - used for seeding the table if it doesn't exist
             - useful for previewing the data
     """
-    if latest_export_response.status_code == 200:
-        content = latest_export_response.content
+    try:
+        s3_download_url = latest_export["url"]
+    except IndexError:
+        raise IndexError(
+            f"\nLatest_export dict {latest_export} does not have valid download url"
+        )
+    # no header needed, since it's an AWS S3 url
+    s3_response = make_request("GET", s3_download_url)
+
+    if s3_response.status_code == 200:
+        content = s3_response.content
         # Write the content to a file in binary mode
         with open(upload_file_name, "wb") as f:
             f.write(content)
@@ -111,8 +120,8 @@ def process_latest_export_response(
             return df
 
     else:
-        error(f"The download failed with this message: {latest_export_response.text}")
-        latest_export_response.raise_for_status()
+        error(f"The download failed with this message: {s3_response.text}")
+        s3_response.raise_for_status()
         return None
 
 
@@ -126,26 +135,31 @@ def download_report_from_latest_export(latest_export: dict) -> Response:
         raise IndexError(
             f"\nLatest_export dict {latest_export} does not have valid download url"
         )
+    # no header needed, since it's an AWS S3 url
     response = make_request("GET", download_url)
     return response
+
+
+def _get_snowflake_table_name(report_name):
+    snowflake_table_name = clean_string(report_name)
+    info(f"snowflake_table_name: {snowflake_table_name}")
+    return snowflake_table_name
 
 
 def get_and_process_latest_export(scheduled_insight_report: dict, report_name: str):
     """
     Does the following:
         - Return the latest export response from endpoint
-        - From the above response, obtain the download url
-        - Request from download url, and save contents into a csv file
+        - From the above response, obtain the S3 download url
+        - Request from S3 download url, and save contents into a csv file
         - Upload csv file to Snowflake
     """
-
     latest_export = get_latest_export(scheduled_insight_report["id"])
-    latest_export_response = download_report_from_latest_export(latest_export)
 
-    snowflake_table_name = clean_string(report_name)
-    info(f"snowflake_table_name: {snowflake_table_name}")
+    snowflake_table_name = _get_snowflake_table_name(report_name)
     upload_file_name = add_csv_file_extension(snowflake_table_name)
-    df = process_latest_export_response(latest_export_response, upload_file_name)
+    df = process_latest_export(latest_export, upload_file_name)
+
     upload_kantanta_to_snowflake(df, snowflake_table_name, upload_file_name)
 
 
