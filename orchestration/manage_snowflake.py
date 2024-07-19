@@ -155,7 +155,8 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
-    def get_roles(self) -> list:
+    @staticmethod
+    def get_roles() -> list:
         """
         retrieves snowflake roles from roles.yml
         """
