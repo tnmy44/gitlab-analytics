@@ -20,7 +20,7 @@ from sqlalchemy.types import DateTime, String
 from args import parse_arguments
 
 SCHEMA_NAME = "kantata"
-STAGE_NAME = "kantata_stage"
+STAGE_NAME = "kantata_csv_stage"
 config_dict = environ.copy()
 HEADERS = {"Authorization": f"Bearer {config_dict.get('KANTATA_OAUTH_TOKEN', '')}"}
 
@@ -44,10 +44,7 @@ def convert_timezone(
     """
 
     # Parse the string using datetime
-    try:
-        dt = datetime.fromisoformat(input_datetime_str)
-    except ValueError:
-        raise
+    dt = datetime.fromisoformat(input_datetime_str)
     dt_from_tz = dt.replace(tzinfo=ZoneInfo(from_tz))
     dt_to_tz = dt_from_tz.astimezone(ZoneInfo(to_tz))
     return dt_to_tz.isoformat()
@@ -55,26 +52,20 @@ def convert_timezone(
 
 def clean_string(string_input: str) -> str:
     """
-    Clean any string by only keep a-Z, 0-9
     Used for the following:
     - Convert Kantata Report name to Snowflake table name
-
-    Cleaning steps:
-    - Replace '-' with '_'
-    - Replace whitespace with '_'
-    - Remove all non-letter/number characters except '_'
-    - Ensure the name doesn't start or end with '_'
     """
     patterns = {
-        r"api.*!": "",
-        r"[^a-zA-Z0-9_]": "_",
-        r"_+": "_",
+        r"api.*!": "",  # remove `api !` prefix from report_name
+        r"[^a-zA-Z0-9_]": "_",  # replace all non-alphanumeric chars
+        r"_+": "_",  # replace multiple '_' with one
     }
 
     cleaned_string = string_input.lower()
     for find, replace in patterns.items():
         cleaned_string = re.sub(find, replace, cleaned_string)
 
+    # remove '_' from any starting or ending positions
     cleaned_string = cleaned_string.strip("_")
     return cleaned_string
 
@@ -106,7 +97,7 @@ def seed_kantata_table(
     snowflake_engine: Engine, df: DataFrame, snowflake_table_name: str
 ):
     """
-    Create an empty Snowflake table based on the dtypes of the pandas df
+    Create an empty Snowflake table with the column names from the pandas df
     """
     info(
         f"Either table does not exist, or schema has changed... \
@@ -116,7 +107,8 @@ def seed_kantata_table(
     snowflake_types = [Column(col, String) for col, dtype in df.dtypes.items()]
     snowflake_types.append(
         Column("uploaded_at", DateTime, server_default=func.current_timestamp())
-    )  # Add timestamp column with default value
+    )
+    # Add timestamp column with default value
     table = Table(snowflake_table_name, MetaData(), *snowflake_types)
 
     # Drop table if it already exists (in the case of schema change)
@@ -126,7 +118,10 @@ def seed_kantata_table(
 
 
 def get_snowflake_columns_str(columns):
-    """Format the list of columns to a single string for COPY INTO"""
+    """
+    Format the list of columns to a single string for COPY INTO
+    i.e ['First name', 'Age'] -> '("First name", "Age")',
+    """
     columns = [f'"{column}"' for column in columns]
     return f"({', '.join(columns)})"
 

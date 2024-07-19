@@ -14,11 +14,15 @@ BASE_ENDPOINT = "https://api.mavenlink.com/api/v1"
 
 
 def _call_endpoint(
-    endpoint: str,
-    endpoint_purpose: str,
-    is_print_response: bool = False,
+    endpoint,
+    endpoint_purpose,
+    is_print_response=False,
     **make_request_kwargs,
 ):
+    """
+    Base function to call Kantata endpoint
+    No mypy type hints here because of open issue: https://github.com/python/mypy/issues/8862
+    """
     url = f"{BASE_ENDPOINT}{endpoint}"
     info(f"{make_request_kwargs['request_type']} {url} for {endpoint_purpose}")
     response = make_request(url=url, headers=HEADERS, **make_request_kwargs)

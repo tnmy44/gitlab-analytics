@@ -68,11 +68,11 @@ def has_valid_latest_export(scheduled_insight_report: dict) -> bool:
         "external_report_object_identifier"
     ]
     if latest_result.get("status") != "success":
-        # Generally this means new scheduled report, but raise error so not missed
+        # Generally means just scheduled report, but raise error just in case
         raise ValueError(
             f"Is this a just-scheduled report? Report_title {report_title} with report_external_identifier {report_external_identifier} cannot be exported because the status is {latest_result.get('status')}, full response: {scheduled_insight_report}"
         )
-        return False
+        # return False
 
     latest_created_at = latest_result.get("created_at")  # in PST tz
     latest_created_at_utc = convert_timezone(latest_created_at)
@@ -80,12 +80,27 @@ def has_valid_latest_export(scheduled_insight_report: dict) -> bool:
         latest_created_at_utc < config_dict["data_interval_start"]
         or latest_created_at_utc >= config_dict["data_interval_end"]
     ):
+        # if report created_at isn't between Airflow dates, log that report not processed
         info(
             f"report_title {report_title} with report_external_identifier {report_external_identifier} cannot be exported because the latest_created_at_utc {latest_created_at_utc} is not between the Airflow execution_dates {config_dict['data_interval_start']} - {config_dict['data_interval_end']}"
         )
         return False
 
     return True
+
+
+def download_report_from_s3(latest_export: dict) -> Response:
+    """
+    Get the url of the latest export (some MavenLink S3 bucket link), and pull it down
+    """
+    try:
+        s3_download_url = latest_export["url"]
+    except IndexError as e:
+        raise IndexError(
+            f"\nLatest_export dict {latest_export} does not have valid download url"
+        ) from e
+    # no header needed, since it's an AWS S3 url
+    return make_request("GET", s3_download_url)
 
 
 def process_latest_export(
@@ -99,14 +114,7 @@ def process_latest_export(
             - used for seeding the table if it doesn't exist
             - useful for previewing the data
     """
-    try:
-        s3_download_url = latest_export["url"]
-    except IndexError:
-        raise IndexError(
-            f"\nLatest_export dict {latest_export} does not have valid download url"
-        )
-    # no header needed, since it's an AWS S3 url
-    s3_response = make_request("GET", s3_download_url)
+    s3_response = download_report_from_s3(latest_export)
 
     if s3_response.status_code == 200:
         content = s3_response.content
@@ -125,22 +133,8 @@ def process_latest_export(
         return None
 
 
-def download_report_from_latest_export(latest_export: dict) -> Response:
-    """
-    Get the url of the latest export (some MavenLink S3 bucket link), and pull it down
-    """
-    try:
-        download_url = latest_export["url"]
-    except IndexError:
-        raise IndexError(
-            f"\nLatest_export dict {latest_export} does not have valid download url"
-        )
-    # no header needed, since it's an AWS S3 url
-    response = make_request("GET", download_url)
-    return response
-
-
 def _get_snowflake_table_name(report_name):
+    """Returns the snowflake table_name based on the Kantata report name"""
     snowflake_table_name = clean_string(report_name)
     info(f"snowflake_table_name: {snowflake_table_name}")
     return snowflake_table_name
@@ -166,9 +160,9 @@ def get_and_process_latest_export(scheduled_insight_report: dict, report_name: s
 def main():
     """
     This function runs the main API flow:
-        - get all available insight reports (scheduled and non-scheduled)
-            - get the insight report identifier
-        - get all scheduled API reports
+        - get all available Insight Reports (scheduled and non-scheduled)
+            - get the insight_report external_identifier
+        - get scheduled API reports
         - If report is already scheduled, and it has a latest valid report, then extract
         - Else schedule the report
     """

@@ -32,23 +32,19 @@ from kubernetes_helpers import get_affinity, get_toleration
 def clean_string(string_input: str) -> str:
     """
     Need to clean the Kantata report name to make it a valid Airflow
-    task name:
-    - Replace '-' with '_'
-    - Replace whitespace with '_'
-    - Remove all non-letter/number characters except '_'
-    - Ensure the name doesn't start or end with '_'
+    task name
     """
-
     patterns = {
-        r"api.*!": "",
-        r"[^a-zA-Z0-9_]": "_",
-        r"_+": "_",
+        r"api.*!": "",  # remove `api !` prefix from report_name
+        r"[^a-zA-Z0-9_]": "_",  # replace all non-alphanumeric chars
+        r"_+": "_",  # replace multiple '_' with one
     }
 
     cleaned_string = string_input.lower()
     for find, replace in patterns.items():
         cleaned_string = re.sub(find, replace, cleaned_string)
 
+    # remove '_' from any starting or ending positions
     cleaned_string = cleaned_string.strip("_")
     return cleaned_string
 
@@ -80,7 +76,7 @@ dag = DAG(
     default_args=default_args,
     # Run shortly before dbt dag which is at 8:45UTC
     schedule_interval="0 8 * * *",
-    start_date=datetime(2024, 7, 8),
+    start_date=datetime(2024, 7, 20),
     catchup=False,
     max_active_runs=2,
 )

@@ -1,3 +1,5 @@
+""" Test kantata.py module """
+
 import os
 import unittest
 from unittest.mock import patch
@@ -6,7 +8,7 @@ from unittest.mock import patch
 os.environ["data_interval_start"] = "2024-01-01T08:00:00"
 os.environ["data_interval_end"] = "2024-01-02T08:00:00"
 from kantata import (
-    download_report_from_latest_export,
+    download_report_from_s3,
     has_valid_latest_export,
     retrieve_insight_report_external_identifier,
     retrieve_scheduled_insight_report,
@@ -72,7 +74,10 @@ def test_has_valid_latest_export(mock_convert_timezone):
     Test2: latest_result['status'] == 'failure'
     Test3: latest_result['status'] == 'success' | created_at is outside the date_interval
     Test4: latest_result['status'] == 'success' | created_at == data_interval_end
-    Test4: latest_result['status'] == 'success' | created_at is inside the date_interval
+    Test5: latest_result['status'] == 'success' | created_at is inside the date_interval
+
+    Note: for the data_interval tests, the data_interval_start/end
+    env variables are set at the top of this file, prior to imports
     """
 
     # Test1
@@ -82,7 +87,6 @@ def test_has_valid_latest_export(mock_convert_timezone):
     }
     with unittest.TestCase().assertRaises(ValueError):
         has_valid_latest_export(scheduled_insight_report)
-    # assert is_valid_latest_export1 is False
 
     # Test2
     scheduled_insight_report = {
@@ -101,11 +105,13 @@ def test_has_valid_latest_export(mock_convert_timezone):
         "created_at": "some_data_that_will_be_mocked",
     }
 
+    # is 1 second before data_interval_start, invalid
     mock_convert_timezone.return_value = "2024-01-01T07:59:59"
     is_valid_latest_export3 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export3 is False
 
     # Test4
+    # is the same as data_interval_end, invalid
     mock_convert_timezone.return_value = "2024-01-02T08:00:00"
     is_valid_latest_export4 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export4 is False
@@ -117,18 +123,19 @@ def test_has_valid_latest_export(mock_convert_timezone):
         "external_report_object_identifier": "some_identifier",
         "created_at": "some_data_that_will_be_mocked",
     }
+    # is the same as data_interval_start, valid
     mock_convert_timezone.return_value = "2024-01-01T08:00:00"
     is_valid_latest_export5 = has_valid_latest_export(scheduled_insight_report)
     assert is_valid_latest_export5 is True
 
 
 @patch("kantata.make_request")
-def test_download_report_from_latest_export(mock_make_request):
+def test_download_report_from_s3(mock_make_request):
     """Test request was made correctly"""
     mock_response = mock_make_request.return_value
     mock_response.status_code = -1
     url = "some_url.com"
     latest_export = {"url": url}
-    result = download_report_from_latest_export(latest_export)
+    result = download_report_from_s3(latest_export)
     assert result.status_code == -1
     mock_make_request.assert_called_once_with("GET", url)

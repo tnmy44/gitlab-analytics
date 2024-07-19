@@ -60,9 +60,9 @@ def test_cleaned_string():
     assert cleaned_str == "some_report"
 
     # Test3
-    str_to_clean = "_some__other      report "
+    str_to_clean = "_some_ _other5     report "
     cleaned_str = clean_string(str_to_clean)
-    assert cleaned_str == "some_other_report"
+    assert cleaned_str == "some_other5_report"
 
 
 def test_add_csv_file_extension():
