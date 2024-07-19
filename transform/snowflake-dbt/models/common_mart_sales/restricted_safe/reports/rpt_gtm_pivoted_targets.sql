@@ -1,193 +1,183 @@
-with dim_date AS (
+{{ simple_cte([
+    ('dim_date','dim_date'),
+    ('targets', 'fct_sales_funnel_target_daily')
+]) }},
 
-  SELECT *
-  FROM PROD.common.dim_date
-
-
-)
-
-, targets AS (
-
-  SELECT *
-  FROM prod.restricted_safe_common.fct_sales_funnel_target_daily
-
-)
-
- , targets_dates as (
-    SELECT DISTINCT
-        targets.TARGET_DATE,
-        targets.TARGET_DATE_ID,
-        targets.REPORT_TARGET_DATE,
-        dim_date.FISCAL_QUARTER_NAME_FY,
-        targets.dim_crm_user_hierarchy_sk,
-        targets.dim_sales_qualified_source_id,
-        targets.dim_order_type_id,
-        targets.KPI_NAME,
-        CONCAT(TO_VARCHAR(TARGET_DATE_ID),TO_CHAR(DIM_CRM_USER_HIERARCHY_SK),TO_CHAR(DIM_SALES_QUALIFIED_SOURCE_ID),TO_CHAR(DIM_ORDER_TYPE_ID)) as key ,
-        DAILY_ALLOCATED_TARGET       AS daily_allocated_target,
-        MTD_ALLOCATED_TARGET         AS mtd_allocated_target,
-        QTD_ALLOCATED_TARGET         AS qtd_allocated_target,
-        YTD_ALLOCATED_TARGET         AS ytd_allocated_target
+targets_dates AS (
+  SELECT DISTINCT
+    targets.target_date,
+    targets.target_date_id,
+    targets.report_target_date,
+    dim_date.fiscal_quarter_name_fy,
+    targets.dim_crm_user_hierarchy_sk,
+    targets.dim_sales_qualified_source_id,
+    targets.dim_order_type_id,
+    targets.kpi_name,
+    CONCAT(TO_VARCHAR(targets.target_date_id), TO_CHAR(targets.dim_crm_user_hierarchy_sk), TO_CHAR(targets.dim_sales_qualified_source_id), TO_CHAR(targets.dim_order_type_id)) AS key,
+    targets.daily_allocated_target,
+    targets.mtd_allocated_target,
+    targets.qtd_allocated_target,
+    targets.ytd_allocated_target
   FROM targets
   LEFT JOIN dim_date
     ON targets.target_date_id = dim_date.date_id
 
-)
+),
 
-, pivoted_targets AS (
-SELECT
+pivoted_targets AS (
+  SELECT
     target_date,
     target_date_id,
-    REPORT_TARGET_DATE,
+    report_target_date,
     fiscal_quarter_name_fy,
     dim_crm_user_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
-    "'Net ARR'"                     as net_arr_daily_allocated_target,
-    "'Deals'"                       as deals_daily_allocated_target,
-    "'New Logos'"                   as new_logos_daily_allocated_target,
-    "'Stage 1 Opportunities'"       as saos_daily_allocated_target,
-    "'Net ARR Pipeline Created'"    as pipeline_created_daily_allocated_target
-FROM (
+    "'Net ARR'"                  AS net_arr_daily_allocated_target,
+    "'Deals'"                    AS deals_daily_allocated_target,
+    "'New Logos'"                AS new_logos_daily_allocated_target,
+    "'Stage 1 Opportunities'"    AS saos_daily_allocated_target,
+    "'Net ARR Pipeline Created'" AS pipeline_created_daily_allocated_target
+  FROM (
     SELECT *
     FROM targets_dates
-    PIVOT(
-        SUM(daily_allocated_target)
-        FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
+    PIVOT (
+      SUM(daily_allocated_target)
+      FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
     ) AS pvt
-    )
+  )
 
-)
+),
 
-, mtd_pivoted_targets AS (
-SELECT
+mtd_pivoted_targets AS (
+  SELECT
     target_date,
     target_date_id,
-    REPORT_TARGET_DATE,
-    fiscal_quarter_name_fy,
-    dim_crm_user_hierarchy_sk,
-    dim_sales_qualified_source_id,
-    dim_order_type_id,
-    key,
-    "'Net ARR'"                  as mtd_net_arr_target,
-    "'Deals'"                    as mtd_deals_target,
-    "'New Logos'"                as mtd_new_logos_target,
-    "'Stage 1 Opportunities'"    as mtd_sao_target,
-    "'Net ARR Pipeline Created'" as mtd_pipeline_created_target
-FROM (
-    SELECT *
-    FROM targets_dates
-    PIVOT(
-        SUM(mtd_allocated_target)
-        FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
-    ) AS pvt
-    )
-
-)
-
-, qtd_pivoted_targets AS (
-SELECT
-    target_date,
-    target_date_id,
-    REPORT_TARGET_DATE,
+    report_target_date,
     fiscal_quarter_name_fy,
     dim_crm_user_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     key,
-    "'Net ARR'"                  as qtd_net_arr_target,
-    "'Deals'"                    as qtd_deals_target,
-    "'New Logos'"                as qtd_new_logos_target,
-    "'Stage 1 Opportunities'"    as qtd_saos_target,
-    "'Net ARR Pipeline Created'" as qtd_pipeline_created_target
-FROM (
+    "'Net ARR'"                  AS mtd_net_arr_target,
+    "'Deals'"                    AS mtd_deals_target,
+    "'New Logos'"                AS mtd_new_logos_target,
+    "'Stage 1 Opportunities'"    AS mtd_sao_target,
+    "'Net ARR Pipeline Created'" AS mtd_pipeline_created_target
+  FROM (
     SELECT *
     FROM targets_dates
-    PIVOT(
-        SUM(qtd_allocated_target)
-        FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
+    PIVOT (
+      SUM(mtd_allocated_target)
+      FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
     ) AS pvt
-    )
+  )
 
-)
+),
 
-, ytd_pivoted_targets AS (
-SELECT
+qtd_pivoted_targets AS (
+  SELECT
     target_date,
     target_date_id,
-    REPORT_TARGET_DATE,
+    report_target_date,
     fiscal_quarter_name_fy,
     dim_crm_user_hierarchy_sk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     key,
-    "'Net ARR'"                  as ytd_net_arr_target,
-    "'Deals'"                    as ytd_deals_target,
-    "'New Logos'"                as ytd_new_logos_target,
-    "'Stage 1 Opportunities'"    as ytd_saos_target,
-    "'Net ARR Pipeline Created'" as ytd_pipeline_created_target
-FROM (
+    "'Net ARR'"                  AS qtd_net_arr_target,
+    "'Deals'"                    AS qtd_deals_target,
+    "'New Logos'"                AS qtd_new_logos_target,
+    "'Stage 1 Opportunities'"    AS qtd_saos_target,
+    "'Net ARR Pipeline Created'" AS qtd_pipeline_created_target
+  FROM (
     SELECT *
     FROM targets_dates
-    PIVOT(
-        SUM(ytd_allocated_target)
-        FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
+    PIVOT (
+      SUM(qtd_allocated_target)
+      FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
     ) AS pvt
-    )
+  )
 
+),
+
+ytd_pivoted_targets AS (
+  SELECT
+    target_date,
+    target_date_id,
+    report_target_date,
+    fiscal_quarter_name_fy,
+    dim_crm_user_hierarchy_sk,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    key,
+    "'Net ARR'"                  AS ytd_net_arr_target,
+    "'Deals'"                    AS ytd_deals_target,
+    "'New Logos'"                AS ytd_new_logos_target,
+    "'Stage 1 Opportunities'"    AS ytd_saos_target,
+    "'Net ARR Pipeline Created'" AS ytd_pipeline_created_target
+  FROM (
+    SELECT *
+    FROM targets_dates
+    PIVOT (
+      SUM(ytd_allocated_target)
+      FOR kpi_name IN ('Net ARR', 'Deals', 'New Logos', 'Stage 1 Opportunities', 'Net ARR Pipeline Created')
+    ) AS pvt
+  )
+
+),
+
+final AS ( -- need to use the MAX function in order to deal with the nulls from the various CTE's otherwise we get four of the same key per row
+  SELECT DISTINCT
+    --dimensions
+    pivoted_targets.target_date,
+    pivoted_targets.target_date_id,
+    pivoted_targets.fiscal_quarter_name_fy,
+    pivoted_targets.dim_crm_user_hierarchy_sk,
+    pivoted_targets.dim_sales_qualified_source_id,
+    pivoted_targets.dim_order_type_id,
+    -- daily allocated targets
+    MAX(pivoted_targets.net_arr_daily_allocated_target)          AS net_arr_daily_allocated_target,
+    MAX(pivoted_targets.deals_daily_allocated_target)            AS deals_daily_allocated_target,
+    MAX(pivoted_targets.new_logos_daily_allocated_target)        AS new_logos_daily_allocated_target,
+    MAX(pivoted_targets.saos_daily_allocated_target)             AS saos_daily_allocated_target,
+    MAX(pivoted_targets.pipeline_created_daily_allocated_target) AS pipeline_created_daily_allocated_target,
+    --mtd targets
+    MAX(mtd_pivoted_targets.mtd_net_arr_target)                  AS mtd_net_arr_daily_allocated_target,
+    MAX(mtd_pivoted_targets.mtd_deals_target)                    AS mtd_deals_daily_allocated_target,
+    MAX(mtd_pivoted_targets.mtd_new_logos_target)                AS mtd_new_logos_daily_allocated_target,
+    MAX(mtd_pivoted_targets.mtd_sao_target)                      AS mtd_saos_daily_allocated_target,
+    MAX(mtd_pivoted_targets.mtd_pipeline_created_target)         AS mtd_pipeline_created_daily_allocated_target,
+    --qtd targets
+    MAX(qtd_pivoted_targets.qtd_net_arr_target)                  AS qtd_net_arr_daily_allocated_target,
+    MAX(qtd_pivoted_targets.qtd_deals_target)                    AS qtd_deals_daily_allocated_target,
+    MAX(qtd_pivoted_targets.qtd_new_logos_target)                AS qtd_new_logos_daily_allocated_target,
+    MAX(qtd_pivoted_targets.qtd_saos_target)                     AS qtd_saos_daily_allocated_target,
+    MAX(qtd_pivoted_targets.qtd_pipeline_created_target)         AS qtd_pipeline_created_daily_allocated_target,
+    -- ytd targets
+    MAX(ytd_pivoted_targets.ytd_net_arr_target)                  AS ytd_net_arr_daily_allocated_target,
+    MAX(ytd_pivoted_targets.ytd_deals_target)                    AS ytd_deals_daily_allocated_target,
+    MAX(ytd_pivoted_targets.ytd_new_logos_target)                AS ytd_new_logos_daily_allocated_target,
+    MAX(ytd_pivoted_targets.ytd_saos_target)                     AS ytd_saos_daily_allocated_target,
+    MAX(ytd_pivoted_targets.ytd_pipeline_created_target)         AS ytd_pipeline_created_daily_allocated_target
+  FROM pivoted_targets
+  LEFT JOIN mtd_pivoted_targets
+    ON pivoted_targets.target_date = mtd_pivoted_targets.report_target_date
+      AND pivoted_targets.dim_sales_qualified_source_id = mtd_pivoted_targets.dim_sales_qualified_source_id
+      AND pivoted_targets.dim_order_type_id = mtd_pivoted_targets.dim_order_type_id
+      AND pivoted_targets.dim_crm_user_hierarchy_sk = mtd_pivoted_targets.dim_crm_user_hierarchy_sk
+  LEFT JOIN qtd_pivoted_targets
+    ON pivoted_targets.target_date = qtd_pivoted_targets.report_target_date
+      AND pivoted_targets.dim_sales_qualified_source_id = qtd_pivoted_targets.dim_sales_qualified_source_id
+      AND pivoted_targets.dim_order_type_id = qtd_pivoted_targets.dim_order_type_id
+      AND pivoted_targets.dim_crm_user_hierarchy_sk = qtd_pivoted_targets.dim_crm_user_hierarchy_sk
+  LEFT JOIN ytd_pivoted_targets
+    ON pivoted_targets.target_date = ytd_pivoted_targets.report_target_date
+      AND pivoted_targets.dim_sales_qualified_source_id = ytd_pivoted_targets.dim_sales_qualified_source_id
+      AND pivoted_targets.dim_order_type_id = ytd_pivoted_targets.dim_order_type_id
+      AND pivoted_targets.dim_crm_user_hierarchy_sk = ytd_pivoted_targets.dim_crm_user_hierarchy_sk
+  GROUP BY 1, 2, 3, 4, 5, 6
 )
-
-, final AS ( -- need to use the MAX function in order to deal with the nulls from the various CTE's otherwise we get four of the same key per row
-    SELECT DISTINCT
---dimensions
-       pivoted_targets.target_date,
-       pivoted_targets.target_date_id,
-       pivoted_targets.fiscal_quarter_name_fy,
-       pivoted_targets.dim_crm_user_hierarchy_sk,
-       pivoted_targets.dim_sales_qualified_source_id,
-       pivoted_targets.dim_order_type_id
-       -- daily allocated targets
-       , MAX(net_arr_daily_allocated_target) AS net_arr_daily_allocated_target
-       , MAX(deals_daily_allocated_target) AS deals_daily_allocated_target
-       , MAX(new_logos_daily_allocated_target) AS new_logos_daily_allocated_target
-       , MAX(saos_daily_allocated_target) AS saos_daily_allocated_target
-       , MAX(pipeline_created_daily_allocated_target) AS pipeline_created_daily_allocated_target
-       --mtd targets
-       , MAX(mtd_net_arr_target)             as mtd_net_arr_daily_allocated_target
-       , MAX(mtd_deals_target)               as mtd_deals_daily_allocated_target
-       , MAX(mtd_new_logos_target) as mtd_new_logos_daily_allocated_target
-       , MAX(mtd_sao_target) as mtd_saos_daily_allocated_target
-       , MAX(mtd_pipeline_created_target) as mtd_pipeline_created_daily_allocated_target
-       --qtd targets
-        ,MAX(qtd_net_arr_target) as qtd_net_arr_daily_allocated_target
-       , MAX(qtd_deals_target)              as qtd_deals_daily_allocated_target
-       , MAX(qtd_new_logos_target) as qtd_new_logos_daily_allocated_target
-       , MAX(qtd_saos_target) as qtd_saos_daily_allocated_target
-       , MAX(qtd_pipeline_created_target) as qtd_pipeline_created_daily_allocated_target
-       -- ytd targets
-       , MAX(ytd_net_arr_target)     as ytd_net_arr_daily_allocated_target
-       , MAX(ytd_deals_target) as ytd_deals_daily_allocated_target
-       , MAX(ytd_new_logos_target) as ytd_new_logos_daily_allocated_target
-       , MAX(ytd_saos_target) as ytd_saos_daily_allocated_target
-       , MAX(ytd_pipeline_created_target) as ytd_pipeline_created_daily_allocated_target
-FROM pivoted_targets
-LEFT JOIN mtd_pivoted_targets
-ON  pivoted_targets.TARGET_DATE=                   mtd_pivoted_targets.REPORT_TARGET_DATE
-    AND pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID = mtd_pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID
-    AND pivoted_targets.DIM_ORDER_TYPE_ID             = mtd_pivoted_targets.DIM_ORDER_TYPE_ID
-    AND pivoted_targets.DIM_CRM_USER_HIERARCHY_SK =     mtd_pivoted_targets.DIM_CRM_USER_HIERARCHY_SK
-LEFT JOIN qtd_pivoted_targets
-ON  pivoted_targets.TARGET_DATE=                 qtd_pivoted_targets.REPORT_TARGET_DATE
-    AND pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID = qtd_pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID
-    AND pivoted_targets.DIM_ORDER_TYPE_ID             = qtd_pivoted_targets.DIM_ORDER_TYPE_ID
-    AND pivoted_targets.DIM_CRM_USER_HIERARCHY_SK =     qtd_pivoted_targets.DIM_CRM_USER_HIERARCHY_SK
-
-LEFT JOIN ytd_pivoted_targets
-ON  pivoted_targets.TARGET_DATE=                 ytd_pivoted_targets.REPORT_TARGET_DATE
-    AND pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID = ytd_pivoted_targets.DIM_SALES_QUALIFIED_SOURCE_ID
-    AND pivoted_targets.DIM_ORDER_TYPE_ID             = ytd_pivoted_targets.DIM_ORDER_TYPE_ID
-    AND pivoted_targets.DIM_CRM_USER_HIERARCHY_SK =     ytd_pivoted_targets.DIM_CRM_USER_HIERARCHY_SK
-GROUP BY 1,2,3,4,5,6)
 
 SELECT *
 FROM final
