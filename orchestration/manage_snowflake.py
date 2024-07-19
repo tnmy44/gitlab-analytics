@@ -189,8 +189,6 @@ class SnowflakeManager:
             for inherited in self.get_role_inheritances(direct, roles_list)
         ]
 
-        return role_inheritances
-
     def grant_clones(self, role, database):
         """
         Grant privileges on a clone. Based on existing grants in production databases.
