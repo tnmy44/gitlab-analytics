@@ -76,9 +76,10 @@ dag = DAG(
     default_args=default_args,
     # Run shortly before dbt dag which is at 8:45UTC
     schedule_interval="0 8 * * *",
-    start_date=datetime(2024, 7, 20),
+    start_date=datetime(2024, 7, 19),
     catchup=False,
-    max_active_runs=2,
+    max_active_runs=1,
+    concurrency=2,
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
