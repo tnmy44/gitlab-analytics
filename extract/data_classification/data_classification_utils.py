@@ -354,7 +354,7 @@ class DataClassification:
         return manifest_dict
 
     # TODO: rbacovic Tagging data
-    def classify(self,date_from: str, unset: bool = False,tagging_type:str = "INCREMENTAL")):
+    def classify(self,date_from: str, unset: bool = False,tagging_type:str = "INCREMENTAL"):
         """
         Routine to classify all data
         """
