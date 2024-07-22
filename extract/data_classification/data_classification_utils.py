@@ -251,9 +251,9 @@ class DataClassification:
     ) -> str:
         return (
             f"CALL {self.schema_name}.execute_data_classification("
-            f"p_type => {tagging_type}, "
-            f"p_date_from=>{date_from}, "
-            f"p_unset=> {unset})"
+            f"p_type => {self.quoted(tagging_type)}, "
+            f"p_date_from=>{self.quoted(date_from)} , "
+            f"p_unset=> {self.quoted(unset)})"
         )
 
     def save_to_file(self, data: list) -> None:
@@ -370,16 +370,14 @@ class DataClassification:
     ):
         """
         Routine to classify all data
+        using stored procedure
         """
         info("START classify.")
         query = self.classify_query(
             date_from=date_from, unset=unset, tagging_type=tagging_type
         )
-        info(f"....CALL PROCEDURE: {query}")
-
-        # self.__execute_query(query=self.classify_query(date_from=date_from,
-        #                                                unset=unset,
-        #                                                tagging_type=tagging_type))
+        info(f"....Call stored procedure: {query}")
+        self.__execute_query(query=query)
         info("END classify.")
 
     # TODO: rbacovic Clear PII tags
