@@ -274,7 +274,7 @@ WITH biz_person AS (
       six_sense_account_buying_stage,
       six_sense_account_profile_fit,
       six_sense_contact_grade                        AS six_sense_person_grade,
-      six_sense_contact_profile_fit                  AS six_sense_person_profile_fit,
+      six_sense_contact_profile                      AS six_sense_person_profile,
       six_sense_contact_update_date                  AS six_sense_person_update_date,
       six_sense_segments,   
       lead_score_classification,
@@ -545,5 +545,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-07-18"
+    updated_date="2024-07-22"
 ) }}

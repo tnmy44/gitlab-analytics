@@ -131,9 +131,9 @@ WITH crm_person AS (
       six_sense_account_6_qa_start_date,
       six_sense_account_buying_stage,
       six_sense_account_profile_fit,
-      six_sense_lead_grade,
-      six_sense_lead_profile_fit,
-      six_sense_lead_update_date,
+      six_sense_person_grade,
+      six_sense_person_profile,
+      six_sense_person_update_date,
       six_sense_segments,  
        
     --MQL and Most Recent Touchpoint info
@@ -159,5 +159,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2024-07-18"
+    updated_date="2024-07-22"
 ) }}

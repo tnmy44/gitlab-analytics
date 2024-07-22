@@ -173,7 +173,7 @@ renamed AS (
     x6sense_account_buying_stage__c AS six_sense_account_buying_stage,
     x6sense_account_profile_fit__c AS six_sense_account_profile_fit,
     x6sense_contact_grade__c AS six_sense_contact_grade,
-    x6sense_contact_profile_fit__c AS six_sense_contact_profile_fit,
+    x6sense_contact_profile__c AS six_sense_contact_profile,
     x6sense_contact_update_date__c::DATE AS six_sense_contact_update_date,
     x6sense_segments__c AS six_sense_segments, 
 
