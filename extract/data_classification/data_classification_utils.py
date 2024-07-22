@@ -377,7 +377,7 @@ class DataClassification:
             date_from=date_from, unset=unset, tagging_type=tagging_type
         )
         info(f"....Call stored procedure: {query}")
-        self.__execute_query(query=query)
+        # self.__execute_query(query=query)
         info("END classify.")
 
     # TODO: rbacovic Clear PII tags
