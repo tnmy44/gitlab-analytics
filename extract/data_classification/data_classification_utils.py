@@ -373,9 +373,10 @@ class DataClassification:
         Routine to classify all data
         """
         info("START classify.")
-        info(
-            f"....CALL PROCEDURE: {self.classify_query(date_from=date_from,unset=unset,tagging_type=tagging_type)}"
+        query = self.classify_query(
+            date_from=date_from, unset=unset, tagging_type=tagging_type
         )
+        info(f"....CALL PROCEDURE: {query}")
 
         # self.__execute_query(query=self.classify_query(date_from=date_from,
         #                                                unset=unset,
