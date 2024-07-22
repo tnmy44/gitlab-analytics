@@ -210,7 +210,10 @@ final AS (
     'targets_actuals'                                                       AS source,
     SUM(total_targets.pipeline_created_total_quarter_target)                AS pipeline_created_total_quarter_target,
     SUM(total_targets.net_arr_total_quarter_target)                         AS net_arr_total_quarter_target,
-    SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)                   AS coverage_booked_net_arr,
+    CASE WHEN base.snapshot_date = dim_date.last_day_of_fiscal_quarter
+        THEN SUM(quarterly_actuals.total_booked_net_arr)
+      ELSE SUM(daily_actuals.booked_net_arr_in_snapshot_quarter)
+    END                                                                     AS coverage_booked_net_arr,
     SUM(daily_actuals.open_1plus_net_arr_in_snapshot_quarter)               AS coverage_open_1plus_net_arr,
     SUM(daily_actuals.open_3plus_net_arr_in_snapshot_quarter)               AS coverage_open_3plus_net_arr,
     SUM(daily_actuals.open_4plus_net_arr_in_snapshot_quarter)               AS coverage_open_4plus_net_arr,
