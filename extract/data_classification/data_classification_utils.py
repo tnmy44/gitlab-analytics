@@ -245,6 +245,10 @@ class DataClassification:
         """
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
+    @property
+    def classify_query(self ,date_from: str, unset: bool = False,tagging_type:str = "INCREMENTAL") -> str:
+        return F"CALL {self.schema_name}.execute_data_classification(p_type => {tagging_type}, p_date_from=>{date_from}, p_unset=> {unset})"
+
     def save_to_file(self, data: list) -> None:
         """
         Save MNPI data to file
@@ -359,6 +363,14 @@ class DataClassification:
         Routine to classify all data
         """
         info("START classify.")
+        info(F"....CALL PROCEDURE: {self.classify_query(date_from=date_from,
+                                                        tagging_type=tagging_type,
+                                                        unset=unset)}")
+
+
+        # self.__execute_query(query=self.classify_query(date_from=date_from,
+        #                                                unset=unset,
+        #                                                tagging_type=tagging_type))
         info("END classify.")
 
     # TODO: rbacovic Clear PII tags

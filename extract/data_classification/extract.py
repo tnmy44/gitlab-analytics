@@ -21,11 +21,8 @@ def run_extract(operation: str, date_from:str,unset:str, tagging_type: str = "IN
     if operation == "EXTRACT":
         data_classification.extract()
     if operation == "CLASSIFY":
-        if unset =='True':
-            unset = True
-        else:
-            unset = False
-        data_classification.classify(date_from=date_from, unset=unset,tagging_type=tagging_type)
+        unset = True if unset == 'True' else False
+        data_classification.classify(date_from=date_from, unset=unset, tagging_type=tagging_type)
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
