@@ -30,5 +30,5 @@ def run_extract(operation: str, date_from:str,unset:str, tagging_type: str = "IN
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     info("START data classification.")
-    Fire(run_extract())
+    Fire(run_extract)
     info("END with data classification.")
