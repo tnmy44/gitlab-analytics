@@ -2665,6 +2665,8 @@ models:
         description: '{{ doc("dim_billing_account_id") }}'
       - name: crm_account_name
         description: '{{ doc("crm_account_name") }}'
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
       - name: dim_parent_crm_account_id
         description: '{{ doc("dim_parent_crm_account_id") }}'
       - name: parent_crm_account_name
