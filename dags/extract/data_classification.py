@@ -29,7 +29,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars}
-pod_env_vars["RUN_DATE"]= "{ds}"
+pod_env_vars["RUN_DATE"] = "{{ next_ds }}"
 
 DAG_NAME = "data_classification"
 
