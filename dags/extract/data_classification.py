@@ -124,7 +124,7 @@ task_id = task_name = "extract_classification"
 
 extract_classification = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DATA_IMAGE,
     task_id=task_id,
     name=task_name,
     secrets=secrets,
@@ -150,4 +150,4 @@ execute_classification = KubernetesPodOperator(
     dag=dag,
 )
 
-extract_classification  # >> execute_classification
+extract_classification >> execute_classification

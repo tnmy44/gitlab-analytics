@@ -24,7 +24,9 @@ def run_extract(
         tagging_type=tagging_type, mnpi_raw_file="safe_models.json"
     )
     if not date_from:
-        curr_date = datetime.now() - timedelta(days=data_classification.INCREMENTAL_LOAD_DAYS)
+        curr_date = datetime.now() - timedelta(
+            days=data_classification.INCREMENTAL_LOAD_DAYS
+        )
         date_from = curr_date.strftime("%Y-%m-%d 00:00:00")
 
     if operation == "EXTRACT":
