@@ -34,6 +34,7 @@ class DataClassification:
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()
+        self.INCREMENTAL_LOAD_DAYS = 7
 
     def __connect(self):
         """
