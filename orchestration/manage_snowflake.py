@@ -158,7 +158,7 @@ class SnowflakeManager:
     @staticmethod
     def get_roles() -> list:
         """
-        retrieves snowflake roles from roles.yml
+        Retrieve Snowflake roles from roles.yml
         """
 
         roles_yaml_url = "https://gitlab.com/gitlab-data/analytics/-/raw/master/permissions/snowflake/roles.yml"
