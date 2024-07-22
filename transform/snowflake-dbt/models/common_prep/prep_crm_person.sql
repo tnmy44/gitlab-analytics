@@ -276,7 +276,7 @@ WITH biz_person AS (
       six_sense_contact_grade                        AS six_sense_person_grade,
       six_sense_contact_profile                      AS six_sense_person_profile,
       six_sense_contact_update_date                  AS six_sense_person_update_date,
-      six_sense_segments,   
+      dim_crm_account.six_sense_segments,   
       lead_score_classification,
       is_defaulted_trial,
       NULL                                           AS zoominfo_company_employee_count,
@@ -299,6 +299,8 @@ WITH biz_person AS (
       ON sfdc_contacts.contact_id = marketo_persons.sfdc_contact_id and sfdc_type = 'Contact'
     LEFT JOIN crm_activity
       ON sfdc_contacts.contact_id=crm_activity.sfdc_record_id
+    LEFT JOIN {{ref('dim_crm_account')}}
+      ON sfdc_contacts.account_id=dim_crm_account.dim_crm_account_id
 
     UNION
 
