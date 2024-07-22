@@ -145,7 +145,7 @@ WITH biz_person AS (
       master_record_id,
       owner_id,
       record_type_id,
-      account_id                                    AS dim_crm_account_id,
+      sfdc_contacts.account_id                      AS dim_crm_account_id,
       reports_to_id,
       owner_id                                      AS dim_crm_user_id,
 
