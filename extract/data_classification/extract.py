@@ -10,7 +10,7 @@ from data_classification_utils import DataClassification
 from fire import Fire
 
 
-def run_extract(operation: str, date_from:str,unset:str, tagging_type: str = "INCREMENTAL"):
+def run_extract(operation: str, date_from:str, unset:str="FALSE", tagging_type: str = "INCREMENTAL"):
     """
     Run process
     """
@@ -21,7 +21,9 @@ def run_extract(operation: str, date_from:str,unset:str, tagging_type: str = "IN
     if operation == "EXTRACT":
         data_classification.extract()
     if operation == "CLASSIFY":
-        unset = True if unset == 'True' else False
+        info(F"DATE_FROM: {date_from}")
+        info(F"unset: {unset}")
+        info(F"tagging_type: {tagging_type}")
         data_classification.classify(date_from=date_from, unset=unset, tagging_type=tagging_type)
 
 if __name__ == "__main__":

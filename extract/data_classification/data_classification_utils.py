@@ -247,7 +247,7 @@ class DataClassification:
 
     @property
     def classify_query(
-        self, date_from: str, unset: bool = False, tagging_type: str = "INCREMENTAL"
+        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
         return f"CALL {self.schema_name}.execute_data_classification(p_type => {tagging_type}, p_date_from=>{date_from}, p_unset=> {unset})"
 
@@ -361,7 +361,7 @@ class DataClassification:
 
     # TODO: rbacovic Tagging data
     def classify(
-        self, date_from: str, unset: bool = False, tagging_type: str = "INCREMENTAL"
+        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ):
         """
         Routine to classify all data
