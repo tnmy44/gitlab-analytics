@@ -354,11 +354,12 @@ class DataClassification:
         return manifest_dict
 
     # TODO: rbacovic Tagging data
-    def tag(self):
+    def classify(self,date_from: str, unset: bool = False,tagging_type:str = "INCREMENTAL")):
         """
-        Routine to tag all data
+        Routine to classify all data
         """
-        pass
+        info("START classify.")
+        info("END classify.")
 
     # TODO: rbacovic Clear PII tags
     def clear_pii_tags(self):
@@ -428,12 +429,12 @@ class DataClassification:
         self.update_mnpi_metadata()
         info(".... START upload_mnpi_data.")
 
-    def upload(self):
+    def extract(self):
         """
-        Routine to identify objects needed for tagging
+        Routine to extract objects needed for tagging
         """
-        info("START upload.")
+        info("START extract.")
         self.delete_data()
         self.upload_pii_data()
         self.upload_mnpi_data()
-        info("END upload.")
+        info("END extract.")
