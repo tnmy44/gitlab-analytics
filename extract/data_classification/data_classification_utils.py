@@ -250,7 +250,12 @@ class DataClassification:
     def classify_query(
         self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
-        return f"CALL {self.schema_name}.execute_data_classification(p_type => {tagging_type}, p_date_from=>{date_from}, p_unset=> {unset})"
+        return (
+            f"CALL {self.schema_name}.execute_data_classification("
+            f"p_type => {tagging_type}, "
+            f"p_date_from=>{date_from}, "
+            f"p_unset=> {unset})"
+        )
 
     def save_to_file(self, data: list) -> None:
         """
@@ -369,7 +374,7 @@ class DataClassification:
         """
         info("START classify.")
         info(
-            f"....CALL PROCEDURE: {self.classify_query(date_from=date_from,tagging_type=tagging_type,unset=unset)}"
+            f"....CALL PROCEDURE: {self.classify_query(date_from=date_from,unset=unset,tagging_type=tagging_type)}"
         )
 
         # self.__execute_query(query=self.classify_query(date_from=date_from,
