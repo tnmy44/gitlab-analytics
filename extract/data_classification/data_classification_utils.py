@@ -24,12 +24,11 @@ class DataClassification:
         Define parameters
         """
         self.encoding = "utf8"
-        self.connected = False
-
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
         self.processing_role = "SYSADMIN"
         self.loader_engine = None
+        self.connected = False
         self.mnpi_file_name = "mnpi_table_list.csv"
         self.specification_file = "specification.yml"
         self.tagging_type = tagging_type
@@ -160,17 +159,17 @@ class DataClassification:
         """
         section = "PII"
         insert_statement = (
-            f"INSERT INTO {self.schema_name}.{self.table_name}(classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type) "
+            f"INSERT INTO {self.schema_name}.{self.table_name}(classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type, _uploaded_at) "
             f"WITH base AS ("
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
+            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
             f"  FROM raw.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
+            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
             f"  FROM prep.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
+            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
             f"  FROM prod.information_schema.tables"
             f" WHERE table_schema != 'INFORMATION_SCHEMA') "
             f"SELECT *"
@@ -354,30 +353,12 @@ class DataClassification:
 
         return manifest_dict
 
-    # TODO: rbacovic Tagging PII data
-    # TODO: rbacovic Tagging PII data - full
-    # TODO: rbacovic Tagging PII data - incremental
-    def tag_pii_data(self):
-        """
-        Routine to tag PII data
-        """
-        pass  # TODO: rbacovic add type
-
-    # TODO: rbacovic Tagging MNPI data
-    # TODO: rbacovic Tagging MNPI data - full
-    # TODO: rbacovic Tagging MNPI data - incremental
-    def tag_mnpi_data(self):
-        """
-        Routine to tag MNPI data
-        """
-        pass  # TODO: rbacovic add type
-
+    # TODO: rbacovic Tagging data
     def tag(self):
         """
         Routine to tag all data
         """
-        self.tag_pii_data()
-        self.tag_mnpi_data()
+        pass
 
     # TODO: rbacovic Clear PII tags
     def clear_pii_tags(self):

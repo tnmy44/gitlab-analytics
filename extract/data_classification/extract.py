@@ -15,7 +15,8 @@ def run():
     Run process
     """
     data_classification = DataClassification(
-        tagging_type="full", mnpi_raw_file="safe_models.json"
+        tagging_type="full",
+        mnpi_raw_file="safe_models.json"
     )
     data_classification.upload()
 
