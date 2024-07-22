@@ -246,7 +246,6 @@ class DataClassification:
         """
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
-    @property
     def classify_query(
         self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
