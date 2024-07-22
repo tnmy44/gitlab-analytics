@@ -9,7 +9,7 @@ WITH unioned AS (
     [
         ref('mart_crm_opportunity_7th_day_weekly_snapshot'),
         ref('mart_crm_opportunity_7th_day_weekly_snapshot_aggregate'),
-        ref('mart_targets_actuals_7th_day_weekly_snapshot'),
+        ref('rpt_pipeline_coverage'),
         ref('rpt_final_bookings')
     ],
     filters={
