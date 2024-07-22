@@ -154,7 +154,7 @@
       dim_crm_account.six_sense_segments,
 
        --Qualified Fields
-      dim_crm_account.days_since_last_activity_qualified,
+      dim_crm_account.qualified_days_since_last_activity,
       dim_crm_account.qualified_signals_active_session_time,
       dim_crm_account.qualified_signals_bot_conversation_count,
       dim_crm_account.qualified_condition,

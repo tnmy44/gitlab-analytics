@@ -231,7 +231,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.six_sense_segments, 
 
        --Qualified Fields
-      sfdc_account.days_since_last_activity_qualified,
+      sfdc_account.qualified_days_since_last_activity,
       sfdc_account.qualified_signals_active_session_time,
       sfdc_account.qualified_signals_bot_conversation_count,
       sfdc_account.qualified_condition,

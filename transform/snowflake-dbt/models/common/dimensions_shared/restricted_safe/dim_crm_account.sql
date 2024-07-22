@@ -183,7 +183,7 @@
       prep_crm_account.six_sense_segments,
 
        --Qualified Fields
-      prep_crm_account.days_since_last_activity_qualified,
+      prep_crm_account.qualified_days_since_last_activity,
       prep_crm_account.qualified_signals_active_session_time,
       prep_crm_account.qualified_signals_bot_conversation_count,
       prep_crm_account.qualified_condition,

@@ -421,7 +421,7 @@ models:
         description: Automatically populates two months out from the actively working start date to indicate when an outbound account should be considered for removal from the outbound pipeline.
       - name: actively_working_start_date
         description: Automatically datestamps the date and time that an account was moved to a BDRs outbound prospecting list.
-      - name: days_since_last_activity_qualified
+      - name: qualified_days_since_last_activity
         description: Qualified's calculation, in days, of time elapsed since last activity on the account. 
       - name: qualified_signals_active_session_time
         description: Qualified's calculation of active session time. 

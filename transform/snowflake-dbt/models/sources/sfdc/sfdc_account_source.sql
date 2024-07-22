@@ -177,7 +177,7 @@ renamed AS (
     x6sense_segments__c AS six_sense_segments,
 
     --Qualified Fields
-    days_since_last_activity_qualified__c AS days_since_last_activity_qualified,
+    days_since_last_activity_qualified__c AS qualified_days_since_last_activity,
     qualified_signals_active_session_time__c AS qualified_signals_active_session_time,
     qualified_signals_bot_conversation_count__c AS qualified_signals_bot_conversation_count,
     q_condition__c AS qualified_condition,
