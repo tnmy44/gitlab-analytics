@@ -84,7 +84,7 @@ class DataClassification:
         """
         if os.path.exists(self.mnpi_raw_file):
             info(F"FILE EXISTS {self.mnpi_raw_file}")
-            info(F"FILE SIZE {path.getsize(self.mnpi_raw_file)}")
+            info(F"FILE SIZE {os.path.getsize(self.mnpi_raw_file)}")
         else:
             info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
 
