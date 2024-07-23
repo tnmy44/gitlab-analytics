@@ -96,7 +96,7 @@ class DataClassification:
                 info(F"TODO: {line[:1000]}")
                 info(F"TODO: {line}")
 
-                res.append(line.rstrip())
+                res.append(json.loads(line.rstrip()))
             info(F"TODO: JSON LOAD DONE")
             return res
 
