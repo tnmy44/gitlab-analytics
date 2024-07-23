@@ -8,7 +8,7 @@ WITH source AS (
 deduped AS (
 
   SELECT *,
-    MAX(REGEXP_LIKE(jsontext['team_member']['hris_id']::NUMBER,'[1-3][0-9]{4}')) OVER (PARTITION BY 'All')                      AS has_workday_ids,
+    IFF(MAX(REGEXP_LIKE(jsontext['team_member']['hris_id']::NUMBER,'[1-3][0-9]{4}')) OVER (PARTITION BY 'All') > 0, TRUE,FALSE)                      AS has_workday_ids,
     MIN(IFF(REGEXP_LIKE(jsontext['team_member']['hris_id']::NUMBER,'[1-3][0-9]{4}'),uploaded_at,NULL)) OVER(PARTITION BY 'All') AS workday_cutover_date
   FROM source
   QUALIFY ROW_NUMBER() OVER (PARTITION BY jsontext['uuid']::VARCHAR ORDER BY uploaded_at DESC) = 1
