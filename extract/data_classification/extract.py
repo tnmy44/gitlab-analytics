@@ -23,7 +23,7 @@ def run_extract(
     Run process
     """
     info(f"RUNNING DIR: {os.getcwd()}")
-    
+
     data_classification = DataClassification(
         tagging_type=tagging_type, mnpi_raw_file="safe_models.json",incremental_load_days=incremental_load_days)
     if not date_from:
