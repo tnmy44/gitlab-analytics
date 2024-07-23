@@ -99,7 +99,7 @@ class DataClassification:
                 except:
                     info(F"TODO: EXCEPTION CANT LOAD JSON")
                 # res.append(json.loads(line.rstrip()))
-            info(F"TODO: JSON LOAD DONE")
+            info(F"TODO: JSON LOAD DONE len(RES): {len(res)}")
             return res
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
