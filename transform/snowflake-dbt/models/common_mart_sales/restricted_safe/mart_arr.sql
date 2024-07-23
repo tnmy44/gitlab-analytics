@@ -245,8 +245,8 @@ WITH dim_billing_account AS (
     LEFT JOIN top_100_child_arr_calc
       ON cohort_diffs.arr_month = top_100_child_arr_calc.arr_month
       AND cohort_diffs.dim_crm_account_id = top_100_child_arr_calc.dim_crm_account_id
-    LEFT JOIN top_100_child_fy25_snapshot
-      ON cohort_diffs.dim_crm_account_id = top_100_child_fy25_snapshot.dim_crm_account_id
+    LEFT JOIN top_100_child_current_fy_snapshot
+      ON cohort_diffs.dim_crm_account_id = top_100_child_current_fy_snapshot.dim_crm_account_id
 )
 
 {{ dbt_audit(
