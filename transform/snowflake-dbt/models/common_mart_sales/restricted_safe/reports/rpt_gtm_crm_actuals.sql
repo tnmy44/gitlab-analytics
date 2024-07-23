@@ -117,9 +117,5 @@ main_actuals AS (
 )
 
 SELECT
-  fiscal_quarter_name_fy,
-  SUM(deal_ids_count) AS deal_count
+  *
 FROM main_actuals
-WHERE fiscal_year > 2019
-GROUP BY 1
-ORDER BY 1 DESC

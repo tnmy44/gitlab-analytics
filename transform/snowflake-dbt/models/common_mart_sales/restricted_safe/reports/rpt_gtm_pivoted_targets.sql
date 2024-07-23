@@ -176,7 +176,7 @@ final AS ( -- need to use the MAX function in order to deal with the nulls from 
       AND pivoted_targets.dim_sales_qualified_source_id = ytd_pivoted_targets.dim_sales_qualified_source_id
       AND pivoted_targets.dim_order_type_id = ytd_pivoted_targets.dim_order_type_id
       AND pivoted_targets.dim_crm_user_hierarchy_sk = ytd_pivoted_targets.dim_crm_user_hierarchy_sk
-  GROUP BY 1, 2, 3, 4, 5, 6
+  GROUP BY ALL
 )
 
 SELECT *
