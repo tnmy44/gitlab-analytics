@@ -93,8 +93,9 @@ class DataClassification:
             # res = [json.loads(line.rstrip()) for line in file]
             res = []
             for line in file:
-                info(F"TODO: {line[:10]}")
-                
+                info(F"TODO: {line[:1000]}")
+                info(F"TODO: {line}")
+
                 res.append(line.rstrip())
             info(F"TODO: JSON LOAD DONE")
             return res
