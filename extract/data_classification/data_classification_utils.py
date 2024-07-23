@@ -82,10 +82,14 @@ class DataClassification:
         """
         Load MNPI list generated via dbt command
         """
-        with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
-            for line in file:
-                info(line)
-            return [json.loads(line.rstrip()) for line in file]
+        try:
+            with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
+                for line in file:
+                    info(line)
+                return [json.loads(line.rstrip()) for line in file]
+        except Exception as e:
+            error(f"Error while load_mnpi_list: {e}")
+            sys.exit(1)
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
         """
