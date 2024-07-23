@@ -6053,12 +6053,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: kbray
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: kbullock
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7927,12 +7921,6 @@ users:
       - Production Project Lead
       - Resources Project Lead
       - Test Permissions Group
-  - user_name: peter
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: pfocanti
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -8642,12 +8630,6 @@ users:
       - General All Access
       - People All Access
   - user_name: sdhage
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: sdumesnil
     user_name_domain: gitlab.com
     site_role: Unlicensed
     auth_setting: SAML
@@ -10163,12 +10145,6 @@ users:
   - user_name: jschneeweisz
     user_name_domain: gitlab.com
     site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: cugorji
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
     auth_setting: SAML
     groups:
       - General All Access
