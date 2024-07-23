@@ -91,17 +91,17 @@ class DataClassification:
             sys.exit(1)
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
-            res = [json.loads(line.rstrip()) for line in file if line[:2] == "{"]
-            # res = []
-            # for line in file:
-            #     info(F"TODO: {line.rstrip()}")
-            #     try:
-            #         res.append(json.loads(line.rstrip()))
-            #     except JSONDecodeError as e:
-            #         info(F"Wrong json format, discard and continue (expected): {e}")
-            #     except Exception as e:
-            #         error(F"Exception: {e.__class__.__name__} - {e}")
-            #         sys.exit(1)
+            # return [json.loads(line.rstrip()) for line in file if line[:2] == "{"]
+            res = []
+            for line in file:
+                info(F"TODO: {line.rstrip()}")
+                try:
+                    res.append(json.loads(line.rstrip()))
+                except JSONDecodeError as e:
+                    info(F"Wrong json format, discard and continue (expected): {e}")
+                except Exception as e:
+                    error(F"Exception: {e.__class__.__name__} - {e}")
+                    sys.exit(1)
             return res
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
@@ -357,11 +357,11 @@ class DataClassification:
         """
 
         mnpi_list = self.load_mnpi_list()
-        info(f"TODO: STILL ALIVE...mnpi_list={mnpi_list}")
+        info(f"TODO: STILL ALIVE...mnpi_list={len(mnpi_list)}")
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        info(f"TODO: STILL ALIVE2...mnpi_data={mnpi_data}")
+        info(f"TODO: STILL ALIVE2...mnpi_data={len(mnpi_data)}")
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
-        info(f"TODO: STILL ALIVE3...mnpi_data_filtered={mnpi_data_filtered}")
+        info(f"TODO: STILL ALIVE3...mnpi_data_filtered={len(mnpi_data_filtered)}")
         columns = [
             "classification_type",
             "created",
