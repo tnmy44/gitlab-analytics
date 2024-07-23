@@ -35,7 +35,7 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=1),
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2024, 7, 1),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -53,7 +53,7 @@ with open(f"{REPO_BASE_PATH}/{config_path}", "r") as file:
 dag = DAG(
     "waterfall_report_driveload",
     default_args=default_args,
-    schedule_interval="15 */4 1-5 * 1-5", 
+    schedule_interval="15 */4 1-5 * *", 
     concurrency=1,
     catchup=False,
 )
