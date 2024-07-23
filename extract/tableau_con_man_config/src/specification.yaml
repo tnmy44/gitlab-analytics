@@ -8635,12 +8635,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: sdumesnil
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: sdungarwal
     user_name_domain: gitlab.com
     site_role: Unlicensed
