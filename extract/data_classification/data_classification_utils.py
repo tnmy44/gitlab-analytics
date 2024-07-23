@@ -355,11 +355,11 @@ class DataClassification:
         """
 
         mnpi_list = self.load_mnpi_list()
-        info(F"TODO: STILL ALIVE...")
+        info(F"TODO: STILL ALIVE...mnpi_list={mnpi_list}")
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        info(F"TODO: STILL ALIVE2...")
+        info(F"TODO: STILL ALIVE2...mnpi_data={mnpi_data}")
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
-        info(F"TODO: STILL ALIVE3...")
+        info(F"TODO: STILL ALIVE3...mnpi_data_filtered={mnpi_data_filtered}")
         columns = [
             "classification_type",
             "created",
