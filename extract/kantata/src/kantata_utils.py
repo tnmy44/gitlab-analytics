@@ -143,9 +143,7 @@ def upload_kantanta_to_snowflake(
         seed_kantata_table(snowflake_engine, df, snowflake_table_name)
 
     snowflake_columns_str = get_snowflake_columns_str(df.columns)
-    file_format_options = (
-        """FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1 COMPRESSION = 'GZIP'"""
-    )
+    file_format_options = """FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1 COMPRESSION = 'GZIP' NULL_IF = ('""', '') """
     info(f"Running COPY INTO  snowflake_table_name: {snowflake_table_name}")
     snowflake_stage_load_copy_remove(
         upload_file_name,
