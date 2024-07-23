@@ -2187,6 +2187,8 @@ models:
         description: ' {{ doc("code_suggestions_is_direct_connection") }} '
       - name: instance_version
         description: ' {{ doc("gsc_instance_version") }} '
+      - name: correlation_id
+        description: ' { doc("gsc_correlation_id") } '
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.

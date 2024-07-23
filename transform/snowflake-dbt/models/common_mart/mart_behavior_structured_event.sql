@@ -106,6 +106,7 @@ report AS (
     structured_behavior.dim_instance_id,
     structured_behavior.host_name,
     structured_behavior.gsc_instance_version,
+    structured_behavior.gsc_correlation_id,
     structured_behavior.delivery_type,
     structured_behavior.gitlab_global_user_id,
     event.event_category,
@@ -150,5 +151,5 @@ report AS (
     created_by="@pempey",
     updated_by="@michellecooper",
     created_date="2023-02-22",
-    updated_date="2024-07-19"
+    updated_date="2024-07-23"
 ) }}

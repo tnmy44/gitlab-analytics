@@ -1450,6 +1450,8 @@ models:
       description: '{{ doc("gitlab_global_user_id") }}'
     - name: delivery_type
       description: '{{ doc("product_delivery_type") }}'
+    - name: gsc_correlation_id
+      description: ' { doc("gsc_correlation_id") } '
 
 - name: mart_behavior_structured_event_code_suggestion
   description: '{{ doc("mart_behavior_structured_event_code_suggestion") }}'

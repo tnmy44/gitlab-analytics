@@ -2741,6 +2741,12 @@ Version of the GitLab instance where the event comes from.
 
 {% enddocs %}
 
+{% docs gsc_correlation_id %}
+
+Unique request id for each request in Snowplow.
+
+{% enddocs %}
+
 {% docs web_page_context %}
 
 Web page fields added to Snowplow as defined in the [schema](https://github.com/snowplow/iglu-central/blob/master/schemas/com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0)

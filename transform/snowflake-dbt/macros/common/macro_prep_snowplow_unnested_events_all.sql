@@ -197,7 +197,8 @@ SELECT
   secure_connection_start                                                                                           AS secure_connection_start,
   unload_event_end                                                                                                  AS unload_event_end,
   unload_event_start                                                                                                AS unload_event_start,
-  instance_version                                                                                                  AS gsc_instance_version
+  instance_version                                                                                                  AS gsc_instance_version,
+  correlation_id                                                                                                    AS gsc_correlation_id
 FROM unioned_view
 
 {% endmacro %}

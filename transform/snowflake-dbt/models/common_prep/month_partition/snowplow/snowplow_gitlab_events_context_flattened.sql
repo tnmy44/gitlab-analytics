@@ -80,7 +80,8 @@ WITH filtered_source as (
             {'field':'instance_version'},
             {'field':'host_name', 'alias':"gsc_host_name"},
             {'field':'realm', 'alias':"gsc_realm"},
-            {'field':'global_user_id'}
+            {'field':'global_user_id'},
+            {'field':'correlation_id'}
             ]
         )
       }},
@@ -249,6 +250,7 @@ SELECT
   MAX(column_selection.is_gitlab_team_member)                 AS is_gitlab_team_member,
   MAX(column_selection.feature_enabled_by_namespace_ids)      AS feature_enabled_by_namespace_ids,
   MAX(column_selection.instance_version)                      AS instance_version,
+  MAX(column_selection.correlation_id)                        AS correlation_id,
 
   MAX(column_selection.web_page_context)                      AS web_page_context,
   MAX(column_selection.web_page_context_schema)               AS web_page_context_schema,
