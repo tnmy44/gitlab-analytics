@@ -3,9 +3,9 @@ Util unit for data classification
 """
 
 import json
-from json import JSONDecodeError
 import os
 import sys
+from json import JSONDecodeError
 from logging import error, info
 
 import pandas as pd
@@ -97,9 +97,9 @@ class DataClassification:
                 try:
                     res.append(json.loads(line.rstrip()))
                 except JSONDecodeError as e:
-                    info(F"Wrong json format, discard and continue (expected): {e}")
+                    info(f"Wrong json format, discard and continue (expected): {e}")
                 except Exception as e:
-                    error(F"Exception: {e.__class__.__name__} - {e}")
+                    error(f"Exception: {e.__class__.__name__} - {e}")
                     sys.exit(1)
             return res
 
@@ -268,24 +268,15 @@ class DataClassification:
     def classify_query(
         self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
+        """
+        Query to call procedure with parameters for classification
+        """
         return (
             f"CALL {self.schema_name}.execute_data_classification("
             f"p_type => {self.quoted(tagging_type)}, "
             f"p_date_from=>{self.quoted(date_from)} , "
             f"p_unset=> {self.quoted(unset)})"
         )
-
-    def save_to_file(self, data: list) -> None:
-        """
-        Save MNPI data to file
-        """
-        with open(
-            file=self.mnpi_file_name,
-            mode="w",
-            encoding=self.encoding,
-        ) as file:
-            for row in sorted(data):
-                file.write(f"{row},\n")
 
     def get_mnpi_scope(self, section: str, scope_type: str, row: list) -> bool:
         """
