@@ -86,9 +86,12 @@ class DataClassification:
             info(F"TODO: FILE EXISTS {self.mnpi_raw_file}")
             info(F"TODO: FILE SIZE {os.path.getsize(self.mnpi_raw_file)}")
         else:
-            info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
+            info(F"TODO DOESNT EXIST {self.mnpi_raw_file}")
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
+            info(F"TODO: FILE OPENED")
+            for line in file:
+                info(F"...{str(line)}")
             return [json.loads(line.rstrip()) for line in file]
 
 
