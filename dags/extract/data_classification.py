@@ -104,8 +104,8 @@ def get_command(task: str):
         "DATA_CLASSIFICATION_DAYS", default_var="7"
     )
     commands = {
-        "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > safe_models.json; ret=$?; {clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
-        # "extract_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
+        # "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > safe_models.json; ret=$?; {clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
+        "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > safe_models.json; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
         "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
     }
 
@@ -126,7 +126,7 @@ task_id = task_name = "extract_classification"
 
 extract_classification = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE,
+    image=DBT_IMAGE,
     task_id=task_id,
     name=task_name,
     secrets=secrets,
