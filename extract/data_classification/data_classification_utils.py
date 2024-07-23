@@ -336,6 +336,8 @@ class DataClassification:
         Entry point to identify MNPI data
         """
         mnpi_list = self.load_mnpi_list()
+        for mnpi in mnpi_list:
+            info(str(mnpi))
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
         columns = [
