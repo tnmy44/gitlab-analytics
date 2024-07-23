@@ -60,7 +60,6 @@ class DataClassification:
         Upload dataframe to Snowflake
         """
         try:
-
             dataframe_uploader(
                 dataframe=self.identify_mnpi_data,
                 engine=self.loader_engine,
@@ -82,6 +81,11 @@ class DataClassification:
         """
         Load MNPI list generated via dbt command
         """
+        if os.path.exists(self.mnpi_raw_file):
+            info(F"FILE EXISTS {self.mnpi_raw_file}")
+        else:
+            info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
+            
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             return [json.loads(line.rstrip()) for line in file]
 
@@ -337,6 +341,7 @@ class DataClassification:
         """
         Entry point to identify MNPI data
         """
+
         mnpi_list = self.load_mnpi_list()
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
