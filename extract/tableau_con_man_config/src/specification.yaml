@@ -7927,12 +7927,6 @@ users:
       - Production Project Lead
       - Resources Project Lead
       - Test Permissions Group
-  - user_name: peter
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: pfocanti
     user_name_domain: gitlab.com
     site_role: Unlicensed
