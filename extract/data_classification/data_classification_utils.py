@@ -85,7 +85,7 @@ class DataClassification:
             info(F"FILE EXISTS {self.mnpi_raw_file}")
         else:
             info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
-            
+
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             return [json.loads(line.rstrip()) for line in file]
 
@@ -453,7 +453,7 @@ class DataClassification:
         info(".... START upload_mnpi_data.")
         self.upload_to_snowflake()
         self.update_mnpi_metadata()
-        info(".... START upload_mnpi_data.")
+        info(".... END upload_mnpi_data.")
 
     def extract(self):
         """
