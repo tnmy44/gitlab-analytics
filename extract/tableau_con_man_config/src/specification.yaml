@@ -2246,11 +2246,11 @@ groups:
 
 users:
   - user_name: aacosta
-  user_name_domain: gitlab.com
-  site_role: Viewer
-  auth_setting: SAML
-  groups:
-    - General All Access
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: aadesanya
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -5731,6 +5731,12 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: jobauer
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: jonglee
     user_name_domain: gitlab.com
     site_role: Creator
@@ -6131,12 +6137,6 @@ users:
       - General All Access
       - General SAFE Access
   - user_name: kbilsborough
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: kbray
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -8316,6 +8316,12 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: rfuhrman
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: rgabriel
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -8731,6 +8737,12 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: sfang
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: sfigueroa
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9534,6 +9546,12 @@ users:
       - RSA SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
+  - user_name: tskora1
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: ttran
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9610,6 +9628,12 @@ users:
       - Go To Market Project Lead
       - Team Member Project Lead
   - user_name: vbertil
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: vbhat
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -9936,3 +9960,4 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+
