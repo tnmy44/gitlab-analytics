@@ -9,7 +9,8 @@ from logging import error, info
 
 import pandas as pd
 import yaml
-from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+from gitlabdata.orchestration_utils import (dataframe_uploader,
+                                            snowflake_engine_factory)
 
 
 class DataClassification:
@@ -82,11 +83,10 @@ class DataClassification:
         """
         Load MNPI list generated via dbt command
         """
-        if os.path.exists(self.mnpi_raw_file):
-            info(F"TODO: FILE EXISTS {self.mnpi_raw_file}")
-            info(F"TODO: FILE SIZE {os.path.getsize(self.mnpi_raw_file)}")
-        else:
-            info(F"TODO DOESNT EXIST {self.mnpi_raw_file}")
+
+        if not os.path.exists(self.mnpi_raw_file):
+            error(F"File {self.mnpi_raw_file} is note generated, stopping processing")
+            sys.exit(1)
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             info(F"TODO: FILE OPENED")
@@ -96,10 +96,10 @@ class DataClassification:
                 info(F"TODO: {line.rstrip()}")
                 try:
                     res.append(json.loads(line.rstrip()))
-                except as e:
+                except Exception as e:
                     info(F"TODO: EXCEPTION CANT LOAD JSON: {e}")
                     info(F"TODO: Exception:{e.__class__.__name__}")
-                # res.append(json.loads(line.rstrip()))
+
             info(F"TODO: JSON LOAD DONE len(RES): {len(res)}")
             return res
 
