@@ -96,8 +96,9 @@ class DataClassification:
                 info(F"TODO: {line.rstrip()}")
                 try:
                     res.append(json.loads(line.rstrip()))
-                except:
-                    info(F"TODO: EXCEPTION CANT LOAD JSON")
+                except as e:
+                    info(F"TODO: EXCEPTION CANT LOAD JSON: {e}")
+                    info(F"TODO: Exception:{e.__class__.__name__}")
                 # res.append(json.loads(line.rstrip()))
             info(F"TODO: JSON LOAD DONE len(RES): {len(res)}")
             return res
