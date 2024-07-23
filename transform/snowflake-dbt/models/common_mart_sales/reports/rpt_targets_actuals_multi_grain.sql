@@ -93,6 +93,7 @@ SELECT
         ELSE NULL 
     END) OVER ()                                                        AS max_snapshot_date, -- We want to ensure we have the max_snapshot_date that comes from the actuals in every row but excluding the future dates we have in the targets data 
   FLOOR((DATEDIFF(day, current_first_day_of_fiscal_quarter, max_snapshot_date) / 7)) 
-                                                                        AS most_recent_snapshot_week
+                                                                        AS most_recent_snapshot_week,
+  NULL                                                                  AS most_recent_test
 FROM unioned 
 WHERE snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
