@@ -114,3 +114,17 @@ Billing - total billing, billing exclusive the tax amount and tax amount of the 
 Collections - total of payments applied to invoices in the month
 
 {% enddocs %}
+
+{% docs rpt_dso_cei_monthly %}
+
+Days Sales Outstanding
+
+Averag AR = (Starting Accounts Receivable / Ending Accounts Receivable) / 2
+
+DSO = (Average AR / Total Billing) * Number of Days in Period
+
+Collection Effectiveness Index
+
+CEI = (Total Beginning AR + Total Billing - Total AR at End of Period) / (Total Beginning AR + Total Billing - Total Current AR) * 100
+
+{% enddocs %}
