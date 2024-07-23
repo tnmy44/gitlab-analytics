@@ -3,14 +3,14 @@ Util unit for data classification
 """
 
 import json
+from json import JSONDecodeError
 import os
 import sys
 from logging import error, info
 
 import pandas as pd
 import yaml
-from gitlabdata.orchestration_utils import (dataframe_uploader,
-                                            snowflake_engine_factory)
+from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
 
 
 class DataClassification:
@@ -20,7 +20,9 @@ class DataClassification:
     - MNPI
     """
 
-    def __init__(self, tagging_type: str, mnpi_raw_file: str, incremental_load_days:int):
+    def __init__(
+        self, tagging_type: str, mnpi_raw_file: str, incremental_load_days: int
+    ):
         """
         Define parameters
         """
@@ -85,22 +87,21 @@ class DataClassification:
         """
 
         if not os.path.exists(self.mnpi_raw_file):
-            error(F"File {self.mnpi_raw_file} is note generated, stopping processing")
+            error(f"File {self.mnpi_raw_file} is note generated, stopping processing")
             sys.exit(1)
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
-            info(F"TODO: FILE OPENED")
-            # res = [json.loads(line.rstrip()) for line in file]
-            res = []
-            for line in file:
-                info(F"TODO: {line.rstrip()}")
-                try:
-                    res.append(json.loads(line.rstrip()))
-                except Exception as e:
-                    info(F"TODO: EXCEPTION CANT LOAD JSON: {e}")
-                    info(F"TODO: Exception:{e.__class__.__name__}")
-
-            info(F"TODO: JSON LOAD DONE len(RES): {len(res)}")
+            res = [json.loads(line.rstrip()) for line in file if line[:2] == "{"]
+            # res = []
+            # for line in file:
+            #     info(F"TODO: {line.rstrip()}")
+            #     try:
+            #         res.append(json.loads(line.rstrip()))
+            #     except JSONDecodeError as e:
+            #         info(F"Wrong json format, discard and continue (expected): {e}")
+            #     except Exception as e:
+            #         error(F"Exception: {e.__class__.__name__} - {e}")
+            #         sys.exit(1)
             return res
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
@@ -356,11 +357,11 @@ class DataClassification:
         """
 
         mnpi_list = self.load_mnpi_list()
-        info(F"TODO: STILL ALIVE...mnpi_list={mnpi_list}")
+        info(f"TODO: STILL ALIVE...mnpi_list={mnpi_list}")
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        info(F"TODO: STILL ALIVE2...mnpi_data={mnpi_data}")
+        info(f"TODO: STILL ALIVE2...mnpi_data={mnpi_data}")
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
-        info(F"TODO: STILL ALIVE3...mnpi_data_filtered={mnpi_data_filtered}")
+        info(f"TODO: STILL ALIVE3...mnpi_data_filtered={mnpi_data_filtered}")
         columns = [
             "classification_type",
             "created",
