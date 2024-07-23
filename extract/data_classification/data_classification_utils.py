@@ -71,7 +71,7 @@ class DataClassification:
                 schema=self.schema_name,
             )
         except Exception as e:
-            error(f"Error uploading to Snowflake: {e}")
+            error(f"Error uploading to Snowflake: {e.__class__.__name__} - {e}")
             sys.exit(1)
 
     @staticmethod
@@ -94,7 +94,6 @@ class DataClassification:
             # return [json.loads(line.rstrip()) for line in file if line[:2] == "{"]
             res = []
             for line in file:
-                info(F"TODO: {line.rstrip()}")
                 try:
                     res.append(json.loads(line.rstrip()))
                 except JSONDecodeError as e:
@@ -355,13 +354,10 @@ class DataClassification:
         """
         Entry point to identify MNPI data
         """
-
         mnpi_list = self.load_mnpi_list()
-        info(f"TODO: STILL ALIVE...mnpi_list={len(mnpi_list)}")
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        info(f"TODO: STILL ALIVE2...mnpi_data={len(mnpi_data)}")
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
-        info(f"TODO: STILL ALIVE3...mnpi_data_filtered={len(mnpi_data_filtered)}")
+
         columns = [
             "classification_type",
             "created",
@@ -372,7 +368,7 @@ class DataClassification:
             "table_name",
             "table_type",
         ]
-        # self.save_to_file(data=mnpi_data_filtered)
+
         return pd.DataFrame(data=mnpi_data_filtered, columns=columns)
 
     @property
@@ -432,8 +428,8 @@ class DataClassification:
         try:
             connection = self.__connect()
             connection.execute(statement=query)
-        except Exception as programming_error:
-            error(f".... ERROR with: {programming_error}")
+        except Exception as e:
+            error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")
         finally:
             self.__dispose()
