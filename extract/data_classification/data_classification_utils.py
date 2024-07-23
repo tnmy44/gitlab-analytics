@@ -83,8 +83,8 @@ class DataClassification:
         Load MNPI list generated via dbt command
         """
         if os.path.exists(self.mnpi_raw_file):
-            info(F"FILE EXISTS {self.mnpi_raw_file}")
-            info(F"FILE SIZE {os.path.getsize(self.mnpi_raw_file)}")
+            info(F"TODO: FILE EXISTS {self.mnpi_raw_file}")
+            info(F"TODO: FILE SIZE {os.path.getsize(self.mnpi_raw_file)}")
         else:
             info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
 
@@ -345,8 +345,11 @@ class DataClassification:
         """
 
         mnpi_list = self.load_mnpi_list()
+        info(F"TODO: STILL ALIVE...")
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
+        info(F"TODO: STILL ALIVE2...")
         mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
+        info(F"TODO: STILL ALIVE3...")
         columns = [
             "classification_type",
             "created",
