@@ -210,3 +210,17 @@ models:
       date fields (at the quarter or year level) and data qualifiers used in the mart 
       table to allow for data union. The values that come from the live data
       are aliased as day '94' of the quarter.
+
+  - name: rpt_pipeline_coverage
+    description: >
+      This report table simplifies tracking sales performance by showing targets and actuals
+      combined, every seven days within a quarter. 
+
+      It combines daily targets, daily actuals along with the total quarterly targets
+      and actuals. The daily actuals come from the snapshot data, whereas the quarterly actuals
+      come from the live data. This is because there are many deals are closed on the 
+      last day of the quarter but are not settled until a few days into the new quarter.
+
+      This model includes both the numerator and denominator for calculating
+      coverage throughout a quarter
+                          
