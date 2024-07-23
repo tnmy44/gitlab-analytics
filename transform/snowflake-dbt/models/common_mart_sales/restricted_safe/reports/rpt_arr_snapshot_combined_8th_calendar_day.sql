@@ -145,6 +145,7 @@
       driveload_financial_metrics_program_phase_1_source.subscription_sales_type,
       driveload_financial_metrics_program_phase_1_source.product_name,
       NULL                                                                                         AS product_rate_plan_name,
+      NULL                                                                                         AS product_deployment_type,
       driveload_financial_metrics_program_phase_1_source.product_category                          AS product_tier_name,
       CASE
         WHEN  driveload_financial_metrics_program_phase_1_source.delivery = 'Others' THEN 'SaaS'
@@ -228,6 +229,7 @@
         ELSE mart_arr_snapshot_model_combined.product_tier_name
       END                                                                                       AS product_name,
       mart_arr_snapshot_model_combined.product_rate_plan_name,
+      mart_arr_snapshot_model_combined.product_deployment_type,
       mart_arr_snapshot_model_combined.product_tier_name,
       CASE
         WHEN  mart_arr_snapshot_model_combined.product_delivery_type = 'Others' THEN 'SaaS'
@@ -343,6 +345,7 @@
         ELSE product_name
       END                                                                                AS product_name_grouped,
       product_rate_plan_name,
+      product_deployment_type
       product_tier_name,
       product_delivery_type,
       product_ranking,
