@@ -112,7 +112,7 @@ main_actuals AS (
     ON unioned_actuals.actual_date = dim_date.date_actual
   LEFT JOIN mart_crm_opportunity
     ON unioned_actuals.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
-  WHERE fiscal_year > 2020
+  WHERE fiscal_year > 2019
   ORDER BY 1 DESC
 )
 
