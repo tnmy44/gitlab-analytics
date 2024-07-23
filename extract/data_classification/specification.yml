@@ -6,12 +6,15 @@ data_classification:
       databases:
         - PREP
         - RAW
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
       schemas:
         - PREP.GAINSIGHT_CUSTOMER_SUCCESS
         - RAW.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
       tables:
         - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
         - RAW.SCHEMA_TEST.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
     exclude:
       databases:
         - PROD
