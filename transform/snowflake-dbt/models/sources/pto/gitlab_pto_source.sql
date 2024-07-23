@@ -44,9 +44,9 @@ each_pto_day AS (
           WHEN has_workday_ids = TRUE
             AND year(end_date) >= '2024'
             AND uploaded_at < workday_cutover_date
-          THEN 0
-          ELSE 1
-          END = 1           
+          THEN FALSE
+          ELSE TRUE
+          END = TRUE           
 
 )
 
