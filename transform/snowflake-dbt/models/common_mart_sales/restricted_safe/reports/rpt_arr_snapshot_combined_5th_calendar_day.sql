@@ -54,6 +54,7 @@
       subscription_sales_type,
       product_tier_name,
       product_rate_plan_name,
+      product_deployment_type,
       product_delivery_type,
       product_ranking,
       service_type,
