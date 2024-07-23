@@ -30,7 +30,7 @@ class DataClassification:
         self.loader_engine = None
         self.connected = False
         self.mnpi_file_name = "mnpi_table_list.csv"
-        self.specification_file = "specification.yml"
+        self.specification_file = "extract/data_classification/specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()

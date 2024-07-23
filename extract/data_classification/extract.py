@@ -3,6 +3,7 @@
     - PII
     - MNPI
 """
+import os
 import sys
 from datetime import datetime, timedelta
 from logging import basicConfig, info
@@ -16,11 +17,13 @@ def run_extract(
     date_from: str,
     unset: str = "FALSE",
     tagging_type: str = "INCREMENTAL",
-    incremental_load_days:int = 7
+    incremental_load_days: int = 7
 ):
     """
     Run process
     """
+    info(f"RUNNING DIR: {os.getcwd()}")
+    
     data_classification = DataClassification(
         tagging_type=tagging_type, mnpi_raw_file="safe_models.json",incremental_load_days=incremental_load_days)
     if not date_from:
