@@ -438,6 +438,8 @@ models:
         description: The bizible touchpoint marketing channel, of the most recent touchpoint. 
       - name: bizible_most_recent_marketing_channel_path
         description: The bizible touchpoint marketing channel path, of the most recent touchpoint.
+      - name: inactive_contact
+        description: A SFDC Contact field that shows whether or not a given contact is still with the company/account they are related to. 
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -2484,6 +2486,10 @@ models:
         description: The number of projects that are presently associated with the namespace.
       - name: has_code_suggestions_enabled
         description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_order_hist
     description: '{{ doc("dim_order_hist") }}'
@@ -2642,6 +2648,10 @@ models:
           - not_null
       - name: masked_label_title
         description: '{{ doc("label_title") }}'
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
@@ -2656,6 +2666,10 @@ models:
           - not_null
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
@@ -2823,6 +2837,10 @@ models:
       - name: dim_plan_sk_at_creation
         data_tests:
           - not_null
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_epic
     description: '{{ doc("dim_epic") }}'
@@ -2854,6 +2872,10 @@ models:
           - not_null
       - name: is_system
         description: boolean flag allowing us to identify if a note is automatically created by the system or if it is a user's action
+      - name: is_deleted
+        description: '{{ doc("is_deleted") }}'
+      - name: is_deleted_updated_at
+        description: '{{ doc("is_deleted_updated_at") }}'
 
   - name: dim_issue_links
     description: '{{ doc("dim_issue_links") }}'
@@ -5287,6 +5309,8 @@ models:
         description: The default quantity of units
       - name: mrr
         description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
+      - name: delta_mrc
+        description: A delta monthly recurring charge is the change in monthly recurring revenue caused by an amendment or a new subscription. This is the value at the charge segment level.
       - name: rate_plan_charge_segment
         description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
       - name: rate_plan_charge_version
@@ -5645,16 +5669,6 @@ models:
           - unique
         tags: ["tdf", "common", "invoice"]
 
-  - name: fct_invoice_aging_detail
-    description: '{{ doc("fct_invoice_aging_detail") }}'
-    columns:
-      - name: invoice_aging_detail_pk
-        description: The unique identifier of a transaction
-        data_tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "invoice"]
-
   - name: fct_invoice_item_adjustment
     description: '{{ doc("fct_invoice_item_adjustment") }}'
     columns:
@@ -5802,8 +5816,8 @@ models:
       - name: quantity
         description: Total quantity
 
-  - name: fct_mrr_weekly
-    description: One row represents Monthly Recurring Revenue per day, by rate plan charge. Excludes charges with $0 MRR.
+  - name: fct_mrr_weekly_with_zero_dollar_charges
+    description: One row represents Monthly Recurring Revenue per week, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.
     columns:
       - name: mrr_id
         description: The unique identifier of the MRR.
@@ -9726,3 +9740,94 @@ models:
         description: ' {{ doc("service_ping_key_path") }} '
       - name: data_source
         description: ' {{ doc("service_ping_data_source") }} '
+
+
+  - name: fct_team_member_absence
+    description: '{{ doc("fct_team_member_absence") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - dim_team_member_sk
+              - absence_date
+              - pto_uuid
+
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique ID of the team.
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current_team_member_position
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_valid_from
+      - name: position_valid_to
+      - name: absence_start
+        description: The team member's absence start date
+        tests: 
+          - not_null
+      - name: absence_end
+        description: The team member's absence end date
+      - name: absence_date  
+        description: The team member's day of absence   
+        tests: 
+          - not_null
+      - name: is_pto
+        description: If this absence day overlaps with a PTO.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: is_holiday
+        description: If this absence day overlaps with a holiday.
+      - name: pto_uuid
+        description: Unique identifier for this pto event
+      - name: pto_type_uuid
+        description: The UUID of this OOO Type.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: pto_group_type
+        description: The group type of the absence.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: pto_status
+        description: Enum:"AP" "RQ" "DN" "CN" 2-character enumeration denoting the status of the OOO Event.
+          "AP" = Approved  "RQ" = Requested  "DN" = Denied  "CN" = Cancelled
+      - name: pto_status_name
+        description: The decoded pto_status
+      - name: total_hours
+        description: How long the user was OOO for. This is different from recorded_hours in that it is unaware of holidays and weekends.
+      - name: recorded_hours
+        description: How many hours were recorded as OOO for this event.
+      - name: absence_status
+        description: The team member's absence status.
+        meta:
+          masking_policy: analyst_people_sensitive
+      - name: employee_day_length
+        description: How long this User's "day" is in hours

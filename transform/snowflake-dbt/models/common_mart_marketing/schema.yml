@@ -288,6 +288,8 @@ models:
           description: The bizible touchpoint marketing channel path, of the most recent touchpoint.  
         - name: net_arr_stage_1
           description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
+        - name: inactive_contact
+          description: A SFDC Contact field that shows whether or not a given contact is still with the company/account they are related to. 
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
