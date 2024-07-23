@@ -90,9 +90,9 @@ class DataClassification:
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
             info(F"TODO: FILE OPENED")
-            for line in file:
-                info(F"...{str(line)}")
-            return [json.loads(line.rstrip()) for line in file]
+            res = [json.loads(line.rstrip()) for line in file]
+            info(F"TODO: JSON LOAD DONE")
+            return res
 
 
     def transform_mnpi_list(self, mnpi_list: list) -> list:
