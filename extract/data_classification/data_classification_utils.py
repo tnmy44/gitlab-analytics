@@ -19,7 +19,7 @@ class DataClassification:
     - MNPI
     """
 
-    def __init__(self, tagging_type: str, mnpi_raw_file: str):
+    def __init__(self, tagging_type: str, mnpi_raw_file: str, incremental_load_days:int):
         """
         Define parameters
         """
@@ -34,7 +34,7 @@ class DataClassification:
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()
-        self.INCREMENTAL_LOAD_DAYS = 7
+        self.incremental_load_days = incremental_load_days
 
     def __connect(self):
         """

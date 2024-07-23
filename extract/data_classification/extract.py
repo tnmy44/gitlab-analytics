@@ -16,25 +16,22 @@ def run_extract(
     date_from: str,
     unset: str = "FALSE",
     tagging_type: str = "INCREMENTAL",
+    incremental_load_days:int = 7
 ):
     """
     Run process
     """
     data_classification = DataClassification(
-        tagging_type=tagging_type, mnpi_raw_file="safe_models.json"
-    )
+        tagging_type=tagging_type, mnpi_raw_file="safe_models.json",incremental_load_days=incremental_load_days)
     if not date_from:
         curr_date = datetime.now() - timedelta(
-            days=data_classification.INCREMENTAL_LOAD_DAYS
+            days=data_classification.incremental_load_days
         )
         date_from = curr_date.strftime("%Y-%m-%d 00:00:00")
 
     if operation == "EXTRACT":
         data_classification.extract()
     if operation == "CLASSIFY":
-        info(f"DATE_FROM: {date_from}")
-        info(f"unset: {unset}")
-        info(f"tagging_type: {tagging_type}")
         data_classification.classify(
             date_from=date_from, unset=unset, tagging_type=tagging_type
         )
