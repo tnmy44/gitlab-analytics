@@ -93,8 +93,11 @@ class DataClassification:
             # res = [json.loads(line.rstrip()) for line in file]
             res = []
             for line in file:
-                info(F"TODO: {line}")
-
+                info(F"TODO: {line.rstrip()}")
+                try:
+                    res.append(json.loads(line.rstrip()))
+                except:
+                    info(F"TODO: EXCEPTION CANT LOAD JSON")
                 # res.append(json.loads(line.rstrip()))
             info(F"TODO: JSON LOAD DONE")
             return res
