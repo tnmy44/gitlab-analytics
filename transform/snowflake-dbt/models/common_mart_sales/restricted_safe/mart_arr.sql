@@ -217,14 +217,16 @@ WITH dim_billing_account AS (
       IFF(child_arr_rank <= 100, true, false) AS is_top_100_child_account_by_arr_month
     FROM child_arr_base_products
 
-), top_100_child_fy25_snapshot AS (
+), top_100_child_current_fy_snapshot AS (
 
     SELECT
       dim_crm_account_id,
-      true as is_top_100_child_account_fy25_start
+      true as is_top_100_child_account_current_fy
     FROM top_100_child_arr_calc
+    LEFT JOIN dim_date
+    ON top_100_child_arr_calc.arr_month = dim_date.date_actual
     WHERE is_top_100_child_account_by_arr_month = true 
-    AND arr_month = '2024-01-01'
+    AND arr_month = DATEADD('MONTH', -1, dim_date.current_first_day_of_fiscal_year)
 
 ), final_table AS (
 
@@ -234,7 +236,7 @@ WITH dim_billing_account AS (
       child_account_base_arr,
       child_arr_rank,
       is_top_100_child_account_by_arr_month,
-      IFF(is_top_100_child_account_fy25_start = true, true, false) as is_top_100_child_account_fy25_start
+      IFF(is_top_100_child_account_current_fy = true, true, false) as is_top_100_child_account_current_fy
 
     FROM cohort_diffs
     LEFT JOIN parent_arr_band_calc
