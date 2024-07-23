@@ -23,6 +23,7 @@ class DataClassification:
         """
         Define parameters
         """
+
         self.encoding = "utf8"
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
@@ -83,6 +84,7 @@ class DataClassification:
         """
         if os.path.exists(self.mnpi_raw_file):
             info(F"FILE EXISTS {self.mnpi_raw_file}")
+            info(F"FILE SIZE {path.getsize(self.mnpi_raw_file)}")
         else:
             info(F"FILE DOESNT EXIST {self.mnpi_raw_file}")
 
