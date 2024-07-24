@@ -332,6 +332,14 @@
       dim_crm_opportunity.sa_tech_evaluation_end_date,
       dim_crm_opportunity.sa_tech_evaluation_start_date,
 
+      --sales dev hierarchy fields
+      fct_crm_opportunity.sales_dev_rep_user_full_name,
+      fct_crm_opportunity.sales_dev_rep_manager_full_name,
+      fct_crm_opportunity.sales_dev_rep_leader_full_name,
+      fct_crm_opportunity.sales_dev_rep_user_role_level_1,
+      fct_crm_opportunity.sales_dev_rep_user_role_level_2,
+      fct_crm_opportunity.sales_dev_rep_user_role_level_3,
+
       --Command Plan fields
       dim_crm_opportunity.cp_partner,
       dim_crm_opportunity.cp_paper_process,
@@ -612,9 +620,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rakhireddy",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-06-12"
+    updated_date="2024-07-24"
   ) }}
 
 

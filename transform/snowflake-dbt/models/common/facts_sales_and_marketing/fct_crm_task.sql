@@ -101,6 +101,14 @@ WHERE prep_crm_task.sa_activity_type IS NOT NULL
     -- Logic
     opps_ranked.task_mapped_to,
 
+    --sales dev hierarchy fields
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
+
     -- Counts
     prep_crm_task.account_or_opportunity_count,
     prep_crm_task.lead_or_contact_count,
@@ -125,13 +133,16 @@ WHERE prep_crm_task.sa_activity_type IS NOT NULL
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) = prep_crm_person.sfdc_record_id
   LEFT JOIN opps_ranked
     ON prep_crm_task.dim_crm_task_pk = opps_ranked.dim_crm_task_pk
+  LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
+    ON prep_crm_task.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
+      AND prep_crm_task.task_completed_date=prep_sales_dev_user_hierarchy.snapshot_date
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jngCES",
+    updated_by="@rkohnke",
     created_date="2022-12-05",
-    updated_date="2023-11-20"
+    updated_date="2024-07-24"
 ) }}

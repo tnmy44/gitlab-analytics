@@ -43,6 +43,14 @@
     dim_crm_event.first_opportunity_event_created_date,
     dim_crm_event.partner_marketing_task_subject,
 
+    --sales dev hierarchy fields
+    fct_crm_event.sales_dev_rep_user_full_name,
+    fct_crm_event.sales_dev_rep_manager_full_name,
+    fct_crm_event.sales_dev_rep_leader_full_name,
+    fct_crm_event.sales_dev_rep_user_role_level_1,
+    fct_crm_event.sales_dev_rep_user_role_level_2,
+    fct_crm_event.sales_dev_rep_user_role_level_3,
+
     --Dates and Datetimes
     dim_crm_event.event_start_date_time,
     dim_crm_event.event_end_date_time,
@@ -79,5 +87,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-08-23"
+    updated_date="2024-07-24"
 ) }}
