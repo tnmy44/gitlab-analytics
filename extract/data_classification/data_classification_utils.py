@@ -417,7 +417,7 @@ class DataClassification:
         """
         Upload PII data
         """
-        info(".... START upload_pii_data.")
+        info(f".... START upload_pii_data.: {self.pii_query}")
         self.__execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
@@ -456,3 +456,4 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END extract.")
+
