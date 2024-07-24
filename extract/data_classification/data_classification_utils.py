@@ -441,6 +441,7 @@ class DataClassification:
         as initially we do not have it
         """
         info(".... START update MNPI metadata.")
+        info(f"....mnpi_metadata_update_query: {self.mnpi_metadata_update_query}")
         self.__execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 

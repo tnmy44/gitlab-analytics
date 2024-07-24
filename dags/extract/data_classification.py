@@ -144,7 +144,7 @@ execute_classification = KubernetesPodOperator(
     task_id=task_id,
     name=task_name,
     secrets=secrets,
-    env_vars=env,
+    env_vars=pod_env_vars,
     arguments=[get_command(task=task_id)],
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
