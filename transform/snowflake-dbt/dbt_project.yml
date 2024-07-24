@@ -299,6 +299,7 @@ models:
       kantata:
         +materialized: table
         +schema: kantata
+        +tags: ["mnpi"]
 
       level_up:
         +schema: level_up
