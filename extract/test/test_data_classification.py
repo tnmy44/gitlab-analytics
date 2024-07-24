@@ -19,7 +19,7 @@ def data_classification():
     environ["SNOWFLAKE_PROD_DATABASE"] = "PROD"
     environ["SNOWFLAKE_LOAD_DATABASE"] = "RAW"
     return DataClassification(
-        tagging_type="FULL", mnpi_raw_file="test.json", incremental_load_days=7
+        tagging_type="FULL", mnpi_raw_file="test.json", incremental_load_days=90
     )
 
 
@@ -39,7 +39,7 @@ def test_initialization(data_classification):
     )
     assert data_classification.tagging_type == "FULL"
     assert data_classification.mnpi_raw_file == "test.json"
-    assert data_classification.incremental_load_days == 7
+    assert data_classification.incremental_load_days == 90
     assert data_classification.raw == "RAW"
     assert data_classification.prep == "PREP"
     assert data_classification.prod == "PROD"
