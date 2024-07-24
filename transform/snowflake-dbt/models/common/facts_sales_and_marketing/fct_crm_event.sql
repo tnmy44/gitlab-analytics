@@ -58,7 +58,7 @@ WITH prep_crm_event AS (
   FROM prep_crm_event
   LEFT JOIN converted_leads
     ON prep_crm_event.sfdc_record_id=converted_leads.lead_id
-  LEFT JOIN prep_crm_person
+  LEFT JOIN {{ ref('prep_crm_person') }}
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_event.sfdc_record_id) = prep_crm_person.sfdc_record_id
 
 
