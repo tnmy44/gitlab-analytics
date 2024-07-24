@@ -17,8 +17,9 @@ WITH unioned AS (
     }
 ) }}
 
-)
+),
 
+final AS (
 SELECT 
   unioned.*,
   NULL AS sao_crm_opp_owner_sales_segment_stamped,
@@ -93,7 +94,14 @@ SELECT
         ELSE NULL 
     END) OVER ()                                                        AS max_snapshot_date, -- We want to ensure we have the max_snapshot_date that comes from the actuals in every row but excluding the future dates we have in the targets data 
   FLOOR((DATEDIFF(day, current_first_day_of_fiscal_quarter, max_snapshot_date) / 7)) 
-                                                                        AS most_recent_snapshot_week,
-  NULL                                                                  AS most_recent_test
+                                                                        AS most_recent_snapshot_week
 FROM unioned 
 WHERE snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
+)
+
+SELECT *,
+  fiscal_quarter_name_fy AS most_recent_snapshot_date_fiscal_quarter_name_fy,
+  fiscal_quarter_date AS most_recent_snapshot_date_fiscal_quarter_date
+FROM final
+LEFT JOIN {{ ref('dim_date') }} dim_date
+ON final.max_snapshot_date = dim_date.date_actual
