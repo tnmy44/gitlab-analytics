@@ -33,7 +33,6 @@ class DataClassification:
         self.processing_role = "SYSADMIN"
         self.loader_engine = None
         self.connected = False
-        self.mnpi_file_name = "mnpi_table_list.csv"
         self.specification_file = "../../extract/data_classification/specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
@@ -399,7 +398,6 @@ class DataClassification:
         # self.__execute_query(query=query)
         info("END classify.")
 
-
     def __execute_query(self, query: str):
         """
         Execute SQL query
@@ -417,7 +415,7 @@ class DataClassification:
         """
         Upload PII data
         """
-        info(f".... START upload_pii_data.: {self.pii_query}")
+        info(f".... START upload_pii_data.")
         self.__execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
@@ -456,4 +454,3 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END extract.")
-
