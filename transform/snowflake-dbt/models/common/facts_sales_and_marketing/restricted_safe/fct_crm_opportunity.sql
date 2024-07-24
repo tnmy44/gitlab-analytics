@@ -364,8 +364,8 @@
     LEFT JOIN prep_date
       ON prep_date.date_id = sfdc_opportunity.close_date_id
     LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-      ON prep_crm_opportunity.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-        AND prep_crm_opportunity.stage_1_discovery_date=prep_sales_dev_user_hierarchy.snapshot_date
+      ON sfdc_opportunity.dim_crm_person_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
+        AND sfdc_opportunity.stage_1_discovery_date=prep_sales_dev_user_hierarchy.snapshot_date
 
 )
 

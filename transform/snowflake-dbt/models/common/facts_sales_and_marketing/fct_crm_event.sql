@@ -54,7 +54,7 @@
     prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
     prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
     prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-    prep_sales_dev_user_hierarchy.sales_Dev_rep_ussales_dev_rep_user_role_level_3er_role_level_3,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
 
 
     -- Metadata
