@@ -75,6 +75,8 @@ dag = DAG(
     catchup=False,
 )
 
+driveload_tasks = []
+
 for folder in folders:
     folder_name = folder.get("folder_name")
     table_name = folder.get("table_name")
@@ -87,13 +89,14 @@ for folder in folders:
     """
 
     cleaned_folder_name = folder_name.replace("_", "-")
+    driveload_task_id = f"{cleaned_folder_name}-driveload"
 
     # Task 1
     folder_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"{cleaned_folder_name}-driveload",
-        name=f"{cleaned_folder_name}-driveload",
+        task_id=driveload_task_id,
+        name=driveload_task_id,
         secrets=[
             GCP_SERVICE_CREDS,
             SNOWFLAKE_ACCOUNT,
@@ -109,6 +112,8 @@ for folder in folders:
         dag=dag,
     )
 
+    driveload_tasks.append(folder_run)
+
 dbt_run_waterfall_reports_cmd = f"""
     export snowflake_load_database="RAW" &&
     {dbt_install_deps_and_seed_nosha_cmd} &&
@@ -116,6 +121,7 @@ dbt_run_waterfall_reports_cmd = f"""
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
+
 dbt_run_waterfall_reports = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
@@ -151,4 +157,4 @@ dbt_run_waterfall_reports = KubernetesPodOperator(
 )
 
 # Order
-folder_run >> dbt_run_waterfall_reports
+driveload_tasks >> dbt_run_waterfall_reports
