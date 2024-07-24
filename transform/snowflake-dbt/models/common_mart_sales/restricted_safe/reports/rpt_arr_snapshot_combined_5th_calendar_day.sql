@@ -212,7 +212,7 @@
        ELSE mart_arr_snapshot_model_combined.parent_crm_account_sales_segment
       END                                                                                       AS parent_crm_account_sales_segment,
       mart_arr_snapshot_model_combined.parent_crm_account_industry,
-      mart_arr_snapshot_model_combined.parent_crm_account_demographics_geo
+      mart_arr_snapshot_model_combined.parent_crm_account_demographics_geo,
       mart_arr_snapshot_model_combined.parent_crm_account_owner_team,
       mart_arr_snapshot_model_combined.parent_crm_account_sales_territory                                      AS parent_crm_account_sales_territory,
       mart_arr_snapshot_model_combined.dim_subscription_id,
