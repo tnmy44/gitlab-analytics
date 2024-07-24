@@ -7,14 +7,17 @@ data_classification:
         - PREP
         - RAW
         - PROD
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
       schemas:
         - PREP.*
         - RAW.*
         - PROD.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
       tables:
         - PREP.*.*
         - RAW.*.*
         - PROD.*.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
     exclude:
       databases:
         - NONE
@@ -29,14 +32,17 @@ data_classification:
         - PREP
         - RAW
         - PROD
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
       schemas:
         - PREP.*
         - RAW.*
         - PROD.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
       tables:
         - PREP.*.*
         - RAW.*.*
         - PROD.*.*
+        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
     exclude:
       databases:
         - NONE
