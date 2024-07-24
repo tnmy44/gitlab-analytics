@@ -141,10 +141,10 @@ WITH prep_crm_user_daily_snapshot AS (
   SELECT DISTINCT
     sales_dev_hierarchy_prep.sales_dev_rep_user_id                                                         AS dim_crm_user_id,
     sales_dev_hierarchy_prep.sales_dev_rep_role_name,
-    sales_dev_role_hierarchy.role_level_1                                                                  AS sales_dev_rep_user_role_level_1,
-    sales_dev_role_hierarchy.role_level_2                                                                  AS sales_dev_rep_user_role_level_2,
-    sales_dev_role_hierarchy.role_level_3                                                                  AS sales_dev_rep_user_role_level_3,
-    sales_dev_role_hierarchy.fiscal_year                                                                   AS sales_dev_rep_user_role_hierarchy_fiscal_year,
+    sheetload_sales_dev_role_hierarchy_source.role_level_1                                                                  AS sales_dev_rep_user_role_level_1,
+    sheetload_sales_dev_role_hierarchy_source.role_level_2                                                                  AS sales_dev_rep_user_role_level_2,
+    sheetload_sales_dev_role_hierarchy_source.role_level_3                                                                  AS sales_dev_rep_user_role_level_3,
+    sheetload_sales_dev_role_hierarchy_source.fiscal_year                                                                   AS sales_dev_rep_user_role_hierarchy_fiscal_year,
     sales_dev_hierarchy_prep.sales_dev_rep_email,
     COALESCE(rep.first_name || ' ' || rep.last_name, sales_dev_hierarchy_prep.sales_dev_rep_user_name)     AS sales_dev_rep_user_full_name,
     sales_dev_hierarchy_prep.sales_dev_rep_title,
@@ -174,8 +174,8 @@ WITH prep_crm_user_daily_snapshot AS (
     ON sales_dev_manager_employee_number = manager.employee_id
   LEFT JOIN prep_team_member AS leader
     ON sales_dev_leader_employee_number = leader.employee_id
-  LEFT JOIN {{ ref('sales_dev_role_hierarchy') }}
-    ON sales_dev_hierarchy_prep.sales_dev_rep_role_name=sales_dev_role_hierarchy.user_role_name
+  LEFT JOIN {{ ref('sheetload_sales_dev_role_hierarchy_source') }}
+    ON sales_dev_hierarchy_prep.sales_dev_rep_role_name=sheetload_sales_dev_role_hierarchy_source.user_role_name
 
 )
 
