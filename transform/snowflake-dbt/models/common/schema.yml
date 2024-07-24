@@ -5602,7 +5602,18 @@ models:
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
       - name: valid_deal_count
         description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
-      
+      - name: sales_dev_rep_user_role_level_1
+        description: The Sales Dev Rep's role hierarchy level 1
+      - name: sales_dev_rep_user_role_level_2
+        description: The Sales Dev Rep's role hierarchy level 2
+      - name: sales_dev_rep_user_role_level_3
+        description: The Sales Dev Rep's role hierarchy level 3
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_full_name
+        description: The Sales Dev Rep's Full Name
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
@@ -6135,6 +6146,18 @@ models:
         description: ID of the last user to modify the Event
       - name: last_modified_date_id
         description: ID of the last modified date
+      - name: sales_dev_rep_user_role_level_1
+        description: The Sales Dev Rep's role hierarchy level 1
+      - name: sales_dev_rep_user_role_level_2
+        description: The Sales Dev Rep's role hierarchy level 2
+      - name: sales_dev_rep_user_role_level_3
+        description: The Sales Dev Rep's role hierarchy level 3
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_full_name
+        description: The Sales Dev Rep's Full Name
 
   - name: dim_crm_event
     description: The Events portion of Activities from SFDC. 
@@ -6292,6 +6315,18 @@ models:
         description: '{{ doc("dim_mapped_opportunity_id") }}'
       - name: task_mapped_to
         description: '{{ doc("task_mapped_to") }}'
+      - name: sales_dev_rep_user_role_level_1
+        description: The Sales Dev Rep's role hierarchy level 1
+      - name: sales_dev_rep_user_role_level_2
+        description: The Sales Dev Rep's role hierarchy level 2
+      - name: sales_dev_rep_user_role_level_3
+        description: The Sales Dev Rep's role hierarchy level 3
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_full_name
+        description: The Sales Dev Rep's Full Name
 
   - name: dim_behavior_browser
     description: '{{ doc("dim_behavior_browser") }}'
