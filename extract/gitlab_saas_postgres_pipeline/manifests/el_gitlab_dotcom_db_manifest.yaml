@@ -2285,6 +2285,29 @@ tables:
       FROM protected_branch_push_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  protected_branches:
+    dbt_source_model: true
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: 'protected_branches'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , CASE
+            WHEN name = 'main' THEN 'main'
+            WHEN name = 'master' THEN 'master'
+            ELSE NULL
+        END as name
+      , created_at
+      , updated_at
+      , code_owner_approval_required
+      FROM protected_branches
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   protected_environment_approval_rules:
     dbt_source_model: true
     deletes_exempt: True
