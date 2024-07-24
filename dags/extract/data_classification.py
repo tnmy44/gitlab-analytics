@@ -99,9 +99,11 @@ def get_command(task: str):
     tagging_type = Variable.get(
         "DATA_CLASSIFICATION_TAGGING_TYPE", default_var="INCREMENTAL"
     )
-    incremental_load_days = Variable.get("DATA_CLASSIFICATION_DAYS", default_var="7")
+    incremental_load_days = Variable.get("DATA_CLASSIFICATION_DAYS", default_var="90")
+
+
     commands = {
-        # "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > safe_models.json; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}; exit $ret""",
+        # "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE config.schema:restricted_safe_common config.schema:restricted_safe_common_mapping config.schema:restricted_safe_common_mart_finance config.schema:restricted_safe_common_mart_sales config.schema:restricted_safe_common_mart_marketing config.schema:restricted_safe_common_mart_product config.schema:restricted_safe_common_prep config.schema:restricted_safe_legacy config.schema:restricted_safe_workspace_finance config.schema:restricted_safe_workspace_sales config.schema:restricted_safe_workspace_marketing config.schema:restricted_safe_workspace_engineering --output json > {mnpi_file}; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}; exit $ret""",
         "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE --output json > safe_models.json; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}; exit $ret""",
         "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
     }
@@ -112,7 +114,7 @@ def get_command(task: str):
 dag = DAG(
     DAG_NAME,
     default_args=default_args,
-    schedule_interval="0 7 * * 1",
+    schedule_interval=None,
     concurrency=1,
     description=DAG_DESCRIPTION,
     catchup=False,

@@ -91,7 +91,6 @@ class DataClassification:
             sys.exit(1)
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
-            # return [json.loads(line.rstrip()) for line in file if line[:2] == "{"]
             res = []
             for line in file:
                 try:
@@ -112,7 +111,7 @@ class DataClassification:
             return [
                 x.get("config").get("database").upper(),
                 x.get("config").get("schema").upper(),
-                x.get("name").upper(),
+                x.get("alias").upper(),
             ]
 
         return [extract_full_path(x) for x in mnpi_list]
