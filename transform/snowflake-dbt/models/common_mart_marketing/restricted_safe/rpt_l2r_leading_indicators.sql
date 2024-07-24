@@ -61,8 +61,8 @@
         ON rpt_lead_to_revenue.sales_accepted_date=sao_date.date_actual
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
-     AND (crm_opp_owner_geo_stamped != 'JIHU'
-     OR crm_opp_owner_geo_stamped IS null)
+     AND (report_geo != 'JIHU'
+     OR report_geo IS null)
 
 ), date_base AS (
 
