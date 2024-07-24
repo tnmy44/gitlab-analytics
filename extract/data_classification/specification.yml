@@ -4,19 +4,19 @@ data_classification:
     description: "MNPI data classification"
     include:
       databases:
-        - PREP
-        - RAW
-        - PROD
+#        - PREP
+#        - RAW
+#        - PROD
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
       schemas:
-        - PREP.*
-        - RAW.*
-        - PROD.*
+#       - PREP.*
+#       - RAW.*
+#       - PROD.*
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
       tables:
-        - PREP.*.*
-        - RAW.*.*
-        - PROD.*.*
+#        - PREP.*.*
+#       - RAW.*.*
+#       - PROD.*.*
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
     exclude:
       databases:
@@ -29,19 +29,19 @@ data_classification:
     description: "PII data classification"
     include:
       databases:
-        - PREP
-        - RAW
-        - PROD
+#        - PREP
+#        - RAW
+#        - PROD
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
       schemas:
-        - PREP.*
-        - RAW.*
-        - PROD.*
+#        - PREP.*
+#        - RAW.*
+#        - PROD.*
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
       tables:
-        - PREP.*.*
-        - RAW.*.*
-        - PROD.*.*
+#        - PREP.*.*
+#        - RAW.*.*
+#        - PROD.*.*
         - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
     exclude:
       databases:
