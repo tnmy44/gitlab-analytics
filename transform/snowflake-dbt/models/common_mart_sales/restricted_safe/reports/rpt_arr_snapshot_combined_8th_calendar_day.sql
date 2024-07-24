@@ -46,6 +46,7 @@
       -- Background issue: https://gitlab.com/gitlab-data/analytics/-/issues/20395
       COALESCE(parent_crm_account_sales_segment_legacy, parent_crm_account_sales_segment)       AS parent_crm_account_sales_segment,
       parent_crm_account_industry,
+      parent_crm_account_demographics_geo,
       parent_crm_account_owner_team,
       parent_crm_account_sales_territory,
       dim_subscription_id,
@@ -89,6 +90,7 @@
       -- Background issue: https://gitlab.com/gitlab-data/analytics/-/issues/20395
       parent_crm_account_sales_segment_legacy                                                   AS parent_crm_account_sales_segment,
       parent_crm_account_industry,
+      parent_crm_account_demographics_geo,
       NULL                                                                                      AS parent_crm_account_owner_team,
       NULL                                                                                      AS parent_crm_account_sales_territory,
       dim_subscription_id,
@@ -135,6 +137,7 @@
        ELSE driveload_financial_metrics_program_phase_1_source.parent_crm_account_sales_segment
       END                                                                                          AS parent_crm_account_sales_segment,
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_industry,
+      NULL                                                                                         AS parent_crm_account_demographics_geo,
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_owner_team,
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_sales_territory,
       NULL                                                                                         AS dim_subscription_id,
@@ -209,6 +212,7 @@
        ELSE mart_arr_snapshot_model_combined.parent_crm_account_sales_segment
       END                                                                                       AS parent_crm_account_sales_segment,
       mart_arr_snapshot_model_combined.parent_crm_account_industry,
+      mart_arr_snapshot_model_combined.parent_crm_account_demographics_geo,
       mart_arr_snapshot_model_combined.parent_crm_account_owner_team,
       mart_arr_snapshot_model_combined.parent_crm_account_sales_territory                                      AS parent_crm_account_sales_territory,
       mart_arr_snapshot_model_combined.dim_subscription_id,
@@ -328,6 +332,7 @@
       parent_crm_account_billing_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
+      parent_crm_account_demographics_geo,
       parent_crm_account_owner_team,
       parent_crm_account_sales_territory,
       combined.dim_subscription_id,
@@ -379,7 +384,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@chrissharp",
+    updated_by="@dgupta5",
     created_date="2021-08-16",
-    updated_date="2024-05-09"
+    updated_date="2024-07-24"
 ) }}
