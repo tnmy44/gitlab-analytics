@@ -1310,6 +1310,25 @@ tables:
       FROM jira_tracker_data
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  keys:
+    dbt_source_model: true
+    is_incremental: False
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: 'keys'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , created_at
+      , updated_at
+      , type
+      , public
+      , last_used_at
+      FROM keys
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   label_priorities:
     dbt_source_model: true
     deletes_exempt: True
