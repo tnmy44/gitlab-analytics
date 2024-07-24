@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('dim_crm_event', 'dim_crm_event'),
     ('fct_crm_event', 'fct_crm_event')

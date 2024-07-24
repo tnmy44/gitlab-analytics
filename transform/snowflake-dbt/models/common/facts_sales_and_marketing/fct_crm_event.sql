@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('prep_crm_person', 'prep_crm_person'),
     ('sfdc_lead_source','sfdc_lead_source')
