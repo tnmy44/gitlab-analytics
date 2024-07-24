@@ -39,9 +39,11 @@ class DataClassification:
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()
         self.incremental_load_days = incremental_load_days
-        info(F"...GIT_BRANCH: {self.config_vars["GIT_BRANCH"]}")
-
-
+        self.branch = self.config_vars["GIT_BRANCH"]
+        info(f"...GIT_BRANCH: {self.branch}")
+        self.raw = ""
+        self.prep = ""
+        self.prod = ""
 
     def __connect(self):
         """
