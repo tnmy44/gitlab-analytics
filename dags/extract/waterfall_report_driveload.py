@@ -53,7 +53,7 @@ with open(f"{REPO_BASE_PATH}/{config_path}", "r") as file:
 dag = DAG(
     "waterfall_report_driveload",
     default_args=default_args,
-    schedule_interval="15 */4 1-5 * *",
+    schedule_interval="15 */4 3-6 * *",
     concurrency=1,
     catchup=False,
 )
