@@ -191,15 +191,15 @@ class DataClassification:
             f"INSERT INTO {self.schema_name}.{self.table_name}(classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type, _uploaded_at) "
             f"WITH base AS ("
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM raw.information_schema.tables "
+            f"  FROM {self.double_quoted(self.raw)}.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM prep.information_schema.tables "
+            f"  FROM {self.double_quoted(self.prep)}.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
             f" UNION "
             f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM prod.information_schema.tables"
+            f"  FROM {self.double_quoted(self.prod)}.information_schema.tables"
             f" WHERE table_schema != 'INFORMATION_SCHEMA') "
             f"SELECT *"
             f"  FROM base"
@@ -399,12 +399,6 @@ class DataClassification:
         # self.__execute_query(query=query)
         info("END classify.")
 
-    def clear_tags(self):
-        """
-        Routine to clear all tags
-        """
-        self.clear_pii_tags()
-        self.clear_mnpi_tags()
 
     def __execute_query(self, query: str):
         """
@@ -441,7 +435,6 @@ class DataClassification:
         as initially we do not have it
         """
         info(".... START update MNPI metadata.")
-        info(f"....mnpi_metadata_update_query: {self.mnpi_metadata_update_query}")
         self.__execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
