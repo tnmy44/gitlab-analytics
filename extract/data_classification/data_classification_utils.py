@@ -84,6 +84,13 @@ class DataClassification:
         """
         return "'" + input_str + "'"
 
+    @staticmethod
+    def double_quoted(input_str: str) -> str:
+        """
+        Returns input string with double quote
+        """
+        return '"' + input_str + '"'
+
     def load_mnpi_list(self) -> list:
         """
         Load MNPI list generated via dbt command
@@ -221,7 +228,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            f"  FROM {self.quoted(self.raw)}.information_schema.tables "
+            f"  FROM {self.double_quoted(self.raw)}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
             " UNION "
@@ -232,7 +239,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            f"  FROM {self.quoted(self.prep)}.information_schema.tables "
+            f"  FROM {self.double_quoted(self.prep)}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
             " UNION "
@@ -244,7 +251,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            f"  FROM {self.quoted(self.prod)}.information_schema.tables "
+            f"  FROM {self.double_quoted(self.prod)}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list)) AS full_table_list "
             f" ON full_table_list.classification_type                  = {self.table_name}.classification_type "
