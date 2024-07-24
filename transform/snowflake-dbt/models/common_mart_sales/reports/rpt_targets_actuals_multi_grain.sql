@@ -99,9 +99,11 @@ FROM unioned
 WHERE snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
 )
 
-SELECT *,
+SELECT final.*,
   fiscal_quarter_name_fy AS most_recent_snapshot_date_fiscal_quarter_name_fy,
-  fiscal_quarter_date AS most_recent_snapshot_date_fiscal_quarter_date
+  fiscal_quarter_name_fy AS most_recent_snapshot_date_fiscal_quarter_name,
+  first_day_of_fiscal_quarter AS most_recent_snapshot_date_fiscal_quarter_date
 FROM final
 LEFT JOIN {{ ref('dim_date') }} dim_date
 ON final.max_snapshot_date = dim_date.date_actual
+ 
