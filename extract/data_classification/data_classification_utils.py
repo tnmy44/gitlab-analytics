@@ -374,7 +374,6 @@ class DataClassification:
 
         return manifest_dict
 
-    # TODO: rbacovic Tagging data
     def classify(
         self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ):
@@ -389,20 +388,6 @@ class DataClassification:
         info(f"....Call stored procedure: {query}")
         # self.__execute_query(query=query)
         info("END classify.")
-
-    # TODO: rbacovic Clear PII tags
-    def clear_pii_tags(self):
-        """
-        Routine to clear PII tags
-        """
-        pass
-
-    # TODO: rbacovic Clear MNPI tags
-    def clear_mnpi_tags(self):
-        """
-        Routine to clear MNPI tags
-        """
-        pass
 
     def clear_tags(self):
         """

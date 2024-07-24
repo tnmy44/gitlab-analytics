@@ -6,46 +6,41 @@ data_classification:
       databases:
         - PREP
         - RAW
-        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD
-      schemas:
-        - PREP.GAINSIGHT_CUSTOMER_SUCCESS
-        - RAW.*
-        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*
-      tables:
-        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
-        - RAW.SCHEMA_TEST.*
-        - 20337-PII-MNPI-DATA-CLASSIFICATION-DATA-EXPORT-MONITORING-PII-AND-MNPI_PROD.*.*
-    exclude:
-      databases:
         - PROD
-        - RAW
       schemas:
+        - PREP.*
         - RAW.*
         - PROD.*
       tables:
-        - RAW.SCHEMA_TEST.RADOVAN_TEST_EXCLUDE
+        - PREP.*.*
+        - RAW.*.*
         - PROD.*.*
-
+    exclude:
+      databases:
+        - NONE
+      schemas:
+        - NONE.*
+      tables:
+        - NONE.*.*
   PII:
     description: "PII data classification"
     include:
       databases:
         - PREP
         - RAW
-      schemas:
-        - PREP.GAINSIGHT_CUSTOMER_SUCCESS
-        - RAW.*
-        - RAW.SOME_SCHEMA
-      tables:
-        - PREP.GAINSIGHT_CUSTOMER_SUCCESS.*
-        - RAW.*.*
-    exclude:
-      databases:
         - PROD
-        - RAW
       schemas:
+        - PREP.*
         - RAW.*
         - PROD.*
       tables:
-        - RAW.SCHEMA_TEST.RADOVAN_TEST_EXCLUDE
+        - PREP.*.*
+        - RAW.*.*
         - PROD.*.*
+    exclude:
+      databases:
+        - NONE
+      schemas:
+        - NONE.*
+      tables:
+        - NONE.*.*
