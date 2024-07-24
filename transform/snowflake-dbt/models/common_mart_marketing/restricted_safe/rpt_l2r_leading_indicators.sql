@@ -164,8 +164,8 @@
         ON rpt_lead_to_revenue_base.sales_accepted_date=date_base.date_day
     WHERE 1=1
         AND sales_accepted_date <= CURRENT_DATE
-        AND (crm_opp_owner_geo_stamped != 'JIHU'
-        OR crm_opp_owner_geo_stamped IS null)
+        AND (report_geo != 'JIHU'
+        OR report_geo IS null)
 
 ), inquiries AS (
 
