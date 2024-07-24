@@ -59,7 +59,8 @@ structured_behavior AS (
     host_name,
     gsc_instance_version,
     delivery_type,
-    gitlab_global_user_id
+    gitlab_global_user_id,
+    gsc_correlation_id
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE is_staging_event = FALSE
   {% if is_incremental() %}
