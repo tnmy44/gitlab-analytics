@@ -41,6 +41,8 @@ class DataClassification:
         self.incremental_load_days = incremental_load_days
         info(F"...GIT_BRANCH: {self.config_vars["GIT_BRANCH"]}")
 
+
+
     def __connect(self):
         """
         Connect to engine factory, return connection object
