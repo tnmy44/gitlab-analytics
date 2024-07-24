@@ -30,4 +30,3 @@ SELECT
                                                                         AS most_recent_snapshot_week
 FROM unioned 
 WHERE snapshot_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
-
