@@ -39,11 +39,9 @@ class DataClassification:
         self.mnpi_raw_file = mnpi_raw_file
         self.config_vars = os.environ.copy()
         self.incremental_load_days = incremental_load_days
-        # self.branch = self.config_vars["GIT_BRANCH"]
-        info(f"...GIT_BRANCH: {self.config_vars}")
-        self.raw = ""
-        self.prep = ""
-        self.prod = ""
+        self.raw = self.config_vars["SNOWFLAKE_LOAD_DATABASE"]
+        self.prep = self.config_vars["SNOWFLAKE_PREP_DATABASE"]
+        self.prod = self.config_vars["SNOWFLAKE_PROD_DATABASE"]
 
     def __connect(self):
         """
@@ -223,7 +221,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            "  FROM raw.information_schema.tables "
+            f"  FROM {self.raw}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
             " UNION "
@@ -234,7 +232,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            "  FROM prep.information_schema.tables "
+            f"  FROM {self.prep}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
             " UNION "
@@ -246,7 +244,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            "  FROM prod.information_schema.tables "
+            f"  FROM {self.prod}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list)) AS full_table_list "
             f" ON full_table_list.classification_type                  = {self.table_name}.classification_type "
