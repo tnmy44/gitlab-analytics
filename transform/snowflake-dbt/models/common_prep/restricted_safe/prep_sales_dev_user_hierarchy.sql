@@ -168,11 +168,11 @@ WITH prep_crm_user_daily_snapshot AS (
     sales_dev_hierarchy_prep.sales_dev_leader_employee_number,
     sales_dev_hierarchy_prep.sales_dev_leader_email
   FROM sales_dev_hierarchy_prep
-  LEFT JOIN prep_team_member AS rep
+  LEFT JOIN prep_team_member_base AS rep
     ON sales_dev_rep_employee_number = rep.employee_id
-  LEFT JOIN prep_team_member AS manager
+  LEFT JOIN prep_team_member_base AS manager
     ON sales_dev_manager_employee_number = manager.employee_id
-  LEFT JOIN prep_team_member AS leader
+  LEFT JOIN prep_team_member_base AS leader
     ON sales_dev_leader_employee_number = leader.employee_id
   LEFT JOIN {{ ref('sheetload_sales_dev_role_hierarchy_source') }}
     ON sales_dev_hierarchy_prep.sales_dev_rep_role_name=sheetload_sales_dev_role_hierarchy_source.user_role_name
