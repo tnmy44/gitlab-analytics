@@ -33,8 +33,8 @@
 
     --Opportunity Data
         opp_order_type,
-        crm_opp_owner_sales_segment_stamped,
-        crm_opp_owner_geo_stamped,
+        report_segment,
+        report_geo,
         sales_qualified_source_name,
 
     --Opportunity Dates
@@ -136,17 +136,17 @@
         is_sao,
         opp_order_type,
         CASE 
-            WHEN crm_opp_owner_sales_segment_stamped = 'LARGE' 
+            WHEN report_segment = 'LARGE' 
                 THEN 'Large'
-            WHEN crm_opp_owner_sales_segment_stamped = 'MID-MARKET' 
+            WHEN report_segment = 'MID-MARKET' 
                 THEN 'Mid-Market'
-            WHEN crm_opp_owner_sales_segment_stamped = 'PUBSEC' 
+            WHEN report_segment = 'PUBSEC' 
                 THEN 'PubSec'
-            WHEN crm_opp_owner_sales_segment_stamped = 'OTHER' 
+            WHEN report_segment = 'OTHER' 
                 THEN 'Other'
-            ELSE crm_opp_owner_sales_segment_stamped
-        END AS crm_opp_owner_sales_segment_stamped_clean, 
-        crm_opp_owner_geo_stamped,
+            ELSE report_segment
+        END AS report_segment, 
+        report_geo,
         sales_qualified_source_name,
         CASE 
             WHEN is_sao = true 
@@ -217,8 +217,8 @@
         date_range_month,
         date_range_quarter,
         date_range_year,
-        crm_opp_owner_sales_segment_stamped_clean AS sales_segment, 
-        crm_opp_owner_geo_stamped AS geo,
+        report_segment AS sales_segment, 
+        report_geo AS geo,
         sales_qualified_source_name,
         opp_order_type AS order_type,
         sales_accepted_date,
@@ -322,5 +322,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2024-03-12",
+    updated_date="2024-07-24",
   ) }}
