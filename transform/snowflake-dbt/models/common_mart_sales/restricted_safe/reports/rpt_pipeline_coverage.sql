@@ -1,7 +1,3 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
-
 {{ simple_cte([
     ('targets', 'mart_sales_funnel_target_daily'),
     ('actuals', 'mart_crm_opportunity_7th_day_weekly_snapshot'),
