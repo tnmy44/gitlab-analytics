@@ -2,12 +2,7 @@
     tags=["mnpi_exception"]
 ) }}
 
-{{ simple_cte([
-    ('prep_crm_person', 'prep_crm_person'),
-    ('sfdc_lead_source','sfdc_lead_source')
-    ]) }}
-
-, prep_crm_event AS (
+WITH prep_crm_event AS (
 
   SELECT *
   FROM {{ ref('prep_crm_event') }} 
@@ -20,8 +15,8 @@
     sfdc_lead_source.converted_contact_id AS sfdc_record_id,
     sfdc_lead_source.lead_id,
     prep_crm_person.dim_crm_person_id
-  FROM sfdc_lead_source
-  LEFT JOIN prep_crm_person
+  FROM {{ ref('sfdc_lead_source') }} 
+  LEFT JOIN {{ ref('prep_crm_person') }} 
     ON sfdc_lead_source.converted_contact_id=prep_crm_person.sfdc_record_id
   WHERE sfdc_lead_source.is_converted = TRUE
 
@@ -71,7 +66,7 @@
   FROM prep_crm_event
   LEFT JOIN converted_leads
     ON prep_crm_event.sfdc_record_id=converted_leads.lead_id
-  LEFT JOIN prep_crm_person
+  LEFT JOIN {{ ref('prep_crm_person') }}
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_event.sfdc_record_id) = prep_crm_person.sfdc_record_id
   LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
     ON prep_crm_event.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id

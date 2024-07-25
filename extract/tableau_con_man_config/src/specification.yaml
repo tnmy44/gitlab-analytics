@@ -5985,7 +5985,7 @@ users:
       - General All Access
   - user_name: jware
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
@@ -12153,6 +12153,12 @@ users:
     groups:
       - General All Access
   - user_name: tskora1
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: julee
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
