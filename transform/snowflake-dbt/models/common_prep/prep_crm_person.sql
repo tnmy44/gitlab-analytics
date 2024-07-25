@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH biz_person AS (
 
     SELECT *
@@ -554,5 +558,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-07-22"
+    updated_date="2024-07-24"
 ) }}
