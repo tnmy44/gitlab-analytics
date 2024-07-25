@@ -2823,7 +2823,7 @@ users:
     user_name_domain: gitlab.com
     site_role: SiteAdministratorCreator
     auth_setting: TableauIDWithMFA
-    groups:
+    groups: []
   - user_name: anatale
     user_name_domain: gitlab.com
     site_role: Viewer
