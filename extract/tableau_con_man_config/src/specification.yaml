@@ -6025,6 +6025,12 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: julee
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
   - user_name: justinames
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6068,6 +6074,12 @@ users:
   - user_name: jwanjohi
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: jware
+    user_name_domain: gitlab.com
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
@@ -9960,4 +9972,3 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-
