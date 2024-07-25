@@ -9558,7 +9558,7 @@ users:
       - RSA SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
-  - user_name: tskora1
+  - user_name: tskora
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -9969,6 +9969,18 @@ users:
   - user_name: zli
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: sthall
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: sakinniranye
+    user_name_domain: gitlab.com
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
