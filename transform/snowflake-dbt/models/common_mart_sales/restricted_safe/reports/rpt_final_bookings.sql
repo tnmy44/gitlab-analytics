@@ -1,7 +1,3 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
-
 {{ simple_cte([
     ('live_actuals', 'mart_crm_opportunity'),
     ('dim_date', 'dim_date'),
