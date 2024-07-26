@@ -55,7 +55,7 @@ structured_behavior AS (
     user_city,
     user_country,
     user_timezone_name,
-    instance_id           AS dim_instance_id,
+    dim_instance_id,
     host_name,
     gsc_instance_version,
     delivery_type,
@@ -152,5 +152,5 @@ report AS (
     created_by="@pempey",
     updated_by="@michellecooper",
     created_date="2023-02-22",
-    updated_date="2024-07-23"
+    updated_date="2024-07-26"
 ) }}

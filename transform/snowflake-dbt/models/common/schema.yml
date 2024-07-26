@@ -6676,7 +6676,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -6933,7 +6933,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -7190,7 +7190,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -7568,7 +7568,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -7813,7 +7813,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -8059,7 +8059,7 @@ models:
         description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
       - name: namespace_ids
         description: ' {{ doc("code_suggestions_namespace_ids") }} '
-      - name: instance_id
+      - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }} '
       - name: host_name
         description: ' {{ doc("host_name") }} '
@@ -9654,7 +9654,7 @@ models:
       description: ' {{ doc("code_suggestions_saas_namespace_ids") }}'
     - name: namespace_ids
       description: '{{ doc("code_suggestions_namespace_ids") }}'
-    - name: instance_id
+    - name: dim_instance_id
       description: '{{ doc("dim_instance_id") }}'
     - name: host_name
       description: '{{ doc("host_name") }}'

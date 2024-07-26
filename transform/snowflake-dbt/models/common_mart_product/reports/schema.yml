@@ -2121,7 +2121,7 @@ models:
       description: ' {{ doc("code_suggestions_is_direct_connection") }} '
     - name: gitlab_global_user_id
       description: '{{ doc("gitlab_global_user_id") }}'
-    - name: instance_id
+    - name: dim_instance_id
       description: '{{ doc("dim_instance_id") }}'
     - name: host_name
       description: '{{ doc("host_name") }}'

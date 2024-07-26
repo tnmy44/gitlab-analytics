@@ -1513,7 +1513,7 @@ models:
       description: '{{ doc("has_code_suggestions_context") }}'
     - name: has_ide_extension_version_context
       description: '{{ doc("has_ide_extension_version_context") }}'
-    - name: instance_id
+    - name: dim_instance_id
       description: '{{ doc("dim_instance_id") }}'
     - name: host_name
       description: '{{ doc("host_name") }}'
