@@ -338,6 +338,7 @@ from trials_grouping
       namespaces.handraise_pql_date,
       IFF(namespaces.is_namespace_created_within_2min_of_creator_invite_acceptance = 1, TRUE, FALSE) 
                                                                            AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
+      trials.all_trials, -- array that includes all trials linked to the namespace
       trials.trial_start_date, -- trial 1
       trials.trial_type, -- trial 1
       trials.trial_type_name, -- trial 1
@@ -423,5 +424,5 @@ from trials_grouping
     created_by="@snalamaru",
     updated_by="@ddeng1",
     created_date="2023-11-10",
-    updated_date="2024-07-09"
+    updated_date="2024-07-26"
 ) }}
