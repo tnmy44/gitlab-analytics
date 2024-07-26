@@ -258,24 +258,6 @@
     - set +e
     - dbt deps $CI_PROFILE_TARGET
     - make safe-check PROFILE_TARGET="$CI_PROFILE_TARGET"
-   # - dbt --quiet ls $CI_PROFILE_TARGET --models tag:mnpi+
-   #   --exclude
-   #     tag:mnpi_exception
-   #     config.database:$SNOWFLAKE_PREP_DATABASE
-   #     config.schema:restricted_safe_common
-   #     config.schema:restricted_safe_common_mapping
-   #     config.schema:restricted_safe_common_mart_finance
-   #     config.schema:restricted_safe_common_mart_sales
-   #     config.schema:restricted_safe_common_mart_marketing
-   #     config.schema:restricted_safe_common_mart_product
-   #     config.schema:restricted_safe_common_prep
-   #     config.schema:restricted_safe_legacy
-   #     config.schema:restricted_safe_workspace_finance
-   #     config.schema:restricted_safe_workspace_sales
-   #     config.schema:restricted_safe_workspace_marketing
-   #     config.schema:restricted_safe_workspace_engineering
-   #   --output json > safe_models.json
-   # - python3 safe_model_check.py
 
 # ======
 # Macro name Check
@@ -372,6 +354,3 @@
     - export CI_MERGE_REQUEST_DIFF_BASE_SHA=$CI_MERGE_REQUEST_DIFF_BASE_SHA
     - dbt deps $CI_PROFILE_TARGET
     - make lint-models MODE="CI"
-    #- export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
-    #- echo $LINT_LIST
-    #- sqlfluff lint $LINT_LIST --config .sqlfluff-ci
