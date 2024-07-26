@@ -322,7 +322,7 @@ i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Daily p50 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.5)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
 FROM
 prep_chunk p
 LEFT JOIN 
