@@ -597,6 +597,7 @@ LEFT JOIN cw_base
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
          AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
+         AND sfdc_opportunity.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_win_rate_calc,
