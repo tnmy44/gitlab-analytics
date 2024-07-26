@@ -55,6 +55,7 @@ site:
   time_zone: null
   auto_suspend_refresh_enabled: true
   auto_suspend_refresh_inactivity_window: 32
+  high-Visibility_data_labels_in_view_and_workbook_subscriptions: true
 
 # ==========================================
 # Projects
@@ -159,6 +160,27 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+
+# ==========================================
+# Admin Archive
+# This subset of projects are for the Archive folders
+# ==========================================
+
+  - project_name: Admin Archive
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Adming Archive
+    permission_set:
+      - group_name: General All Access
+        permission_rule: denied
+
+  - project_name: Automatic User Workbook Archive
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Adming Archive/Automatic User Workbook Archive
+    permission_set:
+      - group_name: General All Access
+        permission_rule: denied
 
 # ==========================================
 # Customer Success
