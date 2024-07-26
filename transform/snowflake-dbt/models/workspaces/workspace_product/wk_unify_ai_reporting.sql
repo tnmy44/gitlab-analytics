@@ -315,7 +315,7 @@ GROUP BY ALL
 ),daily_p50_chunk AS (
 
 SELECT
-e.behavior_date AS _date,
+p.behavior_date AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
@@ -323,7 +323,7 @@ clients.client,
 'Daily p50 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(e.event_value,0.5)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -337,23 +337,23 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 GROUP BY ALL
 
 ), daily_p99_chunk AS (
 
 SELECT
-e.behavior_date AS _date,
+p.behavior_date AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Daily p99 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.99)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -367,23 +367,23 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 GROUP BY ALL
 
 ), weekly_p50_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,e.behavior_date) AS _date,
+DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Weekly p50 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.5)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -397,23 +397,23 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 GROUP BY ALL
 
 ), weekly_p99_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,e.behavior_date) AS _date,
+DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Weekly p99 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.99)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -427,23 +427,23 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 GROUP BY ALL
 
 ), monthly_p50_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,e.behavior_date) AS _date,
+DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Monthly p50 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.5)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -457,23 +457,23 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 GROUP BY ALL
 
 ), monthly_p99_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,e.behavior_date) AS _date,
+DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
 clients.client,
 'Monthly p99 Response Chunk Time' AS metric,
-APPROX_PERCENTILE(e.event_value,0.99)  AS metric_value
+APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
 FROM
-prep_chunk e 
+prep_chunk p
 LEFT JOIN 
 ai_features f 
 ON 
@@ -487,9 +487,9 @@ plans ON plans.plan = p.plan_name OR plans.plan = 'All'
 LEFT JOIN 
 clients ON clients.client = p.client OR clients.client = 'All'
 WHERE 
-e.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
+p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
-e.event_action = 'ai_response_time'
+p.event_action = 'ai_response_time'
 
 ),
 metrics AS (
