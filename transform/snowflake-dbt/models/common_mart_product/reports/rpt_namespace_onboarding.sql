@@ -56,7 +56,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       AND namespace_is_ultimate_parent = TRUE
     GROUP BY ALL
 
-), trials AS ( -- Current trial data does not specify what type of trial was started
+), trials_prep AS ( -- Current trial data does not specify what type of trial was started
     
     SELECT DISTINCT
       namespaces.ultimate_parent_namespace_id,
@@ -67,6 +67,41 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     FROM namespaces
     INNER JOIN prep_namespace_order_trial AS trials
       ON namespaces.ultimate_parent_namespace_id = trials.dim_namespace_id
+
+), trials_grouping AS (
+
+select ultimate_parent_namespace_id,
+ARRAY_AGG(
+            OBJECT_CONSTRUCT(
+                'trial_type',
+                trial_type,
+                'trial_type_name',
+                trial_type_name,
+                'trial_start_date',
+                trial_start_date,
+                'days_since_namespace_creation_at_trial',
+                days_since_namespace_creation_at_trial
+            )
+        ) within group (
+            order by
+                trial_type
+        ) AS all_trials
+from trials_prep
+group by all
+
+), trials as (
+
+select ultimate_parent_namespace_id,
+all_trials,
+    all_trials[0].trial_type as trial_type,
+    all_trials[0].trial_type_name::string as trial_type_name,
+    all_trials[0].trial_start_date::date as trial_start_date,
+    all_trials[0].days_since_namespace_creation_at_trial as days_since_namespace_creation_at_trial,
+    all_trials[1].trial_type as trial_2_type,
+    all_trials[1].trial_type_name::string as trial_2_type_name,
+    all_trials[1].trial_start_date::date as trial_2_start_date,
+    all_trials[1].days_since_namespace_creation_at_trial as days_since_namespace_creation_at_trial_2
+from trials_grouping
 
 ), charges AS ( --First paid subscription for ultimate namespace
 
@@ -303,10 +338,13 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       namespaces.handraise_pql_date,
       IFF(namespaces.is_namespace_created_within_2min_of_creator_invite_acceptance = 1, TRUE, FALSE) 
                                                                            AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
-      trials.trial_start_date,
-      trials.trial_type,
-      trials.trial_type_name,
-      trials.days_since_namespace_creation_at_trial,
+      trials.trial_start_date, -- trial 1
+      trials.trial_type, -- trial 1
+      trials.trial_type_name, -- trial 1
+      trials.days_since_namespace_creation_at_trial, -- trial 1
+      trials.trial_2_start_date,
+      trials.trial_2_type_name,
+      trials.days_since_namespace_creation_at_trial_2,
       charges.first_paid_subscription_start_date,
       charges.days_since_namespace_creation_at_first_paid_subscription,
       charges.first_paid_plan_name,
@@ -383,7 +421,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 {{ dbt_audit(
     cte_ref="base",
     created_by="@snalamaru",
-    updated_by="@utkarsh060",
+    updated_by="@ddeng1",
     created_date="2023-11-10",
     updated_date="2024-07-09"
 ) }}
