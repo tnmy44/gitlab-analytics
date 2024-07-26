@@ -436,7 +436,7 @@ GROUP BY ALL
 ), monthly_p50_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,p.behavior_date) AS _date,
+DATE_TRUNC(MONTH,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
@@ -466,7 +466,7 @@ GROUP BY ALL
 ), monthly_p99_chunk AS (
 
 SELECT
-DATE_TRUNC(WEEK,p.behavior_date) AS _date,
+DATE_TRUNC(MONTH,p.behavior_date) AS _date,
 f.event_label,
 i.internal_or_external,
 plans.plan AS plan_name,
@@ -491,7 +491,7 @@ WHERE
 p.behavior_date > DATEADD(MONTH,-18,CURRENT_DATE)
 AND
 p.event_action = 'ai_response_time'
-
+GROUP BY ALL
 ),
 metrics AS (
   
