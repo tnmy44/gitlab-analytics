@@ -24,8 +24,18 @@ Below checklist of activities would be run once for quarter to validate security
 1. [ ] Deprovision access if an account has not logged-in within the past 90 days from the moment of performing audit. [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/quarterly_data_health_and_security_audit/montecarlo.md#deprovision-access-if-an-account-has-not-logged-in-within-the-past-90-days-from-the-moment-of-performing-audit)
 
 ## Tableau
-1. [ ] Validate offboarded employess have been removed from Tableau Cloud. [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/quarterly_data_health_and_security_audit/tableau.md#validate-offboarded-employess-have-been-removed-from-tableau-cloud)
-1. [ ] Deprovision access if a user has had access for >=90 days, but have not logged in during the past 90 days from the moment of performing audit. [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/quarterly_data_health_and_security_audit/tableau.md#deprovision-access-if-a-user-has-had-access-for-90-days-but-have-not-logged-in-during-the-past-90-days-from-the-moment-of-performing-audit)
+1. [ ] Validate offboarded employess have been removed from Tableau Cloud and purge from systems:
+    
+    1. [ ] Remove offboarded users from [Google Groups: okta-tableau-users](https://groups.google.com/a/gitlab.com/g/okta-tableau-users/members)
+    1. [ ] Remove offboarded (Unlicensed) users full entry from [Tableau's spec.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/tableau_con_man_config/src/specification.yaml)
+
+1. [ ] Downgrade users - Report: [User Deprovision Check](https://10az.online.tableau.com/#/site/gitlab/workbooks/2447768/views)
+    1. [ ] Creators - Downgrade users who haven't published a data source or used Tableau Desktop in the last 90 days.
+    1. [ ] Explorers - Downgrade users who haven't published a workbook or used Tableau web authoring the last 90 days.
+    1. [ ] Viewers - Deprovision access if a user has had access for >=90 days, but have not logged in during the past 90 days from the moment of performing audit. [Runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/quarterly_data_health_and_security_audit/tableau.md#deprovision-access-if-a-user-has-had-access-for-90-days-but-have-not-logged-in-during-the-past-90-days-from-the-moment-of-performing-audit)
+1. [ ] Role Credentials for Snowflake Service Account: TABLEAU
+    1. [ ] Collect new credentials from Platform and have the records updated in 1Pass for `Snowflake_tableau`.
+    1. [ ] Batch update all data sources using the credentials.
 
 ## Package version inventory
 
