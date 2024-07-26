@@ -76,9 +76,9 @@ help:
 		 - MODE - defaults to DEV, providing the value of CI will adjust behavior to work within the CI environment  \n \
 		 - PROFILE_TARGET - a combination of profile director and target, used in the CI jobs \n \
     - lint-models: will lint or fix all of the changed sql files or the provided model \n \
-     - MODEL: overrides the list of changed files for the provided file name \n \
-     - FIX: defaults to false, providing any value will set to true and make possible changes to files \n \
-		- safe-check: will check for models downstream of SAFE data not properly tagged \n \
+		 - MODEL: overrides the list of changed files for the provided file name \n \
+		 - FIX: defaults to false, providing any value will set to true and make possible changes to files \n \
+    - safe-check: will check for models downstream of SAFE data not properly tagged \n \
 	 \n \
 	------------------------------------------------------------"
 
