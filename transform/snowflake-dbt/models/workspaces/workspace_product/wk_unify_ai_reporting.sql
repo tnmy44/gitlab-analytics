@@ -318,8 +318,8 @@ GROUP BY ALL
 SELECT
 p.behavior_date AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Daily p50 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
@@ -348,8 +348,8 @@ GROUP BY ALL
 SELECT
 p.behavior_date AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Daily p99 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
@@ -378,8 +378,8 @@ GROUP BY ALL
 SELECT
 DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Weekly p50 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
@@ -408,8 +408,8 @@ GROUP BY ALL
 SELECT
 DATE_TRUNC(WEEK,p.behavior_date) AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Weekly p99 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
@@ -438,8 +438,8 @@ GROUP BY ALL
 SELECT
 DATE_TRUNC(MONTH,p.behavior_date) AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Monthly p50 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.5)  AS metric_value
@@ -468,8 +468,8 @@ GROUP BY ALL
 SELECT
 DATE_TRUNC(MONTH,p.behavior_date) AS _date,
 f.event_label,
-i.internal_or_external,
 plans.plan AS plan_name,
+i.internal_or_external,
 clients.client,
 'Monthly p99 Response Chunk Time' AS metric,
 APPROX_PERCENTILE(p.event_value,0.99)  AS metric_value
