@@ -48,12 +48,12 @@
     dim_crm_event.partner_marketing_task_subject,
 
     --sales dev hierarchy fields
-    fct_crm_event.sales_dev_rep_user_full_name,
-    fct_crm_event.sales_dev_rep_manager_full_name,
-    fct_crm_event.sales_dev_rep_leader_full_name,
-    fct_crm_event.sales_dev_rep_user_role_level_1,
-    fct_crm_event.sales_dev_rep_user_role_level_2,
-    fct_crm_event.sales_dev_rep_user_role_level_3,
+    dim_crm_event.sales_dev_rep_user_full_name,
+    dim_crm_event.sales_dev_rep_manager_full_name,
+    dim_crm_event.sales_dev_rep_leader_full_name,
+    dim_crm_event.sales_dev_rep_user_role_level_1,
+    dim_crm_event.sales_dev_rep_user_role_level_2,
+    dim_crm_event.sales_dev_rep_user_role_level_3,
 
     --Dates and Datetimes
     dim_crm_event.event_start_date_time,
