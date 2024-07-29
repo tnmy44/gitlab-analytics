@@ -4953,6 +4953,7 @@ roles:
         - pto
         - snowflake_analyst_safe
         - snowflake
+        - tableau_backend
         - workday
         - workday_hcm
         - zengrc
@@ -6022,6 +6023,7 @@ roles:
       member_of:
         - snowflake_analyst_safe
         - data_team_analyst
+        - tableau_backend
       warehouses:
         - dev_xs
   - jaltherr:
