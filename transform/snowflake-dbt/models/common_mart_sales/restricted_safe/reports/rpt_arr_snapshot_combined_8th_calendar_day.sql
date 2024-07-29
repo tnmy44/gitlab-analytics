@@ -345,7 +345,7 @@
         ELSE product_name
       END                                                                                AS product_name_grouped,
       product_rate_plan_name,
-      product_deployment_type
+      product_deployment_type,
       product_tier_name,
       product_delivery_type,
       product_ranking,
