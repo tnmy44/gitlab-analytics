@@ -217,7 +217,7 @@ models:
         +materialized: table
         +schema: driveload
         +tags: ["driveload"]
-      
+
       e2e_metrics:
         +materialized: table
         +schema: e2e_metrics
@@ -295,6 +295,11 @@ models:
       just_global_campaigns:
         +materialized: table
         +schema: just_global_campaigns
+
+      kantata:
+        +materialized: table
+        +schema: kantata
+        +tags: ["mnpi"]
 
       level_up:
         +schema: level_up
