@@ -2631,6 +2631,17 @@ roles:
           read:
             - prep.tableau_cloud.*
             - raw.tableau_cloud.*
+  - tableau_backend:
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.tableau_fivetran
+        tables:
+          read:
+            - raw.tableau_fivetran.*
   - version_db:
       privileges:
         databases:
