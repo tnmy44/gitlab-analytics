@@ -47,14 +47,6 @@ WITH prep_crm_event AS (
     {{ get_date_id('prep_crm_event.event_recurrence_start_date_time') }} AS event_recurrence_start_date_id,
     prep_crm_event.event_recurrence_start_date_time,
 
-    --sales dev hierarchy fields
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
-
 
     -- Metadata
     prep_crm_event.created_by_id                                   AS event_created_by_id,
@@ -68,9 +60,6 @@ WITH prep_crm_event AS (
     ON prep_crm_event.sfdc_record_id=converted_leads.lead_id
   LEFT JOIN {{ ref('prep_crm_person') }}
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_event.sfdc_record_id) = prep_crm_person.sfdc_record_id
-  LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-    ON prep_crm_event.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-      AND prep_crm_event.event_date=prep_sales_dev_user_hierarchy.snapshot_date
 
 
 )

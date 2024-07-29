@@ -10,7 +10,7 @@ WITH prep_crm_task AS (
   SELECT
 
     -- Surrogate key
-    prep_crm_task.dim_crm_task_sk,
+    prep_crm_task.dim_crm_task_sk, 
 
     -- Natural key
     prep_crm_task.task_id,
@@ -85,6 +85,14 @@ WITH prep_crm_task AS (
     prep_crm_task.zoom_app_make_it_zoom_meeting,
     prep_crm_task.chorus_call_id,
 
+    --sales dev hierarchy fields
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
+    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
+
     -- Flags
     prep_crm_task.is_reminder_task,
     prep_crm_task.is_completed_task,
@@ -113,6 +121,9 @@ WITH prep_crm_task AS (
     prep_crm_task.is_opportunity_followup_call_task
 
     FROM prep_crm_task
+    LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
+    ON prep_crm_task.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
+      AND prep_crm_task.task_completed_date=prep_sales_dev_user_hierarchy.snapshot_date
 
 
 )
@@ -120,7 +131,7 @@ WITH prep_crm_task AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2022-12-05",
-    updated_date="2024-05-17"
+    updated_date="2024-07-29"
 ) }}

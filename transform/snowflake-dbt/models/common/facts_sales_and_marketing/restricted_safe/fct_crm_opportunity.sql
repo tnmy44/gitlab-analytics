@@ -266,14 +266,6 @@
       sfdc_opportunity.partner_margin_percentage,
       sfdc_opportunity.comp_channel_neutral,
 
-      --sales dev hierarchy fields
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
-
       -- additive fields
       sfdc_opportunity.incremental_acv                                                                                      AS iacv,
       sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
@@ -363,9 +355,6 @@
       ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id
     LEFT JOIN prep_date
       ON prep_date.date_id = sfdc_opportunity.close_date_id
-    LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-      ON sfdc_opportunity.dim_crm_person_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-        AND sfdc_opportunity.stage_1_discovery_date=prep_sales_dev_user_hierarchy.snapshot_date
 
 )
 
@@ -374,5 +363,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-11-30",
-    updated_date="2024-07-24"
+    updated_date="2024-05-23"
 ) }}
