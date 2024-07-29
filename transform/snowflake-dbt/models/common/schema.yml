@@ -4853,6 +4853,8 @@ models:
         description: Qualified's count of sessions on the account
       - name: qualified_visitors_count
         description: Qualified's count of visitors on the account
+      - name: account_domains
+        description: All domain names associated with this account, separated by a comma.
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
