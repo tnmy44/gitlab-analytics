@@ -2631,6 +2631,17 @@ roles:
           read:
             - prep.tableau_cloud.*
             - raw.tableau_cloud.*
+  - tableau_backend:
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.tableau_fivetran
+        tables:
+          read:
+            - raw.tableau_fivetran.*
   - version_db:
       privileges:
         databases:
@@ -4942,6 +4953,7 @@ roles:
         - pto
         - snowflake_analyst_safe
         - snowflake
+        - tableau_backend
         - workday
         - workday_hcm
         - zengrc
@@ -6011,6 +6023,7 @@ roles:
       member_of:
         - snowflake_analyst_safe
         - data_team_analyst
+        - tableau_backend
       warehouses:
         - dev_xs
   - jaltherr:
