@@ -105,7 +105,6 @@ trials AS (
     all_trials[0].trial_type_name::STRING                AS trial_type_name,
     all_trials[0].trial_start_date::DATE                 AS trial_start_date,
     all_trials[0].days_since_namespace_creation_at_trial AS days_since_namespace_creation_at_trial,
-    all_trials[1].trial_type                             AS trial_2_type,
     all_trials[1].trial_type_name::STRING                AS trial_2_type_name,
     all_trials[1].trial_start_date::DATE                 AS trial_2_start_date,
     all_trials[1].days_since_namespace_creation_at_trial AS days_since_namespace_creation_at_trial_2
