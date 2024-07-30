@@ -2263,6 +2263,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - People Restricted Access      
   - user_name: aalattar
     user_name_domain: gitlab.com
     site_role: Viewer
