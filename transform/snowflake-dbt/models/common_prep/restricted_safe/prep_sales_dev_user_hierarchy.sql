@@ -79,7 +79,8 @@ WITH prep_crm_user_daily_snapshot AS (
     ON prep_crm_opportunity.stage_1_discovery_date_id = stage_1_discovery_date.date_id
   WHERE sdr_bdr_user_id IS NOT NULL
     AND opp_created_date >= '2022-10-11' --since this date we are observing improved data quality in terms of associated employee_id with the record
-
+    AND is_live = TRUE 
+    
 ), last_user_employee_id AS (
 
   SELECT DISTINCT
