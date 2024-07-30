@@ -37,7 +37,6 @@ WITH prep_crm_task AS (
     -- Activity infromation
     prep_crm_task.activity_disposition,
     prep_crm_task.activity_source,
-    prep_crm_task.activity,
     prep_crm_task.csm_activity_type,
     prep_crm_task.sa_activity_type,
     prep_crm_task.gs_activity_type,
