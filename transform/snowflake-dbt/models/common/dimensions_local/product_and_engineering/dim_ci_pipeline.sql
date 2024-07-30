@@ -48,7 +48,7 @@ WITh prep AS (
         WHEN ci_pipeline_source = 15 THEN 'security_orchestration_policy'
         WHEN ci_pipeline_source = 16 THEN 'container_registry_push'
         ELSE NULL 
-        END as ci_pipeline_source
+        END as ci_pipeline_source,
       config_source, 
       is_protected, 
       failure_reason_id,
