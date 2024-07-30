@@ -53,11 +53,7 @@ WITH prep_crm_task AS (
     prep_crm_task.call_duration_in_seconds,
     prep_crm_task.call_recording,
     prep_crm_task.is_answered,
-    prep_crm_task.is_bad_number,
-    prep_crm_task.is_busy,
     prep_crm_task.is_correct_contact,
-    prep_crm_task.is_not_answered,
-    prep_crm_task.is_left_message,
 
     -- Reminder information
     prep_crm_task.is_reminder_set,

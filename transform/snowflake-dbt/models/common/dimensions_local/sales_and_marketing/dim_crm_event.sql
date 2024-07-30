@@ -52,14 +52,9 @@ WITH prep_crm_event AS (
         prep_crm_event.is_recurrence,
         prep_crm_event.has_reminder_set,
         prep_crm_event.is_answered,
-        prep_crm_event.is_bad_number, 
-        prep_crm_event.is_busy, 
         prep_crm_event.is_correct_contact,
-        prep_crm_event.is_left_message,
-        prep_crm_event.is_not_answered,
         prep_crm_event.is_meeting_canceled,
         prep_crm_event.is_closed_event,
-        prep_crm_event.is_activity,
 
     --Recurrence Info
         prep_crm_event.event_recurrence_activity_id,

@@ -72,11 +72,7 @@
     dim_crm_task.call_duration_in_seconds,
     dim_crm_task.call_recording,
     dim_crm_task.is_answered,
-    dim_crm_task.is_bad_number,
-    dim_crm_task.is_busy,
     dim_crm_task.is_correct_contact,
-    dim_crm_task.is_not_answered,
-    dim_crm_task.is_left_message,
 
     -- Reminder information
     dim_crm_task.is_reminder_set,
