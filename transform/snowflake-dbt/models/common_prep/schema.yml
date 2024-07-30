@@ -1154,6 +1154,8 @@ models:
         data_tests:
           - not_null
           - unique
+      - name: ci_pipeline_source 
+        description: Defines failure reasions based on the [pipeline.rb](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/enums/ci/pipeline.rb#L8-21) file
 
   - name: prep_action
     description: '{{ doc("prep_action") }}'
