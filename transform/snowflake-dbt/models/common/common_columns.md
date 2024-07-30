@@ -396,7 +396,7 @@ The unique identifier of the ping. This appears as `id` in the ping payload.
 
 {% docs dim_instance_id %}
 
-The identifier of the instance, easily joined to `dim_installation`. This id is stored in the database of the installation and appears as `uuid` in the ping payload.
+The identifier of the instance, easily joined to `dim_installation`. This id is stored in the database of the installation and appears as `uuid` in the ping payload. In Snowplow events, this field is coalesced from the GitLab Standard context and the Code Suggestions context.
 
 {% enddocs %}
 
