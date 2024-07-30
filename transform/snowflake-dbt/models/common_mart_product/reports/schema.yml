@@ -1501,7 +1501,6 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - ultimate_parent_namespace_id
-            - trial_type
   columns:
     - name: ultimate_parent_namespace_id
       description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
@@ -1545,6 +1544,14 @@ models:
       description: '{{ doc("trial_type_name") }}'
     - name: days_since_namespace_creation_at_trial
       description: Date difference in days between ultimate parent namespace creation and trial start.
+    - name: trial_2_start_date
+      description: Second trial start date associated with the ultimate parent namespace from customers_db_trial_histories.
+    - name: trial_2_type
+      description: '{{ doc("trial_type") }}'
+    - name: trial_2_type_name
+      description: '{{ doc("trial_type_name") }}'
+    - name: days_since_namespace_creation_at_trial_2
+      description: Date difference in days between ultimate parent namespace creation and trial type 2 start.
     - name: first_paid_subscription_start_date
       description: Date of first paid ultimate parent namespace subscription from mart_charge model.
     - name: days_since_namespace_creation_at_first_paid_subscription
