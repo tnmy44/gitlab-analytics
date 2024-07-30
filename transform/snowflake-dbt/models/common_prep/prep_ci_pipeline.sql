@@ -46,7 +46,6 @@
       gitlab_dotcom_ci_pipelines_source.lock_version, 
       gitlab_dotcom_ci_pipelines_source.auto_canceled_by_id, 
       gitlab_dotcom_ci_pipelines_source.pipeline_schedule_id, 
-      gitlab_dotcom_ci_pipelines_source.ci_pipeline_source,
       CASE 
         WHEN gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 1 THEN 'push'
         WHEN gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 2 THEN 'web'
