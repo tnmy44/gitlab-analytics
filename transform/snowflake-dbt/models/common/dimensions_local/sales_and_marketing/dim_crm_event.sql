@@ -92,7 +92,7 @@ WITH prep_crm_event AS (
     FROM prep_crm_event
     LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
     ON prep_crm_event.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-      AND prep_crm_event.event_date_time::DATE=prep_sales_dev_user_hierarchy.snapshot_date
+      AND prep_crm_event.event_date_time=prep_sales_dev_user_hierarchy.snapshot_date
 
     )
 
@@ -101,5 +101,5 @@ WITH prep_crm_event AS (
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2024-07-29"
+    updated_date="2024-07-30"
 ) }}
