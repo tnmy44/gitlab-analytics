@@ -85,29 +85,8 @@ f.value IS NOT NULL
 )
 
 SELECT
-_datetime::DATE AS date_day,
-u.crm_account_name,
-u.gitlab_global_user_id,
-u.app_id,
-u.language,
-u.delivery_type,
-u.is_direct_connection,
-
-COUNT(1) AS occs,
-COUNT(DISTINCT u.behavior_structured_event_pk) AS event_count,
-COALESCE(COUNT(DISTINCT u.suggestion_id),0) AS unique_suggestions,
-COALESCE(SUM(u.was_accepted::INT),0) AS was_accepted,
-COALESCE(SUM(u.was_cancelled::INT),0) AS was_cancelled,
-COALESCE(SUM(u.was_error::INT),0) AS was_error,
-COALESCE(SUM(u.was_loaded::INT),0) AS was_loaded,
-COALESCE(SUM(u.was_not_provided::INT),0) AS was_not_provided,
-COALESCE(SUM(u.was_rejected::INT),0) AS was_rejected,
-COALESCE(SUM(u.was_requested::INT),0) AS was_requested,
-COALESCE(SUM(u.was_shown::INT),0) AS was_shown,
-COALESCE(SUM(u.was_stream_completed::INT),0) AS was_stream_completed,
-COALESCE(SUM(u.was_stream_started::INT),0) AS was_stream_started
-
+*
 FROM
 unify u
-GROUP BY ALL
-ORDER BY 1 DESC
+WHERE
+u._datetime > '2024-02-15'
