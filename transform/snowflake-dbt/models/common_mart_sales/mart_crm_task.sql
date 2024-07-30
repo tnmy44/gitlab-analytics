@@ -56,7 +56,6 @@
     -- Activity infromation
     dim_crm_task.activity_disposition,
     dim_crm_task.activity_source,
-    dim_crm_task.activity,
     dim_crm_task.csm_activity_type,
     dim_crm_task.sa_activity_type,
     dim_crm_task.gs_activity_type,
