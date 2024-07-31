@@ -398,10 +398,11 @@
       fct_crm_opportunity.calculated_age_in_days,
       fct_crm_opportunity.days_since_last_activity,
 
-      -- Additive fields
+    --additive fields
       fct_crm_opportunity.arr_basis,
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_iacv,
+      fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
       fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
       fct_crm_opportunity.calculated_from_ratio_net_arr,
       fct_crm_opportunity.net_arr,
@@ -441,7 +442,17 @@
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
       fct_crm_opportunity.override_arr_basis_clari,
-      fct_crm_opportunity.cycle_time_in_days
+      fct_crm_opportunity.cycle_time_in_days,
+      fct_crm_opportunity.created_arr,
+      fct_crm_opportunity.closed_won_opps,
+      fct_crm_opportunity.closed_opps,
+      fct_crm_opportunity.created_deals,
+      fct_crm_opportunity.positive_booked_deal_count,
+      fct_crm_opportunity.positive_booked_net_arr,
+      fct_crm_opportunity.positive_open_deal_count,
+      fct_crm_opportunity.positive_open_net_arr,
+      fct_crm_opportunity.closed_deals,
+      fct_crm_opportunity.closed_net_arr
       
 
     FROM fct_crm_opportunity
