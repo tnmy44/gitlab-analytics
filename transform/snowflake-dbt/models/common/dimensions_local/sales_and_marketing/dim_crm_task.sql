@@ -79,14 +79,6 @@ WITH final AS (
     prep_crm_task.zoom_app_make_it_zoom_meeting,
     prep_crm_task.chorus_call_id,
 
-    --sales dev hierarchy fields
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-    prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
-
     -- Flags
     prep_crm_task.is_reminder_task,
     prep_crm_task.is_completed_task,
