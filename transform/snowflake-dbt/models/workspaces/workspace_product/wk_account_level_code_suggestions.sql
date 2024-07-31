@@ -45,7 +45,7 @@ FROM
 WHERE
 f.value IS NOT NULL
 AND
-f.requested_at >= '2024-06-26'
+o.requested_at >= '2024-06-26'
 
 
 UNION ALL 
@@ -90,7 +90,7 @@ FROM
 WHERE
 f.value IS NOT NULL
 AND
-f.requested_at >= '2024-06-26'
+r.behavior_at >= '2024-06-26'
 )
 
 SELECT
