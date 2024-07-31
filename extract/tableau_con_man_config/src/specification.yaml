@@ -2282,16 +2282,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: aarts
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM AMER Commercial Restricted Access
-      - ASM EMEA Commercial Restricted Access
-      - General All Access
-      - General SAFE Access
-      - Sales Development SAFE Access
   - user_name: abakunovets
     user_name_domain: gitlab.com
     site_role: Viewer
