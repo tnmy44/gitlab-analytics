@@ -3469,3 +3469,21 @@ The timestamp of when the `is_deleted` flag has been updated
 Pseudonymised combination of instance id and user id coalesced from the `global_user_id` sent in the GitLab Standard Context and the `gitlab_global_user_id` sent in Code Suggestions events.
 
 {% enddocs %}
+
+{% docs user_type_id %}
+
+Numeric id indicating the type of user in GitLab.com data.
+
+{% enddocs %}
+
+{% docs user_type %}
+
+User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) to translate the ids to human-readable types.
+
+{% enddocs %}
+
+{% docs is_bot %}
+
+Calculated field based on user_type_id != 0 (human) to flag non-human (bot) users.
+
+{% enddocs %}

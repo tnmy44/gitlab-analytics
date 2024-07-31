@@ -1198,6 +1198,12 @@ models:
         description: User Country selected during registration
       - name: state
         description: A state that is part of the given country selected during registration 
+      - name: user_type_id
+        description: '{{ doc("user_type_id") }}'
+      - name: user_type
+        description: '{{ doc("user_type") }}'
+      - name: is_bot
+        description: '{{ doc("is_bot") }}'
 
   - name: prep_ci_build
     description: '{{ doc("prep_ci_build") }}'
