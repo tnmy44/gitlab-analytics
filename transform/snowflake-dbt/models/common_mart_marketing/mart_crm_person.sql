@@ -181,6 +181,8 @@
       dim_crm_person.matched_account_owner_role,
       dim_crm_person.matched_account_account_owner_name,
       dim_crm_person.matched_account_sdr_assigned,
+      dim_crm_person.assignment_date,
+      dim_crm_person.assignment_type,
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
       dim_crm_person.matched_account_bdr_prospecting_status,

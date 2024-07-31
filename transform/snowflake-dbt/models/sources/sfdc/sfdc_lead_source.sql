@@ -140,6 +140,8 @@ renamed AS (
     pql_namespace_name__c AS pql_namespace_name,
     pqlnamespaceusers__c AS pql_namespace_users,
     lead_score_classification__c AS lead_score_classification,
+    assignment_date__c AS assignment_date,
+    assignment_type__c AS assignment_type,
 
     {{ sfdc_source_buckets('leadsource') }}
 
