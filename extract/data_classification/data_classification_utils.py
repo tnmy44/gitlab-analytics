@@ -414,6 +414,7 @@ class DataClassification:
         except Exception as e:
             error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")
+            sys.exit(1)
         finally:
             self.__dispose()
 
@@ -439,6 +440,7 @@ class DataClassification:
         as initially we do not have it
         """
         info(".... START update MNPI metadata.")
+        info(F"METADATA: {self.update_mnpi_metadata()}")
         self.__execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
