@@ -6,7 +6,7 @@ WITH final AS (
 
     SELECT
     --primary key
-        {{ dbt_utils.generate_surrogate_key(['dim_crm_user_id','snapshot_date')] AS sales_dev_rep_user_hierarchy_pk,
+        {{ dbt_utils.generate_surrogate_key(['dim_crm_user_id','snapshot_date')]}} AS sales_dev_rep_user_hierarchy_pk,
 
     --secondary keys
         dim_crm_user_id,
