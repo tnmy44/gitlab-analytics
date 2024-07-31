@@ -107,7 +107,7 @@
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 10010 THEN 'ip_restriction_failure'
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 10011 THEN 'reached_max_pipeline_hierarchy_size'
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 10012 THEN 'reached_downstream_pipeline_trigger_rate_limit'
-      ELSE null 
+      ELSE gitlab_dotcom_ci_builds_source.failure_reason 
       END as failure_reason,
       gitlab_dotcom_ci_builds_source.ci_build_scheduled_at        AS scheduled_at,
       gitlab_dotcom_ci_builds_source.upstream_pipeline_id,
