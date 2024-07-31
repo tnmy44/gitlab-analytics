@@ -23,26 +23,29 @@ def data_classification():
     )
 
 
-def test_initialization(data_classification):
+@pytest.mark.parametrize(
+    "attribute, expected_value",
+    [
+        ("encoding", "utf8"),
+        ("schema_name", "data_classification"),
+        ("table_name", "sensitive_objects_classification"),
+        ("processing_role", "SYSADMIN"),
+        ("loader_engine", None),
+        ("connected", False),
+        ("specification_file", "../../extract/data_classification/specification.yml"),
+        ("tagging_type", "FULL"),
+        ("mnpi_raw_file", "test.json"),
+        ("incremental_load_days", 90),
+        ("raw", "RAW"),
+        ("prep", "PREP"),
+        ("prod", "PROD"),
+    ],
+)
+def test_initialization(data_classification, attribute, expected_value):
     """
     Test class creation attributes
     """
-    assert data_classification.encoding == "utf8"
-    assert data_classification.schema_name == "data_classification"
-    assert data_classification.table_name == "sensitive_objects_classification"
-    assert data_classification.processing_role == "SYSADMIN"
-    assert data_classification.loader_engine is None
-    assert data_classification.connected is False
-    assert (
-        data_classification.specification_file
-        == "../../extract/data_classification/specification.yml"
-    )
-    assert data_classification.tagging_type == "FULL"
-    assert data_classification.mnpi_raw_file == "test.json"
-    assert data_classification.incremental_load_days == 90
-    assert data_classification.raw == "RAW"
-    assert data_classification.prep == "PREP"
-    assert data_classification.prod == "PROD"
+    assert getattr(data_classification, attribute) == expected_value
 
 
 def test_quoted(data_classification):
