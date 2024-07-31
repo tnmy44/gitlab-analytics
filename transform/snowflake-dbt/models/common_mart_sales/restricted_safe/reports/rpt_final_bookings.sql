@@ -80,7 +80,9 @@ booked_arr AS (
     live_actuals.deal_path_name,
     live_actuals.sales_type,
     live_actuals.stage_name,
-    SUM(live_actuals.booked_net_arr) AS total_booked_arr
+    SUM(live_actuals.booked_net_arr) AS total_booked_arr,
+    SUM(live_actuals.booked_deal_count) AS total_booked_deal_count,
+    SUM(live_actuals.closed_won_opps) AS total_closed_won_opps,    
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 
@@ -97,7 +99,8 @@ created_arr AS (
     live_actuals.deal_path_name,
     live_actuals.sales_type,
     live_actuals.stage_name,
-    SUM(live_actuals.created_arr) AS total_created_arr
+    SUM(live_actuals.created_arr) AS total_created_arr,
+    SUM(live_actuals.created_deals) AS total_created_deal_count,
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 ),
@@ -138,7 +141,10 @@ final AS (
     base.stage_name, 
     'final_bookings'                               AS source,
     booked_arr.total_booked_arr                    AS booked_net_arr_in_snapshot_quarter,
-    created_arr.total_created_arr                  AS created_arr_in_snapshot_quarter
+    created_arr.total_created_arr                  AS created_arr_in_snapshot_quarter,
+    created_arr.total_created_arr                  AS created_deal_count_in_snapshot_quarter,
+    booked_arr.total_booked_deal_count             AS booked_deal_count_in_snapshot_quarter,  
+    booked_arr.total_closed_won_opps               AS closed_won_opps_in_snapshot_quarter  
   FROM base
   LEFT JOIN created_arr
     ON base.snapshot_fiscal_quarter_date = created_arr.arr_created_fiscal_quarter_date
