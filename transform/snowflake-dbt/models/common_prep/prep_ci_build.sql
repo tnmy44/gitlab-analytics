@@ -71,10 +71,10 @@
       gitlab_dotcom_ci_builds_source.retried,
       gitlab_dotcom_ci_builds_source.protected,
       CASE 
-      WHEN gitlab_dotcom_ci_builds_source.gitlab_dotcom_ci_builds_source.failure_reason = 1 THEN 'script_failure'
-      WHEN gitlab_dotcom_ci_builds_source.gitlab_dotcom_ci_builds_source.failure_reason = 2 THEN 'api_failure'
-      WHEN gitlab_dotcom_ci_builds_source.gitlab_dotcom_ci_builds_source.failure_reason = 3 THEN 'stuck_or_timeout_failure'
-      WHEN gitlab_dotcom_ci_builds_source.gitlab_dotcom_ci_builds_source.failure_reason = 4 THEN 'runner_or_system_failure'
+      WHEN gitlab_dotcom_ci_builds_source.failure_reason = 1 THEN 'script_failure'
+      WHEN gitlab_dotcom_ci_builds_source.failure_reason = 2 THEN 'api_failure'
+      WHEN gitlab_dotcom_ci_builds_source.failure_reason = 3 THEN 'stuck_or_timeout_failure'
+      WHEN gitlab_dotcom_ci_builds_source.failure_reason = 4 THEN 'runner_or_system_failure'
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 5 THEN 'missing_dependency_failure'
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 6 THEN 'runner_unsupported'
       WHEN gitlab_dotcom_ci_builds_source.failure_reason = 7 THEN 'stale_schedule'
