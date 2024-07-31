@@ -1,10 +1,4 @@
-WITH prep_crm_event AS (
-
-  SELECT *
-  FROM {{ ref('prep_crm_event') }}
-  WHERE is_deleted = FALSE
-
-), final AS (
+WITH final AS (
 
     SELECT
 
@@ -41,15 +35,6 @@ WITH prep_crm_event AS (
         prep_crm_event.event_date_time,
         prep_crm_event.created_at,
         prep_crm_event.event_end_date,
-
-    --sales dev hierarchy fields
-        prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
-        prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
-        prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
-        prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
-        prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-        prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
-
 
     --Event Flags
         prep_crm_event.is_all_day_event, 
@@ -89,10 +74,8 @@ WITH prep_crm_event AS (
         prep_crm_event.last_modified_date,
         prep_crm_event.systemmodstamp
 
-    FROM prep_crm_event
-    LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-    ON prep_crm_event.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-      AND prep_crm_event.event_date_time=prep_sales_dev_user_hierarchy.snapshot_date
+    FROM {{ ref('prep_crm_event') }}
+    WHERE is_deleted = FALSE
 
     )
 
@@ -101,5 +84,5 @@ WITH prep_crm_event AS (
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2024-07-30"
+    updated_date="2024-07-31"
 ) }}

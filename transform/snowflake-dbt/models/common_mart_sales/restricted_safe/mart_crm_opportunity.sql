@@ -240,12 +240,12 @@
       dim_crm_opportunity.sa_tech_evaluation_start_date,
 
       --sales dev hierarchy fields
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
-      prep_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_user_full_name,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_manager_full_name,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_leader_full_name,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_1,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_2,
+      dim_sales_dev_user_hierarchy.sales_dev_rep_user_role_level_3,
 
       --Command Plan fields
       dim_crm_opportunity.cp_partner,
@@ -521,9 +521,9 @@
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
     LEFT JOIN dim_crm_user
       ON fct_crm_opportunity.dim_crm_user_id = dim_crm_user.dim_crm_user_id
-    LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-      ON fct_crm_opportunity.dim_crm_person_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-        AND fct_crm_opportunity.stage_1_discovery_date=prep_sales_dev_user_hierarchy.snapshot_date
+    LEFT JOIN {{ref('dim_sales_dev_user_hierarchy')}}
+      ON fct_crm_opportunity.dim_crm_person_id=dim_sales_dev_user_hierarchy.dim_crm_user_id
+        AND fct_crm_opportunity.stage_1_discovery_date=dim_sales_dev_user_hierarchy.snapshot_date
 
 )
 
@@ -532,7 +532,7 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2024-07-24"
+    updated_date="2024-07-31"
   ) }}
 
 

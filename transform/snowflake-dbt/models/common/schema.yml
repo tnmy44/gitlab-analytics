@@ -6248,19 +6248,6 @@ models:
         description: The time/date stamp from SFDC when this record was created. 
       - name: partner_marketing_task_subject
         description: A non-pii field with the type of subject.
-      - name: sales_dev_rep_user_role_level_1
-        description: The Sales Dev Rep's role hierarchy level 1
-      - name: sales_dev_rep_user_role_level_2
-        description: The Sales Dev Rep's role hierarchy level 2
-      - name: sales_dev_rep_user_role_level_3
-        description: The Sales Dev Rep's role hierarchy level 3
-      - name: sales_dev_rep_leader_full_name
-        description: The Sales Dev Rep's Leader's full name. 
-      - name: sales_dev_manager_full_name
-        description: The Sales Dev Rep's Manager's full name. 
-      - name: sales_dev_rep_user_full_name
-        description: The Sales Dev Rep's Full Name
-
 
   - name: dim_crm_task
     description: '{{ doc("dim_crm_task") }}'
@@ -6279,18 +6266,68 @@ models:
            masking_policy: data_science_sensitive
       - name: partner_marketing_task_subject
         description: A non-pii field with the type of subject.
+
+  - name: dim_sales_dev_user_hierarchy
+    description: '{{ doc("dim_sales_dev_user_hierarchy") }}'
+    columns:
+      - name: sales_dev_rep_user_hierarchy_pk
+        description: The primary key generated from a combination of dim_crm_user_id and snapshot_date
+      - name: dim_crm_user_id
+        description: The SFDC User ID of the sales dev rep
+      - name: sales_dev_rep_direct_manager_id
+        description: The SFDC User ID of the sales dev rep's manager
+      - name: sales_dev_leader_id
+        description: The SFDC User ID of the sales dev rep's leader
+      - name: sales_dev_rep_role_name
+        description: The Sales Dev Rep's role name
       - name: sales_dev_rep_user_role_level_1
         description: The Sales Dev Rep's role hierarchy level 1
       - name: sales_dev_rep_user_role_level_2
         description: The Sales Dev Rep's role hierarchy level 2
       - name: sales_dev_rep_user_role_level_3
         description: The Sales Dev Rep's role hierarchy level 3
-      - name: sales_dev_rep_leader_full_name
-        description: The Sales Dev Rep's Leader's full name. 
-      - name: sales_dev_manager_full_name
-        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_role_hierarchy_fiscal_year
+        description: The fiscal year of the Sales Dev Rep's role hierarchy data
+      - name: sales_dev_rep_email
+        description: The Sales Dev Rep's email
       - name: sales_dev_rep_user_full_name
         description: The Sales Dev Rep's Full Name
+      - name: sales_dev_rep_title
+        description: The Sales Dev Rep's title
+      - name: sales_dev_rep_department
+        description: The Sales Dev Rep's department
+      - name: sales_dev_rep_team
+        description: The Sales Dev Rep's team
+      - name: sales_dev_rep_is_active
+        description: Whether The Sales Dev Rep is active
+      - name: sales_dev_rep_employee_number
+        description: The Sales Dev Rep's employee number
+      - name: crm_user_sales_segment
+        description: The Sales Dev Rep's sales segment
+      - name: crm_user_geo
+        description: The Sales Dev Rep's geo
+      - name: crm_user_region
+        description: The Sales Dev Rep's region
+      - name: crm_user_area
+        description: The Sales Dev Rep's area
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_manager_email
+        description: The Sales Dev Rep's Manager'semail
+      - name: sales_dev_manager_employee_number
+        description: The Sales Dev Rep's Manager'semployee number
+      - name: sales_dev_manager_user_role_name
+        description: The Sales Dev Rep's Manager'srole name
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name
+      - name: sales_dev_leader_employee_number
+        description: The Sales Dev Rep's Leader's employee number
+      - name: sales_dev_leader_email
+        description: The Sales Dev Rep's Leader's email
+      - name: snapshot_date
+        description: The snapshot date of the sales dev hierarchy data depicted
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'

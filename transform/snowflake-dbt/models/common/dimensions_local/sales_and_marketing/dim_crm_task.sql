@@ -1,10 +1,4 @@
-WITH prep_crm_task AS (
-
-  SELECT *
-  FROM {{ ref('prep_crm_task') }}
-  WHERE is_deleted = FALSE
-
-), final AS (
+WITH final AS (
 
 
   SELECT
@@ -120,10 +114,8 @@ WITH prep_crm_task AS (
     prep_crm_task.is_opportunity_initiation_call_task,
     prep_crm_task.is_opportunity_followup_call_task
 
-    FROM prep_crm_task
-    LEFT JOIN {{ref('prep_sales_dev_user_hierarchy')}}
-    ON prep_crm_task.dim_crm_user_id=prep_sales_dev_user_hierarchy.dim_crm_user_id
-      AND prep_crm_task.task_completed_date=prep_sales_dev_user_hierarchy.snapshot_date
+    FROM {{ ref('prep_crm_task') }}
+    WHERE is_deleted = FALSE
 
 
 )
@@ -133,5 +125,5 @@ WITH prep_crm_task AS (
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-12-05",
-    updated_date="2024-07-29"
+    updated_date="2024-07-31"
 ) }}
