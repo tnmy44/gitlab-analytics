@@ -6268,7 +6268,7 @@ models:
         description: A non-pii field with the type of subject.
 
   - name: dim_sales_dev_user_hierarchy
-    description: '{{ doc("dim_sales_dev_user_hierarchy") }}'
+    description: A snapshotted history of sales dev user hierarchy from SFDC.
     columns:
       - name: sales_dev_rep_user_hierarchy_pk
         description: The primary key generated from a combination of dim_crm_user_id and snapshot_date
