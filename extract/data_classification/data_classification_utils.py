@@ -11,6 +11,7 @@ from logging import error, info
 import pandas as pd
 import yaml
 from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+from sqlalchemy.engine.base import Engine
 
 
 class DataClassification:
@@ -31,7 +32,7 @@ class DataClassification:
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
         self.processing_role = "SYSADMIN"
-        self.loader_engine = None
+        self.loader_engine: Engine = None
         self.connected = False
         self.specification_file = "../../extract/data_classification/specification.yml"
         self.tagging_type = tagging_type
@@ -42,7 +43,7 @@ class DataClassification:
         self.prep = self.config_vars["SNOWFLAKE_PREP_DATABASE"]
         self.prod = self.config_vars["SNOWFLAKE_PROD_DATABASE"]
 
-    def __connect(self):
+    def __connect(self) -> Engine:
         """
         Connect to engine factory, return connection object
         """
@@ -96,7 +97,7 @@ class DataClassification:
         """
 
         if not os.path.exists(self.mnpi_raw_file):
-            error(f"File {self.mnpi_raw_file} is note generated, stopping processing")
+            error(f"File {self.mnpi_raw_file} is not generated, stopping processing")
             sys.exit(1)
 
         with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
@@ -116,11 +117,15 @@ class DataClassification:
         Transform MNPI list to uppercase in a proper format
         """
 
-        def extract_full_path(x: dict) -> list:
+        def extract_full_path(x: dict) -> list[str]:
+            database_name = x["config"]["database"].upper()
+            schema_name = x["config"]["schema"].upper()
+            alias = x["alias"].upper()
+
             return [
-                x.get("config").get("database").upper(),
-                x.get("config").get("schema").upper(),
-                x.get("alias").upper(),
+                database_name,
+                schema_name,
+                alias,
             ]
 
         return [extract_full_path(x) for x in mnpi_list]
@@ -415,7 +420,7 @@ class DataClassification:
         """
         Upload PII data
         """
-        info(f".... START upload_pii_data.")
+        info(".... START upload_pii_data.")
         self.__execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 

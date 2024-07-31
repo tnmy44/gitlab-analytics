@@ -54,7 +54,7 @@ def test_quoted(data_classification):
 
 def test_double_quoted(data_classification):
     """
-    Test double quoted
+    Test double-quoted
     """
     assert data_classification.double_quoted("test") == '"test"'
 
@@ -154,7 +154,7 @@ def test_identify_mnpi_data(mock_dataframe, data_classification):
     ],
 )
 @patch.object(DataClassification, "scope", new_callable=MagicMock)
-def test_get_pii_scope(mock_scope, data_classification, expected_value):
+def test_get_pii_scope_include(mock_scope, data_classification, expected_value):
     """
     Test get_pii_scope
     """
@@ -168,6 +168,38 @@ def test_get_pii_scope(mock_scope, data_classification, expected_value):
         }
     }
     result = data_classification.get_pii_scope("PII", "include")
+    assert expected_value in result
+
+
+@pytest.mark.parametrize(
+    "expected_value",
+    [
+        "table_catalog NOT IN ('DB2')",
+        "NOT (table_catalog = 'DB2' AND table_schema = 'TT' and table_name = 'TABLE2')",
+        "NOT (table_catalog = 'DB2' AND table_schema ILIKE '%')",
+        "NOT (table_catalog = 'DB2' AND table_schema = 'TT' and table_name = 'TABLE2')",
+    ],
+)
+@patch.object(DataClassification, "scope", new_callable=MagicMock)
+def test_get_pii_scope_exclude(mock_scope, data_classification, expected_value):
+    """
+    Test get_pii_scope
+    """
+    mock_scope.get.return_value = {
+        "PII": {
+            "include": {
+                "databases": ["DB1", "DB2"],
+                "schemas": ["DB1.SCHEMA1", "DB2.*"],
+                "tables": ["DB1.SCHEMA1.TABLE1", "DB2.TT.TABLE2"],
+            },
+            "exclude": {
+                "databases": ["DB2"],
+                "schemas": ["DB2.*"],
+                "tables": ["DB2.TT.TABLE2"],
+            },
+        }
+    }
+    result = data_classification.get_pii_scope("PII", "exclude")
     assert expected_value in result
 
 
@@ -192,4 +224,23 @@ def test_pii_query(mock_scope, data_classification, expected_value):
         }
     }
     query = data_classification.pii_query
+    assert expected_value in query
+
+
+@pytest.mark.parametrize(
+    "expected_value",
+    [
+        "MERGE INTO",
+        "data_classification.sensitive_objects_classification",
+        "MNPI",
+        "RAW",
+        "PREP",
+        "PROD",
+    ],
+)
+def test_mnpi_metadata_update_query(data_classification, expected_value):
+    """
+    Test test_mnpi_metadata_update_query
+    """
+    query = data_classification.mnpi_metadata_update_query
     assert expected_value in query
