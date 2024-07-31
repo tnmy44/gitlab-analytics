@@ -43,11 +43,10 @@ o.was_stream_started
 FROM
  {{ ref('rpt_behavior_code_suggestion_outcome') }} o, LATERAL FLATTEN(input => crm_account_names::ARRAY ) AS f
 WHERE
-o.namespace_is_internal != TRUE
-AND
-o.suggestion_outcome != 'suggestion_cancelled'
-AND
 f.value IS NOT NULL
+AND
+f.requested_at >= '2024-06-26'
+
 
 UNION ALL 
 SELECT
@@ -81,18 +80,20 @@ NULL,
 NULL, 
 NULL, 
 NULL, 
+NULL,
+NULL,
+NULL,
+NULL,
 NULL
 FROM 
 {{ ref('rpt_behavior_code_suggestion_gateway_request') }} r, LATERAL FLATTEN(input => crm_account_names::ARRAY ) AS f
 WHERE
-r.namespace_is_internal != TRUE
-AND 
 f.value IS NOT NULL
+AND
+f.requested_at >= '2024-06-26'
 )
 
 SELECT
 *
 FROM
 unify u
-WHERE
-u._datetime > '2024-02-15'
