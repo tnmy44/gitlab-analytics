@@ -17,7 +17,7 @@ renamed AS (
     division_refid::VARCHAR                     AS division_refid,
     cost_center::VARCHAR                        AS cost_center,
     cost_center_refid::VARCHAR                  AS cost_center_refid,
-    IFF(inactive::VARCHAR = 'Yes', FALSE, TRUE) AS is_department_active,
+    IFF(dept_inactive::VARCHAR = 'Yes', FALSE, TRUE) AS is_department_active,
     report_effective_date::DATE                 AS report_effective_date
 
   FROM source
