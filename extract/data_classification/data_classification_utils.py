@@ -7,6 +7,7 @@ import os
 import sys
 from json import JSONDecodeError
 from logging import error, info
+from typing import List
 
 import pandas as pd
 import yaml
@@ -117,7 +118,7 @@ class DataClassification:
         Transform MNPI list to uppercase in a proper format
         """
 
-        def extract_full_path(x: dict) -> list[str]:
+        def extract_full_path(x: dict) -> List[str]:
             database_name = x["config"]["database"].upper()
             schema_name = x["config"]["schema"].upper()
             alias = x["alias"].upper()
