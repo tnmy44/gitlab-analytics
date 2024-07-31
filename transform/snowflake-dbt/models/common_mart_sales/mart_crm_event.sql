@@ -83,8 +83,8 @@
     LEFT JOIN dim_crm_event 
       ON fct_crm_event.dim_crm_event_sk = dim_crm_event.dim_crm_event_sk
     LEFT JOIN {{ref('dim_sales_dev_user_hierarchy')}}
-      ON prep_crm_task.dim_crm_user_id=dim_sales_dev_user_hierarchy.dim_crm_user_id
-        AND prep_crm_task.task_completed_date=dim_sales_dev_user_hierarchy.snapshot_date
+      ON fct_crm_event.dim_crm_user_id=dim_sales_dev_user_hierarchy.dim_crm_user_id
+        AND fct_crm_event.task_completed_date=dim_sales_dev_user_hierarchy.snapshot_date
 
 
 )
