@@ -30,7 +30,7 @@
       WHEN {{user_type}} =  13 
         THEN 'Service Account'
       WHEN {{user_type}} =  14 
-        THEN 'LLM  Bot'
+        THEN 'LLM Bot'
       WHEN {{user_type}} =  15 
         THEN 'Placeholder'
       WHEN {{user_type}} =  16 
@@ -39,5 +39,5 @@
         THEN 'Import User'
       ELSE NULL
     END
-    
+
 {%- endmacro -%}
