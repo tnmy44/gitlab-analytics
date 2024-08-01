@@ -3484,6 +3484,6 @@ User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blo
 
 {% docs is_bot %}
 
-Calculated field based on user_type_id != 0 (human) to flag non-human (bot) users.
+Calculated field based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) of bot user types.
 
 {% enddocs %}
