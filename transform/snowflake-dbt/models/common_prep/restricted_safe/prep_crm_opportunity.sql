@@ -560,7 +560,7 @@ LEFT JOIN cw_base
       COALESCE(
         sfdc_opportunity.fpa_master_bookings_flag, 
         CASE
-          WHEN sfdc_opportunity_live.is_jihu_account != 1 
+          WHEN (sfdc_opportunity_live.is_jihu_account != 1 OR sfdc_opportunity_live.is_jihu_account IS NULL) 
             AND (sfdc_opportunity_stage.is_won = 1
                   OR (
                       is_renewal = 1
@@ -584,7 +584,7 @@ LEFT JOIN cw_base
             AND (net_arr > 0
               OR sfdc_opportunity_live.opportunity_category = 'Credit')
             AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
-            AND sfdc_opportunity_live.is_jihu_account != 1
+            AND (sfdc_opportunity_live.is_jihu_account != 1 OR sfdc_opportunity_live.is_jihu_account IS NULL)
             AND sfdc_opportunity.stage_1_discovery_date IS NOT NULL
           THEN 1
           ELSE 0
@@ -593,7 +593,7 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND sfdc_opportunity.is_closed = 'TRUE'
          AND sfdc_opportunity_live.is_edu_oss = 0
-         AND sfdc_opportunity_live.is_jihu_account != 1
+         AND (sfdc_opportunity_live.is_jihu_account != 1 OR sfdc_opportunity_live.is_jihu_account IS NULL)
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
          AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
          AND sfdc_opportunity_live.parent_crm_account_geo != 'JIHU'
@@ -614,7 +614,7 @@ LEFT JOIN cw_base
           AND is_stage_1_plus = 1
           AND sfdc_opportunity.forecast_category_name != 'Omitted'
           AND sfdc_opportunity.is_open = 1
-          AND sfdc_opportunity_live.is_jihu_account != 1
+          AND (sfdc_opportunity_live.is_jihu_account != 1 OR sfdc_opportunity_live.is_jihu_account IS NULL)
          THEN 1
          ELSE 0
       END                                                                                         AS is_eligible_open_pipeline,
@@ -642,7 +642,7 @@ LEFT JOIN cw_base
         WHEN sfdc_opportunity.close_date <= CURRENT_DATE()
          AND is_booked_net_arr = TRUE
          AND sfdc_opportunity_live.is_edu_oss = 0
-         AND sfdc_opportunity_live.is_jihu_account != 1
+         AND (sfdc_opportunity_live.is_jihu_account != 1 OR sfdc_opportunity_live.is_jihu_account IS NULL)
          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
          AND sfdc_opportunity_live.sales_qualified_source != 'Web Direct Generated'
          AND sfdc_opportunity_live.deal_path != 'Web Direct'
