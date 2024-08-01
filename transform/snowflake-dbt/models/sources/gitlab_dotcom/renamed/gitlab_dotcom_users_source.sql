@@ -81,21 +81,35 @@ renamed AS (
     last_name::VARCHAR                                                                 AS last_name,
     name::VARCHAR                                                                      AS users_name,
     user_type::NUMBER                                                                  AS user_type_id,
-    {{ user_type_mapping('user_type') }}                                               AS user_type,
-    IFF(user_type != 0, 1, 0)                                                          AS is_bot
+    {{ user_type_mapping('user_type') }}                                               AS user_type
 
   FROM source
 
 ),
 
-add_job_hierarchy AS (
+final AS (
 
   SELECT
     renamed.*,
-    {{ it_job_title_hierarchy('role') }}
+    {{ it_job_title_hierarchy('role') }},
+    IFF(user_type IN (
+      'Alert Bot',
+      'Project Bot',
+      'Support Bot',
+      'Visual Review Bot',
+      'Migration Bot',
+      'Security Bot',
+      'Automation Bot',
+      'Security Policy Bot',
+      'Admin Bot',
+      'Suggested Reviewers Bot',
+      'Service Account',
+      'LLM Bot',
+      'Duo Code Review Bot'
+     ), 1, 0)                     AS is_bot
   FROM renamed
 
 )
 
 SELECT *
-FROM add_job_hierarchy
+FROM final
