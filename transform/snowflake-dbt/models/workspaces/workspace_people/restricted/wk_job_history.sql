@@ -195,7 +195,7 @@ staff_hist_promo AS (
 job_profiles AS (
 
   SELECT *
-  FROM prep.workday.blended_job_profiles_source
+  FROM {{ ref('blended_job_profiles_source') }}
 
 ),
 
