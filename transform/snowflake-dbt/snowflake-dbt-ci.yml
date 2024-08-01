@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -38,7 +38,7 @@
     - merge_requests
   when: manual
   artifacts:
-    name: "dbt Compiled Files and logs"  
+    name: "dbt Compiled Files and logs"
     paths:
       - public
       - transform/snowflake-dbt/logs
@@ -105,7 +105,7 @@
     - export DBT_CI_SELECTION=""
     - if [ -z "$SELECTION" ]; then DBT_CI_SELECTION=$DBT_CI_CHANGES; else DBT_CI_SELECTION=$SELECTION; fi
     - echo $DBT_CI_SELECTION
-    - if [ -z "$DBT_CI_SELECTION" ]; then echo "No models selected." && exit 3; fi 
+    - if [ -z "$DBT_CI_SELECTION" ]; then echo "No models selected." && exit 3; fi
     - export DBT_CI_FAIL_FAST=""
     - if [ -z "$FAIL_FAST" ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
@@ -142,7 +142,7 @@
 
 
 📚✏️generate_dbt_docs:
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -186,7 +186,7 @@
     - cp -r target $CI_PROJECT_DIR/public/dbt/
   tags:
     - analytics
-  
+
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
   <<: *snowflake_dbt_jobs
@@ -245,7 +245,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -307,7 +307,7 @@
 
 .dbt_macro_check: &dbt_macro_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
   tags:
@@ -354,7 +354,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
