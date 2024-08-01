@@ -503,7 +503,7 @@ job_history AS (
     LAG(date_actual) OVER ( PARTITION BY employee_id ORDER BY date_actual DESC ),
     is_hire_date,
     is_termination_date
-  FROM eda_stage 
+  FROM eda 
   QUALIFY pr_job_title <> job_title OR is_hire_date = 'TRUE' 
 
 ),
