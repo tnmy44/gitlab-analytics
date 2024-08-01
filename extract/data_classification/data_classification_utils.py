@@ -411,8 +411,11 @@ class DataClassification:
         try:
             connection = self.__connect()
             res = connection.execute(statement=query)
-            for r in res:
-                info(F"RESULT OF THE QUERY: {r}")
+
+            # Logging stored procedure result
+            if res:
+                for r in res:
+                    info(F"Return message: {r}")
         except Exception as e:
             error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")
