@@ -10,6 +10,7 @@
 
 {{ simple_cte([
     ('fct_ping_instance', 'fct_ping_instance'),
+    ('dim_ping_instance','dim_ping_instance'),
     ('fct_ping_instance_metric', 'fct_ping_instance_metric')
 
 ]) }}
