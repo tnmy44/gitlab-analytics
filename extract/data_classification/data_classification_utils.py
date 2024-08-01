@@ -286,7 +286,7 @@ class DataClassification:
         Query to call procedure with parameters for classification
         """
         return (
-            f"CALL {self.schema_name}.execute_data_classification("
+            f"CALL {self.double_quoted(self.raw)}.{self.schema_name}.execute_data_classification("
             f"p_type => {self.quoted(tagging_type)}, "
             f"p_date_from=>{self.quoted(date_from)} , "
             f"p_unset=> {self.quoted(unset)})"

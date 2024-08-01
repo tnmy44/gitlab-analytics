@@ -247,3 +247,25 @@ def test_mnpi_metadata_update_query(data_classification, expected_value):
     """
     query = data_classification.mnpi_metadata_update_query
     assert expected_value in query
+
+
+@pytest.mark.parametrize(
+    "expected_value",
+    [
+        "CALL",
+        "FALSE",
+        "execute_data_classification",
+        "data_classification",
+        "p_type",
+        "p_date_from",
+        "p_unset",
+    ],
+)
+def test_classify_query(data_classification, expected_value):
+    """
+    Test for calling stored procedure
+    """
+    actual = data_classification.classify_query(
+        date_from="2024-01-01", unset="FALSE", tagging_type="FULL"
+    )
+    assert expected_value in actual
