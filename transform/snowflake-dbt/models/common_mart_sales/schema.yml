@@ -17,6 +17,18 @@ models:
            masking_policy: analyst_sales_sensitive
       - name: partner_marketing_task_subject
         description: A non-pii field with the type of subject.
+      - name: sales_dev_rep_user_role_level_1
+        description: The Sales Dev Rep's role hierarchy level 1
+      - name: sales_dev_rep_user_role_level_2
+        description: The Sales Dev Rep's role hierarchy level 2
+      - name: sales_dev_rep_user_role_level_3
+        description: The Sales Dev Rep's role hierarchy level 3
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_full_name
+        description: The Sales Dev Rep's Full Name
 
   - name: mart_crm_event
     description: Record of all Salesforce Events related to leads, contact, accounts, and opportunities. 
@@ -169,6 +181,18 @@ models:
         description: The time/date stamp from SFDC when this record was created.
       - name: partner_marketing_task_subject
         description: A non-pii field with the type of subject.
+      - name: sales_dev_rep_user_role_level_1
+        description: The Sales Dev Rep's role hierarchy level 1
+      - name: sales_dev_rep_user_role_level_2
+        description: The Sales Dev Rep's role hierarchy level 2
+      - name: sales_dev_rep_user_role_level_3
+        description: The Sales Dev Rep's role hierarchy level 3
+      - name: sales_dev_rep_leader_full_name
+        description: The Sales Dev Rep's Leader's full name. 
+      - name: sales_dev_manager_full_name
+        description: The Sales Dev Rep's Manager's full name. 
+      - name: sales_dev_rep_user_full_name
+        description: The Sales Dev Rep's Full Name
 
   - name: rpt_scaffold_sales_funnel
     description: Scaffold table that provides a foundational structure between fct_sales_funnel_actual and fct_sales_funnel_target_daily to support the visualization layer. Link to handbook documentation on [scaffold tables](https://about.gitlab.com/handbook/business-technology/data-team/platform/edw/#scaffold-tables)
