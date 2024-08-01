@@ -411,7 +411,8 @@ class DataClassification:
         try:
             connection = self.__connect()
             res = connection.execute(statement=query)
-            info(F"RESULT OF THE QUERY: {res}")
+            for r in res:
+                info(F"RESULT OF THE QUERY: {r}")
         except Exception as e:
             error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")
