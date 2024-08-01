@@ -107,11 +107,11 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
-#@echo $(SQLFLUFF_COMMAND)
-	@pip install --force-reinstall -v sqlfluff==3.1.0
-	@sqlfluff --version
-	@dbt --version
-#@$(SQLFLUFF_COMMAND)
+	@echo $(SQLFLUFF_COMMAND)
+#@pip install --force-reinstall -v sqlfluff==3.1.0 sqlfluff-templater-dbt==3.1.0
+#@sqlfluff --version
+#@dbt --version
+	@$(SQLFLUFF_COMMAND)
 
 safe-check:
 	@echo "\n***** Getting List of un-SAFE Models *******\n"
