@@ -415,7 +415,7 @@ class DataClassification:
             # Logging stored procedure result
             if res:
                 for r in res:
-                    info(F"Return message: {r}")
+                    info(f"Return message: {r}")
         except Exception as e:
             error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")
