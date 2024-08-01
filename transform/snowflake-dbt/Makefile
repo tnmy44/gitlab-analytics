@@ -108,6 +108,7 @@ build-changes:
 
 lint-models:
 #@echo $(SQLFLUFF_COMMAND)
+	@pip install --force-reinstall -v sqlfluff==3.1.0
 	@sqlfluff --version
 	@dbt --version
 #@$(SQLFLUFF_COMMAND)
