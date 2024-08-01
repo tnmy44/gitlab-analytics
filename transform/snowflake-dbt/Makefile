@@ -107,7 +107,7 @@ build-changes:
 	@$(DBT_DEV_BUILD_CHANGES_BUILD_COMMAND) || (echo "Error in Build"; exit 5)
 
 lint-models:
-	@echo $(SQLFLUFF_COMMAND)
+#@echo $(SQLFLUFF_COMMAND)
 	@sqlfluff --version
 	@dbt --version
 #@$(SQLFLUFF_COMMAND)
