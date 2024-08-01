@@ -4,7 +4,7 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_charge', 'prep_charge_mrr'),
+    ('prep_charge', 'prep_charge'),
     ('dim_crm_account', 'dim_crm_account')
 ]) }}
 
