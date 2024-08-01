@@ -88,11 +88,11 @@
         (dbt_valid_FROM <= date_day AND dbt_valid_to > date_day) OR (dbt_valid_from <= date_day AND dbt_valid_to is null)
 
 
-    LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist ON
-    sfdc_bizible_attribution_touchpoint_snapshots_source.opportunity_id = mart_crm_opportunity_stamped_hierarchy_hist.DIM_CRM_OPPORTUNITY_ID
+    LEFT JOIN mart_crm_opportunity ON
+    sfdc_bizible_attribution_touchpoint_snapshots_source.opportunity_id = mart_crm_opportunity.DIM_CRM_OPPORTUNITY_ID
 
     WHERE 
-    snapshot_dates.fiscal_quarter_name_fy = mart_crm_opportunity_stamped_hierarchy_hist.pipeline_created_fiscal_quarter_name 
+    snapshot_dates.fiscal_quarter_name_fy = mart_crm_opportunity.pipeline_created_fiscal_quarter_name 
 
 )
 
