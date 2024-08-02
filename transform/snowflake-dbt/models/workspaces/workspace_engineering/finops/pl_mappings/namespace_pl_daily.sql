@@ -1,40 +1,47 @@
 WITH date_spine AS (
 
   SELECT date_day FROM {{ ref('dim_date') }}
-  WHERE date_day < GETDATE() AND date_day >= '2020-01-01'
+  WHERE date_day < GETDATE() AND date_day >= '2024-01-01'
 ),
 
 plan_ids AS (
 
   SELECT DISTINCT
     gitlab_plan_id,
-    CASE
+    FIRST_VALUE(CASE
       WHEN gitlab_plan_title = 'Default' THEN 'internal'
       WHEN gitlab_plan_is_paid = TRUE THEN 'paid'
       WHEN gitlab_plan_is_paid = FALSE THEN 'free'
-      ELSE 'internal' END AS gitlab_plan_title
-    FROM {{ ref('dim_namespace') }}
--- add namespace_is_internal to internal identification
+      ELSE 'internal'
+    END) OVER (PARTITION BY gitlab_plan_id ORDER BY IFF(gitlab_plan_is_paid = TRUE, 1, 0) DESC) AS gitlab_plan_title
+  FROM {{ ref('dim_namespace') }}
+
 ),
 
 dim_namespace_plan_hist AS (
 
-  SELECT * FROM {{ ref('dim_namespace_plan_hist') }}
+  SELECT
+    hist.*,
+    ns.namespace_is_internal -- add namespace_is_internal to internal identification
+  FROM {{ ref('dim_namespace_plan_hist') }} AS hist
+  LEFT JOIN {{ ref('dim_namespace') }} AS ns ON hist.dim_namespace_id = ns.dim_namespace_id
 
 ),
 
-internal AS (
-  SELECT DISTINCT namespace_id AS ultimate_parent_namespace_id
-  FROM {{ ref('internal_gitlab_namespaces') }}
-  WHERE namespace_id IS NOT NULL
+final AS (
+
+  SELECT
+    date_spine.date_day,
+    hist.dim_namespace_id,
+    hist.dim_plan_id,
+    CASE WHEN hist.namespace_is_internal THEN 'internal'
+      WHEN hist.is_trial = TRUE THEN 'free' ELSE plan_ids.gitlab_plan_title
+    END AS finance_pl
+  FROM date_spine
+  LEFT JOIN dim_namespace_plan_hist AS hist ON date_spine.date_day >= hist.valid_from AND date_spine.date_day < COALESCE(hist.valid_to, GETDATE())
+  LEFT JOIN plan_ids ON hist.dim_plan_id = plan_ids.gitlab_plan_id
+
 )
 
-SELECT
-  date_spine.date_day,
-  hist.dim_namespace_id,
-  hist.dim_plan_id,
-  COALESCE(plan_ids.gitlab_plan_title, 'internal') AS finance_pl
-FROM date_spine
-LEFT JOIN dim_namespace_plan_hist hist ON date_spine.date_day BETWEEN hist.valid_from AND COALESCE(hist.valid_to, GETDATE())
-LEFT JOIN plan_ids ON plan_ids.gitlab_plan_id = hist.dim_plan_id
-LEFT JOIN internal ON hist.dim_namespace_id = internal.ultimate_parent_namespace_id
+SELECT *
+FROM final
