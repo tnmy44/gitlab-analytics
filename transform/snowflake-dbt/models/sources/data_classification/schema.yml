@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: TBA
-    description: '{{ doc("TBA") }}'
+  - name: sensitive_queries_sources
+    description: '{{ doc("sensitive_queries_sources") }}'
     columns:
       - name: TBA
         data_tests:
