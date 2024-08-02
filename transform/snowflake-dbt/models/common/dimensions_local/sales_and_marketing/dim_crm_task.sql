@@ -1,16 +1,10 @@
-WITH prep_crm_task AS (
-
-  SELECT *
-  FROM {{ ref('prep_crm_task') }}
-  WHERE is_deleted = FALSE
-
-), final AS (
+WITH final AS (
 
 
   SELECT
 
     -- Surrogate key
-    prep_crm_task.dim_crm_task_sk,
+    prep_crm_task.dim_crm_task_sk, 
 
     -- Natural key
     prep_crm_task.task_id,
@@ -107,7 +101,8 @@ WITH prep_crm_task AS (
     prep_crm_task.is_opportunity_initiation_call_task,
     prep_crm_task.is_opportunity_followup_call_task
 
-    FROM prep_crm_task
+    FROM {{ ref('prep_crm_task') }}
+    WHERE is_deleted = FALSE
 
 
 )
@@ -115,7 +110,7 @@ WITH prep_crm_task AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2022-12-05",
-    updated_date="2024-05-17"
+    updated_date="2024-07-31"
 ) }}
