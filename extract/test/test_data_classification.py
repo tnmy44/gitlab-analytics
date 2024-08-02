@@ -9,8 +9,8 @@ import pytest
 from extract.data_classification.data_classification_utils import DataClassification
 
 
-@pytest.fixture
-def data_classification():
+@pytest.fixture(name="data_classification")
+def fixture_data_classification():
     """
     Create env variables and initialize
     DataClassification object
@@ -87,16 +87,16 @@ def test_get_mnpi_scope(mock_scope, data_classification):
         }
     }
     assert (
-        data_classification.get_mnpi_scope(
+            data_classification.get_mnpi_scope(
             "MNPI", "include", ["DB1", "SCHEMA1", "TABLE1"]
         )
-        is True
+            is True
     )
     assert (
-        data_classification.get_mnpi_scope(
+            data_classification.get_mnpi_scope(
             "MNPI", "include", ["DB2", "SCHEMA1", "TABLE1"]
         )
-        is False
+            is False
     )
 
 

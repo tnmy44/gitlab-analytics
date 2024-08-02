@@ -13,6 +13,8 @@ This code is needed to run for the first time to create needed objects:
 USE DATABASE RAW;
 USE SCHEMA data_classification;
 
+CREATE OR REPLACE TAG MNPI_DATA allowed_values 'no', 'yes' COMMENT='MNPI content flag';
+    
 CREATE OR REPLACE TABLE log_classification
 
 (
@@ -129,7 +131,7 @@ BEGIN
       BEGIN TRANSACTION; 
       BEGIN
 
-          -- EXECUTE IMMEDIATE l_query;
+          EXECUTE IMMEDIATE l_query;
           CALL log_me(p_log_text => 'CLASSIFIED: '||:l_full_table_name, 
                       p_log_level => 'INFO');
       EXCEPTION
