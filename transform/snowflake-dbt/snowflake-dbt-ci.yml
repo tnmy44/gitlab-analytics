@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -38,7 +38,7 @@
     - merge_requests
   when: manual
   artifacts:
-    name: "dbt Compiled Files and logs"  
+    name: "dbt Compiled Files and logs"
     paths:
       - public
       - transform/snowflake-dbt/logs
@@ -116,7 +116,7 @@
 
 
 📚✏️generate_dbt_docs:
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -160,7 +160,7 @@
     - cp -r target $CI_PROJECT_DIR/public/dbt/
   tags:
     - analytics
-  
+
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
   <<: *snowflake_dbt_jobs
@@ -219,7 +219,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -265,7 +265,7 @@
 
 .dbt_macro_check: &dbt_macro_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
   tags:
@@ -312,7 +312,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.6
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.7
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
