@@ -1,4 +1,4 @@
-{% docs sensitive_queries_sources %}
+{% docs sensitive_queries_source %}
 
 Source for sensitive queries for:
 * `PII`

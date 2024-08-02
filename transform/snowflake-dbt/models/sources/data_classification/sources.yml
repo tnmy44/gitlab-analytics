@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: data_classification
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: data_classification
+    schema: snowflake
     loader: Airflow
     tags: ["data_classification"]
 
@@ -14,8 +14,7 @@ sources:
       schema: false
       identifier: false
 
-
     tables:
-      - name: TBA
-        columns:
-          - name: TBA
+      - name: access_history
+      - name: tag_references
+      - name: query_history
