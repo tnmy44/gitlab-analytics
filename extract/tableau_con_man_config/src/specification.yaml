@@ -10085,31 +10085,13 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-    - user_name:  gyoung
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
     - user_name:  jbaumgardner
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
-    - user_name:  jmcdonnell
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
     - user_name:  nwestbury
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-    - user_name:  nprabakaran
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
