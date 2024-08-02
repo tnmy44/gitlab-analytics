@@ -1,7 +1,7 @@
 WITH date_spine AS (
 
   SELECT date_day FROM {{ ref('dim_date') }}
-  WHERE date_day < GETDATE() AND date_day >= '2024-01-01'
+  WHERE date_day < GETDATE() AND date_day >= '2020-01-01'
 ),
 
 plan_ids AS (
