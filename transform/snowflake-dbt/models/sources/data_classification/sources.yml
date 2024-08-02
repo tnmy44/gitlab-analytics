@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: data_classification
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: data_classification
+    loader: Airflow
+    tags: ["data_classification"]
+
+    loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+
+    tables:
+      - name: TBA
+        columns:
+          - name: TBA

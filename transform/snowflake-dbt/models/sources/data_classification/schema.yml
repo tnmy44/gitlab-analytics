@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: TBA
+    description: '{{ doc("TBA") }}'
+    columns:
+      - name: TBA
+        data_tests:
+          - not_null
+          - unique
