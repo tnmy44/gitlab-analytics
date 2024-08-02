@@ -87,16 +87,16 @@ def test_get_mnpi_scope(mock_scope, data_classification):
         }
     }
     assert (
-            data_classification.get_mnpi_scope(
+        data_classification.get_mnpi_scope(
             "MNPI", "include", ["DB1", "SCHEMA1", "TABLE1"]
         )
-            is True
+        is True
     )
     assert (
-            data_classification.get_mnpi_scope(
+        data_classification.get_mnpi_scope(
             "MNPI", "include", ["DB2", "SCHEMA1", "TABLE1"]
         )
-            is False
+        is False
     )
 
 
