@@ -243,27 +243,32 @@ class DataClassification:
 
         return f"AND ({res})"
 
+    def _get_pii_select_part_query(self, database_name:str):
+        """
+        Return SELECT part of the PII INSERT query to avoid repetition
+        """
+        section = "PII"
+        return (
+            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
+            f"  FROM {self.double_quoted(database_name)}.information_schema.tables "
+            f" WHERE table_schema != 'INFORMATION_SCHEMA' "
+        )
     @property
     def pii_query(self) -> str:
         """
         Property method for the query generated to define the scope
         for tagging PII data
         """
-        section = "PII"
+
         insert_statement = (
             f"INSERT INTO {self.schema_name}.{self.table_name}(classification_type, created, last_altered,last_ddl, database_name, schema_name, table_name, table_type, _uploaded_at) "
             f"WITH base AS ("
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM {self.double_quoted(self.raw)}.information_schema.tables "
-            f" WHERE table_schema != 'INFORMATION_SCHEMA' "
+            f"{self._get_pii_select_part_query(database_name=self.raw)} "
             f" UNION "
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM {self.double_quoted(self.prep)}.information_schema.tables "
-            f" WHERE table_schema != 'INFORMATION_SCHEMA' "
+            f"{self._get_pii_select_part_query(database_name=self.prep)} "
             f" UNION "
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM {self.double_quoted(self.prod)}.information_schema.tables"
-            f" WHERE table_schema != 'INFORMATION_SCHEMA') "
+            f"{self._get_pii_select_part_query(database_name=self.prod)} "
+            f") "
             f"SELECT *"
             f"  FROM base"
             f" WHERE 1=1 "
@@ -275,7 +280,7 @@ class DataClassification:
         res = f"{insert_statement}{where_clause_include}{where_clause_exclude}"
         return res
 
-    def get_mnpi_select_part_query(self, database_name:str):
+    def _get_mnpi_select_part_query(self, database_name:str):
         """
         Return SELECT part of the MNPI MERGE query to avoid repetition
         """
@@ -301,11 +306,11 @@ class DataClassification:
         return (
             f"MERGE INTO {self.schema_name}.{self.table_name} USING ( "
             f"WITH database_list AS (SELECT DISTINCT database_name FROM  {self.schema_name}.{self.table_name}) "
-            f"{self.get_mnpi_select_part_query(self.raw)} "
+            f"{self._get_mnpi_select_part_query(database_name=self.raw)} "
             " UNION "
-            f"{self.get_mnpi_select_part_query(self.prep)} "
+            f"{self._get_mnpi_select_part_query(database_name=self.prep)} "
             " UNION "
-            f"{self.get_mnpi_select_part_query(self.prod)} " 
+            f"{self._get_mnpi_select_part_query(database_name=self.prod)} " 
             f" AS full_table_list "
             f" ON full_table_list.classification_type                  = {self.table_name}.classification_type "
             f"AND full_table_list.table_catalog                        = {self.table_name}.database_name "

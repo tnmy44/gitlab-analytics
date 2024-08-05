@@ -87,13 +87,11 @@ def test_get_mnpi_scope(mock_scope, data_classification):
         }
     }
     assert (
-        data_classification.get_mnpi_scope("include", ["DB1", "SCHEMA1", "TABLE1"]
-        )
+        data_classification.get_mnpi_scope("include", ["DB1", "SCHEMA1", "TABLE1"])
         is True
     )
     assert (
-        data_classification.get_mnpi_scope("include", ["DB2", "SCHEMA1", "TABLE1"]
-        )
+        data_classification.get_mnpi_scope("include", ["DB2", "SCHEMA1", "TABLE1"])
         is False
     )
 
@@ -272,12 +270,30 @@ def test_classify_query(data_classification, expected_value):
 @pytest.mark.parametrize(
     "input_value, expected_value",
     [
-        ("RAW","RAW"),
-        ("PREP","PREP"),
-        ("PROD","PROD"),
-
+        ("RAW", "RAW"),
+        ("PREP", "PREP"),
+        ("PROD", "PROD"),
     ],
 )
 def test_get_mnpi_select_part_query(data_classification, input_value, expected_value):
-    actual = data_classification.get_mnpi_select_part_query(input_value)
+    """
+    Test get_mnpi_select_part_query
+    """
+    actual = data_classification._get_mnpi_select_part_query(input_value)
+    assert expected_value in actual
+
+
+@pytest.mark.parametrize(
+    "input_value, expected_value",
+    [
+        ("RAW", "RAW"),
+        ("PREP", "PREP"),
+        ("PROD", "PROD"),
+    ],
+)
+def test_get_pii_select_part_query(data_classification, input_value, expected_value):
+    """
+    Test get_pii_select_part_query
+    """
+    actual = data_classification._get_pii_select_part_query(input_value)
     assert expected_value in actual
