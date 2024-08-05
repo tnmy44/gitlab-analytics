@@ -87,14 +87,12 @@ def test_get_mnpi_scope(mock_scope, data_classification):
         }
     }
     assert (
-        data_classification.get_mnpi_scope(
-            "MNPI", "include", ["DB1", "SCHEMA1", "TABLE1"]
+        data_classification.get_mnpi_scope("include", ["DB1", "SCHEMA1", "TABLE1"]
         )
         is True
     )
     assert (
-        data_classification.get_mnpi_scope(
-            "MNPI", "include", ["DB2", "SCHEMA1", "TABLE1"]
+        data_classification.get_mnpi_scope("include", ["DB2", "SCHEMA1", "TABLE1"]
         )
         is False
     )
@@ -102,12 +100,12 @@ def test_get_mnpi_scope(mock_scope, data_classification):
 
 def test_filter_data(data_classification):
     """
-    Test filter_data
+    Test filter_mnpi_data
     """
     with patch.object(DataClassification, "get_mnpi_scope") as mock_get_mnpi_scope:
         mock_get_mnpi_scope.side_effect = [True, False]  # include True, exclude False
         input_data = [["DB1", "SCHEMA1", "TABLE1"]]
-        result = data_classification.filter_data(input_data)
+        result = data_classification.filter_mnpi_data(mnpi_data=input_data)
         assert result == [["MNPI", None, None, None, "DB1", "SCHEMA1", "TABLE1", None]]
 
 
@@ -118,7 +116,7 @@ def test_identify_mnpi_data(mock_dataframe, data_classification):
     """
     with patch.object(DataClassification, "load_mnpi_list") as mock_load:
         with patch.object(DataClassification, "transform_mnpi_list") as mock_transform:
-            with patch.object(DataClassification, "filter_data") as mock_filter:
+            with patch.object(DataClassification, "filter_mnpi_data") as mock_filter:
                 mock_load.return_value = [
                     {"config": {"database": "db", "schema": "schema"}, "alias": "table"}
                 ]

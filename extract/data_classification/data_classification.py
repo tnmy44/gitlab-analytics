@@ -350,11 +350,12 @@ class DataClassification:
             f"p_unset=> {self.quoted(unset)})"
         )
 
-    def get_mnpi_scope(self, section: str, scope_type: str, row: list) -> bool:
+    def get_mnpi_scope(self, scope_type: str, row: list) -> bool:
         """
         Define what is included and what is excluded for MNPI data
         DATABASE, SCHEMA and TABLE level
         """
+        section = "MNPI"
         scope = self.scope.get("data_classification").get(section).get(scope_type)
 
         databases = scope.get("databases")
@@ -382,19 +383,18 @@ class DataClassification:
 
         return False
 
-    def filter_data(self, mnpi_data: list, section: str = "MNPI") -> list:
+    def filter_mnpi_data(self, mnpi_data: list) -> list:
         """
         filtering data based on the configuration
         """
+        section = "MNPI"
         res = []
 
         for row in mnpi_data:
 
-            include = self.get_mnpi_scope(
-                section=section, scope_type="include", row=row
+            include = self.get_mnpi_scope(scope_type="include", row=row
             )
-            exclude = self.get_mnpi_scope(
-                section=section, scope_type="exclude", row=row
+            exclude = self.get_mnpi_scope(scope_type="exclude", row=row
             )
 
             if include and not exclude:
@@ -419,7 +419,7 @@ class DataClassification:
         """
         mnpi_list = self.load_mnpi_list()
         mnpi_data = self.transform_mnpi_list(mnpi_list=mnpi_list)
-        mnpi_data_filtered = self.filter_data(mnpi_data=mnpi_data, section="MNPI")
+        mnpi_data_filtered = self.filter_mnpi_data(mnpi_data=mnpi_data)
 
         columns = [
             "classification_type",
