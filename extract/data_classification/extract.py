@@ -16,7 +16,7 @@ def run_extract(
     date_from: str,
     unset: str = "FALSE",
     tagging_type: str = "INCREMENTAL",
-    incremental_load_days: int = 7,
+    incremental_load_days: int = 90,
 ):
     """
     Run process

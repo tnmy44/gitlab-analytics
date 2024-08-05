@@ -94,7 +94,7 @@ def get_command(task: str):
     else:
         operation = "CLASSIFY"
 
-    unset = Variable.get("DATA_CLASSIFICATION_UNSET", default_var="False")
+    unset = Variable.get("DATA_CLASSIFICATION_UNSET", default_var="FALSE")
     tagging_type = Variable.get(
         "DATA_CLASSIFICATION_TAGGING_TYPE", default_var="INCREMENTAL"
     )
