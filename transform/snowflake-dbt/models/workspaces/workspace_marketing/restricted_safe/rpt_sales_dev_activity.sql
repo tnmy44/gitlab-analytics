@@ -567,7 +567,7 @@
     opportunity_snapshot_hierarchy.dim_crm_user_id AS sales_dev_rep_user_id,
     opportunity_snapshot_hierarchy.sales_dev_rep_role_name,
     opportunity_snapshot_hierarchy.sales_dev_rep_email,
-    opportunity_snapshot_hierarchy.sales_dev_rep_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_user_full_name,
     opportunity_snapshot_hierarchy.sales_dev_rep_title,
     opportunity_snapshot_hierarchy.sales_dev_rep_department,
     opportunity_snapshot_hierarchy.sales_dev_rep_team,
