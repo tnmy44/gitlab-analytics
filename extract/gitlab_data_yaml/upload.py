@@ -195,15 +195,15 @@ def curl_and_upload(
 
 if __name__ == "__main__":
 
-    for key, value in FILE_MAPPINGS["handbook_dict"].items():
+    for key, value in FILE_MAPPINGS["handbook"].items():
         curl_and_upload(
             table_to_upload=key, file_name=value + ".yml", base_url=HANDBOOK_URL
         )
 
-    for key, value in FILE_MAPPINGS["pi_file_dict"].items():
+    for key, value in FILE_MAPPINGS["pi_file"].items():
         curl_and_upload(table_to_upload=key, file_name=value + ".yml", base_url=PI_URL)
 
-    for key, value in FILE_MAPPINGS["pi_internal_hb_file_dict"].items():
+    for key, value in FILE_MAPPINGS["pi_internal_hb_file"].items():
         request_download_decode_upload(
             table_to_upload=key,
             file_name=value,
@@ -212,7 +212,7 @@ if __name__ == "__main__":
             suffix_url="%2Eyml?ref=main",
         )
 
-    for key, value in FILE_MAPPINGS["comp_calc_dict"].items():
+    for key, value in FILE_MAPPINGS["comp_calc"].items():
         curl_and_upload(
             table_to_upload=key,
             file_name=value,
@@ -220,7 +220,7 @@ if __name__ == "__main__":
             private_token=gitlab_analytics_private_token,
         )
 
-    for key, value in FILE_MAPPINGS["cloud_connector_dict"].items():
+    for key, value in FILE_MAPPINGS["cloud_connector"].items():
         curl_and_upload(
             table_to_upload=key,
             file_name=value,
