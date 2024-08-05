@@ -160,15 +160,19 @@ if __name__ == "__main__":
     curl_and_upload("team", "team.yml", TEAM_URL)
     curl_and_upload("usage_ping_metrics", "", USAGE_PING_METRICS_URL)
 
-    cloud_connectors = {
+    cloud_connector = {
+        "cloud_connector": "cloud_connector",
+        "access_data": "access_data",
+    }
+    cloud_connector_urls = {
         "cloud_connector": "https://gitlab.com/api/v4/projects/2670515/repository/files/config%2F",
         "access_data": "https://gitlab.com/api/v4/projects/278964/repository/files/ee%2Fconfig%2Fcloud_connector%2F",
     }
 
-    for key, value in cloud_connectors.items():
+    for table_name, file_name in cloud_connector.items():
         curl_and_upload(
-            table_name=key,
-            file_name=key,
-            base_url=value,
+            table_name=file_name,
+            file_name=file_name,
+            base_url=cloud_connector_urls[file_name],
             private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
         )
