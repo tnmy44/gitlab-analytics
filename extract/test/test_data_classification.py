@@ -170,7 +170,7 @@ def test_get_pii_scope_include(mock_scope, data_classification, expected_value):
             }
         }
     }
-    result = data_classification.get_pii_scope("PII", "include")
+    result = data_classification.get_pii_scope(scope_type="include")
     assert expected_value in result
 
 
@@ -202,7 +202,7 @@ def test_get_pii_scope_exclude(mock_scope, data_classification, expected_value):
             },
         }
     }
-    result = data_classification.get_pii_scope("PII", "exclude")
+    result = data_classification.get_pii_scope(scope_type="exclude")
     assert expected_value in result
 
 

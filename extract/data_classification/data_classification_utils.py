@@ -131,12 +131,12 @@ class DataClassification:
 
         return [extract_full_path(x) for x in mnpi_list]
 
-    def get_pii_scope(self, section: str, scope_type: str) -> str:
+    def get_pii_scope(self, scope_type: str) -> str:
         """
         Get the WHERE clause for the PII data
         """
         res = ""
-        scope = self.scope.get("data_classification").get(section).get(scope_type)
+        scope = self.scope.get("data_classification").get("PII").get(scope_type)
         databases = scope.get("databases")
         schemas = scope.get("schemas")
         tables = scope.get("tables")
@@ -211,8 +211,8 @@ class DataClassification:
             f" WHERE 1=1 "
         )
 
-        where_clause_include = self.get_pii_scope(section=section, scope_type="include")
-        where_clause_exclude = self.get_pii_scope(section=section, scope_type="exclude")
+        where_clause_include = self.get_pii_scope(scope_type="include")
+        where_clause_exclude = self.get_pii_scope(scope_type="exclude")
 
         res = f"{insert_statement}{where_clause_include}{where_clause_exclude}"
         return res
