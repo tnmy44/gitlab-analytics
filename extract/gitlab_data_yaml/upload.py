@@ -1,21 +1,19 @@
 """Source code to perform extraction of YAML file from Gitlab handbook, internal handbook, comp calculator"""
 
+import base64
+import json
 import logging
 import subprocess
 import sys
-import base64
-import json
-from os import environ as env
 import traceback
+from os import environ as env
+
 import requests
 import yaml
-
-
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
-
 
 if __name__ == "__main__":
     handbook_dict = dict(categories="categories", stages="stages", releases="releases")
@@ -39,9 +37,6 @@ if __name__ == "__main__":
         product_pi="product",
         sales_pi="sales",
         security_department_pi="security_division",
-        # recruiting_pi="recruiting",
-        # secure_and_protect_section_pi="secure_and_protect_section",
-        # corporate_finance_pi="corporate_finance",
     )
 
     comp_calc_dict = dict(
@@ -164,3 +159,16 @@ if __name__ == "__main__":
 
     curl_and_upload("team", "team.yml", TEAM_URL)
     curl_and_upload("usage_ping_metrics", "", USAGE_PING_METRICS_URL)
+
+    cloud_connectors = {
+        "cloud_connector": "https://gitlab.com/api/v4/projects/2670515/repository/files/config%2F",
+        "access_data": "https://gitlab.com/api/v4/projects/278964/repository/files/ee%2Fconfig%2Fcloud_connector%2F",
+    }
+
+    for key, value in cloud_connectors.items():
+        curl_and_upload(
+            table_name=key,
+            file_name=key,
+            base_url=value,
+            private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+        )
