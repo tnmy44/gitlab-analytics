@@ -267,3 +267,17 @@ def test_classify_query(data_classification, expected_value):
         date_from="2024-01-01", unset="FALSE", tagging_type="FULL"
     )
     assert expected_value in actual
+
+
+@pytest.mark.parametrize(
+    "input_value, expected_value",
+    [
+        ("RAW","RAW"),
+        ("PREP","PREP"),
+        ("PROD","PROD"),
+
+    ],
+)
+def test_get_mnpi_select_part_query(data_classification, input_value, expected_value):
+    actual = data_classification.get_mnpi_select_part_query(input_value)
+    assert expected_value in actual
