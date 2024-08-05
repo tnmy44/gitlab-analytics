@@ -118,10 +118,10 @@ class DataClassification:
         Transform MNPI list to uppercase in a proper format
         """
 
-        def extract_full_path(x: dict) -> List[str]:
-            database_name = x["config"]["database"].upper()
-            schema_name = x["config"]["schema"].upper()
-            alias = x["alias"].upper()
+        def extract_full_path(configuration: dict) -> List[str]:
+            database_name = configuration["config"]["database"].upper()
+            schema_name = configuration["config"]["schema"].upper()
+            alias = configuration["alias"].upper()
 
             return [
                 database_name,
@@ -133,7 +133,53 @@ class DataClassification:
 
     def get_pii_scope(self, scope_type: str) -> str:
         """
-        Get the WHERE clause for the PII data
+        This method get_pii_scope is responsible for generating a SQL WHERE clause for filtering
+        PII (Personally Identifiable Information) data based on specified scopes.
+        The method takes one parameter:
+            scope_type: Determines whether to include or exclude data ("include" or "exclude")
+
+        Get the WHERE clause for the PII data, as the scope type can be included/excluded, both logic is supported.
+
+        The specification file (specification.yml) is exposed in the format
+          PII:
+            description: "PII data classification"
+            include:
+              databases:
+                - PREP
+                - RAW
+                - PROD
+              schemas:
+                - PREP.*
+                - RAW.*
+                - PROD.*
+
+              tables:
+                - PREP.*.*
+                - RAW.*.*
+                - PROD.*.*
+            exclude:
+              databases:
+                - NONE
+              schemas:
+                - NONE.*
+              tables:
+                - NONE.*.*
+        and based on this logic, the WHERE clause of the SQL statement is generated bot for include and exclude clauses
+        include - this section is mandatory to be specified in the specification.yml
+        exclude - this section is optional
+
+        The method then builds the WHERE clause in three parts:
+
+        a. For databases:
+            If databases are specified, it creates a condition to include/exclude those databases.
+        b. For schemas:
+            If schemas are specified, it adds conditions for each schema.
+            It handles wildcards (*) in schema names, using ILIKE for pattern matching.
+        c. For tables:
+            If tables are specified, it adds conditions for each table.
+            It handles wildcards (*) in table names, supporting both single and double wildcard patterns.
+
+        Finally, it returns the complete WHERE clause as a string, prefixed with "AND" (or "NOT" if the scope is "excluded") and enclosed in parentheses.
         """
         res = ""
         scope = self.scope.get("data_classification").get("PII").get(scope_type)
@@ -142,9 +188,15 @@ class DataClassification:
         tables = scope.get("tables")
         exclude_statement = "NOT" if scope_type == "exclude" else ""
 
+        # Create part of the WHERE clause for databases
+        # Result is in format: table_catalog [NOT] IN ('RAW','PREP')
         if databases:
             res = f" (table_catalog {exclude_statement} IN ({', '.join(self.quoted(x) for x in databases)}))"
 
+        # Create part of the WHERE clause for schemas
+        # Result is in format:
+        #     RAW.*        -> table_catalog = 'RAW' AND table_schema ILIKE '%'
+        #     RAW.SCHEMA_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A'
         if schemas:
             res += " AND"
 
@@ -164,6 +216,12 @@ class DataClassification:
 
                 if i < len(schemas):
                     res += " OR"
+
+        # Create part of the WHERE clause for tables
+        # Result is in format:
+        #     RAW.*.*              -> table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%'
+        #     RAW.SCHEMA_A.*       -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%'
+        #     RAW.SCHEMA_A.TABLE_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name = 'TABLE_A'
         if tables:
             res += " AND"
             if exclude_statement:
