@@ -243,7 +243,7 @@ class DataClassification:
 
         return f"AND ({res})"
 
-    def _get_pii_select_part_query(self, database_name:str):
+    def _get_pii_select_part_query(self, database_name: str):
         """
         Return SELECT part of the PII INSERT query to avoid repetition
         """
@@ -253,6 +253,7 @@ class DataClassification:
             f"  FROM {self.double_quoted(database_name)}.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
         )
+
     @property
     def pii_query(self) -> str:
         """
@@ -280,7 +281,7 @@ class DataClassification:
         res = f"{insert_statement}{where_clause_include}{where_clause_exclude}"
         return res
 
-    def _get_mnpi_select_part_query(self, database_name:str):
+    def _get_mnpi_select_part_query(self, database_name: str):
         """
         Return SELECT part of the MNPI MERGE query to avoid repetition
         """
@@ -296,8 +297,8 @@ class DataClassification:
             f"  FROM {self.double_quoted(database_name)}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
-
         )
+
     @property
     def mnpi_metadata_update_query(self) -> str:
         """
@@ -310,7 +311,7 @@ class DataClassification:
             " UNION "
             f"{self._get_mnpi_select_part_query(database_name=self.prep)} "
             " UNION "
-            f"{self._get_mnpi_select_part_query(database_name=self.prod)} " 
+            f"{self._get_mnpi_select_part_query(database_name=self.prod)} "
             f" AS full_table_list "
             f" ON full_table_list.classification_type                  = {self.table_name}.classification_type "
             f"AND full_table_list.table_catalog                        = {self.table_name}.database_name "
@@ -387,10 +388,8 @@ class DataClassification:
 
         for row in mnpi_data:
 
-            include = self.get_mnpi_scope(scope_type="include", row=row
-            )
-            exclude = self.get_mnpi_scope(scope_type="exclude", row=row
-            )
+            include = self.get_mnpi_scope(scope_type="include", row=row)
+            exclude = self.get_mnpi_scope(scope_type="exclude", row=row)
 
             if include and not exclude:
                 null_value = None
