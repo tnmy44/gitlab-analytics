@@ -129,7 +129,7 @@ def request_download_decode_upload(
 
         info(f"Uploading to {file_name}.json to Snowflake stage.")
 
-        upload_to_snowflake(file_for_upload=file_name, table=table_name)
+        upload_to_snowflake(file_for_upload=json_file_name, table=table_name)
     else:
         error(
             f"The file for {file_name} is either empty or the location has changed investigate"
@@ -187,7 +187,7 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
 
     info(f"Uploading to {json_file_name}.json to Snowflake stage.")
 
-    upload_to_snowflake(file_for_upload=file_name, table=table_name)
+    upload_to_snowflake(file_for_upload=json_file_name, table=table_name)
 
 
 if __name__ == "__main__":
