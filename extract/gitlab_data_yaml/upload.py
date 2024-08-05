@@ -41,38 +41,41 @@ CLOUD_CONNECTOR_URLS = {
 }
 
 # File settings
-handbook_dict = {"categories": "categories", "stages": "stages", "releases": "releases"}
-
-pi_file_dict = {
-    "chief_of_staff_team_pi": "chief_of_staff_team",
-    "customer_support_pi": "customer_support_department",
-    "development_department_pi": "development_department",
-    "engineering_function_pi": "engineering_function",
-    "finance_team_pi": "finance_team",
-    "infrastructure_department_pi": "infrastructure_department",
-    "marketing_pi": "marketing",
-    "people_success_pi": "people_success",
-    "ux_department_pi": "ux_department",
-}
-
-pi_internal_hb_file_dict = {
-    "dev_section_pi": "dev_section",
-    "core_platform_section_pi": "core_platform_section",
-    "ops_section_pi": "ops_section",
-    "product_pi": "product",
-    "sales_pi": "sales",
-    "security_department_pi": "security_division",
-}
-
-comp_calc_dict = {
-    "location_factors": "location_factors",
-    "roles": "job_families",
-    "geo_zones": "geo_zones",
-}
-
-cloud_connector_dict = {
-    "cloud_connector": "cloud_connector",
-    "access_data": "access_data",
+# File settings
+FILE_MAPPINGS = {
+    "handbook": {
+        "categories": "categories",
+        "stages": "stages",
+        "releases": "releases",
+    },
+    "pi_file": {
+        "chief_of_staff_team_pi": "chief_of_staff_team",
+        "customer_support_pi": "customer_support_department",
+        "development_department_pi": "development_department",
+        "engineering_function_pi": "engineering_function",
+        "finance_team_pi": "finance_team",
+        "infrastructure_department_pi": "infrastructure_department",
+        "marketing_pi": "marketing",
+        "people_success_pi": "people_success",
+        "ux_department_pi": "ux_department",
+    },
+    "pi_internal_hb_file": {
+        "dev_section_pi": "dev_section",
+        "core_platform_section_pi": "core_platform_section",
+        "ops_section_pi": "ops_section",
+        "product_pi": "product",
+        "sales_pi": "sales",
+        "security_department_pi": "security_division",
+    },
+    "comp_calc": {
+        "location_factors": "location_factors",
+        "roles": "job_families",
+        "geo_zones": "geo_zones",
+    },
+    "cloud_connector": {
+        "cloud_connector": "cloud_connector",
+        "access_data": "access_data",
+    },
 }
 
 
@@ -91,7 +94,7 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
 
 
 def request_download_decode_upload(
-    table_name: str,
+    table_to_upload: str,
     file_name: str,
     base_url: str,
     private_token=None,
@@ -127,7 +130,7 @@ def request_download_decode_upload(
         with open(f"{file_name}.json", "w", encoding="UTF-8") as file_name_json:
             json.dump(output_json_request, file_name_json, indent=4)
 
-        upload_to_snowflake(file_for_upload=f"{file_name}.json", table=table_name)
+        upload_to_snowflake(file_for_upload=f"{file_name}.json", table=table_to_upload)
     else:
         error(
             f"The file for {file_name} is either empty or the location has changed investigate"
@@ -165,7 +168,9 @@ def run_subprocess(command: str, file: str) -> None:
         )
 
 
-def curl_and_upload(table_name: str, file_name: str, base_url: str, private_token=None):
+def curl_and_upload(
+    table_to_upload: str, file_name: str, base_url: str, private_token=None
+):
     """
     The function uses curl to download the file and convert the YAML to JSON.
     Then upload the JSON file to external stage and then load it snowflake.
@@ -185,43 +190,47 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
 
     info(f"Uploading to {json_file_name}.json to Snowflake stage.")
 
-    upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_name)
+    upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_to_upload)
 
 
 if __name__ == "__main__":
 
-    for key, value in handbook_dict.items():
-        curl_and_upload(table_name=key, file_name=value + ".yml", base_url=HANDBOOK_URL)
+    for key, value in FILE_MAPPINGS["handbook_dict"].items():
+        curl_and_upload(
+            table_to_upload=key, file_name=value + ".yml", base_url=HANDBOOK_URL
+        )
 
-    for key, value in pi_file_dict.items():
-        curl_and_upload(table_name=key, file_name=value + ".yml", base_url=PI_URL)
+    for key, value in FILE_MAPPINGS["pi_file_dict"].items():
+        curl_and_upload(table_to_upload=key, file_name=value + ".yml", base_url=PI_URL)
 
-    for key, value in pi_internal_hb_file_dict.items():
+    for key, value in FILE_MAPPINGS["pi_internal_hb_file_dict"].items():
         request_download_decode_upload(
-            table_name=key,
+            table_to_upload=key,
             file_name=value,
             base_url=PI_INTERNAL_HB_URL,
             private_token=gitlab_in_hb_token,
             suffix_url="%2Eyml?ref=main",
         )
 
-    for key, value in comp_calc_dict.items():
+    for key, value in FILE_MAPPINGS["comp_calc_dict"].items():
         curl_and_upload(
-            table_name=key,
+            table_to_upload=key,
             file_name=value,
             base_url=COMP_CALC_URL,
             private_token=gitlab_analytics_private_token,
         )
 
-    curl_and_upload(table_name="team", file_name="team.yml", base_url=TEAM_URL)
-    curl_and_upload(
-        table_name="usage_ping_metrics", file_name="", base_url=USAGE_PING_METRICS_URL
-    )
-
-    for table_name, file_name in cloud_connector_dict.items():
+    for key, value in FILE_MAPPINGS["cloud_connector_dict"].items():
         curl_and_upload(
-            table_name=file_name,
-            file_name=file_name,
-            base_url=CLOUD_CONNECTOR_URLS[file_name],
+            table_to_upload=key,
+            file_name=value,
+            base_url=CLOUD_CONNECTOR_URLS[value],
             private_token=gitlab_analytics_private_token,
         )
+
+    curl_and_upload(table_to_upload="team", file_name="team.yml", base_url=TEAM_URL)
+    curl_and_upload(
+        table_to_upload="usage_ping_metrics",
+        file_name="",
+        base_url=USAGE_PING_METRICS_URL,
+    )
