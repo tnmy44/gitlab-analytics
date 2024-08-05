@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from extract.data_classification.data_classification_utils import DataClassification
+from extract.data_classification.data_classification import DataClassification
 
 
 @pytest.fixture(name="data_classification")

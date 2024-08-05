@@ -7,7 +7,7 @@ import sys
 from datetime import datetime, timedelta
 from logging import basicConfig, info
 
-from data_classification_utils import DataClassification
+from data_classification import DataClassification
 from fire import Fire
 
 
