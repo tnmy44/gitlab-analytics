@@ -8,10 +8,10 @@ Source code to perform extraction of YAML files from:
 
 import base64
 import json
-import logging
 import subprocess
 import sys
 import traceback
+from logging import basicConfig, error, info
 from os import environ as env
 
 import requests
@@ -23,7 +23,7 @@ from gitlabdata.orchestration_utils import (
 
 # Configuration
 config_dict = env.copy()
-logging.basicConfig(stream=sys.stdout, level=20)
+basicConfig(stream=sys.stdout, level=20)
 snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 gitlab_in_hb_token = env.get("GITLAB_INTERNAL_HANDBOOK_TOKEN")
 gitlab_analytics_private_token = config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
@@ -80,12 +80,14 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     """
     Upload json file to Snowflake
     """
+    info(f"....Start uploading to Snowflake, file: {file_for_upload}")
     snowflake_stage_load_copy_remove(
-        f"{file_for_upload}.json",
-        "gitlab_data_yaml.gitlab_data_yaml_load",
-        f"gitlab_data_yaml.{table}",
-        snowflake_engine,
+        file=f"{file_for_upload}.json",
+        stage="gitlab_data_yaml.gitlab_data_yaml_load",
+        table_path="gitlab_data_yaml.{table}",
+        engine=snowflake_engine,
     )
+    info(f"....End uploading to Snowflake, file: {file_for_upload}")
 
 
 def request_download_decode_upload(
@@ -101,7 +103,7 @@ def request_download_decode_upload(
     it to external stage of snowflake. Once the file gets loaded it will be deleted from external stage.
     This function can be extended but for now this used for the decoding the encoded content
     """
-    logging.info(f"Downloading {file_name} to {file_name}.json file.")
+    info(f"Downloading {file_name} to {file_name}.json file.")
 
     # Check if there is private token issued for the URL
     if private_token:
@@ -125,11 +127,11 @@ def request_download_decode_upload(
         with open(f"{file_name}.json", "w", encoding="UTF-8") as file_name_json:
             json.dump(output_json_request, file_name_json, indent=4)
 
-        logging.info(f"Uploading to {file_name}.json to Snowflake stage.")
+        info(f"Uploading to {file_name}.json to Snowflake stage.")
 
         upload_to_snowflake(file_for_upload=file_name, table=table_name)
     else:
-        logging.error(
+        error(
             f"The file for {file_name} is either empty or the location has changed investigate"
         )
 
@@ -150,7 +152,7 @@ def get_json_file_name(input_file: str) -> str:
     return res
 
 
-def run_subprocess(command: str) -> None:
+def run_subprocess(command: str, file: str) -> None:
     """
     Run subprocess in a separate function
 
@@ -160,8 +162,8 @@ def run_subprocess(command: str) -> None:
         process_check.check_returncode()
     except IOError:
         traceback.print_exc()
-        logging.error(
-            f"The file for {file_name} is either empty or the location has changed investigate"
+        error(
+            f"The file for {file} is either empty or the location has changed investigate"
         )
 
 
@@ -173,7 +175,7 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
     """
     json_file_name = get_json_file_name(input_file=file_name)
 
-    logging.info(f"Downloading {file_name} to {json_file_name}.json file.")
+    info(f"Downloading {file_name} to {json_file_name}.json file.")
 
     if private_token:
         header = f'--header "PRIVATE-TOKEN: {private_token}"'
@@ -181,9 +183,9 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
     else:
         command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
-    run_subprocess(command=command)
+    run_subprocess(command=command, file=file_name)
 
-    logging.info(f"Uploading to {json_file_name}.json to Snowflake stage.")
+    info(f"Uploading to {json_file_name}.json to Snowflake stage.")
 
     upload_to_snowflake(file_for_upload=file_name, table=table_name)
 
@@ -191,15 +193,18 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
 if __name__ == "__main__":
 
     for key, value in handbook_dict.items():
-        curl_and_upload(key, value + ".yml", HANDBOOK_URL)
+        curl_and_upload(table_name=key, file_name=value + ".yml", base_url=HANDBOOK_URL)
 
     for key, value in pi_file_dict.items():
-        curl_and_upload(key, value + ".yml", PI_URL)
+        curl_and_upload(table_name=key, file_name=value + ".yml", base_url=PI_URL)
 
-    # Iterate over Internal handbook
     for key, value in pi_internal_hb_file_dict.items():
         request_download_decode_upload(
-            key, value, PI_INTERNAL_HB_URL, gitlab_in_hb_token, "%2Eyml?ref=main"
+            table_name=key,
+            file_name=value,
+            base_url=PI_INTERNAL_HB_URL,
+            private_token=gitlab_in_hb_token,
+            suffix_url="%2Eyml?ref=main",
         )
 
     for key, value in comp_calc_dict.items():
