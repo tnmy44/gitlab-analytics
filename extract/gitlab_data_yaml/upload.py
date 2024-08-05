@@ -187,7 +187,7 @@ def curl_and_upload(table_name: str, file_name: str, base_url: str, private_toke
 
     info(f"Uploading to {json_file_name}.json to Snowflake stage.")
 
-    upload_to_snowflake(file_for_upload=json_file_name, table=table_name)
+    upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_name)
 
 
 if __name__ == "__main__":
