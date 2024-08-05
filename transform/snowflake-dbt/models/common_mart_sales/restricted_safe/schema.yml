@@ -79,14 +79,6 @@ models:
         description: Categorizes Zuora products as either Add On Services or Base Products
       - name: product_rate_plan_category
         description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce.
-      - name: child_account_base_arr
-        description: ARR of the child account on its base products
-      - name: child_arr_rank
-        description: ARR Rank of the child account over arr_month
-      - name: is_top_100_child_account_by_arr_month
-        description: boolean flag to identify whether the child account is in Top 100 calculated month over month
-      - name: is_top_100_child_account_fy25_start
-        description: boolean flag to identify whether the child account belongs to Top 100 as of 2024-01-31 (FY25 Start)
 
   - name: mart_arr_jihu
     description: '{{ doc("mart_arr_jihu") }}'
@@ -921,14 +913,6 @@ models:
         description: Categorizes Zuora products as either Add On Services or Base Products
       - name: product_rate_plan_category
         description: On created opportunities (Web store/Sales assisted), the Product category field is be populated at the Rate plan level in Salesforce. Aides identification of Agile Planning and Duo Pro SKUs, flowing from salesforce.
-      - name: child_account_base_arr
-        description: ARR of the child account on its base products
-      - name: child_arr_rank
-        description: ARR Rank of the child account over arr_month
-      - name: is_top_100_child_account_by_arr_month
-        description: boolean flag to identify whether the child account is in Top 100 calculated month over month
-      - name: is_top_100_child_account_fy25_start
-        description: boolean flag to identify whether the child account belongs to Top 100 as of 2024-01-31 (FY25 Start)
   
   - name: mart_targets_actuals_7th_day_weekly_snapshot
     columns: 
