@@ -82,9 +82,9 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     """
     info(f"....Start uploading to Snowflake, file: {file_for_upload}")
     snowflake_stage_load_copy_remove(
-        file=f"{file_for_upload}.json",
+        file=file_for_upload,
         stage="gitlab_data_yaml.gitlab_data_yaml_load",
-        table_path="gitlab_data_yaml.{table}",
+        table_path=F"gitlab_data_yaml.{table}",
         engine=snowflake_engine,
     )
     info(f"....End uploading to Snowflake, file: {file_for_upload}")
@@ -126,8 +126,6 @@ def request_download_decode_upload(
         # write to the Json file
         with open(f"{file_name}.json", "w", encoding="UTF-8") as file_name_json:
             json.dump(output_json_request, file_name_json, indent=4)
-
-        info(f"Uploading to {file_name}.json to Snowflake stage.")
 
         upload_to_snowflake(file_for_upload=f"{file_name}.json", table=table_name)
     else:
