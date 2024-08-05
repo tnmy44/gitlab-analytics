@@ -44,6 +44,8 @@
       referer_url,
       page_url_scheme,
       referer_url_scheme,
+      REGEXP_REPLACE(page_url, '^https?:\/\/')                                      AS page_url_host_path,
+      REGEXP_REPLACE(referer_url, '^https?:\/\/')                                   AS referer_url_host_path,
       IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
       IFNULL(geo_country, 'Unknown')::VARCHAR                                       AS user_country,
       IFNULL(geo_region, 'Unknown')::VARCHAR                                        AS user_region,
@@ -64,8 +66,16 @@
       {{ dbt_utils.generate_surrogate_key(['event_id','page_view_end_at']) }}                    AS fct_behavior_website_page_view_sk,
 
       -- Foreign Keys
-      {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
-      {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
+      {{ dbt_utils.generate_surrogate_key([
+          'page_url_host_path',
+          'app_id',
+          'page_url_scheme'
+        ]) }}                                                                                    AS dim_behavior_website_page_sk,
+      {{ dbt_utils.generate_surrogate_key([
+          'referer_url_host_path', 
+          'app_id', 
+          'referer_url_scheme'
+        ]) }}                                                                                    AS dim_behavior_referrer_page_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
