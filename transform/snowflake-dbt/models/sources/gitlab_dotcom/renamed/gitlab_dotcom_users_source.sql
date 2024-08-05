@@ -106,7 +106,7 @@ final AS (
       'Service Account',
       'LLM Bot',
       'Duo Code Review Bot'
-     ), 1, 0)                     AS is_bot
+     ), 1, 0)::BOOLEAN                 AS is_bot
   FROM renamed
 
 )
