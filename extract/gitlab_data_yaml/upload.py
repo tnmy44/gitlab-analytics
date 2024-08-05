@@ -84,7 +84,7 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     snowflake_stage_load_copy_remove(
         file=file_for_upload,
         stage="gitlab_data_yaml.gitlab_data_yaml_load",
-        table_path=F"gitlab_data_yaml.{table}",
+        table_path=f"gitlab_data_yaml.{table}",
         engine=snowflake_engine,
     )
     info(f"....End uploading to Snowflake, file: {file_for_upload}")
