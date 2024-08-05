@@ -15,10 +15,3 @@ models:
         data_tests:
           - not_null
           - unique
-  - name: rpt_product_usage_health_score_with_arr
-    description: Joined table between rpt_product_usage_health_score and mart_arr_all to calculate instance attributed ARR. This model powers Account Landscape dashboard in Tableau
-    columns:
-      - name: primary_key
-        data_tests:
-          - not_null
-          - unique
