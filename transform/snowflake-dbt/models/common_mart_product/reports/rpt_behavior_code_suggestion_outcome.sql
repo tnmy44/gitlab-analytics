@@ -162,6 +162,16 @@ suggestion_level AS (
     requested.crm_account_names,
     requested.namespace_is_internal,
     requested.product_deployment_type,
+    requested.gsc_instance_version,
+    requested.total_context_size_bytes,
+    requested.content_above_cursor_size_bytes,
+    requested.content_below_cursor_size_bytes,
+    requested.context_items,
+    requested.context_items_count,
+    requested.input_tokens,
+    requested.output_tokens,
+    requested.context_tokens_sent,
+    requested.context_tokens_used,
 
     --model_engine, model_name, accepted_option, suggestion_source, and options_count, is_direct_connection are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
     accepted.accepted_option,
@@ -247,6 +257,6 @@ suggestion_level AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-04-09",
-    updated_date="2024-06-28"
+    updated_date="2024-08-06"
 ) }}
 

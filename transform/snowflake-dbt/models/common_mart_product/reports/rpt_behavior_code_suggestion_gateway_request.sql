@@ -27,6 +27,7 @@ WITH gitlab_ai_gateway_request_events AS (
     prefix_length,
     suffix_length,
     is_direct_connection,
+    gsc_instance_version,
 
     --attribution properties
     gitlab_global_user_id,
