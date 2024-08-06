@@ -168,12 +168,8 @@ suggestion_level AS (
     requested.content_below_cursor_size_bytes,
     requested.context_items,
     requested.context_items_count,
-    requested.input_tokens,
-    requested.output_tokens,
-    requested.context_tokens_sent,
-    requested.context_tokens_used,
 
-    --model_engine, model_name, accepted_option, suggestion_source, and options_count, is_direct_connection are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
+    --Fields that are not available on requested event. If not limited to a single possible event type, default to loaded event, fall back to others to maximize coverage
     accepted.accepted_option,
     COALESCE(loaded.model_engine, shown.model_engine, 
       accepted.model_engine, rejected.model_engine, 
@@ -190,6 +186,18 @@ suggestion_level AS (
     COALESCE(loaded.is_direct_connection, shown.is_direct_connection, 
       accepted.is_direct_connection, rejected.is_direct_connection, 
       cancelled.is_direct_connection)                                                               AS is_direct_connection,
+    COALESCE(loaded.input_tokens, shown.input_tokens, 
+      accepted.input_tokens, rejected.input_tokens, 
+      cancelled.input_tokens)                                                                       AS input_tokens,
+    COALESCE(loaded.output_tokens, shown.output_tokens, 
+      accepted.output_tokens, rejected.output_tokens, 
+      cancelled.output_tokens)                                                                      AS output_tokens,
+    COALESCE(loaded.context_tokens_sent, shown.context_tokens_sent, 
+      accepted.context_tokens_sent, rejected.context_tokens_sent, 
+      cancelled.context_tokens_sent)                                                                AS context_tokens_sent,
+    COALESCE(loaded.context_tokens_used, shown.context_tokens_used, 
+      accepted.context_tokens_used, rejected.context_tokens_used, 
+      cancelled.context_tokens_used)                                                                AS context_tokens_used,
 
     --Timestamps
     requested.behavior_at                                                                           AS requested_at,
