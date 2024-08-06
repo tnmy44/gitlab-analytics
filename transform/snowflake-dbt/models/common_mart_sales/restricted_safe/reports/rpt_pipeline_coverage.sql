@@ -35,6 +35,7 @@ total_targets AS (
     targets.order_type_grouped,
     targets.sales_qualified_source_name,
     targets.sales_qualified_source_grouped,
+    targets.dim_crm_user_hierarchy_sk,
     SUM(CASE WHEN kpi_name = 'Net ARR' THEN daily_allocated_target END)                  AS net_arr_total_quarter_target,
     SUM(CASE WHEN kpi_name = 'Net ARR Pipeline Created' THEN daily_allocated_target END) AS pipeline_created_total_quarter_target
   FROM targets
@@ -51,6 +52,7 @@ daily_actuals AS (
     actuals.sales_qualified_source_grouped_live,
     actuals.order_type_live,
     actuals.order_type_grouped_live,
+    actuals.dim_crm_current_account_set_hierarchy_live_sk,
     SUM(booked_net_arr_in_snapshot_quarter)     AS booked_net_arr_in_snapshot_quarter,
     SUM(open_1plus_net_arr_in_snapshot_quarter) AS open_1plus_net_arr_in_snapshot_quarter,
     SUM(open_3plus_net_arr_in_snapshot_quarter) AS open_3plus_net_arr_in_snapshot_quarter,
@@ -68,6 +70,7 @@ quarterly_actuals AS (
     live_actuals.sales_qualified_source_grouped,
     live_actuals.order_type,
     live_actuals.order_type_grouped,
+    live_actuals.dim_crm_current_account_set_hierarchy_sk,
     SUM(live_actuals.booked_net_arr) AS total_booked_net_arr
   FROM live_actuals
   {{ dbt_utils.group_by(n=6) }}
@@ -78,6 +81,7 @@ quarterly_actuals AS (
 combined_data AS (
 
   SELECT
+    dim_crm_current_account_set_hierarchy_live_sk,
     sales_qualified_source_live,
     sales_qualified_source_grouped_live,
     order_type_live,
@@ -85,25 +89,27 @@ combined_data AS (
     snapshot_fiscal_quarter_name
   FROM daily_actuals
 
+  UNION 
+
+  SELECT
+    dim_crm_current_account_set_hierarchy_sk,
+    sales_qualified_source_name,
+    sales_qualified_source_grouped,
+    order_type,
+    order_type_grouped,
+    close_fiscal_quarter_name
+  FROM quarterly_actuals 
+
   UNION
 
   SELECT
+    dim_crm_user_hierarchy_sk,
     sales_qualified_source_name,
     sales_qualified_source_grouped,
     order_type_name,
     order_type_grouped,
     fiscal_quarter_name_fy
   FROM total_targets
-
-  UNION
-
-  SELECT
-    sales_qualified_source_name,
-    sales_qualified_source_grouped,
-    order_type,
-    order_type_grouped,
-    close_fiscal_quarter_name
-  FROM quarterly_actuals
 
 ),
 
@@ -120,6 +126,7 @@ base AS (
   */
 
   SELECT
+    combined_data.dim_crm_current_account_set_hierarchy_live_sk,
     combined_data.sales_qualified_source_live,
     combined_data.sales_qualified_source_grouped_live,
     combined_data.order_type_live,
@@ -135,6 +142,7 @@ base AS (
 final AS (
 
   SELECT
+    base.dim_crm_current_account_set_hierarchy_live_sk,
     base.snapshot_date,
     base.sales_qualified_source_live,
     base.sales_qualified_source_grouped_live,
@@ -217,18 +225,21 @@ final AS (
   FROM base
   LEFT JOIN total_targets
     ON base.snapshot_fiscal_quarter_name = total_targets.fiscal_quarter_name_fy
+      AND base.dim_crm_current_account_set_hierarchy_live_sk = total_targets.dim_crm_user_hierarchy_sk
       AND base.sales_qualified_source_live = total_targets.sales_qualified_source_name
       AND base.sales_qualified_source_grouped_live = total_targets.sales_qualified_source_grouped
       AND base.order_type_live = total_targets.order_type_name
       AND base.order_type_grouped_live = total_targets.order_type_grouped
   LEFT JOIN daily_actuals
     ON base.snapshot_date = daily_actuals.snapshot_date
+      AND base.dim_crm_current_account_set_hierarchy_live_sk = daily_actuals.dim_crm_current_account_set_hierarchy_live_sk
       AND base.sales_qualified_source_live = daily_actuals.sales_qualified_source_live
       AND base.sales_qualified_source_grouped_live = daily_actuals.sales_qualified_source_grouped_live
       AND base.order_type_live = daily_actuals.order_type_live
       AND base.order_type_grouped_live = daily_actuals.order_type_grouped_live
   LEFT JOIN quarterly_actuals
     ON base.snapshot_fiscal_quarter_name = quarterly_actuals.close_fiscal_quarter_name
+      AND base.dim_crm_current_account_set_hierarchy_live_sk = quarterly_actuals.dim_crm_current_account_set_hierarchy_sk
       AND base.sales_qualified_source_live = quarterly_actuals.sales_qualified_source_name
       AND base.sales_qualified_source_grouped_live = quarterly_actuals.sales_qualified_source_grouped
       AND base.order_type_live = quarterly_actuals.order_type

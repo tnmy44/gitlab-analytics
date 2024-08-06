@@ -33,6 +33,7 @@
       fct_crm_opportunity.merged_crm_opportunity_id,
       fct_crm_opportunity.record_type_id,
       fct_crm_opportunity.ssp_id,
+      fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
       dim_crm_account.dim_crm_account_id,
 
       -- opportunity attributes
