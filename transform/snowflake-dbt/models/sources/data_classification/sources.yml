@@ -14,7 +14,3 @@ sources:
       schema: false
       identifier: false
 
-    tables:
-      - name: access_history
-      - name: tag_references
-      - name: query_history
