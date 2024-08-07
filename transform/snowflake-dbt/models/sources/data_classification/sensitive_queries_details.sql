@@ -27,10 +27,5 @@ WITH sensitive_queries_base AS (
 
 )
 
-  SELECT details.classification_type,
-         details.query_id,
-         details.accessed_column,
-         details.tag_name,
-         details.tag_value,
-         details.start_time
+  SELECT *
   FROM details

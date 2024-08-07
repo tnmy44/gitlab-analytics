@@ -20,12 +20,6 @@ WITH sensitive_data_tags AS (
   WHERE access_history.query_start_time >= '2024-06-07 00:00:00'::TIMESTAMP
   AND access_history.user_name = 'RBACOVIC'
 
--- {% if is_incremental() %}
-
-  AND access_history.query_start_time > (SELECT MAX(query_start_time) FROM {{this}})
-
---  {% endif %}
-
 ), query_history AS (
 
   SELECT query_history.query_id         AS query_id,
@@ -45,19 +39,14 @@ WITH sensitive_data_tags AS (
   AND query_history.user_name = 'RBACOVIC'
   AND query_history.role_name = 'RBACOVIC'
 
---  {% if is_incremental() %}
-
-  AND access_history.query_start_time > (SELECT MAX(query_start_time) FROM {{this}})
-
---  {% endif %}
 
 ), queries AS (
 
-  SELECT query_history.query_id                            AS query_id,
-         SPLIT_PART(access_history.accessed_table, '.', 1) AS accessed_database,
-         SPLIT_PART(access_history.accessed_table, '.', 2) AS accessed_schema,
-         SPLIT_PART(access_history.accessed_table, '.', 3) AS accessed_table,
-         access_history.accessed_column                    AS accessed_column,
+  SELECT query_history.query_id                                            AS query_id,
+         REPLACE(SPLIT_PART(access_history.accessed_table, '.', 1),'"','') AS accessed_database,
+         SPLIT_PART(access_history.accessed_table, '.', 2)                 AS accessed_schema,
+         SPLIT_PART(access_history.accessed_table, '.', 3)                 AS accessed_table,
+         access_history.accessed_column                                    AS accessed_column,
          query_history.query_text,
          query_history.database_name executed_from_database_name,
          query_history.schema_name   executed_from_schema_name,
@@ -100,27 +89,8 @@ WITH sensitive_data_tags AS (
           (classification_type = 'PII'  AND queries.accessed_column = sensitive_data_tags.accessed_column)
        OR (classification_type = 'MNPI' AND 1=1)
       )
-    WHERE queries.accessed_database = 'RBACOVIC_PREP'
-    AND queries.accessed_schema   = 'BENCHMARK_PII'
-    AND queries.accessed_table NOT IN ('SENSITIVE_OBJECTS_CLASSIFICATION','LOG_CLASSIFICATION')
 
 )
 
-  SELECT joined.classification_type,
-         joined.query_id,
-         joined.user_name,
-         joined.accessed_database,
-         joined.accessed_schema,
-         joined.accessed_table,
-         joined.query_text,
-         joined.executed_from_database_name,
-         joined.executed_from_schema_name,
-         joined.query_type,
-         joined.role_name,
-         joined.execution_status,
-         joined.start_time,
-         joined.end_time,
-         joined.accessed_column,
-         joined.tag_name,
-         joined.tag_value
+  SELECT *
   FROM joined
