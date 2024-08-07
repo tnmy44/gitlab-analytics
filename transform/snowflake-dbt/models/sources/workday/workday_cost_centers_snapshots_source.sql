@@ -14,7 +14,7 @@ final AS (
     division::VARCHAR                            AS division,
     cost_center_workday_id::VARCHAR              AS cost_center_workday_id,
     cost_center::VARCHAR                         AS cost_center,
-    dept_inactive::BOOLEAN                       AS inactive,
+    dept_inactive::BOOLEAN                       AS dept_inactive,
     IFF(dept_inactive::BOOLEAN = 0, TRUE, FALSE) AS is_dept_active,
     dbt_valid_from::TIMESTAMP                    AS valid_from,
     dbt_valid_to::TIMESTAMP                      AS valid_to
