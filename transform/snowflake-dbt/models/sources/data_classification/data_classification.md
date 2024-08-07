@@ -37,10 +37,16 @@ Details about the tagging.
 {% docs classification_type_doc %}
 
 This column can have values:
-
+- `PII` - Personally identifiable information (PII) is any type of data that can be used to identify someone, from their name and address to their phone number, passport information, and Social Security numbers. This information is frequently a target for identity thieves, especially over the internet.
+- `MNPI` - Material Nonpublic Information (MNPI) is information that has not been made available to the public in any form, and is not available through proper channels of inquiry.
 
 {% enddocs %}
 
+{% docs query_id_doc %}
+
+The ID of a specified query in the current session and explain under which query SQL was executed.
+
+{% enddocs %}
 
 {% docs start_time_doc %}
 

@@ -4,18 +4,21 @@ models:
   - name: sensitive_queries_tags
     description: '{{ doc("sensitive_queries_tags_doc") }}'
     columns:
-      - name: classification_type,
-      - name: tag_name,
-      - name: tag_value,
-      - name: accessed_database,
-      - name: accessed_schema,
-      - name: accessed_table,
+      - name: classification_type
+        description: '{{ doc("classification_type_doc") }}'
+      - name: tag_name
+      - name: tag_value
+      - name: accessed_database
+      - name: accessed_schema
+      - name: accessed_table
       - name: accessed_column
   - name: sensitive_queries_base
     description: '{{ doc("sensitive_queries_base_doc") }}'
     columns:
       - name: classification_type
+        description: '{{ doc("classification_type_doc") }}'
       - name: query_id
+        description: '{{ doc("query_id_doc") }}'
       - name: user_name
       - name: accessed_database
       - name: accessed_schema
@@ -37,7 +40,9 @@ models:
     description: '{{ doc("sensitive_queries_source_doc") }}'
     columns:
       - name: classification_type
+        description: '{{ doc("classification_type_doc") }}'
       - name: query_id
+        description: '{{ doc("query_id_doc") }}'
       - name: user_name
       - name: accessed_database
       - name: accessed_schema
@@ -61,7 +66,9 @@ models:
     description: '{{ doc("sensitive_queries_details_doc") }}'
     columns:
       - name: classification_type
+        description: '{{ doc("classification_type_doc") }}'
       - name: query_id
+        description: '{{ doc("query_id_doc") }}'
       - name: accessed_column
       - name: tag_name
       - name: tag_value

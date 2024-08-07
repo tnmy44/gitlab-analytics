@@ -29,7 +29,7 @@ WITH sensitive_queries_base AS (
 
   {% if is_incremental() %}
 
-  AND sensitive_queries_base.query_start_time > (SELECT MAX(query_start_time) FROM {{this}})
+  WHERE sensitive_queries_base.query_start_time > (SELECT MAX(query_start_time) FROM {{this}})
 
   {% endif %}
   GROUP BY ALL
