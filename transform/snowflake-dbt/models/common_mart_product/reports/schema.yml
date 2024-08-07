@@ -2168,5 +2168,3 @@ models:
       description: '{{ doc("contexts") }}'
     - name: code_suggestions_context
       description: '{{ doc("code_suggestions_context") }}'
-    - name: gsc_instance_version
-      description: '{{ doc("gsc_instance_version") }}'
