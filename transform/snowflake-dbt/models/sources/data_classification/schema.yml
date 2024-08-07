@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: sensitive_queries_tags
-    description: '{{ doc("sensitive_queries_tags") }}'
+    description: '{{ doc("sensitive_queries_tags_doc") }}'
     columns:
       - name: classification_type,
       - name: tag_name,
@@ -11,8 +11,8 @@ models:
       - name: accessed_schema,
       - name: accessed_table,
       - name: accessed_column
-  - name: sensitive_queries_source
-    description: '{{ doc("sensitive_queries_source") }}'
+  - name: sensitive_queries_base
+    description: '{{ doc("sensitive_queries_base_doc") }}'
     columns:
       - name: classification_type
       - name: query_id
@@ -27,11 +27,43 @@ models:
       - name: role_name
       - name: execution_status
       - name: start_time
+        description: '{{ doc("start_time_doc") }}'
       - name: end_time
+        description: '{{ doc("end_time_doc") }}'
+      - name: accessed_column
+      - name: tag_name
+      - name: tag_value
+  - name: sensitive_queries_source
+    description: '{{ doc("sensitive_queries_source_doc") }}'
+    columns:
+      - name: classification_type
+      - name: query_id
+      - name: user_name
+      - name: accessed_database
+      - name: accessed_schema
+      - name: accessed_table
+      - name: query_text
+      - name: executed_from_database_name
+      - name: executed_from_schema_name
+      - name: query_type
+      - name: role_name
+      - name: execution_status
+      - name: start_time
+        description: '{{ doc("start_time_doc") }}'
+      - name: end_time
+        description: '{{ doc("end_time_doc") }}'
     data_tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - classification_type
             - query_id
   - name: sensitive_queries_details
-    description: '{{ doc("sensitive_queries_details") }}'
+    description: '{{ doc("sensitive_queries_details_doc") }}'
+    columns:
+      - name: classification_type
+      - name: query_id
+      - name: accessed_column
+      - name: tag_name
+      - name: tag_value
+      - name: start_time
+        description: '{{ doc("start_time_doc") }}'
