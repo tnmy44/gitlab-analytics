@@ -88,7 +88,7 @@
       lack_of_ci_adoption_reason_gc,
       lack_of_security_adoption_reason_gc
     FROM wk_gs_company
-    WHERE clack_of_ci_adoption_reason_gc IS NOT NULL
+    WHERE lack_of_ci_adoption_reason_gc IS NOT NULL
     OR lack_of_security_adoption_reason_gc IS NOT NULL
 )     
   SELECT
