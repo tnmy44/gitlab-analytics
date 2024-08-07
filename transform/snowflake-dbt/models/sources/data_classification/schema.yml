@@ -28,7 +28,6 @@ models:
       - name: executed_from_schema_name
       - name: query_type
       - name: role_name
-      - name: execution_status
       - name: start_time
         description: '{{ doc("start_time_doc") }}'
       - name: end_time
@@ -52,11 +51,12 @@ models:
       - name: executed_from_schema_name
       - name: query_type
       - name: role_name
-      - name: execution_status
       - name: start_time
         description: '{{ doc("start_time_doc") }}'
       - name: end_time
         description: '{{ doc("end_time_doc") }}'
+      - name: _uploaded_at
+        description: '{{ doc("_uploaded_at_doc") }}'
     data_tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -74,3 +74,5 @@ models:
       - name: tag_value
       - name: start_time
         description: '{{ doc("start_time_doc") }}'
+      - name: _uploaded_at
+        description: '{{ doc("_uploaded_at_doc") }}'

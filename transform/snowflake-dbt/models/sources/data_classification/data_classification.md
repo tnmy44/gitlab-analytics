@@ -26,11 +26,21 @@ to get the data can be treated as not allowed or suspicious action.
 
 More details about the technical implementation can be found in the [**/analytics**](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/data_classification/README.md) repo.
 
+Deduplication is, due to complexity sorted out with the setting:
+```bash
+"incremental_strategy":"delete+insert"
+```
+
 {% enddocs %}
 
 {% docs sensitive_queries_details_doc %}
 
 Details about the tagging.
+
+Deduplication is, due to complexity sorted out with the setting:
+```bash
+"incremental_strategy":"delete+insert"
+```
 
 {% enddocs %}
 
@@ -57,5 +67,11 @@ When query execution was started.
 {% docs end_time_doc %}
 
 When query execution was ended.
+
+{% enddocs %}
+
+{% docs _uploaded_at_doc %}
+
+When the record was inserted into table.
 
 {% enddocs %}

@@ -22,6 +22,8 @@ models:
         description: '{{ doc("wk_start_time_doc") }}'
       - name: end_time
         description: '{{ doc("wk_end_time_doc") }}'
+      - name: _uploaded_at
+        description: '{{ doc("wk_uploaded_at_doc") }}'
   - name: wk_sensitive_queries_details
     description: '{{ doc("wk_sensitive_queries_details_doc") }}'
     columns:
@@ -34,3 +36,5 @@ models:
       - name: tag_value
       - name: start_time
         description: '{{ doc("wk_start_time_doc") }}'
+      - name: _uploaded_at
+        description: '{{ doc("wk_uploaded_at_doc") }}'

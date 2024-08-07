@@ -46,3 +46,9 @@ When query execution was started.
 When query execution was ended.
 
 {% enddocs %}
+
+{% docs wk_uploaded_at_doc %}
+
+When the record was inserted into table.
+
+{% enddocs %}
