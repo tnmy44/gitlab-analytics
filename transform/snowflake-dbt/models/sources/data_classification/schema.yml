@@ -13,5 +13,25 @@ models:
       - name: accessed_column
   - name: sensitive_queries_source
     description: '{{ doc("sensitive_queries_source") }}'
+    columns:
+      - name: classification_type
+      - name: query_id
+      - name: user_name
+      - name: accessed_database
+      - name: accessed_schema
+      - name: accessed_table
+      - name: query_text
+      - name: executed_from_database_name
+      - name: executed_from_schema_name
+      - name: query_type
+      - name: role_name
+      - name: execution_status
+      - name: start_time
+      - name: end_time
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - classification_type
+            - query_id
   - name: sensitive_queries_details
     description: '{{ doc("sensitive_queries_details") }}'

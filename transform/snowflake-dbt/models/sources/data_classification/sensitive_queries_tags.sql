@@ -47,7 +47,9 @@ SELECT 'PII'::VARCHAR           AS classification_type,
          accessed_schema,
          accessed_table,
          accessed_column
-  FROM pii_tags)
+  FROM pii_tags
+
+)
 
   SELECT *
   FROM tags
