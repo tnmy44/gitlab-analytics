@@ -1227,6 +1227,8 @@ models:
       - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
+      - name: failure_reason
+        description: The reason for build failure as defined in [commit_status.rb](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/enums/ci/commit_status.rb)
 
   - name: prep_ci_runner
     description: '{{ doc("prep_ci_runner") }}'
@@ -1826,8 +1828,6 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-      - name: ping_type
-        description: '{{ doc("ping_type") }}'
       - name: is_saas_dedicated
         description: '{{ doc("is_saas_dedicated") }}'
       - name: ping_delivery_type
@@ -1894,8 +1894,6 @@ models:
         description: '{{ doc("ping_delivery_type") }}'
       - name: ping_deployment_type
         description: '{{ doc("ping_deployment_type") }}'
-      - name: ping_type
-        description: '{{ doc("ping_type") }}'
       - name: version
         description: '{{ doc("version_ping_model") }}'
 
@@ -2217,6 +2215,24 @@ models:
         description: ' { doc("gsc_correlation_id") } '
       - name: dim_instance_id
         description: ' { doc("dim_instance_id") } '
+      - name: total_context_size_bytes
+        description: ' {{ doc("code_suggestions_total_context_size_bytes") }}'
+      - name: content_above_cursor_size_bytes
+        description: ' {{ doc("code_suggestions_content_above_cursor_size_bytes") }}'
+      - name: content_below_cursor_size_bytes
+        description: ' {{ doc("code_suggestions_content_below_cursor_size_bytes") }}'
+      - name: context_items
+        description: ' {{ doc("code_suggestions_context_items") }}'
+      - name: context_items_count
+        description: ' {{ doc("code_suggestions_context_items_count") }}'
+      - name: input_tokens
+        description: ' {{ doc("code_suggestions_input_tokens") }}'
+      - name: output_tokens
+        description: ' {{ doc("code_suggestions_output_tokens") }}'
+      - name: context_tokens_sent
+        description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
+      - name: context_tokens_used
+        description: ' {{ doc("code_suggestions_context_tokens_used") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.

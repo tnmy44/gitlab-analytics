@@ -2504,23 +2504,11 @@ users:
       - General All Access
   - user_name: afoltz
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: afoltz
-    user_name_domain: gitlab.com
     site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
   - user_name: afonseca
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: afontaine
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -2819,12 +2807,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: amustapic
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: anair
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -3056,12 +3038,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: avovchenko
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: avpfestin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -3112,12 +3088,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: azubov
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: azubov
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -3685,12 +3655,6 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
-  - user_name: ckirkham
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: clee
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -3818,12 +3782,6 @@ users:
       - General All Access
       - General SAFE Access
   - user_name: coas
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: collen
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -5013,14 +4971,6 @@ users:
       - Finance All Access
       - General All Access
       - Internal Audit Restricted Access
-  - user_name: hroscher
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM EMEA Commercial Restricted Access
-      - ASM Restricted Access
-      - General All Access
   - user_name: hselim
     user_name_domain: gitlab.com
     site_role: Creator
@@ -5060,12 +5010,6 @@ users:
       - General All Access
       - General SAFE Access
   - user_name: htarver
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: hustewart
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -5532,14 +5476,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: jheilig
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - Engineering All Access
-      - General All Access
-      - General SAFE Access
   - user_name: jhillwright
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5762,9 +5698,9 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: jpeterson
+  - user_name: jpetersen
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
@@ -6993,12 +6929,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: mflorian
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mflouton
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7214,12 +7144,6 @@ users:
       - General SAFE Access
       - Support Project Lead
   - user_name: mmalcolm
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: mmazurskiy
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -7622,13 +7546,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: nkhalwadekar
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: nklick
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7692,12 +7609,6 @@ users:
     auth_setting: SAML
     groups:
       - ASM Restricted Access
-      - General All Access
-  - user_name: nmohunlol
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
       - General All Access
   - user_name: nnguyen
     user_name_domain: gitlab.com
@@ -7922,12 +7833,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: omiles
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: opysaryuk
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7960,12 +7865,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: partiaga
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: partiaga
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -8150,13 +8049,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: prodopoulos
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: prodopoulos
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -9091,12 +8983,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: srehm
-    user_name_domain: gitlab.com
-    site_role: Creator
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: srenton
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9364,12 +9250,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: tfurrer
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: tgao
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9464,6 +9344,7 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
+      - People Restricted Access
   - user_name: tmccaslin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -9478,12 +9359,6 @@ users:
     groups:
       - General All Access
   - user_name: tmoreira
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: tnishida
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -9575,12 +9450,6 @@ users:
     groups:
       - General All Access
   - user_name: tvik
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: twatson
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
@@ -9687,9 +9556,9 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: vkramer
+  - user_name: vkramar
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
@@ -9759,12 +9628,6 @@ users:
   - user_name: vslobodin
     user_name_domain: gitlab.com
     site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: vtak
-    user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
@@ -10017,12 +9880,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access  
-  - user_name: rbirsan
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name:  jvazquez
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10049,3 +9906,83 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name:  mjubrey
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  psedlak-jakubowska
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  ssuman
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  vpatel
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  ahohenner
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  bwilkerson
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  jbaumgardner
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  nwestbury
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: zfilho
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  melclark
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  cstevenson
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - Customer Success Restricted Access
+  - user_name:  jdallmar
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name:  mrleite
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
