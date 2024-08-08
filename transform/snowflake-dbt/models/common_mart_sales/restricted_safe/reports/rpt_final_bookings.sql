@@ -82,7 +82,7 @@ booked_arr AS (
     live_actuals.stage_name,
     SUM(live_actuals.booked_net_arr) AS total_booked_arr,
     SUM(live_actuals.booked_deal_count) AS total_booked_deal_count,
-    SUM(live_actuals.closed_won_opps) AS total_closed_won_opps,    
+    SUM(live_actuals.closed_won_opps) AS total_closed_won_opps
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 
@@ -100,7 +100,7 @@ created_arr AS (
     live_actuals.sales_type,
     live_actuals.stage_name,
     SUM(live_actuals.created_arr) AS total_created_arr,
-    SUM(live_actuals.created_deals) AS total_created_deal_count,
+    SUM(live_actuals.created_deals) AS total_created_deal_count
   FROM live_actuals
   {{ dbt_utils.group_by(n=8) }}
 ),
