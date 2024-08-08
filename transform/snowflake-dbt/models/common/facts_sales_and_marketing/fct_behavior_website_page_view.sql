@@ -45,7 +45,7 @@
       referer_url,
       page_url_scheme,
       referer_url_scheme,
-      REGEXP_REPLACE(page_url, '^https?:\/\/')                                      AS page_url_host_path,
+      REGEXP_REPLACE(page_url || page_url_query, '^https?:\/\/')                    AS page_url_host_path,
       REGEXP_REPLACE(referer_url, '^https?:\/\/')                                   AS referer_url_host_path,
       IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
       IFNULL(geo_country, 'Unknown')::VARCHAR                                       AS user_country,
@@ -126,7 +126,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2024-06-17"
+    updated_date="2024-08-08"
 ) }}
