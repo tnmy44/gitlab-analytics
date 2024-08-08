@@ -12,7 +12,7 @@ require-dbt-version: [">=1.0.0", "<2.0.0"]
 # ======
 model-paths: ["models"]
 test-paths: ["tests"]
-seed-paths: ["data"]
+seed-paths: ["seeds"]
 macro-paths: ["macros"]
 analysis-paths: ["analysis"]
 target-path: "target"
@@ -49,17 +49,38 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
-  +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
-  +schema: legacy
+  +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
   +quote_columns: False
   +post-hook:
     - "{{ mask_model() }}"
   +query_tag: dbt
 
   gitlab_snowflake:
-    director_location_factors:
-      +column_types:
-        valid_to: date # Not behaving well when the column is all null
+
+    seed_data:
+      +schema: seed_data
+
+    seed_engineering:
+      +schema: seed_engineering
+
+    seed_finance:
+      +schema: seed_finance
+
+    seed_marketing:
+      +schema: seed_marketing
+
+    seed_people:
+      +schema: seed_people
+      director_location_factors:
+        +column_types:
+          valid_to: date # Not behaving well when the column is all null
+    
+    seed_product:
+      +schema: seed_product
+
+    seed_sales:
+      +schema: seed_sales
+    
 
 # ==================
 # Variable Configs
@@ -150,6 +171,14 @@ models:
     entitlement:
       +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
       +schema: entitlement
+
+    # ------------------
+    # Specific
+    # ------------------
+
+    specific:
+      +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
+      +schema: specific
 
     # ------------------
     # Sources
