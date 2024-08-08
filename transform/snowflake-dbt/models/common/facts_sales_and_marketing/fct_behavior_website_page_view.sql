@@ -2,6 +2,7 @@
         materialized = "incremental",
         unique_key = "fct_behavior_website_page_view_sk",
         on_schema_change='sync_all_columns',
+        post_hook=["{{ rolling_window_delete('behavior_at','month',25) }}"],
         tags=['product']
 ) }}
 

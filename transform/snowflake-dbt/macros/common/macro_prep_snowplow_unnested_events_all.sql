@@ -54,7 +54,7 @@ SELECT
   collector_tstamp::TIMESTAMP                                                                                       AS collector_tstamp,
   domain_userid                                                                                                     AS user_snowplow_domain_id,
   domain_sessionidx::INT                                                                                            AS session_index,
-  REGEXP_REPLACE(page_url, '^https?:\/\/')                                                                          AS page_url_host_path,
+  REGEXP_REPLACE(page_urlhost || page_urlpath, '^https?:\/\/')                                                      AS page_url_host_path,
   page_urlscheme                                                                                                    AS page_url_scheme,
   page_urlpath                                                                                                      AS page_url_path,
   {{ clean_url('page_urlpath') }} AS clean_url_path,
@@ -90,7 +90,7 @@ SELECT
   refr_urlpath                                                                                                      AS referrer_url_path,
   refr_urlscheme                                                                                                    AS referrer_url_scheme,
   refr_urlquery                                                                                                     AS referrer_url_query,
-  REGEXP_REPLACE(page_referrer, '^https?:\/\/')                                                                     AS referrer_url_host_path,
+  REGEXP_REPLACE(refr_urlhost || refr_urlpath, '^https?:\/\/')                                                      AS referrer_url_host_path,
   {{ dbt_utils.generate_surrogate_key([
     'referrer_url_host_path',
     'app_id',
