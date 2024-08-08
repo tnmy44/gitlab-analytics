@@ -147,18 +147,6 @@ final AS (
     fct_crm_opportunity.is_excluded_from_pipeline_created,
     fct_crm_opportunity.critical_deal_flag,
 
-    -- hierarchy 
-    fct_crm_opportunity.report_segment,
-    fct_crm_opportunity.report_geo,
-    fct_crm_opportunity.report_region,
-    fct_crm_opportunity.report_area,
-    fct_crm_opportunity.report_role_name,
-    fct_crm_opportunity.report_role_level_1,
-    fct_crm_opportunity.report_role_level_2,
-    fct_crm_opportunity.report_role_level_3,
-    fct_crm_opportunity.report_role_level_4,
-    fct_crm_opportunity.report_role_level_5,
-
     --live fields
     fct_crm_opportunity.sales_qualified_source_live,
     fct_crm_opportunity.sales_qualified_source_grouped_live,
@@ -191,8 +179,6 @@ final AS (
     dim_crm_account.crm_account_focus_account,
     dim_crm_account.crm_account_zi_technologies,
     dim_crm_account.is_jihu_account,
-
-
 
     -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
     fct_crm_opportunity.opportunity_owner_user_segment,

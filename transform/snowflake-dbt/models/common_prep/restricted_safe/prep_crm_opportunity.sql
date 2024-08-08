@@ -1125,7 +1125,7 @@ LEFT JOIN cw_base
       IFF(CONTAINS(sfdc_opportunity.competitors, 'CircleCI'),1,0) AS competitors_circleci_flag,
       IFF(CONTAINS(sfdc_opportunity.competitors, 'Bamboo'),1,0) AS competitors_bamboo_flag,
       IFF(CONTAINS(sfdc_opportunity.competitors, 'AWS'),1,0) AS competitors_aws_flag,
-      UPPER(
+     UPPER(
         IFF(sfdc_opportunity_live.close_date < close_date_live.current_first_day_of_fiscal_year, sfdc_opportunity_live.crm_account_owner_sales_segment, sfdc_opportunity_live.crm_opp_owner_sales_segment_stamped)
       ) AS report_segment,
       UPPER(
@@ -1235,19 +1235,17 @@ LEFT JOIN cw_base
       UPPER(
         IFF(sfdc_opportunity.close_date < close_date.current_first_day_of_fiscal_year, sfdc_opportunity.dim_crm_user_hierarchy_account_user_sk, dim_crm_opp_owner_stamped_hierarchy_sk)
       ) AS dim_crm_current_account_set_hierarchy_sk,
-
       UPPER(
         IFF(sfdc_opportunity_live.close_date < close_date_live.current_first_day_of_fiscal_year, sfdc_opportunity_live.dim_crm_user_hierarchy_account_user_sk, 
         CONCAT(
-
-                      UPPER(COALESCE(sfdc_opportunity_live.opportunity_owner_role, sfdc_opportunity_live.opportunity_account_owner_role)),
-                      '-',
-                      close_fiscal_year_live
-                      ) )
+          UPPER(COALESCE(sfdc_opportunity_live.opportunity_owner_role, sfdc_opportunity_live.opportunity_account_owner_role)),
+          '-',
+          close_fiscal_year_live
+          ) )
       ) AS dim_crm_current_account_set_hierarchy_live_sk,
 
       DATEDIFF(MONTH, arr_created_fiscal_quarter_date, close_fiscal_quarter_date) AS arr_created_to_close_diff,
-      CASE
+      CASE        
         WHEN arr_created_to_close_diff BETWEEN 0 AND 2 THEN 'CQ'
         WHEN arr_created_to_close_diff BETWEEN 3 AND 5 THEN 'CQ+1'
         WHEN arr_created_to_close_diff BETWEEN 6 AND 8 THEN 'CQ+2'

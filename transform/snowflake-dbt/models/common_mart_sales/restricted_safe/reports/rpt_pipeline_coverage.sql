@@ -39,7 +39,7 @@ total_targets AS (
     SUM(CASE WHEN kpi_name = 'Net ARR' THEN daily_allocated_target END)                  AS net_arr_total_quarter_target,
     SUM(CASE WHEN kpi_name = 'Net ARR Pipeline Created' THEN daily_allocated_target END) AS pipeline_created_total_quarter_target
   FROM targets
-  {{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=6) }}
 
 ),
 
@@ -58,7 +58,7 @@ daily_actuals AS (
     SUM(open_3plus_net_arr_in_snapshot_quarter) AS open_3plus_net_arr_in_snapshot_quarter,
     SUM(open_4plus_net_arr_in_snapshot_quarter) AS open_4plus_net_arr_in_snapshot_quarter
   FROM actuals
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=7) }}
 ),
 
 quarterly_actuals AS (
@@ -73,7 +73,7 @@ quarterly_actuals AS (
     live_actuals.dim_crm_current_account_set_hierarchy_sk,
     SUM(live_actuals.booked_net_arr) AS total_booked_net_arr
   FROM live_actuals
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=7) }}
 
 
 ),
