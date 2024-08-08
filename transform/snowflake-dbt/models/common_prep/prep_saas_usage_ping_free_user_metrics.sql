@@ -16,7 +16,7 @@
     ('bdg_namespace_order','bdg_namespace_order_subscription_monthly')
 ]) }}
 
-, gainsight_wave_2_3_metrics AS (
+, health_score_metrics AS (
     SELECT metrics_path
     FROM {{ ref('dim_ping_metric') }}
     WHERE is_health_score_metric = TRUE
@@ -46,8 +46,8 @@
     INNER JOIN free_namespaces
       ON prep_saas_usage_ping_namespace.dim_namespace_id = free_namespaces.dim_namespace_id
       AND dim_date.first_day_of_month = free_namespaces.snapshot_month
-    INNER JOIN gainsight_wave_2_3_metrics
-      ON prep_saas_usage_ping_namespace.ping_name = gainsight_wave_2_3_metrics.metrics_path
+    INNER JOIN health_score_metrics
+      ON prep_saas_usage_ping_namespace.ping_name = health_score_metrics.metrics_path
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY 
         dim_date.first_day_of_month,

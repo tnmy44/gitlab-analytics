@@ -18,7 +18,7 @@
     ('map_subscription_namespace_month', 'map_latest_subscription_namespace_monthly')
 ]) }}
 
-, gainsight_wave_2_3_metrics AS (
+, health_score_metrics AS (
     SELECT metrics_path
     FROM {{ ref('dim_ping_metric') }}
     WHERE is_health_score_metric = TRUE
@@ -82,8 +82,8 @@
     LEFT JOIN namespace_subscription_monthly_distinct
       ON prep_saas_usage_ping_namespace.dim_namespace_id = namespace_subscription_monthly_distinct.dim_namespace_id
       AND dim_date.first_day_of_month = namespace_subscription_monthly_distinct.snapshot_month
-    INNER JOIN gainsight_wave_2_3_metrics
-      ON prep_saas_usage_ping_namespace.ping_name = gainsight_wave_2_3_metrics.metrics_path
+    INNER JOIN health_score_metrics
+      ON prep_saas_usage_ping_namespace.ping_name = health_score_metrics.metrics_path
     LEFT JOIN map_subscription_namespace_month
       ON prep_saas_usage_ping_namespace.dim_namespace_id = map_subscription_namespace_month.dim_namespace_id
       AND dim_date.first_day_of_month = map_subscription_namespace_month.date_month

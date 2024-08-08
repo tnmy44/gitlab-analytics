@@ -15,7 +15,7 @@
 
 ]) }}
 
-, gainsight_wave_2_3_metrics AS (
+, health_score_metrics AS (
     SELECT metrics_path
     FROM {{ ref('dim_ping_metric') }}
     WHERE is_health_score_metric = TRUE
@@ -65,8 +65,8 @@
     dim_ping_instance.cleaned_version                                                          AS cleaned_version
 
     FROM fct_ping_instance_metric_with_license
-    INNER JOIN gainsight_wave_2_3_metrics
-      ON fct_ping_instance_metric_with_license.metrics_path = gainsight_wave_2_3_metrics.metrics_path
+    INNER JOIN health_score_metrics
+      ON fct_ping_instance_metric_with_license.metrics_path = health_score_metrics.metrics_path
     LEFT JOIN fct_ping_instance
       ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  fct_ping_instance.dim_ping_instance_id
     LEFT JOIN dim_ping_instance
