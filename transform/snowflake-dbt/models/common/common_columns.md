@@ -3519,3 +3519,20 @@ Pseudonymised combination of instance id and user id coalesced from the `global_
 
 {% enddocs %}
 
+{% docs user_type_id %}
+
+Numeric id indicating the type of user in GitLab.com data.
+
+{% enddocs %}
+
+{% docs user_type %}
+
+User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) to translate the ids to human-readable types.
+
+{% enddocs %}
+
+{% docs is_bot %}
+
+Calculated field based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) of bot user types.
+
+{% enddocs %}
