@@ -73,3 +73,23 @@ This is because there were not yet active paid subscriptions for Dedicated.
 * There are edge cases where `paid_user_count` is greater than `total_user_count` (ex: more Dedicated licenses were sold than there were registered Dedicated users). In this case, we set `paid_user_count` to equal `total_user_count`.
 
 {% enddocs %}
+
+{% docs wk_ping_installation_latest %}
+
+**Description:**
+
+This model contains the installation-level attributes from the latest ping for each installation.
+
+**Data Grain:**
+* dim_installation_id
+
+**Filters & Business Logic in this Model:**
+
+* This model inherits all filters and business logic from [`mart_ping_instance`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_ping_instance#description).
+
+**Business Logic in this Model:**
+
+* Determine the first ping date for each installation.
+* Retrieve various attributes from the most recent ping for each installation.
+* Resulting table is a JOIN of the above two informations where each row represents a unique installation, containing both first ping date and latest ping attributes.
+* The `latest_` prefix on several columns indicates the status as of the most recent ping.
