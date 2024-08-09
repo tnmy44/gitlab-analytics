@@ -33,7 +33,6 @@ final AS (
     fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
     fct_crm_opportunity.dim_crm_current_account_set_hierarchy_live_sk,
-    fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk,
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
     fct_crm_opportunity.snapshot_fiscal_year,
