@@ -7,7 +7,9 @@ models:
       - name: classification_type
         description: '{{ doc("classification_type_doc") }}'
       - name: tag_name
+        description: '{{ doc("tag_name_doc") }}'
       - name: tag_value
+        description: '{{ doc("tag_value_doc") }}'
       - name: accessed_database
       - name: accessed_schema
       - name: accessed_table
@@ -34,7 +36,9 @@ models:
         description: '{{ doc("end_time_doc") }}'
       - name: accessed_column
       - name: tag_name
+        description: '{{ doc("tag_name_doc") }}'
       - name: tag_value
+        description: '{{ doc("tag_value_doc") }}'
   - name: sensitive_queries_source
     description: '{{ doc("sensitive_queries_source_doc") }}'
     columns:
@@ -71,7 +75,9 @@ models:
         description: '{{ doc("query_id_doc") }}'
       - name: accessed_column
       - name: tag_name
+        description: '{{ doc("tag_name_doc") }}'
       - name: tag_value
+        description: '{{ doc("tag_value_doc") }}'
       - name: start_time
         description: '{{ doc("start_time_doc") }}'
       - name: _uploaded_at

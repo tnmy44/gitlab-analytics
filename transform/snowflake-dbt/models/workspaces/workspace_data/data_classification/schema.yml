@@ -33,7 +33,9 @@ models:
         description: '{{ doc("wk_query_id_doc") }}'
       - name: accessed_column
       - name: tag_name
+        description: '{{ doc("wk_tag_name_doc") }}'
       - name: tag_value
+        description: '{{ doc("wk_tag_value_doc") }}'
       - name: start_time
         description: '{{ doc("wk_start_time_doc") }}'
       - name: _uploaded_at
