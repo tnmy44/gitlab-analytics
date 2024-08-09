@@ -5766,6 +5766,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - tgao:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - rchanila:
       member_of:
         - snowflake_analyst
@@ -6891,6 +6896,10 @@ users:
       can_login: true
       member_of:
         - avpfestin
+  - tgao:
+      can_login: true
+      member_of:
+        - tgao
   - trea:
       can_login: true
       member_of:
