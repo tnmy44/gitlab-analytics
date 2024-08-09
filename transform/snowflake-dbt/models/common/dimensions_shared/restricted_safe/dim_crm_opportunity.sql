@@ -187,16 +187,6 @@ WITH prep_crm_opportunity AS (
 
       -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
       prep_crm_opportunity.opportunity_owner_user_segment,
-      prep_crm_opportunity.report_segment,
-      prep_crm_opportunity.report_geo,
-      prep_crm_opportunity.report_region,
-      prep_crm_opportunity.report_area,
-      prep_crm_opportunity.report_role_name,
-      prep_crm_opportunity.report_role_level_1,
-      prep_crm_opportunity.report_role_level_2,
-      prep_crm_opportunity.report_role_level_3,
-      prep_crm_opportunity.report_role_level_4,
-      prep_crm_opportunity.report_role_level_5,
 
       -- channel reporting
       prep_crm_opportunity.dr_partner_deal_type,

@@ -124,7 +124,7 @@ created_arr AS (
 final AS (
 
   SELECT
-    base.dim_crm_user_hierarchy_sk                                   AS dim_crm_current_account_set_hierarchy_live_sk,
+    base.dim_crm_user_hierarchy_sk                                   AS dim_crm_current_account_set_hierarchy_sk,
     base.crm_user_sales_segment                                      AS report_segment,
     base.crm_user_business_unit                                      AS report_business_unit,
     base.crm_user_geo                                                AS report_geo,
