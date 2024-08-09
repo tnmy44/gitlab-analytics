@@ -1,4 +1,5 @@
 {{ config({
+    "materialized": "view",
     "tags": ["data_classification", "mnpi_exception"]
     })
 }}
@@ -10,34 +11,38 @@ WITH sensitive_data_tags AS (
 
 ), access_history AS (
 
-  SELECT access_history.query_id                    AS query_id,
-         access_history.user_name                   AS user_name,
-         base_objects.value:objectName::VARCHAR     AS accessed_table,
-         base_columns.value:columnName::VARCHAR     AS accessed_column
+  SELECT access_history.query_id                AS query_id,
+         access_history.user_name               AS user_name,
+         base_objects.value:objectName::VARCHAR AS accessed_table,
+         base_columns.value:columnName::VARCHAR AS accessed_column
   FROM {{ source('snowflake_account_usage', 'access_history') }} AS access_history,
   LATERAL FLATTEN (input => access_history.BASE_OBJECTS_ACCESSED) AS base_objects,
   LATERAL FLATTEN (input => base_objects.value:columns)  AS base_columns
-  WHERE access_history.query_start_time >= '2024-06-07 00:00:00'::TIMESTAMP
-  --AND access_history.user_name = 'RBACOVIC'
+  --------------------------------------------------------------------------------
+  -- For the reason of performance wise execution,
+  -- we should take only last 4 months of data
+  --------------------------------------------------------------------------------
+  WHERE access_history.query_start_time >= DATEADD(month, -4, CURRENT_TIMESTAMP())::TIMESTAMP
 
 ), query_history AS (
 
-  SELECT query_history.query_id         AS query_id,
-         query_history.query_text       AS query_text,
-         query_history.database_name    AS database_name,
-         query_history.schema_name      AS schema_name,
-         query_history.query_type       AS query_type,
-         query_history.user_name        AS user_name,
-         query_history.role_name        AS role_name,
-         query_history.start_time       AS start_time,
-         query_history.end_time         AS end_time
+  SELECT query_history.query_id      AS query_id,
+         query_history.query_text    AS query_text,
+         query_history.database_name AS database_name,
+         query_history.schema_name   AS schema_name,
+         query_history.query_type    AS query_type,
+         query_history.user_name     AS user_name,
+         query_history.role_name     AS role_name,
+         query_history.start_time    AS start_time,
+         query_history.end_time      AS end_time
   FROM {{ source('snowflake_account_usage', 'query_history') }} AS query_history
   WHERE query_history.query_type IN ('GET_FILES','SELECT', 'UNLOAD')
   AND query_history.execution_status = 'SUCCESS'
-  AND query_history.start_time >= '2024-06-07 00:00:00'::TIMESTAMP
-  --AND query_history.user_name = 'RBACOVIC'
-  --AND query_history.role_name = 'RBACOVIC'
-
+  --------------------------------------------------------------------------------
+  -- For the reason of performance wise execution,
+  -- we should take only last 4 months of data
+  --------------------------------------------------------------------------------
+  AND query_history.start_time >= DATEADD(month, -4, CURRENT_TIMESTAMP())::TIMESTAMP
 
 ), queries AS (
 
@@ -46,14 +51,14 @@ WITH sensitive_data_tags AS (
          SPLIT_PART(access_history.accessed_table, '.', 2)                 AS accessed_schema,
          SPLIT_PART(access_history.accessed_table, '.', 3)                 AS accessed_table,
          access_history.accessed_column                                    AS accessed_column,
-         query_history.query_text,
-         query_history.database_name executed_from_database_name,
-         query_history.schema_name   executed_from_schema_name,
-         query_history.query_type,
-         query_history.user_name,
-         query_history.role_name,
-         query_history.start_time,
-         query_history.end_time
+         query_history.query_text                                          AS query_text,
+         query_history.database_name                                       AS executed_from_database_name,
+         query_history.schema_name                                         AS executed_from_schema_name,
+         query_history.query_type                                          AS query_type,
+         query_history.user_name                                           AS user_name,
+         query_history.role_name                                           AS role_name,
+         query_history.start_time                                          AS start_time,
+         query_history.end_time                                            AS end_time
     FROM query_history
     JOIN access_history
     ON query_history.query_id  = access_history.query_id
@@ -88,7 +93,7 @@ WITH sensitive_data_tags AS (
     -- For MNPI data will join data on teh TABLE usage level
     --------------------------------------------------------------------------------
           (classification_type = 'PII'  AND queries.accessed_column = sensitive_data_tags.accessed_column)
-       OR (classification_type = 'MNPI' AND 1=1)
+       OR (classification_type = 'MNPI' AND 1 = 1)
       )
 
 )
