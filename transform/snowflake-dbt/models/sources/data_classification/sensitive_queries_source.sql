@@ -32,7 +32,7 @@ WITH sensitive_queries_base AS (
 
   {% if is_incremental() %}
   --------------------------------------------------------------------------------
-  -- ACCESS_HISTORY view has 3 hours lag and need to cover it.
+  -- ACCESS_HISTORY view has 3 hours lag and need to cover it to avoid data loss.
   -- Put 4 hours lag to be on the safe side
   -- Reference:
   -- https://docs.snowflake.com/en/sql-reference/account-usage/access_history
