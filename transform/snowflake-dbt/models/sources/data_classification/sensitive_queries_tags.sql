@@ -3,53 +3,53 @@
     })
 }}
 
-WITH mnpi_tags AS (
+WITH tags AS (
 
-  SELECT 'MNPI'::VARCHAR          AS classification_type,
-         tag_name::VARCHAR        AS tag_name,
+  SELECT tag_name::VARCHAR        AS tag_name,
          tag_value::VARCHAR       AS tag_value,
+         tag_schema::VARCHAR      AS tag_schema,
          object_database::VARCHAR AS accessed_database,
          object_schema::VARCHAR   AS accessed_schema,
          object_name::VARCHAR     AS accessed_table,
-         NULL                     AS accessed_column
+         column_name::VARCHAR     AS accessed_column
   FROM {{ source('snowflake_account_usage', 'tag_references') }}
+  WHERE object_database IN ('RAW', 'PREP', 'PROD')
+
+), mnpi_tags AS (
+
+  SELECT 'MNPI'::VARCHAR   AS classification_type,
+         tag_name          AS tag_name,
+         tag_value         AS tag_value,
+         accessed_database AS accessed_database,
+         accessed_schema   AS accessed_schema,
+         accessed_table    AS accessed_table,
+         NULL              AS accessed_column
+  FROM tags
   WHERE tag_name  = 'MNPI_DATA'
   AND tag_value = 'yes'
 
 ), pii_tags AS (
 
-SELECT 'PII'::VARCHAR           AS classification_type,
-       tag_name::VARCHAR        AS tag_name,
-       tag_value::VARCHAR       AS tag_value,
-       object_database::VARCHAR AS accessed_database,
-       object_schema::VARCHAR   AS accessed_schema,
-       object_name::VARCHAR     AS accessed_table,
-       column_name::VARCHAR     AS accessed_column
-  FROM {{ source('snowflake_account_usage', 'tag_references') }}
-  WHERE tag_database = 'SNOWFLAKE'
+SELECT 'PII'::VARCHAR    AS classification_type,
+       tag_name          AS tag_name,
+       tag_value         AS tag_value,
+       accessed_database AS accessed_database,
+       accessed_schema   AS accessed_schema,
+       accessed_table    AS accessed_table,
+       accessed_column   AS accessed_column
+  FROM tags
+  WHERE accessed_database = 'SNOWFLAKE'
   AND tag_schema   = 'CORE'
 
-), tags AS (
+), unioned AS (
 
-  SELECT classification_type,
-         tag_name,
-         tag_value,
-         accessed_database,
-         accessed_schema,
-         accessed_table,
-         accessed_column
+  SELECT *
   FROM mnpi_tags
   UNION
-  SELECT classification_type,
-         tag_name,
-         tag_value,
-         accessed_database,
-         accessed_schema,
-         accessed_table,
-         accessed_column
+  SELECT *
   FROM pii_tags
 
 )
 
   SELECT *
-  FROM tags
+  FROM unioned
