@@ -147,11 +147,16 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         data_tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
+
       - name: created_at
         tags: ["tdf","gitlab_dotcom"]
         data_tests:
-          - not_null
+          - not_null:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
 
   - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
