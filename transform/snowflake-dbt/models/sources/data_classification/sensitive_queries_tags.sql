@@ -38,8 +38,8 @@ SELECT 'PII'::VARCHAR    AS classification_type,
        accessed_table    AS accessed_table,
        accessed_column   AS accessed_column
   FROM tags
-  WHERE accessed_database = 'SNOWFLAKE'
-  AND tag_schema   = 'CORE'
+  WHERE tag_schema   = 'CORE'
+  AND tag_name IN ('PRIVACY_CATEGORY', 'SEMANTIC_CATEGORY')
 
 ), unioned AS (
 
