@@ -31,8 +31,18 @@ WITH first_ping AS (
 )
 
 SELECT
-  first_ping.*,
-  latest_ping.* EXCLUDE dim_installation_id
+  first_ping.dim_installation_id,
+  first_ping.first_ping_created_at,
+  latest_ping.dim_crm_account_id,
+  latest_ping.latest_subscription_id,
+  latest_ping.latest_ping_created_at,
+  latest_ping.latest_major_minor_version,
+  latest_ping.latest_major_minor_version_num,
+  latest_ping.latest_ping_edition,
+  latest_ping.latest_product_tier,
+  latest_ping.latest_ping_edition_product_tier,
+  latest_ping.is_paid_subscription,
+  latest_ping.is_internal_installation
 FROM first_ping
 INNER JOIN latest_ping
   ON first_ping.dim_installation_id = latest_ping.dim_installation_id

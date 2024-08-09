@@ -83,9 +83,9 @@ This model contains the installation-level attributes from the latest ping for e
 **Data Grain:**
 * dim_installation_id
 
-**Filters & Business Logic in this Model:**
+**Filters in this Model:**
 
-* This model inherits all filters and business logic from [`mart_ping_instance`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_ping_instance#description).
+* This model inherits all filters from [`mart_ping_instance`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_ping_instance#description).
 
 **Business Logic in this Model:**
 
@@ -93,3 +93,5 @@ This model contains the installation-level attributes from the latest ping for e
 * Retrieve various attributes from the most recent ping for each installation.
 * Resulting table is a JOIN of the above two informations where each row represents a unique installation, containing both first ping date and latest ping attributes.
 * The `latest_` prefix on several columns indicates the status as of the most recent ping.
+
+{% enddocs %}
