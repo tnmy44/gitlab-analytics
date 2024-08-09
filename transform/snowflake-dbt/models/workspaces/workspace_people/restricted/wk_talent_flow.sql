@@ -8,7 +8,7 @@
     ('staffing_history_approved_source', 'staffing_history_approved_source'),
     ('bamboohr_promotions_xf', 'bamboohr_promotions_xf'),
     ('bamboohr_directionary_bonuses_xf', 'bamboohr_directionary_bonuses_xf'),
-    ('blended_job_profiles_source', 'blended_job_profiles_source')
+    ('job_profiles', 'blended_job_profiles_source')
     ])
 }},
 
