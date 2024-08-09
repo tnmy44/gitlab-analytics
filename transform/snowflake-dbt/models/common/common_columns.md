@@ -756,6 +756,18 @@ The timestamp when the ping was created
 
 {% enddocs %}
 
+{% docs latest_ping_created_at %}
+
+The timestamp when the most recent ping was created for a specific source.
+
+{% enddocs %}
+
+{% docs first_ping_created_at %}
+
+The timestamp when the very first ping was created for a specific source.
+
+{% enddocs %}
+
 {% docs ping_created_date_month %}
 
 The first day of the calendar month when the ping was created (YYYY-MM-01)

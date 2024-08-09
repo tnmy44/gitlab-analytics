@@ -92,6 +92,6 @@ This model contains the installation-level attributes from the latest ping for e
 * Determine the first ping date for each installation.
 * Retrieve various attributes from the most recent ping for each installation.
 * Resulting table is a JOIN of the above two informations where each row represents a unique installation, containing both first ping date and latest ping attributes.
-* The `latest_` prefix on several columns indicates the status as of the most recent ping.
+* The `latest_` prefix on the columns indicates the status as of the most recent ping.
 
 {% enddocs %}
