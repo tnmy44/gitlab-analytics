@@ -2,7 +2,8 @@
     "materialized": "incremental",
     "tags": ["data_classification", "mnpi_exception"],
     "unique_key":['classification_type', 'query_id', 'accessed_column', 'tag_name'],
-    "incremental_strategy":"delete+insert"
+    "incremental_strategy":"delete+insert",
+    "full_refresh": true if flags.FULL_REFRESH and var('full_refresh_force', false) else false
     })
 }}
 
