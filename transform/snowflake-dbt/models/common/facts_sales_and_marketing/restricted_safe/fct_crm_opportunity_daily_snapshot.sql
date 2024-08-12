@@ -74,11 +74,6 @@ final AS (
     prep_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
     CASE
       WHEN close_fiscal_year < prep_date.current_fiscal_year
-        THEN dim_crm_user_hierarchy_account_user_sk  -- live account owner hierarchy
-      ELSE {{ get_keyed_nulls('prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk') }} -- stamped opp owner hierarchy
-    END                                                                                                                         AS dim_crm_current_account_set_hierarchy_sk,
-    CASE
-      WHEN close_fiscal_year < prep_date.current_fiscal_year
         THEN dim_crm_account_user_sales_segment_id
       ELSE dim_crm_opp_owner_sales_segment_stamped_id
     END                                                                                                                         AS dim_crm_current_account_set_sales_segment_id,
