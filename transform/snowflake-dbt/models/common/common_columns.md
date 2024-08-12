@@ -2510,8 +2510,8 @@ The unique identifier that identifies a cloud activation.
 
 Sales hierarchy surrogate key that accounts for yearly changes in the sales hierarchy. Views all hierarchies through the lens of the current year hierarchy, and it reflects how the sales hierarchy is applied in practice. It choose between the opportunity owner stamped hierarchy or the account owner live user hierarchy:
 
-1. If the fiscal year of the live close_date of the opportunity is less than the current fiscal year THEN it outputs the account owner live user hierarchy
-2. If the fiscal year of the live close_date of the opportunity is greater than or equal to the current fiscal year THEN it output the opportunity owner stamped hierarchy
+1. If the fiscal year of the live close_date of the opportunity is less than the current fiscal year, use the account owner live user hierarchy
+2. If the fiscal year of the live close_date of the opportunity is greater than or equal to the current fiscal year, use the opportunity owner stamped hierarchy
 
 {% enddocs %}
 

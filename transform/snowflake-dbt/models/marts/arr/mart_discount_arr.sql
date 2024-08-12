@@ -156,7 +156,7 @@ arr_agg AS (
     LEFT JOIN dim_crm_user_hierarchy
       ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = dim_crm_opportunity.dim_crm_current_account_set_hierarchy_sk
     WHERE dim_crm_account_subscription.is_jihu_account != 'TRUE'
-    {{ dbt_utils.group_by(n=46) }}
+    {{ dbt_utils.group_by(n=47) }}
     ORDER BY 3 DESC
 
 ), final AS (

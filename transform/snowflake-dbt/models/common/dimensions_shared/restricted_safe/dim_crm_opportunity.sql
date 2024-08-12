@@ -22,6 +22,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.opportunity_name,
       prep_crm_opportunity.dim_crm_user_id,
       prep_crm_opportunity.dim_parent_crm_opportunity_id,
+      prep_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
 
       -- logistical information
       prep_crm_opportunity.generated_source,
