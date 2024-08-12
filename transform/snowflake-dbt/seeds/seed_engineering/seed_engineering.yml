@@ -1,0 +1,19 @@
+
+seeds:
+  - name: engineering_analytics_workflow_labels
+  - name: engineering_productivity_metrics_projects_to_include
+  - name: gcp_billing_ai_mapping
+    description: CSV containing the resource names for AI resources in unreview-poc project
+  - name: gcp_billing_folder_pl_mapping
+  - name: gcp_billing_haproxy_pl_mapping
+  - name: gcp_billing_hierarchy
+  - name: gcp_billing_infra_pl_mapping
+    description: CSV containing the static allocation % on Free/Paid/Internal P&L mappings for GCP billing - Infra labels version https://docs.google.com/spreadsheets/d/1NqiddQILw-bay__M6GgBobbjFpp15QSjfGiYwucMR4s/edit#gid=1536190575
+  - name: gcp_billing_project_pl_mapping
+    description: CSV containing the static allocation % on Free/Paid/Internal P&L mappings for GCP billing - Projects version https://docs.google.com/spreadsheets/d/1NqiddQILw-bay__M6GgBobbjFpp15QSjfGiYwucMR4s/edit#gid=1536190575
+  - name: gcp_billing_unit_mapping
+    description: CSV containing the conversion rate for various usage and pricing unit. https://docs.google.com/spreadsheets/d/1V6_XwqjoKRo4LwbNPh8YtvnbHZPw5zM3HhgFxwyF-Mc/edit?usp=sharing
+  - name: handbook_file_classification_mapping
+    description: This a csv loaded by dbt seed for mapping handbook file paths to divisions/department classifications.
+  - name: projects_part_of_product_ops
+  - name: projects_part_of_product

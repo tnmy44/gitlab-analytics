@@ -1,0 +1,6 @@
+
+seeds:
+  - name: netsuite_expense_cost_category
+  - name: zuora_country_geographic_region
+  - name: zuora_excluded_accounts
+    description: '{{ doc("zuora_excluded_accounts_doc") }}'

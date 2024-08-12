@@ -57,6 +57,9 @@ seeds:
 
   gitlab_snowflake:
 
+    seed_customer_success:
+      +schema: seed_customer_success
+
     seed_data:
       +schema: seed_data
 
