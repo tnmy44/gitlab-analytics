@@ -92,17 +92,6 @@ combined_data AS (
   UNION 
 
   SELECT
-    dim_crm_current_account_set_hierarchy_sk,
-    sales_qualified_source_name,
-    sales_qualified_source_grouped,
-    order_type,
-    order_type_grouped,
-    close_fiscal_quarter_name
-  FROM quarterly_actuals 
-
-  UNION
-
-  SELECT
     dim_crm_user_hierarchy_sk,
     sales_qualified_source_name,
     sales_qualified_source_grouped,
@@ -110,6 +99,17 @@ combined_data AS (
     order_type_grouped,
     fiscal_quarter_name_fy
   FROM total_targets
+
+  UNION
+
+  SELECT
+    dim_crm_current_account_set_hierarchy_sk,
+    sales_qualified_source_name,
+    sales_qualified_source_grouped,
+    order_type,
+    order_type_grouped,
+    close_fiscal_quarter_name
+  FROM quarterly_actuals
 
 ),
 
