@@ -10007,11 +10007,10 @@ users:
     groups:
       - General All Access
       - General SAFE Access    
-# Awaiting completion of watching the SAFE Video
-#  - user_name: jjanes
-#    user_name_domain: gitlab.com
-#    site_role: ExplorerCanPublish
-#    auth_setting: SAML
-#    groups:
-#      - General All Access
-#      - General SAFE Access
+  - user_name: jjanes
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
