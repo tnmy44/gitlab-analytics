@@ -154,7 +154,7 @@ def get_base_url(url_specification, table_name: str) -> str:
     return url_specification["URL"]
 
 
-def get_private_token(token_name: str) -> str | None:
+def get_private_token(token_name: str):
     """
     Return private token, if exists.
     Otherwise, return None
