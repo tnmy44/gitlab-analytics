@@ -29,7 +29,7 @@ final AS (
     hist.dim_plan_id,
     CASE WHEN hist.namespace_is_internal THEN 'internal'
       WHEN hist.is_trial = TRUE THEN 'free' -- adding this so that customers on paid plan trials are identified as free
-      WHEN plan_ids.plan_is_paid THEN 'paid'
+      WHEN plan_ids.plan_is_paid = TRUE THEN 'paid'
       ELSE 'free'
     END AS finance_pl
   FROM date_spine
