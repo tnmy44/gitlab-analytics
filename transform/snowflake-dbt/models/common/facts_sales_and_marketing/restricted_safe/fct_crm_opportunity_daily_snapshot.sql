@@ -181,7 +181,6 @@ final AS (
     prep_crm_opportunity.dim_parent_crm_account_id,
     prep_crm_opportunity.is_open,
     prep_crm_opportunity.opportunity_owner_user_segment,
-
     prep_crm_opportunity.opportunity_owner_role,
     prep_crm_opportunity.opportunity_owner_title,
     prep_crm_opportunity.opportunity_account_owner_role,
