@@ -756,6 +756,18 @@ The timestamp when the ping was created
 
 {% enddocs %}
 
+{% docs latest_ping_created_at %}
+
+The timestamp when the most recent ping was created for a specific source.
+
+{% enddocs %}
+
+{% docs first_ping_created_at %}
+
+The timestamp when the very first ping was created for a specific source.
+
+{% enddocs %}
+
 {% docs ping_created_date_month %}
 
 The first day of the calendar month when the ping was created (YYYY-MM-01)
@@ -3519,3 +3531,20 @@ Pseudonymised combination of instance id and user id coalesced from the `global_
 
 {% enddocs %}
 
+{% docs user_type_id %}
+
+Numeric id indicating the type of user in GitLab.com data.
+
+{% enddocs %}
+
+{% docs user_type %}
+
+User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) to translate the ids to human-readable types.
+
+{% enddocs %}
+
+{% docs is_bot %}
+
+Calculated field based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) of bot user types.
+
+{% enddocs %}
