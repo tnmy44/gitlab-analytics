@@ -197,18 +197,6 @@ final AS (
     dim_crm_user_hierarchy.crm_user_role_level_4                            AS report_role_level_4,
     dim_crm_user_hierarchy.crm_user_role_level_5                            AS report_role_level_5,
 
-    --fields to deprecate
-    dim_crm_user_hierarchy.crm_user_sales_segment                           AS crm_current_account_set_sales_segment,
-    dim_crm_user_hierarchy.crm_user_geo                                     AS crm_current_account_set_geo,
-    dim_crm_user_hierarchy.crm_user_region                                  AS crm_current_account_set_region,
-    dim_crm_user_hierarchy.crm_user_area                                    AS crm_current_account_set_area,
-    dim_crm_user_hierarchy.crm_user_business_unit                           AS crm_current_account_set_business_unit,
-    dim_crm_user_hierarchy.crm_user_role_name                               AS crm_current_account_set_role_name,
-    dim_crm_user_hierarchy.crm_user_role_level_1                            AS crm_current_account_set_role_level_1,
-    dim_crm_user_hierarchy.crm_user_role_level_2                            AS crm_current_account_set_role_level_2,
-    dim_crm_user_hierarchy.crm_user_role_level_3                            AS crm_current_account_set_role_level_3,
-    dim_crm_user_hierarchy.crm_user_role_level_4                            AS crm_current_account_set_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5                            AS crm_current_account_set_role_level_5,
 
     LOWER(
       account_owner_live.crm_user_sales_segment

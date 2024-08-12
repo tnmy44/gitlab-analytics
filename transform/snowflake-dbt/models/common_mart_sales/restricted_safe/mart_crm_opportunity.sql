@@ -195,19 +195,6 @@
       fct_crm_opportunity.is_abm_tier_closed_won,
 
       -- Key Reporting Fields
-      --Fields need to be deprecated in favor of report_* fields
-      dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS crm_current_account_set_sales_segment,
-      dim_crm_user_hierarchy.crm_user_geo                                                                   AS crm_current_account_set_geo,
-      dim_crm_user_hierarchy.crm_user_region                                                                AS crm_current_account_set_region,
-      dim_crm_user_hierarchy.crm_user_area                                                                  AS crm_current_account_set_area,
-      dim_crm_user_hierarchy.crm_user_business_unit                                                         AS crm_current_account_set_business_unit,
-      dim_crm_user_hierarchy.crm_user_role_name                                                             AS crm_current_account_set_role_name,
-      dim_crm_user_hierarchy.crm_user_role_level_1                                                          AS crm_current_account_set_role_level_1,
-      dim_crm_user_hierarchy.crm_user_role_level_2                                                          AS crm_current_account_set_role_level_2,
-      dim_crm_user_hierarchy.crm_user_role_level_3                                                          AS crm_current_account_set_role_level_3,
-      dim_crm_user_hierarchy.crm_user_role_level_4                                                          AS crm_current_account_set_role_level_4,
-      dim_crm_user_hierarchy.crm_user_role_level_5                                                          AS crm_current_account_set_role_level_5,
-
       dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS report_segment,
       dim_crm_user_hierarchy.crm_user_geo                                                                   AS report_geo,
       dim_crm_user_hierarchy.crm_user_region                                                                AS report_region,
