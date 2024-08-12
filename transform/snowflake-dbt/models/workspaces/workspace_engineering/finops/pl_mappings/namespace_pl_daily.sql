@@ -6,15 +6,8 @@ WITH date_spine AS (
 
 plan_ids AS (
 
-  SELECT DISTINCT
-    gitlab_plan_id,
-    FIRST_VALUE(CASE
-      WHEN gitlab_plan_title = 'Default' THEN 'internal'
-      WHEN gitlab_plan_is_paid = TRUE THEN 'paid'
-      WHEN gitlab_plan_is_paid = FALSE THEN 'free'
-      ELSE 'internal'
-    END) OVER (PARTITION BY gitlab_plan_id ORDER BY IFF(gitlab_plan_is_paid = TRUE, 1, 0) DESC) AS gitlab_plan_title
-  FROM {{ ref('dim_namespace') }}
+  SELECT *
+  FROM {{ ref('prep_gitlab_dotcom_plan') }}
 
 ),
 
@@ -35,11 +28,13 @@ final AS (
     hist.dim_namespace_id,
     hist.dim_plan_id,
     CASE WHEN hist.namespace_is_internal THEN 'internal'
-      WHEN hist.is_trial = TRUE THEN 'free' ELSE plan_ids.gitlab_plan_title
+      WHEN hist.is_trial = TRUE THEN 'free' -- adding this so that customers on paid plan trials are identified as free
+      WHEN plan_ids.plan_is_paid THEN 'paid'
+      ELSE 'free'
     END AS finance_pl
   FROM date_spine
   LEFT JOIN dim_namespace_plan_hist AS hist ON date_spine.date_day >= hist.valid_from AND date_spine.date_day < COALESCE(hist.valid_to, GETDATE())
-  LEFT JOIN plan_ids ON hist.dim_plan_id = plan_ids.gitlab_plan_id
+  LEFT JOIN plan_ids ON hist.dim_plan_id = plan_ids.dim_plan_id
 
 )
 
