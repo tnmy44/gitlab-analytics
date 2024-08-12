@@ -131,9 +131,6 @@ def curl_and_upload(
         command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
     run_subprocess(command=command, file=file_name)
-
-    info(f"Uploading to {json_file_name}.json to Snowflake stage.")
-
     upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_to_upload)
 
 
@@ -148,6 +145,25 @@ def manifest_reader(file_path: str):
     return manifest_dict
 
 
+def get_base_url(url_specification, table_name: str) -> str:
+    """
+    Return base url
+    """
+    if isinstance(url_specification, dict):
+        return url_specification[table_name]
+    return url_specification["URL"]
+
+
+def get_private_token(token_name: str) -> str | None:
+    """
+    Return private token, if exists.
+    Otherwise, return None
+    """
+    if token_name:
+        return env.get(token_name)
+    return None
+
+
 def run(file_path: str = "file_specification.yml") -> None:
     """
     Procedure to process files from the manifest file.
@@ -159,14 +175,12 @@ def run(file_path: str = "file_specification.yml") -> None:
 
         for table_to_upload, file_name in specification["files"].items():
             streaming = specification.get("streaming", False)
-
-            base_url = specification["URL"]
-            if isinstance(base_url, dict):
-                base_url = base_url[table_to_upload]
-
-            private_token = specification.get("private_token", None)
-            if private_token:
-                private_token = env.get(private_token)
+            base_url = get_base_url(
+                url_specification=specification["URL"], table_name=table_to_upload
+            )
+            private_token = get_private_token(
+                token_name=specification.get("private_token", None)
+            )
 
             if streaming:
                 request_download_decode_upload(
