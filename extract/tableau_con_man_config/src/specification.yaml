@@ -10022,7 +10022,7 @@ users:
       - General All Access
   - user_name: dbauer
     user_name_domain: gitlab.com
-    site_role: ExplorerCanPublish
+    site_role: Viewer
     auth_setting: SAML
     groups:
       - General All Access
