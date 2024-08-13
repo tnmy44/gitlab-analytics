@@ -35,6 +35,7 @@ If none, please include a description
 
 - [ ] Do **NOT** need to link it to other data
     * [ ]  Open CSV directly in Tableau, Submitter please follow steps:
+      1. Submitter needs to be a Tableau Creator. If the submitter is not a Tableau Creator, please reach out to #data-tableau Slack Channel for support.
       1. In Tableau Desktop select Connect to Data from the start page
       1. In the To a File section, click More and select the CSV file
       1. Click Open to load the file into Tableau
@@ -54,7 +55,7 @@ If none, please include a description
     * [ ] Data Team member to check file name and sheet names to match: The file will be located and loaded based on its name `boneyard.<table_name>`. The names of the sheets shared with the runner must be unique and in the `<file_name>.<tab_name>` format.
     * [ ] Data Team member to merge update after validation of data and MR
     * [ ] Submitter to wait 6 to 8 hours for data to become available (runs 4x per day), or if urgent to ask Data Engineer to trigger job
-    * [ ] Submitter to create a new data source in Tableau using the table: `boneyard.[new-dbt-model-name]`.
+    * [ ] Submitter to create a new data source in Tableau using the table: `boneyard.[new-dbt-model-name]`. The submitter needs to be a Tableau Creator. If the submitter is not a Tableau Creator, please reach out to #data-tableau Slack Channel for support.
 
 ---
 
@@ -77,5 +78,5 @@ If none, please include a description
     * [ ]  Data Analyst to assign MR to project maintainer for review (iterate until model is complete).
     * [ ]  Data Team project maintainers/owners to merge in dbt models
     * [ ]  If not urgent, data will be availble within 24 hours. If urgent, Data Engineer to run full refresh and inform when available.
-    * [ ]  Submitter to create a new data source in Tableau using the table: `boneyard.[new-dbt-model-name]`.
+    * [ ]  Submitter to create a new data source in Tableau using the table: `boneyard.[new-dbt-model-name]`. The submitter needs to be a Tableau Creator. If the submitter is not a Tableau Creator, please reach out to #data-tableau Slack Channel for support.
 
