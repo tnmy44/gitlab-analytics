@@ -31,10 +31,10 @@ def manifest_file_fixture():
     """
     from logging import info
     import os
-    info(F"XXXXXXXXX: {os.getcwd()}")
-    return manifest_reader(
-        file_path="../../extract/gitlab_data_yaml/file_specification.yml"
-    )
+
+    info(f"XXXXXXXXX: {os.getcwd()}")
+    print(f"XXXXXXXXX: {os.getcwd()}")
+    return manifest_reader(file_path="../gitlab_data_yaml/file_specification.yml")
 
 
 @pytest.mark.parametrize(
