@@ -164,7 +164,7 @@ def get_private_token(token_name: str):
     return None
 
 
-def run(file_path: str = "file_specification.yml") -> None:
+def run(file_path: str = "../../extract/gitlab_data_yaml/file_specification.yml") -> None:
     """
     Procedure to process files from the manifest file.
     """
