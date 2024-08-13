@@ -29,6 +29,9 @@ def manifest_file_fixture():
     """
     Get manifest file
     """
+    from logging import info
+    import os
+    info(F"XXXXXXXXX: {os.getcwd()}")
     return manifest_reader(
         file_path="../../extract/gitlab_data_yaml/file_specification.yml"
     )
