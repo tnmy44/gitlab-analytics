@@ -3,7 +3,7 @@
 }) }}
 
 WITH dates AS (
-
+--
   SELECT
     {{ dbt_utils.star(
            from=ref('prep_date'), 
