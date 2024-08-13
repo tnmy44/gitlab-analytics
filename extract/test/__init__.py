@@ -11,6 +11,7 @@ test_paths = [
     "extract/level_up_thought_industries/src",
     "extract/adaptive/src",
     "extract/data_classification",
+    "extract/gitlab_data_yaml"
 ]
 absolute_test_path = os.path.dirname(os.path.realpath(__file__))
 

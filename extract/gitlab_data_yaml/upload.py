@@ -21,10 +21,8 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
 )
 
-# Configuration
 config_dict = env.copy()
 basicConfig(stream=sys.stdout, level=20)
-snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
 
 def upload_to_snowflake(file_for_upload: str, table: str) -> None:
@@ -32,6 +30,8 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     Upload json file to Snowflake
     """
     info(f"....Start uploading to Snowflake, file: {file_for_upload}")
+    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
     snowflake_stage_load_copy_remove(
         file=file_for_upload,
         stage="gitlab_data_yaml.gitlab_data_yaml_load",
@@ -151,7 +151,7 @@ def get_base_url(url_specification, table_name: str) -> str:
     """
     if isinstance(url_specification, dict):
         return url_specification[table_name]
-    return url_specification["URL"]
+    return url_specification
 
 
 def get_private_token(token_name: str):
