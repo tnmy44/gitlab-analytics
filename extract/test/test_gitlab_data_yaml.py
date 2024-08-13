@@ -34,7 +34,7 @@ def manifest_file_fixture():
 
     info(f"XXXXXXXXX: {os.getcwd()}")
     print(f"XXXXXXXXX: {os.getcwd()}")
-    return manifest_reader(file_path="../gitlab_data_yaml/file_specification.yml")
+    return manifest_reader(file_path="extract/gitlab_data_yaml/file_specification.yml")
 
 
 @pytest.mark.parametrize(
