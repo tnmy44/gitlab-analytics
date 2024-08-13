@@ -4,7 +4,6 @@ Main test unit for GitLab_data_yaml pipeline
 from unittest.mock import patch
 
 import pytest
-
 from extract.gitlab_data_yaml.upload import (
     get_base_url,
     get_json_file_name,
@@ -29,11 +28,7 @@ def manifest_file_fixture():
     """
     Get manifest file
     """
-    from logging import info
-    import os
 
-    info(f"XXXXXXXXX: {os.getcwd()}")
-    print(f"XXXXXXXXX: {os.getcwd()}")
     return manifest_reader(file_path="extract/gitlab_data_yaml/file_specification.yml")
 
 
