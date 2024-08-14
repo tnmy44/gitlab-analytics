@@ -1310,6 +1310,25 @@ tables:
       FROM jira_tracker_data
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  keys:
+    dbt_source_model: true
+    is_incremental: False
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: 'keys'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , created_at
+      , updated_at
+      , type
+      , public
+      , last_used_at
+      FROM keys
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   label_priorities:
     dbt_source_model: true
     deletes_exempt: True
@@ -2266,6 +2285,29 @@ tables:
       FROM protected_branch_push_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  protected_branches:
+    dbt_source_model: true
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: 'protected_branches'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , CASE
+            WHEN name = 'main' THEN 'main'
+            WHEN name = 'master' THEN 'master'
+            ELSE NULL
+        END as name
+      , created_at
+      , updated_at
+      , code_owner_approval_required
+      FROM protected_branches
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   protected_environment_approval_rules:
     dbt_source_model: true
     deletes_exempt: True
@@ -2306,6 +2348,22 @@ tables:
       , group_id
       , required_approval_count
       FROM protected_environments
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  related_epic_links:
+    advanced_metadata: true
+    dbt_source_model: true
+    is_incremental: False
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: 'related_epic_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      FROM related_epic_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   releases:
@@ -3083,6 +3141,22 @@ tables:
       , created_at
       , updated_at
       FROM work_item_types
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  work_item_parent_links:
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: work_item_parent_links
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , work_item_parent_id
+      , created_at
+      , updated_at
+      FROM work_item_parent_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   work_item_progresses:
