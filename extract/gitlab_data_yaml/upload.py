@@ -41,7 +41,26 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     info(f"....End uploading to Snowflake, file: {file_for_upload}")
 
 
-def request_download_decode_upload(
+def decode_file(response):
+    """
+    Decode file and get the content from response
+    """
+    file_content = response.get("content")
+    message_bytes = base64.b64decode(file_content)
+
+    return yaml.load(message_bytes, Loader=yaml.Loader)
+
+
+def save_to_file(file: str, request: dict) -> None:
+    """
+    Save json to file for uploading
+    """
+
+    with open(f"{file}.json", "w", encoding="UTF-8") as file_name_json:
+        json.dump(request, file_name_json, indent=4)
+
+
+def stream_processing(
     table_to_upload: str, file_name: str, base_url: str, private_token=None
 ):
     """
@@ -58,26 +77,17 @@ def request_download_decode_upload(
         response = requests.request(
             "GET", request_url, headers={"Private-Token": private_token}, timeout=10
         )
-    # Load the content in json
-    api_response_json = response.json()
 
-    # check if the file is empty or not present.
+    api_response_json = response.json()
     record_count = len(api_response_json)
 
     if record_count > 1:
-        # Get the content from response
-        file_content = api_response_json.get("content")
-        message_bytes = base64.b64decode(file_content)
-        output_json_request = yaml.load(message_bytes, Loader=yaml.Loader)
-
-        # write to the Json file
-        with open(f"{file_name}.json", "w", encoding="UTF-8") as file_name_json:
-            json.dump(output_json_request, file_name_json, indent=4)
-
+        output_json_request = decode_file(response=api_response_json)
+        save_to_file(file=f"{file_name}.json", request=output_json_request)
         upload_to_snowflake(file_for_upload=f"{file_name}.json", table=table_to_upload)
     else:
         error(
-            f"The file for {file_name} is either empty or the location has changed investigate"
+            f"The file for {file_name} is either empty or the location has changed, please investigate."
         )
 
 
@@ -112,7 +122,7 @@ def run_subprocess(command: str, file: str) -> None:
         )
 
 
-def curl_and_upload(
+def batch_processing(
     table_to_upload: str, file_name: str, base_url: str, private_token=None
 ):
     """
@@ -122,7 +132,7 @@ def curl_and_upload(
     """
     json_file_name = get_json_file_name(input_file=file_name)
 
-    info(f"Downloading {file_name} to {json_file_name}.json file.")
+    info(f"... Start downloading {file_name} to {json_file_name}.json file.")
 
     if private_token:
         header = f'--header "PRIVATE-TOKEN: {private_token}"'
@@ -131,6 +141,8 @@ def curl_and_upload(
         command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
     run_subprocess(command=command, file=file_name)
+    info(f"... End downloading {file_name} to {json_file_name}.json file.")
+
     upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_to_upload)
 
 
@@ -164,40 +176,54 @@ def get_private_token(token_name: str):
     return None
 
 
+def process_file(specification: dict, table_to_upload: str, file_name: str) -> None:
+    """
+    Assign properties and process file
+    """
+    info(f"... Start processing {file_name} to Snowflake stage.")
+
+    streaming = specification.get("streaming", False)
+    base_url = get_base_url(
+        url_specification=specification["URL"], table_name=table_to_upload
+    )
+    private_token = get_private_token(
+        token_name=specification.get("private_token", None)
+    )
+
+    if streaming:
+        stream_processing(
+            table_to_upload=table_to_upload,
+            file_name=file_name,
+            base_url=base_url,
+            private_token=private_token,
+        )
+    else:
+        batch_processing(
+            table_to_upload=table_to_upload,
+            file_name=file_name,
+            base_url=base_url,
+            private_token=private_token,
+        )
+    info(f"... End processing {file_name} to Snowflake stage.")
+
+
 def run(file_path: str = "gitlab_data_yaml/file_specification.yml") -> None:
     """
     Procedure to process files from the manifest file.
     """
     manifest = manifest_reader(file_path=file_path)
 
-    for file, specification in manifest.items():
-        info(f"Start processing {file} to Snowflake stage.")
+    for file_group, specification in manifest.items():
+        info(f"Start processing {file_group} to Snowflake stage.")
 
         for table_to_upload, file_name in specification["files"].items():
-            streaming = specification.get("streaming", False)
-            base_url = get_base_url(
-                url_specification=specification["URL"], table_name=table_to_upload
-            )
-            private_token = get_private_token(
-                token_name=specification.get("private_token", None)
+            process_file(
+                specification=specification,
+                table_to_upload=table_to_upload,
+                file_name=file_name,
             )
 
-            if streaming:
-                request_download_decode_upload(
-                    table_to_upload=table_to_upload,
-                    file_name=file_name,
-                    base_url=base_url,
-                    private_token=private_token,
-                )
-            else:
-                curl_and_upload(
-                    table_to_upload=table_to_upload,
-                    file_name=file_name,
-                    base_url=base_url,
-                    private_token=private_token,
-                )
-
-        info(f"End processing {file} to Snowflake stage.")
+        info(f"End processing {file_group} to Snowflake stage.")
 
 
 if __name__ == "__main__":
