@@ -259,8 +259,8 @@ final AS (
       AND base.order_type_grouped_live = quarterly_actuals.order_type_grouped
   LEFT JOIN dim_date
     ON base.snapshot_date = dim_date.date_actual 
-  LEFT JOIN dim_crm_user_hierarchy
-    ON base.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+  LEFT JOIN hierarchy
+    ON base.dim_crm_current_account_set_hierarchy_sk = hierarchy.dim_crm_user_hierarchy_sk
   GROUP BY ALL
 
 )
