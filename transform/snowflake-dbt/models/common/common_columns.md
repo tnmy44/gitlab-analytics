@@ -698,9 +698,37 @@ Boolean flag set to True if the subscription is under an EDU or OSS Program. Thi
 
 {% docs dim_subscription_id %}
 
+Unique identifier of a version of a subscription
+
 {% enddocs %}
 
 {% docs dim_subscription_id_original %}
+
+Unique identifier of a subscription, does not change when amendments are made to the subscription. This ID will have multiple dim_subscription_id values associated with it for each version of the original subscription
+
+{% enddocs %}
+
+{% docs subscription_version %}
+
+The version number of the subscription
+
+{% enddocs %}
+
+{% docs dim_namespace_id %}
+
+The namespace ID of the instance (GitLab.com only)
+
+{% enddocs %}
+
+{% docs product_rate_plan_charge_name %}
+
+The name of the product rate plan charge
+
+{% enddocs %}
+
+{% docs charge_type %}
+
+Type of the charge
 
 {% enddocs %}
 
