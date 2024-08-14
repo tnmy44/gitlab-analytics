@@ -24,15 +24,15 @@ handbook:
   streaming: False
 pi_file:
   files:
-    chief_of_staff_team_pi: chief_of_staff_team
-    customer_support_pi: customer_support_department
-    development_department_pi: development_department
-    engineering_function_pi: engineering_function
-    finance_team_pi: finance_team
-    infrastructure_department_pi: infrastructure_department
-    marketing_pi: marketing
-    people_success_pi: people_success
-    ux_department_pi: ux_department
+    chief_of_staff_team_pi: chief_of_staff_team.yml
+    customer_support_pi: customer_support_department.yml
+    development_department_pi: development_department.yml
+    engineering_function_pi: engineering_function.yml
+    finance_team_pi: finance_team.yml
+    infrastructure_department_pi: infrastructure_department.yml
+    marketing_pi: marketing.yml
+    people_success_pi: people_success.yml
+    ux_department_pi: ux_department.yml
   URL: https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/performance_indicators/
   streaming: False
 pi_internal_hb_file:
