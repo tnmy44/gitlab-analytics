@@ -18,6 +18,7 @@
 
       --primary key
       fct_crm_opportunity.dim_crm_opportunity_id,
+      fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk,
       
       --surrogate keys
       dim_crm_account.dim_parent_crm_account_id,
@@ -610,10 +611,10 @@
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
     LEFT JOIN dim_date                                       AS dim_date_close_date
       ON fct_crm_opportunity.close_date = dim_date_close_date.date_day
+    LEFT JOIN dim_crm_user_hierarchy AS report_hierarchy
+      ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = report_hierarchy.dim_crm_user_hierarchy_sk
     LEFT JOIN dim_crm_user_hierarchy
       ON fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-    LEFT JOIN dim_crm_user_hierarchy AS report_hierarchy
-      ON fct_crm_opportunity.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_crm_opportunity.dim_crm_user_hierarchy_live_sk = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_account_owner
