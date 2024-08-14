@@ -137,7 +137,7 @@ def test_manifest_reader(manifest_file):
 )
 def test_decode(attribute, expected_value):
     """
-    Test decode_file function for exising file
+    Test decode_file function
     """
 
     result = decode_file(attribute)
