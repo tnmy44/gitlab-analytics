@@ -150,17 +150,17 @@ final AS (
     base.order_type_grouped_live,
 
     --Hierarchy fields
-    dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS report_segment,
-    dim_crm_user_hierarchy.crm_user_geo                                                                   AS report_geo,
-    dim_crm_user_hierarchy.crm_user_region                                                                AS report_region,
-    dim_crm_user_hierarchy.crm_user_area                                                                  AS report_area,
-    dim_crm_user_hierarchy.crm_user_business_unit                                                         AS report_business_unit,
-    dim_crm_user_hierarchy.crm_user_role_name                                                             AS report_role_name,
-    dim_crm_user_hierarchy.crm_user_role_level_1                                                          AS report_role_level_1,
-    dim_crm_user_hierarchy.crm_user_role_level_2                                                          AS report_role_level_2,
-    dim_crm_user_hierarchy.crm_user_role_level_3                                                          AS report_role_level_3,
-    dim_crm_user_hierarchy.crm_user_role_level_4                                                          AS report_role_level_4,
-    dim_crm_user_hierarchy.crm_user_role_level_5                                                          AS report_role_level_5,
+    hierarchy.crm_user_sales_segment                                                         AS report_segment,
+    hierarchy.crm_user_geo                                                                   AS report_geo,
+    hierarchy.crm_user_region                                                                AS report_region,
+    hierarchy.crm_user_area                                                                  AS report_area,
+    hierarchy.crm_user_business_unit                                                         AS report_business_unit,
+    hierarchy.crm_user_role_name                                                             AS report_role_name,
+    hierarchy.crm_user_role_level_1                                                          AS report_role_level_1,
+    hierarchy.crm_user_role_level_2                                                          AS report_role_level_2,
+    hierarchy.crm_user_role_level_3                                                          AS report_role_level_3,
+    hierarchy.crm_user_role_level_4                                                          AS report_role_level_4,
+    hierarchy.crm_user_role_level_5                                                          AS report_role_level_5,
 
     --Dates
     dim_date.current_day_name,
