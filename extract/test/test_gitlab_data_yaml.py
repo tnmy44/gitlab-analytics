@@ -120,39 +120,28 @@ def test_manifest_reader(manifest_file):
         assert isinstance(spec, dict)
 
 
-def test_decode_file_exists():
+@pytest.mark.parametrize(
+    "attribute, expected_value",
+    [
+        (
+            {
+                "content": base64.b64encode(
+                    yaml.dump({"key": "value"}).encode()
+                ).decode()
+            },
+            {"key": "value"},
+        ),
+        ({"content": ""}, None),
+        (None, None),
+    ],
+)
+def test_decode(attribute, expected_value):
     """
     Test decode_file function for exising file
     """
-    mock_response = {
-        "content": base64.b64encode(yaml.dump({"key": "value"}).encode()).decode()
-    }
 
-    result = decode_file(mock_response)
-
-    assert result == {"key": "value"}
-
-
-def test_decode_file_empty():
-    """
-    Test decode_file function for empty file
-    """
-    mock_response = {"content": ""}
-
-    result = decode_file(mock_response)
-
-    assert result is None
-
-
-def test_decode_file_none():
-    """
-    Test decode_file function for None value
-    """
-    mock_response = None
-
-    result = decode_file(mock_response)
-
-    assert result is None
+    result = decode_file(attribute)
+    assert result == expected_value
 
 
 def test_save_to_file(tmp_path):
