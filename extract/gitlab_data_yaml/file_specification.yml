@@ -17,9 +17,9 @@ comp_calc:
   private_token: gitlab_analytics_private_token
 handbook:
   files:
-    categories: categories
-    releases: releases
-    stages: stages
+    categories: categories.yml
+    releases: releases.yml
+    stages: stages.yml
   URL: https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/
   streaming: False
 pi_file:
