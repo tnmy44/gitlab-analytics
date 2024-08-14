@@ -149,6 +149,19 @@ final AS (
     base.order_type_live,
     base.order_type_grouped_live,
 
+    --Hierarchy fields
+    dim_crm_user_hierarchy.crm_user_sales_segment                                                         AS report_segment,
+    dim_crm_user_hierarchy.crm_user_geo                                                                   AS report_geo,
+    dim_crm_user_hierarchy.crm_user_region                                                                AS report_region,
+    dim_crm_user_hierarchy.crm_user_area                                                                  AS report_area,
+    dim_crm_user_hierarchy.crm_user_business_unit                                                         AS report_business_unit,
+    dim_crm_user_hierarchy.crm_user_role_name                                                             AS report_role_name,
+    dim_crm_user_hierarchy.crm_user_role_level_1                                                          AS report_role_level_1,
+    dim_crm_user_hierarchy.crm_user_role_level_2                                                          AS report_role_level_2,
+    dim_crm_user_hierarchy.crm_user_role_level_3                                                          AS report_role_level_3,
+    dim_crm_user_hierarchy.crm_user_role_level_4                                                          AS report_role_level_4,
+    dim_crm_user_hierarchy.crm_user_role_level_5                                                          AS report_role_level_5,
+
     --Dates
     dim_date.current_day_name,
     dim_date.current_date_actual,
@@ -246,6 +259,8 @@ final AS (
       AND base.order_type_grouped_live = quarterly_actuals.order_type_grouped
   LEFT JOIN dim_date
     ON base.snapshot_date = dim_date.date_actual 
+  LEFT JOIN dim_crm_user_hierarchy
+    ON base.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
   GROUP BY ALL
 
 )
