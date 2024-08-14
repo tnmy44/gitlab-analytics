@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH prep_user AS (
 
     SELECT 
