@@ -1,15 +1,20 @@
 """
 Main test unit for GitLab_data_yaml pipeline
 """
+import base64
+import json
 from unittest.mock import patch
 
 import pytest
+import yaml
 from extract.gitlab_data_yaml.upload import (
+    decode_file,
     get_base_url,
     get_json_file_name,
     get_private_token,
     manifest_reader,
     run_subprocess,
+    save_to_file,
 )
 
 
@@ -113,3 +118,76 @@ def test_manifest_reader(manifest_file):
     assert isinstance(manifest_file, dict)
     for _, spec in manifest_file.items():
         assert isinstance(spec, dict)
+
+
+def test_decode_file_exists():
+    """
+    Test decode_file function for exising file
+    """
+    mock_response = {
+        "content": base64.b64encode(yaml.dump({"key": "value"}).encode()).decode()
+    }
+
+    result = decode_file(mock_response)
+
+    assert result == {"key": "value"}
+
+
+def test_decode_file_empty():
+    """
+    Test decode_file function for empty file
+    """
+    mock_response = {"content": ""}
+
+    result = decode_file(mock_response)
+
+    assert result is None
+
+
+def test_decode_file_none():
+    """
+    Test decode_file function for None value
+    """
+    mock_response = None
+
+    result = decode_file(mock_response)
+
+    assert result is None
+
+
+def test_save_to_file(tmp_path):
+    """
+    Test the save_to_file function.
+
+    This test ensures that:
+    1. The function creates a file with the correct name
+    2. The file contains the expected JSON content
+    """
+    file = "test_file"
+    request = {"key": "value"}
+    expected_file = tmp_path / f"{file}.json"
+
+    save_to_file(str(tmp_path / file), request)
+
+    assert expected_file.exists()
+    with open(file=expected_file, mode="r", encoding="utf8") as f:
+        content = json.load(f)
+    assert content == request
+
+
+def test_decode_file():
+    """
+    Test the decode_file function.
+
+    This test ensures that:
+    1. The function correctly decodes base64 encoded content
+    2. The decoded content is properly parsed as YAML
+    """
+    yaml_content = "key: value\nlist:\n  - item1\n  - item2"
+    encoded_content = base64.b64encode(yaml_content.encode()).decode()
+    response = {"content": encoded_content}
+
+    result = decode_file(response)
+
+    expected_result = {"key": "value", "list": ["item1", "item2"]}
+    assert result == expected_result

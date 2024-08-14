@@ -45,6 +45,9 @@ def decode_file(response):
     """
     Decode file and get the content from response
     """
+    if response is None:
+        return None
+
     file_content = response.get("content")
     message_bytes = base64.b64decode(file_content)
 
