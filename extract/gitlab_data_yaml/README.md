@@ -26,6 +26,22 @@ pi_internal_hb_file:                            # [Mandatory] replace it with yo
   private_token: GITLAB_INTERNAL_HANDBOOK_TOKEN # [Optional] Either you skip this part, or put the token you want to use. 
 ```
 
+**Note:** `URL:` section in the yml file can be in 2 formats:
+
+* represented as one URL for all files in the section:
+
+    ```yml
+      URL: https://... 
+    ```
+
+* represented as multiple URLs for each file in the section (one URL per file from the section):
+
+    ```yml
+      URL:
+        access_data: https://...
+        cloud_connector: https://...
+    ```
+
 If you introduce a new file, you should create a table in the `RAW.GITLAB_DATA_YAML` schema:
 
 ```sql
