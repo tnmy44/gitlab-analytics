@@ -5165,6 +5165,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: jbielecki
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10034,6 +10035,13 @@ users:
       - General All Access
       - General SAFE Access
   - user_name: ebao
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: lchoi
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
     auth_setting: SAML
