@@ -156,6 +156,18 @@ renamed AS (
     account_demographics_upa_street__c AS account_upa_street,
     account_demographics_upa_postal_code__c AS account_upa_postal_code,
 
+      --D&B Fields
+    DNBCONNECT__D_B_NAME_MATCH_SCORE__C::NUMERIC AS account_dnb_name_match_score,
+    DNBCONNECT__D_B_MATCH_TYPE__C::TEXT AS account_dnb_name_match_type,
+    DNBCONNECT__D_B_MATCH_DATA_PROFILE__C ::NUMERIC AS account_dnb_match_data_profile,
+    DNBCONNECT__D_B_MATCH_CONFIDENCE_CODE__C::NUMERIC AS account_dnb_match_confidence_score,
+    DNBCONNECT__D_B_MATCH_GRADE__C::TEXT AS account_dnb_match_grade,
+    DNBCONNECT__D_B_CONNECT_COMPANY_PROFILE__C::TEXT AS account_dnb_connect_company_profile_id,
+    DUNS__C::NUMERIC AS account_dnb_duns,
+    GLOBAL_ULTIMATE_DUNS__C::NUMERIC AS account_dnb_global_ultimate_duns,
+    DOMESTIC_ULTIMATE_DUNS__C::NUMERIC AS account_dnb_domestic_ultimate_duns,
+    DNB_EXCLUDE_COMPANY__C::BOOLEAN AS account_dnb_exclude_company,
+
     -- present state info
     gs_health_score__c AS health_number,
     gs_health_score_color__c AS health_score_color,
