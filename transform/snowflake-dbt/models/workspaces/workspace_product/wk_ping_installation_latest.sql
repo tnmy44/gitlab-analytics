@@ -1,6 +1,6 @@
 {{ config(
     materialized='table',
-    tags=["product"]
+    tags=["product", "mnpi_exception"]
 ) }}
 
 WITH first_ping AS (
