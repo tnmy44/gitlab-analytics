@@ -131,6 +131,80 @@ class DataClassification:
 
         return [extract_full_path(x) for x in mnpi_list]
 
+    def _get_database_where_clause(
+        self, exclude_statement: str, databases: list
+    ) -> str:
+        """
+        Generate database WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for databases
+        Result is in format: table_catalog [NOT] IN ('RAW','PREP')
+        """
+        return f" (table_catalog {exclude_statement} IN ({', '.join(self.quoted(x) for x in databases)}))"
+
+    def _get_schema_where_clause(self, exclude_statement: str, schemas: list) -> str:
+        """
+        Generate schema WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for schemas
+        Result is in format:
+            - RAW.*        -> table_catalog = 'RAW' AND table_schema ILIKE '%'
+            - RAW.SCHEMA_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A'
+        """
+
+        res = " AND"
+
+        if exclude_statement:
+            res += f" {exclude_statement}"
+
+        for i, schema in enumerate(schemas, start=1):
+            schema_list = schema.split(".")
+
+            res += f" (table_catalog = {self.quoted(schema_list[0])} AND table_schema"
+            if "*" in schema_list:
+                res += f" ILIKE {self.quoted('%')})"
+            else:
+                res += f" = {self.quoted(schema_list[1])})"
+
+            if i < len(schemas):
+                res += " OR"
+
+        return res
+
+    def _get_table_where_clause(self, exclude_statement: str, tables: list) -> str:
+        """
+        Generate table WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for tables
+        Result is in format:
+            - RAW.*.*              -> table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%'
+            - RAW.SCHEMA_A.*       -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%'
+            - RAW.SCHEMA_A.TABLE_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name = 'TABLE_A'
+        """
+        res = " AND"
+
+        if exclude_statement:
+            res += f" {exclude_statement}"
+
+        for i, table in enumerate(tables, start=1):
+            table_list = table.split(".")
+
+            if "*" in table_list:
+                res += (
+                    f" (table_catalog = {self.quoted(table_list[0])} AND table_schema"
+                )
+                if table_list.count("*") == 1:
+                    res += f" = {self.quoted(table_list[1])} AND table_name ILIKE {self.quoted('%')})"
+                if table_list.count("*") == 2:
+                    res += f" ILIKE {self.quoted('%')} AND table_name ILIKE {self.quoted('%')})"
+            else:
+                res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema = {self.quoted(table_list[1])} and table_name = {self.quoted(table_list[2])})"
+
+            if i < len(tables):
+                res += " OR"
+
+        return res
+
     def get_pii_scope(self, scope_type: str) -> str:
         """
         This method get_pii_scope is responsible for generating a SQL WHERE clause for filtering
@@ -188,58 +262,20 @@ class DataClassification:
         tables = scope.get("tables")
         exclude_statement = "NOT" if scope_type == "exclude" else ""
 
-        # Create part of the WHERE clause for databases
-        # Result is in format: table_catalog [NOT] IN ('RAW','PREP')
         if databases:
-            res = f" (table_catalog {exclude_statement} IN ({', '.join(self.quoted(x) for x in databases)}))"
+            res = self._get_database_where_clause(
+                exclude_statement=exclude_statement, databases=databases
+            )
 
-        # Create part of the WHERE clause for schemas
-        # Result is in format:
-        #     RAW.*        -> table_catalog = 'RAW' AND table_schema ILIKE '%'
-        #     RAW.SCHEMA_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A'
         if schemas:
-            res += " AND"
+            res += self._get_schema_where_clause(
+                exclude_statement=exclude_statement, schemas=schemas
+            )
 
-            if exclude_statement:
-                res += f" {exclude_statement}"
-
-            for i, schema in enumerate(schemas, start=1):
-                schema_list = schema.split(".")
-
-                res += (
-                    f" (table_catalog = {self.quoted(schema_list[0])} AND table_schema"
-                )
-                if "*" in schema_list:
-                    res += f" ILIKE {self.quoted('%')})"
-                else:
-                    res += f" = {self.quoted(schema_list[1])})"
-
-                if i < len(schemas):
-                    res += " OR"
-
-        # Create part of the WHERE clause for tables
-        # Result is in format:
-        #     RAW.*.*              -> table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%'
-        #     RAW.SCHEMA_A.*       -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%'
-        #     RAW.SCHEMA_A.TABLE_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name = 'TABLE_A'
         if tables:
-            res += " AND"
-            if exclude_statement:
-                res += f" {exclude_statement}"
-            for i, table in enumerate(tables, start=1):
-                table_list = table.split(".")
-
-                if "*" in table_list:
-                    res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema"
-                    if table_list.count("*") == 1:
-                        res += f" = {self.quoted(table_list[1])} AND table_name ILIKE {self.quoted('%')})"
-                    if table_list.count("*") == 2:
-                        res += f" ILIKE {self.quoted('%')} AND table_name ILIKE {self.quoted('%')})"
-                else:
-                    res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema = {self.quoted(table_list[1])} and table_name = {self.quoted(table_list[2])})"
-
-                if i < len(tables):
-                    res += " OR"
+            res += self._get_table_where_clause(
+                exclude_statement=exclude_statement, tables=tables
+            )
 
         return f"AND ({res})"
 
