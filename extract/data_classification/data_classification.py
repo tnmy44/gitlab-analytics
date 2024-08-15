@@ -554,3 +554,4 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END extract.")
+

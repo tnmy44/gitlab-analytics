@@ -315,7 +315,7 @@ def test_get_database_where_clause(
     for database filtering in SQL queries.
     """
     result = data_classification._get_database_where_clause(
-        exclude_statement, databases
+        exclude_statement=exclude_statement, databases=databases
     )
     assert result == expected
 
@@ -343,7 +343,10 @@ def test_get_schema_where_clause(
 
     This test ensures that the method correctly generates
     """
-    result = data_classification._get_schema_where_clause(exclude_statement, schemas)
+    result = data_classification._get_schema_where_clause(
+        exclude_statement=exclude_statement, schemas=schemas
+    )
+    assert result == expected
 
 
 @pytest.mark.parametrize(
@@ -383,5 +386,7 @@ def test_get_table_where_clause(
     4. Combinations of different patterns
     5. Inclusion and exclusion logic
     """
-    result = data_classification._get_table_where_clause(exclude_statement, tables)
+    result = data_classification._get_table_where_clause(
+        exclude_statement=exclude_statement, tables=tables
+    )
     assert result == expected
