@@ -698,9 +698,37 @@ Boolean flag set to True if the subscription is under an EDU or OSS Program. Thi
 
 {% docs dim_subscription_id %}
 
+Unique identifier of a version of a subscription
+
 {% enddocs %}
 
 {% docs dim_subscription_id_original %}
+
+Unique identifier of a subscription, does not change when amendments are made to the subscription. This ID will have multiple dim_subscription_id values associated with it for each version of the original subscription
+
+{% enddocs %}
+
+{% docs subscription_version %}
+
+The version number of the subscription
+
+{% enddocs %}
+
+{% docs dim_namespace_id %}
+
+The namespace ID of the instance (GitLab.com only)
+
+{% enddocs %}
+
+{% docs product_rate_plan_charge_name %}
+
+The name of the product rate plan charge
+
+{% enddocs %}
+
+{% docs charge_type %}
+
+Type of the charge
 
 {% enddocs %}
 
@@ -753,6 +781,18 @@ The name of the technical account manager of the CRM account
 {% docs ping_created_at %}
 
 The timestamp when the ping was created
+
+{% enddocs %}
+
+{% docs latest_ping_created_at %}
+
+The timestamp when the most recent ping was created for a specific source.
+
+{% enddocs %}
+
+{% docs first_ping_created_at %}
+
+The timestamp when the very first ping was created for a specific source.
 
 {% enddocs %}
 
@@ -2508,11 +2548,10 @@ The unique identifier that identifies a cloud activation.
 
 {% docs dim_crm_current_account_set_hierarchy_sk %}
 
-Sales hierarchy surrogate key that accounts for yearly changes in the sales hierarchy. Views all hierarchies through the lens of the current year hierarchy, and it reflects how the sales hierarchy is applied in practice. It choose between the opportunity owner stamped hierarchy, the live user hierarchy and the account hierarchy based on the following rules:
+Sales hierarchy surrogate key that accounts for yearly changes in the sales hierarchy. Views all hierarchies through the lens of the current year hierarchy, and it reflects how the sales hierarchy is applied in practice. It choose between the opportunity owner stamped hierarchy or the account owner live user hierarchy:
 
-1. If the fiscal year of the close_date of the opportunity is less than the current fiscal year AND the opp owner is NOT an hybrid user THEN `live user hierarchy`
-2. If the fiscal year of the close_date of the opportunity is less than the current fiscal year AND the opp owner IS an hybrid user THEN `account hierarchy`
-3. Any other case, use `opp owner stamped hierarchy`
+1. If the fiscal year of the live close_date of the opportunity is less than the current fiscal year, use the account owner live user hierarchy
+2. If the fiscal year of the live close_date of the opportunity is greater than or equal to the current fiscal year, use the opportunity owner stamped hierarchy
 
 {% enddocs %}
 

@@ -67,6 +67,8 @@ models:
       - name: tags
       - name: job_title
       - name: last_organization
+      - name: organization_name
+      - name: organization_domain
       - name: _uploaded_at
         description: '{{ doc("_uploaded_at") }}'
       - name: _file_name

@@ -33,7 +33,7 @@ WITH engineering_merge_requests AS (
         PARTITION BY LOWER(user_name) ORDER BY COALESCE(dbt_valid_to, CURRENT_DATE) DESC
         ) AS a
     FROM users
-    WHERE user_type IN (0, 'Human')
+    WHERE user_type = 0
     AND LOWER(user_name) NOT LIKE '%gitlab%bot%'
     AND LOWER(user_name) NOT LIKE '%project%bot%'
     AND LOWER(user_name) NOT LIKE '%group%bot%'
