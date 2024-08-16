@@ -34,12 +34,20 @@ If none, please include a description
 ### If you need data in Tableau but...
 
 - [ ] Do **NOT** need to link it to other data
-    * [ ]  Open CSV directly in Tableau, Submitter please follow steps:
-      1. Submitter needs to be a Tableau Creator. If the submitter is not a Tableau Creator, please reach out to #data-tableau Slack Channel for support.
-      1. In Tableau Desktop select Connect to Data from the start page
-      1. In the To a File section, click More and select the CSV file
-      1. Click Open to load the file into Tableau
-      1. Click Sheet 1 at the bottom of the screen to start working on your Tableau project
+    * [ ]  Open CSV directly in Tableau -  Submitter needs to be a Tableau Creator. If the submitter is not a Tableau Creator, please reach out to #data-tableau Slack Channel for support. As a Tableau Creator, Submitter please follow steps in Tableau Cloud or Desktop:
+        
+       - Tableau Cloud
+          1. In Tableau Cloud, navigate to the "Explore" page.
+          1. Click on the "New" button and select "Workbook" to start a new project.
+          1. In the "Connect to Data" section, click "More" under the "Files" category and select the CSV file.
+          1. Click "Open" to load the file into Tableau Cloud.
+          1. Click on "Sheet 1" at the bottom of the screen to begin working on your Tableau project.
+
+      - Tableau Desktop
+          1. In Tableau Desktop select Connect to Data from the start page
+          1. In the To a File section, click More and select the CSV file
+          1. Click Open to load the file into Tableau
+          1. Click Sheet 1 at the bottom of the screen to start working on your Tableau project
     * [ ]  Submitter to close issue if this data will not be used again.
 
 ---
