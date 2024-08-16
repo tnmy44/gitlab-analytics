@@ -60,7 +60,7 @@ WITH sensitive_data_tags AS (
          query_history.start_time                                          AS start_time,
          query_history.end_time                                            AS end_time
     FROM query_history
-    JOIN access_history
+    INNER JOIN access_history
     ON query_history.query_id  = access_history.query_id
     AND query_history.user_name = access_history.user_name
 
