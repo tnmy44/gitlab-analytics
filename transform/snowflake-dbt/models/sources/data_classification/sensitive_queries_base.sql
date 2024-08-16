@@ -83,7 +83,7 @@ WITH sensitive_data_tags AS (
          sensitive_data_tags.tag_name::VARCHAR            AS tag_name,
          sensitive_data_tags.tag_value::VARCHAR           AS tag_value
     FROM queries
-    JOIN sensitive_data_tags
+    INNER JOIN sensitive_data_tags
     ON queries.accessed_database  = sensitive_data_tags.accessed_database
     AND queries.accessed_schema   = sensitive_data_tags.accessed_schema
     AND queries.accessed_table    = sensitive_data_tags.accessed_table
