@@ -216,9 +216,6 @@ WITH map_merged_crm_account AS (
       executive_sponsor.name AS executive_sponsor,
 
       --D&B Fields
-      sfdc_account.account_dnb_name_match_score,
-      sfdc_account.account_dnb_name_match_type,
-      sfdc_account.account_dnb_match_data_profile,
       sfdc_account.account_dnb_match_confidence_score,
       sfdc_account.account_dnb_match_grade,
       sfdc_account.account_dnb_connect_company_profile_id,

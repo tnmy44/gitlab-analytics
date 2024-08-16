@@ -157,9 +157,6 @@ renamed AS (
     account_demographics_upa_postal_code__c AS account_upa_postal_code,
 
       --D&B Fields
-    DNBCONNECT__D_B_NAME_MATCH_SCORE__C::NUMERIC AS account_dnb_name_match_score,
-    DNBCONNECT__D_B_MATCH_TYPE__C::TEXT AS account_dnb_name_match_type,
-    DNBCONNECT__D_B_MATCH_DATA_PROFILE__C ::NUMERIC AS account_dnb_match_data_profile,
     DNBCONNECT__D_B_MATCH_CONFIDENCE_CODE__C::NUMERIC AS account_dnb_match_confidence_score,
     DNBCONNECT__D_B_MATCH_GRADE__C::TEXT AS account_dnb_match_grade,
     DNBCONNECT__D_B_CONNECT_COMPANY_PROFILE__C::TEXT AS account_dnb_connect_company_profile_id,

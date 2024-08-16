@@ -169,9 +169,6 @@
       prep_crm_account.carr_this_account,
 
       --D&B Fields
-      prep_crm_account.account_dnb_name_match_score,
-      prep_crm_account.account_dnb_name_match_type,
-      prep_crm_account.account_dnb_match_data_profile,
       prep_crm_account.account_dnb_match_confidence_score,
       prep_crm_account.account_dnb_match_grade,
       prep_crm_account.account_dnb_connect_company_profile_id,

@@ -140,9 +140,6 @@
       dim_crm_account.account_bdr_assigned_user_role,
 
       --D&B Fields
-      dim_crm_account.account_dnb_name_match_score,
-      dim_crm_account.account_dnb_name_match_type,
-      dim_crm_account.account_dnb_match_data_profile,
       dim_crm_account.account_dnb_match_confidence_score,
       dim_crm_account.account_dnb_match_grade,
       dim_crm_account.account_dnb_connect_company_profile_id,
