@@ -53,7 +53,7 @@ class DataClassification:
                 self.config_vars, self.processing_role
             )
             self.connected = True
-            return self.loader_engine.connect()
+        return self.loader_engine.connect()
 
     def __dispose(self) -> None:
         """
@@ -113,7 +113,8 @@ class DataClassification:
                     sys.exit(1)
             return res
 
-    def transform_mnpi_list(self, mnpi_list: list) -> list:
+    @staticmethod
+    def transform_mnpi_list(mnpi_list: list) -> list:
         """
         Transform MNPI list to uppercase in a proper format
         """
