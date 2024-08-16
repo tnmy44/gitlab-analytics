@@ -95,3 +95,9 @@ This model contains the installation-level attributes from the latest ping for e
 * The `latest_` prefix on the columns indicates the status as of the most recent ping.
 
 {% enddocs %}
+
+{% docs wk_cloud_connector_configuration %}
+
+This model contains the information about cloud connector configurations.
+
+{% enddocs %}
