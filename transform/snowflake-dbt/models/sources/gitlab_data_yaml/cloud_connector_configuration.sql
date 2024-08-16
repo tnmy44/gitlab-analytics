@@ -4,7 +4,7 @@ WITH source AS (
     FROM {{ source('gitlab_data_yaml', 'cloud_connector') }}
 
 ), renamed AS (
-    SELECT 
+    SELECT DISTINCT
       f.key                                                                       AS environment_name,
       f1.value['backend']::VARCHAR                                                AS backend,
       f1.key                                                                      AS feature_name,
