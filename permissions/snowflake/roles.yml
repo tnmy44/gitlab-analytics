@@ -5856,6 +5856,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ghickman:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - kkloss:
       member_of:
         - snowflake_analyst
@@ -7005,6 +7010,10 @@ users:
       can_login: true
       member_of:
         - dchevalier
+  - ghickman:
+      can_login: true
+      member_of:
+        - ghickman
   - plopez:
       can_login: true
       member_of:
