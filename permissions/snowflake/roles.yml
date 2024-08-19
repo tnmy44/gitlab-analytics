@@ -6029,6 +6029,18 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - jclapper:
+      member_of:
+        - analyst_sales
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - judume:
+      member_of:
+        - analyst_sales
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
   - ttavares:
       member_of:
         - snowflake_analyst
@@ -6897,6 +6909,14 @@ users:
       can_login: true
       member_of:
         - nveenhof
+  - jclapper:
+      can_login: true
+      member_of:
+        - jclapper
+  - judume:
+      can_login: true
+      member_of:
+        - judume
   - jcoghlan:
       can_login: true
       member_of:
