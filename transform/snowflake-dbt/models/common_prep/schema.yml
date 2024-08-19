@@ -208,7 +208,7 @@ models:
     columns:
       - name: sfdc_record_id
         description: Primary key for Salesforce person records and the primary key for this dimension
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: bizible_mql_touchpoint_id
@@ -2987,17 +2987,17 @@ models:
     columns:
       - name: hr_employee_id
         description: The employee id of Workday
-        tests:
+        data_tests:
           - not_null
       - name: start_date
         description: The team member's absence start date
-        tests: 
+        data_tests: 
           - not_null
       - name: end_date
         description: The team member's absence end date
       - name: pto_date  
         description: The team member's day of absence   
-        tests: 
+        data_tests: 
           - not_null
       - name: is_pto
         description: If this absence day overlaps with a PTO.
