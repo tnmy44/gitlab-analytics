@@ -225,7 +225,7 @@ position_history AS (
     job_profiles.management_level                                                                                              AS management_level,
     job_profiles.job_grade::VARCHAR                                                                                            AS job_grade,
     job_profiles.is_position_active                                                                                            AS is_position_active,
-    MIN(ddates.date_actual)                                                                                                    AS effective_date
+    MIN(dates.date_actual)                                                                                                    AS effective_date
   FROM dates
   INNER JOIN staffing_history
     ON dates.date_actual >= staffing_history.effective_date
