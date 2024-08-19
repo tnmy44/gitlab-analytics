@@ -973,14 +973,12 @@ roles:
             - raw.tap_zengrc
             - raw.tap_xactly
             - raw.tap_zendesk
-            - raw.tap_zendesk__community_relations
             - raw.public
         tables:
           write:
             - raw.tap_zengrc.*
             - raw.tap_xactly.*
             - raw.tap_zendesk.*
-            - raw.tap_zendesk__community_relations.*
   - people_operations:
       warehouses:
         - dev_xs
