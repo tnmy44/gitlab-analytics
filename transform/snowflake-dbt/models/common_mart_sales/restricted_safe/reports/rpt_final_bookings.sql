@@ -1,8 +1,5 @@
 {{ simple_cte([
     ('live_actuals', 'mart_crm_opportunity'),
-    ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
-    ('dim_order_type','dim_order_type'),
-    ('dim_deal_path', 'dim_deal_path'),
     ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
 
     ])
@@ -69,7 +66,6 @@ booked_arr AS (
     SUM(live_actuals.booked_deal_count) AS total_booked_deal_count,
     SUM(live_actuals.closed_won_opps) AS total_closed_won_opps
   FROM live_actuals
-  WHERE close_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
   {{ dbt_utils.group_by(n=20) }}
 
 ),
@@ -209,7 +205,7 @@ final AS (
     'final_bookings'                                                               AS source,
     booked_arr.total_booked_arr                                                    AS booked_net_arr_in_snapshot_quarter,
     created_arr.total_created_arr                                                  AS created_arr_in_snapshot_quarter,
-    created_arr.total_created_arr                                                  AS created_deal_count_in_snapshot_quarter,
+    created_arr.total_created_deal_count                                           AS created_deals_in_snapshot_quarter,
     booked_arr.total_booked_deal_count                                             AS booked_deal_count_in_snapshot_quarter,  
     booked_arr.total_closed_won_opps                                               AS closed_won_opps_in_snapshot_quarter  
   FROM base
@@ -235,8 +231,6 @@ final AS (
       AND base.sales_type = booked_arr.sales_type
       AND base.stage_name = booked_arr.stage_name
       AND base.dim_crm_current_account_set_hierarchy_sk = booked_arr.dim_crm_current_account_set_hierarchy_sk
-  LEFT JOIN dim_crm_user_hierarchy
-    ON base.dim_crm_current_account_set_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
 
 )
 
