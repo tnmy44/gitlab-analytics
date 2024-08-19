@@ -1,4 +1,37 @@
-WITH snapshot_date AS (
+WITH live_actuals AS (
+  
+  SELECT 
+    dim_crm_current_account_set_hierarchy_sk,
+    report_geo,
+    report_business_unit,
+    report_segment,
+    report_region,
+    report_area,
+    report_role_name,
+    report_role_level_1,
+    report_role_level_2,
+    report_role_level_3,
+    report_role_level_4,
+    report_role_level_5,
+    close_fiscal_quarter_date,
+    arr_created_fiscal_quarter_date,
+    sales_qualified_source_name,
+    sales_qualified_source_grouped,
+    order_type,
+    order_type_grouped,
+    deal_path_name,
+    sales_type,
+    stage_name,
+    booked_net_arr,
+    booked_deal_count,
+    closed_won_opps,
+    created_arr,
+    created_deals
+  FROM {{ref('mart_crm_opportunity')}}
+
+),
+
+snapshot_date AS (
 
   SELECT DISTINCT
     dim_date.current_day_name,
