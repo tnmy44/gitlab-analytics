@@ -6768,14 +6768,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: mbrownrigg
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - People All Access
-      - People Restricted Access
   - user_name: mbruemmer
     user_name_domain: gitlab.com
     site_role: Viewer
