@@ -3081,13 +3081,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: azaglul
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: azubov
     user_name_domain: gitlab.com
     site_role: Viewer
