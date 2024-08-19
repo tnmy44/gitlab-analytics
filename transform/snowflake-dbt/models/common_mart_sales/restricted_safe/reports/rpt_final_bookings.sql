@@ -1,12 +1,4 @@
-{{ simple_cte([
-    ('live_actuals', 'mart_crm_opportunity'),
-    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
-
-    ])
-
-}},
-
-snapshot_date AS (
+WITH snapshot_date AS (
 
   SELECT DISTINCT
     dim_date.current_day_name,
@@ -96,7 +88,6 @@ created_arr AS (
     SUM(live_actuals.created_arr) AS total_created_arr,
     SUM(live_actuals.created_deals) AS total_created_deal_count
   FROM live_actuals
-  WHERE arr_created_fiscal_quarter_date >= DATEADD(QUARTER, -9, CURRENT_DATE())
   {{ dbt_utils.group_by(n=20) }}
 
 ),
