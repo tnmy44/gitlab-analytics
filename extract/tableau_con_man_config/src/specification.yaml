@@ -4922,15 +4922,6 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
-  - user_name: hmason
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM EMEA Commercial Restricted Access
-      - ASM Restricted Access
-      - General All Access
-      - General SAFE Access
   - user_name: hmatthews
     user_name_domain: gitlab.com
     site_role: Viewer
