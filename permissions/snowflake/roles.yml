@@ -2684,19 +2684,6 @@ roles:
           read:
             - prep.workday.*
             - raw.workday.*
-  - workday_hcm:
-      warehouses:
-        - dev_xs
-      privileges:
-        databases:
-          read:
-            - raw
-        schemas:
-          read:
-            - raw.workday_hcm
-        tables:
-          read:
-            - raw.workday_hcm.*
   - xactly:
       warehouses:
         - dev_xs
@@ -3557,17 +3544,13 @@ roles:
         schemas:
           read:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
           write:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
         tables:
           read:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
           write:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
   - fkhalid:
       member_of:
         - commonroom_sensitive
@@ -4934,7 +4917,6 @@ roles:
         - snowflake
         - tableau_backend
         - workday
-        - workday_hcm
         - zengrc
       warehouses:
         - dev_xs
@@ -5310,7 +5292,6 @@ roles:
         - pto
         - snowflake_analyst_safe
         - workday
-        - workday_hcm
       warehouses:
         - dev_xs
   - snalamaru:
