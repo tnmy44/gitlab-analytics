@@ -973,14 +973,12 @@ roles:
             - raw.tap_zengrc
             - raw.tap_xactly
             - raw.tap_zendesk
-            - raw.tap_zendesk__community_relations
             - raw.public
         tables:
           write:
             - raw.tap_zengrc.*
             - raw.tap_xactly.*
             - raw.tap_zendesk.*
-            - raw.tap_zendesk__community_relations.*
   - people_operations:
       warehouses:
         - dev_xs
@@ -2684,19 +2682,6 @@ roles:
           read:
             - prep.workday.*
             - raw.workday.*
-  - workday_hcm:
-      warehouses:
-        - dev_xs
-      privileges:
-        databases:
-          read:
-            - raw
-        schemas:
-          read:
-            - raw.workday_hcm
-        tables:
-          read:
-            - raw.workday_hcm.*
   - xactly:
       warehouses:
         - dev_xs
@@ -3557,17 +3542,13 @@ roles:
         schemas:
           read:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
           write:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
         tables:
           read:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
           write:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
   - fkhalid:
       member_of:
         - commonroom_sensitive
@@ -3795,6 +3776,7 @@ roles:
   - jonglee:
       member_of:
         - data_science_readonly
+        - data_team_analyst
         - driveload
         - gainsight
         - gainsight_customer_success
@@ -4933,7 +4915,6 @@ roles:
         - snowflake
         - tableau_backend
         - workday
-        - workday_hcm
         - zengrc
       warehouses:
         - dev_xs
@@ -5309,7 +5290,6 @@ roles:
         - pto
         - snowflake_analyst_safe
         - workday
-        - workday_hcm
       warehouses:
         - dev_xs
   - snalamaru:
@@ -5851,6 +5831,11 @@ roles:
       warehouses:
         - dev_xs
   - aspringfield:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ghickman:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7004,6 +6989,10 @@ users:
       can_login: true
       member_of:
         - dchevalier
+  - ghickman:
+      can_login: true
+      member_of:
+        - ghickman
   - plopez:
       can_login: true
       member_of:
