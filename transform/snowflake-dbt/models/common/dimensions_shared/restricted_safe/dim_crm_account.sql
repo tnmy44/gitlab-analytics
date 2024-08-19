@@ -169,13 +169,13 @@
       prep_crm_account.carr_this_account,
 
       --D&B Fields
-      prep_crm_account.account_dnb_match_confidence_score,
-      prep_crm_account.account_dnb_match_grade,
-      prep_crm_account.account_dnb_connect_company_profile_id,
-      prep_crm_account.account_dnb_duns,
-      prep_crm_account.account_dnb_global_ultimate_duns,
-      prep_crm_account.account_dnb_domestic_ultimate_duns,
-      prep_crm_account.account_dnb_exclude_company,
+      prep_crm_account.dnb_match_confidence_score,
+      prep_crm_account.dnb_match_grade,
+      prep_crm_account.dnb_connect_company_profile_id,
+      prep_crm_account.dnb_duns,
+      prep_crm_account.dnb_global_ultimate_duns,
+      prep_crm_account.dnb_domestic_ultimate_duns,
+      prep_crm_account.dnb_exclude_company,
 
       --6 sense fields
       prep_crm_account.has_six_sense_6_qa,

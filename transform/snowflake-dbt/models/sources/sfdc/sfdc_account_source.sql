@@ -124,13 +124,13 @@ renamed AS (
     account_demographics_upa_postal_code__c AS account_upa_postal_code,
 
   --D&B Fields
-    DNBCONNECT__D_B_MATCH_CONFIDENCE_CODE__C::NUMERIC AS account_dnb_match_confidence_score,
-    DNBCONNECT__D_B_MATCH_GRADE__C::TEXT AS account_dnb_match_grade,
-    DNBCONNECT__D_B_CONNECT_COMPANY_PROFILE__C::TEXT AS account_dnb_connect_company_profile_id,
-    DUNS__C::NUMERIC AS account_dnb_duns,
-    GLOBAL_ULTIMATE_DUNS__C::NUMERIC AS account_dnb_global_ultimate_duns,
-    DOMESTIC_ULTIMATE_DUNS__C::NUMERIC AS account_dnb_domestic_ultimate_duns,
-    DNB_EXCLUDE_COMPANY__C::BOOLEAN AS account_dnb_exclude_company,
+    dnbconnect__d_b_match_confidence_code__c::NUMERIC AS dnb_match_confidence_score,
+    dnbconnect__d_b_match_grade__c::TEXT AS dnb_match_grade,
+    dnbconnect__d_b_connect_company_profile__c::TEXT AS dnb_connect_company_profile_id,
+    duns__c::NUMERIC AS dnb_duns,
+    global_ultimate_duns__c::NUMERIC AS dnb_global_ultimate_duns,
+    domestic_ultimate_duns__c::NUMERIC AS dnb_domestic_ultimate_duns,
+    dnb_exclude_company__c::BOOLEAN AS dnb_exclude_company,
 
     -- present state info
     gs_health_score__c AS health_number,

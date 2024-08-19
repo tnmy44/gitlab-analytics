@@ -140,13 +140,13 @@
       dim_crm_account.account_bdr_assigned_user_role,
 
       --D&B Fields
-      dim_crm_account.account_dnb_match_confidence_score,
-      dim_crm_account.account_dnb_match_grade,
-      dim_crm_account.account_dnb_connect_company_profile_id,
-      dim_crm_account.account_dnb_duns,
-      dim_crm_account.account_dnb_global_ultimate_duns,
-      dim_crm_account.account_dnb_domestic_ultimate_duns,
-      dim_crm_account.account_dnb_exclude_company,
+      dim_crm_account.dnb_match_confidence_score,
+      dim_crm_account.dnb_match_grade,
+      dim_crm_account.dnb_connect_company_profile_id,
+      dim_crm_account.dnb_duns,
+      dim_crm_account.dnb_global_ultimate_duns,
+      dim_crm_account.dnb_domestic_ultimate_duns,
+      dim_crm_account.dnb_exclude_company,
 
       --6 sense fields
       dim_crm_account.has_six_sense_6_qa,
