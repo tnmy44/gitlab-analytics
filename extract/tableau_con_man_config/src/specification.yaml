@@ -7425,17 +7425,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: nbernardo
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - Finance All Access
-      - Finance Project Lead
-      - General All Access
-      - General SAFE Access
-      - Sales All Access
-      - Go To Market Project Lead
   - user_name: nbilgrami
     user_name_domain: gitlab.com
     site_role: Creator
