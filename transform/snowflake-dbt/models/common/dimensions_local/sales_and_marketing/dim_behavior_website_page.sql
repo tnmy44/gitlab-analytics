@@ -40,7 +40,7 @@
       referrer_url_host_path                                                        AS page_url_host_path,
       referrer_url_path                                                             AS page_url_path,
       referrer_url_query                                                            AS page_url_query,
-      {{ clean_url('referrer_url_path') }}                                          AS clean_url_path,
+      {{ clean_url('referrer_url_host_path') }}                                     AS clean_url_path,
       referrer_url_host                                                             AS page_url_host,
       referrer_url_scheme                                                           AS page_url_scheme,
       referrer_medium,

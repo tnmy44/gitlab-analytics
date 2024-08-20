@@ -54,10 +54,10 @@ SELECT
   collector_tstamp::TIMESTAMP                                                                                       AS collector_tstamp,
   domain_userid                                                                                                     AS user_snowplow_domain_id,
   domain_sessionidx::INT                                                                                            AS session_index,
-  REGEXP_REPLACE(page_urlhost || page_urlpath || page_urlquery, '^https?:\/\/')                                     AS page_url_host_path,
+  REGEXP_REPLACE(IFNULL(page_urlhost, '') || IFNULL(page_urlpath, '') || IFNULL(page_urlquery, ''), '^https?:\/\/')           AS page_url_host_path,
   page_urlscheme                                                                                                    AS page_url_scheme,
   page_urlpath                                                                                                      AS page_url_path,
-  {{ clean_url('page_urlpath') }} AS clean_url_path,
+  {{ clean_url('page_url_host_path') }}                                                                             AS clean_url_path,
   page_urlfragment                                                                                                  AS page_url_fragment,
   page_urlquery                                                                                                     AS page_url_query,
   {{ dbt_utils.generate_surrogate_key([
@@ -90,7 +90,7 @@ SELECT
   refr_urlpath                                                                                                      AS referrer_url_path,
   refr_urlscheme                                                                                                    AS referrer_url_scheme,
   refr_urlquery                                                                                                     AS referrer_url_query,
-  REGEXP_REPLACE(refr_urlhost || refr_urlpath || refr_urlquery, '^https?:\/\/')                                     AS referrer_url_host_path,
+  REGEXP_REPLACE(IFNULL(refr_urlhost, '') || IFNULL(refr_urlpath, '') || IFNULL(refr_urlquery, ''), '^https?:\/\/')         AS referrer_url_host_path,
   {{ dbt_utils.generate_surrogate_key([
     'referrer_url_host_path',
     'app_id',

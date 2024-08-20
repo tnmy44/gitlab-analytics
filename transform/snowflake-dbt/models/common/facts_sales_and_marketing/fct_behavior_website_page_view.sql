@@ -15,7 +15,6 @@
 , page_views_w_clean_url AS (
 
     SELECT
-      {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       page_url_path,
       app_id,
       page_url_host,
@@ -45,8 +44,9 @@
       referer_url,
       page_url_scheme,
       referer_url_scheme,
-      REGEXP_REPLACE(page_url || page_url_query, '^https?:\/\/')                    AS page_url_host_path,
-      REGEXP_REPLACE(referer_url, '^https?:\/\/')                                   AS referer_url_host_path,
+      REGEXP_REPLACE(IFNULL(page_url, '') || IFNULL(page_url_query, ''), '^https?:\/\/')                    AS page_url_host_path,
+      REGEXP_REPLACE(IFNULL(referer_url, '') || IFNULL(referer_url_query, ''), '^https?:\/\/')              AS referer_url_host_path,
+      {{ clean_url('page_url_host_path') }}                                              AS clean_url_path,
       IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
       IFNULL(geo_country, 'Unknown')::VARCHAR                                       AS user_country,
       IFNULL(geo_region, 'Unknown')::VARCHAR                                        AS user_region,
