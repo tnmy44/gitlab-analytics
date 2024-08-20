@@ -144,7 +144,7 @@ models:
       description: '{{ doc("is_paid_subscription") }}'
 
   - name: wk_cloud_connector_configuration
-    description: Emphemeral layer for extracting and cleaning data from [cloud_connector.yml file](https://gitlab.com/gitlab-org/customers-gitlab-com/-/blob/main/config/cloud_connector.yml).
+    description: ' {{ doc("wk_cloud_connector_configuration") }} '
     columns:
       - name: environment_name
         description: '{{ doc("cloud_connector_environment_name") }}'
