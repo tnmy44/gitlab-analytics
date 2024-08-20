@@ -58,10 +58,12 @@ final AS (
       -- allow this field to be used as a filter and display the live data when the quarter is not in the third month
        CASE
        WHEN MONTH_OF_FISCAL_YEAR % 3 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH -- is not the last month of the quarter but is the current month
-        THEN DIM_DATE.FISCAL_QUARTER_NAME_FY ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_QUARTER_NAME_FY END as fiscal_quarter_name_fy, 
+        THEN DIM_DATE.FISCAL_QUARTER_NAME_FY ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_QUARTER_NAME_FY 
+        END as fiscal_quarter_name_fy, 
        CASE
            WHEN MONTH_OF_FISCAL_YEAR % 12 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH
-            THEN DIM_DATE.FISCAL_YEAR ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_YEAR END as fiscal_year,
+            THEN DIM_DATE.FISCAL_YEAR ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_YEAR 
+            END as fiscal_year,
 
       subscription_start_month,
       subscription_end_month,
