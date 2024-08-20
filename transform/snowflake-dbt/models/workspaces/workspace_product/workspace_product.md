@@ -98,12 +98,6 @@ This model contains the installation-level attributes from the latest ping for e
 
 {% docs wk_cloud_connector_configuration %}
 
-This model contains the information about cloud connector configurations.
-
-{% enddocs %}
-
-{% docs wk_cloud_connector_configuration %}
-
 **Description:** This model contains detailed information about cloud connector configurations within GitLab data ecosystem.
 - Data is extracted and cleaned from [cloud_connector.yml file](https://gitlab.com/gitlab-org/customers-gitlab-com/-/blob/main/config/cloud_connector.yml) in the underlying model.
 - [GitLab Cloud Connector](https://about.gitlab.com/direction/cloud-connector/) is a way to access services common to multiple GitLab deployments, instances, and cells.
