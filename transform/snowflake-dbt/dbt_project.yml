@@ -302,6 +302,7 @@ models:
         +tags: ["mnpi"]
 
       level_up:
+        +materialized: table
         +schema: level_up
 
       linkedin_ads:
