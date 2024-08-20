@@ -40,8 +40,16 @@ final AS (
       parent_crm_account_name_live,
       is_arr_month_finalized,
       retention_month,
-      retention_fiscal_quarter_name_fy,
-      retention_fiscal_year,
+      -- allow these fields to be used as a filter and display the live data when the quarter is not in the third month
+      CASE
+        WHEN MONTH_OF_FISCAL_YEAR % 3 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH -- is not the last month of the quarter but is the current month
+          THEN DIM_DATE.FISCAL_QUARTER_NAME_FY ELSE rpt_retention_future_parent_account.fiscal_quarter_name_fy 
+      END                                                                                                                        AS retention_fiscal_quarter_name_fy, 
+      CASE
+        WHEN MONTH_OF_FISCAL_YEAR % 12 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH
+          THEN DIM_DATE.FISCAL_YEAR ELSE rpt_retention_future_parent_account.fiscal_year
+      END                                                                                                                        AS retention_fiscal_year,
+
       parent_crm_account_sales_segment_live,
       parent_crm_account_sales_segment_grouped_live,
       parent_crm_account_geo_live,
@@ -59,6 +67,8 @@ final AS (
       net_retention_product_ranking,
       prior_year_product_ranking
     FROM rpt_retention_future_parent_account
+    LEFT JOIN dim_date
+      ON retention_month = date_actual
     WHERE retention_month >= '2023-08-01'
     
 )
