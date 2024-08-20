@@ -3575,3 +3575,51 @@ User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blo
 Calculated field based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) of bot user types.
 
 {% enddocs %}
+
+{% docs cloud_connector_environment_name %}
+
+Name of the source environment, such as `production` or `staging`
+
+{% enddocs %}
+
+{% docs cloud_connector_backend %}
+
+Name of the backend who is serving the feature.
+
+{% enddocs %}
+
+{% docs cloud_connector_feature_name %}
+
+Name of the cloud connector feature such as code_suggestions, duo_chat etc.
+
+{% enddocs %}
+
+{% docs cloud_connector_bundled_with_add_on_name %}
+
+Name of the add-on under which the group of unit primitives are bundled and sold together. For Ex - code_suggestions and duo_chat are 2 UP sold together under `DUO_PRO` add-on.
+
+{% enddocs %}
+
+{% docs cloud_connector_unit_primitive_name %}
+
+Name of the unit primitive bundled with the add-on. Unit primitive is a smallest logical feature that a permission/access scope can govern.
+
+{% enddocs %}
+
+{% docs cloud_connector_cut_off_date %}
+
+The earliest date when the feature requires add-on seat purchase.
+
+{% enddocs %}
+
+{% docs cloud_connector_min_gitlab_version %}
+
+Minimum required GitLab version to use the feature.
+
+{% enddocs %}
+
+{% docs cloud_connector_min_gitlab_version_for_free_access %}
+
+Minimum required GitLab version to use the feature during free_access period (beta). If it's not set, the feature is available for all GitLab versions.
+
+{% enddocs %}
