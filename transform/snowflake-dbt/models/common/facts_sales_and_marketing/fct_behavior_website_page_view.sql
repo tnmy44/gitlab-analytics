@@ -50,17 +50,8 @@
       IFNULL(geo_region, 'Unknown')::VARCHAR                                        AS user_region,
       IFNULL(geo_region_name, 'Unknown')::VARCHAR                                   AS user_region_name,
       IFNULL(geo_timezone, 'Unknown')::VARCHAR                                      AS user_timezone_name,
-
-
-      -- Attributes pulled in to replace join to dim_behavior_website_page since it is not working as of 2024-08-21
       REGEXP_REPLACE(page_url_original, '^https?:\/\/')                             AS page_url_host_path,
-      page_url_query,
-      SPLIT_PART(clean_url_path, '/' ,1)                                            AS page_group,
-      SPLIT_PART(clean_url_path, '/' ,2)                                            AS page_type,
-      SPLIT_PART(clean_url_path, '/' ,3)                                            AS page_sub_type,
-      referer_medium,
-      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS url_namespace_id,
-      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS url_project_id
+      REGEXP_REPLACE(page_referrer, '^https?:\/\/')                                 AS referrer_url_host_path,
     FROM page_views
 
     {% if is_incremental() %}
@@ -73,18 +64,18 @@
 
     SELECT
       -- Primary Key
-      {{ dbt_utils.generate_surrogate_key(['event_id','page_view_end_at']) }}                    AS fct_behavior_website_page_view_sk,
+      {{ dbt_utils.generate_surrogate_key(['event_id','page_view_end_at']) }}                               AS fct_behavior_website_page_view_sk,
 
       -- Foreign Keys
-      {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
-      {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
+      {{ dbt_utils.generate_surrogate_key(['page_url_host_path', 'app_id', 'page_url_scheme']) }}           AS dim_behavior_website_page_sk,
+      {{ dbt_utils.generate_surrogate_key(['referrer_url_host_path', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
       --Time Attributes
       page_views_w_clean_url.page_view_start_at,
       page_views_w_clean_url.page_view_end_at,
-      page_views_w_clean_url.page_view_start_at                                                  AS behavior_at,
+      page_views_w_clean_url.page_view_start_at                                                             AS behavior_at,
 
       -- Natural Keys
       page_views_w_clean_url.session_id,
@@ -120,16 +111,8 @@
       page_views_w_clean_url.page_load_time_in_ms,
       page_views_w_clean_url.page_view_index,
       page_views_w_clean_url.page_view_in_session_index,
-
       page_views_w_clean_url.page_url_host_path,
-      page_views_w_clean_url.page_url_query,
-      page_views_w_clean_url.clean_url_path,
-      page_views_w_clean_url.page_group,
-      page_views_w_clean_url.page_type,
-      page_views_w_clean_url.page_sub_type,
-      page_views_w_clean_url.referer_medium,
-      page_views_w_clean_url.url_namespace_id,
-      page_views_w_clean_url.url_project_id
+      page_views_w_clean_url.clean_url_path
     FROM page_views_w_clean_url
 
 )
@@ -137,7 +120,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2024-06-17"
+    updated_date="2024-08-21"
 ) }}
