@@ -51,7 +51,7 @@ monthly_account_arr AS (
 
 monthly_subscription_base_products_arr AS (
 
-  SELECT DISTINCT
+  SELECT
     arr_month,
     dim_crm_account_id,
     dim_subscription_id_original,
