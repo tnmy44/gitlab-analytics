@@ -56,8 +56,16 @@ WITH dim_billing_account AS (
 
       --date info
       dim_date.date_actual                                                            AS arr_month,
-      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
-      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
+      -- allow for fiscal quarter name and fiscal year to populate a value for the most recent month, so live data can be pulled for the most recent month
+    CASE
+      WHEN dim_date.current_first_day_of_month = dim_date.first_day_of_month OR dim_date.is_first_day_of_last_month_of_fiscal_quarter -- the last month of the quarter, or is the current month
+        THEN DIM_DATE.FISCAL_QUARTER_NAME_FY ELSE NULL 
+    END                                                                                                           AS fiscal_quarter_name_fy,
+    CASE
+      WHEN dim_date.current_first_day_of_month = dim_date.first_day_of_month OR dim_date.is_first_day_of_last_month_of_fiscal_year
+        THEN DIM_DATE.FISCAL_YEAR ELSE NULL 
+    END                                                                                                           AS fiscal_year,      
+
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
       dim_subscription.subscription_end_month                                         AS subscription_end_month,
 
