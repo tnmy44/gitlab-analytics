@@ -2170,7 +2170,7 @@ models:
       description: '{{ doc("code_suggestions_context") }}'
 
 - name: rpt_product_usage_health_score_account_roll_up
-  description: Pulls from `rpt_product_usage_health_score_account_roll_up`, reducing the granularity from one record per _installation/namespace_ and subscription per month to one record per _account_ per month. This table is the SSOT for Use Case Adoption scores in the Gainsight scorecard.
+  description: Pulls from `rpt_product_usage_health_score_account_calcs`, reducing the granularity from one record per _installation/namespace_ and subscription per month to one record per _account_ per month. This table is the SSOT for Use Case Adoption scores in the Gainsight scorecard.
   data_tests:
     - dbt_utils.unique_combination_of_columns:
         combination_of_columns:
