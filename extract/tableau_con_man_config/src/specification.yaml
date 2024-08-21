@@ -4410,10 +4410,11 @@ users:
       - General SAFE Access
   - user_name: dzubova
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: ExplorerCanPublish
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access      
   - user_name: ebarr
     user_name_domain: gitlab.com
     site_role: Viewer
