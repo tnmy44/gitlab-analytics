@@ -177,6 +177,7 @@ models:
       - name: id
         data_tests:
           - not_null
+          - unique
       - name: uploaded_at
         data_tests:
           - not_null
@@ -186,6 +187,7 @@ models:
       - name: id
         data_tests:
           - not_null
+          - unique
       - name: source
       - name: event_timestamp
       - name: type
