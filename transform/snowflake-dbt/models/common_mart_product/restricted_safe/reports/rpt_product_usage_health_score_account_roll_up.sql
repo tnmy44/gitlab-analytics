@@ -8,7 +8,7 @@
 
 fy25_account_ranking AS (
 
-  SELECT DISTINCT
+  SELECT
     dim_crm_account_id,
     crm_account_name,
     SUM(arr)                                      AS total_account_arr,
