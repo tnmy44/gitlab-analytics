@@ -2170,7 +2170,7 @@ models:
       description: '{{ doc("code_suggestions_context") }}'
 
 - name: rpt_product_usage_health_score_gainsight_pump
-  description: A deduplicated model from rpt_product_usage_health_score_account_roll_up with a granularity of 1 account per month. This table is the source for Use Case Adoption scores in the Gainsight scorecard.
+  description: A deduplicated model from rpt_product_usage_health_score_account_roll_up with a granularity of 1 account per month. This table is the SSOT for Use Case Adoption scores in the Gainsight scorecard.
   data_tests:
     - dbt_utils.unique_combination_of_columns:
         combination_of_columns:
