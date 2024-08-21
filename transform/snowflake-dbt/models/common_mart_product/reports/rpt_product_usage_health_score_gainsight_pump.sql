@@ -2,7 +2,7 @@
     tags=["mnpi_exception"]
 ) }}
 
-With final as (
+WITH final as (
 
 SELECT DISTINCT
      arr_month
