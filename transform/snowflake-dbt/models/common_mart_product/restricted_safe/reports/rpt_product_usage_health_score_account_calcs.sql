@@ -244,8 +244,8 @@ final AS (
           'uuid',
           'hostname',
           'dim_namespace_id',
-		  'mart_arr_all_account_id',
-		  'arr_month'
+		      'dim_crm_account_id',
+		      'arr_month'
         ]
       ) }} AS primary_key
   FROM rpt_product_usage_health_score
