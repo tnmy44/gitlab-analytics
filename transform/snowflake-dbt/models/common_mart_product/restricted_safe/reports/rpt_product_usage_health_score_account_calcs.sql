@@ -51,15 +51,15 @@ monthly_account_arr AS (
 monthly_subscription_base_products_arr AS (
 
   SELECT
-    arr_month,
-    dim_crm_account_id,
-    dim_subscription_id_original,
-    subscription_name,
-    product_delivery_type,
-    product_deployment_type,
-    product_tier_name,
-    SPLIT_PART(product_tier_name, '- ', 2) AS tier_trimmed,
-    SUM(arr)                               AS total_subscription_base_products_arr
+    mart_arr_all.arr_month,
+    mart_arr_all.dim_crm_account_id,
+    mart_arr_all.dim_subscription_id_original,
+    mart_arr_all.subscription_name,
+    mart_arr_all.product_delivery_type,
+    mart_arr_all.product_deployment_type,
+    mart_arr_all.product_tier_name,
+    SPLIT_PART(mart_arr_all.product_tier_name, '- ', 2) AS tier_trimmed,
+    SUM(mart_arr_all.arr)                               AS total_subscription_base_products_arr
   FROM mart_arr_all
   WHERE product_category = 'Base Products'
     AND arr_month < CURRENT_DATE
