@@ -55,16 +55,8 @@ final AS (
     SELECT
       arr_month,
       is_arr_month_finalized,
-      -- allow these fields to be used as a filter and display the live data when the quarter is not in the third month
-      CASE
-        WHEN MONTH_OF_FISCAL_YEAR % 3 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH -- is not the last month of the quarter but is the current month
-          THEN DIM_DATE.FISCAL_QUARTER_NAME_FY ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_QUARTER_NAME_FY 
-      END                                                                                                                        AS fiscal_quarter_name_fy, 
-      CASE
-        WHEN MONTH_OF_FISCAL_YEAR % 12 != 0 AND CURRENT_FIRST_DAY_OF_MONTH = FIRST_DAY_OF_MONTH
-          THEN DIM_DATE.FISCAL_YEAR ELSE rpt_arr_snapshot_combined_5th_calendar_day.FISCAL_YEAR 
-      END                                                                                                                        AS fiscal_year,
-
+      fiscal_quarter_name_fy, 
+      fiscal_year,
       subscription_start_month,
       subscription_end_month,
       dim_billing_account_id,

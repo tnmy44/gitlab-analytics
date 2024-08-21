@@ -322,8 +322,18 @@
     SELECT
       combined.arr_month,
       combined.is_arr_month_finalized,
-      fiscal_quarter_name_fy,
-      fiscal_year,
+      -- adjust date fields in final query so each source is considered, bringing in the live data for the current month
+      COALESCE(combined.fiscal_quarter_name_fy, 
+        CASE WHEN current_first_day_of_month = first_day_of_month 
+          THEN dim_date.fiscal_quarter_name_fy 
+        ELSE NULL
+        END) AS fiscal_quarter_name_fy,
+      COALESCE(combined.fiscal_year, 
+        CASE WHEN current_first_day_of_month = first_day_of_month 
+            THEN dim_date.fiscal_year 
+        ELSE NULL
+        END) AS fiscal_year,
+
       subscription_start_month,
       subscription_end_month,
       combined.dim_billing_account_id,
@@ -382,6 +392,8 @@
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
+    INNER JOIN PROD.common.dim_date
+      ON arr_month = date_actual
     WHERE combined.arr_month >= '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
