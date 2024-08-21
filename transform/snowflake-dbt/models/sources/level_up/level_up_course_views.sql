@@ -20,7 +20,7 @@ parsed AS (
     value['sectionTitle']::VARCHAR              AS section_title,
     value['topicId']::VARCHAR                   AS topic_id,
     value['topicTitle']::VARCHAR                AS topic_title,
-    {{ level_up_filter_gitlab_email("value['user']") }} as username,
+    {{ level_up_filter_gitlab_email("value['user']") }} AS username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
     value['userDetail']['state']::VARCHAR       AS user_state,

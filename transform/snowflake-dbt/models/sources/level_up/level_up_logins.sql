@@ -14,7 +14,7 @@ parsed AS (
     value['event']::VARCHAR                     AS event,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['userAgent']::VARCHAR                 AS user_agent,
-    {{ level_up_filter_gitlab_email("value['user']") }} as username,
+    {{ level_up_filter_gitlab_email("value['user']") }} AS username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
     value['userDetail']['ref1']::VARCHAR        AS ref1_user_type,

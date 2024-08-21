@@ -7,22 +7,22 @@
 
 parsed AS (
   SELECT
-  value['notifiableType']::varchar as notifiable_type,
-  value['courseSku']::varchar as course_sku,
-  value['courseId']::varchar as course_id,
-  value['companyId']::varchar as company_id,
-  value['companyHost']::varchar as company_host,
-  value['companySubdomain']::varchar as company_subdomain,
-  value['courseTitle']::varchar as course_title,
-  value['anonymousId']::varchar as anonymous_id,
-  value['source']::varchar as source,
-  value['notifiableId']::varchar as notifiable_id,
-  value['timestamp']::timestamp as event_timestamp,
-  {{ level_up_filter_gitlab_email("value['user']") }} as username,
-  value['event']::varchar as event,
-  SHA2(concat(course_id, value['user'], event_timestamp)) as id,
+    value['notifiableType']::VARCHAR                        AS notifiable_type,
+    value['courseSku']::VARCHAR                             AS course_sku,
+    value['courseId']::VARCHAR                              AS course_id,
+    value['companyId']::VARCHAR                             AS company_id,
+    value['companyHost']::VARCHAR                           AS company_host,
+    value['companySubdomain']::VARCHAR                      AS company_subdomain,
+    value['courseTitle']::VARCHAR                           AS course_title,
+    value['anonymousId']::VARCHAR                           AS anonymous_id,
+    value['source']::VARCHAR                                AS source,
+    value['notifiableId']::VARCHAR                          AS notifiable_id,
+    value['timestamp']::TIMESTAMP                           AS event_timestamp,
+    {{ level_up_filter_gitlab_email("value['user']") }} AS username,
+    value['event']::VARCHAR                                 AS event,
+    SHA2(CONCAT(course_id, value['user'], event_timestamp)) AS id,
 
-  uploaded_at
+    uploaded_at
   FROM intermediate
 
   -- remove dups in case 'raw' is reloaded
