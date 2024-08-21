@@ -70,7 +70,7 @@ monthly_subscription_base_products_arr AS (
 
 production_usage_data AS (
 
-  SELECT DISTINCT *
+  SELECT *
   FROM rpt_product_usage_health_score
   WHERE instance_type = 'Production'
   QUALIFY ROW_NUMBER() OVER (PARTITION BY snapshot_month, dim_subscription_id_original, delivery_type ORDER BY billable_user_count DESC NULLS LAST, ping_created_at DESC NULLS LAST) = 1
