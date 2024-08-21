@@ -406,9 +406,9 @@
     activity_snapshot_hierarchy.sales_dev_rep_user_full_name    AS activity_sales_dev_rep_full_name,
     activity_snapshot_hierarchy.sales_dev_rep_manager_full_name AS activity_sales_dev_manager_full_name,
     activity_snapshot_hierarchy.sales_dev_rep_leader_full_name  AS activity_sales_dev_leader_full_name,
-    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_1,
-    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_2,
-    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_3
+    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_1 AS activity_sales_dev_rep_user_role_level_1,
+    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_2 AS activity_sales_dev_rep_user_role_level_2,
+    activity_snapshot_hierarchy.sales_dev_rep_user_role_level_3 AS activity_sales_dev_rep_user_role_level_3
 
   FROM mart_crm_person
   LEFT JOIN dim_date dim_mql_date
