@@ -35,6 +35,7 @@
 
       gitlab_dotcom_ci_pipelines_source.created_at, 
       gitlab_dotcom_ci_pipelines_source.started_at, 
+      gitlab_dotcom_ci_pipelines_source.updated_at, 
       gitlab_dotcom_ci_pipelines_source.committed_at,
       gitlab_dotcom_ci_pipelines_source.finished_at, 
       gitlab_dotcom_ci_pipelines_source.ci_pipeline_duration    AS ci_pipeline_duration_in_s, 
@@ -64,7 +65,7 @@
         WHEN gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 15 THEN 'security_orchestration_policy'
         WHEN  gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 16 THEN 'container_registry_push'
         ELSE NULL 
-        END as ci_pipeline_source, 
+      END as ci_pipeline_source, 
       gitlab_dotcom_ci_pipelines_source.config_source, 
       gitlab_dotcom_ci_pipelines_source.is_protected, 
       gitlab_dotcom_ci_pipelines_source.failure_reason          AS failure_reason_id,
@@ -73,12 +74,16 @@
       gitlab_dotcom_ci_pipelines_source.is_deleted              AS is_deleted,
       gitlab_dotcom_ci_pipelines_source.is_deleted_updated_at   AS is_deleted_updated_at
     FROM gitlab_dotcom_ci_pipelines_source
-    LEFT JOIN prep_project ON gitlab_dotcom_ci_pipelines_source.project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+    LEFT JOIN prep_project 
+      ON gitlab_dotcom_ci_pipelines_source.project_id = prep_project.dim_project_id
+    LEFT JOIN dim_namespace_plan_hist 
+      ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_ci_pipelines_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_ci_pipelines_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_ci_pipelines_source.user_id = prep_user.dim_user_id
-    LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_ci_pipelines_source.created_at) = dim_date.date_day
+    LEFT JOIN prep_user 
+      ON gitlab_dotcom_ci_pipelines_source.user_id = prep_user.dim_user_id
+    LEFT JOIN dim_date 
+      ON TO_DATE(gitlab_dotcom_ci_pipelines_source.created_at) = dim_date.date_day
     WHERE gitlab_dotcom_ci_pipelines_source.project_id IS NOT  NULL
 
 )
@@ -86,7 +91,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@utkarsh060",
+    updated_by="@lisvinueza",
     created_date="2021-06-10",
-    updated_date="2024-07-09"
+    updated_date="2024-08-21"
 ) }}

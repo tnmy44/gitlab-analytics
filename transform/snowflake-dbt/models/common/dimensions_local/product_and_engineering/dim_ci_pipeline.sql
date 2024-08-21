@@ -7,6 +7,9 @@ WITh prep AS (
     SELECT 
       dim_ci_pipeline_id, 
 
+      --NATURAL KEY
+      ci_pipeline_id,
+
       -- FOREIGN KEYS
       dim_project_id,
       dim_namespace_id,
@@ -18,6 +21,7 @@ WITh prep AS (
 
       created_at, 
       started_at, 
+      updated_at,
       committed_at,
       finished_at, 
       ci_pipeline_duration_in_s, 
@@ -44,7 +48,7 @@ WITh prep AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mpeychet_",
-    updated_by="@utkarsh060",
+    updated_by="@lisvinueza",
     created_date="2021-06-10",
-    updated_date="2024-07-09"
+    updated_date="2024-08-21"
 ) }}
