@@ -322,7 +322,7 @@
     SELECT
       combined.arr_month,
       combined.is_arr_month_finalized,
-      -- adjust date fields in final query so each source is considered, bringing in the live data for the current month
+      -- adjust date fields in final query so each source is considered, bringing in the live data for the current month only
       COALESCE(combined.fiscal_quarter_name_fy, 
         CASE WHEN current_first_day_of_month = first_day_of_month 
           THEN dim_date.fiscal_quarter_name_fy 
