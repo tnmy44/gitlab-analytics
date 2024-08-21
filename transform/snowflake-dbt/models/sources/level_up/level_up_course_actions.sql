@@ -15,10 +15,7 @@ parsed AS (
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['notifiableId']::VARCHAR              AS notifiable_id,
     value['type']::VARCHAR                      AS transaction_type,
-
-    CASE
-      WHEN LOWER(value['user']) LIKE '%@gitlab.com' THEN value['user']::VARCHAR
-    END                                         AS username,
+    {{ level_up_filter_gitlab_email("value['user']") }} as username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
     value['userDetail']['state']::VARCHAR       AS user_state,

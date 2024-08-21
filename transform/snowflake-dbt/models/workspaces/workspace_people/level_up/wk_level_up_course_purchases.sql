@@ -3,4 +3,4 @@
 ]) }}
 
 
-SELECT * FROM logins
+SELECT * FROM course_purchases

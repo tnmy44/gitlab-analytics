@@ -14,10 +14,7 @@ parsed AS (
     value['event']::VARCHAR                     AS event,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['userAgent']::VARCHAR                 AS user_agent,
-
-    CASE
-      WHEN LOWER(value['user']) LIKE '%@gitlab.com' THEN value['user']::VARCHAR
-    END                                         AS username,
+    {{ level_up_filter_gitlab_email("value['user']") }} as username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
     value['userDetail']['ref1']::VARCHAR        AS ref1_user_type,
