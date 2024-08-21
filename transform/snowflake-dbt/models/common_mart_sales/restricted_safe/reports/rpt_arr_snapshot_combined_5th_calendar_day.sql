@@ -386,7 +386,7 @@
       months_since_parent_account_cohort_start,
       COALESCE(parent_arr_band_calc.arr_band_calc, 'Missing crm_account_id')            AS arr_band_calc,
       parent_crm_account_employee_count_band,
-      MAX(arr_month) OVER ()                                                            AS max_arr_month, -- So that when a new quarter begins, running an extract wont pull in blank data for the first 5 days
+      MAX(combined.arr_month) OVER ()                                                            AS max_arr_month, -- So that when a new quarter begins, running an extract wont pull in blank data for the first 5 days
     FROM combined
     LEFT JOIN parent_arr_band_calc
       ON combined.dim_parent_crm_account_id = parent_arr_band_calc.dim_parent_crm_account_id
