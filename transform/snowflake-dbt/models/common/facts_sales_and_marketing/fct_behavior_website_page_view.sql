@@ -8,13 +8,14 @@
 
 {{
     simple_cte([
-    ('page_views', 'prep_snowplow_page_views_all'),
+    ('page_views', 'prep_snowplow_page_views_all')
     ])
 }}
 
 , page_views_w_clean_url AS (
 
     SELECT
+      {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       page_url_path,
       app_id,
       page_url_host,
@@ -40,18 +41,26 @@
       page_view_index,
       page_view_in_session_index,
       referer_url_path,
-      page_url,
-      referer_url,
+      page_url_original                                                             AS page_url,
+      page_referrer                                                                 AS referer_url,
       page_url_scheme,
       referer_url_scheme,
-      REGEXP_REPLACE(IFNULL(page_url, '') || IFNULL(page_url_query, ''), '^https?:\/\/')                    AS page_url_host_path,
-      REGEXP_REPLACE(IFNULL(referer_url, '') || IFNULL(referer_url_query, ''), '^https?:\/\/')              AS referer_url_host_path,
-      {{ clean_url('page_url_host_path') }}                                              AS clean_url_path,
       IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
       IFNULL(geo_country, 'Unknown')::VARCHAR                                       AS user_country,
       IFNULL(geo_region, 'Unknown')::VARCHAR                                        AS user_region,
       IFNULL(geo_region_name, 'Unknown')::VARCHAR                                   AS user_region_name,
-      IFNULL(geo_timezone, 'Unknown')::VARCHAR                                      AS user_timezone_name
+      IFNULL(geo_timezone, 'Unknown')::VARCHAR                                      AS user_timezone_name,
+
+
+      -- Attributes pulled in to replace join to dim_behavior_website_page since it is not working as of 2024-08-21
+      REGEXP_REPLACE(page_url_original, '^https?:\/\/')                             AS page_url_host_path,
+      page_url_query,
+      SPLIT_PART(clean_url_path, '/' ,1)                                            AS page_group,
+      SPLIT_PART(clean_url_path, '/' ,2)                                            AS page_type,
+      SPLIT_PART(clean_url_path, '/' ,3)                                            AS page_sub_type,
+      referer_medium,
+      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS url_namespace_id,
+      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS url_project_id
     FROM page_views
 
     {% if is_incremental() %}
@@ -67,16 +76,8 @@
       {{ dbt_utils.generate_surrogate_key(['event_id','page_view_end_at']) }}                    AS fct_behavior_website_page_view_sk,
 
       -- Foreign Keys
-      {{ dbt_utils.generate_surrogate_key([
-          'page_url_host_path',
-          'app_id',
-          'page_url_scheme'
-        ]) }}                                                                                    AS dim_behavior_website_page_sk,
-      {{ dbt_utils.generate_surrogate_key([
-          'referer_url_host_path', 
-          'app_id', 
-          'referer_url_scheme'
-        ]) }}                                                                                    AS dim_behavior_referrer_page_sk,
+      {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
+      {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
@@ -118,7 +119,17 @@
       page_views_w_clean_url.engaged_seconds,
       page_views_w_clean_url.page_load_time_in_ms,
       page_views_w_clean_url.page_view_index,
-      page_views_w_clean_url.page_view_in_session_index
+      page_views_w_clean_url.page_view_in_session_index,
+
+      page_views_w_clean_url.page_url_host_path,
+      page_views_w_clean_url.page_url_query,
+      page_views_w_clean_url.clean_url_path,
+      page_views_w_clean_url.page_group,
+      page_views_w_clean_url.page_type,
+      page_views_w_clean_url.page_sub_type,
+      page_views_w_clean_url.referer_medium,
+      page_views_w_clean_url.url_namespace_id,
+      page_views_w_clean_url.url_project_id
     FROM page_views_w_clean_url
 
 )
@@ -126,7 +137,7 @@
 {{ dbt_audit(
     cte_ref="page_views_w_dim",
     created_by="@chrissharp",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-07-22",
-    updated_date="2024-08-08"
+    updated_date="2024-06-17"
 ) }}

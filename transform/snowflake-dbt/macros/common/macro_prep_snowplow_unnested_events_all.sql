@@ -54,10 +54,10 @@ SELECT
   collector_tstamp::TIMESTAMP                                                                                       AS collector_tstamp,
   domain_userid                                                                                                     AS user_snowplow_domain_id,
   domain_sessionidx::INT                                                                                            AS session_index,
-  REGEXP_REPLACE(IFNULL(page_urlhost, '') || IFNULL(page_urlpath, '') || IFNULL(page_urlquery, ''), '^https?:\/\/')           AS page_url_host_path,
+  REGEXP_REPLACE(page_url, '^https?:\/\/')                                                                          AS page_url_host_path,
   page_urlscheme                                                                                                    AS page_url_scheme,
   page_urlpath                                                                                                      AS page_url_path,
-  {{ clean_url('page_url_host_path') }}                                                                             AS clean_url_path,
+  {{ clean_url('page_urlpath') }} AS clean_url_path,
   page_urlfragment                                                                                                  AS page_url_fragment,
   page_urlquery                                                                                                     AS page_url_query,
   {{ dbt_utils.generate_surrogate_key([
@@ -90,7 +90,7 @@ SELECT
   refr_urlpath                                                                                                      AS referrer_url_path,
   refr_urlscheme                                                                                                    AS referrer_url_scheme,
   refr_urlquery                                                                                                     AS referrer_url_query,
-  REGEXP_REPLACE(IFNULL(refr_urlhost, '') || IFNULL(refr_urlpath, '') || IFNULL(refr_urlquery, ''), '^https?:\/\/')         AS referrer_url_host_path,
+  REGEXP_REPLACE(page_referrer, '^https?:\/\/')                                                                     AS referrer_url_host_path,
   {{ dbt_utils.generate_surrogate_key([
     'referrer_url_host_path',
     'app_id',
@@ -198,7 +198,16 @@ SELECT
   unload_event_end                                                                                                  AS unload_event_end,
   unload_event_start                                                                                                AS unload_event_start,
   instance_version                                                                                                  AS gsc_instance_version,
-  correlation_id                                                                                                    AS gsc_correlation_id
+  correlation_id                                                                                                    AS gsc_correlation_id,
+  total_context_size_bytes                                                                                          AS total_context_size_bytes,
+  content_above_cursor_size_bytes                                                                                   AS content_above_cursor_size_bytes,
+  content_below_cursor_size_bytes                                                                                   AS content_below_cursor_size_bytes,
+  context_items                                                                                                     AS context_items,
+  context_items_count                                                                                               AS context_items_count,
+  input_tokens                                                                                                      AS input_tokens,
+  output_tokens                                                                                                     AS output_tokens,
+  context_tokens_sent                                                                                               AS context_tokens_sent,
+  context_tokens_used                                                                                               AS context_tokens_used
 FROM unioned_view
 
 {% endmacro %}
