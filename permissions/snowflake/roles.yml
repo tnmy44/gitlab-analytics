@@ -5955,6 +5955,71 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - azubov:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - arivera:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ecarey:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ebenson:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jslaughter:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jgdoyon:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - julee:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kjamoralin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - krichardson:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - lionel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ohoralkoretska:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - tread:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - tvik:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ichernikov:
       member_of:
         - snowflake_analyst
@@ -7049,6 +7114,58 @@ users:
       can_login: true
       member_of:
         - bparkhomchuk
+  - azubov:
+      can_login: true
+      member_of:
+        - azubov
+  - arivera:
+      can_login: true
+      member_of:
+        - arivera
+  - ecarey:
+      can_login: true
+      member_of:
+        - ecarey
+  - ebenson:
+      can_login: true
+      member_of:
+        - ebenson
+  - jslaughter:
+      can_login: true
+      member_of:
+        - jslaughter
+  - jgdoyon:
+      can_login: true
+      member_of:
+        - jgdoyon
+  - julee:
+      can_login: true
+      member_of:
+        - julee
+  - kjamoralin:
+      can_login: true
+      member_of:
+        - kjamoralin
+  - krichardson:
+      can_login: true
+      member_of:
+        - krichardson
+  - lionel:
+      can_login: true
+      member_of:
+        - lionel
+  - ohoralkoretska:
+      can_login: true
+      member_of:
+        - ohoralkoretska
+  - tread:
+      can_login: true
+      member_of:
+        - tread
+  - tvik:
+      can_login: true
+      member_of:
+        - tvik
 warehouses:
   - admin:
       size: x-small
