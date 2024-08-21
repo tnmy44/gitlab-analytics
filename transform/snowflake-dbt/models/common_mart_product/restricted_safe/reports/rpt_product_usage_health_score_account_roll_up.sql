@@ -34,10 +34,10 @@ monthly_account_arr AS (
     SUM(CASE WHEN mart_arr_all.product_category = 'Base Products' THEN arr END)                                       AS total_account_base_products_arr,
     SUM(CASE WHEN mart_arr_all.product_tier_name ILIKE '%Ultimate%' THEN arr END)                                     AS total_account_ultimate_arr,
     SUM(CASE WHEN mart_arr_all.product_category != 'Base Products' THEN arr END)                                      AS total_account_add_on_arr,
-    COUNT(DISTINCT dim_subscription_id_original)                                                         AS number_of_subscriptions,
-    COUNT(DISTINCT CASE WHEN product_category = 'Base Products' THEN dim_subscription_id_original END)   AS number_of_base_products_subscriptions,
-    COUNT(DISTINCT CASE WHEN product_tier_name ILIKE '%Ultimate%' THEN dim_subscription_id_original END) AS number_of_ultimate_subscriptions,
-    COUNT(DISTINCT CASE WHEN product_category != 'Base Products' THEN dim_subscription_id_original END)  AS number_of_add_on_subscriptions
+    COUNT(DISTINCT mart_arr_all.dim_subscription_id_original)                                                         AS number_of_subscriptions,
+    COUNT(DISTINCT CASE WHEN mart_arr_all.product_category = 'Base Products' THEN dim_subscription_id_original END)   AS number_of_base_products_subscriptions,
+    COUNT(DISTINCT CASE WHEN mart_arr_all.product_tier_name ILIKE '%Ultimate%' THEN dim_subscription_id_original END) AS number_of_ultimate_subscriptions,
+    COUNT(DISTINCT CASE WHEN mart_arr_all.product_category != 'Base Products' THEN dim_subscription_id_original END)  AS number_of_add_on_subscriptions
   FROM mart_arr_all
   LEFT JOIN dim_crm_account
     ON mart_arr_all.dim_crm_account_id = dim_crm_account.dim_crm_account_id
