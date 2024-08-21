@@ -201,6 +201,8 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 SELECT
     rpt_product_usage_health_score.* EXCLUDE(created_by,updated_by,model_created_date,model_updated_date,dbt_updated_at,dbt_created_at)
     ,account_rollup_calculations.arr_month
+	,account_rollup_calculations.dim_crm_account_id AS mart_arr_all_account_id
+    ,account_rollup_calculations.crm_account_name AS mart_arr_all_account_name
     ,account_rollup_calculations.FY25_account_rank
     ,account_rollup_calculations.is_FY25_top_100_account
 	,account_rollup_calculations.total_account_subscription_arr
