@@ -65,7 +65,8 @@ final AS (
       net_retention_product_category,
       prior_year_product_category,
       net_retention_product_ranking,
-      prior_year_product_ranking
+      prior_year_product_ranking,
+      MAX(retention_month) OVER ()                                                                                                    AS max_retention_month, -- So that when a new quarter begins, running an extract wont pull in blank data for the first 5 days
     FROM rpt_retention_future_parent_account
     LEFT JOIN dim_date
       ON retention_month = date_actual
