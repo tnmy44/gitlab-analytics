@@ -1,6 +1,9 @@
-{{ config(
+{{
+  config(
+    materialized='table',
     tags=["mnpi_exception"]
-) }}
+  )
+}}
 
 WITH final as (
 
