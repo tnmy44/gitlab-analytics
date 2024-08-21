@@ -34,6 +34,9 @@ renamed AS (
   SELECT
     gitlab_dotcom_ci_builds_source.ci_build_id                  AS dim_ci_build_id,
 
+    -- NATURAL KEY
+    gitlab_dotcom_ci_builds_source.ci_build_id,
+
     -- FOREIGN KEYS
     gitlab_dotcom_ci_builds_source.ci_build_project_id          AS dim_project_id,
     prep_project.dim_namespace_id,

@@ -2,6 +2,9 @@ WITH prep_ci_build AS (
 
     SELECT 
       dim_ci_build_id, 
+
+      --NATURAL KEY
+      ci_build_id,
       
       -- FOREIGN KEYS
       dim_project_id,
