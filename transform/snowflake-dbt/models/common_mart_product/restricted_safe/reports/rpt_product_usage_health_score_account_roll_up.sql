@@ -199,7 +199,7 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 , final AS (
 
 SELECT
-    rpt_product_usage_health_score.* EXCLUDE(created_by,updated_by,model_created_date,model_updated_date,dbt_updated_at,dbt_created_at)
+    rpt_product_usage_health_score.* EXCLUDE(created_by,updated_by,model_created_date,model_updated_date,dbt_updated_at,dbt_created_at,primary_key)
     ,account_rollup_calculations.arr_month
 	,account_rollup_calculations.dim_crm_account_id AS mart_arr_all_account_id
     ,account_rollup_calculations.crm_account_name AS mart_arr_all_account_name
@@ -230,6 +230,18 @@ SELECT
 	,account_rollup_calculations.account_level_cd_color
 	,account_rollup_calculations.account_level_security_color
     ,account_rollup_calculations.max_ping_created_at
+	,{{ dbt_utils.generate_surrogate_key(
+        [
+          'snapshot_month',
+          'dim_subscription_id',
+          'deployment_type',
+          'uuid',
+          'hostname',
+          'dim_namespace_id',
+		  'mart_arr_all_account_id',
+		  'arr_month'
+        ]
+      ) }} AS primary_key
 FROM rpt_product_usage_health_score
 FULL OUTER JOIN account_rollup_calculations
 	ON account_rollup_calculations.dim_crm_account_id = rpt_product_usage_health_score.dim_crm_account_id
