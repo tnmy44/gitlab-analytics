@@ -10,14 +10,13 @@ fy25_account_ranking AS (
 
   SELECT
     dim_crm_account_id,
-    crm_account_name,
     SUM(arr)                                      AS total_account_arr,
     RANK() OVER (ORDER BY total_account_arr DESC) AS fy25_account_rank,
     IFF(fy25_account_rank <= 100, TRUE, FALSE)    AS is_fy25_top_100_account
   FROM mart_arr_all
   WHERE arr_month = '2024-01-01'
     AND dim_crm_account_id != '0016100001TBkZNAA1' --exclude partner accounts
-  GROUP BY 1, 2
+  GROUP BY 1
 
 ),
 
