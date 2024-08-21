@@ -47,7 +47,7 @@ WITH final AS (
       WHEN account_level_security_color = 'Yellow' THEN 63
       WHEN account_level_security_color = 'Red' THEN 25
     END                     AS gs_security_color_value
-  FROM {{ ref('rpt_product_usage_health_score_account_roll_up') }}
+  FROM {{ ref('rpt_product_usage_health_score_account_calcs') }}
 
 )
 
