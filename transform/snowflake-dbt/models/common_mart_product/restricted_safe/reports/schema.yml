@@ -17,3 +17,9 @@ models:
           - unique
   - name: rpt_product_usage_health_score_account_roll_up
     description: This table calculates Account level scores for % of ARR reporting usage data, license utilization, User Engagement, SCM adoption, CI adoption, CD adoption, and Security Adoption. Those scores are then joined back to rpt_product_usage_health_score so that we maintain an instance-level grain for reporting in Customer Intelligence dashboards in Tableau. 
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - arr_month
+            - dim_crm_account_id
+            - primary_key
