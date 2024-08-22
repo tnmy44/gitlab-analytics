@@ -204,6 +204,7 @@ final AS (
 
   SELECT
     rpt_product_usage_health_score.* EXCLUDE (created_by, updated_by, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key),
+    COALESCE(account_rollup_calculations.arr_month,rpt_product_usage_health_score.snapshot_month) AS reporting_month,
     account_rollup_calculations.arr_month,
     account_rollup_calculations.dim_crm_account_id AS dim_crm_account_id_mart_arr_all,
     account_rollup_calculations.crm_account_name AS mart_arr_all_account_name,
@@ -236,14 +237,9 @@ final AS (
     account_rollup_calculations.max_ping_created_at,
     {{ dbt_utils.generate_surrogate_key(
         [
-          'snapshot_month',
-          'dim_subscription_id',
-          'deployment_type',
-          'uuid',
-          'hostname',
-          'dim_namespace_id',
-		      'account_rollup_calculations.dim_crm_account_id',
-		      'arr_month'
+          'reporting_month',
+          'dim_subscription_id_original',
+          'delivery_type'
         ]
       ) }} AS primary_key
   FROM rpt_product_usage_health_score
