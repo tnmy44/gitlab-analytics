@@ -57,7 +57,7 @@ monthly_subscription_base_products_arr AS (
     mart_arr_all.subscription_name,
     mart_arr_all.product_delivery_type,
     mart_arr_all.product_deployment_type,
-    LISTAGG(distinct mart_arr_all.product_tier_name, ', ') AS product_tier_name_string_agg,
+    LISTAGG(DISTINCT mart_arr_all.product_tier_name, ', ') AS product_tier_name_string_agg,
     SUM(mart_arr_all.arr)                     AS total_subscription_base_products_arr
   FROM mart_arr_all
   WHERE product_category = 'Base Products'
