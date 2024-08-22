@@ -719,7 +719,7 @@ tables:
     database_type: main
     export_schema: 'gitlab_com'
     export_table: 'project_authorizations'
-    export_table_primary_key: id
+    export_table_primary_key: user_id
     import_db: GITLAB_DB
     import_query: |-
       SELECT user_id
