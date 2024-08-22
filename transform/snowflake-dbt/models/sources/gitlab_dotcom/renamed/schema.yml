@@ -1060,8 +1060,7 @@ models:
           - unique
 
 - name: gitlab_dotcom_onboarding_progresses_source
-    description: >-
-      A base model for Gitlab.com onboarding_progresses.
+    description: A base model for Gitlab.com onboarding_progresses.
     columns:
       - name: onboarding_progress_id
         tags: ["tdf","gitlab_dotcom"]
