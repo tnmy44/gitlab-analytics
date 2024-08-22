@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "note_id"
+    })
+}}
+
 WITH all_notes AS (
 
   SELECT
