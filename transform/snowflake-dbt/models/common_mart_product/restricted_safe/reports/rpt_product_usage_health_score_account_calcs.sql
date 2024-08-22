@@ -244,7 +244,7 @@ final AS (
           'uuid',
           'hostname',
           'dim_namespace_id',
-		      'dim_crm_account_id',
+		      'account_rollup_calculations.dim_crm_account_id',
 		      'arr_month'
         ]
       ) }} AS primary_key
