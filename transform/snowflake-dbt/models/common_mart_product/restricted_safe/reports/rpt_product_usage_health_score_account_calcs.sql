@@ -238,8 +238,11 @@ final AS (
     {{ dbt_utils.generate_surrogate_key(
         [
           'reporting_month',
-          'dim_subscription_id_original',
-          'delivery_type'
+          'dim_subscription_id',
+          'deployment_type',
+          'dim_installation_id',
+          'dim_namespace_id',
+          'account_rollup_calculations.dim_crm_account_id'
         ]
       ) }} AS primary_key
   FROM rpt_product_usage_health_score
