@@ -1059,7 +1059,7 @@ models:
           - not_null
           - unique
 
-- name: gitlab_dotcom_onboarding_progresses_source
+  - name: gitlab_dotcom_onboarding_progresses_source
     description: A base model for Gitlab.com onboarding_progresses.
     columns:
       - name: onboarding_progress_id
