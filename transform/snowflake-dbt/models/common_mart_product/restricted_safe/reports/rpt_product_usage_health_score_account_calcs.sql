@@ -62,7 +62,6 @@ monthly_subscription_base_products_arr AS (
   FROM mart_arr_all
   WHERE product_category = 'Base Products'
     AND arr_month < CURRENT_DATE
-    and arr_month = '2024-01-01' and dim_subscription_id_original = '2c92a0086a9195ad016ab55f1eac0164'
   GROUP BY 1, 2, 3, 4, 5, 6
 
 ),
