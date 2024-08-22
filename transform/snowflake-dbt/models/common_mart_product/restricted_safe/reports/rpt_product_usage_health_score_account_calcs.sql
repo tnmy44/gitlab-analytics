@@ -57,13 +57,13 @@ monthly_subscription_base_products_arr AS (
     mart_arr_all.subscription_name,
     mart_arr_all.product_delivery_type,
     mart_arr_all.product_deployment_type,
-    mart_arr_all.product_tier_name,
-    SPLIT_PART(mart_arr_all.product_tier_name, '- ', 2) AS tier_trimmed,
-    SUM(mart_arr_all.arr)                               AS total_subscription_base_products_arr
+    LISTAGG(distinct mart_arr_all.product_tier_name, ', ') AS product_tier_name_string_agg,
+    SUM(mart_arr_all.arr)                     AS total_subscription_base_products_arr
   FROM mart_arr_all
   WHERE product_category = 'Base Products'
     AND arr_month < CURRENT_DATE
-  GROUP BY 1, 2, 3, 4, 5, 6, 7
+    and arr_month = '2024-01-01' and dim_subscription_id_original = '2c92a0086a9195ad016ab55f1eac0164'
+  GROUP BY 1, 2, 3, 4, 5, 6
 
 ),
 
@@ -98,8 +98,7 @@ subscription_level_calculations AS (
     monthly_subscription_base_products_arr.subscription_name,
     monthly_subscription_base_products_arr.product_delivery_type,
     monthly_subscription_base_products_arr.product_deployment_type,
-    monthly_subscription_base_products_arr.product_tier_name,
-    monthly_subscription_base_products_arr.tier_trimmed,
+    monthly_subscription_base_products_arr.product_tier_name_string_agg,
     monthly_subscription_base_products_arr.total_subscription_base_products_arr,
     production_usage_data.ping_created_at,
     IFF(production_usage_data.ping_created_at IS NULL, FALSE, TRUE)                                                                                                                                                  AS is_reporting_usage_data,
@@ -111,7 +110,7 @@ subscription_level_calculations AS (
     (production_usage_data.git_operation_utilization) * (monthly_subscription_base_products_arr.total_subscription_base_products_arr)                                                                                AS subscription_scm_utilization_dollars,
     (production_usage_data.ci_pipeline_utilization) * (monthly_subscription_base_products_arr.total_subscription_base_products_arr)                                                                                  AS subscription_ci_utilization_dollars,
     (production_usage_data.cd_score) * (monthly_subscription_base_products_arr.total_subscription_base_products_arr)                                                                                                 AS subscription_cd_utilization_dollars,
-    IFF(monthly_subscription_base_products_arr.product_tier_name ILIKE '%Ultimate%', ((production_usage_data.security_score) * (monthly_subscription_base_products_arr.total_subscription_base_products_arr)), NULL) AS subscription_security_utilization_dollars
+    IFF(monthly_subscription_base_products_arr.product_tier_name_string_agg ILIKE '%Ultimate%', ((production_usage_data.security_score) * (monthly_subscription_base_products_arr.total_subscription_base_products_arr)), NULL) AS subscription_security_utilization_dollars
   FROM monthly_account_arr
   LEFT JOIN monthly_subscription_base_products_arr
     ON monthly_account_arr.dim_crm_account_id = monthly_subscription_base_products_arr.dim_crm_account_id
@@ -141,7 +140,7 @@ account_rollup_calculations AS (
     number_of_ultimate_subscriptions,
     number_of_add_on_subscriptions,
     SUM(CASE WHEN is_reporting_usage_data = TRUE THEN total_subscription_base_products_arr END)                                                                      AS account_arr_reporting_usage_data,
-    SUM(CASE WHEN is_reporting_usage_data = TRUE AND product_tier_name ILIKE '%Ultimate%' THEN total_subscription_base_products_arr END)                             AS account_ultimate_arr_reporting_usage_data,
+    SUM(CASE WHEN is_reporting_usage_data = TRUE AND product_tier_name_string_agg ILIKE '%Ultimate%' THEN total_subscription_base_products_arr END)                             AS account_ultimate_arr_reporting_usage_data,
     ZEROIFNULL(DIV0(account_arr_reporting_usage_data, total_account_base_products_arr))                                                                              AS pct_of_account_arr_reporting_usage_data,
     DIV0(account_ultimate_arr_reporting_usage_data, total_account_ultimate_arr)                                                                                      AS pct_of_account_ultimate_arr_reporting_usage_data,
     IFF(pct_of_account_arr_reporting_usage_data = 0, NULL, DIV0(SUM(subscription_license_utilization_dollars), account_arr_reporting_usage_data))                    AS account_weighted_license_utilization,
@@ -207,7 +206,7 @@ final AS (
   SELECT
     rpt_product_usage_health_score.* EXCLUDE (created_by, updated_by, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key, dim_crm_account_id),
     account_rollup_calculations.arr_month,
-    account_rollup_calculations.dim_crm_account_id,
+    account_rollup_calculations.dim_crm_account_id as dim_crm_account_id_mart_arr_all,
     account_rollup_calculations.crm_account_name AS mart_arr_all_account_name,
     account_rollup_calculations.fy25_account_rank,
     account_rollup_calculations.is_fy25_top_100_account,
