@@ -542,6 +542,7 @@ tables:
       , ldap
       , override
       , member_role_id
+      , member_namespace_id
       FROM members
   merge_request_diff_commit_users:
     advanced_metadata: true
