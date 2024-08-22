@@ -2174,5 +2174,5 @@ models:
   data_tests:
     - dbt_utils.unique_combination_of_columns:
         combination_of_columns:
-          - arr_month
+          - reporting_month
           - dim_crm_account_id
