@@ -1944,6 +1944,7 @@ roles:
             - raw.tap_postgres.gitlab_db_notes
             - raw.tap_postgres.gitlab_db_notification_settings
             - raw.tap_postgres.gitlab_db_oauth_access_tokens
+            - raw.tap_postgres.gitlab_db_onboarding_progresses
             - raw.tap_postgres.gitlab_db_packages_packages
             - raw.tap_postgres.gitlab_db_pages_domains
             - raw.tap_postgres.gitlab_db_plans
