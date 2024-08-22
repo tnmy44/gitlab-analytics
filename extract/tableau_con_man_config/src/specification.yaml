@@ -6694,12 +6694,6 @@ users:
       - General All Access
       - General SAFE Access
       - Product All Access
-  - user_name: mbagdon
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mbeltran
     user_name_domain: gitlab.com
     site_role: Viewer
