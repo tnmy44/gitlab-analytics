@@ -2002,25 +2002,19 @@ tables:
       , namespace_id
       , created_at
       , updated_at
-      , git_pull_at
       , git_write_at
       , merge_request_created_at
       , pipeline_created_at
       , user_added_at
       , trial_started_at
-      , subscription_created_at
       , required_mr_approvals_enabled_at
       , code_owners_enabled_at
-      , scoped_label_created_at
-      , security_scan_enabled_at
-      , issue_auto_closed_at
-      , repository_imported_at
-      , repository_mirrored_at
       , issue_created_at
       , license_scanning_run_at
       , secure_dependency_scanning_run_at
       , secure_dast_run_at
       , code_added_at
+      , ended_at
       FROM onboarding_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
