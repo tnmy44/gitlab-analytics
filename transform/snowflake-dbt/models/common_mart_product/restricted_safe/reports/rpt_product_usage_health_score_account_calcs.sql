@@ -123,7 +123,7 @@ subscription_level_calculations AS (
 
 account_rollup_calculations AS (
 
-  SELECT DISTINCT
+  SELECT
     arr_month,
     dim_crm_account_id,
     crm_account_name,
