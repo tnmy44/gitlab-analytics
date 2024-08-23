@@ -72,9 +72,9 @@ staffing_history AS (
     business_process_type,
     hire_date,
     IFF(business_process_type IN (
-			'End Contingent Worker Contract'
-			,'Termination'
-			), effective_date, NULL)                                                                                                  AS termination_date,
+        'End Contingent Worker Contract',
+        'Termination'
+      ), effective_date, NULL)                                                                                                  AS termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING)         AS most_recent_hire_date,
     IFF(business_process_type IN (
 			'End Contingent Worker Contract',
