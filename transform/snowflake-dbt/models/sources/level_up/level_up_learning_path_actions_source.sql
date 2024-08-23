@@ -10,7 +10,7 @@ parsed AS (
     value['id']::VARCHAR                        AS learning_path_action_id,
     value['source']::VARCHAR                    AS source,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
-    value['type']::VARCHAR                      AS type,
+    value['type']::VARCHAR                      AS learning_path_action_type,
     {{ level_up_filter_gitlab_email("value['user']") }} AS username,
     value['companyId']::VARCHAR                 AS company_id,
     value['notifiableId']::VARCHAR              AS notifiable_id,

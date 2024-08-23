@@ -96,7 +96,7 @@ models:
       - name: quantity
       - name: variation
       - name: shipping_method
-      - name: type
+      - name: transaction_type
       - name: course_sku
       - name: course_slug
       - name: course_title
@@ -190,7 +190,7 @@ models:
           - unique
       - name: source
       - name: event_timestamp
-      - name: type
+      - name: transaction_type
       - name: username
       - name: company_id
       - name: notifiable_id

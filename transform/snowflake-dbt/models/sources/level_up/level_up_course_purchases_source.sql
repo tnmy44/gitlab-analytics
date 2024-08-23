@@ -23,7 +23,7 @@ parsed AS (
     value['quantity']::INT                           AS quantity,
     value['variation']::VARCHAR                      AS variation,
     value['shippingMethod']::VARCHAR                 AS shipping_method,
-    value['type']::VARCHAR                           AS type,
+    value['type']::VARCHAR                           AS transaction_type,
     value['sku']::VARCHAR                            AS course_sku,
     value['slug']::VARCHAR                           AS course_slug,
     value['title']::VARCHAR                          AS course_title,
