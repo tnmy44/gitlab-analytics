@@ -207,7 +207,8 @@ SELECT
   input_tokens                                                                                                      AS input_tokens,
   output_tokens                                                                                                     AS output_tokens,
   context_tokens_sent                                                                                               AS context_tokens_sent,
-  context_tokens_used                                                                                               AS context_tokens_used
+  context_tokens_used                                                                                               AS context_tokens_used,
+  debounce_interval                                                                                                 AS debounce_interval
 FROM unioned_view
 
 {% endmacro %}
