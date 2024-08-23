@@ -77,8 +77,8 @@ staffing_history AS (
       ), effective_date, NULL)                                                                                                  AS termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING)         AS most_recent_hire_date,
     IFF(business_process_type IN (
-			'End Contingent Worker Contract',
-      'Termination'
+			  'End Contingent Worker Contract',
+        'Termination'
 			), FALSE, TRUE)                                                                                                           AS is_current_team_member,
     IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
     effective_date                                                                                                              AS valid_from,
