@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('course_purchases', 'level_up_course_purchases')
+    ('course_purchases', 'level_up_course_purchases_source')
 ]) }}
 
 
