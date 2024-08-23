@@ -203,7 +203,7 @@ account_rollup_calculations AS (
 final AS (
 
   SELECT
-    rpt_product_usage_health_score.* EXCLUDE (created BY, updated BY, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key),
+    rpt_product_usage_health_score.* EXCLUDE (created_by, updated_by, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key),
     COALESCE(account_rollup_calculations.arr_month,rpt_product_usage_health_score.snapshot_month) AS reporting_month,
     account_rollup_calculations.arr_month,
     account_rollup_calculations.dim_crm_account_id AS dim_crm_account_id_mart_arr_all,
