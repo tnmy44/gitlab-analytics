@@ -11,7 +11,7 @@ parsed AS (
     value['companyHost']::VARCHAR               AS company_host,
     value['companyId']::VARCHAR                 AS company_id,
     value['companySubdomain']::VARCHAR          AS company_subdomain,
-    value['event']::VARCHAR                     AS event,
+    value['event']::VARCHAR                     AS event, -- noqa: RF04
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['userAgent']::VARCHAR                 AS user_agent,
     {{ level_up_filter_gitlab_email("value['user']") }} AS username,

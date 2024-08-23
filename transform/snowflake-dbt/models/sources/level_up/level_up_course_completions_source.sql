@@ -10,7 +10,7 @@ parsed AS (
     value['id']::VARCHAR                        AS id,
     value['companyId']::VARCHAR                 AS company_id,
     value['source']::VARCHAR                    AS course_action,
-    value['event']::VARCHAR                     AS event,
+    value['event']::VARCHAR                     AS event, -- noqa: RF04
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['license']::VARCHAR                   AS license,
     value['notifiableId']::VARCHAR              AS notifiable_id,
