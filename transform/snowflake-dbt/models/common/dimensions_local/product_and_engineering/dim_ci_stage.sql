@@ -2,6 +2,12 @@ WITH ci_stages AS (
   
     SELECT
       --PRIMARY KEY
+      dim_ci_stage_sk,
+
+      --NATURAL KEY
+      ci_stage_id,
+
+      --LEGACY NATURAL KEY
       dim_ci_stage_id,
 
       -- FOREIGN KEYS
@@ -9,7 +15,7 @@ WITH ci_stages AS (
       dim_ci_pipeline_id,
       created_date_id,
 
-      -- metadata
+      -- METADATA
       created_at,
       updated_at,
       ci_stage_name,
