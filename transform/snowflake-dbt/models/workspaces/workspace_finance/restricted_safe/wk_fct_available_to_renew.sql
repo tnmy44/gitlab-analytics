@@ -248,8 +248,8 @@
       subscriptions_for_all.ATR_term_start_date,
       subscriptions_for_all.ATR_term_end_date,
       subscriptions_for_all.dim_crm_account_id, 
-      subscriptions_for_all.zuora_renewal_subscription_name AS renewal_subscription_name 
       subscriptions_for_all.subscription_name,
+      subscriptions_for_all.zuora_renewal_subscription_name AS renewal_subscription_name, 
       prep_charge.quantity, 
       prep_charge.ARR
     FROM subscriptions_for_all    
