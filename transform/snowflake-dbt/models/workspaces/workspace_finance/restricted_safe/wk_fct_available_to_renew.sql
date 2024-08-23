@@ -3,61 +3,39 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_crm_opportunity','mart_crm_opportunity'),
-    ('dim_crm_opportunity','dim_crm_opportunity'),
     ('sheetload_map_ramp_deals','sheetload_map_ramp_deals'),
     ('dim_subscription', 'dim_subscription'),
-    ('dim_charge', 'dim_charge'),
-    ('fct_charge','fct_charge'),
+    ('prep_charge', 'prep_charge'),
     ('dim_billing_account','dim_billing_account'),
-    ('dim_crm_account','dim_crm_account'),
-    ('dim_crm_user', 'dim_crm_user'),
+    ('prep_crm_account','prep_crm_account'),
+    ('prep_crm_user', 'prep_crm_user'),
     ('dim_date', 'dim_date')
-
 
 ]) }}
 
-----All Subscriptions from Source that include RampID and Legacy RampID
-, dim_subscription_source AS (
-
-  SELECT distinct
-    sub.accountid                    AS dim_crm_account_id,
-    sub.id                           AS subscription_id,
-    sub.name                         AS subscription_name,
-    sub.version                      AS subscription_version,
-    sub.status                       AS subscription_status,
-    sub.termstartdate                AS term_start_date,
-    sub.termenddate                  AS term_end_date,
-    rampid                           AS ramp_id, ---Identifies ramps booked via current Ramp functionality
-    CASE WHEN sub.rampid != '' OR  (MULTIYEARDEALSUBSCRIPTIONLINKAGE__C != '' AND MULTIYEARDEALSUBSCRIPTIONLINKAGE__C IS NOT NULL 
-      AND MULTIYEARDEALSUBSCRIPTIONLINKAGE__C != 'Not a ramp') THEN 'Yes' 
-    ELSE 'No' END AS is_ramp,
-    MULTIYEARDEALSUBSCRIPTIONLINKAGE__C AS myb_opportunity_id,---Equivalent to SSP ID in SF, deprecated now, used for identifying Legacy ramps,only the first year of ramp can ve identified by this opp_id
-    sub.opportunityid__c                AS opportunity_id
-  FROM {{ source('zuora', 'subscription') }} sub
-
+----All Subscriptions from Zuora that include RampID and Legacy RampID
 ---Legacy Zuora Ramps 
 ---Historical Ramp Deals for data >= Sep 2021
 ---myb_opportunity_id should have a value of SSP_ID
 ---Identifying all ramps from Zuora
-), zuora_ramps AS (
 
-    SELECT 
+, zuora_ramps AS (
+
+    SELECT DISTINCT
       dim_crm_account_id,
-      subscription_id,
+      dim_subscription_id,
+      dim_crm_opportunity_id,
       subscription_name,
       subscription_version,
       subscription_status,
       term_start_date,
       term_end_date,
+      multi_year_deal_subscription_linkage,
       ramp_id,
-      is_ramp,
-      myb_opportunity_id,
-      opportunity_id
-    FROM dim_subscription_source
+      is_ramp
+    FROM dim_subscription
     WHERE 
-      is_ramp = 'Yes'
-      
+      is_ramp = 'Yes'    
 
 --- Legacy SF Ramps 
 --- Historical Ramp Deals for data <= October 2021
@@ -73,15 +51,22 @@
 --Opportunity_category is manually updated in SF, over 90% accuracy rate
 ), ramp_deals AS (
 
-   SELECT 
-      mart_crm_opportunity.dim_crm_opportunity_id,
-      mart_crm_opportunity.ssp_id, 
-      dim_crm_opportunity.opportunity_term	
-    FROM mart_crm_opportunity		
-    INNER JOIN dim_crm_opportunity			
-     ON LEFT(dim_crm_opportunity.dim_crm_opportunity_id,15) = LEFT(mart_crm_opportunity.ssp_id,15)				
+   SELECT DISTINCT
+      dim_crm_opportunity_id,
+      ssp_id, 
+      opportunity_term	
+    FROM prep_crm_opportunity					
     WHERE ssp_id IS NOT NULL 
-     AND mart_crm_opportunity.opportunity_category LIKE '%Ramp Deal%'
+     AND  is_live = 1
+     AND opportunity_category LIKE '%Ramp Deal%'
+
+
+), prep_crm_opportunity AS (
+
+    SELECT 
+      *
+    FROM {{ref('prep_crm_opportunity')}}
+    WHERE is_live = 1
 
 
 ---Combining All Ramp deals from SF and Zuora sources
@@ -89,7 +74,7 @@
 
     SELECT 
       zuora_ramps.subscription_name,
-      dim_crm_opportunity.dim_crm_opportunity_id, 
+      prep_crm_opportunity.dim_crm_opportunity_id, 
       CASE
        WHEN sheetload_map_ramp_deal.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deal."Overwrite_SSP_ID" 
        WHEN zuora_ramps.opportunity_id IS NOT NULL THEN zuora_ramps.myb_opportunity_id
@@ -100,13 +85,13 @@
       zuora_ramps.opportunity_id as zuora_opp_id,
       sheetload_map_ramp_deal.dim_crm_opportunity_id as sheetload_opp_id,
       ramp_deals.dim_crm_opportunity_id as sf_ramp_deal_opp_id
-    FROM dim_crm_opportunity	        
+    FROM prep_crm_opportunity	        
     LEFT JOIN sheetload_map_ramp_deal       
-     ON sheetload_map_ramp_deal.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id 
+     ON sheetload_map_ramp_deal.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id 
     LEFT JOIN ramp_deals          
-     ON ramp_deals.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+     ON ramp_deals.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN zuora_ramps
-     ON zuora_ramps.opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
+     ON zuora_ramps.opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
     WHERE ramp_ssp_id IS NOT NULL 
 
 
@@ -116,10 +101,11 @@
     SELECT 
       ramp_deals_ssp_id_multiyear_linkage.ramp_ssp_id,
       dim_subscription.*,
-    CASE WHEN ramp_ssp_id IS NULL AND LEAD(term_start_month) OVER (PARTITION BY dim_subscription.subscription_name ORDER BY ramp_ssp_id,subscription_version) = term_start_month THEN TRUE					 
-         WHEN RAMP_SSP_ID IS NOT NULL THEN FALSE														
-         ELSE FALSE
-    END AS is_dup_term				
+      CASE 
+        WHEN ramp_ssp_id IS NULL AND LEAD(term_start_month) OVER (PARTITION BY dim_subscription.subscription_name ORDER BY ramp_ssp_id,subscription_version) = term_start_month THEN TRUE					 
+        WHEN RAMP_SSP_ID IS NOT NULL THEN FALSE														
+        ELSE FALSE
+      END AS is_dup_term				
     FROM dim_subscription			
     LEFT JOIN ramp_deals_ssp_id_multiyear_linkage				
      ON dim_subscription.dim_crm_opportunity_id = ramp_deals_ssp_id_multiyear_linkage.dim_crm_opportunity_id
@@ -226,11 +212,14 @@
 
     SELECT 
       dim_subscription_base.*, 
-      CASE WHEN min_term_start_date IS NOT NULL THEN min_term_start_date 
-      ELSE term_start_date 
+      CASE 
+        WHEN min_term_start_date IS NOT NULL THEN min_term_start_date 
+        ELSE term_start_date 
       END AS ATR_term_start_date,       
-      CASE WHEN max_term_end_date IS NOT NULL THEN max_term_end_date 
-      ELSE term_end_date END AS ATR_term_end_date       
+      CASE 
+        WHEN max_term_end_date IS NOT NULL THEN max_term_end_date 
+        ELSE term_end_date 
+      END AS ATR_term_end_date       
     FROM dim_subscription_base        
     LEFT JOIN ramp_min_max_dates       
       ON dim_subscription_base.ramp_ssp_id = ramp_min_max_dates.ramp_ssp_id        
@@ -243,42 +232,40 @@
 ), subscription_charges AS (
 
     SELECT 
-       subscriptions_for_all.dim_subscription_id,
-      fct_charge.dim_charge_id,
-      dim_crm_account.dim_parent_crm_account_id,
-      dim_crm_account.parent_crm_account_name,
-      dim_product_detail_id,
+      subscriptions_for_all.dim_subscription_id,
+      prep_charge.dim_charge_id,
+      prep_crm_account.dim_parent_crm_account_id,
+      prep_crm_account.parent_crm_account_name,
+      prep_charge.dim_product_detail_id,
       subscriptions_for_all.dim_crm_opportunity_id,
-      fct_charge.dim_billing_account_id,
-      dim_crm_user.crm_user_sales_segment,
-      dim_crm_user.crm_user_geo,
-      dim_crm_user.crm_user_region,
-      dim_crm_user.crm_user_area,
-      dim_crm_user.dim_crm_user_id,
-      dim_crm_user.user_name,
+      prep_charge.dim_billing_account_id,
+      prep_crm_user.crm_user_sales_segment,
+      prep_crm_user.crm_user_geo,
+      prep_crm_user.crm_user_region,
+      prep_crm_user.crm_user_area,
+      prep_crm_user.dim_crm_user_id,
+      prep_crm_user.user_name,
       subscriptions_for_all.ATR_term_start_date,
       subscriptions_for_all.ATR_term_end_date,
       subscriptions_for_all.dim_crm_account_id, 
+      subscriptions_for_all.zuora_renewal_subscription_name AS renewal_subscription_name 
       subscriptions_for_all.subscription_name,
-      quantity, 
-      ARR,
-      zuora_renewal_subscription_name AS renewal_subscription_name 
+      prep_charge.quantity, 
+      prep_charge.ARR
     FROM subscriptions_for_all    
-    LEFT JOIN fct_charge   
-      ON subscriptions_for_all.dim_subscription_id = fct_charge.dim_subscription_id        
+    LEFT JOIN prep_charge   
+      ON subscriptions_for_all.dim_subscription_id = prep_charge.dim_subscription_id        
       AND subscriptions_for_all.term_end_date = TO_VARCHAR(TO_DATE(TO_CHAR(effective_end_date_id),'yyyymmdd'), 'YYYY-MM-DD')   
-      AND fct_charge.effective_start_date_id != fct_charge.effective_end_date_id            
+      AND prep_charge.effective_start_date_id != prep_charge.effective_end_date_id            
     INNER JOIN dim_billing_account
-      ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
-    LEFT JOIN dim_charge  
-      ON dim_charge.dim_charge_id = fct_charge.dim_charge_id 
-    LEFT JOIN dim_crm_account
-      ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
-    LEFT JOIN dim_crm_user
-      ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
-    WHERE fct_charge.dim_product_detail_id IS NOT NULL  
-      AND dim_crm_account.is_jihu_account != 'TRUE'
-      AND dim_charge.is_included_in_arr_calc = 'TRUE'
+      ON prep_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+    LEFT JOIN prep_crm_account
+      ON prep_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
+    LEFT JOIN prep_crm_user
+      ON prep_crm_account.dim_crm_user_id = prep_crm_user.dim_crm_user_id
+    WHERE prep_charge.dim_product_detail_id IS NOT NULL  
+      AND prep_crm_account.is_jihu_account != 'TRUE'
+      AND prep_charge.is_included_in_arr_calc = 'TRUE'
 
     
 --Final ATR Calculation for all Quarters 
@@ -317,7 +304,7 @@ cte_ref="final",
 created_by="@snalamaru",
 updated_by="@snalamaru",
 created_date="2024-04-01",
-updated_date="2024-06-20"
+updated_date="2024-09-20"
 ) }}
 
 
