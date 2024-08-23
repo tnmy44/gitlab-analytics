@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='id'
+    unique_key='learning_path_action_id'
 ) }}
 
 {{ level_up_incremental('learning_path_actions') }}
@@ -28,7 +28,7 @@ parsed AS (
   QUALIFY
     ROW_NUMBER() OVER (
       PARTITION BY
-        id
+        learning_path_action_id
       ORDER BY
         uploaded_at DESC
     ) = 1

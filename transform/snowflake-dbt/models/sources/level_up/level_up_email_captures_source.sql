@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='id'
+    unique_key='email_capture_id'
 ) }}
 
 {{ level_up_incremental('email_captures') }}
@@ -29,7 +29,7 @@ parsed AS (
   QUALIFY
     ROW_NUMBER() OVER (
       PARTITION BY
-        id
+        email_capture_id
       ORDER BY
         uploaded_at DESC
     ) = 1
