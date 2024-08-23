@@ -20,7 +20,7 @@ parsed AS (
     value['timestamp']::TIMESTAMP                           AS event_timestamp,
     {{ level_up_filter_gitlab_email("value['user']") }} AS username,
     value['event']::VARCHAR                                 AS event, -- noqa: RF04
-    SHA2(CONCAT(course_id, value['user'], event_timestamp)) AS id,
+    SHA2(CONCAT(course_id, value['user'], event_timestamp)) AS email_capture_id,
 
     uploaded_at
   FROM intermediate

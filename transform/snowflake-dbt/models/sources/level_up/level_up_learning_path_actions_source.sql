@@ -7,7 +7,7 @@
 
 parsed AS (
   SELECT
-    value['id']::VARCHAR                        AS id,
+    value['id']::VARCHAR                        AS learning_path_action_id,
     value['source']::VARCHAR                    AS source,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['type']::VARCHAR                      AS type,

@@ -7,7 +7,7 @@
 
 parsed AS (
   SELECT
-    value['id']::VARCHAR                             AS id,
+    value['id']::VARCHAR                             AS course_purchase_id,
     value['transactionId']::VARCHAR                  AS transaction_id,
     {{ level_up_filter_gitlab_email("value['giftRecipientEmail']") }} AS gift_recipient_email,
     value['timestamp']::TIMESTAMP                    AS event_timestamp,

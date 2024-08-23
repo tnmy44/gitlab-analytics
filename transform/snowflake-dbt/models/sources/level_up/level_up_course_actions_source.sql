@@ -7,7 +7,7 @@
 
 parsed AS (
   SELECT
-    value['id']::VARCHAR                        AS id,
+    value['id']::VARCHAR                        AS course_action_id,
     value['companyId']::VARCHAR                 AS company_id,
     value['source']::VARCHAR                    AS course_action,
     value['courseSku']::VARCHAR                 AS course_sku,
