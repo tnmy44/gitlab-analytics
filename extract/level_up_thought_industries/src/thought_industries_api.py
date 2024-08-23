@@ -280,18 +280,6 @@ class EmailCaptures(ThoughtIndustries):
         return "incoming/v2/events/emailCapture"
 
 
-class Awards(ThoughtIndustries):
-    """Class for Awards endpoint"""
-
-    def get_name(self) -> str:
-        """implement abstract class"""
-        return "awards"
-
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return "incoming/v2/events/award"
-
-
 if __name__ == "__main__":
     EPOCH_START_MS = 1722384000001
     EPOCH_END_MS = 1722470400000
