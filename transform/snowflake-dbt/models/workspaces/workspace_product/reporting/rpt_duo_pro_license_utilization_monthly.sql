@@ -60,7 +60,7 @@ LEFT JOIN mart_arr_all AS tier -- joining to get tier occuring within same month
   AND LOWER(tier.product_rate_plan_name) NOT LIKE '%duo pro%'
   AND LOWER(tier.product_rate_plan_name) NOT LIKE '%storage%'
   AND LOWER(tier.product_rate_plan_name) NOT LIKE '%success plan%' --new non-tier plan
-LEFT JOIN PROD.COMMON.dim_product_detail AS detail
+LEFT JOIN dim_product_detail AS detail
   ON detail.dim_product_detail_id = tier.dim_product_detail_id
 GROUP BY ALL
 
