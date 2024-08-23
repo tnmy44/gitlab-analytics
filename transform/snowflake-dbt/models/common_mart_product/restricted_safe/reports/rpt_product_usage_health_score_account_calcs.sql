@@ -203,7 +203,7 @@ account_rollup_calculations AS (
 final AS (
 
   SELECT
-    rpt_product_usage_health_score.* EXCLUDE (created_by, updated_by, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key),
+    rpt_product_usage_health_score.* EXCLUDE (created BY, updated BY, model_created_date, model_updated_date, dbt_updated_at, dbt_created_at, primary_key),
     COALESCE(account_rollup_calculations.arr_month,rpt_product_usage_health_score.snapshot_month) AS reporting_month,
     account_rollup_calculations.arr_month,
     account_rollup_calculations.dim_crm_account_id AS dim_crm_account_id_mart_arr_all,
@@ -251,5 +251,13 @@ final AS (
       AND rpt_product_usage_health_score.snapshot_month = account_rollup_calculations.arr_month
 )
 
-SELECT *
+SELECT *,
+   LAG(account_level_ci_color) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_ci_color_previous_month,
+   LAG(account_level_ci_color, 3) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_ci_color_previous_3_month,
+   LAG(account_level_scm_color) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_scm_color_previous_month,
+   LAG(account_level_scm_color, 3) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_scm_color_previous_3_month,
+   LAG(account_level_cd_color) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_cd_color_previous_month,
+   LAG(account_level_cd_color, 3) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_cd_color_previous_3_month,
+   LAG(account_level_security_color_ultimate_only) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_security_color_previous_month,
+   LAG(account_level_security_color_ultimate_only, 3) OVER (PARTITION BY dim_crm_account_id_mart_arr_all ORDER BY reporting_month) AS account_level_security_color_previous_3_month 
 FROM final
