@@ -2,7 +2,7 @@
     tags=["product"]
 ) }}
 
-WITH prep_ci_runner AS (test
+WITH prep_ci_runner AS (
 
   SELECT
 

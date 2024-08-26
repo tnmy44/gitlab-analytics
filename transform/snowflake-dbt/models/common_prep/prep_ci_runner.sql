@@ -37,24 +37,24 @@ final AS (
     gitlab_dotcom_ci_runners_source.ci_runner_id,
 
     --LEGACY NATURAL KEY
-    gitlab_dotcom_ci_runners_source.runner_id                                                                              AS dim_ci_runner_id,
+    gitlab_dotcom_ci_runners_source.ci_runner_id                                                                              AS dim_ci_runner_id,
 
     -- FOREIGN KEYS
     prep_date.date_id                                                                                                      AS created_date_id,
 
     gitlab_dotcom_ci_runners_source.created_at,
     gitlab_dotcom_ci_runners_source.updated_at,
-    gitlab_dotcom_ci_runners_source.description                                                                            AS ci_runner_description,
+    gitlab_dotcom_ci_runners_source.ci_runner_description,
     gitlab_dotcom_ci_runners_source.contacted_at,
     gitlab_dotcom_ci_runners_source.is_active,
-    gitlab_dotcom_ci_runners_source.version                                                                                AS ci_runner_version,
+    gitlab_dotcom_ci_runners_source.ci_runner_version,
     gitlab_dotcom_ci_runners_source.revision,
     gitlab_dotcom_ci_runners_source.platform,
     gitlab_dotcom_ci_runners_source.is_untagged,
     gitlab_dotcom_ci_runners_source.is_locked,
     gitlab_dotcom_ci_runners_source.access_level,
     gitlab_dotcom_ci_runners_source.maximum_timeout,
-    gitlab_dotcom_ci_runners_source.runner_type,
+    gitlab_dotcom_ci_runners_source.ci_runner_type,
     gitlab_dotcom_ci_runners_source.public_projects_minutes_cost_factor,
     gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor,
     COALESCE(sheetload_ci_runner_machine_type_mapping_source.ci_runner_machine_type, 'Other')                              AS ci_runner_machine_type,
@@ -64,7 +64,7 @@ final AS (
   LEFT JOIN prep_date
     ON gitlab_dotcom_ci_runners_source.created_at = prep_date.date_day
   LEFT JOIN sheetload_ci_runner_machine_type_mapping_source
-    ON gitlab_dotcom_ci_runners_source.description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
+    ON gitlab_dotcom_ci_runners_source.ci_runner_description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
 
 )
 
