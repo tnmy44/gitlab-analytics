@@ -47,6 +47,14 @@
   WHERE "Overwrite_SSP_ID" IS NOT NULL
 
 
+), prep_crm_opportunity AS (
+
+    SELECT 
+      *
+    FROM {{ref('prep_crm_opportunity')}}
+    WHERE is_live = 1
+
+
 --Identifying Ramp Deals from SF by using Opportunity_category
 --Opportunity_category is manually updated in SF, over 90% accuracy rate
 ), ramp_deals AS (
@@ -59,14 +67,6 @@
     WHERE ssp_id IS NOT NULL 
      AND  is_live = 1
      AND opportunity_category LIKE '%Ramp Deal%'
-
-
-), prep_crm_opportunity AS (
-
-    SELECT 
-      *
-    FROM {{ref('prep_crm_opportunity')}}
-    WHERE is_live = 1
 
 
 ---Combining All Ramp deals from SF and Zuora sources
