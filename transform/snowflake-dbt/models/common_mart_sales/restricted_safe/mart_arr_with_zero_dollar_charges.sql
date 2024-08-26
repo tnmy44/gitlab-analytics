@@ -22,14 +22,14 @@
       dim_product_detail_id,
       dim_billing_account_id,
       dim_crm_account_id,
-      unit_of_measure,
       SUM(mrr)                                                                      AS mrr,
       SUM(arr)                                                                      AS arr,
-      SUM(quantity)                                                                 AS quantity
+      SUM(quantity)                                                                 AS quantity,
+      ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
 
     FROM {{ ref('fct_mrr_with_zero_dollar_charges') }}
     WHERE subscription_status IN ('Active', 'Cancelled')
-    {{ dbt_utils.group_by(n=6) }}
+    {{ dbt_utils.group_by(n=5) }}
 
 ), joined AS (
 
