@@ -204,7 +204,8 @@
       MAX(term_end_date) AS max_term_end_date  
     FROM dim_subscription_base      
     WHERE ramp_ssp_id IS NOT NULL       
-    GROUP BY 1 HAVING COUNT(*) > 1  
+    GROUP BY 1 
+      HAVING COUNT(*) > 1  
 
 
 ----Calculating ATR start term and End term dates from Subscripion base
@@ -272,32 +273,51 @@
 ), final AS ( 
 
     SELECT DISTINCT
-      dim_date.fiscal_quarter_name_fy, 
-      dim_charge_id,
-      dim_crm_account_id, 
-      dim_crm_opportunity_id,
-      dim_subscription_id, 
-      subscription_name,
-      renewal_subscription_name,
-      dim_billing_account_id,
-      dim_product_detail_id,
-      dim_parent_crm_account_id,
-      parent_crm_account_name,
-      ATR_term_start_date,
-      ATR_term_end_date,
-      dim_crm_user_id,
-      user_name,
-      crm_user_sales_segment,
-      crm_user_geo,
-      crm_user_region,
-      crm_user_area,
-      SUM(ARR) as ARR, 
-      Quantity 
+
+      --Primary Key
+      {{ dbt_utils.generate_surrogate_key(['subscription_charges.dim_charge_id' ]) }} AS primary_key,
+      subscription_charges.dim_charge_id                                              AS dim_charge_id,
+
+      --Date dimensions  
+      dim_date.fiscal_quarter_name_fy                 AS fiscal_quarter_name_fy, 
+      dim_date.fiscal_year                            As fiscal_year,
+
+      --Foreign Keys
+      subscription_charges.dim_crm_account_id         AS dim_crm_account_id, 
+      subscription_charges.dim_crm_opportunity_id     AS dim_crm_opportunity_id,
+      subscription_charges.dim_subscription_id        AS dim_subscription_id, 
+      subscription_charges.subscription_name          AS subscription_name,
+      subscription_charges.dim_billing_account_id     AS dim_billing_account_id,
+      subscription_charges.dim_product_detail_id      AS dim_product_detail_id,
+      subscription_charges.dim_parent_crm_account_id  AS dim_parent_crm_account_id,
+      subscription_charges.dim_crm_user_id            AS dim_crm_user_id,
+
+      --Other attributes
+      subscription_charges.renewal_subscription_name  AS renewal_subscription_name,
+      subscription_charges.parent_crm_account_name    AS parent_crm_account_name,
+
+      --User info
+      subscription_charges.user_name                  AS user_name,
+
+      --User geo-related attributes
+      subscription_charges.crm_user_sales_segment     AS crm_user_sales_segment,
+      subscription_charges.crm_user_geo               AS crm_user_geo,
+      subscription_charges.crm_user_region            AS crm_user_region,
+      subscription_charges.crm_user_area              AS crm_user_area,
+      
+      --ATR related attributes including Seat Quantity & ARR 
+      subscription_charges.ATR_term_start_date        AS ATR_term_start_date,
+      subscription_charges.ATR_term_end_date          AS ATR_term_end_date,
+      subscription_charges.quantity                   AS quantity,
+      SUM(subscription_charges.ARR)                   AS ARR
+
     FROM subscription_charges 
     LEFT JOIN dim_date
      ON subscription_charges.ATR_term_end_date = dim_date.date_day 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21
+    {{ dbt_utils.group_by(n=22) }}
+
 )
+
 
 {{ dbt_audit(
 cte_ref="final",
