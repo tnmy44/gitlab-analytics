@@ -9265,7 +9265,6 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
-      - People Restricted Access
   - user_name: tmccaslin
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -10093,3 +10092,10 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: tlu
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - Customer Success All Access
+      - People Restricted Access
