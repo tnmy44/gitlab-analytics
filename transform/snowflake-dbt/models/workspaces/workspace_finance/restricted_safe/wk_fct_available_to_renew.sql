@@ -6,7 +6,7 @@
     ('sheetload_map_ramp_deals','sheetload_map_ramp_deals'),
     ('dim_subscription', 'dim_subscription'),
     ('prep_charge', 'prep_charge'),
-    ('dim_billing_account','dim_billing_account'),
+    ('prep_billing_account','prep_billing_account'),
     ('prep_crm_account','prep_crm_account'),
     ('prep_crm_user', 'prep_crm_user'),
     ('dim_date', 'dim_date')
@@ -258,10 +258,10 @@
       ON subscriptions_for_all.dim_subscription_id = prep_charge.dim_subscription_id        
       AND subscriptions_for_all.term_end_date = TO_VARCHAR(TO_DATE(TO_CHAR(effective_end_date_id),'yyyymmdd'), 'YYYY-MM-DD')   
       AND prep_charge.effective_start_date_id != prep_charge.effective_end_date_id            
-    INNER JOIN dim_billing_account
-      ON prep_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+    INNER JOIN prep_billing_account
+      ON prep_charge.dim_billing_account_id = prep_billing_account.dim_billing_account_id
     LEFT JOIN prep_crm_account
-      ON prep_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
+      ON prep_crm_account.dim_crm_account_id = prep_billing_account.dim_crm_account_id
     LEFT JOIN prep_crm_user
       ON prep_crm_account.dim_crm_user_id = prep_crm_user.dim_crm_user_id
     WHERE prep_charge.dim_product_detail_id IS NOT NULL  
