@@ -30,7 +30,7 @@
       subscription_status,
       term_start_date,
       term_end_date,
-      multi_year_deal_subscription_linkage,
+      multi_year_deal_subscription_linkage AS myb_opportunity_id,
       ramp_id,
       is_ramp
     FROM dim_subscription
@@ -77,12 +77,12 @@
       prep_crm_opportunity.dim_crm_opportunity_id, 
       CASE
        WHEN sheetload_map_ramp_deal.dim_crm_opportunity_id IS NOT NULL THEN sheetload_map_ramp_deal."Overwrite_SSP_ID" 
-       WHEN zuora_ramps.opportunity_id IS NOT NULL THEN zuora_ramps.myb_opportunity_id
+       WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN zuora_ramps.myb_opportunity_id
        WHEN ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id     
       END AS ramp_ssp_id_init,
       CASE WHEN ramp_ssp_id_init != 'Not a ramp' THEN ramp_ssp_id_init
-      ELSE LEFT(zuora_ramps.opportunity_id, 15) END AS ramp_ssp_id,
-      zuora_ramps.opportunity_id as zuora_opp_id,
+      ELSE LEFT(zuora_ramps.dim_crm_opportunity_id, 15) END AS ramp_ssp_id,
+      zuora_ramps.dim_crm_opportunity_id as zuora_opp_id,
       sheetload_map_ramp_deal.dim_crm_opportunity_id as sheetload_opp_id,
       ramp_deals.dim_crm_opportunity_id as sf_ramp_deal_opp_id
     FROM prep_crm_opportunity	        
@@ -91,7 +91,7 @@
     LEFT JOIN ramp_deals          
      ON ramp_deals.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN zuora_ramps
-     ON zuora_ramps.opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
+     ON zuora_ramps.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
     WHERE ramp_ssp_id IS NOT NULL 
 
 
