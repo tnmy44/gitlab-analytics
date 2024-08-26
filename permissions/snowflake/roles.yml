@@ -4201,6 +4201,7 @@ roles:
   - lmai:
       member_of:
         - analyst_engineering
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
         - reporting
