@@ -309,7 +309,8 @@ final AS (
       AS pct_assignment_seat_utilization,  -- only available for dotcom data - all SM/Dedicated deployments will show null     
     IFF(pct_assignment_seat_utilization > 1, 1,  pct_assignment_seat_utilization)
       AS standard_pct_assignment_seat_utilization,
-    a.is_oss_or_edu_rate_plan
+    COALESCE(a.is_oss_or_edu_rate_plan, FALSE) 
+      AS is_oss_or_edu_rate_plan
   FROM all_weekly_duo_pro_seats AS a
   LEFT JOIN unit_primitive_group_product_usage AS u
     ON a.reporting_week = u.reporting_week

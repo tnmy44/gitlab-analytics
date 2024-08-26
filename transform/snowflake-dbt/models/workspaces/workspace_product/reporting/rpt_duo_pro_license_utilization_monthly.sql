@@ -12,8 +12,7 @@
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
     ('mart_behavior_structured_event', 'mart_behavior_structured_event'),
     ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
-    ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion'),
-    ('dim_product_detail', 'dim_product_detail')
+    ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion')
 
     ])
 }},
@@ -310,7 +309,8 @@ final AS (
       AS pct_assignment_seat_utilization,  -- only available for dotcom data - all SM/Dedicated deployments will show null     
     IFF(pct_assignment_seat_utilization > 1, 1,  pct_assignment_seat_utilization)
       AS standard_pct_assignment_seat_utilization,
-    a.is_oss_or_edu_rate_plan
+    COALESCE(a.is_oss_or_edu_rate_plan, FALSE) 
+      AS is_oss_or_edu_rate_plan
   FROM all_monthly_duo_pro_seats AS a
   LEFT JOIN unit_primitive_group_product_usage AS u
     ON a.reporting_month = u.reporting_month
