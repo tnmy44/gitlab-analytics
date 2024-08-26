@@ -12,7 +12,8 @@
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
     ('mart_behavior_structured_event', 'mart_behavior_structured_event'),
     ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
-    ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion')
+    ('mart_behavior_structured_event_code_suggestion', 'mart_behavior_structured_event_code_suggestion'),
+    ('dim_product_detail', 'dim_product_detail')
 
     ])
 }},
@@ -330,5 +331,5 @@ final AS (
     created_by="@eneuberger",
     updated_by="@eneuberger",
     created_date="2024-05-07",
-    updated_date="2024-08-23"
+    updated_date="2024-08-26"
 ) }}
