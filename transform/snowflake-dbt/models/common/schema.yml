@@ -6853,6 +6853,8 @@ models:
         description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
       - name: context_tokens_used
         description: ' {{ doc("code_suggestions_context_tokens_used") }}'
+      - name: debounce_interval
+        description: ' {{ doc("code_suggestions_debounce_interval") }}'
 
   - name: fct_behavior_structured_event_30
     description: '{{ doc("fct_behavior_structured_event_30") }}'
@@ -7128,6 +7130,8 @@ models:
         description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
       - name: context_tokens_used
         description: ' {{ doc("code_suggestions_context_tokens_used") }}'
+      - name: debounce_interval
+        description: ' {{ doc("code_suggestions_debounce_interval") }}'
 
   - name: fct_behavior_structured_event_90
     description: '{{ doc("fct_behavior_structured_event_90") }}'
@@ -7403,6 +7407,8 @@ models:
         description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
       - name: context_tokens_used
         description: ' {{ doc("code_suggestions_context_tokens_used") }}'
+      - name: debounce_interval
+        description: ' {{ doc("code_suggestions_debounce_interval") }}'
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
@@ -9895,6 +9901,8 @@ models:
       description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
     - name: context_tokens_used
       description: ' {{ doc("code_suggestions_context_tokens_used") }}'
+    - name: debounce_interval
+      description: ' {{ doc("code_suggestions_debounce_interval") }}'
 
   - name: fct_behavior_structured_event_ide_extension_version
     description: '{{ doc("fct_behavior_structured_event_ide_extension_version") }}'

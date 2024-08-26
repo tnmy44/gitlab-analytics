@@ -3029,6 +3029,12 @@ Total context tokens used in request to model provider
 
 {% enddocs %}
 
+{% docs code_suggestions_debounce_interval%}
+
+Number of milliseconds we wait between last keystroke and API request for Code Suggestions
+
+{% enddocs %}
+
 {% docs ide_extension_version_context %}
 
 IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
