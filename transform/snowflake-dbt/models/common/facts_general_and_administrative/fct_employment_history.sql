@@ -10,6 +10,7 @@ final AS (
   FROM prep_employee_history
 
 )
+
 {{ dbt_audit(
     cte_ref='final',
     created_by='@rakhireddy',
