@@ -35,7 +35,7 @@
       is_ramp
     FROM dim_subscription
     WHERE 
-      is_ramp = 'Yes'    
+      is_ramp = True
 
 --- Legacy SF Ramps 
 --- Historical Ramp Deals for data <= October 2021
