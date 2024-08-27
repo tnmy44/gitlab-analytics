@@ -8681,7 +8681,7 @@ users:
       - General All Access
   - user_name: snalamaru
     user_name_domain: gitlab.com
-    site_role: SiteAdministratorCreator
+    site_role: Creator
     auth_setting: SAML
     groups:
       - Data Team All Access
