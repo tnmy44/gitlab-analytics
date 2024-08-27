@@ -42,7 +42,7 @@
       page_view_in_session_index,
       referer_url_path,
       page_url_original                                                             AS page_url,
-      page_referrer                                                                 AS referer_url,
+      page_referrer                                                                 AS referrer_url,
       page_url_scheme,
       referer_url_scheme,
       IFNULL(geo_city, 'Unknown')::VARCHAR                                          AS user_city,
@@ -104,6 +104,7 @@
       page_views_w_clean_url.page_url_path,
       page_views_w_clean_url.page_url,
       page_views_w_clean_url.page_url_host,
+      page_views_w_clean_url.referrer_url,
       page_views_w_clean_url.referer_url_path,
       page_views_w_clean_url.event_name,
       NULL                                                                                       AS sf_formid,
@@ -122,5 +123,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2024-08-21"
+    updated_date="2024-08-27"
 ) }}

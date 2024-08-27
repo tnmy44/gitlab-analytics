@@ -261,7 +261,7 @@
 {{ dbt_audit(
     cte_ref="dim_with_sk",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2023-01-20"
+    updated_date="2024-08-27"
 ) }}
