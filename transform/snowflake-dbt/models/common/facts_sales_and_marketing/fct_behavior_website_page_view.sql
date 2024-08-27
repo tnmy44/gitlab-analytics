@@ -68,7 +68,7 @@
 
       -- Foreign Keys
       {{ dbt_utils.generate_surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}                     AS dim_behavior_website_page_sk,
-      {{ dbt_utils.generate_surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}               AS dim_behavior_referrer_page_sk,
+      {{ dbt_utils.generate_surrogate_key(['referrer_url', 'app_id', 'referer_url_scheme']) }}              AS dim_behavior_referrer_page_sk,
       page_views_w_clean_url.dim_namespace_id,
       page_views_w_clean_url.dim_project_id,
 
