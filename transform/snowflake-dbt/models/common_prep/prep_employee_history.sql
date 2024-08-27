@@ -1,35 +1,42 @@
-WITH bhr_map
+WITH bamboohr_employee_directory_intermediate
 AS (
 	SELECT *
 	FROM {{ ref('employee_directory_intermediate') }}
 	WHERE uploaded_row_number_desc = 1
 	),
-bhr_map_id
+bamboohr_employee_mapping
 AS (
-	SELECT DISTINCT employee_id AS bhr_employee_id,
-		employee_number AS wk_employee_id
-	FROM bhr_map
+	  SELECT DISTINCT 
+    employee_id AS bhr_employee_id,
+    employee_number AS wk_employee_id
+  FROM bamboohr_employee_directory_intermediate
 	),
-bhr_dir_stage
+bamboohr_terminations
 AS (
-	SELECT DISTINCT employee_number AS wk_employee_id,
-		hire_date,
-		termination_date
-	FROM bhr_map
-	WHERE termination_date <= '2020-12-31'
-		AND hire_date <= '2020-12-31'
-		AND wk_employee_id != '11595'
-		OR wk_employee_id = '11202'
+  SELECT DISTINCT employee_number AS wk_employee_id,
+  	hire_date,
+  	termination_date
+	FROM bamboohr_employee_directory_intermediate
+  WHERE termination_date <= '2020-12-31' --use Workday data for 2021-01-01 or later
+  	AND hire_date <= '2020-12-31'      --use Workday data for 2021-01-01 or later
+  	AND wk_employee_id != '11595'      --incorrect hire date in bhr_map, listed as 2020-09-10. Correct date is 2020-06-09
+  	OR wk_employee_id = '11202'        --not in Workday and terminated on 2021-10-29 so WHERE clause would have excluded this team member
 	),
+  bamboohr_status
+AS (
+  SELECT * 
+  FROM {{ ref('bamboohr_employment_status_source') }}
+)
+  ,
 bhr_status
 AS (
-	SELECT bhr_map_id.wk_employee_id,
+SELECT bhr_map_id.wk_employee_id,
 		sts.effective_date,
 		sts.employment_status
-	FROM {{ ref('bamboohr_employment_status_source') }} sts
-	LEFT JOIN bhr_map_id ON sts.employee_id = bhr_map_id.bhr_employee_id QUALIFY min(IFF(sts.employment_status = 'Terminated', sts.effective_date, NULL)) OVER (
-			PARTITION BY sts.employee_id ORDER BY sts.effective_date DESC
-			) <= '2020-12-31'
+	FROM PREP.bamboohr.bamboohr_employment_status_source sts 
+	LEFT JOIN bhr_map_id ON sts.employee_id = bhr_map_id.bhr_employee_id 
+    WHERE employment_status = 'Terminated'
+    AND effective_date <= '2020-12-31'
 	),
 bhr_rehires
 AS (
@@ -39,16 +46,17 @@ AS (
 			PARTITION BY employee_id ORDER BY effective_date DESC,
 				is_terminated DESC
 			) AS prior_reason
-	FROM {{ ref('bamboohr_employment_status_source') }}
-	WHERE effective_date <= '2020-12-31' QUALIFY prior_reason = 'Terminated'
+	FROM bamboohr_status
+	WHERE effective_date <= '2020-12-31' 
+      QUALIFY prior_reason = 'Terminated'
 		AND employment_status != 'Terminated'
 	ORDER BY employee_id,
 		effective_date DESC
 	),
-bhr_new_hires1
+bhr_new_hires
 AS (
 	SELECT sts.*
-	FROM {{ ref('bamboohr_employment_status_source') }} sts
+	FROM bamboohr_status sts
 	INNER JOIN bhr_rehires ON sts.employee_id = bhr_rehires.employee_id
 	WHERE sts.effective_date <= '2020-12-31'
 		AND sts.employment_Status != 'Terminated' QUALIFY row_number() OVER (
@@ -58,7 +66,7 @@ AS (
 bhr_new_hires2
 AS (
 	SELECT sts.*
-	FROM {{ ref('bamboohr_employment_status_source') }} sts
+	FROM bamboohr_status sts
 	LEFT JOIN bhr_rehires ON sts.employee_id = bhr_rehires.employee_id
 	WHERE sts.effective_date <= '2020-12-31'
 		AND sts.employment_status != 'Terminated'
@@ -75,7 +83,7 @@ AS (
 sha
 AS (
 	SELECT *
-	FROM prep.workday.staffing_history_approved_source
+	FROM {{ ref('staffing_history_approved_source') }}
 	),
 bhr_hires
 AS (
@@ -116,13 +124,13 @@ AS (
 	
 	SELECT wk_employee_id,
 		hire_date
-	FROM bhr_dir_stage
+	FROM bamboohr_terminations
 	),
 terms_stage
 AS (
 	SELECT wk_employee_id,
 		termination_date
-	FROM bhr_dir_stage
+	FROM bamboohr_terminations
 	
 	UNION
 	
