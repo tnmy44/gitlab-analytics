@@ -59,8 +59,8 @@
       zuora_subscription.ramp_id                                                AS ramp_id,
       CASE 
         WHEN ramp_id != '' OR  (multi_year_deal_subscription_linkage != '' AND multi_year_deal_subscription_linkage IS NOT NULL AND multi_year_deal_subscription_linkage != 'Not a ramp') 
-          THEN 'Yes' 
-        ELSE 'No' 
+          THEN True
+        ELSE False
       END AS is_ramp,
 
       --Date Information
