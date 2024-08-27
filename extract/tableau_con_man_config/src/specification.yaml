@@ -603,42 +603,6 @@ projects:
         permission_rule: project_lead
 
 # ==========================================
-# Team Member
-# This subset of projects are for the
-# Team Member Production folders
-# ==========================================
-
-  - project_name: Team Member
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Production/Team Member
-    permission_set:
-      - group_name: General All Access
-        permission_rule: view
-      - group_name: Production Project Lead
-        permission_rule: project_lead
-
-  - project_name: General
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Production/Team Member/General
-    permission_set:
-      - group_name: General All Access
-        permission_rule: view
-      - group_name: Production Project Lead
-        permission_rule: project_lead
-
-  - project_name: SAFE
-    description: ""
-    content_permissions: LockedToProject
-    project_path: Production/Team Member/SAFE
-    permission_set:
-      - group_name: General SAFE Access
-        permission_rule: view
-      - group_name: Production Project Lead
-        permission_rule: project_lead
-
-# ==========================================
 # Ad-hoc
 # This subset of projects are for the Ad-hoc folders
 # ==========================================
@@ -1132,44 +1096,6 @@ projects:
         permission_rule: view
       - group_name: Support Project Lead
         permission_rule: project_lead
-
-# ==========================================
-# Team Member
-# This subset of projects are for the
-# Team Member Ad-hoc folders
-# ==========================================
-
-  - project_name: Team Member
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Ad-hoc/Team Member
-    permission_set:
-      - group_name: Ad-hoc Project Lead
-        permission_rule: project_lead
-      - group_name: Team Member Project Lead
-        permission_rule: project_lead
-      - group_name: General All Access
-        permission_rule: view
-
-  - project_name: General
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Ad-hoc/Team Member/General
-    permission_set:
-      - group_name: Ad-hoc Project Lead
-        permission_rule: project_lead
-      - group_name: Team Member Project Lead
-        permission_rule: project_lead
-      - group_name: General All Access
-        permission_rule: view
-
-  - project_name: SAFE
-    description: ""
-    content_permissions: LockedToProject
-    project_path: Ad-hoc/Team Member/SAFE
-    permission_set:
-      - group_name: General SAFE Access
-        permission_rule: view
 
 # ==========================================
 # Development
@@ -1667,48 +1593,6 @@ projects:
         permission_rule: publish
       - group_name: Support Project Lead
         permission_rule: project_lead
-
-# ==========================================
-# Team Member
-# This subset of projects are for the
-# Team Member Development folders
-# ==========================================
-
-  - project_name: Team Member
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Development/Team Member
-    permission_set:
-      - group_name: Development Project Lead
-        permission_rule: project_lead
-      - group_name: Team Member Project Lead
-        permission_rule: project_lead
-      - group_name: General All Access
-        permission_rule: publish
-
-  - project_name: General
-    description: ""
-    content_permissions: LockedToProjectWithoutNested
-    project_path: Development/Team Member/General
-    permission_set:
-      - group_name: Development Project Lead
-        permission_rule: project_lead
-      - group_name: Team Member Project Lead
-        permission_rule: project_lead
-      - group_name: General All Access
-        permission_rule: publish
-
-  - project_name: SAFE
-    description: ""
-    content_permissions: LockedToProject
-    project_path: Development/Team Member/SAFE
-    permission_set:
-      - group_name: Development Project Lead
-        permission_rule: project_lead
-      - group_name: Team Member Project Lead
-        permission_rule: project_lead
-      - group_name: General SAFE Access
-        permission_rule: publish
 
 # ==========================================
 # Permission Templates
@@ -2212,7 +2096,6 @@ groups:
   - group_name: Sales Project Lead
   - group_name: Security Project Lead
   - group_name: Support Project Lead
-  - group_name: Team Member Project Lead
 
 # ==========================================
 # Access Groups
@@ -2230,7 +2113,6 @@ groups:
   - group_name: Product All Access
   - group_name: Sales All Access
   - group_name: Security All Access
-  - group_name: Team Member All Access
 
 # ==========================================
 # Limited Access Groups
@@ -2890,7 +2772,6 @@ users:
       - People All Access
       - People Project Lead
       - People Restricted Access
-      - Team Member Project Lead
   - user_name: apesta
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5819,7 +5700,6 @@ users:
       - Finance Project Lead
       - General All Access
       - General SAFE Access
-      - Team Member Project Lead
       - Go To Market Project Lead
   - user_name: jshin
     user_name_domain: gitlab.com
@@ -7499,7 +7379,6 @@ users:
       - Go To Market Project Lead
       - Production Project Lead
       - Resources Project Lead
-      - Team Member Project Lead
   - user_name: nmcdonald
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -9417,7 +9296,6 @@ users:
       - General All Access
       - General SAFE Access
       - Go To Market Project Lead
-      - Team Member Project Lead
   - user_name: vbertil
     user_name_domain: gitlab.com
     site_role: Viewer
