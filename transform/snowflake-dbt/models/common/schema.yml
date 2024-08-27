@@ -1366,6 +1366,10 @@ models:
         description: '{{ doc("oldest_subscription_start_date") }}'
       - name: oldest_subscription_cohort_month
         description: '{{ doc("oldest_subscription_cohort_month") }}'
+      - name: ramp_id
+        description: The unique identifier of each ramp deal.  
+      - name: is_ramp
+        description: The indicator flag to identify ramp deals based on ramp_id and multi_year_deal_subscription_linkage fields.
 
   - name: dim_app_release_major_minor
     description: '{{ doc("dim_app_release_major_minor") }}'
