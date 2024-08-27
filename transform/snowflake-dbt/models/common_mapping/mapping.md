@@ -122,6 +122,8 @@ The user name of the snowflake user.  This is different than the user email and 
 
 {% docs map_namespace_subscription_product %}
 
-This model maps namespaces to their most recent paid GitLab.com (SaaS) subscription product, excluding one-time charges and specific product offerings. It provides a daily snapshot of active subscription product(s) for each namespace.
+This model maps namespaces to their most recent paid GitLab.com (SaaS) subscription product, excluding one-time charges and specific product offerings. 
+
+It provides a daily snapshot of active subscription product(s) for each namespace by expanding the subscription-product across the effective dates of the associated charge.
 
 {% enddocs %}

@@ -28,11 +28,11 @@ joined AS (
   LEFT JOIN charges
     ON subscriptions.dim_subscription_id = charges.dim_subscription_id
   INNER JOIN dim_date
-    ON dim_date.date_actual <= charges.effective_start_date
+    ON charges.effective_start_date <= dim_date.date_actual
       AND (
         charges.effective_end_date > dim_date.date_actual
         OR charges.effective_end_date IS NULL
-      )
+     )
   LEFT JOIN product_detail
     ON product_detail.dim_product_detail_id = charges.dim_product_detail_id
   LEFT JOIN product_tier
