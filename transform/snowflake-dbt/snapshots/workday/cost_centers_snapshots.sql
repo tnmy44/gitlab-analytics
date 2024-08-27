@@ -10,8 +10,7 @@
             'division_workday_id',
             'division',
             'cost_center_workday_id',
-            'cost_center',
-            '_fivetran_deleted']
+            'cost_center']
         )
     }}
 

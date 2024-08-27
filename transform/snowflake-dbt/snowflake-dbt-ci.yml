@@ -250,7 +250,7 @@
       - "transform/snowflake-dbt/models/**/*.sql"
     refs:
       - merge_request
-  allow_failure: true
+  allow_failure: False
 
 🚫safe_model_script:
   <<: *safe_models_check
