@@ -8,7 +8,7 @@ Closes
 
 * Run the ❄️`Snowflake` -> [clone_raw_postgres_pipeline](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#clone_raw_postgres_pipeline) CI job
 * Run one of this pipeline. Depends on the file you changed, you should run either:
-    * [ ] 🚂`Extract` -> [saas_pgp_test](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#-saas_pgp_test) if one of this file(s) is changed:
+    * [ ] 🚂`Extract` -> [gitlab_saas_pgp_test](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#-saas_pgp_test) if one of this file(s) is changed:
         * [ ] `el_saas_customers_scd_db_manifest.yaml`
         * [ ] `el_gitlab_dotcom_com_db_manifest.yaml`
         * [ ] `el_gitlab_dotcom_com_scd_db_manifest.yaml`
