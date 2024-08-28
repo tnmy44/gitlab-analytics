@@ -34,7 +34,7 @@ final AS (
     {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_ci_runners_source.runner_id']) }}        AS dim_ci_runner_sk,
 
     --NATURAL KEY
-    gitlab_dotcom_ci_runners_source.runner_id,
+    gitlab_dotcom_ci_runners_source.runner_id                                                    AS ci_runner_id,
 
     --LEGACY NATURAL KEY
     gitlab_dotcom_ci_runners_source.runner_id                                                    AS dim_ci_runner_id,
@@ -64,7 +64,7 @@ final AS (
   LEFT JOIN prep_date
     ON gitlab_dotcom_ci_runners_source.created_at = prep_date.date_day
   LEFT JOIN sheetload_ci_runner_machine_type_mapping_source
-    ON gitlab_dotcom_ci_runners_source.ci_runner_description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
+    ON gitlab_dotcom_ci_runners_source.description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
 
 )
 
