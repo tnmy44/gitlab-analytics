@@ -207,7 +207,7 @@ tables:
       FROM ci_pipeline_schedules
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_pipelines:
+  p_ci_pipelines:
     dbt_source_model: true
     is_incremental: True
     database_type: ci
