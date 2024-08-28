@@ -12,6 +12,11 @@ WITh prep AS (
 final AS (
 
   SELECT
+
+    -- SURROGATE KEY
+    dim_ci_pipeline_sk,
+
+    --LEGACY NATURAL KEY
     dim_ci_pipeline_id,
 
     --NATURAL KEY

@@ -1,6 +1,11 @@
 WITH prep_ci_build AS (
 
     SELECT 
+
+    --Surrogate key
+      dim_ci_build_sk,
+
+      --Legacy Natural Key
       dim_ci_build_id, 
 
       --NATURAL KEY
@@ -53,8 +58,8 @@ WITH prep_ci_build AS (
 {{ dbt_audit(
     cte_ref="prep_ci_build",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2021-06-17",
-    updated_date="2023-07-21"
+    updated_date="2024-08-28"
 ) }}
 

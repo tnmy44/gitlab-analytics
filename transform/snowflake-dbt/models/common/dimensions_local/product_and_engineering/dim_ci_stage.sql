@@ -1,7 +1,7 @@
 WITH ci_stages AS (
   
     SELECT
-      --PRIMARY KEY
+      --SURROGATE KEY
       dim_ci_stage_sk,
 
       --NATURAL KEY
@@ -29,8 +29,8 @@ WITH ci_stages AS (
 {{ dbt_audit(
     cte_ref="ci_stages",
     created_by="@mpeychet_",
-    updated_by="@ischweickartDD",
+    updated_by="@lisvinueza",
     created_date="2021-06-29",
-    updated_date="2021-07-08"
+    updated_date="2024-08-28"
 ) }}
 

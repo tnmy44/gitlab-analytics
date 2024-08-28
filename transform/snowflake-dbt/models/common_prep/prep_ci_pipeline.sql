@@ -3,12 +3,12 @@
 ) }}
 
 {{ simple_cte([
-    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_project', 'prep_project'),
     ('prep_user', 'prep_user'),
     ('gitlab_dotcom_ci_pipelines_source', 'gitlab_dotcom_ci_pipelines_source'),
-    ('dim_date', 'dim_date'),
+    ('prep_date', 'prep_date'),
 ]) }},
 
 renamed AS (
@@ -16,7 +16,7 @@ renamed AS (
   SELECT
 
     -- SURROGATE KEY
-    {{ dbt_utils.generate_surrogate_key(['ci_pipeline_id']) }} AS dim_ci_pipeline_sk,
+    {{ dbt_utils.generate_surrogate_key(['ci_pipeline_id']) }}                                  AS dim_ci_pipeline_sk,
 
     -- NATURAL KEY
     ci_pipeline_id,
@@ -29,8 +29,8 @@ renamed AS (
     prep_project.dim_namespace_id,
     prep_project.ultimate_parent_namespace_id,
     prep_user.dim_user_id,
-    dim_date.date_id                                                                            AS created_date_id,
-    COALESCE(dim_namespace_plan_hist.dim_plan_id, 34)                                           AS dim_plan_id,
+    prep_date.date_id                                                                            AS created_date_id,
+    COALESCE(prep_namespace_plan_hist.dim_plan_id, 34)                                           AS dim_plan_id,
     merge_request_id,
 
     gitlab_dotcom_ci_pipelines_source.created_at,
@@ -75,14 +75,14 @@ renamed AS (
   FROM gitlab_dotcom_ci_pipelines_source
   LEFT JOIN prep_project
     ON gitlab_dotcom_ci_pipelines_source.project_id = prep_project.dim_project_id
-  LEFT JOIN dim_namespace_plan_hist
-    ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-      AND gitlab_dotcom_ci_pipelines_source.created_at >= dim_namespace_plan_hist.valid_from
-      AND gitlab_dotcom_ci_pipelines_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
+  LEFT JOIN prep_namespace_plan_hist
+    ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
+      AND gitlab_dotcom_ci_pipelines_source.created_at >= prep_namespace_plan_hist.valid_from
+      AND gitlab_dotcom_ci_pipelines_source.created_at < COALESCE(prep_namespace_plan_hist.valid_to, '2099-01-01')
   LEFT JOIN prep_user
     ON gitlab_dotcom_ci_pipelines_source.user_id = prep_user.dim_user_id
-  LEFT JOIN dim_date
-    ON TO_DATE(gitlab_dotcom_ci_pipelines_source.created_at) = dim_date.date_day
+  LEFT JOIN prep_date
+    ON TO_DATE(gitlab_dotcom_ci_pipelines_source.created_at) = prep_date.date_day
   WHERE gitlab_dotcom_ci_pipelines_source.project_id IS NOT NULL
 
 )
