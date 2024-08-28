@@ -20,7 +20,7 @@ cost_centers_stage AS (
     department_name AS department,
     division,
     cost_center,
-    is_department_active,
+    is_dept_active,
     report_effective_date
   FROM cost_centers_snapshots_source
   LEFT JOIN max_hist_date_cte
@@ -34,7 +34,7 @@ cost_centers_stage AS (
     department,
     division,
     cost_center,
-    is_dept_active AS is_department_active,
+    is_dept_active,
     report_effective_date
   FROM cost_centers_historical_source
 ),
@@ -56,7 +56,7 @@ final AS (
     department,
     division,
     cost_center,
-    is_department_active
+    is_dept_active AS is_department_active
   FROM cost_centers_stage
 )
 
