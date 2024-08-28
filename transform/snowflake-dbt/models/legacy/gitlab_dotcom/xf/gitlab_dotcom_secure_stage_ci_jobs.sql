@@ -9,7 +9,7 @@
 WITH ci_builds AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_ci_builds') }}
+    FROM {{ ref('prep_ci_build') }}
     {% if is_incremental() %}
 
       WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
@@ -34,25 +34,42 @@ WITH ci_builds AS (
 ), secure_ci_builds AS (
   
     SELECT 
-      *,
-      CASE
-      WHEN ci_build_name LIKE '%apifuzzer_fuzz%' 
-        THEN 'api_fuzzing'
-      WHEN ci_build_name LIKE '%container_scanning%' 
-        THEN 'container_scanning'
-      WHEN ci_build_name LIKE '%dast%'  
-        THEN 'dast' 
-      WHEN ci_build_name LIKE '%dependency_scanning%'  
-        THEN 'dependency_scanning'
-      WHEN ci_build_name LIKE '%license_management%'  
-        THEN 'license_management'
-      WHEN ci_build_name LIKE '%license_scanning%'  
-        THEN 'license_scanning'
-      WHEN ci_build_name LIKE '%sast%'  
-        THEN 'sast'  
-      WHEN ci_build_name LIKE '%secret_detection%'
-        THEN 'secret_detection'
-      END AS secure_ci_job_type
+      ci_build_id,
+      dim_project_id AS ci_build_project_id,
+      dim_ci_runner_id AS ci_build_runner_id,
+      dim_user_id AS ci_build_user_id,
+      dim_ci_stage_id AS ci_build_stage_id,
+      ci_build_status AS status,
+      finished_at,
+      created_at,
+      updated_at,
+      started_at,
+      coverage,
+      commit_id AS ci_build_commit_id,
+      ci_build_name,
+      options,
+      allow_failure,
+      stage,
+      trigger_request_id AS ci_build_trigger_request_id,
+      stage_idx,
+      tag,
+      ref,
+      ci_build_type AS type,
+      ci_build_description AS description,
+      erased_by_id AS ci_build_erased_by_id,
+      erased_at AS ci_build_erased_at,
+      artifacts_expire_at AS ci_build_artifacts_expire_at,
+      environment,
+      queued_at AS ci_build_queued_at,
+      lock_version,
+      coverage_regex,
+      auto_canceled_by_id AS ci_build_auto_canceled_by_id,
+      retried,
+      protected,
+      failure_reason,
+      scheduled_at AS ci_build_scheduled_at,
+      upstream_pipeline_id,
+      secure_ci_build_type AS secure_ci_job_type
     FROM ci_builds 
     WHERE ci_build_name ILIKE ANY (
                                       '%apifuzzer_fuzz%',
