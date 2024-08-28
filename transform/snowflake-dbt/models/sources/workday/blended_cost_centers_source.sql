@@ -17,7 +17,7 @@ cost_centers_stage AS (
   SELECT
     dept_workday_id,
     cost_center_workday_id,
-    department,
+    department_name AS department,
     division,
     cost_center,
     is_department_active,
