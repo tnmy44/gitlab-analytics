@@ -29,8 +29,8 @@ renamed AS (
     prep_project.dim_namespace_id,
     prep_project.ultimate_parent_namespace_id,
     prep_user.dim_user_id,
-    prep_date.date_id                                                                            AS created_date_id,
-    COALESCE(prep_namespace_plan_hist.dim_plan_id, 34)                                           AS dim_plan_id,
+    prep_date.date_id                                                                           AS created_date_id,
+    COALESCE(prep_namespace_plan_hist.dim_plan_id, 34)                                          AS dim_plan_id,
     merge_request_id,
 
     gitlab_dotcom_ci_pipelines_source.created_at,

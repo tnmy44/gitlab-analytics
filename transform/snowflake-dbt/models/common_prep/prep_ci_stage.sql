@@ -26,9 +26,9 @@ ci_stages AS (
 joined AS (
 
   SELECT
-  
+
     -- SURROGATE KEY
-    {{ dbt_utils.generate_surrogate_key(['ci_stages.ci_stage_id']) }} AS dim_ci_stage_sk,
+    {{ dbt_utils.generate_surrogate_key(['ci_stages.ci_stage_id']) }}                                  AS dim_ci_stage_sk,
 
     --NATURAL KEY
     ci_stages.ci_stage_id,
