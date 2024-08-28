@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_ci_runner_id"
+    "unique_key": "dim_ci_runner_sk"
     })
 }}
 
@@ -62,7 +62,7 @@ final AS (
 
   FROM gitlab_dotcom_ci_runners_source
   LEFT JOIN prep_date
-    ON gitlab_dotcom_ci_runners_source.created_at = prep_date.date_day
+    ON TO_DATE(gitlab_dotcom_ci_runners_source.created_at) = prep_date.date_day
   LEFT JOIN sheetload_ci_runner_machine_type_mapping_source
     ON gitlab_dotcom_ci_runners_source.description LIKE sheetload_ci_runner_machine_type_mapping_source.ci_runner_description_mapping
 
@@ -71,7 +71,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2021-06-23",
-    updated_date="2024-05-20"
+    updated_date="2024-08-28"
 ) }}

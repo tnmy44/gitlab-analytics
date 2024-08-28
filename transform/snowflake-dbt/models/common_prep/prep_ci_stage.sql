@@ -57,7 +57,7 @@ joined AS (
   LEFT JOIN prep_ci_pipeline
     ON ci_stages.pipeline_id = prep_ci_pipeline.dim_ci_pipeline_id
   INNER JOIN prep_date
-    ON TO_DATE(ci_stages.created_at) = dim_date.date_day
+    ON TO_DATE(ci_stages.created_at) = prep_date.date_day
 
 )
 
