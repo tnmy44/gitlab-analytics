@@ -34,7 +34,7 @@ cost_centers_stage AS (
     department,
     division,
     cost_center,
-    is_dept_active,
+    is_department_active AS is_dept_active,
     report_effective_date
   FROM cost_centers_historical_source
 ),
