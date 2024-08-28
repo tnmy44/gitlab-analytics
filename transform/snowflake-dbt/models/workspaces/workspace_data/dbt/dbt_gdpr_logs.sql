@@ -26,7 +26,7 @@ WITH gdpr_delete_logs AS (
 SELECT
     logs.time_stamp,
     logs.info_msg,
-    REPLACE(partition_times.info_msg, '        SET email_sha = ', '') AS email_sha,
+    RTRIM(REPLACE(REPLACE(REPLACE(partition_times.info_msg, '        SET email_sha = ''', ''), ''';', ''), '\n', '')) AS email_sha,
     logs.invocation_id
 FROM gdpr_delete_logs logs
 JOIN partition_times
