@@ -70,7 +70,7 @@ secure_ci_builds AS (
     environment,
     queued_at            AS ci_build_queued_at,
     lock_version,
-    coverage_regex,cd tr
+    coverage_regex,
     auto_canceled_by_id  AS ci_build_auto_canceled_by_id,
     retried,
     protected,
