@@ -67,4 +67,4 @@ ping_daily_mapping AS (
 
 )
 
-SELECT * FROM ping_daily_mapping;
+SELECT * FROM ping_daily_mapping
