@@ -150,6 +150,7 @@
       driveload_financial_metrics_program_phase_1_source.subscription_sales_type,
       driveload_financial_metrics_program_phase_1_source.product_name,
       NULL                                                                                         AS product_rate_plan_name,
+      NULL                                                                                         AS product_rate_plan_charge_name,
       NULL                                                                                         AS product_deployment_type,
       driveload_financial_metrics_program_phase_1_source.product_category                          AS product_tier_name,
       CASE
