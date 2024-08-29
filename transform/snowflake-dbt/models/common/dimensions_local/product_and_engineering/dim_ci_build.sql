@@ -49,6 +49,7 @@ WITH prep_ci_build AS (
       retried,
       protected,
       failure_reason,
+      failure_reason_id,
       scheduled_at,
       upstream_pipeline_id
     FROM {{ ref('prep_ci_build') }}

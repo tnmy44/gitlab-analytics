@@ -155,6 +155,7 @@ renamed AS (
         THEN 'reached_downstream_pipeline_trigger_rate_limit'
       ELSE gitlab_dotcom_ci_builds_source.failure_reason
     END                                                                                                                     AS failure_reason,
+    gitlab_dotcom_ci_builds_source.failure_reason                                                                           AS failure_reason_id,
     gitlab_dotcom_ci_builds_source.ci_build_scheduled_at                                                                    AS scheduled_at,
     gitlab_dotcom_ci_builds_source.upstream_pipeline_id,
     CASE

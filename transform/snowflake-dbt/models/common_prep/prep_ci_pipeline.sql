@@ -65,6 +65,7 @@ renamed AS (
       WHEN gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 15 THEN 'security_orchestration_policy'
       WHEN gitlab_dotcom_ci_pipelines_source.ci_pipeline_source = 16 THEN 'container_registry_push'
     END                                                                                         AS ci_pipeline_source,
+    gitlab_dotcom_ci_pipelines_source.ci_pipeline_source                                        AS ci_pipeline_source_id,
     gitlab_dotcom_ci_pipelines_source.config_source,
     gitlab_dotcom_ci_pipelines_source.is_protected,
     gitlab_dotcom_ci_pipelines_source.failure_reason                                            AS failure_reason_id,

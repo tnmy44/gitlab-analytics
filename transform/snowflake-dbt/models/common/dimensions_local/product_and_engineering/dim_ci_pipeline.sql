@@ -46,6 +46,7 @@ final AS (
     auto_canceled_by_id,
     pipeline_schedule_id,
     ci_pipeline_source,
+    ci_pipeline_source_id,
     config_source,
     is_protected,
     failure_reason_id,
