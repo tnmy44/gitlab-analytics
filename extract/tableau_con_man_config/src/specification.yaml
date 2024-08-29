@@ -2629,11 +2629,9 @@ users:
       - ASM Restricted Access
       - General All Access
       - General SAFE Access
-      - Go To Market Project Lead
       - RSA SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
-      - Sales Project Lead
   - user_name: aluis
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6524,6 +6522,7 @@ users:
       - RSA SAFE Access
       - Sales Development SAFE Access
       - Sales Project Lead
+      - Go To Market Project Lead
   - user_name: lzhao
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7265,7 +7264,6 @@ users:
       - General SAFE Access
       - Sales All Access
       - Sales Development SAFE Access
-      - Sales Project Lead
   - user_name: ncerveira
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7577,7 +7575,6 @@ users:
       - ASM EMEA Commercial Restricted Access
       - ASM Restricted Access
       - Finance All Access
-      - Finance Project Lead
       - General All Access
       - General SAFE Access
       - RSA SAFE Access
@@ -8683,17 +8680,12 @@ users:
       - General All Access
   - user_name: snalamaru
     user_name_domain: gitlab.com
-    site_role: SiteAdministratorCreator
+    site_role: Creator
     auth_setting: SAML
     groups:
-      - Ad-hoc Project Lead
       - Data Team All Access
-      - Development Project Lead
       - General All Access
       - General SAFE Access
-      - Production Project Lead
-      - Resources Project Lead
-      - Data Team Project Lead
   - user_name: snguyen
     user_name_domain: gitlab.com
     site_role: Viewer
