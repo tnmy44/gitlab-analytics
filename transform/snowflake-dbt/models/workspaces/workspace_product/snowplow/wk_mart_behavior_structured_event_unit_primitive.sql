@@ -58,20 +58,13 @@
     flattened_with_installation_id.behavior_structured_event_pk,
 
     -- foreign keys
-    flattened_with_installation_id.dim_behavior_website_page_sk,
-    flattened_with_installation_id.dim_behavior_referrer_page_sk,
-    flattened_with_installation_id.dim_behavior_browser_sk,
-    flattened_with_installation_id.dim_behavior_operating_system_sk,
     flattened_with_installation_id.dim_behavior_event_sk,
     flattened_with_installation_id.dim_user_location_sk,
     dim_app_release_major_minor.dim_app_release_major_minor_sk,
-    flattened_with_installation_id.dim_project_id,
-    flattened_with_installation_id.dim_plan_sk,
-    flattened_with_installation_id.dim_plan_id,
     flattened_with_installation_id.dim_installation_id,
     flattened_with_installation_id.gsc_feature_enabled_by_namespace_ids,
     flattened_with_installation_id.enabled_by_namespace_id,
-    dim_namespace.ultimate_parent_namespace_id AS enabled_by_ultimate_parent_namespace_id,
+    dim_namespace.ultimate_parent_namespace_id                              AS enabled_by_ultimate_parent_namespace_id,
 
     -- dates
     flattened_with_installation_id.dvce_created_tstamp,
