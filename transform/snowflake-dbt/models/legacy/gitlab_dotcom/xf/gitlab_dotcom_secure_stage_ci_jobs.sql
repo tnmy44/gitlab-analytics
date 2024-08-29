@@ -70,25 +70,16 @@ secure_ci_builds AS (
     environment,
     queued_at            AS ci_build_queued_at,
     lock_version,
-    coverage_regex,
+    coverage_regex,cd tr
     auto_canceled_by_id  AS ci_build_auto_canceled_by_id,
     retried,
     protected,
-    failure_reason,
+    failure_reason_id,
     scheduled_at         AS ci_build_scheduled_at,
     upstream_pipeline_id,
     secure_ci_build_type AS secure_ci_job_type
   FROM ci_builds
-  WHERE ci_build_name ILIKE ANY (
-      '%apifuzzer_fuzz%',
-      '%container_scanning%',
-      '%dast%',
-      '%dependency_scanning%',
-      '%license_management%',
-      '%license_scanning%',
-      '%sast%',
-      '%secret_detection%'
-    )
+  WHERE secure_ci_build_type IS NOT NULL
 ),
 
 joined AS (
