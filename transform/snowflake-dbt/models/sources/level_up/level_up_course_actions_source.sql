@@ -1,13 +1,13 @@
 {{ config(
     materialized='incremental',
-    unique_key='id'
+    unique_key='course_action_id'
 ) }}
 
 {{ level_up_incremental('course_actions') }}
 
 parsed AS (
   SELECT
-    value['id']::VARCHAR                        AS id,
+    value['id']::VARCHAR                        AS course_action_id,
     value['companyId']::VARCHAR                 AS company_id,
     value['source']::VARCHAR                    AS course_action,
     value['courseSku']::VARCHAR                 AS course_sku,
@@ -15,10 +15,7 @@ parsed AS (
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['notifiableId']::VARCHAR              AS notifiable_id,
     value['type']::VARCHAR                      AS transaction_type,
-
-    CASE
-      WHEN LOWER(value['user']) LIKE '%@gitlab.com' THEN value['user']::VARCHAR
-    END                                         AS username,
+    {{ level_up_filter_gitlab_email("value['user']") }} AS username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
     value['userDetail']['state']::VARCHAR       AS user_state,
@@ -45,7 +42,7 @@ parsed AS (
   QUALIFY
     ROW_NUMBER() OVER (
       PARTITION BY
-        id
+        course_action_id
       ORDER BY
         uploaded_at DESC
     ) = 1
