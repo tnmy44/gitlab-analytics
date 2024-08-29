@@ -394,7 +394,7 @@
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
     INNER JOIN PROD.common.dim_date
-      ON arr_month = date_actual
+      ON combined.arr_month = date_actual
     WHERE combined.arr_month >= '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
