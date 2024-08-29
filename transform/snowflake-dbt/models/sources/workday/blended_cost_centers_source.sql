@@ -19,6 +19,7 @@ cost_centers_stage AS (
     cost_center_workday_id,
     department_name AS department,
     division,
+    division_workday_id,
     cost_center,
     is_dept_active,
     report_effective_date
@@ -33,6 +34,7 @@ cost_centers_stage AS (
     cost_center_workday_id,
     department,
     division,
+    division_workday_id,
     cost_center,
     is_department_active AS is_dept_active,
     report_effective_date
@@ -53,6 +55,7 @@ final AS (
       PARTITION BY dept_workday_id ORDER BY report_effective_date DESC
     ), '2099-01-01')                                              AS valid_to,
     cost_center_workday_id,
+    division_workday_id,
     department,
     division,
     cost_center,
@@ -63,6 +66,7 @@ final AS (
 SELECT
   dept_workday_id,
   cost_center_workday_id,
+  division_workday_id,
   department,
   division,
   cost_center,

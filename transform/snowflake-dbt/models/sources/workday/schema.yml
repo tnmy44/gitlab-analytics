@@ -609,6 +609,7 @@ models:
           - not_null
       - name: department_name
       - name: division
+      - name: division_workday_id
       - name: cost_center_workday_id
       - name: cost_center
       - name: dept_inactive
@@ -624,6 +625,7 @@ models:
       - name: cost_center_workday_id
       - name: department
       - name: division
+      - name: division_workday_id
       - name: cost_center
       - name: is_department_active
       - name: valid_from
