@@ -65,10 +65,10 @@ final AS (
 
 SELECT
   dept_workday_id,
-  cost_center_workday_id,
-  division_workday_id,
   department,
+  division_workday_id,
   division,
+  cost_center_workday_id,
   cost_center,
   is_department_active,
   valid_from,
