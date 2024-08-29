@@ -71,7 +71,7 @@
     flattened_with_installation_id.dim_installation_id,
     flattened_with_installation_id.gsc_feature_enabled_by_namespace_ids,
     flattened_with_installation_id.enabled_by_namespace_id,
-    dim_namespace.ultimate_parent_namespace_id,
+    dim_namespace.ultimate_parent_namespace_id AS enabled_by_ultimate_parent_namespace_id,
 
     -- dates
     flattened_with_installation_id.dvce_created_tstamp,
