@@ -1182,6 +1182,7 @@ roles:
             - raw.sales_analytics
             - prod.workspace_sales
             - prep.tableau_cloud
+            - prep.seed_sales
           write:
             - raw.sales_analytics
         tables:
@@ -1189,6 +1190,7 @@ roles:
             - raw.sales_analytics.*
             - prod.workspace_sales.*
             - prep.tableau_cloud.*
+            - prep.seed_sales.*
           write:
             - raw.sales_analytics.*
   - sales_analytics_read:
@@ -1583,6 +1585,14 @@ roles:
             - prod.workspace_people
             - prep.dbt
             - prep.preparation
+            - prep.seed_customer_success
+            - prep.seed_data
+            - prep.seed_finance
+            - prep.seed_marketing
+            - prep.seed_product
+            - prep.seed_sales
+            - prep.seed_engineering
+            - prep.seed_people
             - raw.dbt
         tables:
           read:
@@ -1608,6 +1618,14 @@ roles:
             - prod.workspace_people.*
             - prep.dbt.*
             - prep.preparation.*
+            - prep.seed_customer_success.*
+            - prep.seed_data.*
+            - prep.seed_finance.*
+            - prep.seed_marketing.*
+            - prep.seed_product.*
+            - prep.seed_sales.*
+            - prep.seed_engineering.*
+            - prep.seed_people.*
             - raw.dbt.*
   - dbt_analytics_clones:
       warehouses:
