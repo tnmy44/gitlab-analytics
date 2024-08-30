@@ -67,7 +67,6 @@
     dim_namespace.ultimate_parent_namespace_id                              AS enabled_by_ultimate_parent_namespace_id,
 
     -- dates
-    flattened_with_installation_id.dvce_created_tstamp,
     flattened_with_installation_id.behavior_at,
 
     -- degenerate dimensions
