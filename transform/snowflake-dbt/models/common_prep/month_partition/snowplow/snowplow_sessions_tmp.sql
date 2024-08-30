@@ -161,12 +161,6 @@ prep AS (
         
         , MAX(CASE WHEN last_page_view_in_session = 1 THEN tt_label ELSE NULL END)
             AS tt_label
-        
-        , MAX(CASE WHEN last_page_view_in_session = 1 THEN page_referrer ELSE NULL END)
-            AS page_referrer
-
-        , MAX(CASE WHEN last_page_view_in_session = 1 THEN page_url ELSE NULL END)
-            AS page_url
 
     from web_page_views
 
@@ -396,11 +390,6 @@ sessions AS (
         
         , a.tt_label AS first_tt_label
         , b.tt_label AS last_tt_label
-        
-        , a.page_referrer AS first_page_referrer
-        , b.page_referrer AS last_page_referrer
-
-        , b.page_url AS last_page_url
 
     from web_page_views AS a
         inner join prep AS b on a.session_id = b.session_id
