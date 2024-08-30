@@ -1,6 +1,7 @@
 {{ simple_cte([
     ('rpt_arr_snapshot_combined_8th_calendar_day','rpt_arr_snapshot_combined_8th_calendar_day'),
-    ('rpt_arr_snapshot_combined_5th_calendar_day','rpt_arr_snapshot_combined_5th_calendar_day')
+    ('rpt_arr_snapshot_combined_5th_calendar_day','rpt_arr_snapshot_combined_5th_calendar_day'),
+    ('dim_date','dim_date')
 ]) }},
 
 final AS (
