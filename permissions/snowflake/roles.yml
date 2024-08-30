@@ -5620,6 +5620,7 @@ roles:
       member_of:
         - data_team_analyst
         - analyst_core
+        - salesforce
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
