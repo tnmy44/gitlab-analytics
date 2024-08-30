@@ -21,7 +21,7 @@ export AS (
 
   SELECT xf.*, cr.total_credit FROM {{ ref('gcp_billing_export_xf') }} xf
   LEFT JOIN credits cr ON cr.source_primary_key = xf.source_primary_key
-  WHERE invoice_month >= '2023-01-01'
+  WHERE invoice_month >= '2024-06-01'
 
 ),
 
