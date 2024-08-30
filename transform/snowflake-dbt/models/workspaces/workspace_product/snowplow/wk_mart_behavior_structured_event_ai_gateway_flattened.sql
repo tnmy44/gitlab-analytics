@@ -65,7 +65,6 @@ Filters:
 
     -- foreign keys
     flattened_with_installation_id.dim_behavior_event_sk,
-    flattened_with_installation_id.dim_user_location_sk,
     dim_app_release_major_minor.dim_app_release_major_minor_sk,
     flattened_with_installation_id.dim_installation_id,
     flattened_with_installation_id.gsc_feature_enabled_by_namespace_ids,
@@ -82,33 +81,24 @@ Filters:
     dim_namespace.namespace_is_internal                                     AS enabled_by_internal_namespace,
     flattened_with_installation_id.enabled_by_product_delivery_type,
     flattened_with_installation_id.enabled_by_product_deployment_type,
-    flattened_with_installation_id.gsc_pseudonymized_user_id,
     flattened_with_installation_id.gitlab_global_user_id,
-    flattened_with_installation_id.user_snowplow_domain_id,
     flattened_with_installation_id.app_id,
-    flattened_with_installation_id.is_staging_event,
 
     -- standard context attributes
     flattened_with_installation_id.contexts,
     flattened_with_installation_id.gitlab_standard_context,
     flattened_with_installation_id.gsc_environment,
     flattened_with_installation_id.gsc_source,
-    flattened_with_installation_id.gsc_plan,
-    flattened_with_installation_id.gsc_google_analytics_client_id,
     flattened_with_installation_id.delivery_type,
     flattened_with_installation_id.gsc_correlation_id,
     flattened_with_installation_id.gsc_extra,
-    flattened_with_installation_id.gsc_is_gitlab_team_member,
     flattened_with_installation_id.gsc_instance_version,
     dim_app_release_major_minor.major_minor_version                       AS enabled_by_major_minor_version_at_event_time, 
     dim_app_release_major_minor.major_minor_version_num                   AS enabled_by_major_minor_version_num_at_event_time, 
 
     -- user attributes
-    flattened_with_installation_id.user_city,
     flattened_with_installation_id.user_country,
-    flattened_with_installation_id.user_region,
     flattened_with_installation_id.user_timezone_name,
-    flattened_with_installation_id.user_region_name,
 
     -- event attributes
     flattened_with_installation_id.event_value,
@@ -133,7 +123,7 @@ Filters:
     cte_ref="joined",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2024-08-29",
-    updated_date="2024-08-29"
+    created_date="2024-08-30",
+    updated_date="2024-08-30"
 ) }}
 
