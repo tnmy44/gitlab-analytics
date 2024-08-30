@@ -95,6 +95,34 @@ repo_storage_pl_daily_ext AS ( -- gitaly costs in gitlab-gitaly-gprd-* projects
 
 ),
 
+repo_storage_pl_daily_cdn AS ( --apply gitaly repository storage split to cdn skus
+  WITH sku_list AS (SELECT 'Cloud CDN Cache Fill from North America to Europe' AS sku
+    UNION ALL
+    SELECT 'Cloud CDN North America Intra-Region Cache Fill'
+    UNION ALL
+    SELECT 'Cloud CDN Cache Fill from North America to Asia Pacific'
+    UNION ALL
+    SELECT 'Cloud CDN Cache Fill from North America to Oceania'
+
+  )
+
+  SELECT
+    snapshot_day                               AS date_day,
+    'gitlab-production'                        AS gcp_project_id,
+    'Cloud Storage'                            AS gcp_service_description,
+    sku_list.sku                               AS gcp_sku_description,
+    NULL                                       AS infra_label,
+    NULL                                       AS env_label,
+    NULL                                       AS runner_label,
+    NULL                                       AS full_path,
+    LOWER(repo_storage_pl_daily.finance_pl)    AS pl_category,
+    repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
+    'repo_storage_pl_daily'                    AS from_mapping
+  FROM {{ ref ('repo_storage_pl_daily') }}
+  CROSS JOIN sku_list
+
+),
+
 container_registry_pl_daily AS (
 
   SELECT
@@ -593,7 +621,7 @@ haproxy_inter AS (
     'gitlab-production'                                         AS gcp_project_id,
     'Compute Engine'                                            AS gcp_service_description,
     'Network Inter Zone Egress'                                 AS gcp_sku_description, -- specific SKU mapping
-    'shared'                                                    AS infra_label,
+    NULL                                                        AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
     NULL                                                        AS full_path,
@@ -609,7 +637,7 @@ haproxy_inter AS (
     'gitlab-production'                                         AS gcp_project_id,
     'Compute Engine'                                            AS gcp_service_description,
     'Network Inter Zone Data Transfer Out'                      AS gcp_sku_description, -- specific SKU mapping
-    'shared'                                                    AS infra_label,
+    NULL                                                        AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
     NULL                                                        AS full_path,
@@ -622,30 +650,12 @@ haproxy_inter AS (
 ),
 
 haproxy_cdn AS (
-  -- rationale: apply same split on CDN thana lready exisitng haproxy split
-  WITH sku_list AS (SELECT 'Networking Cloud CDN Traffic Cache Egress to North America' AS sku
-    UNION ALL
-    SELECT 'Networking Cloud CDN Traffic Cache Egress to Europe'
-    UNION ALL
-    SELECT 'Cloud CDN Cache Fill from North America to Europe'
-    UNION ALL
-    SELECT 'Networking Cloud CDN Traffic Cache Egress to Asia'
-    UNION ALL
-    SELECT 'Networking Cloud CDN Traffic Cache Egress to Oceania'
-    UNION ALL
-    SELECT 'Networking Cloud Nat Data Processing'
-    UNION ALL
-    SELECT 'Networking Cloud CDN Traffic Cache Egress to Latin America'
-    UNION ALL
-    SELECT 'Cloud CDN Cache Fill from North America to Asia Pacific'
-
-  )
 
   SELECT
     haproxy_usage.date_day                                      AS date_day,
     'gitlab-production'                                         AS gcp_project_id,
-    NULL                                                        AS gcp_service_description,
-    sku_list.sku                                                AS gcp_sku_description, -- all CDN skus
+    'Networking'                                                AS gcp_service_description,
+    NULL                                                        AS gcp_sku_description, -- all CDN skus
     NULL                                                        AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
@@ -656,7 +666,6 @@ haproxy_cdn AS (
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
-  CROSS JOIN sku_list
 
 ),
 
@@ -749,6 +758,9 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM haproxy_cdn
+  UNION ALL
+  SELECT * 
+  FROM repo_storage_pl_daily_cdn
 )
 
 SELECT
