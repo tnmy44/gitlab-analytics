@@ -140,6 +140,12 @@ models:
       default:
         snowplow_web_events:
           +enabled: false
+    sessions:
+      default:
+        snowplow_sessions_tmp:
+          +enabled: false
+        snowplow_sessions:
+          +enabled: false
 
   # ------------------
   # Snowflake Spend Package https://gitlab.com/gitlab-data/snowflake_spend
