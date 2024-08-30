@@ -797,6 +797,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_marketing
@@ -821,6 +822,7 @@ roles:
             - prep.customers.*
             - prod.common.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.restricted_safe_common.*
@@ -846,6 +848,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_marketing
@@ -871,6 +874,7 @@ roles:
             - prep.customers.*
             - prod.common.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.restricted_safe_common.*
@@ -907,6 +911,7 @@ roles:
             - prod.common_prep
             - prod.common_mapping
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_sales
@@ -943,6 +948,7 @@ roles:
             - prod.common_prep.*
             - prod.common_mapping.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.common_mart_sales.*
@@ -1106,6 +1112,7 @@ roles:
           - prod.common_mart_product
           - prod.common_mart_people
           - prod.legacy
+          - prod.specific
           - prep.sensitive
           - monte_carlo.prod_insights
         tables:
@@ -1117,6 +1124,7 @@ roles:
           - prod.common_mart_product.*
           - prod.common_mart_people.*
           - prod.legacy.*
+          - prod.specific.*
           - prep.sensitive.*
           - monte_carlo.prod_insights.*
       privileges:
@@ -1174,6 +1182,7 @@ roles:
             - raw.sales_analytics
             - prod.workspace_sales
             - prep.tableau_cloud
+            - prep.seed_sales
           write:
             - raw.sales_analytics
         tables:
@@ -1181,6 +1190,7 @@ roles:
             - raw.sales_analytics.*
             - prod.workspace_sales.*
             - prep.tableau_cloud.*
+            - prep.seed_sales.*
           write:
             - raw.sales_analytics.*
   - sales_analytics_read:
@@ -1301,11 +1311,13 @@ roles:
             - prod.common
             - prod.pumps_sensitive
             - prod.legacy
+            - prod.specific
         tables:
           read:
             - prod.common.*
             - prod.pumps_sensitive.pump_disaster_relief_fund
             - prod.legacy.*
+            - prod.specific.*
             - prep.sensitive.employee_directory
             - prep.sensitive.employee_directory_intermediate
             - prep.sensitive.employee_locality
@@ -1433,6 +1445,7 @@ roles:
             - prod.common_mart_people
             - prod.common_prep
             - prod.legacy
+            - prod.specific
             - prod.workspace_customer_success
             - prod.workspace_data
             - prod.workspace_data_science
@@ -1453,6 +1466,7 @@ roles:
             - prod.common_mart_people.*
             - prod.common_prep.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.workspace_customer_success.*
             - prod.workspace_data.*
             - prod.workspace_data_science.*
@@ -1559,6 +1573,7 @@ roles:
             - prod.common_prep
             - prod.data_quality
             - prod.legacy
+            - prod.specific
             - prod.pumps
             - prod.workspace_customer_success
             - prod.workspace_data
@@ -1570,6 +1585,14 @@ roles:
             - prod.workspace_people
             - prep.dbt
             - prep.preparation
+            - prep.seed_customer_success
+            - prep.seed_data
+            - prep.seed_finance
+            - prep.seed_marketing
+            - prep.seed_product
+            - prep.seed_sales
+            - prep.seed_engineering
+            - prep.seed_people
             - raw.dbt
         tables:
           read:
@@ -1583,6 +1606,7 @@ roles:
             - prod.common_prep.*
             - prod.data_quality.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.pumps.*
             - prod.workspace_customer_success.*
             - prod.workspace_data.*
@@ -1594,6 +1618,14 @@ roles:
             - prod.workspace_people.*
             - prep.dbt.*
             - prep.preparation.*
+            - prep.seed_customer_success.*
+            - prep.seed_data.*
+            - prep.seed_finance.*
+            - prep.seed_marketing.*
+            - prep.seed_product.*
+            - prep.seed_sales.*
+            - prep.seed_engineering.*
+            - prep.seed_people.*
             - raw.dbt.*
   - dbt_analytics_clones:
       warehouses:
