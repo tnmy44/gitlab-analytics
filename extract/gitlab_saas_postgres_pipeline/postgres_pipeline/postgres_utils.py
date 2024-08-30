@@ -97,13 +97,13 @@ def get_internal_identifier_keys(identifiers: list) -> str:
 
     internal_identifiers = {
         "project_id": [
-            "seeds_engineering/projects_part_of_product_ops.csv",
-            "seeds_engineering/projects_part_of_product.csv",
+            "seed_engineering/projects_part_of_product_ops.csv",
+            "seed_engineering/projects_part_of_product.csv",
             "seed_data/internal_gitlab_projects.csv",
         ],
         "project_path": [
-            "seeds_engineering/projects_part_of_product_ops.csv",
-            "seeds_engineering/projects_part_of_product.csv",
+            "seed_engineering/projects_part_of_product_ops.csv",
+            "seed_engineering/projects_part_of_product.csv",
             "seed_data/internal_gitlab_projects.csv",
         ],
         "namespace_id": ["seed_data/internal_gitlab_namespaces.csv"],
