@@ -27,7 +27,13 @@
   FROM fct_behavior_structured_event
   LEFT JOIN dim_behavior_event
     ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
-  WHERE behavior_at >= '2024-07-29' 
+/* 
+Filters:
+- first date after events were implemented and pseudonymization was fixed in https://gitlab.com/gitlab-org/analytics-section/analytics-instrumentation/snowplow-pseudonymization/-/merge_requests/27
+- event_action indicates it is a unit primitive
+- event occurred in AI Gateway
+*/
+  WHERE behavior_at >= '2024-08-03'
     AND event_action LIKE 'request_%'
     AND app_id = 'gitlab_ai_gateway'
 
