@@ -1,5 +1,6 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    cluster_by=['behavior_at::DATE']
 ) }}
 
 {{ simple_cte([
