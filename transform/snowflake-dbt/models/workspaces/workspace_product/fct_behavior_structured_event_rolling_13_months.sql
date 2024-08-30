@@ -5,7 +5,7 @@
     tags=['product'],
     on_schema_change='sync_all_columns',
     post_hook=["{{ rolling_window_delete('behavior_at','month',13) }}"],
-    cluster_by=['behavior_at::DATE']
+    cluster_by=['behavior_at::DATE','event_action']
   )
 
 }}
