@@ -65,7 +65,7 @@ overlaps AS (
     AND COALESCE(combined_pl_mapping.env_label, COALESCE(service_base.env_label, '')) = COALESCE(service_base.env_label, '')
     AND COALESCE(combined_pl_mapping.runner_label, COALESCE(service_base.runner_label, '')) = COALESCE(service_base.runner_label, '')
     {# AND COALESCE(combined_pl_mapping.full_path, COALESCE(service_base.full_path, '')) = COALESCE(service_base.full_path, '') #}
-    AND COALESCE(service_base.full_path, 'null') LIKE COALESCE(combined_pl_mapping.full_path, COALESCE(service_base.full_path, ''))
+    AND COALESCE(service_base.full_path, '') LIKE COALESCE(combined_pl_mapping.full_path, COALESCE(service_base.full_path, ''))
 )
 
 SELECT
