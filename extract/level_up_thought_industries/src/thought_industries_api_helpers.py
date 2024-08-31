@@ -2,18 +2,19 @@
 Helpers to the main level_up module
 """
 
-import os
 import datetime
 import json
-
+import logging
+import os
 from typing import Any, Dict
 
 import dateutil.parser
-
 from gitlabdata.orchestration_utils import (
-    snowflake_stage_load_copy_remove,
     snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
+from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 
 config_dict = os.environ.copy()
 
@@ -82,3 +83,32 @@ def is_invalid_ms_timestamp(epoch_start_ms, epoch_end_ms):
     if len(str(epoch_start_ms)) != 13 or (len(str(epoch_end_ms)) != 13):
         return True
     return False
+
+
+def postgres_engine_factory(
+    password: str, host: str, database: str, port: str, user: str
+) -> Engine:
+    """
+    Create a postgres engine to be used by pandas.
+    """
+    # Inject the values to create the engine
+    engine = create_engine(
+        f"postgresql://{user}:{password}@{host}:{port}/{database}",
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
+    )
+    logging.info(engine)
+    return engine
+
+
+def get_metadata_engine() -> Engine:
+    """
+    Returns a postgres engine that is connected to the metadata db
+    """
+    password = os.environ["GITLAB_METADATA_DB_PASS"]
+    host = os.environ["GITLAB_METADATA_DB_HOST"]
+    database = os.environ["LEVEL_UP_METADATA_DB_NAME"]
+    port = os.environ["GITLAB_METADATA_PG_PORT"]
+    user = os.environ["GITLAB_METADATA_DB_USER"]
+
+    metadata_engine = postgres_engine_factory(password, host, database, port, user)
+    return metadata_engine
