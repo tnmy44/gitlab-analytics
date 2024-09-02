@@ -2716,6 +2716,32 @@ roles:
           read:
             - prep.workday.*
             - raw.workday.*
+  - workday_hcm:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.workday_hcm
+        tables:
+          read:
+            - raw.workday_hcm.*
+  - workday_hcm_sandbox:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.workday_hcm_sandbox
+        tables:
+          read:
+            - raw.workday_hcm_sandbox.*
   - xactly:
       warehouses:
         - dev_xs
@@ -4950,6 +4976,8 @@ roles:
         - snowflake
         - tableau_backend
         - workday
+        - workday_hcm
+        - workday_hcm_sandbox
         - zengrc
       warehouses:
         - dev_xs
