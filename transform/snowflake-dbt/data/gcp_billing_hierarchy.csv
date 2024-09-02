@@ -205,5 +205,7 @@ GitLab Infrastructure,Shared,,,,,gitlab.com/Infrastructure/Environments,infralab
 GitLab Infrastructure,Shared,,,,,gitlab.com/Infrastructure/Environments,infralabel_pl,infrastructure
 GitLab Infrastructure,Dependency proxy,,,,,gitlab.com/Infrastructure/Environments,infralabel_pl,dependency_proxy
 GitLab Infrastructure,CI/CD,gitlab-production costs,,,,gitlab.com/Infrastructure/Environments,,continuous_integration
-GitLab Systems,Systems,,,,,gitlab.systems/%,folder_pl,
-GitLab Private Org,,,,,,gitlab-private.org,folder_pl,
+GitLab Systems,Systems,,,,,gitlab.systems/%,,
+GitLab Private Org,,,,,,gitlab-private.org,,
+GitLab Cells,.Com,,,,,gitlab-cells.com%,,
+GitLab Cells,.Dev,,,,,gitlab-cells.dev%,,
