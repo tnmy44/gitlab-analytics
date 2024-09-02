@@ -269,8 +269,6 @@ final_test AS (
     4,
     5,
     6
-  ORDER BY
-    1 DESC
 )
 
 SELECT *
