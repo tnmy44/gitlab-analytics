@@ -24,7 +24,6 @@ prep_recurring_charge AS (
     AND snapshot_date = (SELECT MAX(snapshot_date) FROM mart_arr_snapshot_bottom_up)
 ),
 
---Select * from prep_recurring_charge;
 parent_account_arrs AS (
   SELECT
     COALESCE(dim_parent_crm_account_id, 'Unspecified') AS dim_parent_crm_account_id,
@@ -228,7 +227,6 @@ final_test AS (
     (
       COALESCE (parent_crm_account_sales_segment, 'SMB')
     )                      AS segment,
-    --type_of_arr_change,
     SUM(net_retention_arr) AS current_arr,
     SUM(prior_year_arr)    AS prior_quarter_arr,
     SUM(
@@ -263,7 +261,7 @@ final_test AS (
   LEFT JOIN dim_date AS b ON analysis_period = b.date_actual
   WHERE
     b.month_of_fiscal_year IN (3, 6, 9, 12)
-    AND b.fiscal_quarter_name_fy >= 'FY21-Q1' --and b.FISCAL_QUARTER_NAME_FY<='FY23-Q4'
+    AND b.fiscal_quarter_name_fy >= 'FY21-Q1'
   GROUP BY
     1,
     2,
@@ -276,6 +274,4 @@ final_test AS (
 )
 
 SELECT *
-FROM
-  final_test
-ORDER BY analysis_period
+FROM final_test
