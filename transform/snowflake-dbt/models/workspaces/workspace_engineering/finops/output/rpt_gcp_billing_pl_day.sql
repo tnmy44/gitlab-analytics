@@ -35,8 +35,8 @@ overlaps AS (
     pl_combined.usage_amount_in_pricing_units * COALESCE(lookback_pl_mappings.pl_percent, 1) AS usage_amount_in_pricing_units,
     pl_combined.cost_before_credits * COALESCE(lookback_pl_mappings.pl_percent, 1)           AS cost_before_credits,
     pl_combined.net_cost * COALESCE(lookback_pl_mappings.pl_percent, 1)                      AS net_cost,
-    pl_combined.usage_standard_unit,
-    pl_combined.usage_amount_in_standard_unit * COALESCE(lookback_pl_mappings.pl_percent, 1) AS usage_amount_in_standard_unit,
+    {# pl_combined.usage_standard_unit, #}
+    {# pl_combined.usage_amount_in_standard_unit * COALESCE(lookback_pl_mappings.pl_percent, 1) AS usage_amount_in_standard_unit, #}
     COALESCE(lookback_pl_mappings.from_mapping, pl_combined.from_mapping)                    AS from_mapping,
     combined_pk,
     DENSE_RANK() OVER (PARTITION BY pl_combined.date_day,
@@ -87,8 +87,8 @@ grouping AS (
     SUM(usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
     SUM(cost_before_credits)           AS cost_before_credits,
     SUM(net_cost)                      AS net_cost,
-    usage_standard_unit,
-    usage_amount_in_standard_unit,
+    {# usage_standard_unit,
+    usage_amount_in_standard_unit, #}
     from_mapping,
     combined_pk
   FROM overlaps
@@ -104,8 +104,8 @@ grouping AS (
     pl_category,
     usage_unit,
     pricing_unit,
-    usage_standard_unit,
-    usage_amount_in_standard_unit,
+    {# usage_standard_unit,
+    usage_amount_in_standard_unit, #}
     from_mapping,
     combined_pk
 )

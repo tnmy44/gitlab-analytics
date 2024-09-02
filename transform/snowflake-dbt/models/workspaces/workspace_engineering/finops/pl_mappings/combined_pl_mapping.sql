@@ -647,6 +647,22 @@ haproxy_inter AS (
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+  UNION ALL
+    SELECT
+    haproxy_usage.date_day                                      AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    'Compute Engine'                                            AS gcp_service_description,
+    'Network Data Transfer Out via Carrier Peering Network - Americas Based'  AS gcp_sku_description, -- specific SKU mapping
+    NULL                                                        AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    NULL                                                        AS full_path,
+    haproxy_pl.type                                             AS pl_category,
+    haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
+    CONCAT('haproxy-inter-egress-', haproxy_usage.backend_category) AS from_mapping
+  FROM haproxy_usage
+  INNER JOIN haproxy_pl
+    ON haproxy_usage.backend_category = haproxy_pl.metric_backend
 ),
 
 haproxy_cdn AS (
@@ -666,6 +682,24 @@ haproxy_cdn AS (
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+
+),
+
+pubsub AS (
+
+  SELECT
+    date_spine.date_day                                         AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    'Cloud Pub/Sub'                                             AS gcp_service_description,
+    NULL                                                        AS gcp_sku_description, -- all CDN skus
+    NULL                                                        AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    NULL                                                        AS full_path,
+    'internal'                                                  AS pl_category,
+    1                                                           AS pl_percent,
+    'pubsub internal'                                           AS from_mapping
+  FROM date_spine
 
 ),
 
@@ -761,6 +795,9 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT * 
   FROM repo_storage_pl_daily_cdn
+  UNION ALL
+  SELECT *
+  FROM pubsub
 )
 
 SELECT

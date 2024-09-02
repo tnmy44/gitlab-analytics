@@ -84,12 +84,12 @@ runner_labels AS (
 
 ),
 
-unit_mapping AS (
+{# unit_mapping AS (
 
   SELECT * FROM {{ ref('gcp_billing_unit_mapping') }}
   WHERE category = 'usage'
 
-),
+), #}
 
 project_ancestory AS (
 
@@ -162,7 +162,6 @@ SELECT
   bill.usage_amount_in_pricing_units AS usage_amount_in_pricing_units,
   bill.cost_before_credits           AS cost_before_credits,
   bill.net_cost                      AS net_cost,
-  usage.converted_unit               AS usage_standard_unit,
-  bill.usage_amount / usage.rate     AS usage_amount_in_standard_unit
+  bill.usage_amount                  AS usage_amount_in_standard_unit
 FROM billing_base AS bill
-LEFT JOIN unit_mapping AS usage ON usage.raw_unit = bill.usage_unit
+
