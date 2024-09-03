@@ -19,19 +19,19 @@ from sqlalchemy.engine.base import Engine
 config_dict = os.environ.copy()
 
 
-def upload_payload_to_snowflake(
-    payload: Dict[Any, Any],
+def upload_dict_to_snowflake(
+    upload_dict: Dict[Any, Any],
     schema_name: str,
     stage_name: str,
     table_name: str,
     json_dump_filename: str = "to_upload.json",
 ):
     """
-    Upload payload to Snowflake using snowflake_stage_load_copy_remove()
+    Upload upload_dict to Snowflake using snowflake_stage_load_copy_remove()
     """
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
     with open(json_dump_filename, "w+", encoding="utf8") as upload_file:
-        json.dump(payload, upload_file)
+        json.dump(upload_dict, upload_file)
 
     snowflake_stage_load_copy_remove(
         json_dump_filename,
@@ -54,7 +54,9 @@ def iso8601_to_epoch_ts_ms(iso8601_timestamp: str) -> int:
     Returns:
     int: Epoch timestamp, i.e number of seconds elapsed since 1/1/1970
     """
-    date_time = dateutil.parser.isoparse(iso8601_timestamp)
+    date_time = dateutil.parser.isoparse(iso8601_timestamp).replace(
+        tzinfo=datetime.timezone.utc
+    )
     # 1/1/1970
     dt_epoch_beginning = datetime.datetime.utcfromtimestamp(0).replace(
         tzinfo=datetime.timezone.utc
@@ -94,7 +96,7 @@ def postgres_engine_factory(
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=10000"},
     )
     logging.info(engine)
     return engine
