@@ -2770,6 +2770,7 @@ users:
       - People All Access
       - People Project Lead
       - People Restricted Access
+      - Production Project Lead
   - user_name: apesta
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4184,12 +4185,6 @@ users:
     groups:
       - General All Access
       - People All Access
-  - user_name: dsamson
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: dsatcher
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -8638,6 +8633,7 @@ users:
       - People All Access
       - People Project Lead
       - People Restricted Access
+      - Production Project Lead
   - user_name: smcmullan
     user_name_domain: gitlab.com
     site_role: Viewer
