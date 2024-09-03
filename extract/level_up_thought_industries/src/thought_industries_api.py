@@ -20,12 +20,13 @@ from typing import Dict, List, Tuple
 
 from gitlabdata.orchestration_utils import make_request, query_executor
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.sql import text, quoted_name
 from thought_industries_api_helpers import (
     epoch_ts_ms_to_datetime_str,
     get_metadata_engine,
     is_invalid_ms_timestamp,
     iso8601_to_epoch_ts_ms,
-    upload_payload_to_snowflake,
+    upload_dict_to_snowflake,
 )
 
 config_dict = os.environ.copy()
@@ -64,12 +65,12 @@ class ThoughtIndustries(ABC):
         info(
             f"Uploading batch {batch} with {len(upload_dict['data'])} records to Snowflake"
         )
-        upload_payload_to_snowflake(
-            upload_dict,
-            self.SCHEMA_NAME,
-            self.STAGE_NAME,
-            table_name,
-            json_dump_filename,
+        upload_dict_to_snowflake(
+            upload_dict=upload_dict,
+            schema_name=self.SCHEMA_NAME,
+            stage_name=self.STAGE_NAME,
+            table_name=table_name,
+            json_dump_filename=json_dump_filename,
         )
 
 
@@ -103,16 +104,23 @@ class CursorEndpoint(ThoughtIndustries):
             - If there's an existing cursor return it
             - Else return blank string
         """
-        read_query = f"""
-        select cursor_id
-        from {self.METADATA_SCHEMA}.cursor_state
-        where endpoint = '{self.name}'
-        order by uploaded_at desc
-        limit 1;
-        """
+        safe_schema = quoted_name(self.METADATA_SCHEMA, quote=True)
 
-        results = query_executor(metadata_engine, read_query)
+        query = text(
+            f"""
+        SELECT cursor_id
+        FROM {safe_schema}.cursor_state
+        WHERE endpoint = :endpoint
+        ORDER BY uploaded_at DESC
+        LIMIT 1;
+        """
+        )
+
+        query_params = {"endpoint": self.name}
+        with metadata_engine.connect() as connection:
+            results = connection.execute(query, query_params).fetchall()
         cursor = results[0][0] if results else ""
+        info(f"Cursor starting position: {cursor}")
         return cursor
 
     def write_cursor_state(self, cursor: str, metadata_engine: Engine):
@@ -121,13 +129,22 @@ class CursorEndpoint(ThoughtIndustries):
         Note: not all processed cursors are saved, just the most recent
         after Snowflake upload.
         """
-        insert_query = f"""
-            INSERT INTO {self.METADATA_SCHEMA}.cursor_state (endpoint, cursor_id, uploaded_at)
-            VALUES ('{self.name}', '{cursor}', '{datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')}');
-        """
+        safe_schema = quoted_name(self.METADATA_SCHEMA, quote=True)
+
+        query = text(
+            f"""
+            INSERT INTO {safe_schema}.cursor_state (endpoint, cursor_id, uploaded_at)
+            VALUES (:endpoint, :cursor_id, :uploaded_at);
+            """
+        )
+        query_params = {
+            "endpoint": self.name,
+            "cursor_id": cursor,
+            "uploaded_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"),
+        }
 
         with metadata_engine.connect() as connection:
-            connection.execute(insert_query)
+            connection.execute(query, query_params)
         info(f"Wrote cursor {cursor} to cursor_state table")
 
     def fetch_from_endpoint(self, metadata_engine: Engine) -> Tuple[list, str, bool]:
@@ -272,7 +289,7 @@ class DateIntervalEndpoint(ThoughtIndustries):
     def upload_to_snowflake(
         self, results: List[Dict], epoch_start_ms: int, epoch_end_ms: int, batch: int
     ):
-        """Upload event payload to Snowflake"""
+        """Upload event dict to Snowflake"""
 
         api_start_datetime = epoch_ts_ms_to_datetime_str(epoch_start_ms)
         api_end_datetime = epoch_ts_ms_to_datetime_str(epoch_end_ms)
@@ -426,11 +443,11 @@ class EmailCaptures(DateIntervalEndpoint):
 
 if __name__ == "__main__":
     # used for testing DateIntervalEndpoint
-    # EPOCH_START_MS = 1722384000001
-    # EPOCH_END_MS = 1722470400000
-    # cls_to_run = CourseActions()
-    # result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
-    # info(f"\nresult_events: {result_events[:2]}")
+    EPOCH_START_MS = 1722384000001
+    EPOCH_END_MS = 1722470400000
+    cls_to_run = CourseActions()
+    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
+    info(f"\nresult_events: {result_events[:2]}")
 
     # used for testing CursorEndpoint
     cls_to_run = Users()
