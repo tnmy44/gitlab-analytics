@@ -42,7 +42,9 @@ def fetch_data_query_upload(
     This function is responsible for executing the passed query_string in data query download the file and upload it to snowflake using dataframe uploader.
     """
     job_id = zq.request_data_query_data(query_string)
+    logging.info(f"job_id: {job_id}")
     df = zq.get_data_query_file(job_id)
+    logging.info(f"df: {df}")
     dataframe_uploader(
         df,
         zq.snowflake_engine,

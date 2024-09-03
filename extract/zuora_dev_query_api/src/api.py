@@ -96,6 +96,7 @@ class ZuoraQueriesAPI:
         )
 
         if response.status_code == 200:
+            logging.info("Successful request")
             return response.json().get("data").get("id")
 
         logging.error(response.json)
@@ -118,7 +119,7 @@ class ZuoraQueriesAPI:
 
         raise ReferenceError("Job not found")
 
-    def get_data_query_file(self, job_id: str, wait_time: int = 30) -> pd.DataFrame:
+    def get_data_query_file(self, job_id: str, wait_time: int = 180) -> pd.DataFrame:
         """
 
         :param job_id:
