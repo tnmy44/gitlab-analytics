@@ -42,11 +42,12 @@ def parse_log_data(log_file_path: str):
     """
     for log_file_name in os.listdir(log_file_path):
         if log_file_name.endswith(".log"):
-            with open(log_file_name, "r") as file:
+            full_file_name = os.path.join(log_file_path, log_file_name)
+            with open(full_file_name, "r") as file:
                 log_data = file.readlines()
 
             parsed_data = [json.loads(line) for line in log_data]
-            with open(log_file_name.replace('.log', '.json'), "w", encoding="utf-8") as f:
+            with open(full_file_name.replace('.log', '.json'), "w", encoding="utf-8") as f:
                 json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
 
@@ -111,12 +112,13 @@ if __name__ == "__main__":
             parse_log_data(file_name)
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
-                snowflake_stage_load_copy_remove(
-                    f,
-                    f"{snowflake_database}.dbt.dbt_load",
-                    get_table_name(config_name, snowflake_database),
-                    snowflake_engine,
-                )
+                if f.endswith(".json"):
+                    snowflake_stage_load_copy_remove(
+                        os.path.join(file_name, f),
+                        f"{snowflake_database}.dbt.dbt_load",
+                        get_table_name(config_name, snowflake_database),
+                        snowflake_engine,
+                    )
             # end immediately after loading files so the next stage_copy_remove isn't run again for gdpr logs.
             exit(0)
 
