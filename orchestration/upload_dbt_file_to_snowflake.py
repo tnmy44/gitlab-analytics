@@ -19,6 +19,8 @@ COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = (
     14  # actually, it is 16MB, but to avoid corner case should put 14
 )
 
+logging.basicConfig(stream=sys.stdout, level=20)
+
 
 def get_file_name(config_name):
     if config_name == "freshness":
@@ -119,6 +121,7 @@ if __name__ == "__main__":
                         get_table_name(config_name, snowflake_database),
                         snowflake_engine,
                     )
+
             # end immediately after loading files so the next stage_copy_remove isn't run again for gdpr logs.
             exit(0)
 
