@@ -1,5 +1,5 @@
 {{ config(
-    materialized="table"
+    materialized="table",
     tags=["product", "mnpi_exception"],
     cluster_by=['behavior_at::DATE']
 ) }}
