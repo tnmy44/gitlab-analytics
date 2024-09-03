@@ -90,7 +90,7 @@ if __name__ == "__main__":
         to prevent shrink of manifest.json we are using for production documentation.
         """
         if (
-            config_name == "manifest_reduce"
+            (config_name == "manifest_reduce" or config_name == "gdpr_logs")
             and get_file_size(file_to_measure=file_name)
             >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
         ):
