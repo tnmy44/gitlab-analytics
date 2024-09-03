@@ -49,6 +49,7 @@ def parse_log_data(log_file_path: str):
                 log_data = file.readlines()
 
             parsed_data = [json.loads(line) for line in log_data]
+            logging.info(f"Writing {full_file_name} to {full_file_name.replace('.log', '.json')}")
             with open(full_file_name.replace('.log', '.json'), "w", encoding="utf-8") as f:
                 json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
