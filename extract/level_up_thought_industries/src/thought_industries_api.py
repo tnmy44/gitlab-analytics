@@ -18,7 +18,7 @@ from datetime import datetime
 from logging import info
 from typing import Dict, List, Tuple
 
-from gitlabdata.orchestration_utils import make_request, query_executor
+from gitlabdata.orchestration_utils import make_request
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.sql import text, quoted_name
 from thought_industries_api_helpers import (
@@ -445,10 +445,10 @@ if __name__ == "__main__":
     # used for testing DateIntervalEndpoint
     EPOCH_START_MS = 1722384000001
     EPOCH_END_MS = 1722470400000
-    cls_to_run = CourseActions()
-    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
+    course_actions = CourseActions()
+    result_events = course_actions.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
     info(f"\nresult_events: {result_events[:2]}")
 
     # used for testing CursorEndpoint
-    cls_to_run = Users()
-    cls_to_run.fetch_and_upload_data()
+    users = Users()
+    users.fetch_and_upload_data()

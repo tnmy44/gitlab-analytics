@@ -2,8 +2,8 @@
 
 import os
 import unittest
-import pytest
 from unittest.mock import patch, Mock, MagicMock
+import pytest
 from sqlalchemy.engine.base import Engine
 
 # can't import without key
@@ -190,13 +190,12 @@ class TestDateIntervalEndpoint(unittest.TestCase):
         ] * multiplier
         mock_response2.json.return_value = {"events": events_value2}
 
+        # Setting the mock to return two responses sequentially
         mock_make_request.side_effect = [mock_response1, mock_response2]
 
         results, current_epoch_end_ms = self.course_endpoint.fetch_from_endpoint(
             epoch_start_ms, epoch_end_ms
         )
-
-        # Setting the mock to return two responses sequentially
 
         self.assertEqual(results, events_value1 + events_value2)
         self.assertEqual(current_epoch_end_ms, some_earlier_ts - 1)
@@ -218,9 +217,6 @@ class TestDateIntervalEndpoint(unittest.TestCase):
         some_ts = epoch_end_ms
         some_datetime_str = epoch_ts_ms_to_datetime_str(some_ts)
 
-        # this multipler always ensures we'll reach the record threshold within 2 calls
-
-        # mock response 1 (later timestamp)
         mock_response = Mock()
         events_value = [
             {"id": "some_id", "timestamp": some_datetime_str},
@@ -230,7 +226,7 @@ class TestDateIntervalEndpoint(unittest.TestCase):
 
         error_str = "endDate parameter has not changed"
         with pytest.raises(ValueError) as exc:
-            results, current_epoch_end_ms = self.course_endpoint.fetch_from_endpoint(
+            _, _ = self.course_endpoint.fetch_from_endpoint(
                 epoch_start_ms, epoch_end_ms
             )
         assert error_str in str(exc.value)
