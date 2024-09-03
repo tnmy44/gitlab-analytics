@@ -110,7 +110,7 @@ class ZuoraQueriesAPI:
         :rtype:
         """
         api_url = f"{self.base_url}/query/jobs"
-        response = requests.get(api_url, headers=self.request_headers, timeout=60)
+        response = requests.get(api_url, headers=self.request_headers, timeout=300)
         data = response.json()
         job = [j for j in data.get("data") if j.get("id") == job_id]
         if len(job) > 0:
@@ -148,7 +148,7 @@ class ZuoraQueriesAPI:
         if job_status == "completed":
             info("File ready")
             file_url = job["dataFile"]
-            response = requests.get(url=file_url, timeout=60)
+            response = requests.get(url=file_url, timeout=300)
 
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
