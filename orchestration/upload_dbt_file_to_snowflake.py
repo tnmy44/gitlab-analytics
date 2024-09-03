@@ -117,6 +117,7 @@ if __name__ == "__main__":
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
                 if f.endswith(".json"):
+                    logging.info(f"Processing {f}")
                     snowflake_stage_load_copy_remove(
                         os.path.join(file_name, f),
                         f"{snowflake_database}.dbt.dbt_load",
