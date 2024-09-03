@@ -111,7 +111,9 @@ if __name__ == "__main__":
         if config_name == "gdpr_logs":
             logging.info(file_name)
             logging.info(config_name)
+            logging.info(os.listdir(file_name))
             parse_log_data(file_name)
+            logging.info(os.listdir(file_name))
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
                 if f.endswith(".json"):
