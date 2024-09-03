@@ -28,7 +28,6 @@ def get_file_name(config_name):
     elif config_name == "manifest_reduce":
         return "target/manifest.json"
     elif config_name == "gdpr_logs":
-        parse_log_data("gdpr_run_logs")
         return "gdpr_run_logs"
     else:
         return "target/run_results.json"
@@ -107,6 +106,9 @@ if __name__ == "__main__":
             logging.info(f"manifest file {file_name} reduced successfully.")
 
         if config_name == "gdpr_logs":
+            logging.info(file_name)
+            logging.info(config_name)
+            parse_log_data(file_name)
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
                 snowflake_stage_load_copy_remove(
