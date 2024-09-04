@@ -337,6 +337,8 @@ from
 
 )
 
+
+
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
