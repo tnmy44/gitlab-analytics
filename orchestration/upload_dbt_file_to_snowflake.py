@@ -49,8 +49,12 @@ def parse_log_data(log_file_path: str):
                 log_data = file.readlines()
 
             parsed_data = [json.loads(line) for line in log_data]
-            logging.info(f"Writing {full_file_name} to {full_file_name.replace('.log', '.json')}")
-            with open(full_file_name.replace('.log', '.json'), "w", encoding="utf-8") as f:
+            logging.info(
+                f"Writing {full_file_name} to {full_file_name.replace('.log', '.json')}"
+            )
+            with open(
+                full_file_name.replace(".log", ".json"), "w", encoding="utf-8"
+            ) as f:
                 json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
 
@@ -91,11 +95,9 @@ if __name__ == "__main__":
         "manifest" and "manifest_reduce" are separated
         to prevent shrink of manifest.json we are using for production documentation.
         """
-        if (
-            (config_name == "manifest_reduce" )
-            and get_file_size(file_to_measure=file_name)
-            >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
-        ):
+        if (config_name == "manifest_reduce") and get_file_size(
+            file_to_measure=file_name
+        ) >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB:
             logging.info(
                 f"manifest file {file_name} "
                 f"is bigger than "
