@@ -8,7 +8,7 @@ final AS (
   SELECT *
 
   FROM prep_employee_history
-
+  
 )
 
 {{ dbt_audit(
