@@ -66,7 +66,7 @@
       IFF(COALESCE(
         raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated'] = -1, 
         NULL, 
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']):: BOOLEAN AS dedicated_bool
+        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']):: BOOLEAN AS dedicated_bool,
       CASE
         WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
                                                                     '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
