@@ -170,6 +170,7 @@
         WHEN edition = 'EEU'                  THEN 'Ultimate'
         ELSE NULL
       END AS product_tier,
+      FALSE AS dedicated_bool,
       FALSE AS is_saas_dedicated,
       'SaaS' AS ping_delivery_type,
       'GitLab.com' AS ping_deployment_type,
@@ -190,7 +191,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@utkarsh060",
+    updated_by="@mdrussell",
     created_date="2022-03-17",
-    updated_date="2024-08-01"
+    updated_date="2024-09-04"
 ) }}
