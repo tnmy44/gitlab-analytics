@@ -16,5 +16,5 @@ final AS (
     created_by='@rakhireddy',
     updated_by='@rakhireddy',
     created_date='2024-08-14',
-    updated_date='2024-08-14',
+    updated_date='2024-09-04',
 ) }}
