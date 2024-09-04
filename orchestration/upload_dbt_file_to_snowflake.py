@@ -19,8 +19,6 @@ COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = (
     14  # actually, it is 16MB, but to avoid corner case should put 14
 )
 
-logging.basicConfig(stream=sys.stdout, level=20)
-
 
 def get_file_name(config_name):
     if config_name == "freshness":
@@ -112,11 +110,7 @@ if __name__ == "__main__":
             logging.info(f"manifest file {file_name} reduced successfully.")
 
         if config_name == "gdpr_logs":
-            logging.info(file_name)
-            logging.info(config_name)
-            logging.info(os.listdir(file_name))
             parse_log_data(file_name)
-            logging.info(os.listdir(file_name))
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
                 if ".json" in f:
