@@ -1663,6 +1663,12 @@ JSON object for custom contexts implemented during tracking implementation. [Mor
 
 {% enddocs %}
 
+{% docs page_url %}
+
+The page URL example: 'http://www.example.com'.
+
+{% enddocs %}
+
 {% docs page_url_host_path %}
 
 The page URL path of the event **with** the host (gitlab.com) information. Example: `gitlab.com/namespace9495566/project21362945/-/merge_requests/1575`. 
@@ -1731,7 +1737,7 @@ Boolean flag set to True if the event is triggered on a mobile device. This appe
 
 {% docs dim_behavior_website_page_sk %}
 
-Surrogate key consisting of page_url_host_path, app_id and page_url_scheme, easily JOINed to dim_behavior_website_page. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`
+Surrogate key consisting of page_url_host_path, app_id and page_url_scheme, easily JOINed to dim_behavior_website_page. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url`, `app_id` and `page_url_scheme`
 
 {% enddocs %}
 
@@ -1816,6 +1822,12 @@ Timestamp of when a web page was first rendered for that `fct_behavior_website_p
 {% docs page_view_end_at %}
 
 Timestamp of when a web page was last rendered for that `fct_behavior_website_page_view_sk`. 
+
+{% enddocs %}
+
+{% docs referrer_url %}
+
+The referer URL. Example: 'www.google.de/'
 
 {% enddocs %}
 
@@ -3029,6 +3041,12 @@ Total context tokens used in request to model provider
 
 {% enddocs %}
 
+{% docs code_suggestions_debounce_interval%}
+
+Number of milliseconds we wait between last keystroke and API request for Code Suggestions
+
+{% enddocs %}
+
 {% docs ide_extension_version_context %}
 
 IDE extension version fields added to Snowplow as defined by GitLab in the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
@@ -3573,5 +3591,53 @@ User type name based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blo
 {% docs is_bot %}
 
 Calculated field based on the [mapping](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/has_user_type.rb) of bot user types.
+
+{% enddocs %}
+
+{% docs cloud_connector_environment_name %}
+
+Name of the source environment, such as `production` or `staging`
+
+{% enddocs %}
+
+{% docs cloud_connector_backend %}
+
+Name of the backend who is serving the feature.
+
+{% enddocs %}
+
+{% docs cloud_connector_feature_name %}
+
+Name of the cloud connector feature such as code_suggestions, duo_chat etc.
+
+{% enddocs %}
+
+{% docs cloud_connector_bundled_with_add_on_name %}
+
+Name of the add-on under which the group of unit primitives are bundled and sold together. For Ex - code_suggestions and duo_chat are 2 UP sold together under `DUO_PRO` add-on.
+
+{% enddocs %}
+
+{% docs cloud_connector_unit_primitive_name %}
+
+Name of the unit primitive bundled with the add-on. Unit primitive is a smallest logical feature that a permission/access scope can govern.
+
+{% enddocs %}
+
+{% docs cloud_connector_cut_off_date %}
+
+The earliest date when the feature requires add-on seat purchase.
+
+{% enddocs %}
+
+{% docs cloud_connector_min_gitlab_version %}
+
+Minimum required GitLab version to use the feature.
+
+{% enddocs %}
+
+{% docs cloud_connector_min_gitlab_version_for_free_access %}
+
+Minimum required GitLab version to use the feature during free_access period (beta). If it's not set, the feature is available for all GitLab versions.
 
 {% enddocs %}

@@ -797,6 +797,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_marketing
@@ -821,6 +822,7 @@ roles:
             - prep.customers.*
             - prod.common.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.restricted_safe_common.*
@@ -846,6 +848,7 @@ roles:
             - prod.workspace_data_science
             - prod.common
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_marketing
@@ -871,6 +874,7 @@ roles:
             - prep.customers.*
             - prod.common.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.restricted_safe_common.*
@@ -907,6 +911,7 @@ roles:
             - prod.common_prep
             - prod.common_mapping
             - prod.legacy
+            - prod.specific
             - prod.common_mart_product
             - prod.restricted_safe_common_mart_sales
             - prod.common_mart_sales
@@ -943,6 +948,7 @@ roles:
             - prod.common_prep.*
             - prod.common_mapping.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.common_mart_product.*
             - prod.restricted_safe_common_mart_sales.*
             - prod.common_mart_sales.*
@@ -973,14 +979,12 @@ roles:
             - raw.tap_zengrc
             - raw.tap_xactly
             - raw.tap_zendesk
-            - raw.tap_zendesk__community_relations
             - raw.public
         tables:
           write:
             - raw.tap_zengrc.*
             - raw.tap_xactly.*
             - raw.tap_zendesk.*
-            - raw.tap_zendesk__community_relations.*
   - people_operations:
       warehouses:
         - dev_xs
@@ -1108,6 +1112,7 @@ roles:
           - prod.common_mart_product
           - prod.common_mart_people
           - prod.legacy
+          - prod.specific
           - prep.sensitive
           - monte_carlo.prod_insights
         tables:
@@ -1119,6 +1124,7 @@ roles:
           - prod.common_mart_product.*
           - prod.common_mart_people.*
           - prod.legacy.*
+          - prod.specific.*
           - prep.sensitive.*
           - monte_carlo.prod_insights.*
       privileges:
@@ -1176,6 +1182,7 @@ roles:
             - raw.sales_analytics
             - prod.workspace_sales
             - prep.tableau_cloud
+            - prep.seed_sales
           write:
             - raw.sales_analytics
         tables:
@@ -1183,6 +1190,7 @@ roles:
             - raw.sales_analytics.*
             - prod.workspace_sales.*
             - prep.tableau_cloud.*
+            - prep.seed_sales.*
           write:
             - raw.sales_analytics.*
   - sales_analytics_read:
@@ -1303,11 +1311,13 @@ roles:
             - prod.common
             - prod.pumps_sensitive
             - prod.legacy
+            - prod.specific
         tables:
           read:
             - prod.common.*
             - prod.pumps_sensitive.pump_disaster_relief_fund
             - prod.legacy.*
+            - prod.specific.*
             - prep.sensitive.employee_directory
             - prep.sensitive.employee_directory_intermediate
             - prep.sensitive.employee_locality
@@ -1435,6 +1445,7 @@ roles:
             - prod.common_mart_people
             - prod.common_prep
             - prod.legacy
+            - prod.specific
             - prod.workspace_customer_success
             - prod.workspace_data
             - prod.workspace_data_science
@@ -1455,6 +1466,7 @@ roles:
             - prod.common_mart_people.*
             - prod.common_prep.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.workspace_customer_success.*
             - prod.workspace_data.*
             - prod.workspace_data_science.*
@@ -1561,6 +1573,7 @@ roles:
             - prod.common_prep
             - prod.data_quality
             - prod.legacy
+            - prod.specific
             - prod.pumps
             - prod.workspace_customer_success
             - prod.workspace_data
@@ -1572,6 +1585,14 @@ roles:
             - prod.workspace_people
             - prep.dbt
             - prep.preparation
+            - prep.seed_customer_success
+            - prep.seed_data
+            - prep.seed_finance
+            - prep.seed_marketing
+            - prep.seed_product
+            - prep.seed_sales
+            - prep.seed_engineering
+            - prep.seed_people
             - raw.dbt
         tables:
           read:
@@ -1585,6 +1606,7 @@ roles:
             - prod.common_prep.*
             - prod.data_quality.*
             - prod.legacy.*
+            - prod.specific.*
             - prod.pumps.*
             - prod.workspace_customer_success.*
             - prod.workspace_data.*
@@ -1596,6 +1618,14 @@ roles:
             - prod.workspace_people.*
             - prep.dbt.*
             - prep.preparation.*
+            - prep.seed_customer_success.*
+            - prep.seed_data.*
+            - prep.seed_finance.*
+            - prep.seed_marketing.*
+            - prep.seed_product.*
+            - prep.seed_sales.*
+            - prep.seed_engineering.*
+            - prep.seed_people.*
             - raw.dbt.*
   - dbt_analytics_clones:
       warehouses:
@@ -1795,6 +1825,7 @@ roles:
             - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
             - prod.workspace_customer_success.mart_product_usage_health_score
             - prod.common_mart_product.rpt_product_usage_health_score
+            - prod.common_mart_product.rpt_product_usage_health_score_account_roll_up
             - prod.workspace_customer_success.mart_product_usage_paid_user_metrics_monthly_workspace
             - prod.pumps.pump_gainsight_metrics_monthly_paid
   - gainsight:
@@ -1946,6 +1977,7 @@ roles:
             - raw.tap_postgres.gitlab_db_notes
             - raw.tap_postgres.gitlab_db_notification_settings
             - raw.tap_postgres.gitlab_db_oauth_access_tokens
+            - raw.tap_postgres.gitlab_db_onboarding_progresses
             - raw.tap_postgres.gitlab_db_packages_packages
             - raw.tap_postgres.gitlab_db_pages_domains
             - raw.tap_postgres.gitlab_db_plans
@@ -2697,6 +2729,19 @@ roles:
         tables:
           read:
             - raw.workday_hcm.*
+  - workday_hcm_sandbox:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.workday_hcm_sandbox
+        tables:
+          read:
+            - raw.workday_hcm_sandbox.*
   - xactly:
       warehouses:
         - dev_xs
@@ -3557,17 +3602,13 @@ roles:
         schemas:
           read:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
           write:
             - raw.netsuite_fivetran
-            - raw.workday_hcm
         tables:
           read:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
           write:
             - raw.netsuite_fivetran.*
-            - raw.workday_hcm.*
   - fkhalid:
       member_of:
         - commonroom_sensitive
@@ -4220,6 +4261,7 @@ roles:
   - lmai:
       member_of:
         - analyst_engineering
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
         - reporting
@@ -4935,6 +4977,7 @@ roles:
         - tableau_backend
         - workday
         - workday_hcm
+        - workday_hcm_sandbox
         - zengrc
       warehouses:
         - dev_xs
@@ -5310,7 +5353,6 @@ roles:
         - pto
         - snowflake_analyst_safe
         - workday
-        - workday_hcm
       warehouses:
         - dev_xs
   - snalamaru:
@@ -5638,6 +5680,7 @@ roles:
       member_of:
         - data_team_analyst
         - analyst_core
+        - salesforce
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
@@ -5856,6 +5899,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ghickman:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - kkloss:
       member_of:
         - snowflake_analyst
@@ -5971,6 +6019,71 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - azubov:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - arivera:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ecarey:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ebenson:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jslaughter:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jgdoyon:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - julee:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - kjamoralin:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - krichardson:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - lionel:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - ohoralkoretska:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - tread:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - tvik:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ichernikov:
       member_of:
         - snowflake_analyst
@@ -6043,6 +6156,18 @@ roles:
   - nwestbury:
       member_of:
         - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - jclapper:
+      member_of:
+        - analyst_sales
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+  - judume:
+      member_of:
+        - analyst_sales
+        - snowflake_analyst_safe
       warehouses:
         - dev_xs
   - ttavares:
@@ -6913,6 +7038,14 @@ users:
       can_login: true
       member_of:
         - nveenhof
+  - jclapper:
+      can_login: true
+      member_of:
+        - jclapper
+  - judume:
+      can_login: true
+      member_of:
+        - judume
   - jcoghlan:
       can_login: true
       member_of:
@@ -7005,6 +7138,10 @@ users:
       can_login: true
       member_of:
         - dchevalier
+  - ghickman:
+      can_login: true
+      member_of:
+        - ghickman
   - plopez:
       can_login: true
       member_of:
@@ -7041,6 +7178,58 @@ users:
       can_login: true
       member_of:
         - bparkhomchuk
+  - azubov:
+      can_login: true
+      member_of:
+        - azubov
+  - arivera:
+      can_login: true
+      member_of:
+        - arivera
+  - ecarey:
+      can_login: true
+      member_of:
+        - ecarey
+  - ebenson:
+      can_login: true
+      member_of:
+        - ebenson
+  - jslaughter:
+      can_login: true
+      member_of:
+        - jslaughter
+  - jgdoyon:
+      can_login: true
+      member_of:
+        - jgdoyon
+  - julee:
+      can_login: true
+      member_of:
+        - julee
+  - kjamoralin:
+      can_login: true
+      member_of:
+        - kjamoralin
+  - krichardson:
+      can_login: true
+      member_of:
+        - krichardson
+  - lionel:
+      can_login: true
+      member_of:
+        - lionel
+  - ohoralkoretska:
+      can_login: true
+      member_of:
+        - ohoralkoretska
+  - tread:
+      can_login: true
+      member_of:
+        - tread
+  - tvik:
+      can_login: true
+      member_of:
+        - tvik
 warehouses:
   - admin:
       size: x-small
