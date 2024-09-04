@@ -836,7 +836,7 @@ roles:
             - raw.data_science.*
   - data_science_sensitive:
       warehouses:
-        - dev_xs
+        - dev_s
         - dev_xs
         - dev_l
       member_of:
