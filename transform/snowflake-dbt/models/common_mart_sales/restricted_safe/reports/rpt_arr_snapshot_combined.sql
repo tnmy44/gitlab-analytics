@@ -1,7 +1,6 @@
 {{ simple_cte([
     ('rpt_arr_snapshot_combined_8th_calendar_day','rpt_arr_snapshot_combined_8th_calendar_day'),
-    ('rpt_arr_snapshot_combined_5th_calendar_day','rpt_arr_snapshot_combined_5th_calendar_day'),
-    ('dim_date','dim_date')
+    ('rpt_arr_snapshot_combined_5th_calendar_day','rpt_arr_snapshot_combined_5th_calendar_day')
 ]) }},
 
 final AS (
@@ -96,8 +95,6 @@ final AS (
       arr_band_calc,
       parent_crm_account_employee_count_band
     FROM rpt_arr_snapshot_combined_5th_calendar_day
-    LEFT JOIN dim_date
-      ON arr_month = date_actual
     WHERE arr_month >= '2024-03-01'
     
 )

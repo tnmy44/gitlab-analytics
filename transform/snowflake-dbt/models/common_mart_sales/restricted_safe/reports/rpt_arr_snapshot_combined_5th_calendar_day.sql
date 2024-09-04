@@ -75,8 +75,16 @@
       FALSE AS is_arr_month_finalized,
       dim_date_actual.snapshot_date_fpa_fifth                                                   AS snapshot_date,
       arr_month,
-      fiscal_quarter_name_fy,
-      fiscal_year,
+      COALESCE(mart_arr_current.fiscal_quarter_name_fy, 
+        CASE WHEN dim_date.current_first_day_of_month = dim_date.first_day_of_month 
+          THEN dim_date.fiscal_quarter_name_fy 
+        ELSE NULL
+        END)                                                                                    AS fiscal_quarter_name_fy,
+      COALESCE(mart_arr_current.fiscal_year, 
+        CASE WHEN dim_date.current_first_day_of_month = dim_date.first_day_of_month 
+            THEN dim_date.fiscal_year 
+        ELSE NULL
+        END)                                                                                    AS fiscal_year,
       subscription_start_month,
       subscription_end_month,
       dim_billing_account_id,
@@ -115,6 +123,8 @@
     FROM mart_arr_current
     INNER JOIN dim_date_actual
       ON mart_arr_current.arr_month = dim_date_actual.first_day_of_month
+    INNER JOIN dim_date
+      ON mart_arr_current.arr_month = dim_date.date_actual
       
 ), phase_one AS (
 
@@ -322,18 +332,8 @@
     SELECT
       combined.arr_month,
       combined.is_arr_month_finalized,
-      -- adjust date fields in final query so each source is considered, bringing in the live data for the current month only
-      COALESCE(combined.fiscal_quarter_name_fy, 
-        CASE WHEN current_first_day_of_month = first_day_of_month 
-          THEN dim_date.fiscal_quarter_name_fy 
-        ELSE NULL
-        END) AS fiscal_quarter_name_fy,
-      COALESCE(combined.fiscal_year, 
-        CASE WHEN current_first_day_of_month = first_day_of_month 
-            THEN dim_date.fiscal_year 
-        ELSE NULL
-        END) AS fiscal_year,
-
+      fiscal_quarter_name_fy,
+      fiscal_year,
       subscription_start_month,
       subscription_end_month,
       combined.dim_billing_account_id,
@@ -385,16 +385,13 @@
       parent_account_cohort_month,
       months_since_parent_account_cohort_start,
       COALESCE(parent_arr_band_calc.arr_band_calc, 'Missing crm_account_id')            AS arr_band_calc,
-      parent_crm_account_employee_count_band,
-      MAX(combined.arr_month) OVER ()                                                            AS max_arr_month, -- So that when a new quarter begins, running an extract wont pull in blank data for the first 5 days
+      parent_crm_account_employee_count_band
     FROM combined
     LEFT JOIN parent_arr_band_calc
       ON combined.dim_parent_crm_account_id = parent_arr_band_calc.dim_parent_crm_account_id
       AND combined.arr_month = parent_arr_band_calc.arr_month
     LEFT JOIN edu_subscriptions
       ON combined.subscription_name = edu_subscriptions.subscription_name
-    INNER JOIN PROD.common.dim_date
-      ON combined.arr_month = date_actual
     WHERE combined.arr_month >= '2024-03-01' -- month from when we switched from 8th to 5th day snapshot
 
 )
