@@ -786,7 +786,7 @@ roles:
             - raw.*.*
   - data_science:
       warehouses:
-        - dev_xs
+        - dev_s
         - dev_xs
         - dev_l
       privileges:
