@@ -510,6 +510,8 @@ roles:
         - snowplow
         - snowflake_db
         - version_db
+        - workday_hcm
+        - workday_hcm_sandbox
         - zendesk
         - zuora
         - zuora_central_sandbox
@@ -4982,8 +4984,6 @@ roles:
         - snowflake
         - tableau_backend
         - workday
-        - workday_hcm
-        - workday_hcm_sandbox
         - zengrc
       warehouses:
         - dev_xs
