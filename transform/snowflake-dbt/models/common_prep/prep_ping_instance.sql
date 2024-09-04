@@ -66,15 +66,11 @@
       IFF(COALESCE(
         raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated'] = -1, 
         NULL, 
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']):: BOOLEAN AS dedicated_bool,
-      CASE
-        WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
-                                                                    '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
-          THEN TRUE
-        WHEN ping_created_at > '2023-06-01'  AND dedicated_bool = TRUE
-          THEN TRUE
-        ELSE FALSE
-      END                                                                                                                                         AS is_saas_dedicated,
+        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']):: BOOLEAN           AS is_dedicated_metric,
+      IFF(hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+                              '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+          , TRUE, FALSE)                                                                                                                          AS is_dedicated_hostname,
+      IFF(is_dedicated_metric = TRUE OR is_dedicated_hostname = TRUE, TRUE, FALSE)                                                                AS is_saas_dedicated,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         WHEN is_saas_dedicated = TRUE THEN 'SaaS' 
@@ -170,7 +166,8 @@
         WHEN edition = 'EEU'                  THEN 'Ultimate'
         ELSE NULL
       END AS product_tier,
-      FALSE AS dedicated_bool,
+      FALSE AS is_dedicated_metric,
+      FALSE AS is_dedicated_hostname,
       FALSE AS is_saas_dedicated,
       'SaaS' AS ping_delivery_type,
       'GitLab.com' AS ping_deployment_type,
