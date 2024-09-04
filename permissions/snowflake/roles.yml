@@ -322,6 +322,7 @@ roles:
   - analyst_core:
       warehouses:
         - dev_xs
+        - dev_s
         - dev_l
       member_of:
         - boneyard
@@ -1001,6 +1002,7 @@ roles:
   - product_manager:
       warehouses:
         - dev_xs
+        - dev_xs
         - dev_l
         - dev_xl
       member_of:
@@ -1088,6 +1090,7 @@ roles:
       warehouses:
         - dev_l
         - dev_m
+        - dev_xs
         - dev_xs
         - dev_xl
         - transforming_s
