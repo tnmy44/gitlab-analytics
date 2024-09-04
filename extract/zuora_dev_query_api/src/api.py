@@ -119,7 +119,7 @@ class ZuoraQueriesAPI:
 
         raise ReferenceError("Job not found")
 
-    def get_data_query_file(self, job_id: str, wait_time: int = 180) -> pd.DataFrame:
+    def get_data_query_file(self, job_id: str, wait_time: int = 30) -> pd.DataFrame:
         """
 
         :param job_id:
