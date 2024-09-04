@@ -23,7 +23,7 @@
 
 namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters out namespaces with blocked creators, and internal namespaces. Filtered to ultimate parent namespaces.
 
-  SELECT DISTINCT
+  SELECT
     dim_namespace.ultimate_parent_namespace_id, -- Keeping this id naming convention for clarity
     dim_product_tier_id,
     dim_namespace.created_at                                                                                AS namespace_created_at, --timestamp is useful for relative calculations - ex) file created win 1 minute of namespace creation
@@ -137,7 +137,7 @@ charges AS ( --First paid subscription for ultimate namespace
 
 activation_events AS ( --Event part of the activation definition occuring while namespace was free within 14 days of namespace creation
 
-  SELECT DISTINCT
+  SELECT
     namespaces.ultimate_parent_namespace_id,
     MIN(events.event_date)                                                                                      AS event_activation_date,
     MIN(events.days_since_namespace_creation_at_event_date)                                                     AS days_since_namespace_creation_at_activation_event,
@@ -192,7 +192,7 @@ d60_retention AS ( --return event between 60 - 90 days
 
 first_last_activity AS ( --min and max event dates
 
-  SELECT DISTINCT
+  SELECT
     namespaces.ultimate_parent_namespace_id,
     MIN(event_date) AS min_event_date,
     MAX(event_date) AS max_event_date
@@ -206,7 +206,7 @@ first_last_activity AS ( --min and max event dates
 
 valuable_signup AS ( --counting namespaces with billable members who initially sign up with a business email domain and are created prior to any paid subscription
 
-  SELECT DISTINCT
+  SELECT
     namespaces.ultimate_parent_namespace_id,
     MAX(IFF(dim_user.dim_user_id = namespaces.creator_id, 1, 0)) AS creator_is_valuable_signup_numeric,
     IFF(creator_is_valuable_signup_numeric = 1, TRUE, FALSE)     AS creator_is_valuable_signup
@@ -227,7 +227,7 @@ valuable_signup AS ( --counting namespaces with billable members who initially s
 
 stage_adoption AS (
 
-  SELECT DISTINCT
+  SELECT 
     namespaces.ultimate_parent_namespace_id,
     stage_name,
     MIN(days_since_namespace_creation_at_event_date)                                                                   AS days_since_namespace_creation_at_first_event_date,
@@ -249,7 +249,7 @@ stage_adoption AS (
 
 stage_aggregation AS (
 
-  SELECT DISTINCT
+  SELECT
     ultimate_parent_namespace_id,
     MIN(IFF(stage_adoption.stage_name = 'plan', days_since_namespace_creation_at_first_event_date, NULL))
       AS days_since_namespace_creation_at_first_plan_event_date,
@@ -296,12 +296,11 @@ creator_attributes AS ( --ultimate namespace creator attributes
   LEFT JOIN dim_crm_person -- Get is_first_order_person 
     ON dim_marketing_contact_no_pii.sfdc_record_id = dim_crm_person.sfdc_record_id
 
-
 ),
 
 billable_members AS ( --billable members calculated to match user limit calculations
 
-  SELECT DISTINCT
+  SELECT
     namespaces.ultimate_parent_namespace_id, -- ultimate parent namespace
     COUNT(DISTINCT mships.user_id) AS billable_member_count
   FROM namespaces
@@ -344,7 +343,7 @@ team_activation_prep AS ( -- CTEs activation_events and second_billable_member a
 
 team_activation AS ( -- CTEs activation_events and second_billable_member are the building blocks for team activation
 
-  SELECT DISTINCT
+  SELECT
     ultimate_parent_namespace_id,
     ARRAY_TO_STRING(ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name ASC), ' , ')
       AS activation_event_array,
