@@ -43,7 +43,7 @@ def parse_log_data(log_file_path: str):
     :return:
     """
     for log_file_name in os.listdir(log_file_path):
-        if log_file_name.endswith(".log"):
+        if ".log" in log_file_name:
             full_file_name = os.path.join(log_file_path, log_file_name)
             with open(full_file_name, "r") as file:
                 log_data = file.readlines()
@@ -117,7 +117,7 @@ if __name__ == "__main__":
             logging.info(os.listdir(file_name))
             # Loop through files in folder (logs come out of the process pre-split)
             for f in os.listdir(file_name):
-                if f.endswith(".json"):
+                if ".json" in f:
                     logging.info(f"Processing {f}")
                     snowflake_stage_load_copy_remove(
                         os.path.join(file_name, f),
