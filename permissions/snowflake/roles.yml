@@ -7239,6 +7239,8 @@ warehouses:
       size: 4-x-large
   - dev_xs:
       size: x-small
+  - dev_s:
+      size: small
   - dev_m:
       size: medium
   - dev_l:
