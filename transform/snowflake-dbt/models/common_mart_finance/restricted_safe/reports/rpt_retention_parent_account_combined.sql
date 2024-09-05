@@ -57,7 +57,7 @@ final AS (
       net_retention_product_category,
       prior_year_product_category,
       net_retention_product_ranking,
-      prior_year_product_ranking,
+      prior_year_product_ranking
     FROM rpt_retention_future_parent_account
     WHERE retention_month >= '2023-08-01'
     
