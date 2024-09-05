@@ -35,7 +35,8 @@ WITH date_details AS (
       project_snapshots.last_update_started_at
     FROM project_snapshots
     INNER JOIN date_details
-      ON date_details.date_actual BETWEEN project_snapshots.valid_from::DATE AND project_snapshots.valid_to_::DATE
+      ON date_details.date_actual >= project_snapshots.valid_from::DATE
+      AND date_details.date_actual < project_snapshots.valid_to_::DATE
 
 )
 
