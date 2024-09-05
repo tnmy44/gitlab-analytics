@@ -99,16 +99,18 @@ trials_grouping AS (
 trials AS (
 
   SELECT
-    ultimate_parent_namespace_id,
-    all_trials,
-    all_trials[0].trial_type::INT                             AS trial_type,
-    all_trials[0].trial_type_name::STRING                     AS trial_type_name,
-    all_trials[0].trial_start_date::DATE                      AS trial_start_date,
-    all_trials[0].days_since_namespace_creation_at_trial::INT AS days_since_namespace_creation_at_trial,
-    all_trials[1].trial_type_name::STRING                     AS trial_2_type_name,
-    all_trials[1].trial_start_date::DATE                      AS trial_2_start_date,
-    all_trials[1].days_since_namespace_creation_at_trial::INT AS days_since_namespace_creation_at_trial_2
-  FROM trials_grouping
+    trials_prep.ultimate_parent_namespace_id,
+    trials_grouping.all_trials,
+    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_type, NULL))                             AS trial_type,
+    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_type_name, NULL))                     AS trial_type_name,
+    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_start_date, NULL))                      AS trial_start_date,
+    MAX(IFF(trials_prep.trial_type=1, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial,
+    MAX(IFF(trials_prep.trial_type=2, trials_prep.trial_type_name, NULL))                     AS trial_2_type_name,
+    MAX(IFF(trials_prep.trial_type=2, trials_prep.trial_start_date, NULL))                      AS trial_2_start_date,
+    MAX(IFF(trials_prep.trial_type=2, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial_2
+  FROM trials_prep
+  LEFT JOIN trials_grouping on trials_prep.ultimate_parent_namespace_id = trials_grouping.ultimate_parent_namespace_id
+  GROUP BY ALL
 
 ),
 
@@ -461,5 +463,5 @@ base AS (
     created_by="@snalamaru",
     updated_by="@ddeng1",
     created_date="2023-11-10",
-    updated_date="2024-08-21"
+    updated_date="2024-09-05"
 ) }}
