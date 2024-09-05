@@ -6553,12 +6553,6 @@ users:
       - RSA SAFE Access
       - Sales All Access
       - Customer Success Project Lead
-  - user_name: marsmith
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mbabin
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10044,4 +10038,34 @@ users:
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access      
+      - General All Access
+  - user_name: maudl-ext
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access  
+  - user_name: muchikawa
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access        
+  - user_name: kkloss
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access     
+  - user_name: azaher
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access       
+  - user_name: stan
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access   
