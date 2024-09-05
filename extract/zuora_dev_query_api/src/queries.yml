@@ -25,7 +25,4 @@ tables:
         ,tcvnetamount
         ,tcvdiscountamount
         ,currency
-        ,createddate
-        ,updateddate
-        ,deleted
       FROM  ChargeMetrics
