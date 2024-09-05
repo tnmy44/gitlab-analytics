@@ -90,6 +90,10 @@ class CursorEndpoint(ThoughtIndustries):
         super().__init__()
         self.results_key = self.name
 
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
+
     def get_cursor_url(self, cursor: str) -> str:
         """
         In order to query for a page, the cursor must be passed into url
@@ -215,10 +219,6 @@ class Users(CursorEndpoint):
         """implement abstract class"""
         return "users"
 
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}{self.name}"
-
 
 class Content(CursorEndpoint):
     """Class for Users endpoint"""
@@ -231,10 +231,6 @@ class Content(CursorEndpoint):
         """implement abstract class"""
         return "content"
 
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}{self.name}"
-
 
 class Meetings(CursorEndpoint):
     """Class for Users endpoint"""
@@ -243,10 +239,6 @@ class Meetings(CursorEndpoint):
         """implement abstract class"""
         return "meetings"
 
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}{self.name}"
-
 
 class Clients(CursorEndpoint):
     """Class for Users endpoint"""
@@ -254,10 +246,6 @@ class Clients(CursorEndpoint):
     def get_name(self) -> str:
         """implement abstract class"""
         return "clients"
-
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}{self.name}"
 
 
 class AssessmentAttempts(CursorEndpoint):
@@ -282,10 +270,6 @@ class Coupons(CursorEndpoint):
     def get_name(self) -> str:
         """implement abstract class"""
         return "coupons"
-
-    def get_endpoint_url(self) -> str:
-        """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}{self.name}"
 
 
 # ------------- Data Interval-based endpoints -------------
