@@ -1,9 +1,10 @@
 """
-Run daily Level Up extract.
+Run Level Up extract for `cursor` based endpoints
 
-This DAG is used for endpoints that take a start/end date argument.
+Because it's cursor based endpoint, one task can be used to run
+all the data from that endpoint, so catchup is set to False
 
-Each Airflow task returns just that day's data idempotently.
+To backfill, the metadata database value needs to be updated manually, more info in handbook
 """
 
 import os
@@ -19,6 +20,12 @@ from airflow_utils import (
     slack_failed_task,
 )
 from kube_secrets import (
+    GITLAB_METADATA_DB_HOST,
+    GITLAB_METADATA_DB_PASS,
+    GITLAB_METADATA_DB_USER,
+    GITLAB_METADATA_PG_PORT,
+    LEVEL_UP_METADATA_DB_NAME,
+    LEVEL_UP_METADATA_SCHEMA,
     LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
@@ -44,34 +51,23 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "el_level_up_thought_industries",
+    "el_level_up_thought_industries_cursor_endpoints",
     default_args=default_args,
-    # daily 1:00 UTC: wait one hour as buffer before running previous day
-    schedule_interval="0 1 * * *",
-    # FYI: on first run, data is backfilled thru 2022-03-01
-    start_date=datetime(2022, 3, 1),
-    catchup=True,
-    max_active_runs=2,  # due to API rate limiting
-    concurrency=3,  # num of max_tasks, limit due to API rate limiting
+    # Run daily at 6:00am UTC, prior to the dbt run
+    schedule_interval="0 6 * * *",
+    start_date=datetime(2024, 8, 28),
+    catchup=False,
+    concurrency=2,  # num of max_tasks, limit due to API rate limiting
 )
 
-endpoint_classes = (
-    "CourseActions",
-    "CourseCompletions",
-    "CourseViews",
-    "Logins",
-    "Visits",
-    "CoursePurchases",
-    "LearningPathActions",
-    "EmailCaptures",
-)
+endpoint_classes = ("Users",)
 extract_tasks = []
 
 for endpoint_class in endpoint_classes:
     extract_command = (
         f"{clone_and_setup_extraction_cmd} && "
         f"""python level_up_thought_industries/src/execute.py \
-        execute-date-interval-endpoint --class-name-to-run={endpoint_class}"""
+        execute-cursor-endpoint --class-name-to-run={endpoint_class}"""
     )
 
     extract_task = KubernetesPodOperator(
@@ -85,19 +81,18 @@ for endpoint_class in endpoint_classes:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
+            GITLAB_METADATA_DB_PASS,
+            GITLAB_METADATA_DB_HOST,
+            GITLAB_METADATA_PG_PORT,
+            GITLAB_METADATA_DB_USER,
+            LEVEL_UP_METADATA_DB_NAME,
+            LEVEL_UP_METADATA_SCHEMA,
             LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY,
         ],
         env_vars={
             **pod_env_vars,
-            # remove time from logical_date, and convert to epoch timestamp
-            "EPOCH_START_STR": (
-                "{{ logical_date.replace(hour=0, minute=0, second=0, microsecond=0)"
-                ".int_timestamp }}"
-            ),
-            "EPOCH_END_STR": (
-                "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
-                ".int_timestamp }}"
-            ),
+            "data_interval_start": "{{ data_interval_start }}",
+            "data_interval_end": "{{ data_interval_end }}",
         },
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),

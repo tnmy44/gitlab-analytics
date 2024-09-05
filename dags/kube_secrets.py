@@ -497,3 +497,17 @@ SNOWFLAKE_DATA_SCIENCE_LOAD_PASSWORD = Secret(
     "airflow",
     "SNOWFLAKE_DATA_SCIENCE_LOAD_PASSWORD",
 )
+
+LEVEL_UP_METADATA_DB_NAME = Secret(
+    "env",
+    "LEVEL_UP_METADATA_DB_NAME",
+    "airflow",
+    "LEVEL_UP_METADATA_DB_NAME",
+)
+
+LEVEL_UP_METADATA_SCHEMA = Secret(
+    "env",
+    "LEVEL_UP_METADATA_SCHEMA",
+    "airflow",
+    "LEVEL_UP_METADATA_SCHEMA",
+)
