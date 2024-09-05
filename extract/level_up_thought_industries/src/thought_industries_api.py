@@ -86,6 +86,10 @@ class CursorEndpoint(ThoughtIndustries):
     ENDPOINT_PREFIX = f"{ThoughtIndustries.BASE_URL}incoming/v2/"
     METADATA_SCHEMA = os.environ.get("LEVEL_UP_METADATA_SCHEMA")
 
+    def __init__(self):
+        super().__init__()
+        self.results_key = self.name
+
     def get_cursor_url(self, cursor: str) -> str:
         """
         In order to query for a page, the cursor must be passed into url
@@ -164,7 +168,7 @@ class CursorEndpoint(ThoughtIndustries):
                 max_retry_count=self.MAX_RETRY_COUNT,
             )
 
-            results = response.json().get(self.name)
+            results = response.json().get(self.results_key)
             page_info = response.json().get("pageInfo")
 
             # response has events
@@ -213,7 +217,75 @@ class Users(CursorEndpoint):
 
     def get_endpoint_url(self) -> str:
         """implement abstract class"""
-        return f"{self.ENDPOINT_PREFIX}users"
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
+
+
+class Content(CursorEndpoint):
+    """Class for Users endpoint"""
+
+    def __init__(self):
+        super().__init__()
+        self.results_key = "contentItems"
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "content"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
+
+
+class Meetings(CursorEndpoint):
+    """Class for Users endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "meetings"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
+
+
+class Clients(CursorEndpoint):
+    """Class for Users endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "clients"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
+
+
+class AssessmentAttempts(CursorEndpoint):
+    """Class for Users endpoint"""
+
+    def __init__(self):
+        super().__init__()
+        self.results_key = "assessmentAttempts"
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "assessment_attempts"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}assessmentAttempts"
+
+
+class Coupons(CursorEndpoint):
+    """Class for Users endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "coupons"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}{self.name}"
 
 
 # ------------- Data Interval-based endpoints -------------

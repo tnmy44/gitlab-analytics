@@ -60,6 +60,31 @@ CREATE OR REPLACE TABLE users (
   jsontext variant,
   uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
 );
+
+CREATE OR REPLACE TABLE content (
+  jsontext variant,
+  uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
+
+CREATE OR REPLACE TABLE meetings (
+  jsontext variant,
+  uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
+
+CREATE OR REPLACE TABLE clients (
+  jsontext variant,
+  uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
+
+CREATE OR REPLACE TABLE assessment_attempts (
+  jsontext variant,
+  uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
+
+CREATE OR REPLACE TABLE coupons (
+  jsontext variant,
+  uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
 ```
 
 ### One-time Setup of Metadata Database Environment
