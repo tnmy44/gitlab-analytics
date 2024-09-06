@@ -2912,6 +2912,19 @@ roles:
           read:
             - raw.zuora_stitch_rest_api.*
             - prep.zuora_stitch_rest_api.*
+  - zuora_query_api_sandbox:
+      warehouses:
+        - dev_xs
+      privileges:
+        databases:
+          read:
+            - raw
+        schemas:
+          read:
+            - raw.zuora_query_api_sandbox
+        tables:
+          read:
+            - raw.zuora_query_api_sandbox.*
   - zuora_query_api:
       warehouses:
         - dev_xs
@@ -3126,6 +3139,7 @@ roles:
         - analyst_engineering
         - snowflake_analyst_safe
         - zuora_query_api
+        - zuora_query_api_sandbox
       warehouses:
         - dev_xs
       owns:
@@ -3289,6 +3303,7 @@ roles:
         - salesforce_sandbox
         - zuora_api_sandbox_stitch
         - zuora_stitch_rest_api
+        - zuora_query_api_sandbox
         - zuora
       warehouses:
         - dev_xs
@@ -3452,6 +3467,7 @@ roles:
         - analyst_marketing
         - data_team_analyst
         - snowflake_analyst_safe
+        - zuora_query_api_sandbox
       warehouses:
         - dev_xs
   - dmack:
@@ -5675,6 +5691,7 @@ roles:
         - data_team_analyst
         - snowflake_analyst_safe
         - xactly
+        - zuora_query_api_sandbox
       warehouses:
         - dev_xs
   - vburton:
