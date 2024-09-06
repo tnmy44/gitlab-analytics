@@ -1,6 +1,6 @@
-WITH bamboohr_employee_directory_intermediate AS (
+WITH bamboohr_employee_id_mapping_source AS (
   SELECT *
-  FROM {{ ref('employee_directory_intermediate') }}
+  FROM {{ ref('bamboohr_id_employee_number_mapping_source') }}
   WHERE uploaded_row_number_desc = 1 --excludes team members deleted from BambooHR
 ),
 
@@ -8,7 +8,7 @@ bamboohr_employee_mapping AS (
   SELECT DISTINCT
     employee_id     AS bhr_employee_id,
     employee_number AS wk_employee_id
-  FROM bamboohr_employee_directory_intermediate
+  FROM bamboohr_employee_id_mapping_source
 ),
 
 bamboohr_terminations AS (
@@ -16,7 +16,7 @@ bamboohr_terminations AS (
     employee_number AS wk_employee_id,
     hire_date,
     termination_date
-  FROM bamboohr_employee_directory_intermediate
+  FROM bamboohr_employee_id_mapping_source
   WHERE termination_date <= '2020-12-31' --use Workday data for 2021-01-01 or later
     AND hire_date <= '2020-12-31'      --use Workday data for 2021-01-01 or later
     AND wk_employee_id != '11595'      --incorrect hire date in bhr_map, listed as 2020-09-10. Correct date is 2020-06-09
@@ -58,7 +58,7 @@ bamboohr_rehires AS (
     effective_date DESC
 ),
 
-bamboohr_hires1 -- displays first non-terminated record for any team members in bamboohr_rehires CTE to capture original hire dateAS (
+bamboohr_hires1 AS (-- displays first non-terminated record for any team members in bamboohr_rehires CTE to capture original hire dateAS (
   SELECT sts.*
   FROM bamboohr_status AS sts
   INNER JOIN bamboohr_rehires ON sts.employee_id = bamboohr_rehires.employee_id
@@ -68,7 +68,7 @@ bamboohr_hires1 -- displays first non-terminated record for any team members in 
   ) = 1
 ),
 
-bamboohr_hires2 --displays non-terminated record for team members not in bamboohr_rehires CTEAS (
+bamboohr_hires2 AS ( --displays non-terminated record for team members not in bamboohr_rehires CTEAS (
   SELECT sts.*
   FROM bamboohr_status AS sts
   LEFT JOIN bamboohr_rehires ON sts.employee_id = bamboohr_rehires.employee_id
@@ -166,7 +166,7 @@ start_date AS (
     effective_date AS hire_date,
     ROW_NUMBER() OVER (
       PARTITION BY wk_employee_id ORDER BY effective_date ASC
-    )              AS hire_rank
+    )              AS hire_rank_asc
   FROM hires_stage
 ),
 
@@ -176,25 +176,28 @@ end_date AS (
     termination_date AS term_date,
     ROW_NUMBER() OVER (
       PARTITION BY wk_employee_id ORDER BY termination_date ASC
-    )                AS term_rank
+    )                AS term_rank_asc
   FROM terminations_stage
 ),
 
 combined AS (
   SELECT
+    -- Surrogate keys
+    {{ dbt_utils.generate_surrogate_key(['hire_id'])}} AS dim_team_member_sk,
+    -- Team member history attributes
     hire_id                             AS employee_id,
-    hire_rank,
+    hire_rank_asc,
     hire_date                           AS hired_date,
     term_date                           AS termination_date,
-    term_rank,
+    term_rank_asc,
     COALESCE(term_date, CURRENT_DATE()) AS last_date
   FROM start_date
   LEFT JOIN end_date ON hire_id = term_id
-    AND hire_rank = term_rank
+    AND hire_rank_asc = term_rank_asc
 )
 
 SELECT *
 FROM combined
 ORDER BY
   employee_id ASC,
-  hire_rank DESC
+  hire_rank_asc DESC
