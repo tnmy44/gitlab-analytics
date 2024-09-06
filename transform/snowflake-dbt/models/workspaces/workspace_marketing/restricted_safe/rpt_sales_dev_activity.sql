@@ -60,17 +60,17 @@
     mart_crm_opportunity.report_role_level_4,
     mart_crm_opportunity.report_role_level_5,
     CASE
-    WHEN report_role_level_1 = 'APJ' THEN 'APJ'
-    WHEN report_role_level_1 = 'SMB' THEN 'SMB'
-    WHEN report_role_level_1 = 'PUBSEC' THEN 'PUBSEC'
-    WHEN report_role_level_2 = 'AMER_COMM' THEN 'AMER COMM'
-    WHEN report_role_level_1 = 'AMER' THEN 'AMER ENT'
-    WHEN report_role_level_2 = 'EMEA_COMM' THEN 'EMEA COMM'
-    WHEN report_role_level_2 = 'EMEA_NEUR' THEN 'EMEA NEUR'
-    WHEN report_role_level_2 = 'EMEA_DACH' THEN 'EMEA DACH'
-    WHEN report_role_level_2 = 'EMEA_SEUR' THEN 'EMEA SEUR'
-    WHEN report_role_level_2 = 'EMEA_META' THEN 'EMEA META'
-    WHEN report_role_level_2 = 'EMEA_TELCO' THEN 'EMEA TELCO'
+    WHEN mart_crm_opportunity.report_role_level_1 = 'APJ' THEN 'APJ'
+    WHEN mart_crm_opportunity.report_role_level_1 = 'SMB' THEN 'SMB'
+    WHEN mart_crm_opportunity.report_role_level_1 = 'PUBSEC' THEN 'PUBSEC'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'AMER_COMM' THEN 'AMER COMM'
+    WHEN mart_crm_opportunity.report_role_level_1 = 'AMER' THEN 'AMER ENT'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_COMM' THEN 'EMEA COMM'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_NEUR' THEN 'EMEA NEUR'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_DACH' THEN 'EMEA DACH'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_SEUR' THEN 'EMEA SEUR'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_META' THEN 'EMEA META'
+    WHEN mart_crm_opportunity.report_role_level_2 = 'EMEA_TELCO' THEN 'EMEA TELCO'
     END          
     AS pipe_council_grouping,
     mart_crm_opportunity.parent_crm_account_territory,
