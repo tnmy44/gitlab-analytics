@@ -39,7 +39,10 @@
     mart_crm_opportunity_stamped_hierarchy_hist.stage_2_scoping_fiscal_quarter_name,
     mart_crm_opportunity_stamped_hierarchy_hist.stage_3_technical_evaluation_date,
     mart_crm_opportunity_stamped_hierarchy_hist.stage_3_technical_evaluation_month,
-    mart_crm_opportunity_stamped_hierarchy_hist.stage_3_technical_evaluation_fiscal_quarter_name, 
+    mart_crm_opportunity_stamped_hierarchy_hist.stage_3_technical_evaluation_fiscal_quarter_name,
+    mart_crm_opportunity_stamped_hierarchy_hist.pipeline_created_date,
+    mart_crm_opportunity_stamped_hierarchy_hist.pipeline_created_date_month,
+    mart_crm_opportunity_stamped_hierarchy_hist.pipeline_created_date_fiscal_quarter_name, 
     mart_crm_opportunity_stamped_hierarchy_hist.days_in_1_discovery,
     mart_crm_opportunity_stamped_hierarchy_hist.days_in_sao,
     mart_crm_opportunity_stamped_hierarchy_hist.days_since_last_activity,
@@ -50,9 +53,25 @@
     mart_crm_opportunity_stamped_hierarchy_hist.report_area,
     mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_1,
     mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_2,
+    SPLIT_PART(mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_2, '_', 2)                         AS report_role_level_2_clean,
     mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_3,
+    COALESCE(SPLIT_PART(mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_3, '_', 3),SPLIT_PART(crm_user_role_level_2, '_', 2) )                         AS report_role_level_3_clean,
     mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_4,
     mart_crm_opportunity_stamped_hierarchy_hist.report_role_level_5,
+    CASE
+    WHEN report_role_level_1 = 'APJ' THEN 'APJ'
+    WHEN report_role_level_1 = 'SMB' THEN 'SMB'
+    WHEN report_role_level_1 = 'PUBSEC' THEN 'PUBSEC'
+    WHEN report_role_level_2 = 'AMER_COMM' THEN 'AMER COMM'
+    WHEN report_role_level_1 = 'AMER' THEN 'AMER ENT'
+    WHEN report_role_level_2 = 'EMEA_COMM' THEN 'EMEA COMM'
+    WHEN report_role_level_2 = 'EMEA_NEUR' THEN 'EMEA NEUR'
+    WHEN report_role_level_2 = 'EMEA_DACH' THEN 'EMEA DACH'
+    WHEN report_role_level_2 = 'EMEA_SEUR' THEN 'EMEA SEUR'
+    WHEN report_role_level_2 = 'EMEA_META' THEN 'EMEA META'
+    WHEN report_role_level_2 = 'EMEA_TELCO' THEN 'EMEA TELCO'
+    END          
+    AS pipe_council_grouping,
     mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_territory,
     mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_sales_segment,
     mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_geo,
@@ -338,6 +357,9 @@
     opp_to_lead.stage_3_technical_evaluation_date,
     opp_to_lead.stage_3_technical_evaluation_month,
     opp_to_lead.stage_3_technical_evaluation_fiscal_quarter_name, 
+    opp_to_lead.pipeline_created_date,
+    opp_to_lead.pipeline_created_date_month,
+    opp_to_lead.pipeline_created_date_fiscal_quarter_name, 
     opp_to_lead.days_in_1_discovery,
     opp_to_lead.days_in_sao,
     opp_to_lead.days_since_last_activity,
@@ -348,9 +370,12 @@
     opp_to_lead.report_area,
     opp_to_lead.report_role_level_1,
     opp_to_lead.report_role_level_2,
+    opp_to_lead.report_role_level_2_clean,
     opp_to_lead.report_role_level_3,
+    opp_to_lead.report_role_level_3_clean,
     opp_to_lead.report_role_level_4,
     opp_to_lead.report_role_level_5,
+    opp_to_lead.pipe_council_grouping,
     opp_to_lead.deal_path_name,
     opp_to_lead.opp_created_date,
     opp_to_lead.close_date,
@@ -512,7 +537,6 @@
     mart_crm_account.account_bdr_assigned_user_role,
     mart_crm_account.bdr_recycle_date,
     mart_crm_account.actively_working_start_date,
-
     opps_missing_link.dim_crm_opportunity_id,
     opps_missing_link.sdr_bdr_user_id,
     opps_missing_link.net_arr,
@@ -534,6 +558,9 @@
     opps_missing_link.stage_3_technical_evaluation_date,
     opps_missing_link.stage_3_technical_evaluation_month,
     opps_missing_link.stage_3_technical_evaluation_fiscal_quarter_name, 
+    opps_missing_link.pipeline_created_date,
+    opps_missing_link.pipeline_created_date_month,
+    opps_missing_link.pipeline_created_date_fiscal_quarter_name, 
     opps_missing_link.days_in_1_discovery,
     opps_missing_link.days_in_sao,
     opps_missing_link.days_since_last_activity,
@@ -543,10 +570,12 @@
     opps_missing_link.report_region,
     opps_missing_link.report_area,
     opps_missing_link.report_role_level_1,
-    opps_missing_link.report_role_level_2,
+    opps_missing_link.report_role_level_2_clean,
     opps_missing_link.report_role_level_3,
+    opps_missing_link.report_role_level_3_clean,
     opps_missing_link.report_role_level_4,
     opps_missing_link.report_role_level_5,
+    opps_missing_link.pipe_council_grouping,
     opps_missing_link.deal_path_name,
     opps_missing_link.opp_created_date,
     opps_missing_link.close_date,
@@ -587,13 +616,13 @@
     opportunity_snapshot_hierarchy.crm_user_area,
     opportunity_snapshot_hierarchy.sales_dev_rep_employee_number,
     opportunity_snapshot_hierarchy.sales_dev_rep_direct_manager_id,
-    opportunity_snapshot_hierarchy.sales_dev_rep_manager_full_name as sales_dev_manager_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_manager_full_name AS sales_dev_manager_full_name,
     opportunity_snapshot_hierarchy.sales_dev_manager_email,
     opportunity_snapshot_hierarchy.sales_dev_manager_employee_number,
     opportunity_snapshot_hierarchy.sales_dev_manager_user_role_name,
     opportunity_snapshot_hierarchy.sales_dev_leader_id,
     opportunity_snapshot_hierarchy.sales_dev_leader_user_role_name,
-    opportunity_snapshot_hierarchy.sales_dev_rep_leader_full_name as sales_dev_leader_full_name,
+    opportunity_snapshot_hierarchy.sales_dev_rep_leader_full_name AS sales_dev_leader_full_name,
     opportunity_snapshot_hierarchy.sales_dev_leader_employee_number,
     opportunity_snapshot_hierarchy.sales_dev_leader_email,
     NULL AS activity_sales_dev_rep_user_id,
