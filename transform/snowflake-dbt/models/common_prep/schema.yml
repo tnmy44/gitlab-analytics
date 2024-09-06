@@ -3065,12 +3065,12 @@ models:
       - name: field_modified_at
 
   - name: prep_team_member_history
-    description: '{{ doc("prep_employee_history") }}'
+    description: '{{ doc("prep_team_member_history") }}'
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
       - name: employee_id
-        description:
+        description: Workday Employee Identification 
       - name: hire_rank_asc
         description: Hire event of a team member ranked earliest by date
       - name: hired_date
