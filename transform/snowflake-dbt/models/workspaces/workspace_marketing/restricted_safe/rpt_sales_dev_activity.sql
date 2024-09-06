@@ -570,6 +570,7 @@
     opps_missing_link.report_region,
     opps_missing_link.report_area,
     opps_missing_link.report_role_level_1,
+    opps_missing_link.report_role_level_2,
     opps_missing_link.report_role_level_2_clean,
     opps_missing_link.report_role_level_3,
     opps_missing_link.report_role_level_3_clean,
@@ -648,5 +649,5 @@
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-09-06",
-    updated_date="2024-08-15",
+    updated_date="2024-09-06",
   ) }}
