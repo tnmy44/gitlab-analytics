@@ -10,8 +10,11 @@ WITH merged_merge_requests AS (
 team_member_history AS (
 
   SELECT
-    *,
-    DATE_TRUNC('month', date_actual) AS employee_month
+    * EXCLUDE (department),
+    DATE_TRUNC('month', date_actual) AS employee_month,
+    CASE WHEN department IN ('Core Development', 'Expansion', 'Development') AND date_actual < '2023-11-01' THEN 'Development'
+      ELSE department
+    END                              AS department --to keep Development historic data before the split
   FROM {{ ref('team_member_history') }}
   WHERE date_actual <= CURRENT_DATE
     AND date_actual >= '2020-01-01'
@@ -47,7 +50,7 @@ aggregated AS (
     ON merged_merge_requests.merge_month = team_member_history.employee_month
       AND merged_merge_requests.group_label = team_member_history.user_group
   WHERE team_member_history.division = 'Engineering'
-  GROUP BY 1, 2, 3, 4
+  GROUP BY ALL
 
   UNION ALL
 
@@ -63,23 +66,23 @@ aggregated AS (
   FROM merged_merge_requests
   LEFT JOIN team_member_history ON merged_merge_requests.merge_month = team_member_history.employee_month AND merged_merge_requests.group_label = team_member_history.user_group
   WHERE team_member_history.division = 'Engineering'
-  GROUP BY 1, 2, 3, 4
+  GROUP BY ALL
 
   UNION ALL
 
   SELECT
     team_author_product_mrs.merge_month,
-    ''                                                        AS group_name,
+    ''                                              AS group_name,
     team_author_product_mrs.department,
-    ''                                                        AS technology_group,
-    team_author_product_mrs.mrs,
+    ''                                              AS technology_group,
     COUNT(DISTINCT team_member_history.employee_id) AS employees,
+    team_author_product_mrs.mrs,
     ROUND(mrs / NULLIF(employees, 0), 2)            AS mr_rate,
     'department'                                    AS granularity_level
   FROM team_author_product_mrs
   LEFT JOIN team_member_history ON team_author_product_mrs.merge_month = team_member_history.employee_month AND team_author_product_mrs.department = team_member_history.department
   WHERE team_member_history.division = 'Engineering'
-  GROUP BY 1, 2, 3, 4, 5
+  GROUP BY ALL
 
 )
 
