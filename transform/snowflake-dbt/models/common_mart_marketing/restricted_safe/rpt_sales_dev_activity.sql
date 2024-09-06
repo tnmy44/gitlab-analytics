@@ -56,7 +56,7 @@
     mart_crm_opportunity.report_role_level_2,
     SPLIT_PART(mart_crm_opportunity.report_role_level_2, '_', 2)                         AS report_role_level_2_clean,
     mart_crm_opportunity.report_role_level_3,
-    COALESCE(SPLIT_PART(mart_crm_opportunity.report_role_level_3, '_', 3),SPLIT_PART(report_role_level_2, '_', 2) )                         AS report_role_level_3_clean,
+    COALESCE(SPLIT_PART(mart_crm_opportunity.report_role_level_3, '_', 3),SPLIT_PART(mart_crm_opportunity.report_role_level_2, '_', 2) )                         AS report_role_level_3_clean,
     mart_crm_opportunity.report_role_level_4,
     mart_crm_opportunity.report_role_level_5,
     CASE
