@@ -124,6 +124,7 @@ SELECT DISTINCT
   joined.dim_installation_id,
   subscriptions_ping.dim_crm_account_id,
   COALESCE(subscriptions_ping.subscription_version, subscriptions.subscription_version) AS subscription_version,
+  prep_charge.dim_product_detail_id,
   dim_product_detail.product_rate_plan_charge_name,
   prep_charge.charge_type,
   prep_charge.date_actual || '-' || COALESCE(joined.dim_installation_id, 'missing installation_id') || '-' || COALESCE(joined.dim_subscription_id, subscriptions.dim_subscription_id) || dim_product_detail.product_rate_plan_charge_name AS primary_key
