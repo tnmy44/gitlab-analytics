@@ -1997,7 +1997,6 @@ roles:
             - raw.tap_postgres.gitlab_db_project_import_data
             - raw.tap_postgres.gitlab_db_project_mirror_data
             - raw.tap_postgres.gitlab_db_project_statistics
-            - raw.tap_postgres.gitlab_db_prometheus_alerts
             - raw.tap_postgres.gitlab_db_protected_branches
             - raw.tap_postgres.gitlab_db_releases
             - raw.tap_postgres.gitlab_db_repository_languages
