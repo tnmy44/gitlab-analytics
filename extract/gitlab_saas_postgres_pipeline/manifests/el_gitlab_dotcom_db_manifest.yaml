@@ -1104,7 +1104,7 @@ tables:
     is_incremental: True
     database_type: main
     export_schema: "gitlab_com"
-    export_table: incident_management_timeline_events
+    export_table: incident_management_timeline_event_tags
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
@@ -1113,14 +1113,14 @@ tables:
       , updated_at
       , project_id
       FROM incident_management_timeline_event_tags
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
+      --WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        --AND '{END_TIMESTAMP}'::timestamp
   incident_management_timeline_event_tag_links:
     deletes_exempt: True
     is_incremental: True
     database_type: main
     export_schema: "gitlab_com"
-    export_table: incident_management_timeline_events
+    export_table: incident_management_timeline_event_tag_links
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
