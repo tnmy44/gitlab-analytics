@@ -71,7 +71,7 @@ directory_mapping AS (
     --sometimes specialty is only specified in either single/multi, this way we can extract the group name properly
 
     b.division,
-    CASE WHEN b.department IN ('Core Development', 'Expansion', 'Development') AND date_actual < '2023-11-01' THEN 'Development'
+    CASE WHEN b.department IN ('Core Development', 'Expansion', 'Development') AND a.date_actual < '2023-11-01' THEN 'Development'
       ELSE b.department
     END                              AS department, --to keep Development historic data before the split (split date is chosen from https://gitlab.com/gitlab-org/quality/cloud-finops/team-tasks/-/issues/346#note_1646832441)
     b.position,
