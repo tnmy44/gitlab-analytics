@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: zuora_query_api_sandbox
+    tags: ["tdf", "zuora", "zuora_query_api"]
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: zuora_query_api_sandbox
+    loader: Airflow
+    loaded_at_field: TO_TIMESTAMP_NTZ(CAST(_uploaded_at AS INT))::TIMESTAMP
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: chargemetrics
