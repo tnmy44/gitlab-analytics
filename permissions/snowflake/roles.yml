@@ -540,6 +540,22 @@ roles:
   - analyst_sales_sensitive:
       warehouses:
         - dev_xs
+  - analyst_support:
+      warehouses:
+        - dev_xs
+      member_of:
+        - snowflake_analyst
+        - zendesk
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.sensitive
+        tables:
+          read:
+            - prep.sensitive.zendesk_*
   - analyst_marketing_sensitive:
       warehouses:
         - dev_xs
@@ -1997,7 +2013,6 @@ roles:
             - raw.tap_postgres.gitlab_db_project_import_data
             - raw.tap_postgres.gitlab_db_project_mirror_data
             - raw.tap_postgres.gitlab_db_project_statistics
-            - raw.tap_postgres.gitlab_db_prometheus_alerts
             - raw.tap_postgres.gitlab_db_protected_branches
             - raw.tap_postgres.gitlab_db_releases
             - raw.tap_postgres.gitlab_db_repository_languages
@@ -5877,9 +5892,8 @@ roles:
         - dev_xs
   - mmagoma:
       member_of:
+        - analyst_support
         - gitlab_dotcom
-        - snowflake_analyst
-        - zendesk
       warehouses:
         - dev_xs
   - tganga:
@@ -6082,6 +6096,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ndular:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - krichardson:
       member_of:
         - snowflake_analyst
@@ -6229,6 +6248,11 @@ roles:
       warehouses:
         - dev_xs
   - bparkhomchuk:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
+  - swiskow:
       member_of:
         - snowflake_analyst
       warehouses:
@@ -7121,6 +7145,10 @@ users:
       can_login: true
       member_of:
         - rhook
+  - ndular:
+      can_login: true
+      member_of:
+        - ndular
   - fkhalid:
       can_login: true
       member_of:
@@ -7157,6 +7185,10 @@ users:
       can_login: true
       member_of:
         - jaltherr
+  - swiskow:
+      can_login: true
+      member_of:
+        - swiskow
   - dchevalier:
       can_login: true
       member_of:
