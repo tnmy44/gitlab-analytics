@@ -10,12 +10,8 @@ WITH merged_merge_requests AS (
 team_member_history AS (
 
   SELECT
-    * EXCLUDE (department),
-    DATE_TRUNC('month', date_actual) AS employee_month,
-    CASE WHEN department IN ('Core Development', 'Expansion', 'Development') AND date_actual < '2023-11-01' THEN 'Development'
-      ELSE department
-    END                              AS department --to keep Development historic data before the split
-  FROM {{ ref('team_member_history') }}
+    *,
+    DATE_TRUNC('month', date_actual) AS employee_month
   WHERE date_actual <= CURRENT_DATE
     AND date_actual >= '2020-01-01'
     AND department != 'CEO'
