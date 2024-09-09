@@ -541,11 +541,11 @@ roles:
       warehouses:
         - dev_xs
   - analyst_support:
-    warehouses:
-      - dev_xs
-    member_of:
-      - snowflake_analyst
-      - zendesk
+      warehouses:
+        - dev_xs
+      member_of:
+        - snowflake_analyst
+        - zendesk
       privileges:
         databases:
           read:
