@@ -5893,9 +5893,8 @@ roles:
         - dev_xs
   - mmagoma:
       member_of:
+        - analyst_support
         - gitlab_dotcom
-        - snowflake_analyst
-        - zendesk
       warehouses:
         - dev_xs
   - tganga:
