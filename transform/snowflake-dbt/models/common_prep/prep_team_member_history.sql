@@ -4,6 +4,16 @@ WITH bamboohr_employee_id_mapping_source AS (
   WHERE uploaded_row_number_desc = 1 --excludes team members deleted from BambooHR
 ),
 
+staffing_history_approved_source AS (
+  SELECT *
+  FROM {{ ref('staffing_history_approved_source') }}
+),
+
+bamboohr_status AS (
+  SELECT *
+  FROM {{ ref('bamboohr_employment_status_source') }}
+)
+,
 bamboohr_employee_mapping AS (
   SELECT DISTINCT
     employee_id     AS bhr_employee_id,
@@ -23,20 +33,16 @@ bamboohr_terminations AS (
     OR wk_employee_id = '11202'        --not in Workday and terminated on 2021-10-29 so WHERE clause would have excluded this team member
 ),
 
-bamboohr_status AS (
-  SELECT *
-  FROM {{ ref('bamboohr_employment_status_source') }}
-)
-,
+
 bamboohr_termination_status AS (
   SELECT
     bamboohr_employee_mapping.wk_employee_id,
-    sts.effective_date,
-    sts.employment_status
-  FROM prep.bamboohr.bamboohr_employment_status_source AS sts
-  LEFT JOIN bamboohr_employee_mapping ON sts.employee_id = bamboohr_employee_mapping.bhr_employee_id
-  WHERE employment_status = 'Terminated'
-    AND effective_date <= '2020-12-31'
+    bamboohr_status.effective_date,
+    bamboohr_status.employment_status
+  FROM bamboohr_status
+  LEFT JOIN bamboohr_employee_mapping ON bamboohr_status.employee_id = bamboohr_employee_mapping.bhr_employee_id
+  WHERE bamboohr_status.employment_status = 'Terminated'
+    AND bamboohr_status.effective_date <= '2020-12-31'
 ),
 
 bamboohr_rehires AS (
@@ -59,35 +65,30 @@ bamboohr_rehires AS (
 ),
 
 bamboohr_hires1 AS (-- displays first non-terminated record for any team members in bamboohr_rehires CTE to capture original hire dateAS (
-  SELECT sts.*
-  FROM bamboohr_status AS sts
-  INNER JOIN bamboohr_rehires ON sts.employee_id = bamboohr_rehires.employee_id
-  WHERE sts.effective_date <= '2020-12-31'
-    AND sts.employment_status != 'Terminated' QUALIFY ROW_NUMBER() OVER (
-    PARTITION BY sts.employee_id ORDER BY sts.effective_date ASC
+  SELECT bamboohr_status.*
+  FROM bamboohr_status
+  INNER JOIN bamboohr_rehires ON bamboohr_status.employee_id = bamboohr_rehires.employee_id
+  WHERE bamboohr_status.effective_date <= '2020-12-31'
+    AND bamboohr_status.employment_status != 'Terminated' QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY bamboohr_status.employee_id ORDER BY bamboohr_status.effective_date ASC
   ) = 1
 ),
 
 bamboohr_hires2 AS ( --displays non-terminated record for team members not in bamboohr_rehires CTEAS (
-  SELECT sts.*
-  FROM bamboohr_status AS sts
-  LEFT JOIN bamboohr_rehires ON sts.employee_id = bamboohr_rehires.employee_id
-  WHERE sts.effective_date <= '2020-12-31'
-    AND sts.employment_status != 'Terminated'
+  SELECT bamboohr_status.*
+  FROM bamboohr_status
+  LEFT JOIN bamboohr_rehires ON bamboohr_status.employee_id = bamboohr_rehires.employee_id
+  WHERE bamboohr_status.effective_date <= '2020-12-31'
+    AND bamboohr_status.employment_status != 'Terminated'
     AND bamboohr_rehires.employee_id IS NULL
-    AND sts.status_id NOT IN (
+    AND bamboohr_status.status_id NOT IN (
       '32108',
       '27971',
       '29556'
     ) -- no hire date
   QUALIFY ROW_NUMBER() OVER (
-    PARTITION BY sts.employee_id ORDER BY sts.effective_date ASC
+    PARTITION BY bamboohr_status.employee_id ORDER BY bamboohr_status.effective_date ASC
   ) = 1
-),
-
-staffing_history_approved_source AS (
-  SELECT *
-  FROM {{ ref('staffing_history_approved_source') }}
 ),
 
 bamboohr_hires AS (
@@ -183,17 +184,17 @@ end_date AS (
 combined AS (
   SELECT
     -- Surrogate keys
-    {{ dbt_utils.generate_surrogate_key(['hire_id'])}} AS dim_team_member_sk,
+    {{ dbt_utils.generate_surrogate_key(['start_date.hire_id']) }} AS dim_team_member_sk,
     -- Team member history attributes
-    hire_id                             AS employee_id,
-    hire_rank_asc,
-    hire_date                           AS hired_date,
-    term_date                           AS termination_date,
-    term_rank_asc,
-    COALESCE(term_date, CURRENT_DATE()) AS last_date
+    start_date.hire_id                                                                              AS employee_id,
+    start_date.hire_rank_asc,
+    start_date.hire_date                                                                            AS hired_date,
+    end_date.term_date                                                                              AS termination_date,
+    end_date.term_rank_asc,
+    COALESCE(end_date.term_date, CURRENT_DATE())                                                    AS last_date
   FROM start_date
-  LEFT JOIN end_date ON hire_id = term_id
-    AND hire_rank_asc = term_rank_asc
+  LEFT JOIN end_date ON start_date.hire_id = end_date.term_id
+    AND start_date.hire_rank_asc = end_date.term_rank_asc
 )
 
 SELECT *
