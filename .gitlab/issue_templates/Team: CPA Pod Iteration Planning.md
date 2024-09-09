@@ -23,6 +23,17 @@ How many points do you expect to complete next iteration? Use the above section 
 | @michellecooper |  |  |
 | @utkarsh060 |  |  |
 
+# Planned work
+
+```glql
+---
+display: table
+fields: titles, assignees, weight, labels("workflow"), updatedAt
+limit: 20
+---
+project = "gitlab-data/analytics" and label = "Team::CPA" and iteration = "x"
+```
+
 # Personal development
 
 Do you have any personal development time planned in the next iteration? Remember that 5%-10% of our bandwidth is reserved for personal development.
