@@ -6247,6 +6247,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - swiskow:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7171,6 +7176,10 @@ users:
       can_login: true
       member_of:
         - jaltherr
+  - swiskow:
+      can_login: true
+      member_of:
+        - swiskow
   - dchevalier:
       can_login: true
       member_of:
