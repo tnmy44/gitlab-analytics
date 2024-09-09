@@ -21,12 +21,12 @@ renamed AS (
     "AMENDMENTTYPE"::TEXT                                           AS amendment_type,
     TRY_TO_DATE("STARTDATE"::TEXT)                                  AS start_date,
     TRY_TO_DATE("ENDDATE"::TEXT)                                    AS end_date,
-    "MRRGROSSAMOUNT"::FLOAT                                        AS mrr_gross_amount,
-    "MRRNETAMOUNT"::FLOAT                                          AS mrr_net_amount,
-    "MRRDISCOUNTAMOUNT"::FLOAT                                     AS mrr_discount_amount,
-    "TCVGROSSAMOUNT"::FLOAT                                        AS tcv_gross_amount,
-    "TCVNETAMOUNT"::FLOAT                                          AS tcv_net_amount,
-    "TCVDISCOUNTAMOUNT"::FLOAT                                     AS tcv_discount_amount,
+    "MRRGROSSAMOUNT"::FLOAT                                         AS mrr_gross_amount,
+    "MRRNETAMOUNT"::FLOAT                                           AS mrr_net_amount,
+    "MRRDISCOUNTAMOUNT"::FLOAT                                      AS mrr_discount_amount,
+    "TCVGROSSAMOUNT"::FLOAT                                         AS tcv_gross_amount,
+    "TCVNETAMOUNT"::FLOAT                                           AS tcv_net_amount,
+    "TCVDISCOUNTAMOUNT"::FLOAT                                      AS tcv_discount_amount,
     "CURRENCY"::TEXT                                                AS currency,
     TO_TIMESTAMP_NTZ("_UPLOADED_AT"::INT)::TIMESTAMP                AS uploaded_at
   FROM source
