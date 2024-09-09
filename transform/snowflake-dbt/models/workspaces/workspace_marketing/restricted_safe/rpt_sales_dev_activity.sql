@@ -86,12 +86,12 @@
     mart_crm_opportunity.product_category,
     mart_crm_opportunity.product_details,
     mart_crm_opportunity.products_purchased,
-    mart_crm_opportunity.crm_account_focus_account, 
+    mart_crm_opportunity.crm_account_focus_account, /* 
     mart_crm_opportunity.crm_opp_owner_sales_segment_stamped,
     mart_crm_opportunity.crm_opp_owner_business_unit_stamped,
     mart_crm_opportunity.crm_opp_owner_geo_stamped,
     mart_crm_opportunity.crm_opp_owner_region_stamped,
-    mart_crm_opportunity.crm_opp_owner_area_stamped,
+    mart_crm_opportunity.crm_opp_owner_area_stamped,*/
     mart_crm_opportunity.is_sao,
     mart_crm_opportunity.is_net_arr_closed_deal,
     mart_crm_opportunity.is_net_arr_pipeline_created,
@@ -389,11 +389,12 @@
     opp_to_lead.sales_dev_bdr_or_sdr,
     opp_to_lead.opportunity_sales_development_representative,
     opp_to_lead.opportunity_business_development_representative,
+    /* 
     opp_to_lead.crm_opp_owner_sales_segment_stamped,
     opp_to_lead.crm_opp_owner_business_unit_stamped,
     opp_to_lead.crm_opp_owner_geo_stamped,
     opp_to_lead.crm_opp_owner_region_stamped,
-    opp_to_lead.crm_opp_owner_area_stamped,
+    opp_to_lead.crm_opp_owner_area_stamped,*/
     opp_to_lead.is_sao,
     opp_to_lead.is_net_arr_closed_deal,
     opp_to_lead.is_net_arr_pipeline_created,
@@ -590,11 +591,12 @@
     opps_missing_link.sales_dev_bdr_or_sdr,
     opps_missing_link.opportunity_sales_development_representative,
     opps_missing_link.opportunity_business_development_representative,
+    /* 
     opps_missing_link.crm_opp_owner_sales_segment_stamped,
     opps_missing_link.crm_opp_owner_business_unit_stamped,
     opps_missing_link.crm_opp_owner_geo_stamped,
     opps_missing_link.crm_opp_owner_region_stamped,
-    opps_missing_link.crm_opp_owner_area_stamped,
+    opps_missing_link.crm_opp_owner_area_stamped,*/
     opps_missing_link.is_sao,
     opps_missing_link.is_net_arr_closed_deal,
     opps_missing_link.is_net_arr_pipeline_created,
@@ -649,5 +651,5 @@
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-09-06",
-    updated_date="2024-09-06",
+    updated_date="2024-09-09",
   ) }}
