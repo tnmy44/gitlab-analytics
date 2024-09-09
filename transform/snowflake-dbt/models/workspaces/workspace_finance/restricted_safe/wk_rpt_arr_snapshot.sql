@@ -1,6 +1,6 @@
 {{ simple_cte([
  ('dim_date', 'dim_date'),
- ('mart_arr_snapshot_bottom_up', 'mart_arr_snapshot_bottom_up'),
+ ('mart_arr', 'mart_arr'),
  ('prep_crm_account', 'prep_crm_account')
 ]) }},
 
@@ -18,10 +18,10 @@ prep_recurring_charge AS (
       WHEN product_tier_name IN ('SaaS - Bronze', 'Self-Managed - Starter') THEN 1
       ELSE 0
     END AS product_ranking2
-  FROM mart_arr_snapshot_bottom_up
+  FROM mart_arr
   WHERE
     mrr != 0
-    AND snapshot_date = (SELECT MAX(snapshot_date) FROM mart_arr_snapshot_bottom_up)
+    AND snapshot_date = (SELECT MAX(snapshot_date) FROM mart_arr)
 ),
 
 parent_account_arrs AS (
