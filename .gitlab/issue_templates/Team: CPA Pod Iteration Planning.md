@@ -1,3 +1,5 @@
+<-- CPA Pod Iteration Planning: 202x-xx-xx - 202x-xx-xx -->
+
 The purpose of this issue is to help us be prepared for the next iteration. It is meant to be lightweight and helpful, not laborious or wasteful. The intent is for each AE to spend less than 5 minutes to complete their part of the issue.
 
 # Work days
@@ -32,3 +34,5 @@ Do you have any personal development time planned in the next iteration? Remembe
 | @utkarsh060 |  |  |
 
 Please leave any questions, comments, or concerns in the comments.
+
+/label ~"Team::CPA" ~"Iteration Planning"
