@@ -154,7 +154,7 @@ SELECT
   CASE
   WHEN live.report_role_level_1 = 'APJ' THEN 'APJ'
   WHEN live.report_role_level_1 = 'SMB' THEN 'SMB'
-  WHEN live.crm_opportunity.report_role_level_1 = 'PUBSEC' THEN 'PUBSEC'
+  WHEN live.report_role_level_1 = 'PUBSEC' THEN 'PUBSEC'
   WHEN live.report_role_level_2 = 'AMER_COMM' THEN 'AMER COMM'
   WHEN live.report_role_level_1 = 'AMER' THEN 'AMER ENT'
   WHEN live.report_role_level_2 = 'EMEA_COMM' THEN 'EMEA COMM'
