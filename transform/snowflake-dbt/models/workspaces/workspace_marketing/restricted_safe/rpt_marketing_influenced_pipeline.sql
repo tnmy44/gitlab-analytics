@@ -18,7 +18,7 @@
     LAG(fiscal_quarter, 1) OVER (ORDER BY date_day) AS fiscal_quarter,
     LAG(fiscal_quarter_name_fy, 1) OVER (ORDER BY date_day) AS fiscal_quarter_name_fy
   FROM
-  common.dim_date 
+  dim_date 
   WHERE day_of_fiscal_quarter = 4 
     AND date_day >= '2023-01-31'
   
