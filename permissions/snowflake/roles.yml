@@ -6096,6 +6096,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - ndular:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - krichardson:
       member_of:
         - snowflake_analyst
@@ -7140,6 +7145,10 @@ users:
       can_login: true
       member_of:
         - rhook
+  - ndular:
+      can_login: true
+      member_of:
+        - ndular
   - fkhalid:
       can_login: true
       member_of:
