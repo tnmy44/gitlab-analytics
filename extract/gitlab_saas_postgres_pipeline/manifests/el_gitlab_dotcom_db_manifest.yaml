@@ -1097,7 +1097,6 @@ tables:
       , cached_markdown_version
       , editable
       FROM incident_management_timeline_events
-      FROM incident_management_issuable_escalation_statuses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   incident_management_timeline_event_tags:
