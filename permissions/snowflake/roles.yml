@@ -540,6 +540,22 @@ roles:
   - analyst_sales_sensitive:
       warehouses:
         - dev_xs
+  - analyst_support:
+      warehouses:
+        - dev_xs
+      member_of:
+        - snowflake_analyst
+        - zendesk
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.sensitive
+        tables:
+          read:
+            - prep.sensitive.zendesk_*
   - analyst_marketing_sensitive:
       warehouses:
         - dev_xs
@@ -5877,9 +5893,8 @@ roles:
         - dev_xs
   - mmagoma:
       member_of:
+        - analyst_support
         - gitlab_dotcom
-        - snowflake_analyst
-        - zendesk
       warehouses:
         - dev_xs
   - tganga:
