@@ -165,7 +165,7 @@ final AS (
   LEFT JOIN dim_crm_account_live
     ON dim_crm_account_live.dim_crm_account_id_live = dim_parent_crm_account_id
 
-  {{ dbt_utils.group_by(n=14) }}
+  {{ dbt_utils.group_by(n=16) }}
 
 )
 
