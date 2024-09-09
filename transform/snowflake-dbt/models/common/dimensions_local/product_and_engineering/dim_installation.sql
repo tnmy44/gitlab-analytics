@@ -42,7 +42,7 @@ most_recent_ping AS (
     ping_delivery_type,
     ping_deployment_type
   FROM prep_ping_instance
-  QUALIFY ROW_NUMBER() OVER(PARITION BY dim_installation_id ORDER BY ping_created_at DESC) = 1
+  QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_installation_id ORDER BY ping_created_at DESC) = 1
 
 ),
 
