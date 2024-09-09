@@ -60,7 +60,14 @@ dag = DAG(
     concurrency=2,  # num of max_tasks, limit due to API rate limiting
 )
 
-endpoint_classes = ("Users",)
+endpoint_classes = (
+    "Users",
+    "Content",
+    "Meetings",
+    "Clients",
+    "AssessmentAttempts",
+    "Coupons",
+)
 extract_tasks = []
 
 for endpoint_class in endpoint_classes:
