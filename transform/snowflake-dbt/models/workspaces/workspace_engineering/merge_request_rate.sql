@@ -12,6 +12,7 @@ team_member_history AS (
   SELECT
     *,
     DATE_TRUNC('month', date_actual) AS employee_month
+  FROM {{ ref('team_member_history') }}
   WHERE date_actual <= CURRENT_DATE
     AND date_actual >= '2020-01-01'
     AND department != 'CEO'
