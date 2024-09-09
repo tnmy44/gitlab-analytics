@@ -28,9 +28,6 @@ renamed AS (
     "TCVNETAMOUNT"::FLOAT                                          AS tcv_net_amount,
     "TCVDISCOUNTAMOUNT"::FLOAT                                     AS tcv_discount_amount,
     "CURRENCY"::TEXT                                                AS currency,
-    {# TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "CREATEDDATE"))::TIMESTAMP AS created_date,
-    TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "UPDATEDDATE"))::TIMESTAMP AS updated_date,
-    "DELETED"::BOOLEAN                                              AS deleted, #}
     TO_TIMESTAMP_NTZ("_UPLOADED_AT"::INT)::TIMESTAMP                AS uploaded_at
   FROM source
 
