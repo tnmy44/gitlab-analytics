@@ -15,7 +15,6 @@
     prep_charge_mrr_daily.date_actual,
     prep_charge_mrr_daily.dim_subscription_id,
     subscriptions.dim_subscription_id_original,
-    prep_charge_mrr_daily.subscription_name,
     subscriptions.namespace_id                  AS dim_namespace_id,
     prep_charge_mrr_daily.dim_crm_account_id,
     subscriptions.subscription_version,

@@ -101,7 +101,6 @@
     prep_charge_mrr_daily.date_actual,
     COALESCE(subscriptions_ping.dim_subscription_id, subscriptions_charge.dim_subscription_id)                    AS dim_subscription_id,
     COALESCE(subscriptions_ping.dim_subscription_id_original, subscriptions_charge.dim_subscription_id_original)  AS dim_subscription_id_original,
-    prep_charge_mrr_daily.subscription_name,
     joined.dim_installation_id,
     subscriptions_ping.dim_crm_account_id,
     COALESCE(subscriptions_ping.subscription_version, subscriptions_charge.subscription_version)                  AS subscription_version,
