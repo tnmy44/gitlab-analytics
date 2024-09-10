@@ -464,8 +464,8 @@
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
-      monthly_saas_metrics.ping_delivery_type                                       AS delivery_type,
-      monthly_saas_metrics.ping_deployment_type                                     AS deployment_type,
+      'SaaS'                                                                        AS delivery_type,
+      'GitLab.com'                                                                  AS deployment_type,
       NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
