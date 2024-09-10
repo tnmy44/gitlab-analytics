@@ -63,7 +63,7 @@ class DataClassification:
             self.connected = False
             self.loader_engine.dispose()
 
-    def upload_to_snowflake(self) -> None:
+    def __upload_to_snowflake(self) -> None:
         """
         Upload dataframe to Snowflake
         """
@@ -542,7 +542,7 @@ class DataClassification:
         Upload MNPI data
         """
         info(".... START upload_mnpi_data.")
-        self.upload_to_snowflake()
+        self.__upload_to_snowflake()
         self.update_mnpi_metadata()
         info(".... END upload_mnpi_data.")
 
@@ -555,3 +555,19 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END extract.")
+
+
+class PiiClassification:
+    """
+    Class for PII classification
+    """
+
+    pass
+
+
+class MnpiClassification:
+    """
+    Class for MNPI classification
+    """
+
+    pass
