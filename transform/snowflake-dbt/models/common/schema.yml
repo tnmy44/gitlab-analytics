@@ -5605,6 +5605,8 @@ models:
         description: The total Net Arr of the SFDC opportunity, as they move to/past Stage 1.
       - name: valid_deal_count
         description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
+      - name: aggregate_partner
+        description: The Aggregate Partner field selects the Resale Partner if the Dealpath is "Partner"; otherwise, it uses the Deal Registration Partner if available.
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
@@ -5621,8 +5623,9 @@ models:
         description: Amount on an opportunity that is from Educational Services only
       - name: investment_services_value
         description: Amount on an opportunity that is from Investment Services only
-        
-
+      - name: aggregate_partner
+        description: The Aggregate Partner field selects the Resale Partner if the Dealpath is "Partner"; otherwise, it uses the Deal Registration Partner if available.
+      
   - name: fct_crm_opportunity_7th_day_weekly_snapshot
     description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot") }}'
     columns:
