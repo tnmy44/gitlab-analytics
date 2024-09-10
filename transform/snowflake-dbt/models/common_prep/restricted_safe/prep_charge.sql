@@ -343,6 +343,7 @@ manual_charges AS (
     DATE_TRUNC('month', effective_end_date)                                                                                                                  AS effective_end_month,
     DATEADD('day', 1, effective_end_date)                                                                                                                    AS charged_through_date,
     revenue_contract_line_created_date                                                                                                                       AS charge_created_date,
+    revenue_contract_line_created_date                                                                                                                       AS charge_created_datetime,
     revenue_contract_line_updated_date                                                                                                                       AS charge_updated_date,
     DATEDIFF('month', effective_start_month::DATE, effective_end_month::DATE)                                                                                AS charge_term,
     NULL                                                                                                                                                     AS billing_period,
