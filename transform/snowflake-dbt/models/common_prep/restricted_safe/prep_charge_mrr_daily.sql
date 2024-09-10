@@ -1,12 +1,6 @@
 {{ simple_cte([
-    ('prep_subscription', 'prep_subscription'),
-    ('prep_ping_instance', 'prep_ping_instance'),
-    ('prep_license', 'prep_license'),
     ('prep_date', 'prep_date'),
-    ('prep_usage_self_managed_seat_link', 'prep_usage_self_managed_seat_link'),
-    ('prep_charge', 'prep_charge'),
-    ('prep_product_detail', 'prep_product_detail'),
-    ('prep_product_tier', 'prep_product_tier')
+    ('prep_charge', 'prep_charge')
 ])}}
 
 , charges_filtered AS (

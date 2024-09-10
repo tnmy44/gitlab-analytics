@@ -233,13 +233,11 @@ models:
 
   - name: map_namespace_subscription_product
     description: '{{ doc("map_namespace_subscription_product") }}'
-    data_tests:
-      - dbt_utils.unique_combination_of_columns:
-            combination_of_columns:
-              - date_actual
-              - dim_subscription_id
-              - dim_namespace_id
     columns:
+      - name: primary_key
+        data_tests:
+          - unique
+          - not_null
       - name: date_actual
       - name: dim_subscription_id
         description: '{{ doc("dim_subscription_id") }}'
