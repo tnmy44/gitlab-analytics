@@ -62,7 +62,9 @@
     fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot,
     dim_ping_instance.ping_delivery_type                                                       AS ping_delivery_type,
     dim_ping_instance.ping_deployment_type                                                     AS ping_deployment_type,
-    dim_ping_instance.cleaned_version                                                          AS cleaned_version
+    dim_ping_instance.cleaned_version                                                          AS cleaned_version,
+    dim_ping_instance.is_dedicated_metric                                                      AS is_dedicated_metric,
+    dim_ping_instance.is_dedicated_hostname                                                    AS is_dedicated_hostname
 
     FROM fct_ping_instance_metric_with_license
     INNER JOIN health_score_metrics
@@ -101,6 +103,8 @@
       instance_user_count,
       hostname,
       cleaned_version,
+      is_dedicated_metric,
+      is_dedicated_hostname,
       is_license_mapped_to_subscription,
       is_license_subscription_id_valid,
       is_service_ping_license_in_customerDot,
@@ -114,7 +118,7 @@
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@mdrussell",
-    updated_by="@utkarsh060",
+    updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2024-08-01"
+    updated_date="2024-09-09"
 ) }}
