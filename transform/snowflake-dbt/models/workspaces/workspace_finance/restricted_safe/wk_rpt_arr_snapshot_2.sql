@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 {{ simple_cte([
     ('dim_date','dim_date'),
     ('dim_crm_account_daily_snapshot', 'dim_crm_account_daily_snapshot'),
@@ -34,6 +36,7 @@ child_account_arrs AS (
     arr_month,
     product_tier_name                       AS product_category,
     product_ranking                         AS product_ranking,
+    {# MIN(is_arpu)                            AS is_arpu, #}
     SUM(ZEROIFNULL(mrr))                    AS mrr,
     SUM(ZEROIFNULL(arr))                    AS arr,
     SUM(ZEROIFNULL(quantity))               AS quantity
@@ -49,6 +52,7 @@ py_arr_with_cy_parent AS (
     DATEADD('year', 1, child_account_arrs.arr_month)            AS retention_month,
     dim_crm_account_daily_snapshot.dim_parent_crm_account_id    AS parent_account_id_in_retention_month,
     DATEADD('year', 1, dim_date.snapshot_date_fpa)              AS retention_period_snapshot_date,
+    {# is_arpu                                                     AS py_is_arpu, #}
     ARRAY_AGG(product_category)                                 AS py_product_category,
     MAX(product_ranking)                                        AS py_product_ranking,
     SUM(ZEROIFNULL(child_account_arrs.mrr))                     AS py_mrr,
@@ -70,7 +74,8 @@ py_arr_with_cy_parent AS (
     child_account_arrs.arr_month                                AS py_arr_month,
     DATEADD('year', 1, child_account_arrs.arr_month)            AS retention_month,
     dim_crm_account_daily_snapshot.dim_parent_crm_account_id    AS parent_account_id_in_retention_month,
-    DATEADD('year', 1, dim_date.snapshot_date_fpa_fifth)              AS retention_period_snapshot_date,
+    DATEADD('year', 1, dim_date.snapshot_date_fpa_fifth)        AS retention_period_snapshot_date,
+    {# is_arpu                                                     AS py_is_arpu, #}
     ARRAY_AGG(product_category)                                 AS py_product_category,
     MAX(product_ranking)                                        AS py_product_ranking,
     SUM(ZEROIFNULL(child_account_arrs.mrr))                     AS py_mrr,
@@ -93,6 +98,7 @@ cy_arr_with_cy_parent AS (
   SELECT
     parent_account_id,
     arr_month,
+    {# is_arpu                         AS retained_is_arpu, #}
     SUM(ZEROIFNULL(mrr))            AS retained_mrr,
     SUM(ZEROIFNULL(arr))            AS retained_arr,
     SUM(ZEROIFNULL(quantity))       AS retained_quantity,
@@ -120,6 +126,8 @@ final AS (
     py_arr_with_cy_parent.py_product_category                                                                     AS prior_year_product_category,
     cy_arr_with_cy_parent.retained_product_ranking                                                                AS net_retention_product_ranking,
     py_arr_with_cy_parent.py_product_ranking                                                                      AS prior_year_product_ranking,
+    {# py_arr_with_cy_parent.py_is_arpu                                                                              AS prior_year_is_arpu,
+    cy_arr_with_cy_parent.retained_is_arpu                                                                        AS retention_is_arpu, #}
     CASE
       WHEN SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) > 100000 THEN '1. ARR > $100K'
       WHEN SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) <= 100000 AND SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) > 5000 THEN '2. ARR $5K-100K'
@@ -158,6 +166,11 @@ final AS (
 final_with_delta AS (
     SELECT
       final.*,
+      {# CASE
+        WHEN prior_year_is_arpu = 'TRUE'
+          AND retention_is_arpu = 'TRUE' THEN 'Y'
+        ELSE 'N'
+      END                              AS is_arpu_combined, #}
       CASE
         WHEN py_arr_with_cy_parent.parent_account_id_in_retention_month IS NULL THEN 'New'
         WHEN net_retention_arr = 0
@@ -167,17 +180,88 @@ final_with_delta AS (
         WHEN net_retention_arr > prior_year_arr
           THEN 'Expansion'
         WHEN net_retention_arr = prior_year_arr THEN 'No Impact'
-      END                               AS type_of_arr_change
+      END                               AS type_of_arr_change,
+    CASE
+      WHEN 
+      {# is_arpu_combined = 'Y'
+        AND  #}
+        type_of_arr_change IN ('Expansion', 'Contraction')
+        AND prior_year_quantity != net_retention_quantity
+        AND prior_year_quantity > 0
+        THEN ZEROIFNULL(
+            prior_year_arr / NULLIF(prior_year_quantity, 0) * (net_retention_quantity - prior_year_quantity)
+          )
+      WHEN prior_year_quantity != net_retention_quantity
+        AND prior_year_quantity = 0 THEN net_retention_arr
+      ELSE 0
+    END AS seat_change_arr,
+    CASE
+      WHEN 
+      {# is_arpu_combined = 'N'
+        AND  #}
+        type_of_arr_change IN ('Expansion', 'Contraction') THEN COALESCE(net_retention_arr, 0) - COALESCE(prior_year_arr, 0)
+      WHEN 
+      {# is_arpu_combined = 'Y'
+        AND  #}
+        prior_year_product_category = net_retention_product_category
+        THEN net_retention_quantity * (
+            net_retention_arr / NULLIF(net_retention_quantity, 0) - prior_year_arr / NULLIF(prior_year_quantity, 0)
+          )
+      WHEN 
+      {# is_arpu_combined = 'Y'
+        AND  #}
+        prior_year_product_category != net_retention_product_category
+        AND prior_year_product_ranking = net_retention_product_ranking
+        THEN net_retention_quantity * (
+            net_retention_arr / NULLIF(net_retention_quantity, 0) - prior_year_arr / NULLIF(prior_year_quantity, 0)
+          )
+      ELSE 0
+    END AS price_change_arr,
+    CASE
+      WHEN 
+      {# is_arpu_combined = 'Y'
+        AND  #}
+        prior_year_product_ranking != net_retention_product_ranking
+        THEN ZEROIFNULL(
+            net_retention_quantity * (
+              net_retention_arr / NULLIF(net_retention_quantity, 0) - prior_year_arr / NULLIF(prior_year_quantity, 0)
+            )
+          )
+      ELSE 0
+    END AS tier_change_arr,
+    (
+      CASE
+        WHEN 
+        {# is_arpu_combined = 'Y'
+          AND  #}
+          prior_year_product_ranking < net_retention_product_ranking
+          THEN ZEROIFNULL(
+              net_retention_quantity * (
+                net_retention_arr / NULLIF(net_retention_quantity, 0) - prior_year_arr / NULLIF(prior_year_quantity, 0)
+              )
+            )
+        ELSE 0
+      END
+    )   AS uptier_change_arr,
+    (
+      CASE
+        WHEN 
+        {# is_arpu_combined = 'Y'
+          AND  #}
+          prior_year_product_ranking > net_retention_product_ranking
+          THEN ZEROIFNULL(
+              net_retention_quantity * (
+                net_retention_arr / NULLIF(net_retention_quantity, 0) - prior_year_quantity / NULLIF(prior_year_quantity, 0)
+              )
+            )
+        ELSE 0
+      END
+    )   AS downtier_change_arr
     FROM final
     LEFT JOIN py_arr_with_cy_parent
       ON final.dim_parent_crm_account_id = py_arr_with_cy_parent.parent_account_id_in_retention_month
       AND final.retention_month = py_arr_with_cy_parent.retention_month
 )
 
-{{ dbt_audit(
- cte_ref="final_with_delta",
- created_by="@nmcavinue",
- updated_by="@chrissharp",
- created_date="2023-11-03",
- updated_date="2024-04-24"
-) }}
+SELECT *
+FROM final_with_delta
