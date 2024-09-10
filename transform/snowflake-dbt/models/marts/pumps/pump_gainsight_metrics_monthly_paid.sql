@@ -16,7 +16,8 @@
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
     ('redis_metrics_28d_user', 'rpt_user_based_metric_counts_namespace_monthly'),
-    ('redis_metrics_all_time_event', 'rpt_event_based_metric_counts_namespace_all_time')
+    ('redis_metrics_all_time_event', 'rpt_event_based_metric_counts_namespace_all_time'),
+    ('dim_product_detail', 'dim_product_detail')
 ]) }}
 
 
@@ -463,8 +464,8 @@
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
-      monthly_saas_metrics.ping_delivery_type                                       AS delivery_type,
-      monthly_saas_metrics.ping_deployment_type                                     AS deployment_type,
+      'SaaS'                                                                        AS delivery_type,
+      'GitLab.com'                                                                  AS deployment_type,
       NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(

@@ -16,7 +16,8 @@
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
     ('redis_metrics_28d_user', 'rpt_user_based_metric_counts_namespace_monthly'),
-    ('redis_metrics_all_time_event', 'rpt_event_based_metric_counts_namespace_all_time')
+    ('redis_metrics_all_time_event', 'rpt_event_based_metric_counts_namespace_all_time'),
+    ('dim_product_detail', 'dim_product_detail')
 ]) }}
 
 
