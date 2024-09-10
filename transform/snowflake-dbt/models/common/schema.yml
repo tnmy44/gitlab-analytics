@@ -5606,7 +5606,7 @@ models:
       - name: valid_deal_count
         description: A Salesforce Opportunity field that gives a -1, 0, or 1 value based on whether or not it should be counted as a true closed won for accounting/reporting purposes
       - name: aggregate_partner
-        description: The Aggregate Partner field selects the Resale Partner if the Dealpath is "Partner"; otherwise, it uses the Deal Registration Partner if available.
+        description: The Aggregate Partner field shows the primary partner, using the Resale Partner first, or the Deal Registration partner if the Resale Partner isn't available.
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
@@ -5624,7 +5624,7 @@ models:
       - name: investment_services_value
         description: Amount on an opportunity that is from Investment Services only
       - name: aggregate_partner
-        description: The Aggregate Partner field selects the Resale Partner if the Dealpath is "Partner"; otherwise, it uses the Deal Registration Partner if available.
+        description: The Aggregate Partner field shows the primary partner, using the Resale Partner first, or the Deal Registration partner if the Resale Partner isn't available.
       
   - name: fct_crm_opportunity_7th_day_weekly_snapshot
     description: '{{ doc("fct_crm_opportunity_7th_day_weekly_snapshot") }}'
