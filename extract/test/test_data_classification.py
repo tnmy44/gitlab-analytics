@@ -306,4 +306,4 @@ def test_brackets_mnpi_metadata_update_query(data_classification):
     Test test_mnpi_metadata_update_query
     """
     query = data_classification.mnpi_metadata_update_query
-    assert query.count("(") == query.count("(") == 8
+    assert query.count("(") == query.count(")") == 8
