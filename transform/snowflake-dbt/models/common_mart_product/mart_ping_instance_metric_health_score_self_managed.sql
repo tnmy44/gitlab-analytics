@@ -111,7 +111,7 @@
       {{ ping_instance_wave_metrics() }}
 
     FROM final
-    {{ dbt_utils.group_by(n=28)}}
+    {{ dbt_utils.group_by(n=30)}}
 
 )
 
