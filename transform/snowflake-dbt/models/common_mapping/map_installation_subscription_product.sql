@@ -20,9 +20,9 @@
       prep_subscription.subscription_version = 1, 
       LEAST(prep_subscription.subscription_created_date, prep_subscription.subscription_start_date),
       prep_subscription.subscription_created_date
-      )                                                                                               AS subscription_created_datetime,
+      )                                                                                               AS subscription_created_datetime_adjusted,
     COALESCE(
-      LEAD(subscription_created_datetime)
+      LEAD(subscription_created_datetime_adjusted)
         OVER (
           PARTITION BY prep_subscription.subscription_name
           ORDER BY prep_subscription.subscription_version
@@ -122,7 +122,7 @@
     ON joined.dim_subscription_id = subscriptions_ping.dim_subscription_id
   LEFT JOIN subscriptions AS subscriptions_charge
     ON prep_charge_mrr_daily.subscription_name = subscriptions_charge.subscription_name
-      AND prep_charge_mrr_daily.date_actual BETWEEN subscriptions_charge.subscription_created_datetime AND subscriptions_charge.next_subscription_created_datetime
+      AND prep_charge_mrr_daily.date_actual BETWEEN subscriptions_charge.subscription_created_datetime_adjusted AND subscriptions_charge.next_subscription_created_datetime
   LEFT JOIN prep_product_detail
     ON prep_charge_mrr_daily.dim_product_detail_id = prep_product_detail.dim_product_detail_id
   WHERE prep_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
