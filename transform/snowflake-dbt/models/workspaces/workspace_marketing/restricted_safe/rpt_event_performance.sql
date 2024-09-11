@@ -9,7 +9,7 @@
     ('dim_crm_user','dim_crm_user'),
     ('dim_date', 'dim_date'),
     ('mart_crm_person','mart_crm_person'),
-    ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
+    ('mart_crm_opportunity','mart_crm_opportunity'),
     ('sfdc_campaign_member','sfdc_campaign_member'),
     ('mart_crm_opportunity_daily_snapshot','mart_crm_opportunity_daily_snapshot'),
     ('mart_crm_account','mart_crm_account'),
@@ -137,14 +137,15 @@ campaign_members AS (
   -- partner from campaigns
   LEFT JOIN mart_crm_account AS campaign_partner_account
     ON campaigns.campaign_partner_crm_id = campaign_partner_account.dim_crm_account_id
+  WHERE mart_crm_person.email_domain != 'gitlab.com'
 
 ),
 
 account_open_pipeline_live AS (
   SELECT
-    mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id,
+    mart_crm_opportunity.dim_crm_account_id,
     SUM(COALESCE(net_arr, 0)) AS open_pipeline_live
-  FROM mart_crm_opportunity_stamped_hierarchy_hist
+  FROM mart_crm_opportunity
   WHERE 
     is_net_arr_pipeline_created = TRUE AND 
     is_eligible_open_pipeline = 1 AND 
@@ -160,7 +161,11 @@ account_summary AS (
     true_event_date,
     campaign_name,
     open_pipeline_live,
-    COUNT(DISTINCT dim_crm_person_id)                                                         AS registered_leads,
+    COUNT(DISTINCT
+          CASE
+          WHEN campaign_member_status NOT IN ('Marketing Invited', 'Email Bounced', 'Declined Invitation', 'Cancelled', 'Sales Nominated', 'Sales Invited', 'Registration Error') 
+          THEN dim_crm_person_id
+          END)                                                         AS registered_leads,
     COUNT(
       DISTINCT 
       CASE 
@@ -293,7 +298,7 @@ opportunity_snapshot_base AS (
     mart_crm_opportunity_daily_snapshot AS snapshot
   INNER JOIN snapshot_opportunity_dates
     ON snapshot.snapshot_date = snapshot_opportunity_dates.date_day
-  LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist AS live
+  LEFT JOIN mart_crm_opportunity AS live
     ON snapshot.dim_crm_opportunity_id = live.dim_crm_opportunity_id
   LEFT JOIN mart_crm_account AS account
     ON snapshot.dim_crm_account_id = account.dim_crm_account_id
@@ -693,5 +698,5 @@ final AS (
     created_by="@dmicovic",
     updated_by="@dmicovic",
     created_date="2024-04-23",
-    updated_date="2024-07-02",
+    updated_date="2024-09-11",
   ) }}
