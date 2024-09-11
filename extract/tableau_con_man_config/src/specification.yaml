@@ -1,1636 +1,2153 @@
-groups:
-- group_name: All Users
-- group_name: Ad-hoc Project Lead
-- group_name: Customer Success Project Lead
-- group_name: Data Team Project Lead
-- group_name: Development Project Lead
-- group_name: Engineering Project Lead
-- group_name: Finance Project Lead
-- group_name: Go To Market Project Lead
-- group_name: Marketing Project Lead
-- group_name: People Project Lead
-- group_name: Product Project Lead
-- group_name: Production Project Lead
-- group_name: Resources Project Lead
-- group_name: Sales Project Lead
-- group_name: Security Project Lead
-- group_name: Support Project Lead
-- group_name: Customer Success All Access
-- group_name: Data Team All Access
-- group_name: Engineering All Access
-- group_name: Finance All Access
-- group_name: General All Access
-- group_name: Go To Market All Access
-- group_name: Marketing All Access
-- group_name: People All Access
-- group_name: Product All Access
-- group_name: Sales All Access
-- group_name: Security All Access
-- group_name: ASM AMER Commercial Restricted Access
-- group_name: ASM EMEA Commercial Restricted Access
-- group_name: ASM Restricted Access
-- group_name: Customer Success Restricted Access
-- group_name: Data Team Restricted Access
-- group_name: Engineering Restricted Access
-- group_name: Finance Restricted Access
-- group_name: General SAFE Access
-- group_name: Internal Audit Restricted Access
-- group_name: Marketing Restricted Access
-- group_name: People Restricted Access
-- group_name: Product Restricted Access
-- group_name: RSA SAFE Access
-- group_name: Sales Development SAFE Access
-- group_name: Sales Restricted Access
-- group_name: Security Restricted Access
-- group_name: Self-Service SAFE Access
-- group_name: Executive RLS SAFE Access
-- group_name: Test Permissions Group
-permission_templates:
-- database:
-    Read: Allow
-  datarole:
-    Read: Allow
-  datasource:
-    Connect: Allow
-    ExportXml: Allow
-    Read: Allow
-  flow:
-    ExportXml: Allow
-    Read: Allow
-  lens:
-    Read: Allow
-  metric:
-    Read: Allow
-  name: view
-  project:
-    Read: Allow
-  table:
-    Read: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-  workbook:
-    AddComment: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    Filter: Allow
-    Read: Allow
-    ShareView: Allow
-    ViewComments: Allow
-- database:
-    Read: Allow
-  datarole:
-    Read: Allow
-  datasource:
-    Connect: Allow
-    Read: Allow
-  flow:
-    Read: Allow
-  lens:
-    Read: Allow
-  metric:
-    Read: Allow
-  name: view_limited
-  project:
-    Read: Allow
-  table:
-    Read: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-  workbook:
-    AddComment: Allow
-    ExportImage: Allow
-    Filter: Allow
-    Read: Allow
-    ShareView: Allow
-    ViewComments: Allow
-- name: project_lead
-  project:
-    ProjectLeader: Allow
-- database:
-    Read: Allow
-    Write: Allow
-  datarole:
-    Read: Allow
-    Write: Allow
-  datasource:
-    Connect: Allow
-    ExportXml: Allow
-    Read: Allow
-    SaveAs: Allow
-    Write: Allow
-  flow:
-    Execute: Allow
-    ExportXml: Allow
-    Read: Allow
-    WebAuthoringForFlows: Allow
-    Write: Allow
-  lens:
-    Read: Allow
-    Write: Allow
-  metric:
-    Read: Allow
-    Write: Allow
-  name: publish
-  project:
-    Read: Allow
-    Write: Allow
-  table:
-    Read: Allow
-    Write: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-    Write: Allow
-  workbook:
-    AddComment: Allow
-    CreateRefreshMetrics: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    ExportXml: Allow
-    Filter: Allow
-    Read: Allow
-    RunExplainData: Allow
-    ShareView: Allow
-    ViewComments: Allow
-    ViewUnderlyingData: Allow
-    WebAuthoring: Allow
-    Write: Allow
-- database:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Read: Allow
-    Write: Allow
-  datarole:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  datasource:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Connect: Allow
-    Delete: Allow
-    ExportXml: Allow
-    Read: Allow
-    SaveAs: Allow
-    Write: Allow
-  flow:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Delete: Allow
-    Execute: Allow
-    ExportXml: Allow
-    Read: Allow
-    WebAuthoringForFlows: Allow
-    Write: Allow
-  lens:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  metric:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  name: tableau-admin
-  project:
-    Read: Allow
-    Write: Allow
-  table:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Read: Allow
-    Write: Allow
-  virtual_connection:
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    Connect: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  workbook:
-    AddComment: Allow
-    ChangeHierarchy: Allow
-    ChangePermissions: Allow
-    CreateRefreshMetrics: Allow
-    Delete: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    ExportXml: Allow
-    Filter: Allow
-    Read: Allow
-    RunExplainData: Allow
-    ShareView: Allow
-    ViewComments: Allow
-    ViewUnderlyingData: Allow
-    WebAuthoring: Allow
-    Write: Allow
-- database:
-    Read: Allow
-    Write: Allow
-  datarole:
-    Read: Allow
-    Write: Allow
-  datasource:
-    Connect: Allow
-    ExportXml: Allow
-    Read: Allow
-    SaveAs: Allow
-    Write: Allow
-  flow:
-    Execute: Allow
-    ExportXml: Allow
-    Read: Allow
-    WebAuthoringForFlows: Allow
-    Write: Allow
-  lens:
-    Read: Allow
-    Write: Allow
-  metric:
-    Read: Allow
-    Write: Allow
-  name: tableau-publish
-  project:
-    Read: Allow
-    Write: Allow
-  table:
-    Read: Allow
-    Write: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-    Write: Allow
-  workbook:
-    AddComment: Allow
-    CreateRefreshMetrics: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    ExportXml: Allow
-    Filter: Allow
-    Read: Allow
-    RunExplainData: Allow
-    ShareView: Allow
-    ViewComments: Allow
-    ViewUnderlyingData: Allow
-    WebAuthoring: Allow
-    Write: Allow
-- database:
-    Read: Allow
-  datarole:
-    Read: Allow
-  datasource:
-    Connect: Allow
-    ExportXml: Allow
-    Read: Allow
-  flow:
-    ExportXml: Allow
-    Read: Allow
-  lens:
-    Read: Allow
-  metric:
-    Read: Allow
-  name: tableau-explore
-  project:
-    Read: Allow
-  table:
-    Read: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-  workbook:
-    AddComment: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    Filter: Allow
-    Read: Allow
-    RunExplainData: Allow
-    ShareView: Allow
-    ViewComments: Allow
-    ViewUnderlyingData: Allow
-    WebAuthoring: Allow
-- database:
-    Read: Allow
-  datarole:
-    Read: Allow
-  datasource:
-    Connect: Allow
-    Read: Allow
-  flow:
-    Read: Allow
-  lens:
-    Read: Allow
-  metric:
-    Read: Allow
-  name: tableau-view
-  project:
-    Read: Allow
-  table:
-    Read: Allow
-  virtual_connection:
-    Connect: Allow
-    Read: Allow
-  workbook:
-    AddComment: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    Filter: Allow
-    Read: Allow
-    ViewComments: Allow
-- database:
-    ChangeHierarchy: Allow
-    Read: Allow
-    Write: Allow
-  datarole:
-    Read: Allow
-    Write: Allow
-  datasource:
-    ChangeHierarchy: Allow
-    Connect: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  flow:
-    ChangeHierarchy: Allow
-    Delete: Allow
-    Execute: Allow
-    ExportXml: Allow
-    Read: Allow
-    WebAuthoringForFlows: Allow
-    Write: Allow
-  lens:
-    ChangeHierarchy: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  metric:
-    ChangeHierarchy: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  name: publish_limited
-  project:
-    Read: Allow
-    Write: Allow
-  table:
-    ChangeHierarchy: Allow
-    Read: Allow
-    Write: Allow
-  virtual_connection:
-    ChangeHierarchy: Allow
-    Connect: Allow
-    Delete: Allow
-    Read: Allow
-    Write: Allow
-  workbook:
-    AddComment: Allow
-    CreateRefreshMetrics: Allow
-    ExportData: Allow
-    ExportImage: Allow
-    Filter: Allow
-    Read: Allow
-    RunExplainData: Allow
-    ShareView: Allow
-    ViewComments: Allow
-    WebAuthoring: Allow
-    Write: Allow
-- datasource:
-    Connect: Allow
-  name: connect_only
-  virtual_connection:
-    Connect: Allow
-projects:
-- content_permissions: LockedToProjectWithoutNested
-  description: The default project that was automatically created by Tableau.
-  project_name: default
-  project_path: default
-- content_permissions: LockedToProject
-  description: The default project for external assets. External assets are put into
-    this project as Catalog discovers them.
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  project_name: External Assets Default Project
-  project_path: External Assets Default Project
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Resources Project Lead
-    permission_rule: project_lead
-  project_name: Resources
-  project_path: Resources
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Resources Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Resources/General
-- content_permissions: LockedToProject
-  description: See data about your site and build custom views to evaluate site and
-    user metrics.
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Resources Project Lead
-    permission_rule: project_lead
-  project_name: Admin Insights
-  project_path: Resources/General/Admin Insights
-- content_permissions: LockedToProjectWithoutNested
-  description: This project includes automatically uploaded samples.
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Resources Project Lead
-    permission_rule: project_lead
-  project_name: Samples
-  project_path: Resources/General/Samples
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Resources Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Resources/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Production
-  project_path: Production
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: denied
-  project_name: Admin Archive
-  project_path: Adming Archive
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: denied
-  project_name: Automatic User Workbook Archive
-  project_path: Adming Archive/Automatic User Workbook Archive
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Customer Success
-  project_path: Production/Customer Success
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Customer Success/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Customer Success/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Data Team
-  project_path: Production/Data Team
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Data Team/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Data Team/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Engineering
-  project_path: Production/Engineering
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Engineering/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Engineering/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Finance
-  project_path: Production/Finance
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Finance/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Finance/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Go To Market
-  project_path: Production/Go To Market
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Go To Market/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Go To Market/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Marketing
-  project_path: Production/Marketing
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Marketing/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Marketing/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: People
-  project_path: Production/People
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view_limited
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/People/General
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: People Restricted Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view_limited
-  project_name: Restricted
-  project_path: Production/People/Restricted
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/People/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Product
-  project_path: Production/Product
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Product/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Product/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Sales
-  project_path: Production/Sales
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Sales/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Sales/SAFE
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: RSA SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: RSA SAFE
-  project_path: Production/Sales/RSA SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: Security
-  project_path: Production/Security
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Sales/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Production Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Sales/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: Support
-  project_path: Production/Support
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Production/Support/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Production/Support/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Ad-hoc
-  project_path: Ad-hoc
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Customer Success Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Customer Success
-  project_path: Ad-hoc/Customer Success
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Customer Success Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Customer Success/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Customer Success Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Customer Success/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Data Team
-  project_path: Ad-hoc/Data Team
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Data Team/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Data Team/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Engineering
-  project_path: Ad-hoc/Engineering
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Engineering/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Engineering/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Finance
-  project_path: Ad-hoc/Finance
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Finance/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Finance/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Go To Market
-  project_path: Ad-hoc/Go To Market
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Go To Market/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Go To Market/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Marketing
-  project_path: Ad-hoc/Marketing
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Marketing/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Marketing/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: People
-  project_path: Ad-hoc/People
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view_limited
-  project_name: General
-  project_path: Ad-hoc/People/General
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view_limited
-  project_name: Restricted
-  project_path: Ad-hoc/People/Restricted
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/People/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Product
-  project_path: Ad-hoc/Product
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Product/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Product/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Sales
-  project_path: Ad-hoc/Sales
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Sales/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Sales/SAFE
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: RSA SAFE Access
-    permission_rule: view
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  project_name: RSA SAFE
-  project_path: Ad-hoc/Sales/RSA SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Security
-  project_path: Ad-hoc/Security
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: General
-  project_path: Ad-hoc/Security/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Ad-hoc Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: view
-  project_name: SAFE
-  project_path: Ad-hoc/Security/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: Support
-  project_path: Ad-hoc/Support
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Ad-hoc/Support/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: view
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Ad-hoc/Support/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: view
-  project_name: Development
-  project_path: Development
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Customer Success Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Customer Success
-  project_path: Development/Customer Success
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Customer Success Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Customer Success/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Customer Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Customer Success/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Data Team
-  project_path: Development/Data Team
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Data Team/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Data Team Project Lead
-    permission_rule: project_lead
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Data Team/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Engineering
-  project_path: Development/Engineering
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Engineering/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Engineering Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Engineering/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Finance
-  project_path: Development/Finance
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Finance/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Finance Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Finance/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Go To Market
-  project_path: Development/Go To Market
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Go To Market/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Go To Market Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Go To Market/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Marketing
-  project_path: Development/Marketing
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Marketing/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Marketing Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Marketing/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: People
-  project_path: Development/People
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish_limited
-  project_name: General
-  project_path: Development/People/General
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: People Restricted Access
-    permission_rule: publish
-  - group_name: General All Access
-    permission_rule: connect_only
-  project_name: Restricted
-  project_path: Development/People/Restricted
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: People Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/People/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Product
-  project_path: Development/Product
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Product/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Product Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Product/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Sales
-  project_path: Development/Sales
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Sales/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Sales/SAFE
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: RSA SAFE Access
-    permission_rule: publish
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Sales Project Lead
-    permission_rule: project_lead
-  project_name: RSA SAFE
-  project_path: Development/Sales/RSA SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: Security
-  project_path: Development/Sales
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General All Access
-    permission_rule: publish
-  project_name: General
-  project_path: Development/Security/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: Development Project Lead
-    permission_rule: project_lead
-  - group_name: Security Project Lead
-    permission_rule: project_lead
-  - group_name: General SAFE Access
-    permission_rule: publish
-  project_name: SAFE
-  project_path: Development/Security/SAFE
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: publish
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: Support
-  project_path: Development/Support
-- content_permissions: LockedToProjectWithoutNested
-  description: ''
-  permission_set:
-  - group_name: General All Access
-    permission_rule: publish
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: General
-  project_path: Development/Support/General
-- content_permissions: LockedToProject
-  description: ''
-  permission_set:
-  - group_name: General SAFE Access
-    permission_rule: publish
-  - group_name: Support Project Lead
-    permission_rule: project_lead
-  project_name: SAFE
-  project_path: Development/Support/SAFE
+version: "1.0"
+
+# ==========================================
+# Site Settings
+# ==========================================
+
 site:
   admin_mode: ContentAndUsers
-  allow_subscription_attachments: true
-  ask_data_mode: DisabledByDefault
-  authoring_enabled: true
-  auto_suspend_refresh_enabled: true
-  auto_suspend_refresh_inactivity_window: 32
-  cache_warmup_enabled: false
-  catalog_obfuscation_enabled: false
-  cataloging_enabled: true
-  commenting_enabled: true
-  commenting_mentions_enabled: true
-  content_url: gitlab
-  custom_subscription_email: false
-  custom_subscription_email_enabled: false
-  custom_subscription_footer: false
-  custom_subscription_footer_enabled: false
-  data_acceleration_mode: adaptive_data_acceleration_owner_allowed
-  data_alerts_enabled: true
-  derived_permissions_enabled: true
-  disable_subscriptions: false
-  editing_flows_enabled: true
-  extract_encryption_mode: disabled
-  flow_auto_save_enabled: true
-  flows_enabled: true
-  guest_access_enabled: false
-  high-Visibility_data_labels_in_view_and_workbook_subscriptions: true
-  metrics_content_type_enabled: false
-  mobile_biometrics_enabled: false
-  name: GitLab
-  named_sharing_enabled: true
-  notify_site_admins_on_throttle: false
   num_users: null
-  request_access_enabled: false
-  revision_history_enabled: true
-  revision_limit: 10
-  run_now_enabled: true
-  scheduling_flows_enabled: true
-  sheet_image_enabled: false
   state: Active
   status_reason: null
   storage: null
-  storage_quota: 100000
-  subscribe_others_enabled: true
-  tier_creator_capacity: 60
-  tier_explorer_capacity: 150
-  tier_viewer_capacity: 1100
-  time_zone: null
-  use_default_time_zone: true
   user_quota: 1310
-  user_visibility_mode: FULL
+  storage_quota: 100000
+  content_url: gitlab
+  disable_subscriptions: false
+  name: GitLab
+  revision_history_enabled: true
+  revision_limit: 10
+  subscribe_others_enabled: true
+  data_acceleration_mode: adaptive_data_acceleration_owner_allowed
+  cataloging_enabled: true
+  flows_enabled: true
+  editing_flows_enabled: true
+  scheduling_flows_enabled: true
+  allow_subscription_attachments: true
+  guest_access_enabled: false
+  cache_warmup_enabled: false
+  commenting_enabled: true
+  extract_encryption_mode: disabled
+  request_access_enabled: false
+  run_now_enabled: true
+  tier_explorer_capacity: 150
+  tier_creator_capacity: 60
+  tier_viewer_capacity: 1100
+  data_alerts_enabled: true
+  commenting_mentions_enabled: true
+  catalog_obfuscation_enabled: false
+  flow_auto_save_enabled: true
   web_extraction_enabled: true
+  metrics_content_type_enabled: false
+  notify_site_admins_on_throttle: false
+  authoring_enabled: true
+  custom_subscription_footer_enabled: false
+  custom_subscription_email_enabled: false
+  custom_subscription_email: false
+  custom_subscription_footer: false
+  ask_data_mode: DisabledByDefault
+  named_sharing_enabled: true
+  mobile_biometrics_enabled: false
+  sheet_image_enabled: false
+  derived_permissions_enabled: true
+  user_visibility_mode: FULL
+  use_default_time_zone: true
+  time_zone: null
+  auto_suspend_refresh_enabled: true
+  auto_suspend_refresh_inactivity_window: 32
+  high-Visibility_data_labels_in_view_and_workbook_subscriptions: true
+
+# ==========================================
+# Projects
+# ==========================================
+
+projects:
+
+# ==========================================
+# System
+# This subset of projects are created by Tableau
+# ==========================================
+  - project_name: default
+    description: The default project that was automatically created by Tableau.
+    content_permissions: LockedToProjectWithoutNested
+    project_path: default
+
+  - project_name: External Assets Default Project
+    description: The default project for external assets. External assets are put into this project as Catalog discovers them.
+    content_permissions: LockedToProject
+    project_path: External Assets Default Project
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+
+# ==========================================
+# Resources
+# This subset of projects are for the Resources folders
+# ==========================================
+
+  - project_name: Resources
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Resources
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Resources Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# General
+# This subset of projects are for the Resources folders
+# ==========================================
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Resources/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Resources Project Lead
+        permission_rule: project_lead
+
+  - project_name: Admin Insights
+    description: See data about your site and build custom views to evaluate site
+      and user metrics.
+    content_permissions: LockedToProject
+    project_path: Resources/General/Admin Insights
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Resources Project Lead
+        permission_rule: project_lead
+
+  - project_name: Samples
+    description: This project includes automatically uploaded samples.
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Resources/General/Samples
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Resources Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# SAFE
+# This subset of projects are for the Resources folders
+# ==========================================
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Resources/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Resources Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Production
+# This subset of projects are for the Production folders
+# ==========================================
+
+  - project_name: Production
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Admin Archive
+# This subset of projects are for the Archive folders
+# ==========================================
+
+  - project_name: Admin Archive
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Adming Archive
+    permission_set:
+      - group_name: General All Access
+        permission_rule: denied
+
+  - project_name: Automatic User Workbook Archive
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Adming Archive/Automatic User Workbook Archive
+    permission_set:
+      - group_name: General All Access
+        permission_rule: denied
+
+# ==========================================
+# Customer Success
+# This subset of projects are for the
+# Customer Success Production folders
+# ==========================================
+
+  - project_name: Customer Success
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Customer Success
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Customer Success/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Customer Success/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+
+# ==========================================
+# Data Team
+# This subset of projects are for the
+# Data Team Production folders
+# ==========================================
+
+  - project_name: Data Team
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Data Team
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Data Team/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Data Team/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Engineering
+# This subset of projects are for the
+# Engineering Production folders
+# ==========================================
+
+  - project_name: Engineering
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Engineering
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Engineering/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Engineering/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Finance
+# This subset of projects are for the
+# Finance Production folders
+# ==========================================
+
+  - project_name: Finance
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Finance
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Finance/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Finance/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Go To Market
+# This subset of projects are for the
+# Go To Market Production folders
+# ==========================================
+
+  - project_name: Go To Market
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Go To Market
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Go To Market/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Go To Market/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Marketing
+# This subset of projects are for the
+# Marketing Production folders
+# ==========================================
+
+  - project_name: Marketing
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Marketing
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Marketing/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Marketing/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# People
+# This subset of projects are for the
+# People Production folders
+# ==========================================
+
+  - project_name: People
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/People
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/People/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view_limited
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: Restricted
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/People/Restricted
+    permission_set:
+      - group_name: People Restricted Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view_limited
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/People/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Product
+# This subset of projects are for the
+# Product Production folders
+# ==========================================
+
+  - project_name: Product
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Product
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Product/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Product/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Sales
+# This subset of projects are for the
+# Sales Production folders
+# ==========================================
+
+  - project_name: Sales
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Sales
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Sales/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Sales/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: RSA SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Sales/RSA SAFE
+    permission_set:
+      - group_name: RSA SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Security
+# This subset of projects are for the
+# Security Production folders
+# ==========================================
+
+  - project_name: Security
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Security
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Sales/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Sales/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Production Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Support
+# This subset of projects are for the
+# Support Production folders
+# ==========================================
+
+  - project_name: Support
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Support
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Production/Support/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Production/Support/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Ad-hoc
+# This subset of projects are for the Ad-hoc folders
+# ==========================================
+
+  - project_name: Ad-hoc
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+# ==========================================
+# Customer Success
+# This subset of projects are for the
+# Customer Success Ad-hoc folders
+# ==========================================
+
+  - project_name: Customer Success
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Customer Success
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Customer Success/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Customer Success/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Data Team
+# This subset of projects are for the
+# Data Team Ad-hoc folders
+# ==========================================
+
+  - project_name: Data Team
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Data Team
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Data Team/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Data Team/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Engineering
+# This subset of projects are for the
+# Engineering Ad-hoc folders
+# ==========================================
+
+  - project_name: Engineering
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Engineering
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Engineering/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Engineering/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Finance
+# This subset of projects are for the
+# Finance Ad-hoc folders
+# ==========================================
+
+  - project_name: Finance
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Finance
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Finance/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Finance/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Go To Market
+# This subset of projects are for the
+# Go To Market Ad-hoc folders
+# ==========================================
+
+  - project_name: Go To Market
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Go To Market
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Go To Market/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Go To Market/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Marketing
+# This subset of projects are for the
+# Marketing Ad-hoc folders
+# ==========================================
+
+  - project_name: Marketing
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Marketing
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Marketing/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Marketing/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# People
+# This subset of projects are for the
+# People Ad-hoc folders
+# ==========================================
+
+  - project_name: People
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/People
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/People/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view_limited
+
+  - project_name: Restricted
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/People/Restricted
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view_limited
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/People/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Product
+# This subset of projects are for the
+# Product Ad-hoc folders
+# ==========================================
+
+  - project_name: Product
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Product
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Product/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Product/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Sales
+# This subset of projects are for the
+# Sales Ad-hoc folders
+# ==========================================
+
+  - project_name: Sales
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Sales
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Sales/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Sales/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+  - project_name: RSA SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Sales/RSA SAFE
+    permission_set:
+      - group_name: RSA SAFE Access
+        permission_rule: view
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Security
+# This subset of projects are for the
+# Security Ad-hoc folders
+# ==========================================
+
+  - project_name: Security
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Security
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Security/General
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Security/SAFE
+    permission_set:
+      - group_name: Ad-hoc Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: view
+
+# ==========================================
+# Support
+# This subset of projects are for the
+# Support Ad-hoc folders
+# ==========================================
+
+  - project_name: Support
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Support
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Ad-hoc/Support/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Ad-hoc/Support/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: view
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Development
+# This subset of projects are for the Development folders
+# ==========================================
+
+  - project_name: Development
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: view
+
+# ==========================================
+# Customer Success
+# This subset of projects are for the
+# Customer Success Development folders
+# ==========================================
+
+  - project_name: Customer Success
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Customer Success
+    permission_set:
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Customer Success/General
+    permission_set:
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Customer Success/SAFE
+    permission_set:
+      - group_name: Customer Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Data Team
+# This subset of projects are for the
+# Data Team Development folders
+# ==========================================
+
+  - project_name: Data Team
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Data Team
+    permission_set:
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Data Team/General
+    permission_set:
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Data Team/SAFE
+    permission_set:
+      - group_name: Data Team Project Lead
+        permission_rule: project_lead
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Engineering
+# This subset of projects are for the
+# Engineering Development folders
+# ==========================================
+
+  - project_name: Engineering
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Engineering
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Engineering/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Engineering/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Finance
+# This subset of projects are for the
+# Finance Development folders
+# ==========================================
+
+  - project_name: Finance
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Finance
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Finance/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Finance/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Go To Market
+# This subset of projects are for the
+# Go To Market Development folders
+# ==========================================
+
+  - project_name: Go To Market
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Go To Market
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Go To Market/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Go To Market/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Marketing
+# This subset of projects are for the
+# Marketing Development folders
+# ==========================================
+
+  - project_name: Marketing
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Marketing
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Marketing/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Marketing/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# People
+# This subset of projects are for the
+# People Success Development folders
+# ==========================================
+
+  - project_name: People
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/People
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/People/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish_limited
+
+  - project_name: Restricted
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/People/Restricted
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: People Restricted Access
+        permission_rule: publish
+      - group_name: General All Access
+        permission_rule: connect_only
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/People/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Product
+# This subset of projects are for the
+# Product Development folders
+# ==========================================
+
+  - project_name: Product
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Product
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Product/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Product/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Sales
+# This subset of projects are for the
+# Sales Development folders
+# ==========================================
+
+  - project_name: Sales
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Sales
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Sales/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Sales/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+  - project_name: RSA SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Sales/RSA SAFE
+    permission_set:
+      - group_name: RSA SAFE Access
+        permission_rule: publish
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Security
+# This subset of projects are for the
+# Security Development folders
+# ==========================================
+
+  - project_name: Security
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Sales
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Security/General
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General All Access
+        permission_rule: publish
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Security/SAFE
+    permission_set:
+      - group_name: Development Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
+      - group_name: General SAFE Access
+        permission_rule: publish
+
+# ==========================================
+# Support
+# This subset of projects are for the
+# Support Development folders
+# ==========================================
+
+  - project_name: Support
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Support
+    permission_set:
+      - group_name: General All Access
+        permission_rule: publish
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: General
+    description: ""
+    content_permissions: LockedToProjectWithoutNested
+    project_path: Development/Support/General
+    permission_set:
+      - group_name: General All Access
+        permission_rule: publish
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+  - project_name: SAFE
+    description: ""
+    content_permissions: LockedToProject
+    project_path: Development/Support/SAFE
+    permission_set:
+      - group_name: General SAFE Access
+        permission_rule: publish
+      - group_name: Support Project Lead
+        permission_rule: project_lead
+
+# ==========================================
+# Permission Templates
+# ==========================================
+
+permission_templates:
+  - name: view
+    project:
+      Read: Allow
+    workbook:
+      Read: Allow
+      Filter: Allow
+      ViewComments: Allow
+      AddComment: Allow
+      ExportImage: Allow
+      ExportData: Allow
+      ShareView: Allow
+    datasource:
+      Read:  Allow # View
+      Connect: Allow # Connect
+      ExportXml:  Allow # Download Data Source
+    datarole:
+      Read: Allow
+    flow:
+      Read: Allow
+      ExportXml:  Allow # Download Flow
+    lens:
+      Read: Allow
+    metric:
+      Read: Allow
+    # not built into the python TSC
+    virtual_connection:
+      Read:  Allow # View
+      Connect: Allow # Connect
+    database:
+      Read:  Allow # View
+    table:
+      Read:  Allow # View
+
+  - name: view_limited
+    project:
+      Read: Allow
+    workbook:
+      Read: Allow
+      Filter: Allow
+      ViewComments: Allow
+      AddComment: Allow
+      ExportImage: Allow
+      ShareView: Allow
+    datasource:
+      Read:  Allow # View
+      Connect: Allow # Connect
+    datarole:
+      Read: Allow
+    flow:
+      Read: Allow
+    lens:
+      Read: Allow
+    metric:
+      Read: Allow
+    # not built into the python TSC
+    virtual_connection:
+      Read:  Allow # View
+      Connect: Allow # Connect
+    database:
+      Read:  Allow # View
+    table:
+      Read:  Allow # View
+
+  - name: project_lead
+    project:
+      ProjectLeader: Allow
+
+  - name: publish
+    workbook:
+      # View
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+      # Explore
+      ShareView: Allow # Share Customized
+      ViewUnderlyingData: Allow # Download Full Data
+      WebAuthoring: Allow  # Web Edit
+      RunExplainData: Allow # Run Explain Data
+      # Publish
+      ExportXml: Allow # Download/Save a Copy
+      Write: Allow # Overwrite
+      CreateRefreshMetrics: Allow # Create/Refresh Metrics
+    project:
+      Read: Allow # View
+      Write: Allow # Publish
+    datasource:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Explore
+      ExportXml:  Allow # Download Data Source
+      # Publish
+      Write:  Allow  # Overwrite
+      SaveAs:  Allow  # Save As
+    flow:
+      # View
+      Read:  Allow # View
+      # Explore
+      ExportXml:  Allow # Download Flow
+      # Publish
+      Execute: Allow # Run Flow
+      Write:  Allow  # Overwrite
+      WebAuthoringForFlows: Allow # Web Edit
+    datarole:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    lens:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow # Overwrite
+    metric:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    virtual_connection:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Publish
+      Write:  Allow  # Overwrite
+    database:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    table:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+
+  - name: tableau-admin
+    workbook:
+      # View
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+      # Explore
+      ShareView: Allow # Share Customized
+      ViewUnderlyingData: Allow # Download Full Data
+      WebAuthoring: Allow  # Web Edit
+      RunExplainData: Allow # Run Explain Data
+      # Publish
+      ExportXml: Allow # Download/Save a Copy
+      Write: Allow # Overwrite
+      CreateRefreshMetrics: Allow # Create/Refresh Metrics
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete: Allow # Delete
+      ChangePermissions: Allow # Set Permissions
+    project:
+      Read: Allow # View
+      Write: Allow # Publish
+    datasource:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Explore
+      ExportXml:  Allow # Download Data Source
+      # Publish
+      Write:  Allow  # Overwrite
+      SaveAs:  Allow  # Save As
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    flow:
+      # View
+      Read:  Allow # View
+      # Explore
+      ExportXml:  Allow # Download Flow
+      # Publish
+      Execute: Allow # Run Flow
+      Write:  Allow  # Overwrite
+      WebAuthoringForFlows: Allow # Web Edit
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    datarole:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    lens:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    metric:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    virtual_connection:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Publish
+      Write:  Allow  # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+      ChangePermissions:  Allow # Set Permissions
+    database:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      ChangePermissions:  Allow # Set Permissions
+    table:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+      # Administer
+      ChangeHierarchy: Allow # Move
+      ChangePermissions:  Allow # Set Permissions
+
+  - name: tableau-publish
+    workbook:
+      # View
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+      # Explore
+      ShareView: Allow # Share Customized
+      ViewUnderlyingData: Allow # Download Full Data
+      WebAuthoring: Allow  # Web Edit
+      RunExplainData: Allow # Run Explain Data
+      # Publish
+      ExportXml: Allow # Download/Save a Copy
+      Write: Allow # Overwrite
+      CreateRefreshMetrics: Allow # Create/Refresh Metrics
+    project:
+      Read: Allow # View
+      Write: Allow # Publish
+    datasource:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Explore
+      ExportXml:  Allow # Download Data Source
+      # Publish
+      Write:  Allow  # Overwrite
+      SaveAs:  Allow  # Save As
+    flow:
+      # View
+      Read:  Allow # View
+      # Explore
+      ExportXml:  Allow # Download Flow
+      # Publish
+      Execute: Allow # Run Flow
+      Write:  Allow  # Overwrite
+      WebAuthoringForFlows: Allow # Web Edit
+    datarole:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    lens:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow # Overwrite
+    metric:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    virtual_connection:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Publish
+      Write:  Allow  # Overwrite
+    database:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+    table:
+      # View
+      Read:  Allow # View
+      # Publish
+      Write:  Allow  # Overwrite
+
+  - name: tableau-explore
+    project:
+      Read: Allow # View
+    workbook:
+      # View
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+      # Explore
+      ShareView: Allow # Share Customized
+      ViewUnderlyingData: Allow # Download Full Data
+      WebAuthoring: Allow  # Web Edit
+      RunExplainData: Allow # Run Explain Data
+    datasource:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+      # Explore
+      ExportXml:  Allow # Download Data Source
+    flow:
+      # View
+      Read:  Allow # View
+      # Explore
+      ExportXml:  Allow # Download Flow
+    datarole:
+      # View
+      Read:  Allow # View
+    lens:
+      # View
+      Read:  Allow # View
+    metric:
+      # View
+      Read:  Allow # View
+    virtual_connection:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+    database:
+      # View
+      Read:  Allow # View
+    table:
+      # View
+      Read:  Allow # View
+
+  - name: tableau-view
+    project:
+      Read: Allow # View
+    workbook:
+      # View
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+    datasource:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+    flow:
+      # View
+      Read:  Allow # View
+    datarole:
+      # View
+      Read:  Allow # View
+    lens:
+      # View
+      Read:  Allow # View
+    metric:
+      # View
+      Read:  Allow # View
+    virtual_connection:
+      # View
+      Read:  Allow # View
+      Connect: Allow # Connect
+    database:
+      # View
+      Read:  Allow # View
+    table:
+      # View
+      Read:  Allow # View
+
+  - name: publish_limited
+    project:
+      Read: Allow # View
+      Write: Allow # Publish
+    workbook:
+      Read: Allow # View
+      Filter: Allow # Filter
+      ViewComments: Allow # View Comments
+      AddComment: Allow # Add Comments
+      ExportImage: Allow  # Download Image/PDF
+      ExportData: Allow  # Download Summary Data
+      ShareView: Allow # Share Customized
+      WebAuthoring: Allow  # Web Edit
+      RunExplainData: Allow # Run Explain Data
+      Write: Allow # Overwrite
+      CreateRefreshMetrics: Allow # Create/Refresh Metrics
+    datasource:
+      Read:  Allow # View
+      Connect: Allow # Connect
+      Write:  Allow  # Overwrite
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+    datarole:
+      Read: Allow
+      Write: Allow # Overwrite
+    flow:
+      Read: Allow
+      ExportXml:  Allow # Download Flow
+      Execute: Allow # Run Flow
+      Write:  Allow  # Overwrite
+      WebAuthoringForFlows: Allow # Web Edit
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+    lens:
+      Read: Allow # View
+      Write:  Allow # Overwrite
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+    metric:
+      Read: Allow # View
+      Write:  Allow  # Overwrite
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+    virtual_connection:
+      Read:  Allow # View
+      Connect: Allow # Connect
+      Write:  Allow  # Overwrite
+      ChangeHierarchy: Allow # Move
+      Delete:  Allow  # Delete
+    database:
+      Read:  Allow # View
+      Write:  Allow  # Overwrite
+      ChangeHierarchy: Allow # Move
+    table:
+      Read:  Allow # View
+      Write:  Allow  # Overwrite
+      ChangeHierarchy: Allow # Move
+
+  - name: connect_only
+    datasource:
+      Connect: Allow # Connect
+    virtual_connection:
+      Connect: Allow # Connect
+
+# ==========================================
+# Groups
+# ==========================================
+
+groups:
+
+# ==========================================
+# System
+# These user groups are created and managed by
+# Tableau and can not be changed
+# ==========================================
+
+  - group_name: All Users
+
+# ==========================================
+# Project Lead Groups
+# Convention: [Project Name] Project Lead
+# ==========================================
+
+  - group_name: Ad-hoc Project Lead
+  - group_name: Customer Success Project Lead
+  - group_name: Data Team Project Lead
+  - group_name: Development Project Lead
+  - group_name: Engineering Project Lead
+  - group_name: Finance Project Lead
+  - group_name: Go To Market Project Lead
+  - group_name: Marketing Project Lead
+  - group_name: People Project Lead
+  - group_name: Product Project Lead
+  - group_name: Production Project Lead
+  - group_name: Resources Project Lead
+  - group_name: Sales Project Lead
+  - group_name: Security Project Lead
+  - group_name: Support Project Lead
+
+# ==========================================
+# Access Groups
+# Convention: [Functional Team Name] [Access Qualifier] Access
+# ==========================================
+
+  - group_name: Customer Success All Access
+  - group_name: Data Team All Access
+  - group_name: Engineering All Access
+  - group_name: Finance All Access
+  - group_name: General All Access
+  - group_name: Go To Market All Access
+  - group_name: Marketing All Access
+  - group_name: People All Access
+  - group_name: Product All Access
+  - group_name: Sales All Access
+  - group_name: Security All Access
+
+# ==========================================
+# Limited Access Groups
+# Convention: [Functional Team Name] [Access Qualifier] Access
+# ==========================================
+
+  - group_name: ASM AMER Commercial Restricted Access
+  - group_name: ASM EMEA Commercial Restricted Access
+  - group_name: ASM Restricted Access
+  - group_name: Customer Success Restricted Access
+  - group_name: Data Team Restricted Access
+  - group_name: Engineering Restricted Access
+  - group_name: Finance Restricted Access
+  - group_name: General SAFE Access
+  - group_name: Internal Audit Restricted Access
+  - group_name: Marketing Restricted Access
+  - group_name: People Restricted Access
+  - group_name: Product Restricted Access
+  - group_name: RSA SAFE Access
+  - group_name: Sales Development SAFE Access
+  - group_name: Sales Restricted Access
+  - group_name: Security Restricted Access
+  - group_name: Self-Service SAFE Access
+  - group_name: Executive RLS SAFE Access
+
+# ==========================================
+# Admin Groups
+# ==========================================
+
+  - group_name: Test Permissions Group
+
+# ==========================================
+# Users
+# ==========================================
+
 users:
 <<<<<<< HEAD
   - user_name: aacosta
