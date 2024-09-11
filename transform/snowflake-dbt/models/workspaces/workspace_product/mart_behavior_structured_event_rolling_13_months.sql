@@ -4,6 +4,7 @@
     unique_key='behavior_structured_event_pk',
     tags=['product'],
     on_schema_change='sync_all_columns',
+    full_refresh= only_force_full_refresh(),
     post_hook=["{{ rolling_window_delete('behavior_at','month',13) }}"],
     cluster_by=['behavior_at::DATE','event_action']
   )
@@ -25,9 +26,9 @@ WITH structured_event_13_months AS (
         ]) 
     }}
   FROM {{ ref('mart_behavior_structured_event') }}
-  WHERE DATE_TRUNC(DAY, behavior_at) >= DATEADD(MONTH, -13, DATE_TRUNC(DAY, CURRENT_DATE))
+  WHERE behavior_at >= DATEADD(MONTH, -13, CURRENT_DATE)
     {% if is_incremental() %}
-      AND behavior_at >= (SELECT MAX(behavior_at) FROM {{ this }})
+      AND behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
     {% endif %}
 
 )
