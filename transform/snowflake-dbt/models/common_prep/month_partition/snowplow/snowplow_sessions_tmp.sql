@@ -18,7 +18,13 @@ relevant_sessions as (
     from all_web_page_views
 
     {% if is_incremental() %}
-        where page_view_start > {{get_start_ts(this, 'session_start')}}
+    where page_view_start > (
+            select
+            COALESCE(
+              MAX(session_start),
+              '0001-01-01'    -- a long, long time ago
+                ) as start_ts
+            from {{this}} )
     {% endif %}
 
 ),
