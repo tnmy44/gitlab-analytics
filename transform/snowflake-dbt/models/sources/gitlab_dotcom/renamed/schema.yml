@@ -731,7 +731,7 @@ models:
   - name: gitlab_dotcom_incident_management_timeline_events_source
     description: Base model for Gitlab.com Incident Management Timeline Events
     columns:
-      - name: id
+      - name: timeline_event_id
         tags: ["tdf","gitlab_dotcom"]
         data_tests:
           - not_null
