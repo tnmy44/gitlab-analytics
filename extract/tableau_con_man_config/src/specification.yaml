@@ -1,4 +1,3 @@
-version: "1.0"
 
 # ==========================================
 # Site Settings
@@ -7134,6 +7133,12 @@ users:
     groups:
       - General All Access
   - user_name: mwawrzyniak
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: mwielich
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
