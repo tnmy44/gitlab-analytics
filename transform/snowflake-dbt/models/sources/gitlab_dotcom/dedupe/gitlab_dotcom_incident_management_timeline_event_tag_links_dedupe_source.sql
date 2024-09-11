@@ -8,7 +8,7 @@ SELECT *
 FROM {{ source('gitlab_dotcom', 'incident_management_timeline_event_tag_links') }}
 {% if is_incremental() %}
 
-WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
 
 {% endif %}
 QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
