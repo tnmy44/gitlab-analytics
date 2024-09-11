@@ -18,7 +18,7 @@ Filter to the most recent subscription version for the original subscription/sub
   QUALIFY
     DENSE_RANK() OVER (
     PARTITION BY subscription_name
-    ORDER BY SUBSCRIPTION_VERSION DESC
+    ORDER BY subscription_version DESC
   ) = 1
 
 ), prep_charge_mrr_daily AS (
