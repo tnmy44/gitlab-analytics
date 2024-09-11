@@ -27,7 +27,7 @@ WITH structured_event_13_months AS (
     }}
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE behavior_at >= DATEADD(MONTH, -13, CURRENT_DATE)
-  
+
   {% if is_incremental() %}
       AND behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
       AND behavior_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'behavior_at') }})) FROM {{ this }})
@@ -39,10 +39,5 @@ WITH structured_event_13_months AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="structured_event_13_months",
-    created_by="@lmai1",
-    updated_by="@chrissharp",
-    created_date="2024-08-29",
-    updated_date="2024-09-11"
-) }}
+SELECT *
+FROM structured_event_13_months
