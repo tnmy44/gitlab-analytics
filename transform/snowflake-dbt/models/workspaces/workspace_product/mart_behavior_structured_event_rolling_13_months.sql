@@ -27,16 +27,22 @@ WITH structured_event_13_months AS (
     }}
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE behavior_at >= DATEADD(MONTH, -13, CURRENT_DATE)
-    {% if is_incremental() %}
-      AND behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
-    {% endif %}
+  
+  {% if is_incremental() %}
+      AND behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
+      AND behavior_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'behavior_at') }})) FROM {{ this }})
+  {% else %}
+  -- This will cover the first creation of the table or a full refresh and requires that the table be backfilled
+  AND behavior_at > DATEADD('day', -30 ,CURRENT_DATE())
+
+  {% endif %}
 
 )
 
 {{ dbt_audit(
     cte_ref="structured_event_13_months",
     created_by="@lmai1",
-    updated_by="@lmai1",
+    updated_by="@chrissharp",
     created_date="2024-08-29",
-    updated_date="2024-08-29"
+    updated_date="2024-09-11"
 ) }}
