@@ -869,6 +869,10 @@ models:
           - not_null
       - name: installation_creation_date
         description: '{{ doc("installation_creation_date") }}'
+      - name: product_delivery_type
+        description: Delivery type of GitLab; either SaaS or Self-Managed. In this model it is a Type 1 SCD, meaning that we show the most recent Delivery Type when an installation has multiple values.
+      - name: product_deployment_type
+        description: Deployment type of GitLab; either GitLab.com, Dedicated, or Self-Managed. In this model it is a Type 1 SCD, meaning that we show the most recent Deployment Type when an installation has multiple values.
 
   - name: dim_invoice
     description: '{{ doc("dim_invoice") }}'
