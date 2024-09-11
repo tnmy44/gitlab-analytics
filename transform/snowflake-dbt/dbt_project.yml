@@ -77,13 +77,13 @@ seeds:
       director_location_factors:
         +column_types:
           valid_to: date # Not behaving well when the column is all null
-    
+
     seed_product:
       +schema: seed_product
 
     seed_sales:
       +schema: seed_sales
-    
+
 
 # ==================
 # Variable Configs
@@ -348,6 +348,9 @@ models:
       level_up:
         +materialized: table
         +schema: level_up
+        sensitive:
+          +schema: sensitive
+          secure: true
 
       linkedin_ads:
         +schema: linkedin_ads
