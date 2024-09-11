@@ -704,7 +704,7 @@ models:
   - name: gitlab_dotcom_incident_management_issuable_escalation_statuses_source
     description: Base model for Gitlab.com Issuable Escalation Statuses
     columns:
-      - name: id
+      - name: status_id
         tags: ["tdf","gitlab_dotcom"]
         data_tests:
           - not_null
