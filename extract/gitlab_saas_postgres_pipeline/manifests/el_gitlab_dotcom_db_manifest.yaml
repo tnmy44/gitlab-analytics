@@ -3204,6 +3204,22 @@ tables:
       FROM workspaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  workspaces_agent_configs:
+    deletes_exempt: True
+    is_incremental: True
+    database_type: main
+    export_schema: 'gitlab_com'
+    export_table: workspaces_agent_configs
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , cluster_agent_id
+      FROM workspaces_agent_configs
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   zoekt_enabled_namespaces:
     deletes_exempt: True
     is_incremental: True
