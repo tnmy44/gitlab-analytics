@@ -506,9 +506,8 @@ class DataClassification:
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
         """
         for i, (database, schema) in enumerate(tables, start=1):
-            info(
-                f"{i}/{len(tables)} Command to classify: {self.get_pii_classify_schema_query(database=database, schema=schema)}"
-            )
+            info(f"{i}/{len(tables)} Schema to classify: {database}.{schema}")
+            # self.get_pii_classify_schema_query(database=database, schema=schema)
 
     def classify(
         self,
@@ -544,7 +543,10 @@ class DataClassification:
             info(f"....Execute query: {query}")
 
             table_list = self.__get_pii_table_list(query=query)
-            self.execute_pii_system_classify_schema(tables=table_list)
+            if table_list:
+                self.execute_pii_system_classify_schema(tables=table_list)
+            else:
+                info(F"....No table for classification in the schema: {getattr(self, database.lower())}")
         info("END classify.")
 
     def __execute_query(self, query: str):
