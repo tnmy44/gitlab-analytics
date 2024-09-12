@@ -17,7 +17,7 @@ def run_extract(
     unset: str = "FALSE",
     tagging_type: str = "INCREMENTAL",
     incremental_load_days: int = 90,
-    database: str = None
+    database: str = None,
 ):
     """
     Run process
@@ -38,7 +38,10 @@ def run_extract(
         data_classification.extract()
     if operation == "CLASSIFY":
         data_classification.classify(
-            date_from=date_from, unset=unset, tagging_type=tagging_type,database=database
+            date_from=date_from,
+            unset=unset,
+            tagging_type=tagging_type,
+            database=database,
         )
 
 

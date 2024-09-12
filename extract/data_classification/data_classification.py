@@ -371,7 +371,11 @@ class DataClassification:
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
     def classify_query(
-        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL", database:str = "RAW"
+        self,
+        date_from: str,
+        unset: str = "FALSE",
+        tagging_type: str = "INCREMENTAL",
+        database: str = "RAW",
     ) -> str:
         """
         Query to call procedure with parameters for classification
@@ -479,19 +483,26 @@ class DataClassification:
         return manifest_dict
 
     def classify(
-        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL", database:str = None
+        self,
+        date_from: str,
+        unset: str = "FALSE",
+        tagging_type: str = "INCREMENTAL",
+        database: str = None,
     ):
         """
         Routine to classify all data
         using stored procedure
         """
-        info(F"START classify. date_from: {date_from}")
-        info(F"START classify. unset: {unset}")
-        info(F"START classify. tagging_type: {tagging_type}")
-        info(F"START classify. database: {database}")
+        info(f"START classify. date_from: {date_from}")
+        info(f"START classify. unset: {unset}")
+        info(f"START classify. tagging_type: {tagging_type}")
+        info(f"START classify. database: {database}")
 
         query = self.classify_query(
-            date_from=date_from, unset=unset, tagging_type=tagging_type, database=database
+            date_from=date_from,
+            unset=unset,
+            tagging_type=tagging_type,
+            database=database,
         )
         # info(f"....Call stored procedure: {query}")
         # self.__execute_query(query=query)
@@ -521,7 +532,6 @@ class DataClassification:
         Upload PII data
         """
         info(".... START upload_pii_data.")
-        info(F".... START upload_pii_data QUERY: {self.pii_query}")
         self.__execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
