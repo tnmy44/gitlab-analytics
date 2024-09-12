@@ -93,7 +93,23 @@ joined AS (
     zuora_subscription.turn_on_seat_reconciliation,
     zuora_subscription.created_date                                                                                                                                                               AS subscription_created_datetime,
     zuora_subscription.created_date::DATE                                                                                                                                                         AS subscription_created_date,
-    zuora_subscription.updated_date::DATE                                                                                                                                                         AS subscription_updated_date
+    zuora_subscription.updated_date::DATE                                                                                                                                                         AS subscription_updated_date,
+    IFF(
+      zuora_subscription.version = 1, 
+      LEAST(zuora_subscription.created_date, zuora_subscription.subscription_start_date),
+      zuora_subscription.created_date
+      )                                                                                                                                                                                           AS subscription_created_datetime_adjusted,
+    COALESCE(
+      LEAD(subscription_created_datetime_adjusted)
+        OVER (
+          PARTITION BY zuora_subscription.subscription_name
+          ORDER BY zuora_subscription.version
+          ),
+      GREATEST(
+        CURRENT_DATE(),
+        zuora_subscription.subscription_end_date
+        ) 
+      )                                                                                                                                                                                         AS next_subscription_created_datetime
   FROM zuora_subscription
   INNER JOIN zuora_account_source
     ON zuora_subscription.account_id = zuora_account_source.account_id
@@ -121,5 +137,5 @@ joined AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-07",
-    updated_date="2024-09-06"
+    updated_date="2024-09-12"
 ) }}

@@ -12,29 +12,14 @@
     ('prep_product_detail', 'prep_product_detail')
 ])}}
 
-, subscriptions AS (
+, base AS (
 
-  SELECT 
-    prep_subscription.*,
-    IFF(
-      prep_subscription.subscription_version = 1, 
-      LEAST(prep_subscription.subscription_created_date, prep_subscription.subscription_start_date),
-      prep_subscription.subscription_created_date
-      )                                                                                               AS subscription_created_datetime_adjusted,
-    COALESCE(
-      LEAD(subscription_created_datetime_adjusted)
-        OVER (
-          PARTITION BY prep_subscription.subscription_name
-          ORDER BY prep_subscription.subscription_version
-          ),
-      GREATEST(
-        CURRENT_DATE(),
-        prep_subscription.subscription_end_date
-        ) 
-      )                                                                                              AS next_subscription_created_datetime
-  FROM prep_subscription
+/*
+Do the following to begin mapping an installation to a subscription:
 
-), base AS (
+1. Map the ping to dim_subscription_id based on the license information sent with the record.
+2. Find the next ping date for each Service Ping
+*/
 
   SELECT
     prep_ping_instance.ping_created_at,
@@ -52,6 +37,14 @@
   
 ), ping_daily_mapping AS (
 
+/*
+Expand the Sevice Ping records to the day grain.
+
+Assumptions:
+1. The dim_installation_id <> dim_subscription_id mapping is valid between the ping_created_at date and the next received ping date for that installation
+2. If no other pings have been received for this installation, this mapping is valid until the current date.
+*/
+
   SELECT 
     prep_date.date_actual,
     base.dim_installation_id,
@@ -59,9 +52,16 @@
   FROM base
   INNER JOIN prep_date
     ON base.ping_created_at <= prep_date.date_actual
-      AND (COALESCE(base.next_ping_date, CURRENT_DATE()) > prep_date.date_actual)
+      AND COALESCE(base.next_ping_date, CURRENT_DATE()) > prep_date.date_actual
 
 ), seat_link AS (
+
+/*
+Not all installations will send a Service Ping, so we will incorporate the Seat Link records
+to have a more complete view of all potential dim_installation_id <> dim_subscription_id mappings.
+
+This CTE finds the next_report_date for each dim_installation_id so we can expand the Seat Link data in a subsequent CTE.
+*/
 
   SELECT 
     prep_usage_self_managed_seat_link.*,
@@ -70,6 +70,14 @@
 
 ), seat_link_records AS (
 
+/*
+Expand the Seat Link data to the daily grain for each installation - subscription.
+
+Assumptions:
+1. The dim_installation_id <> dim_subscription_id mapping is valid between the report_date and the next received report_date for that installation
+2. If no other Seat Link records have been received for this installation, this mapping is valid until the current date.
+*/
+
   SELECT
     prep_date.date_actual,
     seat_link.dim_installation_id,
@@ -77,25 +85,44 @@
   FROM seat_link
   INNER JOIN prep_date
     ON seat_link.report_date <= prep_date.date_actual
-    AND (seat_link.next_report_date > prep_date.date_actual
-      OR seat_link.next_report_date IS NULL)
+    AND COALESCE(seat_link.next_report_date, CURRENT_DATE) > prep_date.date_actual
 
 ), joined AS (
 
+/*
+Combine the Seat Link and Service Ping mappings for dim_installation_id <> dim_subscription_id. This will create a source of truth
+for all possible mappings across both sources.
+
+We perform a LEFT OUTER JOIN on the two datasets because the set of installations that send Service Ping records and the set of 
+installations that send Seat Link data overlaps, but both may contain additional mappings.
+*/
+
   SELECT 
-    ping_daily_mapping.date_actual,
-    ping_daily_mapping.dim_installation_id,
-    COALESCE(seat_link_records.dim_subscription_id, ping_daily_mapping.dim_subscription_id) AS dim_subscription_id,
-    subscriptions.dim_subscription_id_original,
-    subscriptions.subscription_name
+    COALESCE(ping_daily_mapping.date_actual, seat_link_records.date_actual)                   AS date_actual,
+    COALESCE(ping_daily_mapping.dim_installation_id, seat_link_records.dim_installation_id)   AS dim_installation_id,
+    COALESCE(seat_link_records.dim_subscription_id, ping_daily_mapping.dim_subscription_id)   AS dim_subscription_id,
+    prep_subscription.dim_subscription_id_original,
+    prep_subscription.subscription_name
   FROM ping_daily_mapping
   LEFT OUTER JOIN seat_link_records
     ON ping_daily_mapping.dim_installation_id = seat_link_records.dim_installation_id
       AND ping_daily_mapping.date_actual = seat_link_records.date_actual
-  LEFT JOIN subscriptions
-    ON COALESCE(seat_link_records.dim_subscription_id, ping_daily_mapping.dim_subscription_id) = subscriptions.dim_subscription_id
+  LEFT JOIN prep_subscription
+    ON COALESCE(seat_link_records.dim_subscription_id, ping_daily_mapping.dim_subscription_id) = prep_subscription.dim_subscription_id
 
 ), final AS (
+
+/*
+To map the products (dim_product_detail_id) associated with the subscription, we need to look at the charges for the latest subscription version of the associated dim_subscription_id.
+We have created a mapping table in prep_charge_mrr_daily at the daily grain which expands the latest charges for a subscription_name across the effective dates of the charges.
+
+These charges contains a full history of the products associated with a subscription (dim_subscription_id_original/subscription_name) as well as the effective dates of the 
+products as they were used by the customer. They are all associated with the most current dim_subscription_id in the subscription_name lineage.
+
+We need to map these charges to the dim_subscription_id at the time the charges were effective otherwise the most recent version will be associated with dates before it was created, based on
+how the charges track the history of the subscription. To map between the current dim_subscription_id and the one active at the time of the charges, we join to the subscription object 
+between the subscription_created_datetime (adjusted for the first version of a subscription due to backdated effective dates in subscriptions) and the created date of the next subscription version.
+*/
 
   SELECT DISTINCT
     prep_charge_mrr_daily.date_actual,
@@ -117,9 +144,9 @@
   LEFT JOIN joined
     ON prep_charge_mrr_daily.subscription_name = joined.subscription_name
       AND prep_charge_mrr_daily.date_actual = joined.date_actual
-  LEFT JOIN subscriptions AS subscriptions_ping
+  LEFT JOIN prep_subscription AS subscriptions_ping
     ON joined.dim_subscription_id = subscriptions_ping.dim_subscription_id
-  LEFT JOIN subscriptions AS subscriptions_charge
+  LEFT JOIN prep_subscription AS subscriptions_charge
     ON prep_charge_mrr_daily.subscription_name = subscriptions_charge.subscription_name
       AND prep_charge_mrr_daily.date_actual BETWEEN subscriptions_charge.subscription_created_datetime_adjusted AND subscriptions_charge.next_subscription_created_datetime
   LEFT JOIN prep_product_detail
@@ -127,6 +154,10 @@
   WHERE prep_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
 
 )
+
+/*
+Filter out any days in the mapping where dim_installation_id is unavailable.
+*/
 
 SELECT *
 FROM final
