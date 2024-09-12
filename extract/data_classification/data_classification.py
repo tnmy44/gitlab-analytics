@@ -38,8 +38,8 @@ class DataClassification:
         self.specification_file = "../../extract/data_classification/specification.yml"
         self.tagging_type = tagging_type
         self.mnpi_raw_file = mnpi_raw_file
-        self.config_vars = os.environ.copy()
         self.incremental_load_days = incremental_load_days
+        self.config_vars = os.environ.copy()
         self.raw = self.config_vars["SNOWFLAKE_LOAD_DATABASE"]
         self.prep = self.config_vars["SNOWFLAKE_PREP_DATABASE"]
         self.prod = self.config_vars["SNOWFLAKE_PROD_DATABASE"]
