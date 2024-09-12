@@ -231,8 +231,8 @@ models:
       - name: snowflake_user_name
         description: '{{ doc("snowflake_user_name") }}' 
 
-  - name: map_namespace_subscription
-    description: '{{ doc("map_namespace_subscription") }}'
+  - name: map_namespace_subscription_product
+    description: '{{ doc("map_namespace_subscription_product") }}'
     data_tests:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:

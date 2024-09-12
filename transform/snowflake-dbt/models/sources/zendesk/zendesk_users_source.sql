@@ -29,7 +29,10 @@ renamed AS (
         --time
         time_zone,
         user_fields__user_region::VARCHAR               AS user_region,
-        tags,
+        CASE WHEN tags = '[]'
+                THEN NULL
+            ELSE tags
+                END                                     AS tags,
         created_at,
         updated_at
 

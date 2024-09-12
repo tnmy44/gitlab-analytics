@@ -234,6 +234,9 @@ def test_pii_query(mock_scope, data_classification, expected_value):
         "RAW",
         "PREP",
         "PROD",
+        "SELECT",
+        "INFORMATION_SCHEMA",
+        "REPLACE(table_type,'BASE TABLE','TABLE')",
     ],
 )
 def test_mnpi_metadata_update_query(data_classification, expected_value):
@@ -390,3 +393,11 @@ def test_get_table_where_clause(
         exclude_statement=exclude_statement, tables=tables
     )
     assert result == expected
+
+
+def test_brackets_mnpi_metadata_update_query(data_classification):
+    """
+    Test test_mnpi_metadata_update_query
+    """
+    query = data_classification.mnpi_metadata_update_query
+    assert query.count("(") == query.count(")") == 8
