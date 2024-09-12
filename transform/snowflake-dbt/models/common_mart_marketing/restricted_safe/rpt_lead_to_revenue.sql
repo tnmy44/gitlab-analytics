@@ -577,7 +577,7 @@
       COALESCE(person_base_with_tp.bizible_marketing_channel,opp_base_with_batp.bizible_marketing_channel) AS bizible_marketing_channel, 
       opp_base_with_batp.bizible_marketing_channel AS opp_bizible_marketing_channel,
       COALESCE(person_base_with_tp.bizible_marketing_channel_path,opp_base_with_batp.bizible_marketing_channel_path) AS bizible_marketing_channel_path, 
-      COALESCE(person_base_with_tp.marketing_channels,opp_base_with_batp.marketing_channels) AS marketing_review_channel_grouping,
+      COALESCE(person_base_with_tp.marketing_review_channel_grouping,opp_base_with_batp.marketing_review_channel_grouping) AS marketing_review_channel_grouping,
       opp_base_with_batp.marketing_review_channel_grouping AS opp_marketing_review_channel_grouping,
       opp_base_with_batp.bizible_marketing_channel_path AS opp_bizible_marketing_channel_path,
       COALESCE(person_base_with_tp.bizible_medium,opp_base_with_batp.bizible_medium) AS bizible_medium, 
