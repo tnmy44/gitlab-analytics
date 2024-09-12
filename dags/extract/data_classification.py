@@ -85,7 +85,7 @@ default_args = {
 }
 
 
-def get_command(task: str):
+def get_command(task: str, database: str = None):
     """
     Get the execute command
     """
@@ -102,7 +102,7 @@ def get_command(task: str):
 
     commands = {
         "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE --output json > mnpi_models.json; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}; exit $ret""",
-        "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
+        "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days} --database={database}""",
     }
 
     return commands[task]
@@ -133,19 +133,25 @@ extract_classification = KubernetesPodOperator(
     dag=dag,
 )
 
-task_id = task_name = "execute_classification"
 
-execute_classification = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id=task_id,
-    name=task_name,
-    secrets=secrets,
-    env_vars=pod_env_vars,
-    arguments=[get_command(task=task_id)],
-    affinity=get_affinity("extraction"),
-    tolerations=get_toleration("extraction"),
-    dag=dag,
-)
+def get_task(database: str):
+    task_id = task_name = "execute_classification"
 
-extract_classification >> execute_classification
+    execute_classification = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=task_id,
+        name=task_name,
+        secrets=secrets,
+        env_vars=pod_env_vars,
+        arguments=[get_command(task=task_id,database=database)],
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
+        dag=dag,
+    )
+
+
+TASK_DATABASES = ["RAW", "PREP", "PROD"]
+
+for database in TASK_DATABASES:
+    extract_classification >> execute_classification(database=database)

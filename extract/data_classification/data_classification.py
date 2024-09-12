@@ -334,7 +334,7 @@ class DataClassification:
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
     def classify_query(
-        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
+        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL", database:str = "RAW"
     ) -> str:
         """
         Query to call procedure with parameters for classification
@@ -442,18 +442,22 @@ class DataClassification:
         return manifest_dict
 
     def classify(
-        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
+        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL", database:str = None
     ):
         """
         Routine to classify all data
         using stored procedure
         """
-        info("START classify.")
+        info(F"START classify. date_from: {date_from}")
+        info(F"START classify. unset: {unset}")
+        info(F"START classify. tagging_type: {tagging_type}")
+        info(F"START classify. database: {database}")
+
         query = self.classify_query(
-            date_from=date_from, unset=unset, tagging_type=tagging_type
+            date_from=date_from, unset=unset, tagging_type=tagging_type, database=database
         )
-        info(f"....Call stored procedure: {query}")
-        self.__execute_query(query=query)
+        # info(f"....Call stored procedure: {query}")
+        # self.__execute_query(query=query)
         info("END classify.")
 
     def __execute_query(self, query: str):
