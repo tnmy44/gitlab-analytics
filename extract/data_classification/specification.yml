@@ -5,15 +5,15 @@ data_classification:
     include:
       databases:
         - RBACOVIC_PREP
-        - RAW
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
         - PROD
       schemas:
         - RBACOVIC_PREP.*
-        - RAW.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
         - PROD.*
       tables:
         - RBACOVIC_PREP.*.*
-        - RAW.*.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
         - PROD.*.*
     exclude:
       databases:
@@ -28,15 +28,15 @@ data_classification:
     include:
       databases:
         - RBACOVIC_PREP
-        - RAW
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
         - PROD
       schemas:
         - RBACOVIC_PREP.*
-        - RAW.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
         - PROD.*
       tables:
         - RBACOVIC_PREP.*.*
-        - RAW.*.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
         - PROD.*.*
     exclude:
       databases:
