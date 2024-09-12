@@ -144,7 +144,7 @@ def get_task(database: str):
         name=task_name,
         secrets=secrets,
         env_vars=pod_env_vars,
-        arguments=[get_command(task=task_id,database=database)],
+        arguments=[get_command(task=task_id, database=database)],
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),
         dag=dag,
@@ -154,4 +154,4 @@ def get_task(database: str):
 TASK_DATABASES = ["RAW", "PREP", "PROD"]
 
 for database in TASK_DATABASES:
-    extract_classification >> execute_classification(database=database)
+    extract_classification >> get_task(database=database)
