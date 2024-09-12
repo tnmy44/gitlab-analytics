@@ -417,9 +417,9 @@ SELECT
             WHEN
                 usage_ping_metrics.section_name = 'ops'
                 AND usage_ping_metrics.time_frame = 'all'
-                THEN flattened_metrics.metrics_path -- TO BE DELETED
+                THEN flattened_metrics.metrics_path 
         END
-    ) AS section_ops_alltime_features,
+    ) AS section_ops_alltime_features, -- TO BE DELETED
     COUNT(
         DISTINCT CASE
             WHEN
@@ -787,6 +787,10 @@ SELECT
         DIV0(stage_deploy_alltime_feature_sum,
              all_stages_alltime_feature_sum), 4
     ) AS stage_deploy_alltime_share_pct,
+    ROUND(
+        DIV0(stage_foundations_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
+    ) AS stage_foundations_alltime_share_pct,
 
 
     -- MOST USED STAGE ALL TIME

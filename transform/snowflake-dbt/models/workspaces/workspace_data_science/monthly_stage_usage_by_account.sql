@@ -636,7 +636,7 @@ SELECT
             END
         ),
         0
-    ) AS stage_monitor_alltime_features_sum, -
+    ) AS stage_monitor_alltime_features_sum, 
     COALESCE(
         SUM(
             CASE
@@ -658,7 +658,7 @@ SELECT
             END
         ),
         0
-    ) AS stage_secure_alltime_feature_sum, -- TO BE DELETED
+    ) AS stage_secure_alltime_feature_sum, 
 
     COALESCE(
         SUM(
@@ -844,7 +844,7 @@ SELECT
                 ORDER BY flattened_metrics.snapshot_month
             )
     END AS stage_package_months_used,
-    CASE WHEN stage_release_28days_features = 0 THEN 0 -- TO BE DELETED
+    CASE WHEN stage_release_28days_features = 0 THEN 0 
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY

@@ -686,7 +686,7 @@ SELECT
         WHEN stage_secure_alltime_share_pct THEN 'secure'
         WHEN stage_govern_alltime_share_pct THEN 'govern'
         WHEN stage_deploy_alltime_share_pct THEN 'deploy'
-        WHEN stage_deploy_alltime_share_pct THEN 'foundations'
+        WHEN stage_foundations_alltime_share_pct THEN 'foundations'
         ELSE 'none'
     END AS stage_most_used_alltime,
 

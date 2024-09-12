@@ -797,7 +797,7 @@ SELECT
         stage_secure_alltime_share_pct,
         stage_govern_alltime_share_pct,
         stage_deploy_alltime_share_pct,
-        stage_deploy_alltime_share_pct
+        stage_foundations_alltime_share_pct
 
     )
         WHEN stage_plan_alltime_share_pct THEN 'plan'
