@@ -428,7 +428,6 @@ SELECT
                 THEN flattened_metrics.metrics_path -- TO BE DELETED
         END
     ) AS section_ops_28days_features,
-
     COUNT(
         DISTINCT CASE
             WHEN
@@ -445,7 +444,6 @@ SELECT
                 THEN flattened_metrics.metrics_path
         END
     ) AS section_sec_28days_features,
-
     COUNT(
         DISTINCT CASE
             WHEN
