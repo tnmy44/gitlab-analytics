@@ -1,19 +1,19 @@
 version: '1.0'
 data_classification:
   MNPI:
-    description: "MNPI data classification"
+    description: MNPI data classification
     include:
       databases:
         - RBACOVIC_PREP
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW
         - PROD
       schemas:
         - RBACOVIC_PREP.*
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*
         - PROD.*
       tables:
         - RBACOVIC_PREP.*.*
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*.*
         - PROD.*.*
     exclude:
       databases:
@@ -23,20 +23,20 @@ data_classification:
       tables:
         - NONE.*.*
   PII:
-    description: "PII data classification"
+    description: PII data classification
     include:
     include:
       databases:
         - RBACOVIC_PREP
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW
         - PROD
       schemas:
         - RBACOVIC_PREP.*
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*
         - PROD.*
       tables:
         - RBACOVIC_PREP.*.*
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
+        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*.*
         - PROD.*.*
     exclude:
       databases:
