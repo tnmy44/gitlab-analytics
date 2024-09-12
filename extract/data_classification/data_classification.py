@@ -505,9 +505,9 @@ class DataClassification:
         """
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
         """
-        for database, schema in tables:
+        for i, database, schema in enumerate(tables, start=1):
             info(
-                f"Command to classify: {self.get_pii_classify_schema_query(database=database, schema=schema)}"
+                f"{i}/{len(tables)} Command to classify: {self.get_pii_classify_schema_query(database=database, schema=schema)}"
             )
 
     def classify(
