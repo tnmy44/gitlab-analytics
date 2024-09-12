@@ -916,8 +916,7 @@ SELECT
                     CASE WHEN stage_deploy_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
-    END AS stage_deploy_months_used
-
+    END AS stage_deploy_months_used,
     CASE WHEN stage_foundations_28days_features = 0 THEN 0
         ELSE
             ROW_NUMBER() OVER (
