@@ -10110,3 +10110,20 @@ users:
     groups:
       - General All Access
     - General SAFE Access
+  - user_name: testuser4
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+      - People All Access
+      - Finance All Access
+      - Other All Access
+  - user_name: testuser5
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - People All Access
