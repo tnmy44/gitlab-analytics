@@ -496,7 +496,7 @@ class DataClassification:
         return manifest_dict
 
     @staticmethod
-    def execute_system_classify_schema(tables: list) -> None:
+    def execute_pii_system_classify_schema(tables: list) -> None:
         """
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
         """
@@ -536,8 +536,8 @@ class DataClassification:
             query = self.pii_table_list_query(database=database)
             info(f"....Execute query: {query}")
 
-            table_list = self.__get_table_list(query=query)
-            self.execute_system_classify_schema(tables=table_list)
+            table_list = self.__get_pii_table_list(query=query)
+            self.execute_pii_system_classify_schema(tables=table_list)
         info("END classify.")
 
     def __execute_query(self, query: str):
@@ -559,9 +559,9 @@ class DataClassification:
         finally:
             self.__dispose()
 
-    def __get_table_list(self, query: str) -> list:
+    def __get_pii_table_list(self, query: str) -> list:
         """
-        Execute SQL query and get the table list
+        Execute SQL query and get the PII table list
         """
         try:
             connection = self.__connect()
