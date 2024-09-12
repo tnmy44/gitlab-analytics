@@ -244,7 +244,7 @@ WITH campaign_details AS (
         WHEN combined_touchpoints.bizible_marketing_channel IN ('Referral') 
           THEN 'Partner'
         ELSE CONCAT('not-grouped - ',combined_touchpoints.bizible_marketing_channel)
-      END AS marketing_channels,
+      END AS marketing_review_channel_grouping,
       combined_touchpoints.bizible_medium,
       combined_touchpoints.bizible_referrer_page,
       combined_touchpoints.bizible_referrer_page_raw,
@@ -319,5 +319,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2024-09-11" 
+    updated_date="2024-09-12" 
 ) }}
