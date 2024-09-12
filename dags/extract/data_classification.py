@@ -112,7 +112,7 @@ dag = DAG(
     DAG_NAME,
     default_args=default_args,
     schedule_interval=None,
-    concurrency=1,
+    concurrency=2,
     description=DAG_DESCRIPTION,
     catchup=False,
 )
@@ -155,7 +155,7 @@ def get_task(database: str):
     )
 
 
-TASK_DATABASES = ["RAW", "PREP", "PROD"]
+TASK_DATABASES = ["MNPI", "RAW", "PREP", "PROD"]
 
 for database in TASK_DATABASES:
     extract_classification >> get_task(database=database)

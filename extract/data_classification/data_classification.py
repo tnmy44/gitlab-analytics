@@ -370,7 +370,20 @@ class DataClassification:
         """
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
-    def classify_query(
+    @property
+    def pii_table_list_query(self, database: str) -> str:
+        """
+        Property method for the get table list for PII data
+        """
+        section = "PII"
+        return (
+            f"SELECT DISTINCT database_name, schema_name "
+            f"  FROM data_classification.sensitive_objects_classification "
+            f" WHERE classification_type = {self.quoted(section)} "
+            f"   AND database_name = {self.quoted(database)}"
+        )
+
+    def classify_mnpi_data(
         self,
         date_from: str,
         unset: str = "FALSE",
@@ -482,6 +495,14 @@ class DataClassification:
 
         return manifest_dict
 
+    @staticmethod
+    def execute_system_classify_schema(tables: list) -> None:
+        """
+        Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
+        """
+        for table in tables:
+            info(f"Schema to classify: {str(table)}")
+
     def classify(
         self,
         date_from: str,
@@ -494,18 +515,29 @@ class DataClassification:
         using stored procedure
         """
         info(f"START classify. date_from: {date_from}")
-        info(f"START classify. unset: {unset}")
-        info(f"START classify. tagging_type: {tagging_type}")
-        info(f"START classify. database: {database}")
+        info(f"............... unset: {unset}")
+        info(f"............... tagging_type: {tagging_type}")
+        info(f"............... database: {database}")
 
-        query = self.classify_query(
-            date_from=date_from,
-            unset=unset,
-            tagging_type=tagging_type,
-            database=database,
-        )
-        # info(f"....Call stored procedure: {query}")
-        # self.__execute_query(query=query)
+        query = ""
+
+        if database == "MNPI":
+            query = self.classify_mnpi_data(
+                date_from=date_from,
+                unset=unset,
+                tagging_type=tagging_type,
+                database=database,
+            )
+
+            info(f"....Call stored procedure: {query}")
+            # self.__execute_query(query=query)
+
+        else:
+            query = self.pii_table_list_query(database=database)
+            info(f"....Execute query: {query}")
+
+            table_list = self.__get_table_list(query=query)
+            self.execute_system_classify_schema(tables=table_list)
         info("END classify.")
 
     def __execute_query(self, query: str):
@@ -520,6 +552,24 @@ class DataClassification:
             if res:
                 for r in res:
                     info(f"Return message: {r}")
+        except Exception as e:
+            error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
+            error(f".... QUERY: {query}")
+            sys.exit(1)
+        finally:
+            self.__dispose()
+
+    def __get_table_list(self, query: str) -> list:
+        """
+        Execute SQL query and get the table list
+        """
+        try:
+            connection = self.__connect()
+            tables = connection.execute(statement=query).fetchall()
+
+            # Logging stored procedure result
+            return tables
+
         except Exception as e:
             error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
             error(f".... QUERY: {query}")

@@ -263,7 +263,7 @@ def test_classify_query(data_classification, expected_value):
     """
     Test for calling stored procedure
     """
-    actual = data_classification.classify_query(
+    actual = data_classification.classify_mnpi_data(
         date_from="2024-01-01", unset="FALSE", tagging_type="FULL"
     )
     assert expected_value in actual
