@@ -555,19 +555,3 @@ class DataClassification:
         self.upload_pii_data()
         self.upload_mnpi_data()
         info("END extract.")
-
-
-class PiiClassification:
-    """
-    Class for PII classification
-    """
-
-    pass
-
-
-class MnpiClassification:
-    """
-    Class for MNPI classification
-    """
-
-    pass
