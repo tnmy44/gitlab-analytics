@@ -4,15 +4,15 @@ data_classification:
     description: "MNPI data classification"
     include:
       databases:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
+        - RBACOVIC_PREP
         - RAW
         - PROD
       schemas:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
+        - RBACOVIC_PREP.*
         - RAW.*
         - PROD.*
       tables:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
+        - RBACOVIC_PREP.*.*
         - RAW.*.*
         - PROD.*.*
     exclude:
@@ -25,16 +25,17 @@ data_classification:
   PII:
     description: "PII data classification"
     include:
+    include:
       databases:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
+        - RBACOVIC_PREP
         - RAW
         - PROD
       schemas:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
+        - RBACOVIC_PREP.*
         - RAW.*
         - PROD.*
       tables:
-        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
+        - RBACOVIC_PREP.*.*
         - RAW.*.*
         - PROD.*.*
     exclude:
