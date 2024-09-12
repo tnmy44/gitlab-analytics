@@ -540,7 +540,6 @@ class DataClassification:
 
         else:
             query = self.pii_table_list_query(database=getattr(self, database.lower()))
-            info(f"....Execute query: {query}")
 
             table_list = self.__get_pii_table_list(query=query)
             if table_list:
