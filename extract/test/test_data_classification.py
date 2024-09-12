@@ -301,6 +301,100 @@ def test_get_pii_select_part_query(data_classification, input_value, expected_va
     assert expected_value in actual
 
 
+@pytest.mark.parametrize(
+    "exclude_statement, databases, expected",
+    [
+        ("", ["RAW", "PREP"], " (table_catalog  IN ('RAW', 'PREP'))"),
+        ("NOT", ["PROD"], " (table_catalog NOT IN ('PROD'))"),
+    ],
+)
+def test_get_database_where_clause(
+    data_classification, exclude_statement, databases, expected
+):
+    """
+    Test the _get_database_where_clause method of DataClassification class.
+
+    This test verifies that the method correctly generates the WHERE clause
+    for database filtering in SQL queries.
+    """
+    result = data_classification._get_database_where_clause(
+        exclude_statement=exclude_statement, databases=databases
+    )
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "exclude_statement, schemas, expected",
+    [
+        (
+            "",
+            ["RAW.*", "PREP.SCHEMA_A"],
+            " AND (table_catalog = 'RAW' AND table_schema ILIKE '%') OR (table_catalog = 'PREP' AND table_schema = 'SCHEMA_A')",
+        ),
+        (
+            "NOT",
+            ["PROD.SCHEMA_B"],
+            " AND NOT (table_catalog = 'PROD' AND table_schema = 'SCHEMA_B')",
+        ),
+    ],
+)
+def test_get_schema_where_clause(
+    data_classification, exclude_statement, schemas, expected
+):
+    """
+    Test the _get_schema_where_clause method of DataClassification class.
+
+    This test ensures that the method correctly generates
+    """
+    result = data_classification._get_schema_where_clause(
+        exclude_statement=exclude_statement, schemas=schemas
+    )
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "exclude_statement, tables, expected",
+    [
+        (
+            "",
+            ["RAW.*.*", "PREP.SCHEMA_A.*", "PROD.SCHEMA_B.TABLE_C"],
+            " AND (table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%') OR (table_catalog = 'PREP' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%') OR (table_catalog = 'PROD' AND table_schema = 'SCHEMA_B' and table_name = 'TABLE_C')",
+        ),
+        (
+            "NOT",
+            ["RAW.SCHEMA_X.TABLE_Y", "PREP.*.*"],
+            " AND NOT (table_catalog = 'RAW' AND table_schema = 'SCHEMA_X' and table_name = 'TABLE_Y') OR (table_catalog = 'PREP' AND table_schema ILIKE '%' AND table_name ILIKE '%')",
+        ),
+    ],
+)
+def test_get_table_where_clause(
+    data_classification, exclude_statement, tables, expected
+):
+    """
+    Test the _get_table_where_clause method of DataClassification class.
+
+    This test ensures that the method correctly generates the WHERE clause
+    for table filtering in SQL queries, handling various patterns including
+    wildcards and specific table names.
+
+    Parameters:
+    - exclude_statement: String indicating whether to exclude ("NOT") or include ("") the tables.
+    - tables: List of table patterns to be included or excluded.
+    - expected: The expected SQL WHERE clause string.
+
+    The test verifies that the method correctly handles:
+    1. Full wildcard patterns (e.g., "RAW.*.*")
+    2. Partial wildcard patterns (e.g., "PREP.SCHEMA_A.*")
+    3. Specific table names (e.g., "PROD.SCHEMA_B.TABLE_C")
+    4. Combinations of different patterns
+    5. Inclusion and exclusion logic
+    """
+    result = data_classification._get_table_where_clause(
+        exclude_statement=exclude_statement, tables=tables
+    )
+    assert result == expected
+
+
 def test_brackets_mnpi_metadata_update_query(data_classification):
     """
     Test test_mnpi_metadata_update_query
