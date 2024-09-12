@@ -3756,13 +3756,21 @@ Specifies the units to measure usage.
 
 {% docs is_paid_in_full %}
 
+When the Charged Through Date is equal to the Effective End Month, flag the charge as paid in full.
+
 {% enddocs %}
 
 {% docs months_of_future_billings %}
 
+If the Charged Through Date is null, then take the Current Term from the subscription, otherwise calcualte the months of future billings as the number of months between the Charged Through Date and the Effective End Month of the charge.
+
 {% enddocs %}
 
 {% docs is_included_in_arr_calc %}
+
+Charges can be marked cancelled by upating the effective dates. We do not want to include these charges in a final ARR calculation, so we mark them for exclusion.
+
+When the Effective End Month > Effective Start Month OR Effective End Month is null, then include the records in the ARR calculation.
 
 {% enddocs %}
 
