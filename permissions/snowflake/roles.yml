@@ -1316,6 +1316,7 @@ roles:
         databases:
           read:
             - raw
+            - prep
         schemas:
           read:
             - raw.aws_billing
