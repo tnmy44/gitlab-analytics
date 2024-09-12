@@ -1316,12 +1316,15 @@ roles:
         databases:
           read:
             - raw
+            - prep
         schemas:
           read:
             - raw.aws_billing
+            - prep.aws_billing
         tables:
           read:
             - raw.aws_billing.*
+            - prep.aws_billing.*
   - bamboohr_analytics:
       warehouses:
         - dev_xs
