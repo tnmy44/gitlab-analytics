@@ -23,7 +23,7 @@ class DataClassification:
     """
 
     def __init__(
-            self, tagging_type: str, mnpi_raw_file: str, incremental_load_days: int
+        self, tagging_type: str, mnpi_raw_file: str, incremental_load_days: int
     ):
         """
         Define parameters
@@ -133,7 +133,7 @@ class DataClassification:
         return [extract_full_path(x) for x in mnpi_list]
 
     def _get_database_where_clause(
-            self, exclude_statement: str, databases: list
+        self, exclude_statement: str, databases: list
     ) -> str:
         """
         Generate database WHERE clause
@@ -388,14 +388,14 @@ class DataClassification:
 
         """
         properties = "{'sample_count': 100, 'auto_tag': true}"
-        return F"CALL SYSTEM$CLASSIFY_SCHEMA('{database}.{schema}', {properties})"
+        return f"CALL SYSTEM$CLASSIFY_SCHEMA('{database}.{schema}', {properties})"
 
     def classify_mnpi_data(
-            self,
-            date_from: str,
-            unset: str = "FALSE",
-            tagging_type: str = "INCREMENTAL",
-            database: str = "RAW",
+        self,
+        date_from: str,
+        unset: str = "FALSE",
+        tagging_type: str = "INCREMENTAL",
+        database: str = "RAW",
     ) -> str:
         """
         Query to call procedure with parameters for classification
@@ -425,15 +425,15 @@ class DataClassification:
 
         if database_name in databases:
             if (
-                    f"{database_name}.{schema_name}" in schemas
-                    or f"{database_name}.*" in schemas
+                f"{database_name}.{schema_name}" in schemas
+                or f"{database_name}.*" in schemas
             ):
                 full_name = f"{database_name}.{schema_name}.{table_name}"
 
                 if (
-                        full_name in tables
-                        or f"{database_name}.{schema_name}.*" in tables
-                        or f"{database_name}.*.*" in tables
+                    full_name in tables
+                    or f"{database_name}.{schema_name}.*" in tables
+                    or f"{database_name}.*.*" in tables
                 ):
                     return True
 
@@ -495,26 +495,27 @@ class DataClassification:
         on DATABASE, SCHEMA and TABLE level
         """
         with open(
-                file=self.specification_file, mode="r", encoding=self.encoding
+            file=self.specification_file, mode="r", encoding=self.encoding
         ) as file:
             manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
 
         return manifest_dict
 
-    @staticmethod
-    def execute_pii_system_classify_schema(tables: list) -> None:
+    def execute_pii_system_classify_schema(self, tables: list) -> None:
         """
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
         """
-        for table in tables:
-            info(f"Schema to classify: {str(table)}")
+        for database, schema in tables:
+            info(
+                f"Command to classify: {self.get_pii_classify_schema_query(database=database, schema=schema)}"
+            )
 
     def classify(
-            self,
-            date_from: str,
-            unset: str = "FALSE",
-            tagging_type: str = "INCREMENTAL",
-            database: str = None,
+        self,
+        date_from: str,
+        unset: str = "FALSE",
+        tagging_type: str = "INCREMENTAL",
+        database: str = None,
     ):
         """
         Routine to classify all data
