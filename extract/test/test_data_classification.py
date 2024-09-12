@@ -18,7 +18,7 @@ def fixture_data_classification():
     environ["SNOWFLAKE_PROD_DATABASE"] = "PROD"
     environ["SNOWFLAKE_LOAD_DATABASE"] = "RAW"
     return DataClassification(
-        tagging_type="FULL", mnpi_raw_file="test.json", incremental_load_days=90
+        tagging_type="FULL", incremental_load_days=90
     )
 
 
@@ -33,7 +33,7 @@ def fixture_data_classification():
         ("connected", False),
         ("specification_file", "../../extract/data_classification/specification.yml"),
         ("tagging_type", "FULL"),
-        ("mnpi_raw_file", "test.json"),
+        ("mnpi_raw_file", "mnpi_models.json"),
         ("incremental_load_days", 90),
         ("raw", "RAW"),
         ("prep", "PREP"),

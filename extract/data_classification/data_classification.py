@@ -23,22 +23,24 @@ class DataClassification:
     """
 
     def __init__(
-        self, tagging_type: str, mnpi_raw_file: str, incremental_load_days: int
+        self, tagging_type: str, incremental_load_days: int
     ):
         """
         Define parameters
         """
-
         self.encoding = "utf8"
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
         self.processing_role = "SYSADMIN"
+        self.specification_file = "../../extract/data_classification/specification.yml"
+        self.mnpi_raw_file = "mnpi_models.json"
+
         self.loader_engine: Engine = None
         self.connected = False
-        self.specification_file = "../../extract/data_classification/specification.yml"
+
         self.tagging_type = tagging_type
-        self.mnpi_raw_file = mnpi_raw_file
         self.incremental_load_days = incremental_load_days
+
         self.config_vars = os.environ.copy()
         self.raw = self.config_vars["SNOWFLAKE_LOAD_DATABASE"]
         self.prep = self.config_vars["SNOWFLAKE_PREP_DATABASE"]
@@ -395,8 +397,7 @@ class DataClassification:
         self,
         date_from: str,
         unset: str = "FALSE",
-        tagging_type: str = "INCREMENTAL",
-        database: str = "RAW",
+        tagging_type: str = "INCREMENTAL"
     ) -> str:
         """
         Query to call procedure with parameters for classification
@@ -534,7 +535,6 @@ class DataClassification:
                 date_from=date_from,
                 unset=unset,
                 tagging_type=tagging_type,
-                database=database,
             )
 
             info(f"....Call stored procedure: {query}")
@@ -542,8 +542,8 @@ class DataClassification:
 
         else:
             query = self.pii_table_list_query(database=getattr(self, database.lower()))
-
             table_list = self.__get_pii_table_list(query=query)
+
             if table_list:
                 self.execute_pii_system_classify_schema(tables=table_list)
             else:
@@ -579,7 +579,6 @@ class DataClassification:
             connection = self.__connect()
             tables = connection.execute(statement=query).fetchall()
 
-            # Logging stored procedure result
             return tables
 
         except Exception as e:

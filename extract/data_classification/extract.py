@@ -25,7 +25,6 @@ def run_extract(
 
     data_classification = DataClassification(
         tagging_type=tagging_type,
-        mnpi_raw_file="mnpi_models.json",
         incremental_load_days=incremental_load_days,
     )
     if not date_from:
