@@ -135,16 +135,20 @@ extract_classification = KubernetesPodOperator(
 
 
 def get_task(database: str):
-    task_id = task_name = "execute_classification"
+    """
+    Generate task for classification separate per database
+    for a better performance
+    """
+    task_id = task_name = f"execute_classification_{database}"
 
-    execute_classification = KubernetesPodOperator(
+    return KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
         task_id=task_id,
         name=task_name,
         secrets=secrets,
         env_vars=pod_env_vars,
-        arguments=[get_command(task=task_id, database=database)],
+        arguments=[get_command(task="execute_classification", database=database)],
         affinity=get_affinity("extraction"),
         tolerations=get_toleration("extraction"),
         dag=dag,

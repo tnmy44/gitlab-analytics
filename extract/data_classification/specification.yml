@@ -4,15 +4,15 @@ data_classification:
     description: "MNPI data classification"
     include:
       databases:
-        - PREP
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
         - RAW
         - PROD
       schemas:
-        - PREP.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
         - RAW.*
         - PROD.*
       tables:
-        - PREP.*.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
         - RAW.*.*
         - PROD.*.*
     exclude:
@@ -26,16 +26,15 @@ data_classification:
     description: "PII data classification"
     include:
       databases:
-        - PREP
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW"
         - RAW
         - PROD
       schemas:
-        - PREP.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*
         - RAW.*
         - PROD.*
-
       tables:
-        - PREP.*.*
+        - "21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW".*.*
         - RAW.*.*
         - PROD.*.*
     exclude:
