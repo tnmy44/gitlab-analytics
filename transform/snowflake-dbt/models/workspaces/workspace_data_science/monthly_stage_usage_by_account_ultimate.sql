@@ -412,14 +412,12 @@ SELECT
                 THEN flattened_metrics.metrics_path
         END
     ) AS section_enablement_28days_features, -- TO BE DELETED
-
-
     COUNT(
         DISTINCT CASE
             WHEN
                 usage_ping_metrics.section_name = 'ops'
                 AND usage_ping_metrics.time_frame = 'all'
-                THEN flattened_metrics.metrics_path
+                THEN flattened_metrics.metrics_path -- TO BE DELETED
         END
     ) AS section_ops_alltime_features,
     COUNT(
@@ -427,7 +425,7 @@ SELECT
             WHEN
                 usage_ping_metrics.section_name = 'ops'
                 AND usage_ping_metrics.time_frame = '28d'
-                THEN flattened_metrics.metrics_path
+                THEN flattened_metrics.metrics_path -- TO BE DELETED
         END
     ) AS section_ops_28days_features,
 
@@ -447,6 +445,71 @@ SELECT
                 THEN flattened_metrics.metrics_path
         END
     ) AS section_sec_28days_features,
+
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'ci'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_ci_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'ci'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_ci_28days_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'cd'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_cd_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'cd'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_cd_28days_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'core_platform'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_sec_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'core_platform'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_core_platform_28days_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'analytics'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_analytics_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'analytics'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_analytics_28days_features,        
 
 
     -- NUMBER OF FEATURES USED BY PRODUCT TIER
