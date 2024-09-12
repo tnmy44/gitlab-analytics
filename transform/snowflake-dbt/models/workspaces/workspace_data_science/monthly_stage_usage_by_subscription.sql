@@ -478,7 +478,7 @@ SELECT
                 AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
         END
-    ) AS section_sec_alltime_features,
+    ) AS section_core_platform_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
