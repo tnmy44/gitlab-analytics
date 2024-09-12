@@ -382,7 +382,8 @@ class DataClassification:
             f"   AND database_name = {self.quoted(database)}"
         )
 
-    def get_pii_classify_schema_query(self, database: str, schema: str) -> str:
+    @staticmethod
+    def get_pii_classify_schema_query(database: str, schema: str) -> str:
         """
         Get schema classify query
 
@@ -501,7 +502,8 @@ class DataClassification:
 
         return manifest_dict
 
-    def execute_pii_system_classify_schema(self, tables: list) -> None:
+    @staticmethod
+    def execute_pii_system_classify_schema(tables: list) -> None:
         """
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
         """
@@ -514,7 +516,7 @@ class DataClassification:
         date_from: str,
         unset: str = "FALSE",
         tagging_type: str = "INCREMENTAL",
-        database: str = None,
+        database: str = "",
     ):
         """
         Routine to classify all data
@@ -545,7 +547,9 @@ class DataClassification:
             if table_list:
                 self.execute_pii_system_classify_schema(tables=table_list)
             else:
-                info(F"....No table for classification in the schema: {getattr(self, database.lower())}")
+                info(
+                    f"....No table for classification in the schema: {getattr(self, database.lower())}"
+                )
         info("END classify.")
 
     def __execute_query(self, query: str):
