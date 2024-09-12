@@ -401,3 +401,74 @@ def test_brackets_mnpi_metadata_update_query(data_classification):
     """
     query = data_classification.mnpi_metadata_update_query
     assert query.count("(") == query.count(")") == 8
+
+
+def test_get_pii_classify_schema_query(data_classification):
+    """
+    Test get_pii_classify_schema_query
+    """
+    database = "TEST_DB"
+    schema = "TEST_SCHEMA"
+    expected_query = "CALL SYSTEM$CLASSIFY_SCHEMA('TEST_DB.TEST_SCHEMA', {'sample_count': 100, 'auto_tag': true})"
+    assert (
+        data_classification.get_pii_classify_schema_query(database, schema)
+        == expected_query
+    )
+
+
+@pytest.mark.parametrize(
+    "database, schema, expected_query",
+    [
+        (
+            "PROD",
+            "SALES",
+            "CALL SYSTEM$CLASSIFY_SCHEMA('PROD.SALES', {'sample_count': 100, 'auto_tag': true})",
+        ),
+        (
+            "DEV",
+            "USERS",
+            "CALL SYSTEM$CLASSIFY_SCHEMA('DEV.USERS', {'sample_count': 100, 'auto_tag': true})",
+        ),
+        (
+            "STAGING",
+            "ORDERS",
+            "CALL SYSTEM$CLASSIFY_SCHEMA('STAGING.ORDERS', {'sample_count': 100, 'auto_tag': true})",
+        ),
+    ],
+)
+def test_get_pii_classify_schema_query_with_different_inputs(
+    data_classification, database, schema, expected_query
+):
+    """
+    Test get_pii_classify_schema_query_with_different_inputs
+    """
+    assert (
+        data_classification.get_pii_classify_schema_query(database, schema)
+        == expected_query
+    )
+
+
+def test_get_pii_classify_schema_query_with_special_characters(data_classification):
+    """
+    Test get_pii_classify_schema_query_with_special_characters
+    """
+    database = "TEST_DB-1"
+    schema = "TEST_SCHEMA_2"
+    expected_query = "CALL SYSTEM$CLASSIFY_SCHEMA('TEST_DB-1.TEST_SCHEMA_2', {'sample_count': 100, 'auto_tag': true})"
+    assert (
+        data_classification.get_pii_classify_schema_query(database, schema)
+        == expected_query
+    )
+
+
+def test_get_pii_classify_schema_query_with_lowercase_inputs(data_classification):
+    """
+    Test get_pii_classify_schema_query_with_lowercase_inputs
+    """
+    database = "test_db"
+    schema = "test_schema"
+    expected_query = "CALL SYSTEM$CLASSIFY_SCHEMA('test_db.test_schema', {'sample_count': 100, 'auto_tag': true})"
+    assert (
+        data_classification.get_pii_classify_schema_query(database, schema)
+        == expected_query
+    )
