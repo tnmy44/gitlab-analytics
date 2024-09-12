@@ -10088,21 +10088,4 @@ users:
     groups:
     - General All Access
     - General SAFE Access
-  - user_name: testuser1
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-    - General All Access
-    - yes
-    - People All Access
-  - user_name: testuser2
-    user_name_domain: gitlab.com
-    site_role: Explorer
-    auth_setting: SAML
-    groups:
-    - General All Access
-    - General SAFE Access
-    - yes
-    - People All Access
-    - Finance All Access
+  
