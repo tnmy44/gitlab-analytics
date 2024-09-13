@@ -4,17 +4,17 @@ data_classification:
     description: MNPI data classification
     include:
       databases:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD
+        - RAW
+        - PREP
+        - PROD
       schemas:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD.*
+        - RAW.*
+        - PREP.*
+        - PROD.*
       tables:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP.*.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD.*.*
+        - RAW.*.*
+        - PREP.*.*
+        - PROD.*.*
     exclude:
       databases:
         - NONE
@@ -26,17 +26,17 @@ data_classification:
     description: PII data classification
     include:
       databases:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD
+        - RAW
+        - PREP
+        - PROD
       schemas:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD.*
+        - RAW.*
+        - PREP.*
+        - PROD.*
       tables:
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_RAW.*.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PREP.*.*
-        - 21629-DATA-CLASSIFICATION-AUDIT-RUN_PROD.*.*
+        - RAW.*.*
+        - PREP.*.*
+        - PROD.*.*
     exclude:
       databases:
         - NONE

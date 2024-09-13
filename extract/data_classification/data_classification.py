@@ -495,7 +495,7 @@ class DataClassification:
             )
 
             info("....Call stored procedure for the MNPI classification")
-            # self.utils.execute_query(query=query)
+            self.utils.execute_query(query=query)
 
         else:
             query = self.pii_table_list_query(database=getattr(self, database.lower()))

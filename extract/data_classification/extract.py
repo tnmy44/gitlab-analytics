@@ -5,7 +5,7 @@
 """
 import sys
 from datetime import datetime, timedelta
-from logging import basicConfig, getLogger, info
+from logging import basicConfig, info
 
 from data_classification import DataClassification
 from fire import Fire
@@ -46,8 +46,6 @@ def run_extract(
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
-    # getLogger("snowflake.connector.cursor").disabled = True
-    # getLogger("snowflake.connector.connection").disabled = True
     info("START data classification.")
     Fire(run_extract)
     info("END with data classification.")

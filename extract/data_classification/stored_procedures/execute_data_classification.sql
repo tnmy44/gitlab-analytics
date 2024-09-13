@@ -44,9 +44,9 @@ DECLARE
                          AND ((? = 'FULL')
                           OR (? = 'INCREMENTAL' AND created >= ?));
 BEGIN
-   CALL log_me(p_log_text  => 'Start classification p_type='     ||:p_type||
-                                                 ', p_date_from='||:p_date_from||
-                                                 ', p_unset='    ||:p_unset,
+   CALL log_me(p_log_text  => 'Start MNPI classification p_type='     ||:p_type||
+                                                      ', p_date_from='||:p_date_from||
+                                                      ', p_unset='    ||:p_unset,
                p_log_level => 'INFO');
 
    OPEN l_cur USING (l_type, l_type, l_date_from);
@@ -54,25 +54,14 @@ BEGIN
    FOR rec IN l_cur DO
        LET l_full_table_name := '"'||rec.database_name||'".'||rec.schema_name||'.'||rec.table_name;
 
-       IF (rec.classification_type = 'PII') THEN
-           IF (p_unset) THEN
-               l_query := 'ALTER '||rec.table_type||' '||l_full_table_name||' MODIFY COLUMN <column_name> UNSET TAG SEMANTIC_CATEGORY'; -- TODO: rbacovic finish UNSET per column level
-           ELSE
-               LET l_pii_properties := '{\'auto_tag\': true, \'sample_count\': 100}';
+       l_query := 'ALTER '||rec.table_type||' '||l_full_table_name;
 
-               l_query := 'CALL SYSTEM$CLASSIFY(\''|| l_full_table_name ||'\','||l_pii_properties||');';
-           END IF;
+       IF (p_unset) THEN
+         l_query := l_query ||' UNSET TAG MNPI_DATA;';
+       ELSE
+         l_query := l_query ||' SET TAG MNPI_DATA=\'yes\';';
        END IF;
 
-       IF (rec.classification_type = 'MNPI') THEN
-           l_query := 'ALTER '||rec.table_type||' '||l_full_table_name;
-
-           IF (p_unset) THEN
-             l_query := l_query ||' UNSET TAG MNPI_DATA;';
-           ELSE
-             l_query := l_query ||' SET TAG MNPI_DATA=\'yes\';;';
-           END IF;
-       END IF;
 
        -- OUTPUT := OUTPUT || l_query|| '\n';
        l_counter := l_counter + 1;
@@ -84,7 +73,7 @@ BEGIN
       BEGIN
 
           EXECUTE IMMEDIATE l_query;
-          CALL log_me(p_log_text => 'CLASSIFIED: '||:l_full_table_name,
+          CALL log_me(p_log_text => 'CLASSIFIED: '||:l_query,
                       p_log_level => 'INFO');
       EXCEPTION
           WHEN OTHER THEN
@@ -103,7 +92,7 @@ BEGIN
    CALL log_me(p_log_text  => 'End classification p_type='     ||:p_type||
                                                ', p_date_from='||:p_date_from||
                                                ', p_unset='    ||:p_unset,
-               p_log_level => 'INFO');;
+               p_log_level => 'INFO');
 
    RETURN 'CLASSIFIED: '||TO_VARCHAR(l_counter)||' ERROR_NO: '||TO_VARCHAR(l_error);
 
