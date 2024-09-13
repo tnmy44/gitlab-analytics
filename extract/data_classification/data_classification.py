@@ -532,7 +532,7 @@ class DataClassification:
                 tagging_type=tagging_type,
             )
 
-            info(f"....Call stored procedure for MNPI classification")
+            info("....Call stored procedure for MNPI classification")
             # self.__execute_query(query=query)
 
         else:

@@ -47,6 +47,7 @@ def run_extract(
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     getLogger("snowflake.connector.cursor").disabled = True
+    getLogger("snowflake.connector.connection").disabled = True
     info("START data classification.")
     Fire(run_extract)
     info("END with data classification.")
