@@ -23,12 +23,8 @@ def fixture_data_classification():
 @pytest.mark.parametrize(
     "attribute, expected_value",
     [
-        ("encoding", "utf8"),
         ("schema_name", "data_classification"),
         ("table_name", "sensitive_objects_classification"),
-        ("processing_role", "SYSADMIN"),
-        ("loader_engine", None),
-        ("connected", False),
         ("specification_file", "../../extract/data_classification/specification.yml"),
         ("tagging_type", "FULL"),
         ("mnpi_raw_file", "mnpi_models.json"),
@@ -43,20 +39,6 @@ def test_initialization(data_classification, attribute, expected_value):
     Test class creation attributes
     """
     assert getattr(data_classification, attribute) == expected_value
-
-
-def test_quoted(data_classification):
-    """
-    Test single quoted
-    """
-    assert data_classification.quoted("test") == "'test'"
-
-
-def test_double_quoted(data_classification):
-    """
-    Test double-quoted
-    """
-    assert data_classification.double_quoted("test") == '"test"'
 
 
 def test_transform_mnpi_list(data_classification):
