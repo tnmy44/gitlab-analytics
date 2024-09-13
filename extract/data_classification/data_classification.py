@@ -498,7 +498,6 @@ class DataClassification:
 
         return manifest_dict
 
-
     def execute_pii_system_classify_schema(self, tables: list) -> None:
         """
         Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
@@ -507,7 +506,6 @@ class DataClassification:
             info(f"{i}/{len(tables)} Schema to classify: {database}.{schema}")
             query = self.get_pii_classify_schema_query(database=database, schema=schema)
             # self.__execute_query(query=query)
-            info(F"Query to run: {query}")
 
     def classify(
         self,
