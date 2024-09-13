@@ -22,9 +22,7 @@ class DataClassification:
     - MNPI
     """
 
-    def __init__(
-        self, tagging_type: str, incremental_load_days: int
-    ):
+    def __init__(self, tagging_type: str, incremental_load_days: int):
         """
         Define parameters
         """
@@ -394,10 +392,7 @@ class DataClassification:
         return f"CALL SYSTEM$CLASSIFY_SCHEMA('{database}.{schema}', {properties})"
 
     def classify_mnpi_data(
-        self,
-        date_from: str,
-        unset: str = "FALSE",
-        tagging_type: str = "INCREMENTAL"
+        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
         """
         Query to call procedure with parameters for classification

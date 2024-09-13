@@ -17,9 +17,7 @@ def fixture_data_classification():
     environ["SNOWFLAKE_PREP_DATABASE"] = "PREP"
     environ["SNOWFLAKE_PROD_DATABASE"] = "PROD"
     environ["SNOWFLAKE_LOAD_DATABASE"] = "RAW"
-    return DataClassification(
-        tagging_type="FULL", incremental_load_days=90
-    )
+    return DataClassification(tagging_type="FULL", incremental_load_days=90)
 
 
 @pytest.mark.parametrize(
