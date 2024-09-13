@@ -505,7 +505,7 @@ class DataClassification:
         for i, (database, schema) in enumerate(tables, start=1):
             info(f"{i}/{len(tables)} Schema to classify: {database}.{schema}")
             query = self.get_pii_classify_schema_query(database=database, schema=schema)
-            # self.__execute_query(query=query)
+            self.__execute_query(query=query)
 
     def classify(
         self,
@@ -532,7 +532,7 @@ class DataClassification:
                 tagging_type=tagging_type,
             )
 
-            info(f"....Call stored procedure: {query}")
+            info(f"....Call stored procedure for MNPI classification")
             # self.__execute_query(query=query)
 
         else:
