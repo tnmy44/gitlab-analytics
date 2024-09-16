@@ -2115,3 +2115,9 @@ This table is a derived fact from fct_team_status and gitlab_pto. Sensitive colu
 The grain of this table is one row per pto_uuid per absence_date per dim_team_member_sk combination. 
 
 {% enddocs %}
+
+{% docs fct_team_member_history %}
+
+Contains the team members' employment history.
+
+{% enddocs %}
