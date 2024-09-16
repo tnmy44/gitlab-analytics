@@ -160,6 +160,10 @@ databases:
       shared: false
   - pempey_prep:
       shared: false
+  - psmith_prod:
+      shared: false
+  - psmith_prep:
+      shared: false
   - rakreddy_prod:
       shared: false
   - rakreddy_prep:
