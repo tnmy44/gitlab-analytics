@@ -80,7 +80,8 @@
         'Dedicated - Administration Fee [Small] - Monthly',
         'Dedicated - Administration Fee [3XLarge] - 1 Year',
         'Dedicated - Administration Fee [Medium] - 1 Year',
-        'Dedicated - Administration Fee [Small] - 1 Year'
+        'Dedicated - Administration Fee [Small] - 1 Year',
+        'Dedicated - Storage 10GB - Monthly'
       )
     {{ dbt_utils.group_by(n = 2) }}
     
