@@ -5974,6 +5974,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - psmith:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - ballam:
       member_of:
         - snowflake_account_usage
@@ -7193,6 +7198,10 @@ users:
       can_login: true
       member_of:
         - swiskow
+  - psmith:
+      can_login: true
+      member_of:
+        - psmith
   - dchevalier:
       can_login: true
       member_of:
