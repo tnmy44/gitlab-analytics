@@ -1,11 +1,18 @@
+{{ config(materialized='table') }}
+
 {{ simple_cte([
  ('dim_date', 'dim_date'),
- ('mart_arr', 'mart_arr'),
- ('prep_crm_account', 'prep_crm_account')
-]) }},
+ ('mart_arr_snapshot_model', 'mart_arr_snapshot_model'),
+ ('prep_crm_account_daily_snapshot', 'prep_crm_account_daily_snapshot')
+]) }}
 
+, dim_date_actual AS (
 
-prep_recurring_charge AS (
+    SELECT DISTINCT
+      first_day_of_month
+    FROM dim_date
+
+), prep_recurring_charge AS (
   SELECT
     *,
     CASE
@@ -18,10 +25,12 @@ prep_recurring_charge AS (
       WHEN product_tier_name IN ('SaaS - Bronze', 'Self-Managed - Starter') THEN 1
       ELSE 0
     END AS product_ranking2
-  FROM mart_arr
+  FROM mart_arr_snapshot_model
+  INNER JOIN dim_date_actual
+    ON mart_arr_snapshot_model.arr_month = dim_date_actual.first_day_of_month
   WHERE
     mrr != 0
-    AND snapshot_date = (SELECT MAX(snapshot_date) FROM mart_arr)
+
 ),
 
 parent_account_arrs AS (
@@ -82,7 +91,7 @@ final AS (
       END
     )                                 AS is_arpu_combined,
     parent_crm_account_sales_segment,
-    prep_crm_account.crm_account_name AS parent_crm_account_name,
+    prep_crm_account_daily_snapshot.crm_account_name AS parent_crm_account_name,
     retention_month,
     future_arr_month,
     current_arr                       AS prior_year_arr,
@@ -113,10 +122,11 @@ final AS (
     END                               AS type_of_arr_change
   FROM
     retention_subs
-  LEFT JOIN prep_crm_account ON prep_crm_account.dim_crm_account_id = COALESCE(
+  LEFT JOIN prep_crm_account_daily_snapshot ON prep_crm_account_daily_snapshot.dim_crm_account_id = COALESCE(
       retention_subs.dim_parent_crm_account_id,
       retention_subs.future_dim_parent_crm_account_id
     )
+      AND retention_subs.retention_month = prep_crm_account_daily_snapshot.snapshot_date
 ),
 
 final_1 AS (

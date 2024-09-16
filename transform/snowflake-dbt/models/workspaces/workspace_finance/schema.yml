@@ -1213,3 +1213,5 @@ models:
         data_tests:
           - not_null
           - unique
+
+  - name: wk_rpt_arr_snapshot
