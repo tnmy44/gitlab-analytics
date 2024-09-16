@@ -196,7 +196,7 @@ projects:
       - group_name: General All Access
         permission_rule: view
       - group_name: Production Project Lead
-        permission_rule: project_lead
+        permission_rule: project_lead 
 
   - project_name: General
     description: ""
@@ -207,6 +207,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Customer Success Project Lead
+        permission_rule: project_lead 
 
   - project_name: SAFE
     description: ""
@@ -216,6 +218,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Customer Success Project Lead 
         permission_rule: project_lead
 
 
@@ -245,6 +249,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Data Team Project Lead 
+        permission_rule: project_lead
 
 
   - project_name: SAFE
@@ -255,6 +261,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Data Team Project Lead 
         permission_rule: project_lead
 
 # ==========================================
@@ -283,6 +291,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Engineering Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -292,6 +302,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Engineering Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -319,6 +331,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Finance Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -328,6 +342,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Finance Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -355,6 +371,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Go To Market Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -364,6 +382,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Go To Market Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -389,6 +409,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Marketing Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -398,6 +420,7 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+      - group_name: Marketing Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -425,6 +448,8 @@ projects:
         permission_rule: view_limited
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: People Project Lead
+        permission_rule: project_lead
 
   - project_name: Restricted
     description: ""
@@ -437,6 +462,8 @@ projects:
         permission_rule: project_lead
       - group_name: General All Access
         permission_rule: view_limited
+      - group_name: People Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -446,6 +473,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: People Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -473,6 +502,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Product Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -482,6 +513,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Product Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -509,6 +542,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -519,6 +554,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Sales Project Lead
+        permission_rule: project_lead
 
   - project_name: RSA SAFE
     description: ""
@@ -528,6 +565,8 @@ projects:
       - group_name: RSA SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Sales Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -555,6 +594,8 @@ projects:
         permission_rule: view
       - group_name: Production Project Lead
         permission_rule: project_lead
+      - group_name: Security Project Lead
+        permission_rule: project_lead
 
   - project_name: SAFE
     description: ""
@@ -564,6 +605,8 @@ projects:
       - group_name: General SAFE Access
         permission_rule: view
       - group_name: Production Project Lead
+        permission_rule: project_lead
+      - group_name: Security Project Lead
         permission_rule: project_lead
 
 # ==========================================
@@ -591,6 +634,7 @@ projects:
         permission_rule: view
       - group_name: Support Project Lead
         permission_rule: project_lead
+
 
   - project_name: SAFE
     description: ""
