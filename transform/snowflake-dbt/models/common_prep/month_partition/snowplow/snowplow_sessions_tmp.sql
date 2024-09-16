@@ -1,5 +1,6 @@
 {{config({
     "materialized":"incremental",
+    "incremental_strategy":"delete+insert",
     "unique_key":"session_id",
     "on_schema_change":"sync_all_columns"
   })
