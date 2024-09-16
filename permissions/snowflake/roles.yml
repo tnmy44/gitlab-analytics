@@ -160,6 +160,10 @@ databases:
       shared: false
   - pempey_prep:
       shared: false
+  - psmith_prod:
+      shared: false
+  - psmith_prep:
+      shared: false
   - rakreddy_prod:
       shared: false
   - rakreddy_prep:
@@ -1316,12 +1320,15 @@ roles:
         databases:
           read:
             - raw
+            - prep
         schemas:
           read:
             - raw.aws_billing
+            - prep.aws_billing
         tables:
           read:
             - raw.aws_billing.*
+            - prep.aws_billing.*
   - bamboohr_analytics:
       warehouses:
         - dev_xs
@@ -5971,6 +5978,44 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - psmith:
+      member_of:
+        - analyst_sales
+        - snowflake_analyst_safe
+      warehouses:
+        - dev_xs
+      owns:
+        databases:
+          - psmith_prep
+          - psmith_prod
+        schemas:
+          - psmith_prep.*
+          - psmith_prod.*
+        tables:
+          - psmith_prep.*.*
+          - psmith_prod.*.*
+      privileges:
+        databases:
+          read:
+            - psmith_prep
+            - psmith_prod
+          write:
+            - psmith_prep
+            - psmith_prod
+        schemas:
+          read:
+            - psmith_prep.*
+            - psmith_prod.*
+          write:
+            - psmith_prep.*
+            - psmith_prod.*
+        tables:
+          read:
+            - psmith_prep.*.*
+            - psmith_prod.*.*
+          write:
+            - psmith_prep.*.*
+            - psmith_prod.*.*
   - ballam:
       member_of:
         - snowflake_account_usage
@@ -7190,6 +7235,10 @@ users:
       can_login: true
       member_of:
         - swiskow
+  - psmith:
+      can_login: true
+      member_of:
+        - psmith
   - dchevalier:
       can_login: true
       member_of:
