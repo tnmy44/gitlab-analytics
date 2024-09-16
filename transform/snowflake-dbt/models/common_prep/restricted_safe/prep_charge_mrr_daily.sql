@@ -1,6 +1,7 @@
 {{ simple_cte([
     ('prep_date', 'prep_date'),
-    ('prep_charge', 'prep_charge')
+    ('prep_charge', 'prep_charge'),
+    ('prep_subscription', 'prep_subscription')
 ])}}
 
 , charges_filtered AS (
@@ -15,11 +16,9 @@ Filter to the most recent subscription version for the original subscription/sub
            ) 
       }}
   FROM prep_charge
-  QUALIFY
-    DENSE_RANK() OVER (
-    PARTITION BY subscription_name
-    ORDER BY subscription_version DESC
-  ) = 1
+  WHERE subscription_status NOT IN ('Draft')
+      AND charge_type = 'Recurring'
+      AND is_included_in_arr_calc = TRUE
 
 ), prep_charge_mrr_daily AS (
 
@@ -40,14 +39,15 @@ LEFT JOIN prep_subscription AS subscriptions_charge
 
   SELECT
     prep_date.date_actual,
-    charges_filtered.*
+    charges_filtered.*,
+    prep_subscription.dim_subscription_id_original
   FROM charges_filtered
   INNER JOIN prep_date
     ON charges_filtered.effective_start_date <= prep_date.date_actual
-    AND COALESCE(charges_filtered.effective_end_date, CURRENT_DATE) > prep_date.date_actual
-  WHERE charge_type != 'OneTime'
-    AND subscription_status NOT IN ('Draft')
-    AND is_included_in_arr_calc = TRUE
+      AND (charges_filtered.effective_end_date > prep_date.date_actual
+        OR charges_filtered.effective_end_date IS NULL)
+  LEFT JOIN prep_subscription
+    ON charges_filtered.dim_subscription_id = prep_subscription.dim_subscription_id
 
 )
 
@@ -55,6 +55,6 @@ LEFT JOIN prep_subscription AS subscriptions_charge
     cte_ref="prep_charge_mrr_daily",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2024-09-12",
-    updated_date="2024-09-12",
+    created_date="2024-09-16",
+    updated_date="2024-09-16",
 ) }}

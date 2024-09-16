@@ -110,11 +110,25 @@ installations that send Seat Link data overlaps, but both may contain additional
   LEFT JOIN prep_subscription
     ON COALESCE(seat_link_records.dim_subscription_id, ping_daily_mapping.dim_subscription_id) = prep_subscription.dim_subscription_id
 
-), final AS (
+), prep_charge_mrr_daily_latest AS (
 
 /*
 To map the products (dim_product_detail_id) associated with the subscription, we need to look at the charges for the latest subscription version of the associated dim_subscription_id.
-We have created a mapping table in prep_charge_mrr_daily at the daily grain which expands the latest charges for a subscription_name across the effective dates of the charges.
+We have created a mapping table in prep_charge_mrr_daily at the daily grain which expands all of the charges for a subscription_name across the effective dates of the charges.
+
+We want to limit this to the Active/Cancelled version of the subscription since this represents the latest valid version.
+
+*/
+
+  SELECT prep_charge_mrr_daily.*
+  FROM prep_charge_mrr_daily
+  LEFT JOIN prep_subscription
+    ON prep_charge_mrr_daily.dim_subscription_id = prep_subscription.dim_subscription_id
+  WHERE prep_subscription.subscription_status IN ('Active', 'Cancelled')
+
+), final AS (
+
+/*
 
 These charges contains a full history of the products associated with a subscription (dim_subscription_id_original/subscription_name) as well as the effective dates of the 
 products as they were used by the customer. They are all associated with the most current dim_subscription_id in the subscription_name lineage.
@@ -125,32 +139,32 @@ between the subscription_created_datetime (adjusted for the first version of a s
 */
 
   SELECT DISTINCT
-    prep_charge_mrr_daily.date_actual,
+    prep_charge_mrr_daily_latest.date_actual,
     COALESCE(subscriptions_ping.dim_subscription_id, subscriptions_charge.dim_subscription_id)                    AS dim_subscription_id,
     COALESCE(subscriptions_ping.dim_subscription_id_original, subscriptions_charge.dim_subscription_id_original)  AS dim_subscription_id_original,
     joined.dim_installation_id,
     subscriptions_ping.dim_crm_account_id,
     COALESCE(subscriptions_ping.subscription_version, subscriptions_charge.subscription_version)                  AS subscription_version,
-    prep_charge_mrr_daily.dim_product_detail_id,
-    prep_charge_mrr_daily.charge_type,
+    prep_charge_mrr_daily_latest.dim_product_detail_id,
+    prep_charge_mrr_daily_latest.charge_type,
     {{ dbt_utils.generate_surrogate_key([
-        'prep_charge_mrr_daily.date_actual',
+        'prep_charge_mrr_daily_latest.date_actual',
         'joined.dim_installation_id',
         'COALESCE(subscriptions_ping.dim_subscription_id, subscriptions_charge.dim_subscription_id)',
-        'prep_charge_mrr_daily.dim_product_detail_id'
+        'prep_charge_mrr_daily_latest.dim_product_detail_id'
       ]) 
     }}                                                                                                            AS primary_key
-  FROM prep_charge_mrr_daily
+  FROM prep_charge_mrr_daily_latest
   LEFT JOIN joined
-    ON prep_charge_mrr_daily.subscription_name = joined.subscription_name
-      AND prep_charge_mrr_daily.date_actual = joined.date_actual
+    ON prep_charge_mrr_daily_latest.dim_subscription_id_original = joined.dim_subscription_id_original
+      AND prep_charge_mrr_daily_latest.date_actual = joined.date_actual
   LEFT JOIN prep_subscription AS subscriptions_ping
     ON joined.dim_subscription_id = subscriptions_ping.dim_subscription_id
   LEFT JOIN prep_subscription AS subscriptions_charge
-    ON prep_charge_mrr_daily.subscription_name = subscriptions_charge.subscription_name
-      AND prep_charge_mrr_daily.date_actual BETWEEN subscriptions_charge.subscription_created_datetime_adjusted AND subscriptions_charge.next_subscription_created_datetime
+    ON prep_charge_mrr_daily_latest.subscription_name = subscriptions_charge.subscription_name
+      AND prep_charge_mrr_daily_latest.date_actual BETWEEN subscriptions_charge.subscription_created_datetime_adjusted AND subscriptions_charge.next_subscription_created_datetime
   LEFT JOIN prep_product_detail
-    ON prep_charge_mrr_daily.dim_product_detail_id = prep_product_detail.dim_product_detail_id
+    ON prep_charge_mrr_daily_latest.dim_product_detail_id = prep_product_detail.dim_product_detail_id
   WHERE prep_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
 
 )
