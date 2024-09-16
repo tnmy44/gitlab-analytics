@@ -196,7 +196,7 @@ projects:
       - group_name: General All Access
         permission_rule: view
       - group_name: Production Project Lead
-        permission_rule: project_lead 
+        permission_rule: project_lead
 
   - project_name: General
     description: ""
