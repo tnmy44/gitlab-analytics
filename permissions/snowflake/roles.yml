@@ -5980,6 +5980,38 @@ roles:
         - snowflake_analyst_safe
       warehouses:
         - dev_xs
+      owns:
+        databases:
+          - psmith_prep
+          - psmith_prod
+        schemas:
+          - psmith_prep.*
+          - psmith_prod.*
+        tables:
+          - psmith_prep.*.*
+          - psmith_prod.*.*
+      privileges:
+        databases:
+          read:
+            - psmith_prep
+            - psmith_prod
+          write:
+            - psmith_prep
+            - psmith_prod
+        schemas:
+          read:
+            - psmith_prep.*
+            - psmith_prod.*
+          write:
+            - psmith_prep.*
+            - psmith_prod.*
+        tables:
+          read:
+            - psmith_prep.*.*
+            - psmith_prod.*.*
+          write:
+            - psmith_prep.*.*
+            - psmith_prod.*.*
   - ballam:
       member_of:
         - snowflake_account_usage
