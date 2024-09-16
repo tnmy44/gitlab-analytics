@@ -31,7 +31,7 @@ SELECT
       THEN 'Engineering'
     WHEN department = 'UX'
       THEN 'Product'
-    WHEN department = 'Data'
+    WHEN department in ('Data','Data (inactive)')
       THEN 'Marketing' 
     WHEN department = 'Security'
       THEN 'Security'
@@ -64,17 +64,17 @@ SELECT
       THEN 'Product Leadership'
     WHEN department = 'Product Monetization'
       THEN 'Monetization'
-    WHEN department IN ('UX Research','Technical Writing', 'Product Design')
+    WHEN department IN ('UX Research','Technical Writing (inactive)', 'Product Design (inactive)')
       THEN 'UX'
     WHEN department = 'Marketing Strategy and Analytics'
       THEN 'Marketing Analytics'  
     WHEN department = 'Security'
       THEN 'Office of CISO'
-    WHEN department in ('Field Marketing', 'Partner Marketing')
+    WHEN department in ('Field Marketing', 'Partner Marketing', 'Partner Marketing (inactive)'
       THEN 'Regional Marketing'
-    WHEN department in ('Account Based Marketing', 'Campaigns', 'Search Marketing')
+    WHEN department in ('Account Based Marketing', 'Account Based Marketing (inactive)', 'Campaigns', 'Search Marketing', 'Search Marketing (inactive)')
       THEN 'Digital Marketing'
-    WHEN department = 'Data'
+    WHEN department in ('Data','Data (inactive)')
       THEN 'Enterprise Data'
     WHEN department = 'Community Relations'
       THEN 'Developer Relations'
