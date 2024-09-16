@@ -150,7 +150,11 @@ terminations_stage AS (
     employee_id,
     effective_date
   FROM staffing_history_approved_source
-  WHERE business_process_type = 'Termination'
+  WHERE business_process_type IN (
+      'Termination',
+      'End Contingent Worker Contract'
+    )
+
 
   UNION
 
