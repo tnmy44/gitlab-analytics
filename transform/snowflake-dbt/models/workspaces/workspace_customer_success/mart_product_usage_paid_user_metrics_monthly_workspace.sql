@@ -70,19 +70,8 @@
     LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
     WHERE charges.subscription_status IN ('Active','Cancelled')
       AND charges.product_tier_name != 'Storage'
-      AND charges.rate_plan_charge_name NOT IN (
-        'Dedicated - Administration Fee [Large] - 1 Year',
-        'Dedicated - Administration Fee  [XLarge] - 1 Year',
-        'Dedicated - Administration Fee [2XLarge] - 1 Year',
-        'Dedicated - Storage 10GB - 1 Year',
-        'Dedicated - Administration Fee [Small] - 1 Year',
-        'GitLab Dedicated for US Public Sector - Administration Fee [Small] - 1 Year',
-        'Dedicated - Administration Fee [Small] - Monthly',
-        'Dedicated - Administration Fee [3XLarge] - 1 Year',
-        'Dedicated - Administration Fee [Medium] - 1 Year',
-        'Dedicated - Administration Fee [Small] - 1 Year',
-        'Dedicated - Storage 10GB - Monthly'
-      )
+      AND charges.is_arpu = TRUE
+      AND charges.is_licensed_user = TRUE
     {{ dbt_utils.group_by(n = 2) }}
     
 ), action_active_users_project_repo_users AS (
