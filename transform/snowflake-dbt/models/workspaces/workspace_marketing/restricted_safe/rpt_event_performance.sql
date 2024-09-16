@@ -163,7 +163,7 @@ account_summary AS (
     open_pipeline_live,
     COUNT(DISTINCT
           CASE
-          WHEN campaign_member_status IN ('Attended On-demand', 'No Show', 'Follow-up Requested', 'Meeting Requested', 'Registered', 'Attended', 'Subscribed to Updates', 'Cancelled', 'Meeting No Show', 'Visited Booth' 'Meeting Attended', 'Follow Up Requested') 
+          WHEN campaign_member_status IN ('Attended On-demand', 'No Show', 'Follow-up Requested', 'Meeting Requested', 'Registered', 'Attended', 'Subscribed to Updates', 'Cancelled', 'Meeting No Show', 'Visited Booth', 'Meeting Attended', 'Follow Up Requested') 
           THEN dim_crm_person_id
           END)                                                         AS registered_leads,
     COUNT(
