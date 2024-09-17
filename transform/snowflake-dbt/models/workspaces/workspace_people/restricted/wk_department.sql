@@ -70,7 +70,7 @@ SELECT
       THEN 'Marketing Analytics'  
     WHEN department = 'Security'
       THEN 'Office of CISO'
-    WHEN department in ('Field Marketing', 'Partner Marketing', 'Partner Marketing (inactive)'
+    WHEN department in ('Field Marketing', 'Partner Marketing', 'Partner Marketing (inactive)')
       THEN 'Regional Marketing'
     WHEN department in ('Account Based Marketing', 'Account Based Marketing (inactive)', 'Campaigns', 'Search Marketing', 'Search Marketing (inactive)')
       THEN 'Digital Marketing'
