@@ -388,7 +388,7 @@ eligible_opps AS (
     END AS open_pipeline_at_event_date_flag,
     CASE 
       WHEN event_snapshot_type = 'Current Date' AND 
-      snapshot.pipeline_created_date <= opportunity_campaign_snapshot_prep.true_event_date AND 
+      opportunity_campaign_snapshot_prep.pipeline_created_date <= opportunity_campaign_snapshot_prep.true_event_date AND 
       snapshot_is_eligible_open_pipeline = TRUE AND 
       is_net_arr_pipeline_created = TRUE 
       THEN TRUE 
