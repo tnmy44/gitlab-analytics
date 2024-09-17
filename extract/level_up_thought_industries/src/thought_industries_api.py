@@ -497,6 +497,18 @@ class EmailCaptures(DateIntervalEndpoint):
         return f"{self.ENDPOINT_PREFIX}emailCapture"
 
 
+class CodeRedemptions(DateIntervalEndpoint):
+    """Class for EmailCaptures endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "code_redemptions"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return f"{self.ENDPOINT_PREFIX}redemptionCodeRedeem"
+
+
 if __name__ == "__main__":
     # used for testing DateIntervalEndpoint
     EPOCH_START_MS = 1722384000001
