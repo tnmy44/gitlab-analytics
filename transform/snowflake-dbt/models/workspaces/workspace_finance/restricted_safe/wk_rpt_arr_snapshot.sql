@@ -6,11 +6,13 @@
  ('prep_crm_account_daily_snapshot', 'prep_crm_account_daily_snapshot')
 ]) }}
 
-, dim_date_actual AS (
-
+, snapshot_dates AS (
+    --Use the 5th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
     SELECT DISTINCT
-      first_day_of_month
+      first_day_of_month,
+      snapshot_date_fpa_fifth
     FROM dim_date
+    ORDER BY 1 DESC
 
 ), prep_recurring_charge AS (
   SELECT
@@ -26,8 +28,9 @@
       ELSE 0
     END AS product_ranking2
   FROM mart_arr_snapshot_model
-  INNER JOIN dim_date_actual
-    ON mart_arr_snapshot_model.arr_month = dim_date_actual.first_day_of_month
+  INNER JOIN snapshot_dates
+    ON mart_arr_snapshot_model.arr_month = snapshot_dates.first_day_of_month
+    AND mart_arr_snapshot_model.snapshot_date = snapshot_dates.snapshot_date_fpa_fifth
   WHERE
     mrr != 0
 
@@ -282,4 +285,4 @@ final_test AS (
 )
 
 SELECT *
-FROM final_test
+FROM parent_account_arrs
