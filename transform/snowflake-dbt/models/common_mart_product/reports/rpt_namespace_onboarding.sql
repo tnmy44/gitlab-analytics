@@ -31,7 +31,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     dim_namespace.creator_id,
     dim_namespace.namespace_type, -- Not limiting to Group namespaces only to facilitate broader analyses if needed 
     dim_user.setup_for_company,
-    dim_user.created_at::DATE as creator_created_date,
+    dim_user.created_at::DATE                                                                               AS creator_created_date,
     dim_namespace.visibility_level,
     dim_namespace.gitlab_plan_id                                                                            AS current_gitlab_plan_id,
     plan.plan_name_modified                                                                                 AS current_gitlab_plan_title,
@@ -42,7 +42,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     MIN(pql.created_at)::DATE                                                                               AS handraise_pql_date,
     MAX(IFF(TIMESTAMPDIFF(MINUTE, members.invite_accepted_at, namespace_created_at) BETWEEN 0 AND 2, 1, 0))
       AS is_namespace_created_within_2min_of_creator_invite_acceptance, --filterable field specific to growth conversion analysis
-    MIN(members.invite_accepted_at::DATE) AS creator_invite_accepted_date
+    MIN(members.invite_accepted_at::DATE)                                                                   AS creator_invite_accepted_date
   FROM dim_namespace
   INNER JOIN prep_gitlab_dotcom_plan AS plan
     ON dim_namespace.gitlab_plan_id = plan.dim_plan_id
@@ -103,15 +103,15 @@ trials AS (
   SELECT
     trials_prep.ultimate_parent_namespace_id,
     trials_grouping.all_trials,
-    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_type, NULL))                             AS trial_type,
-    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_type_name, NULL))                     AS trial_type_name,
-    MAX(IFF(trials_prep.trial_type=1, trials_prep.trial_start_date, NULL))                      AS trial_start_date,
-    MAX(IFF(trials_prep.trial_type=1, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial,
-    MAX(IFF(trials_prep.trial_type=2, trials_prep.trial_type_name, NULL))                     AS trial_2_type_name,
-    MAX(IFF(trials_prep.trial_type=2, trials_prep.trial_start_date, NULL))                      AS trial_2_start_date,
-    MAX(IFF(trials_prep.trial_type=2, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial_2
+    MAX(IFF(trials_prep.trial_type = 1, trials_prep.trial_type, NULL))                             AS trial_type,
+    MAX(IFF(trials_prep.trial_type = 1, trials_prep.trial_type_name, NULL))                        AS trial_type_name,
+    MAX(IFF(trials_prep.trial_type = 1, trials_prep.trial_start_date, NULL))                       AS trial_start_date,
+    MAX(IFF(trials_prep.trial_type = 1, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial,
+    MAX(IFF(trials_prep.trial_type = 2, trials_prep.trial_type_name, NULL))                        AS trial_2_type_name,
+    MAX(IFF(trials_prep.trial_type = 2, trials_prep.trial_start_date, NULL))                       AS trial_2_start_date,
+    MAX(IFF(trials_prep.trial_type = 2, trials_prep.days_since_namespace_creation_at_trial, NULL)) AS days_since_namespace_creation_at_trial_2
   FROM trials_prep
-  LEFT JOIN trials_grouping on trials_prep.ultimate_parent_namespace_id = trials_grouping.ultimate_parent_namespace_id
+  LEFT JOIN trials_grouping ON trials_prep.ultimate_parent_namespace_id = trials_grouping.ultimate_parent_namespace_id
   GROUP BY ALL
 
 ),
@@ -231,7 +231,7 @@ valuable_signup AS ( --counting namespaces with billable members who initially s
 
 stage_adoption AS (
 
-  SELECT 
+  SELECT
     namespaces.ultimate_parent_namespace_id,
     stage_name,
     MIN(days_since_namespace_creation_at_event_date)                                                                   AS days_since_namespace_creation_at_first_event_date,
@@ -378,10 +378,11 @@ base AS (
     IFF(namespaces.handraise_pql_date IS NOT NULL, TRUE, FALSE)                                    AS is_hand_raise_pql,
     IFF(namespaces.is_namespace_created_within_2min_of_creator_invite_acceptance = 1, TRUE, FALSE)
       AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
-    CASE 
+    CASE
       WHEN namespaces.namespace_created_date = creator_invite_accepted_date THEN 'invite'
       WHEN namespaces.creator_created_date = trials.trial_start_date THEN 'trial'
-    ELSE 'free' END AS registration_type,
+      ELSE 'free'
+    END                                                                                            AS registration_type,
     trials.all_trials, -- array that includes all trials linked to the namespace
     trials.trial_start_date, -- trial 1
     trials.trial_type, -- trial 1
