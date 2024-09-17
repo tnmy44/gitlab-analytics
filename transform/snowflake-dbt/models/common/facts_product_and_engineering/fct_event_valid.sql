@@ -22,7 +22,7 @@ plan_history AS (
     valid_to
   FROM {{ ref('dim_namespace_plan_hist') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id, DATE_TRUNC('day', valid_from) ORDER BY valid_from DESC) = 1
-    ),
+),
 
 plan_changes AS (
   SELECT
@@ -82,12 +82,12 @@ fct_event_valid AS (
     LEFT JOIN dim_user
       ON fct_event.dim_user_sk = dim_user.dim_user_sk
     LEFT JOIN filtered_namespace_plan_scd 
-        ON fct_event.dim_ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
-        AND fct_event.event_date >= prep_namespace_plan_hist.valid_from_date
-        AND fct_event.event_date < prep_namespace_plan_hist.valid_to_date
-      left join dim_plan
-        ON COALESCE(prep_namespace_plan_hist.dim_plan_id,fct_event.plan_id_at_event_timestamp) = dim_plan.dim_plan_id
-    WHERE event_created_at >= DATEADD(MONTH, -36, DATE_TRUNC(MONTH,CURRENT_DATE)) 
+      ON fct_event.dim_ultimate_parent_namespace_id = filtered_namespace_plan_scd.dim_namespace_id
+      AND fct_event.event_date >= filtered_namespace_plan_scd.valid_from_date
+      AND fct_event.event_date < filtered_namespace_plan_scd.valid_to_date
+    LEFT JOIN dim_plan
+      ON COALESCE(filtered_namespace_plan_scd.dim_plan_id,fct_event.plan_id_at_event_timestamp) = dim_plan.dim_plan_id
+    WHERE event_created_at >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE)) 
       AND (fct_event.days_since_user_creation_at_event_date >= 0
            OR fct_event.days_since_user_creation_at_event_date IS NULL)
       AND (dim_user.is_blocked_user = FALSE 
@@ -107,7 +107,7 @@ deduped_namespace_bdg AS (
   INNER JOIN dim_subscription
     ON namespace_order_subscription.dim_subscription_id = dim_subscription.dim_subscription_id
   WHERE namespace_order_subscription.product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY subscription_version DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY subscription_version DESC, subscription_updated_date DESC) = 1
 
 ),
 
