@@ -38,7 +38,7 @@
 
 parent_account_arrs AS (
   SELECT
-    COALESCE(dim_parent_crm_account_id, 'Unspecified') AS dim_parent_crm_account_id,
+    COALESCE(dim_parent_crm_account_id, dim_crm_account_id) AS dim_parent_crm_account_id,
     dim_crm_account_id,
     arr_month,
     DATEADD('month', 3, arr_month)                     AS retention_month,
@@ -78,7 +78,7 @@ retention_subs AS (
   FROM
     parent_account_arrs AS current_arr
   FULL
-  OUTER JOIN parent_account_arrs AS future_arr ON current_arr.dim_parent_crm_account_id = future_arr.dim_parent_crm_account_id
+  OUTER JOIN parent_account_arrs AS future_arr ON current_arr.dim_crm_account_id = future_arr.dim_crm_account_id
     AND current_arr.retention_month = future_arr.arr_month
 ),
 
