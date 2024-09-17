@@ -57,6 +57,9 @@
     fct_campaign.count_opportunities,
     fct_campaign.count_responses,
     fct_campaign.count_won_opportunities,
+    CASE 
+    WHEN true_event_date > CURRENT_DATE 
+    THEN TRUE END AS future_event_flag,
 
     -- dates
     campaign_start.fiscal_quarter_name_fy                                                       AS campaign_fiscal_quarter_name_fy,
@@ -384,6 +387,15 @@ eligible_opps AS (
       ELSE FALSE 
     END AS open_pipeline_at_event_date_flag,
     CASE 
+      WHEN event_snapshot_type = 'Current Date' AND 
+      snapshot.pipeline_created_date <= opportunity_campaign_snapshot_prep.true_event_date AND 
+      snapshot_is_eligible_open_pipeline = TRUE AND 
+      is_net_arr_pipeline_created = TRUE 
+      THEN TRUE 
+      ELSE FALSE 
+    END AS open_pipeline_current_date_flag,
+
+    CASE 
       WHEN opportunity_campaign_snapshot_prep.pipeline_created_date >= opportunity_campaign_snapshot_prep.true_event_date AND 
       opportunity_campaign_snapshot_prep.is_net_arr_pipeline_created
       THEN TRUE 
@@ -396,6 +408,7 @@ opportunity_campaign_snapshot_base AS (
     SELECT DISTINCT
     opportunity_campaign_snapshot_prep.*,
     eligible_opps.open_pipeline_at_event_date_flag,
+    eligible_opps.open_pipeline_current_date_flag,
     eligible_opps.sourced_pipeline_post_event_flag
     FROM 
     opportunity_campaign_snapshot_prep
@@ -408,7 +421,9 @@ opportunity_campaign_snapshot_base AS (
     AND 
     opportunity_campaign_snapshot_prep.dim_campaign_id = eligible_opps.dim_campaign_id
     WHERE 
-    eligible_opps.open_pipeline_at_event_date_flag = TRUE OR eligible_opps.sourced_pipeline_post_event_flag = TRUE 
+    eligible_opps.open_pipeline_at_event_date_flag = TRUE 
+    OR eligible_opps.sourced_pipeline_post_event_flag = TRUE 
+    OR eligible_opps.open_pipeline_current_date_flag = TRUE
 ),
 
 
@@ -616,6 +631,7 @@ final AS (
     campaigns.campaign_sub_region,
     campaigns.campaign_budgeted_cost,
     campaigns.campaign_actual_cost,
+    campaigns.future_event_flag,
   --Opportunity dimensions
     opportunity_snapshot_base.snapshot_stage_name,
     opportunity_snapshot_base.live_stage_name,
@@ -645,6 +661,7 @@ final AS (
     opportunity_snapshot_base.snapshot_is_net_arr_pipeline_created,
     opportunity_snapshot_base.snapshot_is_booked_net_arr,
     opportunity_campaign_snapshot_base.open_pipeline_at_event_date_flag,
+    opportunity_campaign_snapshot_base.open_pipeline_current_date_flag,
     opportunity_campaign_snapshot_base.sourced_pipeline_post_event_flag,
   --ACCOUNT LEVEL METRICS
     account_summary.open_pipeline_live,
