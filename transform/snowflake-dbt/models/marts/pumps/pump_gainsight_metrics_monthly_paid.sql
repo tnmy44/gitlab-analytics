@@ -70,7 +70,6 @@
     LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
     WHERE charges.subscription_status IN ('Active','Cancelled')
       AND charges.product_tier_name != 'Storage'
-      AND charges.is_arpu = TRUE
       AND charges.is_licensed_user = TRUE
     {{ dbt_utils.group_by(n = 2) }}
     
