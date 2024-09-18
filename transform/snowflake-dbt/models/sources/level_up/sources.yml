@@ -20,6 +20,7 @@ sources:
       - name: assessment_attempts
       - name: clients
       - name: content
+      - name: code_redemptions
       - name: course_actions
       - name: course_completions
       - name: course_purchases

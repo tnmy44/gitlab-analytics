@@ -500,6 +500,8 @@ sources:
         identifier: gitlab_db_work_item_types
       - name: workspaces
         identifier: gitlab_db_workspaces
+      - name: workspaces_agent_configs
+        identifier: gitlab_db_workspaces_agent_configs
       - name: zoekt_enabled_namespaces
         identifier: gitlab_db_zoekt_enabled_namespaces
       - name: zoekt_indices
