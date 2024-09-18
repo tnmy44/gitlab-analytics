@@ -5,7 +5,7 @@ WITH metrics AS (
 ),
 
 final AS (
-  SELECT
+  SELECT DISTINCT
     metrics.metrics_path,
     COALESCE(
       TRIM(options_events.value, '"'),
