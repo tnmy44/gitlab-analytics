@@ -275,6 +275,12 @@ models:
         data_tests:
           - not_null
           - unique
+      - name: crm_user_geo
+        data_tests:
+          - not_null
+      - name: crm_user_sales_segment
+        data_tests:
+          - not_null
 
   - name: prep_app_release_major_minor
     description: '{{ doc("prep_app_release_major_minor") }}'
@@ -717,6 +723,10 @@ models:
         description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
       - name: dim_crm_opportunity_id_closed_lost_renewal
         description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
+      - name: ramp_id
+        description: The unique identifier of each ramp deal.
+      - name: is_ramp
+        description: The indicator flag to identify ramp deals based on ramp_id and multi_year_deal_subscription_linkage fields.
 
   - name: prep_subscription_lineage
     description:  '{{doc("prep_subscription_lineage")}}'
@@ -2233,6 +2243,8 @@ models:
         description: ' {{ doc("code_suggestions_context_tokens_sent") }}'
       - name: context_tokens_used
         description: ' {{ doc("code_suggestions_context_tokens_used") }}'
+      - name: debounce_interval
+        description: ' {{ doc("code_suggestions_debounce_interval") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
@@ -3051,4 +3063,21 @@ models:
       - name: old_value
       - name: is_deleted
       - name: field_modified_at
-      
+
+  - name: prep_team_member_history
+    description: '{{ doc("prep_team_member_history") }}'
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+      - name: employee_id
+        description: Workday Employee Identification 
+      - name: hire_rank_asc
+        description: Hire event of a team member ranked earliest by date
+      - name: hired_date
+        description: Date of hire
+      - name: termination_date
+        description: Date of termination of employment  
+      - name: term_rank_asc
+        description: Termination event of a team member ranked earliest by date
+      - name: last_date
+        description:  Date of termination or current date, whichever comes first
