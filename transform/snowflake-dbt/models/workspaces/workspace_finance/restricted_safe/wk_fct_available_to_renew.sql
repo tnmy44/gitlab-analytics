@@ -80,7 +80,7 @@
        WHEN zuora_ramps.dim_crm_opportunity_id IS NOT NULL THEN zuora_ramps.myb_opportunity_id
        WHEN ramp_deals.dim_crm_opportunity_id IS NOT NULL THEN ramp_deals.ssp_id     
       END AS ramp_ssp_id_init,
-      CASE WHEN ramp_ssp_id_init != 'Not a ramp' THEN ramp_ssp_id_init
+      CASE WHEN ramp_ssp_id_init != 'Not a ramp' THEN LEFT(ramp_ssp_id_init, 15)
       ELSE LEFT(zuora_ramps.dim_crm_opportunity_id, 15) END AS ramp_ssp_id,
       zuora_ramps.dim_crm_opportunity_id as zuora_opp_id,
       sheetload_map_ramp_deal.dim_crm_opportunity_id as sheetload_opp_id,
@@ -205,7 +205,7 @@
     FROM dim_subscription_base      
     WHERE ramp_ssp_id IS NOT NULL       
     GROUP BY 1 
-      HAVING COUNT(*) > 1  
+      HAVING COUNT(*) >= 1
 
 
 ----Calculating ATR start term and End term dates from Subscripion base
@@ -324,7 +324,7 @@ cte_ref="final",
 created_by="@snalamaru",
 updated_by="@snalamaru",
 created_date="2024-04-01",
-updated_date="2024-09-20"
+updated_date="2024-09-18"
 ) }}
 
 

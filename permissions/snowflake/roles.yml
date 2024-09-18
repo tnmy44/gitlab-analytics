@@ -559,7 +559,7 @@ roles:
             - prep.sensitive
         tables:
           read:
-            - prep.sensitive.zendesk_*
+            - prep.sensitive.zendesk_ticket_custom_field_values_sensitive
   - analyst_marketing_sensitive:
       warehouses:
         - dev_xs

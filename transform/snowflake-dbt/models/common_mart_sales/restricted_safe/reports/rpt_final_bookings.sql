@@ -89,7 +89,9 @@ booked_arr AS (
     live_actuals.stage_name,
     SUM(live_actuals.booked_net_arr) AS total_booked_arr,
     SUM(live_actuals.booked_deal_count) AS total_booked_deal_count,
-    SUM(live_actuals.closed_won_opps) AS total_closed_won_opps
+    SUM(live_actuals.closed_won_opps) AS total_closed_won_opps,
+    SUM(CASE WHEN live_actuals.booked_net_arr > 0 THEN live_actuals.booked_net_arr ELSE NULL END) AS total_positive_booked_net_arr,
+    SUM(CASE WHEN live_actuals.booked_net_arr > 0 THEN 1 ELSE NULL END) AS total_positive_booked_deal_count
   FROM live_actuals
   {{ dbt_utils.group_by(n=20) }}
 
@@ -231,7 +233,9 @@ final AS (
     created_arr.total_created_arr                                                  AS created_arr_in_snapshot_quarter,
     created_arr.total_created_deal_count                                           AS created_deals_in_snapshot_quarter,
     booked_arr.total_booked_deal_count                                             AS booked_deal_count_in_snapshot_quarter,  
-    booked_arr.total_closed_won_opps                                               AS closed_won_opps_in_snapshot_quarter  
+    booked_arr.total_closed_won_opps                                               AS closed_won_opps_in_snapshot_quarter,  
+    booked_arr.total_positive_booked_net_arr                                       AS positive_booked_net_arr_in_snapshot_quarter,  
+    booked_arr.total_positive_booked_deal_count                                    AS positive_booked_deal_count_in_snapshot_quarter  
   FROM base
   INNER JOIN snapshot_date
     ON base.snapshot_fiscal_quarter_date = snapshot_date.first_day_of_fiscal_quarter
