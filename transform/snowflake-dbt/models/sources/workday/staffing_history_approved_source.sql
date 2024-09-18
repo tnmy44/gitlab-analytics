@@ -48,8 +48,10 @@ renamed AS (
     d.value['JOB_WORKDAY_ID_PROPOSED']::VARCHAR       AS job_workday_id_current,
     d.value['JOB_TITLE_CURRENT']::VARCHAR             AS job_title_past,
     d.value['JOB_TITLE_PROPOSED']::VARCHAR            AS job_title_current,
+    d.value['JOB_TITLE_PROPOSED_IS_JOB_PROFILE_PROPOSED']::BOOLEAN AS job_title_current_matches_profile,
     d.value['BUSINESS_TITLE_CURRENT']::VARCHAR        AS business_title_past,
     d.value['BUSINESS_TITLE_PROPOSED']::VARCHAR       AS business_title_current,
+    d.value['BUSINESS_TITLE_PROPOSED_IS_JOB_PROFILE_PROPOSED']::BOOLEAN AS business_title_current_matches_profile,
     d.value['DATE_TIME_INITIATED']::TIMESTAMP         AS date_time_initiated,
     d.value['EFFECTIVE_DATE']::DATE                   AS effective_date
   FROM source
