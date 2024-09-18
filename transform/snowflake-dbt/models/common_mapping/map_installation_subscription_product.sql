@@ -48,7 +48,7 @@ Expand the Sevice Ping records to the day grain.
 
 Assumptions:
 1. The dim_installation_id <> dim_subscription_id mapping is valid between the ping_created_at date and the next received ping date for that installation
-2. If no other pings have been received for this installation, this mapping is valid until one week the last report created date since this data is received daily.
+2. If no other pings have been received for this installation, this mapping is valid until one week the last report created date since this data is received weekly.
 */
 
   SELECT 
