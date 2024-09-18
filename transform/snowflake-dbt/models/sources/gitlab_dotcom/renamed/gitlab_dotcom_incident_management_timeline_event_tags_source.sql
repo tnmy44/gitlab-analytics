@@ -9,7 +9,6 @@ renamed AS (
 
     SELECT
       event_tag_id::NUMBER   AS id,
-      event_tag_id::NUMBER   AS id,
       created_at::TIMESTAMP  AS created_at,
       updated_at::TIMESTAMP  AS updated_at,
       project_id::NUMBER     AS project_id

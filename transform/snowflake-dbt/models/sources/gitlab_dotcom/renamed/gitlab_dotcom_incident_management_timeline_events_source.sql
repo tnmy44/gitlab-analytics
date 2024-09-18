@@ -9,7 +9,6 @@ renamed AS (
 
     SELECT
       timeline_event_id::NUMBER         AS id,
-      timeline_event_id::NUMBER         AS id,
       created_at::TIMESTAMP             AS created_at,
       updated_at::TIMESTAMP             AS updated_at,
       occurred_at::TIMESTAMP            AS occurred_at,
