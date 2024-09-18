@@ -110,11 +110,11 @@ final AS (
     finalized_arr_months.is_arr_month_finalized,
     DATEADD('year', 1, py_arr_with_cy_parent.py_arr_month)                                                                                                                                     AS retention_month,
     {{ dbt_utils.generate_surrogate_key(['dim_parent_crm_account_id', 'retention_month']) }} AS primary_key,
-    IFF(dim_date.is_first_day_of_last_month_of_fiscal_quarter, dim_date.fiscal_quarter_name_fy, NULL)             AS retention_fiscal_quarter_name_fy,
-    IFF(dim_date.is_first_day_of_last_month_of_fiscal_year, dim_date.fiscal_year, NULL)                           AS retention_fiscal_year,
-    
+    IFF(dim_date.is_first_day_of_last_month_of_fiscal_quarter, dim_date.fiscal_quarter_name_fy, NULL)                                                                                          AS retention_fiscal_quarter_name_fy,
+    IFF(dim_date.is_first_day_of_last_month_of_fiscal_year, dim_date.fiscal_year, NULL)                                                                                                        AS retention_fiscal_year,
+
     -- allow for fiscal quarter name and fiscal year to populate a value for the most recent month, so live data can be pulled for the most recent month
-    
+
     CASE
       WHEN (dim_date.is_first_day_of_last_month_of_fiscal_quarter AND dim_date.current_fiscal_quarter_name_fy != fiscal_quarter_name_fy)  -- is the last month of the quarter, except in the current quarter
         OR dim_date.current_first_day_of_month = dim_date.first_day_of_month -- is the current month
