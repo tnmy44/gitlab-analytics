@@ -8,7 +8,7 @@ WITH source AS (
 renamed AS (
 
     SELECT
-      status_id::NUMBER                        AS id,
+      status_id::NUMBER                 AS id,
       created_at::TIMESTAMP             AS created_at,
       updated_at::TIMESTAMP             AS updated_at,
       issue_id::NUMBER                  AS issue_id,
