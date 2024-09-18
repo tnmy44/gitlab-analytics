@@ -4,8 +4,7 @@
 
 {{ simple_cte([
     ('prep_subscription', 'prep_subscription'),
-    ('prep_charge_mrr_daily', 'prep_charge_mrr_daily'),
-    ('prep_product_detail', 'prep_product_detail')
+    ('prep_charge_mrr_daily', 'prep_charge_mrr_daily')
 ]) }}
 
 , prep_charge_mrr_daily_latest AS (
@@ -60,8 +59,6 @@ between the subscription_created_datetime (adjusted for the first version of a s
   LEFT JOIN prep_subscription
     ON prep_charge_mrr_daily_latest.subscription_name = prep_subscription.subscription_name
       AND prep_charge_mrr_daily_latest.date_actual BETWEEN prep_subscription.subscription_created_datetime_adjusted AND prep_subscription.next_subscription_created_datetime
-  LEFT JOIN prep_product_detail
-    ON prep_charge_mrr_daily_latest.dim_product_detail_id = prep_product_detail.dim_product_detail_id
 
 )
 
