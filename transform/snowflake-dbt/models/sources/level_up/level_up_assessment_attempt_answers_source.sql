@@ -3,7 +3,7 @@
     unique_key='answer_id'
 ) }}
 
-{{ level_up_incremental('assessment_attempts') }}
+{{ level_up_intermediate('assessment_attempts') }}
 
 parsed AS (
   SELECT

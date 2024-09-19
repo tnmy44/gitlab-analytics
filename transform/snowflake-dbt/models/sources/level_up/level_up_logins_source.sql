@@ -3,7 +3,7 @@
     unique_key=['user_id', 'event_timestamp']
 ) }}
 
-{{ level_up_incremental('logins') }}
+{{ level_up_intermediate('logins') }}
 
 parsed AS (
   SELECT

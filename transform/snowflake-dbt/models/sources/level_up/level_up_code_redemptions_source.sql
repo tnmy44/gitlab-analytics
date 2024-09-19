@@ -1,4 +1,4 @@
-{{ level_up_incremental('code_redemptions') }}
+{{ level_up_intermediate('code_redemptions') }}
 
 parsed AS (
   SELECT

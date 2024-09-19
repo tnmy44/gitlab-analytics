@@ -3,7 +3,7 @@
     unique_key='learning_path_action_id'
 ) }}
 
-{{ level_up_incremental('learning_path_actions') }}
+{{ level_up_intermediate('learning_path_actions') }}
 
 parsed AS (
   SELECT

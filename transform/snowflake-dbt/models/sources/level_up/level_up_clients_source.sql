@@ -3,7 +3,7 @@
     unique_key='client_id'
 ) }}
 
-{{ level_up_incremental('clients') }}
+{{ level_up_intermediate('clients') }}
 
 parsed AS (
   SELECT

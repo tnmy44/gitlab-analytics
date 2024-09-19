@@ -3,7 +3,7 @@
     unique_key='coupon_id'
 ) }}
 
-{{ level_up_incremental('coupons') }}
+{{ level_up_intermediate('coupons') }}
 
 parsed AS (
   SELECT
