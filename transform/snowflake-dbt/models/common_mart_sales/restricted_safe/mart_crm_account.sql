@@ -272,7 +272,7 @@
       LEFT JOIN dim_crm_user crm_account_owner
         ON fct_crm_account.crm_account_owner_id = crm_account_owner.dim_crm_user_id
       LEFT JOIN dim_crm_user sales_development_team
-        ON fct_crm_account.sales_development_rep = sales_development_team.dim_crm_user_id
+        ON dim_crm_account.sales_development_rep = sales_development_team.dim_crm_user_id
 
 )
 
