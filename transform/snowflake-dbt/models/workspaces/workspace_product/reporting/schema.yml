@@ -26,7 +26,7 @@ models:
       - name: product_deployment
         description: Using the deployment listed in product_rate_plan_name from mart_arr and renaming 'SaaS' to 'Gitlab.com' for clarity. 
       - name: add_on_name
-        description: Currently only includes Duo Pro.
+        description: Duo Pro or Duo Enterprise.
       - name: paired_tier
         description: Tier or tiers associated with the Duo Pro Add On purchase with reported revenue in the same month that Duo Pro revenue is reported within mart_arr.
       - name: is_product_entity_associated_w_subscription
@@ -105,7 +105,7 @@ models:
       - name: product_deployment
         description: Using the deployment listed in product_rate_plan_name from mart_arr and renaming 'SaaS' to 'Gitlab.com' for clarity. 
       - name: add_on_name
-        description: Currently only includes Duo Pro.
+        description: Duo Pro or Duo Enterprise.
       - name: paired_tier
         description: Tier or tiers associated with the Duo Pro Add On purchase with reported revenue in the same week that Duo Pro revenue is reported within mart_arr.
       - name: is_product_entity_associated_w_subscription

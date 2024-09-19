@@ -30,6 +30,8 @@ SELECT
   dim_parent_crm_account_id,
   product_deployment_type
     AS product_deployment,
+  SPLIT_PART(product_rate_plan_category, ' - ', 2)
+    AS add_on_name,
   SUM(quantity) 
     AS dp_seats,
   SUM(arr)
@@ -38,7 +40,7 @@ SELECT
     AS is_dp_subscription_paid
 FROM mart_arr_all
 WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
-  AND LOWER(product_rate_plan_name) LIKE '%duo pro%'
+  AND LOWER(product_rate_plan_name) LIKE '%duo%'
 GROUP BY ALL
 
 ), 
@@ -57,9 +59,7 @@ LEFT JOIN mart_arr_all AS tier -- joining to get tier occuring within same month
   ON duo_pro.reporting_month = tier.arr_month
   AND duo_pro.dim_crm_account_id = tier.dim_crm_account_id
   AND duo_pro.dim_subscription_id = tier.dim_subscription_id -- add on will be on the same subscription as the tier
-  AND LOWER(tier.product_rate_plan_name) NOT LIKE '%duo pro%'
-  AND LOWER(tier.product_rate_plan_name) NOT LIKE '%storage%'
-  AND LOWER(tier.product_rate_plan_name) NOT LIKE '%success plan%' --new non-tier plan
+  AND tier.product_category = 'Base Products' --tiers only - not add ons or other charges
 LEFT JOIN dim_product_detail AS detail
   ON detail.dim_product_detail_id = tier.dim_product_detail_id
 GROUP BY ALL
@@ -70,8 +70,6 @@ sm_dedicated_duo_pro_monthly_seats AS ( -- duo pro monthly seats associated enti
 
   SELECT DISTINCT
     duo_pro.*,
-    'Duo Pro'                                                                                        
-      AS add_on_name, -- it've very possible that we will need to add additional add on names to this model in the future
     m.dim_installation_id
       AS product_entity_id,
     'dim_installation_id'
@@ -97,8 +95,6 @@ dotcom_duo_pro_monthly_seats AS ( -- duo pro monthly seats and associated entiti
 
   SELECT DISTINCT
     duo_pro.*,
-    'Duo Pro'                                                                                        
-      AS add_on_name,
     s.namespace_id
       AS product_entity_id,
     'ultimate_parent_namespace_id'
@@ -152,7 +148,7 @@ dotcom_chat_users AS ( -- gitlab.com chat monthly users with subacriptions
       AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                                               
+    'duo'                                               
       AS unit_primitive_group,
     'chat'                                                  
       AS primitive,
@@ -176,7 +172,7 @@ sm_dedicated_chat_users AS ( -- sm & dedicated chat 28d count unique users with 
       AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                  
+    'duo'                  
       AS unit_primitive_group,
     'chat'                     
       AS primitive,
@@ -199,7 +195,7 @@ dotcom_cs_users AS ( -- gitlab.com code_suggestions monthly users with subscript
       AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                             
+    'duo'                             
       AS unit_primitive_group,
     'code suggestions'                    
       AS primitive,
@@ -223,7 +219,7 @@ sm_dedicated_cs_users AS ( -- sm & dedicated chat code suggestions users with su
       AS reporting_month,
     duo_pro.product_entity_id,
     duo_pro.product_entity_type,
-    'duo pro'                             
+    'duo'                             
       AS unit_primitive_group,
     'code suggestions'                    
       AS primitive,
@@ -331,5 +327,5 @@ final AS (
     created_by="@eneuberger",
     updated_by="@eneuberger",
     created_date="2024-05-07",
-    updated_date="2024-08-26"
+    updated_date="2024-09-19"
 ) }}
