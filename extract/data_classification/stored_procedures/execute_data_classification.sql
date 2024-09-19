@@ -1,4 +1,9 @@
-CREATE OR REPLACE PROCEDURE execute_data_classification(p_type VARCHAR, p_date_from VARCHAR DEFAULT '3000-01-01', p_unset BOOLEAN DEFAULT FALSE)
+USE DATABASE raw;
+USE SCHEMA data_classification;
+
+CREATE OR REPLACE PROCEDURE execute_data_classification(p_type      VARCHAR,
+                                                        p_date_from VARCHAR DEFAULT '3000-01-01',
+                                                        p_unset     BOOLEAN DEFAULT FALSE)
 RETURNS STRING
 --------------------------------------------------------------------------------
 -- Purpose: Procedure to execute data classification for PII and MNPI data
