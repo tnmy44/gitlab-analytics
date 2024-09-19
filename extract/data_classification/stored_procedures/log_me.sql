@@ -1,4 +1,8 @@
-CREATE OR REPLACE PROCEDURE log_me(p_log_text VARCHAR DEFAULT '', p_log_level VARCHAR DEFAULT 'INFO')
+USE DATABASE raw;
+USE SCHEMA data_classification;
+
+CREATE OR REPLACE PROCEDURE log_me(p_log_text  VARCHAR DEFAULT '',
+                                   p_log_level VARCHAR DEFAULT 'INFO')
 RETURNS STRING
 --------------------------------------------------------------------------------
 -- Purpose: Procedure to log processing
