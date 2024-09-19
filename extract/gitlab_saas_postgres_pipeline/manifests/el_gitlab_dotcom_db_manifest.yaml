@@ -1077,6 +1077,12 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   incident_management_timeline_events:
+    additional_filtering: |-
+      AND occurred_at NOT IN (
+        '202112-09-07 09:30:00+00'
+        , '12023-07-06 20:09:00+00'
+        , '12023-07-06 10:53:00+00'
+        )
     deletes_exempt: True
     is_incremental: True
     database_type: main
@@ -1097,7 +1103,7 @@ tables:
       , cached_markdown_version
       , editable
       FROM incident_management_timeline_events
-      WHERE occurred_at < '5000-01-01 00:00:00+00'
+      WHERE 
         AND updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   incident_management_timeline_event_tags:
