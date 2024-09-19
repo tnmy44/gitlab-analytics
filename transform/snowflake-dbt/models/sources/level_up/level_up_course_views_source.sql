@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key=['user_id', 'event_timestamp', 'topic_title']
-) }}
-
 {{ level_up_intermediate('course_views') }}
 
 parsed AS (

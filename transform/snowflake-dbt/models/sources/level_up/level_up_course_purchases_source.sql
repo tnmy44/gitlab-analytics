@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='course_purchase_id'
-) }}
-
 {{ level_up_intermediate('course_purchases') }}
 
 parsed AS (

@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='user_id'
-) }}
-
 {{ level_up_intermediate('users') }}
 
 parsed AS (

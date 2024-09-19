@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='assessment_attempt_id'
-) }}
-
 {{ level_up_intermediate('assessment_attempts') }}
 
 parsed AS (

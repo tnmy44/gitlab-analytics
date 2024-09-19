@@ -1,8 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='client_id'
-) }}
-
 {{ level_up_intermediate('clients') }}
 
 parsed AS (
