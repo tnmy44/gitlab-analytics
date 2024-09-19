@@ -1097,7 +1097,8 @@ tables:
       , cached_markdown_version
       , editable
       FROM incident_management_timeline_events
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE occurred_at < '5000-01-01 00:00:00+00'
+        AND updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   incident_management_timeline_event_tags:
     deletes_exempt: True
