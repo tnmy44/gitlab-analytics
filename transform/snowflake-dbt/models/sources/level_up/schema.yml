@@ -19,22 +19,8 @@ models:
         data_tests:
           - not_null
       - name: transaction_type
-      - name: username
       - name: user_id
-      - name: user_state
-      - name: user_country
-      - name: user_client
-      - name: external_customer_id
-      - name: ref1_user_type
-      - name: ref2_user_job
-      - name: ref4_user_company
-      - name: ref6_user_role_type
-      - name: ref7_user_continent
-      - name: ref8_user_country
-      - name: ref9_user_sub_dept
-      - name: ref10_user_dept
-      - name: sf_account_id
-      - name: sf_contact_id
+      - name: username
       - name: uploaded_at
         data_tests:
           - not_null
@@ -56,21 +42,8 @@ models:
       - name: title
       - name: transaction_type
       - name: updated_at
-      - name: username
       - name: user_id
-      - name: user_state
-      - name: user_country
-      - name: user_client
-      - name: ref1_user_type
-      - name: ref2_user_job
-      - name: ref4_user_company
-      - name: ref6_user_role_type
-      - name: ref7_user_continent
-      - name: ref8_user_country
-      - name: ref9_user_sub_dept
-      - name: ref10_user_dept
-      - name: sf_account_id
-      - name: sf_contact_id
+      - name: username
       - name: uploaded_at
         data_tests:
           - not_null
@@ -104,11 +77,8 @@ models:
       - name: is_success
       - name: failure_code
       - name: failure_message
-      - name: username
       - name: user_id
-      - name: stripe_customer_id
-      - name: sf_contact_id
-      - name: sf_account_id
+      - name: username
       - name: referral_referrer
       - name: referral_referrer_type
       - name: referral_source
@@ -136,21 +106,8 @@ models:
           - not_null
       - name: topic_id
       - name: topic_title
-      - name: username
       - name: user_id
-      - name: user_state
-      - name: user_country
-      - name: user_type
-      - name: ref1_user_type
-      - name: ref2_user_job
-      - name: ref4_user_company
-      - name: ref6_user_role_type
-      - name: ref7_user_continent
-      - name: ref8_user_country
-      - name: ref9_user_sub_dept
-      - name: ref10_user_dept
-      - name: sf_account_id
-      - name: sf_contact_id
+      - name: username
       - name: uploaded_at
         data_tests:
           - not_null
@@ -191,6 +148,7 @@ models:
       - name: event_timestamp
         data_tests:
           - not_null
+      - name: user_id
       - name: username
       - name: event
       - name: email_capture_id
@@ -239,12 +197,8 @@ models:
         data_tests:
           - not_null
       - name: user_agent
-      - name: username
       - name: user_id
-      - name: ref1_user_type
-      - name: ref2_user_job
-      - name: sf_account_id
-      - name: sf_contact_id
+      - name: username
       - name: uploaded_at
         data_tests:
           - not_null
@@ -263,14 +217,8 @@ models:
       - name: event_timestamp
         data_tests:
           - not_null
-      - name: username
       - name: user_id
-      - name: user_client_id
-      - name: user_department_id
-      - name: ref1_user_type
-      - name: ref2_user_job
-      - name: sf_account_id
-      - name: sf_contact_id
+      - name: username
       - name: uploaded_at
         data_tests:
           - not_null
