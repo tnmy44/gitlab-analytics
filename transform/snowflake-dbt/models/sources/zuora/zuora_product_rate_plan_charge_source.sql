@@ -8,7 +8,8 @@ WITH source AS (
     SELECT 
       id                    AS product_rate_plan_charge_id,
       productrateplanid     AS product_rate_plan_id,
-      name                  AS product_rate_plan_charge_name
+      name                  AS product_rate_plan_charge_name,
+      chargetype            AS charge_type
     FROM source
     
 )

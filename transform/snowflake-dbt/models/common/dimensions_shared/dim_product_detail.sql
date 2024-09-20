@@ -30,6 +30,7 @@ WITH base AS (
       product_category                 AS product_category,
       product_rate_plan_category       AS product_rate_plan_category,
       service_type                     AS service_type,
+      charge_type                      AS charge_type,
       is_reporter_license              AS is_reporter_license,
       effective_start_date             AS effective_start_date,
       effective_end_date               AS effective_end_date,
@@ -45,7 +46,7 @@ WITH base AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@rakhireddy",
+    updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2024-06-01"
+    updated_date="2024-09-20"
 ) }}
