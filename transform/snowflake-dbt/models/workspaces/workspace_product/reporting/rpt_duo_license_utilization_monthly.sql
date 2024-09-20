@@ -37,7 +37,7 @@ SELECT
   SUM(arr)
     AS dp_arr,
   IFF(dp_arr > 0, TRUE, FALSE)
-    AS is_dp_subscription_paid
+    AS is_duo_subscription_paid
 FROM mart_arr_all
 WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
   AND LOWER(product_rate_plan_name) LIKE '%duo%'
