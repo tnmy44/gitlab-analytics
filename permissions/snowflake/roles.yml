@@ -6204,6 +6204,11 @@ roles:
         - reporter
       warehouses:
         - dev_xs
+  - lmcandrew:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
   - nscoville:
       member_of:
         - snowflake_analyst_safe
@@ -7275,6 +7280,10 @@ users:
       can_login: true
       member_of:
         - mvanremmerden
+  - lmcandrew:
+      can_login: true
+      member_of:
+        - lmcandrew
   - jmcdonnell:
       can_login: true
       member_of:
