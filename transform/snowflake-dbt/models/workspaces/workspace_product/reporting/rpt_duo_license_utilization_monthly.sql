@@ -33,10 +33,10 @@ SELECT
   SPLIT_PART(product_rate_plan_category, ' - ', 2)
     AS add_on_name,
   SUM(quantity) 
-    AS dp_seats,
+    AS duo_seats,
   SUM(arr)
-    AS dp_arr,
-  IFF(dp_arr > 0, TRUE, FALSE)
+    AS duo_arr,
+  IFF(duo_arr > 0, TRUE, FALSE)
     AS is_duo_subscription_paid
 FROM mart_arr_all
 WHERE arr_month BETWEEN '2024-02-01' AND CURRENT_DATE -- first duo pro arr
@@ -78,7 +78,7 @@ sm_dedicated_duo_monthly_seats AS ( -- duo pro monthly seats associated entities
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo.dp_seats)
+    MAX(duo.duo_seats)
       AS duo_seats -- max because left join can result in duplicate records
   FROM duo_and_paired_tier AS duo
   LEFT JOIN mart_ping_instance AS m -- joining to get installation id because that identifier is not in mart_arr
@@ -103,7 +103,7 @@ dotcom_duo_monthly_seats AS ( -- duo pro monthly seats and associated entities
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo.dp_seats)
+    MAX(duo.duo_seats)
       AS duo_seats -- max because left join can result in duplicate records
   FROM duo_and_paired_tier AS duo
   INNER JOIN dim_subscription AS s -- joining to get namespace id because that identifier is not in mart_arr
@@ -284,7 +284,7 @@ final AS (
     a.clean_paired_tier  
       AS paired_tier,                                                                        
     a.is_product_entity_associated_w_subscription,
-    a.is_dp_subscription_paid,
+    a.is_duo_subscription_paid,
     MAX(a.major_minor_version_id)                                                                  
       AS major_minor_version_id,
     ZEROIFNULL(MAX(a.duo_seats))                                                               
