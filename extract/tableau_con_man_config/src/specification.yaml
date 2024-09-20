@@ -3559,9 +3559,7 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-      - Go To Market Project Lead
       - Marketing All Access
-      - Marketing Project Lead
   - user_name: clemos
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -3867,6 +3865,7 @@ users:
       - General All Access
       - General SAFE Access
       - Marketing All Access
+      - Marketing Project Lead
   - user_name: dchevalier
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -3967,8 +3966,6 @@ users:
       - General All Access
       - General SAFE Access
       - Marketing All Access
-      - Go To Market Project Lead
-      - Marketing Project Lead
   - user_name: dfelton
     user_name_domain: gitlab.com
     site_role: Creator
@@ -4122,6 +4119,8 @@ users:
       - General All Access
       - General SAFE Access
       - Marketing All Access
+      - Marketing Project Lead
+      - Go To Market Project Lead
   - user_name: dmishunov
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4640,12 +4639,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: fsantos
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: fsieverding
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4872,13 +4865,6 @@ users:
       - General All Access
       - General SAFE Access
       - Product All Access
-  - user_name: hstewart
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - People All Access
   - user_name: hsutor
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -4994,7 +4980,6 @@ users:
       - General All Access
       - General SAFE Access
       - Marketing All Access
-      - Marketing Project Lead
   - user_name: jallen
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5739,7 +5724,6 @@ users:
       - Finance All Access
       - General All Access
       - General SAFE Access
-      - Go To Market Project Lead
   - user_name: jshin
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6557,8 +6541,6 @@ users:
       - General SAFE Access
       - RSA SAFE Access
       - Sales Development SAFE Access
-      - Sales Project Lead
-      - Go To Market Project Lead
   - user_name: lzhao
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10192,3 +10174,59 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: rlacaze
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: adarshan
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: cmaxim
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: galfaro
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: gmyers
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: kmorrison
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: owesterlund
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: rshambhuni
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
