@@ -19,8 +19,8 @@ WHERE
    AND 
    (
       LOWER(account_demographics_geo) != 'jihu' 
-      OR LOWER(account_demographics_sales_segment) != 'jihu' 
-      OR LOWER(opp_account_demographics_geo) != 'jihu' 
+      AND LOWER(account_demographics_sales_segment) != 'jihu' 
+      AND LOWER(opp_account_demographics_geo) != 'jihu' 
    )
    AND 
    (
