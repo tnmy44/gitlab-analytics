@@ -10,7 +10,11 @@
     ('dim_installation', 'dim_installation'),
     ('dim_namespace', 'dim_namespace'),
     ('dim_app_release_major_minor', 'dim_app_release_major_minor'),
-    ('wk_ping_installation_latest', 'wk_ping_installation_latest')
+    ('wk_ping_installation_latest', 'wk_ping_installation_latest'),
+    ('map_namespace_subscription_product', 'map_namespace_subscription_product'),
+    ('map_installation_subscription_product','map_installation_subscription_product'),
+    ('dim_product_detail', 'dim_product_detail'),
+    ('dim_product_tier', 'dim_product_tier')
     ])
 }}
 
@@ -58,6 +62,76 @@ Filters:
   LEFT JOIN dim_installation
     ON flattened.dim_instance_id = dim_installation.dim_instance_id
       AND flattened.host_name = dim_installation.host_name
+
+), installation_subs_product AS (
+
+  SELECT 
+    map_installation_subscription_product.*,
+    dim_product_detail.*
+    -- dim_product_tier.product_delivery_type,
+    -- dim_product_tier.product_deployment_type
+  FROM map_installation_subscription_product
+  LEFT JOIN dim_product_detail
+    ON map_installation_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+  LEFT JOIN dim_product_tier
+    ON dim_product_detail.dim_product_tier_id = dim_product_tier.dim_product_tier_id
+
+), installation_subscription AS (
+
+  SELECT 
+    DISTINCT 
+    date_actual,
+    dim_installation_id,
+    ARRAY_AGG(installation_subs_product.dim_subscription_id::VARCHAR)       AS dim_subscription_ids,
+    ARRAY_AGG(installation_subs_product.dim_crm_account_id::VARCHAR)        AS dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT installation_subs_product.product_tier_name)         AS product_tier_names,
+    ARRAY_AGG(DISTINCT installation_subs_product.product_rate_plan_name)    AS product_rate_plan_names,
+    ARRAY_AGG(DISTINCT installation_subs_product.product_delivery_type)     AS product_delivery_types,
+    ARRAY_AGG(DISTINCT installation_subs_product.product_deployment_type)   AS product_deployment_types
+  FROM installation_subs_product
+  GROUP BY 1,2
+
+), namespace_sub_product AS (
+
+  SELECT 
+    map_namespace_subscription_product.*,
+    dim_product_detail.*
+    -- dim_product_tier.product_delivery_type,
+    -- dim_product_tier.product_deployment_type
+  FROM map_namespace_subscription_product
+  LEFT JOIN dim_product_detail
+    ON map_namespace_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+  LEFT JOIN dim_product_tier
+    ON dim_product_detail.dim_product_tier_id = dim_product_tier.dim_product_tier_id
+
+), add_on_namespace_sub_product AS (
+
+  SELECT DISTINCT 
+    date_actual,
+    dim_namespace_id,
+    ARRAY_AGG(namespace_sub_product.dim_subscription_id::VARCHAR)       AS enabled_by_add_on_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)        AS enabled_by_add_on_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name)         AS enabled_by_add_on_product_tier_names,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)    AS enabled_by_add_on_product_rate_plan_names,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_delivery_type)     AS enabled_by_add_on_product_delivery_types,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_deployment_type)   AS enabled_by_add_on_product_deployment_types
+  FROM namespace_sub_product
+  WHERE product_category = 'Add On Services'
+  GROUP BY 1,2
+
+), namespace_subscription AS (
+
+  SELECT DISTINCT 
+    date_actual,
+    dim_namespace_id,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)            AS enabled_by_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id::VARCHAR)  AS enabled_by_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name)             AS enabled_by_product_tier_names,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)        AS enabled_by_product_rate_plan_names,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_delivery_type)         AS enabled_by_product_delivery_types,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_deployment_type)       AS enabled_by_product_deployment_types
+  FROM namespace_sub_product
+  GROUP BY 1,2
 
 ), joined AS (
 
@@ -109,7 +183,26 @@ Filters:
     flattened_with_installation_id.event_label,
     flattened_with_installation_id.clean_event_label,
     flattened_with_installation_id.event_property,
-    flattened_with_installation_id.unit_primitive
+    flattened_with_installation_id.unit_primitive,
+
+    installation_subscription.dim_subscription_ids,
+    installation_subscription.dim_crm_account_ids,
+    installation_subscription.product_tier_names,
+    installation_subscription.product_rate_plan_names,
+    installation_subscription.product_delivery_types,
+    installation_subscription.product_deployment_types,
+    add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
+    add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
+    add_on_namespace_sub_product.enabled_by_add_on_product_tier_names,
+    add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
+    add_on_namespace_sub_product.enabled_by_add_on_product_delivery_types,
+    add_on_namespace_sub_product.enabled_by_add_on_product_deployment_types,
+    namespace_subscription.enabled_by_dim_crm_account_ids,
+    namespace_subscription.enabled_by_dim_subscription_ids,
+    namespace_subscription.enabled_by_product_tier_names,
+    namespace_subscription.enabled_by_product_rate_plan_names,
+    namespace_subscription.enabled_by_product_delivery_types,
+    namespace_subscription.enabled_by_product_deployment_types
 
   FROM flattened_with_installation_id
   LEFT JOIN dim_namespace
@@ -118,6 +211,15 @@ Filters:
     ON regexp_substr(flattened_with_installation_id.gsc_instance_version,'(.*)[.]',1, 1, 'e') = dim_app_release_major_minor.major_minor_version
   LEFT JOIN wk_ping_installation_latest
     ON flattened_with_installation_id.dim_installation_id = wk_ping_installation_latest.dim_installation_id
+  LEFT JOIN namespace_subscription
+    ON flattened_with_installation_id.enabled_by_namespace_id = namespace_subscription.dim_namespace_id
+    AND flattened_with_installation_id.behavior_at::DATE = namespace_subscription.date_actual::DATE
+  LEFT JOIN add_on_namespace_sub_product
+    ON flattened_with_installation_id.enabled_by_namespace_id = add_on_namespace_sub_product.dim_namespace_id
+    AND flattened_with_installation_id.behavior_at::DATE = add_on_namespace_sub_product.date_actual::DATE
+  LEFT JOIN installation_subscription
+  ON flattened_with_installation_id.dim_installation_id = installation_subscription.dim_installation_id
+    AND flattened_with_installation_id.behavior_at::DATE = installation_subscription.date_actual::DATE
 
 )
 
@@ -126,6 +228,6 @@ Filters:
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-08-30",
-    updated_date="2024-08-30"
+    updated_date="2024-09-19"
 ) }}
 
