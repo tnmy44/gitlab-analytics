@@ -33,7 +33,7 @@ SELECT
   SPLIT_PART(product_rate_plan_category, ' - ', 2)
     AS add_on_name,
   SUM(quantity) 
-    AS duo_seats,
+    AS d_seats,
   SUM(arr)
     AS duo_arr,
   IFF(duo_arr > 0, TRUE, FALSE)
@@ -78,7 +78,7 @@ sm_dedicated_duo_monthly_seats AS ( -- duo pro monthly seats associated entities
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo.duo_seats)
+    MAX(duo.d_seats)
       AS duo_seats -- max because left join can result in duplicate records
   FROM duo_and_paired_tier AS duo
   LEFT JOIN mart_ping_instance AS m -- joining to get installation id because that identifier is not in mart_arr
@@ -103,7 +103,7 @@ dotcom_duo_monthly_seats AS ( -- duo pro monthly seats and associated entities
       AS is_product_entity_associated_w_subscription,
     MAX(m.major_minor_version_id)
       AS major_minor_version_id, --max major minor version within month
-    MAX(duo.duo_seats)
+    MAX(duo.d_seats)
       AS duo_seats -- max because left join can result in duplicate records
   FROM duo_and_paired_tier AS duo
   INNER JOIN dim_subscription AS s -- joining to get namespace id because that identifier is not in mart_arr
