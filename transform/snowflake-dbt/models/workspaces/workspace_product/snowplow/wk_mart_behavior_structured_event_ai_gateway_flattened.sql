@@ -86,9 +86,7 @@ Filters:
     ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS dim_subscription_ids,
     ARRAY_AGG(installation_sub_product.dim_crm_account_id::VARCHAR)        AS dim_crm_account_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)   AS product_tier_names,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS product_rate_plan_names,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_delivery_type)     AS product_delivery_types,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_deployment_type)   AS product_deployment_types
+    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS product_rate_plan_names
   FROM installation_sub_product
   GROUP BY 1,2
 
@@ -100,9 +98,7 @@ Filters:
     ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS add_on_dim_subscription_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id)        AS add_on_dim_crm_account_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)   AS add_on_product_tier_names,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS add_on_product_rate_plan_names,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_delivery_type)     AS add_on_product_delivery_types,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_deployment_type)   AS add_on_product_deployment_types
+    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS add_on_product_rate_plan_names
   FROM installation_sub_product
   WHERE product_category = 'Add On Services'
     AND charge_type = 'Recurring'
@@ -132,9 +128,7 @@ Filters:
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)            AS enabled_by_dim_crm_account_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id::VARCHAR)  AS enabled_by_dim_subscription_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)       AS enabled_by_product_tier_names,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)        AS enabled_by_product_rate_plan_names,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_delivery_type)         AS enabled_by_product_delivery_types,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_deployment_type)       AS enabled_by_product_deployment_types
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)        AS enabled_by_product_rate_plan_names
   FROM namespace_sub_product
   GROUP BY 1,2
 
@@ -146,9 +140,7 @@ Filters:
     ARRAY_AGG(namespace_sub_product.dim_subscription_id::VARCHAR)       AS enabled_by_add_on_dim_subscription_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)        AS enabled_by_add_on_dim_crm_account_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)   AS enabled_by_add_on_product_tier_names,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)    AS enabled_by_add_on_product_rate_plan_names,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_delivery_type)     AS enabled_by_add_on_product_delivery_types,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_deployment_type)   AS enabled_by_add_on_product_deployment_types
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)    AS enabled_by_add_on_product_rate_plan_names
   FROM namespace_sub_product
   WHERE product_category = 'Add On Services'
     AND charge_type = 'Recurring'
@@ -206,31 +198,22 @@ Filters:
     flattened_with_installation_id.clean_event_label,
     flattened_with_installation_id.event_property,
     flattened_with_installation_id.unit_primitive,
-
     installation_subscription.dim_subscription_ids,
     installation_subscription.dim_crm_account_ids,
     installation_subscription.product_tier_names,
     installation_subscription.product_rate_plan_names,
-    installation_subscription.product_delivery_types,
-    installation_subscription.product_deployment_types,
     add_on_installation_sub_product.add_on_dim_subscription_ids,
     add_on_installation_sub_product.add_on_dim_crm_account_ids,
     add_on_installation_sub_product.add_on_product_tier_names,
     add_on_installation_sub_product.add_on_product_rate_plan_names,
-    add_on_installation_sub_product.add_on_product_delivery_types,
-    add_on_installation_sub_product.add_on_product_deployment_types,
     add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
     add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
     add_on_namespace_sub_product.enabled_by_add_on_product_tier_names,
     add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
-    add_on_namespace_sub_product.enabled_by_add_on_product_delivery_types,
-    add_on_namespace_sub_product.enabled_by_add_on_product_deployment_types,
     namespace_subscription.enabled_by_dim_crm_account_ids,
     namespace_subscription.enabled_by_dim_subscription_ids,
     namespace_subscription.enabled_by_product_tier_names,
-    namespace_subscription.enabled_by_product_rate_plan_names,
-    namespace_subscription.enabled_by_product_delivery_types,
-    namespace_subscription.enabled_by_product_deployment_types
+    namespace_subscription.enabled_by_product_rate_plan_names
 
   FROM flattened_with_installation_id
   LEFT JOIN dim_namespace
@@ -259,6 +242,6 @@ Filters:
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2024-08-30",
-    updated_date="2024-09-19"
+    updated_date="2024-09-20"
 ) }}
 
