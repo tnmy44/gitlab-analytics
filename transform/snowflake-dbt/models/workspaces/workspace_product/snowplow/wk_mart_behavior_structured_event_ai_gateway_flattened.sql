@@ -97,7 +97,6 @@ Filters:
     dim_installation_id,
     ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS add_on_dim_subscription_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id)        AS add_on_dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)   AS add_on_product_tier_names,
     ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS add_on_product_rate_plan_names
   FROM installation_sub_product
   WHERE product_category = 'Add On Services'
@@ -140,7 +139,6 @@ Filters:
     dim_namespace_id,
     ARRAY_AGG(namespace_sub_product.dim_subscription_id::VARCHAR)       AS enabled_by_add_on_dim_subscription_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)        AS enabled_by_add_on_dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)   AS enabled_by_add_on_product_tier_names,
     ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)    AS enabled_by_add_on_product_rate_plan_names
   FROM namespace_sub_product
   WHERE product_category = 'Add On Services'
@@ -204,35 +202,31 @@ Filters:
     COALESCE(
       namespace_subscription.enabled_by_dim_subscription_ids,
       installation_subscription.dim_subscription_ids
-      )                                                                       AS enabled_by_dim_subscription_ids,
+      )                                                                       AS enabled_by_dim_subscription_ids_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_dim_crm_account_ids, 
       installation_subscription.dim_crm_account_ids
-      )                                                                       AS enabled_by_dim_crm_account_ids,
+      )                                                                       AS enabled_by_dim_crm_account_ids_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
-      )                                                                       AS enabled_by_product_tier_names,
+      )                                                                       AS enabled_by_product_tier_names_at_event_time,
     COALESCE(
       add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
       add_on_installation_sub_product.add_on_dim_subscription_ids
-      )                                                                       AS enabled_by_add_on_dim_subscription_ids_time_of_event,
+      )                                                                       AS enabled_by_add_on_dim_subscription_ids_at_event_time,
     COALESCE(
       add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
       add_on_installation_sub_product.add_on_dim_crm_account_ids
-      )                                                                       AS enabled_by_add_on_dim_crm_account_ids_time_of_event,
-    COALESCE(
-      add_on_namespace_sub_product.enabled_by_add_on_product_tier_names,
-      add_on_installation_sub_product.add_on_product_tier_names
-      )                                                                       AS enabled_by_add_on_product_tier_names_time_of_event,
+      )                                                                       AS enabled_by_add_on_dim_crm_account_ids_at_event_time,
     COALESCE(
       add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
       add_on_installation_sub_product.add_on_product_rate_plan_names
-      )                                                                       AS enabled_by_add_on_product_rate_plan_names_time_of_event,
+      )                                                                       AS enabled_by_add_on_product_rate_plan_names_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_oss_or_edu_rate_plan,
       installation_subscription.oss_or_edu_rate_plans
-      )                                                                       AS enabled_by_oss_or_edu_rate_plan
+      )                                                                       AS enabled_by_oss_or_edu_rate_plan_at_event_time
 
   FROM flattened_with_installation_id
   LEFT JOIN dim_namespace
