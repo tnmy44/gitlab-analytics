@@ -83,7 +83,6 @@ Filters:
     ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS dim_subscription_ids,
     ARRAY_AGG(installation_sub_product.dim_crm_account_id::VARCHAR)        AS dim_crm_account_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)   AS product_tier_names,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS product_rate_plan_names,
     MAX(installation_sub_product.is_oss_or_edu_rate_plan)                  AS oss_or_edu_rate_plans
   FROM installation_sub_product
   WHERE product_category = 'Base Products'
@@ -127,7 +126,6 @@ Filters:
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)            AS enabled_by_dim_crm_account_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id::VARCHAR)  AS enabled_by_dim_subscription_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)       AS enabled_by_product_tier_names,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)        AS enabled_by_product_rate_plan_names,
     MAX(namespace_sub_product.is_oss_or_edu_rate_plan)                      AS enabled_by_oss_or_edu_rate_plan
   FROM namespace_sub_product
   WHERE product_category = 'Base Products'
@@ -215,11 +213,6 @@ Filters:
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
       )                                                                       AS enabled_by_product_tier_names,
-    COALESCE
-      (
-      namespace_subscription.enabled_by_product_rate_plan_names,
-      installation_subscription.product_rate_plan_names
-      )                                                                       AS enabled_by_product_rate_plan_names,
     COALESCE(
       add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
       add_on_installation_sub_product.add_on_dim_subscription_ids
