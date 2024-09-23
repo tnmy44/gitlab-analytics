@@ -6308,6 +6308,11 @@ roles:
         - snowflake_analyst
       warehouses:
         - dev_xs
+  - scosentino:
+      member_of:
+        - snowflake_analyst
+      warehouses:
+        - dev_xs
 users:
   - aadesanya:
       can_login: true
@@ -7212,6 +7217,10 @@ users:
       can_login: true
       member_of:
         - nprabakaran
+  - scosentino:
+      can_login: true
+      member_of:
+        - scosentino
   - amcdonald:
       can_login: true
       member_of:
