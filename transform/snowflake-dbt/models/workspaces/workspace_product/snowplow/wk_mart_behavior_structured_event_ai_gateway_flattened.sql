@@ -13,8 +13,7 @@
     ('wk_ping_installation_latest', 'wk_ping_installation_latest'),
     ('map_namespace_subscription_product', 'map_namespace_subscription_product'),
     ('map_installation_subscription_product','map_installation_subscription_product'),
-    ('dim_product_detail', 'dim_product_detail'),
-    ('dim_product_tier', 'dim_product_tier')
+    ('dim_product_detail', 'dim_product_detail')
     ])
 }}
 
@@ -75,8 +74,6 @@ Filters:
   FROM map_installation_subscription_product
   LEFT JOIN dim_product_detail
     ON map_installation_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
-  LEFT JOIN dim_product_tier
-    ON dim_product_detail.dim_product_tier_id = dim_product_tier.dim_product_tier_id
 
 ), installation_subscription AS (
 
@@ -89,6 +86,9 @@ Filters:
     ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS product_rate_plan_names,
     MAX(installation_sub_product.is_oss_or_edu_rate_plan)                  AS oss_or_edu_rate_plans
   FROM installation_sub_product
+  WHERE product_category = 'Base Products'
+    AND charge_type = 'Recurring'
+    AND is_licensed_user = TRUE
   GROUP BY 1,2
 
 ), add_on_installation_sub_product AS (
@@ -118,8 +118,6 @@ Filters:
   FROM map_namespace_subscription_product
   LEFT JOIN dim_product_detail
     ON map_namespace_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
-  LEFT JOIN dim_product_tier
-    ON dim_product_detail.dim_product_tier_id = dim_product_tier.dim_product_tier_id
 
 ), namespace_subscription AS (
 
@@ -132,6 +130,9 @@ Filters:
     ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)        AS enabled_by_product_rate_plan_names,
     MAX(namespace_sub_product.is_oss_or_edu_rate_plan)                      AS enabled_by_oss_or_edu_rate_plan
   FROM namespace_sub_product
+  WHERE product_category = 'Base Products'
+    AND charge_type = 'Recurring'
+    AND is_licensed_user = TRUE
   GROUP BY 1,2
 
 ), add_on_namespace_sub_product AS (
