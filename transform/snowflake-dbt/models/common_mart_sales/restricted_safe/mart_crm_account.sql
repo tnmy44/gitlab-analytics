@@ -34,10 +34,14 @@
       dim_crm_account.executive_sponsor,
 
       --crm account owner attributes
-      crm_account_owner.manager_name as crm_account_owner_manager,
+      crm_account_owner.manager_name AS crm_account_owner_manager,
       crm_account_owner.crm_user_geo AS crm_account_owner_geo,
       crm_account_owner.crm_user_region AS crm_account_owner_region,
       crm_account_owner.crm_user_area AS crm_account_owner_area,
+
+      --sdr bdr attributes
+      sales_development_team.manager_name AS sales_development_rep_manager_name,
+      sales_development_team.user_name AS sales_development_rep_name,
 
       ----ultimate parent crm account info
       dim_crm_account.parent_crm_account_name,
@@ -267,6 +271,8 @@
         ON dim_crm_account.dim_crm_account_id = fct_crm_account.dim_crm_account_id
       LEFT JOIN dim_crm_user crm_account_owner
         ON fct_crm_account.crm_account_owner_id = crm_account_owner.dim_crm_user_id
+      LEFT JOIN dim_crm_user sales_development_team
+        ON dim_crm_account.sales_development_rep = sales_development_team.dim_crm_user_id
 
 )
 

@@ -996,6 +996,9 @@ models:
     - name: rpt_l2r_campaign_interactions_paid_account
       description: filtered version of rpt_l2r_campaign_interactions on current paying accounts only  
 
+    - name: rpt_l2r_prospects
+      description: A refined subset of the rpt_lead_to_revenue, focused exclusively on prospect data. It includes records where touchpoint dates and pipeline creation dates fall within the rolling past 365-day window
+
     - name: mart_marketo_person
       description: The core Mart table of Marketo's person data.  
       columns:
