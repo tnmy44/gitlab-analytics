@@ -2216,6 +2216,17 @@ roles:
           read:
             - raw.iterable.*
             - prep.iterable.*
+  - level_up_sensitive:
+      privileges:
+        databases:
+          read:
+            - prep
+        schemas:
+          read:
+            - prep.sensitive
+        tables:
+          read:
+            - prep.sensitive.level_up_users_source
   - linkedin_ads:
       privileges:
         databases:
@@ -6311,6 +6322,7 @@ roles:
   - scosentino:
       member_of:
         - snowflake_analyst
+        - level_up_sensitive
       warehouses:
         - dev_xs
 users:
