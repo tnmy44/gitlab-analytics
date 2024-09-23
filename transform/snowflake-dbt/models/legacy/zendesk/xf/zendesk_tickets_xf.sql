@@ -119,8 +119,10 @@ SELECT DISTINCT
       True, False)                                            AS was_sla_achieved,
   IFF(zendesk_tickets_sla.first_reply_time_sla > zendesk_sla_policies.policy_metrics_target,
       True, False)                                            AS was_sla_breached,
-  zendesk_users_submitter.user_region                         AS user_region,
-  zendesk_users_submitter.tags                                AS user_tags,
+  zendesk_agent.user_region                                 AS assignee_region,
+  zendesk_agent.tags                                            AS assignee_tags,
+  zendesk_users_submitter.user_region                         AS submitter_region,
+  zendesk_users_submitter.tags                         AS submitter_tags,
   zendesk_organizations.organization_region                   AS organization_region
 
 FROM zendesk_tickets
@@ -133,6 +135,8 @@ LEFT JOIN zendesk_tickets_sla
 LEFT JOIN zendesk_sla_policies
   ON zendesk_tickets_sla.priority = zendesk_sla_policies.policy_metrics_priority
   AND zendesk_tickets_sla.sla_policy = zendesk_sla_policies.zendesk_sla_title
+LEFT JOIN zendesk_users_source AS zendesk_agent
+  ON zendesk_agent.user_id = zendesk_tickets.assignee_id
 LEFT JOIN zendesk_users_source AS zendesk_users_submitter
   ON zendesk_users_submitter.user_id = zendesk_tickets.submitter_id
 LEFT JOIN zendesk_satisfaction_ratings
