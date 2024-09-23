@@ -80,10 +80,10 @@ Filters:
   SELECT DISTINCT 
     date_actual,
     dim_installation_id,
-    ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS dim_subscription_ids,
-    ARRAY_AGG(installation_sub_product.dim_crm_account_id::VARCHAR)        AS dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)   AS product_tier_names,
-    MAX(installation_sub_product.is_oss_or_edu_rate_plan)                  AS oss_or_edu_rate_plans
+    ARRAY_AGG(DISTINCT installation_sub_product.dim_subscription_id)                AS dim_subscription_ids,
+    ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id)                 AS dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short)            AS product_tier_names,
+    MAX(installation_sub_product.is_oss_or_edu_rate_plan)                           AS oss_or_edu_rate_plans
   FROM installation_sub_product
   WHERE product_category = 'Base Products'
     AND charge_type = 'Recurring'
@@ -95,9 +95,9 @@ Filters:
   SELECT DISTINCT 
     date_actual,
     dim_installation_id,
-    ARRAY_AGG(installation_sub_product.dim_subscription_id::VARCHAR)       AS add_on_dim_subscription_ids,
-    ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id)        AS add_on_dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)    AS add_on_product_rate_plan_names
+    ARRAY_AGG(DISTINCT installation_sub_product.dim_subscription_id)                AS add_on_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id)                 AS add_on_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT installation_sub_product.product_rate_plan_name)             AS add_on_product_rate_plan_names
   FROM installation_sub_product
   WHERE product_category = 'Add On Services'
     AND charge_type = 'Recurring'
@@ -122,10 +122,10 @@ Filters:
   SELECT DISTINCT 
     date_actual,
     dim_namespace_id,
-    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)            AS enabled_by_dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id::VARCHAR)  AS enabled_by_dim_subscription_ids,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)       AS enabled_by_product_tier_names,
-    MAX(namespace_sub_product.is_oss_or_edu_rate_plan)                      AS enabled_by_oss_or_edu_rate_plan
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)                  AS enabled_by_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id)                 AS enabled_by_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short)             AS enabled_by_product_tier_names,
+    MAX(namespace_sub_product.is_oss_or_edu_rate_plan)                            AS enabled_by_oss_or_edu_rate_plan
   FROM namespace_sub_product
   WHERE product_category = 'Base Products'
     AND charge_type = 'Recurring'
@@ -137,9 +137,9 @@ Filters:
   SELECT DISTINCT 
     date_actual,
     dim_namespace_id,
-    ARRAY_AGG(namespace_sub_product.dim_subscription_id::VARCHAR)       AS enabled_by_add_on_dim_subscription_ids,
-    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)        AS enabled_by_add_on_dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)    AS enabled_by_add_on_product_rate_plan_names
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id::VARCHAR)        AS enabled_by_add_on_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id)                  AS enabled_by_add_on_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.product_rate_plan_name)              AS enabled_by_add_on_product_rate_plan_names
   FROM namespace_sub_product
   WHERE product_category = 'Add On Services'
     AND charge_type = 'Recurring'
