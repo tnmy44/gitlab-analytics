@@ -1,3 +1,5 @@
+<!-- CPA Pod Iteration Planning: 202x-xx-xx - 202x-xx-xx -->
+
 The purpose of this issue is to help us be prepared for the next iteration. It is meant to be lightweight and helpful, not laborious or wasteful. The intent is for each AE to spend less than 5 minutes to complete their part of the issue.
 
 # Work days
@@ -21,6 +23,17 @@ How many points do you expect to complete next iteration? Use the above section 
 | @michellecooper |  |  |
 | @utkarsh060 |  |  |
 
+# Planned work
+
+```glql
+---
+display: table
+fields: titles, assignees, weight, labels("workflow"), updatedAt
+limit: 20
+---
+project = "gitlab-data/analytics" and label = "Team::CPA" and iteration = "x"
+```
+
 # Personal development
 
 Do you have any personal development time planned in the next iteration? Remember that 5%-10% of our bandwidth is reserved for personal development.
@@ -32,3 +45,5 @@ Do you have any personal development time planned in the next iteration? Remembe
 | @utkarsh060 |  |  |
 
 Please leave any questions, comments, or concerns in the comments.
+
+/label ~"Team::CPA" ~"Iteration Planning"
