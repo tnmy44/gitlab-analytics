@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('version', 'versions') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY version ORDER BY updated_at DESC) = 1
 
 
 ), renamed AS (
