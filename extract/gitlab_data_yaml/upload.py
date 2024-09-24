@@ -21,62 +21,8 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
 )
 
-# Configuration
 config_dict = env.copy()
 basicConfig(stream=sys.stdout, level=20)
-snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-gitlab_in_hb_token = env.get("GITLAB_INTERNAL_HANDBOOK_TOKEN")
-gitlab_analytics_private_token = config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
-
-# URLs
-HANDBOOK_URL = "https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/"
-PI_URL = f"{HANDBOOK_URL}performance_indicators/"
-PI_INTERNAL_HB_URL = "https://gitlab.com/api/v4/projects/26282493/repository/files/data%2Fperformance_indicators%2F"
-COMP_CALC_URL = "https://gitlab.com/api/v4/projects/21924975/repository/files/data%2F"
-TEAM_URL = "https://about.gitlab.com/company/team/"
-USAGE_PING_METRICS_URL = "https://gitlab.com/api/v4/usage_data/metric_definitions/"
-CLOUD_CONNECTOR_URLS = {
-    "cloud_connector": "https://gitlab.com/api/v4/projects/2670515/repository/files/config%2F",
-    "access_data": "https://gitlab.com/api/v4/projects/278964/repository/files/ee%2Fconfig%2Fcloud_connector%2F",
-}
-
-# File settings
-# File settings
-FILE_MAPPINGS = {
-    "handbook": {
-        "categories": "categories",
-        "stages": "stages",
-        "releases": "releases",
-    },
-    "pi_file": {
-        "chief_of_staff_team_pi": "chief_of_staff_team",
-        "customer_support_pi": "customer_support_department",
-        "development_department_pi": "development_department",
-        "engineering_function_pi": "engineering_function",
-        "finance_team_pi": "finance_team",
-        "infrastructure_department_pi": "infrastructure_department",
-        "marketing_pi": "marketing",
-        "people_success_pi": "people_success",
-        "ux_department_pi": "ux_department",
-    },
-    "pi_internal_hb_file": {
-        "dev_section_pi": "dev_section",
-        "core_platform_section_pi": "core_platform_section",
-        "ops_section_pi": "ops_section",
-        "product_pi": "product",
-        "sales_pi": "sales",
-        "security_department_pi": "security_division",
-    },
-    "comp_calc": {
-        "location_factors": "location_factors",
-        "roles": "job_families",
-        "geo_zones": "geo_zones",
-    },
-    "cloud_connector": {
-        "cloud_connector": "cloud_connector",
-        "access_data": "access_data",
-    },
-}
 
 
 def upload_to_snowflake(file_for_upload: str, table: str) -> None:
@@ -84,6 +30,8 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     Upload json file to Snowflake
     """
     info(f"....Start uploading to Snowflake, file: {file_for_upload}")
+    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
     snowflake_stage_load_copy_remove(
         file=file_for_upload,
         stage="gitlab_data_yaml.gitlab_data_yaml_load",
@@ -93,16 +41,34 @@ def upload_to_snowflake(file_for_upload: str, table: str) -> None:
     info(f"....End uploading to Snowflake, file: {file_for_upload}")
 
 
-def request_download_decode_upload(
-    table_to_upload: str,
-    file_name: str,
-    base_url: str,
-    private_token=None,
-    suffix_url=None,
+def decode_file(response):
+    """
+    Decode file and get the content from response
+    """
+    if response is None:
+        return None
+
+    file_content = response.get("content")
+    message_bytes = base64.b64decode(file_content)
+
+    return yaml.load(message_bytes, Loader=yaml.Loader)
+
+
+def save_to_file(file: str, request: dict) -> None:
+    """
+    Save json to file for uploading
+    """
+
+    with open(f"{file}.json", "w", encoding="UTF-8") as file_name_json:
+        json.dump(request, file_name_json, indent=4)
+
+
+def stream_processing(
+    table_to_upload: str, file_name: str, base_url: str, private_token=None
 ):
     """
     This function is designed to stream the API content by using Python request library.
-    Also it will be responsible for decoding and generating json file output and upload
+    Also, it will be responsible for decoding and generating json file output and upload
     it to external stage of snowflake. Once the file gets loaded it will be deleted from external stage.
     This function can be extended but for now this used for the decoding the encoded content
     """
@@ -110,30 +76,21 @@ def request_download_decode_upload(
 
     # Check if there is private token issued for the URL
     if private_token:
-        request_url = f"{base_url}{file_name}{suffix_url}"
+        request_url = f"{base_url}{file_name}"
         response = requests.request(
             "GET", request_url, headers={"Private-Token": private_token}, timeout=10
         )
-    # Load the content in json
-    api_response_json = response.json()
 
-    # check if the file is empty or not present.
+    api_response_json = response.json()
     record_count = len(api_response_json)
 
     if record_count > 1:
-        # Get the content from response
-        file_content = api_response_json.get("content")
-        message_bytes = base64.b64decode(file_content)
-        output_json_request = yaml.load(message_bytes, Loader=yaml.Loader)
-
-        # write to the Json file
-        with open(f"{file_name}.json", "w", encoding="UTF-8") as file_name_json:
-            json.dump(output_json_request, file_name_json, indent=4)
-
+        output_json_request = decode_file(response=api_response_json)
+        save_to_file(file=f"{file_name}.json", request=output_json_request)
         upload_to_snowflake(file_for_upload=f"{file_name}.json", table=table_to_upload)
     else:
         error(
-            f"The file for {file_name} is either empty or the location has changed investigate"
+            f"The file for {file_name} is either empty or the location has changed, please investigate."
         )
 
 
@@ -168,7 +125,7 @@ def run_subprocess(command: str, file: str) -> None:
         )
 
 
-def curl_and_upload(
+def batch_processing(
     table_to_upload: str, file_name: str, base_url: str, private_token=None
 ):
     """
@@ -178,7 +135,7 @@ def curl_and_upload(
     """
     json_file_name = get_json_file_name(input_file=file_name)
 
-    info(f"Downloading {file_name} to {json_file_name}.json file.")
+    info(f"... Start downloading {file_name} to {json_file_name}.json file.")
 
     if private_token:
         header = f'--header "PRIVATE-TOKEN: {private_token}"'
@@ -187,50 +144,90 @@ def curl_and_upload(
         command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
     run_subprocess(command=command, file=file_name)
-
-    info(f"Uploading to {json_file_name}.json to Snowflake stage.")
+    info(f"... End downloading {file_name} to {json_file_name}.json file.")
 
     upload_to_snowflake(file_for_upload=f"{json_file_name}.json", table=table_to_upload)
 
 
-if __name__ == "__main__":
+def manifest_reader(file_path: str):
+    """
+    Read a yaml manifest file into a dictionary and return it.
+    """
 
-    for key, value in FILE_MAPPINGS["handbook"].items():
-        curl_and_upload(
-            table_to_upload=key, file_name=value + ".yml", base_url=HANDBOOK_URL
-        )
+    with open(file=file_path, mode="r", encoding="utf8") as file:
+        manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
 
-    for key, value in FILE_MAPPINGS["pi_file"].items():
-        curl_and_upload(table_to_upload=key, file_name=value + ".yml", base_url=PI_URL)
+    return manifest_dict
 
-    for key, value in FILE_MAPPINGS["pi_internal_hb_file"].items():
-        request_download_decode_upload(
-            table_to_upload=key,
-            file_name=value,
-            base_url=PI_INTERNAL_HB_URL,
-            private_token=gitlab_in_hb_token,
-            suffix_url="%2Eyml?ref=main",
-        )
 
-    for key, value in FILE_MAPPINGS["comp_calc"].items():
-        curl_and_upload(
-            table_to_upload=key,
-            file_name=value,
-            base_url=COMP_CALC_URL,
-            private_token=gitlab_analytics_private_token,
-        )
+def get_base_url(url_specification, table_name: str) -> str:
+    """
+    Return base url
+    """
+    if isinstance(url_specification, dict):
+        return url_specification[table_name]
+    return url_specification
 
-    for key, value in FILE_MAPPINGS["cloud_connector"].items():
-        curl_and_upload(
-            table_to_upload=key,
-            file_name=value,
-            base_url=CLOUD_CONNECTOR_URLS[value],
-            private_token=gitlab_analytics_private_token,
-        )
 
-    curl_and_upload(table_to_upload="team", file_name="team.yml", base_url=TEAM_URL)
-    curl_and_upload(
-        table_to_upload="usage_ping_metrics",
-        file_name="",
-        base_url=USAGE_PING_METRICS_URL,
+def get_private_token(token_name: str):
+    """
+    Return private token, if exists.
+    Otherwise, return None
+    """
+    if token_name:
+        return env.get(token_name)
+    return None
+
+
+def process_file(specification: dict, table_to_upload: str, file_name: str) -> None:
+    """
+    Assign properties and process file
+    """
+    info(f"... Start processing {file_name} to Snowflake stage.")
+
+    streaming = specification.get("streaming", False)
+    base_url = get_base_url(
+        url_specification=specification["URL"], table_name=table_to_upload
     )
+    private_token = get_private_token(
+        token_name=specification.get("private_token", None)
+    )
+
+    if streaming:
+        stream_processing(
+            table_to_upload=table_to_upload,
+            file_name=file_name,
+            base_url=base_url,
+            private_token=private_token,
+        )
+    else:
+        batch_processing(
+            table_to_upload=table_to_upload,
+            file_name=file_name,
+            base_url=base_url,
+            private_token=private_token,
+        )
+    info(f"... End processing {file_name} to Snowflake stage.")
+
+
+def run(file_path: str = "gitlab_data_yaml/file_specification.yml") -> None:
+    """
+    Procedure to process files from the manifest file.
+    """
+    manifest = manifest_reader(file_path=file_path)
+
+    for file_group, specification in manifest.items():
+        info(f"Start processing {file_group} to Snowflake stage.")
+
+        for table_to_upload, file_name in specification["files"].items():
+            process_file(
+                specification=specification,
+                table_to_upload=table_to_upload,
+                file_name=file_name,
+            )
+
+        info(f"End processing {file_group} to Snowflake stage.")
+
+
+if __name__ == "__main__":
+    run()
