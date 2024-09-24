@@ -225,7 +225,7 @@ Filters:
         installation_subscription.crm_account_names
         ),
       ' ,'
-      )                                                                       AS enabled_by_crm_account_names,
+      )                                                                       AS enabled_by_crm_account_names_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
@@ -254,7 +254,7 @@ Filters:
       COALESCE(
         namespace_subscription.enabled_by_oss_or_edu_rate_plan,
         installation_subscription.oss_or_edu_rate_plans
-        )                                                                     AS enabled_by_oss_or_edu_rate_plan_at_event_time
+        )                                                                      AS enabled_by_oss_or_edu_rate_plan_at_event_time
 
   FROM flattened_with_installation_id
   LEFT JOIN dim_namespace
