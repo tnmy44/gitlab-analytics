@@ -3576,7 +3576,6 @@ users:
       - General All Access
       - General SAFE Access
       - Engineering Project Lead
-      - Security Project Lead
   - user_name: cli
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6385,8 +6384,6 @@ users:
       - Engineering All Access
       - General All Access
       - General SAFE Access
-      - Engineering Project Lead
-      - Security Project Lead
   - user_name: lmcandrew
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10230,3 +10227,9 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+  - user_name: squadri
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access

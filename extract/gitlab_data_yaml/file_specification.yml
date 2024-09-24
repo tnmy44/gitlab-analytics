@@ -1,0 +1,58 @@
+cloud_connector:
+  files:
+    access_data: access_data
+    cloud_connector: cloud_connector
+  URL:
+    access_data: https://gitlab.com/api/v4/projects/278964/repository/files/ee%2Fconfig%2Fcloud_connector%2F
+    cloud_connector: https://gitlab.com/api/v4/projects/2670515/repository/files/config%2F
+  streaming: False
+  private_token: gitlab_analytics_private_token
+comp_calc:
+  files:
+    geo_zones: geo_zones
+    location_factors: location_factors
+    roles: job_families
+  URL: https://gitlab.com/api/v4/projects/21924975/repository/files/data%2F
+  streaming: False
+  private_token: gitlab_analytics_private_token
+handbook:
+  files:
+    categories: categories.yml
+    releases: releases.yml
+    stages: stages.yml
+  URL: https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/
+  streaming: False
+pi_file:
+  files:
+    chief_of_staff_team_pi: chief_of_staff_team.yml
+    customer_support_pi: customer_support_department.yml
+    development_department_pi: development_department.yml
+    engineering_function_pi: engineering_function.yml
+    finance_team_pi: finance_team.yml
+    infrastructure_department_pi: infrastructure_department.yml
+    marketing_pi: marketing.yml
+    people_success_pi: people_success.yml
+    ux_department_pi: ux_department.yml
+  URL: https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/performance_indicators/
+  streaming: False
+pi_internal_hb_file:
+  files:
+    core_platform_section_pi: core_platform_section
+    dev_section_pi: dev_section
+    ops_section_pi: ops_section
+    product_pi: product
+    sales_pi: sales
+    security_department_pi: security_division
+  URL: https://gitlab.com/api/v4/projects/26282493/repository/files/data%2Fperformance_indicators%2F%2Eyml?ref=main
+  streaming: True
+  private_token: GITLAB_INTERNAL_HANDBOOK_TOKEN
+team:
+  files:
+    team: team.yml
+  URL: https://about.gitlab.com/company/team/
+  streaming: False
+usage_ping_metrics:
+  files:
+    usage_ping_metrics: ''
+  URL: https://gitlab.com/api/v4/usage_data/metric_definitions/
+  streaming: False
