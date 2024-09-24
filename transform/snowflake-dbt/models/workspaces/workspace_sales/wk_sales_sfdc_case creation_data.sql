@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_case') }}
+{{ config(alias='sfdc_case_creation_data') }}
 
 
 WITH source AS (
