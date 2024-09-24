@@ -13,7 +13,8 @@
     ('wk_ping_installation_latest', 'wk_ping_installation_latest'),
     ('map_namespace_subscription_product', 'map_namespace_subscription_product'),
     ('map_installation_subscription_product','map_installation_subscription_product'),
-    ('dim_product_detail', 'dim_product_detail')
+    ('dim_product_detail', 'dim_product_detail'),
+    ('dim_crm_account', 'dim_crm_account')
     ])
 }}
 
@@ -70,10 +71,13 @@ Filters:
     map_installation_subscription_product.dim_subscription_id_original,
     map_installation_subscription_product.dim_installation_id,
     map_installation_subscription_product.dim_crm_account_id,
+    dim_crm_account.crm_account_name,
     dim_product_detail.*
   FROM map_installation_subscription_product
   LEFT JOIN dim_product_detail
     ON map_installation_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+  LEFT JOIN dim_crm_account
+    ON map_installation_subscription_product.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), installation_subscription AS (
 
@@ -82,8 +86,9 @@ Filters:
     dim_installation_id,
     ARRAY_AGG(DISTINCT installation_sub_product.dim_subscription_id) WITHIN GROUP (ORDER BY installation_sub_product.dim_subscription_id ASC)             AS dim_subscription_ids,
     ARRAY_AGG(DISTINCT installation_sub_product.dim_crm_account_id) WITHIN GROUP (ORDER BY installation_sub_product.dim_crm_account_id ASC)               AS dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT installation_sub_product.crm_account_name) WITHIN GROUP (ORDER BY installation_sub_product.crm_account_name ASC)                   AS crm_account_names,
     ARRAY_AGG(DISTINCT installation_sub_product.product_tier_name_short) WITHIN GROUP (ORDER BY installation_sub_product.product_tier_name_short ASC)     AS product_tier_names,
-    MAX(installation_sub_product.is_oss_or_edu_rate_plan)                                                                                             AS oss_or_edu_rate_plans
+    MAX(installation_sub_product.is_oss_or_edu_rate_plan)                                                                                                 AS oss_or_edu_rate_plans
   FROM installation_sub_product
   WHERE product_category = 'Base Products'
     AND charge_type = 'Recurring'
@@ -112,18 +117,22 @@ Filters:
     map_namespace_subscription_product.dim_subscription_id_original,
     map_namespace_subscription_product.dim_namespace_id,
     map_namespace_subscription_product.dim_crm_account_id,
+    dim_crm_account.crm_account_name,
     dim_product_detail.*
   FROM map_namespace_subscription_product
   LEFT JOIN dim_product_detail
     ON map_namespace_subscription_product.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+  LEFT JOIN dim_crm_account
+    ON map_namespace_subscription_product.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), namespace_subscription AS (
 
   SELECT DISTINCT 
     date_actual,
     dim_namespace_id,
-    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id) WITHIN GROUP (ORDER BY namespace_sub_product.dim_crm_account_id ASC)                     AS enabled_by_dim_crm_account_ids,
     ARRAY_AGG(DISTINCT namespace_sub_product.dim_subscription_id) WITHIN GROUP (ORDER BY namespace_sub_product.dim_subscription_id ASC)                   AS enabled_by_dim_subscription_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.dim_crm_account_id) WITHIN GROUP (ORDER BY namespace_sub_product.dim_crm_account_id ASC)                     AS enabled_by_dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT namespace_sub_product.crm_account_name) WITHIN GROUP (ORDER BY namespace_sub_product.crm_account_name ASC)                         AS enabled_by_crm_account_names,
     ARRAY_AGG(DISTINCT namespace_sub_product.product_tier_name_short) WITHIN GROUP (ORDER BY namespace_sub_product.product_tier_name_short ASC)           AS enabled_by_product_tier_names,
     MAX(namespace_sub_product.is_oss_or_edu_rate_plan)                            AS enabled_by_oss_or_edu_rate_plan
   FROM namespace_sub_product
@@ -210,6 +219,13 @@ Filters:
         ),
       ' ,'
       )                                                                       AS enabled_by_dim_crm_account_ids_at_event_time,
+    ARRAY_TO_STRING(
+      COALESCE(
+        namespace_subscription.enabled_by_crm_account_names,
+        installation_subscription.crm_account_names
+        ),
+      ' ,'
+      )                                                                       AS enabled_by_crm_account_names,
     COALESCE(
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
@@ -235,13 +251,10 @@ Filters:
         ),
       ' ,'
       )                                                                       AS enabled_by_add_on_product_rate_plan_names_at_event_time,
-    ARRAY_TO_STRING(
       COALESCE(
         namespace_subscription.enabled_by_oss_or_edu_rate_plan,
         installation_subscription.oss_or_edu_rate_plans
-        ),
-      ' ,'
-      )                                                                       AS enabled_by_oss_or_edu_rate_plan_at_event_time
+        )                                                                     AS enabled_by_oss_or_edu_rate_plan_at_event_time
 
   FROM flattened_with_installation_id
   LEFT JOIN dim_namespace
