@@ -203,29 +203,44 @@ Filters:
       namespace_subscription.enabled_by_dim_subscription_ids,
       installation_subscription.dim_subscription_ids
       )                                                                       AS enabled_by_dim_subscription_ids_at_event_time,
-    COALESCE(
-      namespace_subscription.enabled_by_dim_crm_account_ids, 
-      installation_subscription.dim_crm_account_ids
+    ARRAY_TO_STRING(
+      COALESCE(
+        namespace_subscription.enabled_by_dim_crm_account_ids, 
+        installation_subscription.dim_crm_account_ids
+        ),
+      ' ,'
       )                                                                       AS enabled_by_dim_crm_account_ids_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
       )                                                                       AS enabled_by_product_tier_names_at_event_time,
-    COALESCE(
-      add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
-      add_on_installation_sub_product.add_on_dim_subscription_ids
+    ARRAY_TO_STRING(
+      COALESCE(
+        add_on_namespace_sub_product.enabled_by_add_on_dim_subscription_ids,
+        add_on_installation_sub_product.add_on_dim_subscription_ids
+        ),
+      ' ,'
       )                                                                       AS enabled_by_add_on_dim_subscription_ids_at_event_time,
-    COALESCE(
-      add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
-      add_on_installation_sub_product.add_on_dim_crm_account_ids
+    ARRAY_TO_STRING(
+      COALESCE(
+        add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
+        add_on_installation_sub_product.add_on_dim_crm_account_ids
+        ),
+      ' ,'
       )                                                                       AS enabled_by_add_on_dim_crm_account_ids_at_event_time,
-    COALESCE(
-      add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
-      add_on_installation_sub_product.add_on_product_rate_plan_names
+    ARRAY_TO_STRING(
+      COALESCE(
+        add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
+        add_on_installation_sub_product.add_on_product_rate_plan_names
+        ),
+      ' ,'
       )                                                                       AS enabled_by_add_on_product_rate_plan_names_at_event_time,
-    COALESCE(
-      namespace_subscription.enabled_by_oss_or_edu_rate_plan,
-      installation_subscription.oss_or_edu_rate_plans
+    ARRAY_TO_STRING(
+      COALESCE(
+        namespace_subscription.enabled_by_oss_or_edu_rate_plan,
+        installation_subscription.oss_or_edu_rate_plans
+        ),
+      ' ,'
       )                                                                       AS enabled_by_oss_or_edu_rate_plan_at_event_time
 
   FROM flattened_with_installation_id
