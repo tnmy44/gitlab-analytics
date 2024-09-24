@@ -11,8 +11,8 @@ from typing import List
 
 import pandas as pd
 import yaml
-from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
-from sqlalchemy.engine.base import Engine
+from data_classification_utils import ClassificationUtils
+from gitlabdata.orchestration_utils import dataframe_uploader
 
 
 class DataClassification:
@@ -22,75 +22,24 @@ class DataClassification:
     - MNPI
     """
 
-    def __init__(
-        self, tagging_type: str, mnpi_raw_file: str, incremental_load_days: int
-    ):
+    def __init__(self, tagging_type: str, incremental_load_days: int):
         """
         Define parameters
         """
 
-        self.encoding = "utf8"
         self.schema_name = "data_classification"
         self.table_name = "sensitive_objects_classification"
-        self.processing_role = "SYSADMIN"
-        self.loader_engine: Engine = None
-        self.connected = False
+
         self.specification_file = "../../extract/data_classification/specification.yml"
+        self.mnpi_raw_file = "mnpi_models.json"
+
         self.tagging_type = tagging_type
-        self.mnpi_raw_file = mnpi_raw_file
-        self.config_vars = os.environ.copy()
         self.incremental_load_days = incremental_load_days
-        self.raw = self.config_vars["SNOWFLAKE_LOAD_DATABASE"]
-        self.prep = self.config_vars["SNOWFLAKE_PREP_DATABASE"]
-        self.prod = self.config_vars["SNOWFLAKE_PROD_DATABASE"]
 
-    def __connect(self) -> Engine:
-        """
-        Connect to engine factory, return connection object
-        """
-        if not self.connected:
-            self.loader_engine = snowflake_engine_factory(
-                self.config_vars, self.processing_role
-            )
-            self.connected = True
-            return self.loader_engine.connect()
-
-    def __dispose(self) -> None:
-        """
-        Dispose from engine factory
-        """
-        if self.connected:
-            self.connected = False
-            self.loader_engine.dispose()
-
-    def upload_to_snowflake(self) -> None:
-        """
-        Upload dataframe to Snowflake
-        """
-        try:
-            dataframe_uploader(
-                dataframe=self.identify_mnpi_data,
-                engine=self.loader_engine,
-                table_name=self.table_name,
-                schema=self.schema_name,
-            )
-        except Exception as e:
-            error(f"Error uploading to Snowflake: {e.__class__.__name__} - {e}")
-            sys.exit(1)
-
-    @staticmethod
-    def quoted(input_str: str) -> str:
-        """
-        Returns input string with single quote
-        """
-        return "'" + input_str + "'"
-
-    @staticmethod
-    def double_quoted(input_str: str) -> str:
-        """
-        Returns input string with double quote
-        """
-        return '"' + input_str + '"'
+        self.utils = ClassificationUtils()
+        self.raw = self.utils.config_vars["SNOWFLAKE_LOAD_DATABASE"]
+        self.prep = self.utils.config_vars["SNOWFLAKE_PREP_DATABASE"]
+        self.prod = self.utils.config_vars["SNOWFLAKE_PROD_DATABASE"]
 
     def load_mnpi_list(self) -> list:
         """
@@ -101,7 +50,7 @@ class DataClassification:
             error(f"File {self.mnpi_raw_file} is not generated, stopping processing")
             sys.exit(1)
 
-        with open(self.mnpi_raw_file, mode="r", encoding=self.encoding) as file:
+        with open(self.mnpi_raw_file, mode="r", encoding=self.utils.encoding) as file:
             res = []
             for line in file:
                 try:
@@ -113,7 +62,8 @@ class DataClassification:
                     sys.exit(1)
             return res
 
-    def transform_mnpi_list(self, mnpi_list: list) -> list:
+    @staticmethod
+    def transform_mnpi_list(mnpi_list: list) -> list:
         """
         Transform MNPI list to uppercase in a proper format
         """
@@ -130,6 +80,78 @@ class DataClassification:
             ]
 
         return [extract_full_path(x) for x in mnpi_list]
+
+    def _get_database_where_clause(
+        self, exclude_statement: str, databases: list
+    ) -> str:
+        """
+        Generate database WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for databases
+        Result is in format: table_catalog [NOT] IN ('RAW','PREP')
+        """
+        return f" (table_catalog {exclude_statement} IN ({', '.join(self.utils.quoted(x) for x in databases)}))"
+
+    def _get_schema_where_clause(self, exclude_statement: str, schemas: list) -> str:
+        """
+        Generate schema WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for schemas
+        Result is in format:
+            - RAW.*        -> table_catalog = 'RAW' AND table_schema ILIKE '%'
+            - RAW.SCHEMA_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A'
+        """
+
+        res = " AND"
+
+        if exclude_statement:
+            res += f" {exclude_statement}"
+
+        for i, schema in enumerate(schemas, start=1):
+            schema_list = schema.split(".")
+
+            res += f" (table_catalog = {self.utils.quoted(schema_list[0])} AND table_schema"
+            if "*" in schema_list:
+                res += f" ILIKE {self.utils.quoted('%')})"
+            else:
+                res += f" = {self.utils.quoted(schema_list[1])})"
+
+            if i < len(schemas):
+                res += " OR"
+
+        return res
+
+    def _get_table_where_clause(self, exclude_statement: str, tables: list) -> str:
+        """
+        Generate table WHERE clause
+        --------------------------------
+        Create part of the WHERE clause for tables
+        Result is in format:
+            - RAW.*.*              -> table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%'
+            - RAW.SCHEMA_A.*       -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%'
+            - RAW.SCHEMA_A.TABLE_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name = 'TABLE_A'
+        """
+        res = " AND"
+
+        if exclude_statement:
+            res += f" {exclude_statement}"
+
+        for i, table in enumerate(tables, start=1):
+            table_list = table.split(".")
+
+            if "*" in table_list:
+                res += f" (table_catalog = {self.utils.quoted(table_list[0])} AND table_schema"
+                if table_list.count("*") == 1:
+                    res += f" = {self.utils.quoted(table_list[1])} AND table_name ILIKE {self.utils.quoted('%')})"
+                if table_list.count("*") == 2:
+                    res += f" ILIKE {self.utils.quoted('%')} AND table_name ILIKE {self.utils.quoted('%')})"
+            else:
+                res += f" (table_catalog = {self.utils.quoted(table_list[0])} AND table_schema = {self.utils.quoted(table_list[1])} and table_name = {self.utils.quoted(table_list[2])})"
+
+            if i < len(tables):
+                res += " OR"
+
+        return res
 
     def get_pii_scope(self, scope_type: str) -> str:
         """
@@ -188,58 +210,20 @@ class DataClassification:
         tables = scope.get("tables")
         exclude_statement = "NOT" if scope_type == "exclude" else ""
 
-        # Create part of the WHERE clause for databases
-        # Result is in format: table_catalog [NOT] IN ('RAW','PREP')
         if databases:
-            res = f" (table_catalog {exclude_statement} IN ({', '.join(self.quoted(x) for x in databases)}))"
+            res = self._get_database_where_clause(
+                exclude_statement=exclude_statement, databases=databases
+            )
 
-        # Create part of the WHERE clause for schemas
-        # Result is in format:
-        #     RAW.*        -> table_catalog = 'RAW' AND table_schema ILIKE '%'
-        #     RAW.SCHEMA_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A'
         if schemas:
-            res += " AND"
+            res += self._get_schema_where_clause(
+                exclude_statement=exclude_statement, schemas=schemas
+            )
 
-            if exclude_statement:
-                res += f" {exclude_statement}"
-
-            for i, schema in enumerate(schemas, start=1):
-                schema_list = schema.split(".")
-
-                res += (
-                    f" (table_catalog = {self.quoted(schema_list[0])} AND table_schema"
-                )
-                if "*" in schema_list:
-                    res += f" ILIKE {self.quoted('%')})"
-                else:
-                    res += f" = {self.quoted(schema_list[1])})"
-
-                if i < len(schemas):
-                    res += " OR"
-
-        # Create part of the WHERE clause for tables
-        # Result is in format:
-        #     RAW.*.*              -> table_catalog = 'RAW' AND table_schema ILIKE '%' AND table_name ILIKE '%'
-        #     RAW.SCHEMA_A.*       -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name ILIKE '%'
-        #     RAW.SCHEMA_A.TABLE_A -> table_catalog = 'RAW' AND table_schema = 'SCHEMA_A' AND table_name = 'TABLE_A'
         if tables:
-            res += " AND"
-            if exclude_statement:
-                res += f" {exclude_statement}"
-            for i, table in enumerate(tables, start=1):
-                table_list = table.split(".")
-
-                if "*" in table_list:
-                    res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema"
-                    if table_list.count("*") == 1:
-                        res += f" = {self.quoted(table_list[1])} AND table_name ILIKE {self.quoted('%')})"
-                    if table_list.count("*") == 2:
-                        res += f" ILIKE {self.quoted('%')} AND table_name ILIKE {self.quoted('%')})"
-                else:
-                    res += f" (table_catalog = {self.quoted(table_list[0])} AND table_schema = {self.quoted(table_list[1])} and table_name = {self.quoted(table_list[2])})"
-
-                if i < len(tables):
-                    res += " OR"
+            res += self._get_table_where_clause(
+                exclude_statement=exclude_statement, tables=tables
+            )
 
         return f"AND ({res})"
 
@@ -249,8 +233,8 @@ class DataClassification:
         """
         section = "PII"
         return (
-            f"SELECT {self.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
-            f"  FROM {self.double_quoted(database_name)}.information_schema.tables "
+            f"SELECT {self.utils.quoted(section)} AS classification_type, created,last_altered, last_ddl, table_catalog, table_schema, table_name, REPLACE(table_type,'BASE TABLE','TABLE') AS table_type, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) "
+            f"  FROM {self.utils.double_quoted(database_name)}.information_schema.tables "
             f" WHERE table_schema != 'INFORMATION_SCHEMA' "
         )
 
@@ -294,7 +278,7 @@ class DataClassification:
             "       table_schema, "
             "       table_name, "
             "       REPLACE(table_type,'BASE TABLE','TABLE') AS table_type "
-            f"  FROM {self.double_quoted(database_name)}.information_schema.tables "
+            f"  FROM {self.utils.double_quoted(database_name)}.information_schema.tables "
             " WHERE table_schema != 'INFORMATION_SCHEMA' "
             "   AND table_catalog IN (SELECT database_name FROM database_list) "
         )
@@ -333,17 +317,38 @@ class DataClassification:
         """
         return f"DELETE FROM {self.schema_name}.{self.table_name}"
 
-    def classify_query(
+    def pii_table_list_query(self, database: str) -> str:
+        """
+        Property method for the get table list for PII data
+        """
+        section = "PII"
+        return (
+            f"SELECT DISTINCT database_name, schema_name "
+            f"  FROM data_classification.sensitive_objects_classification "
+            f" WHERE classification_type = {self.utils.quoted(section)} "
+            f"   AND database_name = {self.utils.quoted(database)}"
+        )
+
+    @staticmethod
+    def get_pii_classify_schema_query(database: str, schema: str) -> str:
+        """
+        Get schema classify query
+
+        """
+        properties = "{'sample_count': 100, 'auto_tag': true}"
+        return f"CALL SYSTEM$CLASSIFY_SCHEMA('{database}.{schema}', {properties})"
+
+    def classify_mnpi_data(
         self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
     ) -> str:
         """
         Query to call procedure with parameters for classification
         """
         return (
-            f"CALL {self.double_quoted(self.raw)}.{self.schema_name}.execute_data_classification("
-            f"p_type => {self.quoted(tagging_type)}, "
-            f"p_date_from=>{self.quoted(date_from)} , "
-            f"p_unset=> {self.quoted(unset)})"
+            f"CALL {self.utils.double_quoted(self.raw)}.{self.schema_name}.execute_data_classification("
+            f"p_type => {self.utils.quoted(tagging_type)}, "
+            f"p_date_from=>{self.utils.quoted(date_from)} , "
+            f"p_unset=> {self.utils.quoted(unset)})"
         )
 
     def get_mnpi_scope(self, scope_type: str, row: list) -> bool:
@@ -374,7 +379,6 @@ class DataClassification:
                     or f"{database_name}.{schema_name}.*" in tables
                     or f"{database_name}.*.*" in tables
                 ):
-
                     return True
 
         return False
@@ -428,6 +432,21 @@ class DataClassification:
 
         return pd.DataFrame(data=mnpi_data_filtered, columns=columns)
 
+    def __upload_to_snowflake(self) -> None:
+        """
+        Upload dataframe to Snowflake
+        """
+        try:
+            dataframe_uploader(
+                dataframe=self.identify_mnpi_data,
+                engine=self.utils.loader_engine,
+                table_name=self.table_name,
+                schema=self.schema_name,
+            )
+        except Exception as e:
+            error(f"Error uploading to Snowflake: {e.__class__.__name__} - {e}")
+            sys.exit(1)
+
     @property
     def scope(self):
         """
@@ -435,52 +454,67 @@ class DataClassification:
         on DATABASE, SCHEMA and TABLE level
         """
         with open(
-            file=self.specification_file, mode="r", encoding=self.encoding
+            file=self.specification_file, mode="r", encoding=self.utils.encoding
         ) as file:
             manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
 
         return manifest_dict
 
+    def execute_pii_system_classify_schema(self, tables: list) -> None:
+        """
+        Execute SYSTEM$CLASSIFY_SCHEMA procedure in the loop
+        """
+        for i, (database, schema) in enumerate(tables, start=1):
+            info(f"{i}/{len(tables)} Schema to classify: {database}.{schema}")
+            query = self.get_pii_classify_schema_query(database=database, schema=schema)
+            self.utils.execute_query(query=query)
+
     def classify(
-        self, date_from: str, unset: str = "FALSE", tagging_type: str = "INCREMENTAL"
+        self,
+        date_from: str,
+        unset: str = "FALSE",
+        tagging_type: str = "INCREMENTAL",
+        database: str = "",
     ):
         """
         Routine to classify all data
         using stored procedure
         """
-        info("START classify.")
-        query = self.classify_query(
-            date_from=date_from, unset=unset, tagging_type=tagging_type
-        )
-        info(f"....Call stored procedure: {query}")
-        self.__execute_query(query=query)
+        info(f"START classify. date_from: {date_from}")
+        info(f"............... unset: {unset}")
+        info(f"............... tagging_type: {tagging_type}")
+        info(f"............... database: {database}")
+
+        query: str = ""
+
+        if database == "MNPI":
+            query = self.classify_mnpi_data(
+                date_from=date_from,
+                unset=unset,
+                tagging_type=tagging_type,
+            )
+
+            info("....Call stored procedure for the MNPI classification")
+            self.utils.execute_query(query=query)
+
+        else:
+            query = self.pii_table_list_query(database=getattr(self, database.lower()))
+            table_list = self.utils.get_pii_table_list(query=query)
+
+            if table_list:
+                self.execute_pii_system_classify_schema(tables=table_list)
+            else:
+                info(
+                    f"....No table for classification in the schema: {getattr(self, database.lower())}"
+                )
         info("END classify.")
-
-    def __execute_query(self, query: str):
-        """
-        Execute SQL query
-        """
-        try:
-            connection = self.__connect()
-            res = connection.execute(statement=query)
-
-            # Logging stored procedure result
-            if res:
-                for r in res:
-                    info(f"Return message: {r}")
-        except Exception as e:
-            error(f".... ERROR with executing query:  {e.__class__.__name__} - {e}")
-            error(f".... QUERY: {query}")
-            sys.exit(1)
-        finally:
-            self.__dispose()
 
     def upload_pii_data(self):
         """
         Upload PII data
         """
         info(".... START upload_pii_data.")
-        self.__execute_query(query=self.pii_query)
+        self.utils.execute_query(query=self.pii_query)
         info(".... END upload_pii_data.")
 
     def delete_data(self):
@@ -488,7 +522,7 @@ class DataClassification:
         Delete data from the table
         """
         info(".... START deleting data.")
-        self.__execute_query(query=self.delete_data_query)
+        self.utils.execute_query(query=self.delete_data_query)
         info(".... END deleting data.")
 
     def update_mnpi_metadata(self):
@@ -497,7 +531,7 @@ class DataClassification:
         as initially we do not have it
         """
         info(".... START update MNPI metadata.")
-        self.__execute_query(query=self.mnpi_metadata_update_query)
+        self.utils.execute_query(query=self.mnpi_metadata_update_query)
         info(".... END update MNPI metadata.")
 
     def upload_mnpi_data(self):
@@ -505,7 +539,7 @@ class DataClassification:
         Upload MNPI data
         """
         info(".... START upload_mnpi_data.")
-        self.upload_to_snowflake()
+        self.__upload_to_snowflake()
         self.update_mnpi_metadata()
         info(".... END upload_mnpi_data.")
 

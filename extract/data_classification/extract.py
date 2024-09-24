@@ -17,6 +17,7 @@ def run_extract(
     unset: str = "FALSE",
     tagging_type: str = "INCREMENTAL",
     incremental_load_days: int = 90,
+    database: str = "",
 ):
     """
     Run process
@@ -24,7 +25,6 @@ def run_extract(
 
     data_classification = DataClassification(
         tagging_type=tagging_type,
-        mnpi_raw_file="mnpi_models.json",
         incremental_load_days=incremental_load_days,
     )
     if not date_from:
@@ -37,7 +37,10 @@ def run_extract(
         data_classification.extract()
     if operation == "CLASSIFY":
         data_classification.classify(
-            date_from=date_from, unset=unset, tagging_type=tagging_type
+            date_from=date_from,
+            unset=unset,
+            tagging_type=tagging_type,
+            database=database,
         )
 
 

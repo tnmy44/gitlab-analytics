@@ -85,7 +85,7 @@ default_args = {
 }
 
 
-def get_command(task: str):
+def get_command(task: str, target_database: str = "") -> str:
     """
     Get the execute command
     """
@@ -102,7 +102,7 @@ def get_command(task: str):
 
     commands = {
         "extract_classification": f"""{dbt_install_deps_nosha_cmd} && dbt --quiet ls --target prod --models tag:mnpi+ --exclude tag:mnpi_exception config.database:$SNOWFLAKE_PREP_DATABASE --output json > mnpi_models.json; ret=$?; python ../../extract/data_classification/extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}; exit $ret""",
-        "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days}""",
+        "execute_classification": f"""{clone_repo_cmd} && cd analytics/extract/data_classification/ && python3 extract.py --operation={operation} --date_from=$RUN_DATE --unset={unset} --tagging_type={tagging_type} --incremental_load_days={incremental_load_days} --database={target_database}""",
     }
 
     return commands[task]
@@ -112,40 +112,52 @@ dag = DAG(
     DAG_NAME,
     default_args=default_args,
     schedule_interval=None,
-    concurrency=1,
+    concurrency=2,
     description=DAG_DESCRIPTION,
     catchup=False,
 )
 
-task_id = task_name = "extract_classification"
+extraction_task_id = extraction_task_name = "extract_classification"
 
 
 extract_classification = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=task_id,
-    name=task_name,
+    task_id=extraction_task_id,
+    name=extraction_task_name,
     secrets=secrets,
     env_vars=pod_env_vars,
-    arguments=[get_command(task=task_id)],
+    arguments=[get_command(task=extraction_task_id)],
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
     dag=dag,
 )
 
-task_id = task_name = "execute_classification"
 
-execute_classification = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id=task_id,
-    name=task_name,
-    secrets=secrets,
-    env_vars=pod_env_vars,
-    arguments=[get_command(task=task_id)],
-    affinity=get_affinity("extraction"),
-    tolerations=get_toleration("extraction"),
-    dag=dag,
-)
+def get_task(target_database: str):
+    """
+    Generate task for classification separate per database
+    for a better performance
+    """
+    task_id = task_name = f"execute_classification_{target_database}"
 
-extract_classification >> execute_classification
+    return KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=task_id,
+        name=task_name,
+        secrets=secrets,
+        env_vars=pod_env_vars,
+        arguments=[
+            get_command(task="execute_classification", target_database=target_database)
+        ],
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
+        dag=dag,
+    )
+
+
+TASK_DATABASES = ["MNPI", "RAW", "PREP", "PROD"]
+
+for database in TASK_DATABASES:
+    extract_classification >> get_task(target_database=database)
