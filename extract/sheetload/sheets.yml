@@ -379,7 +379,6 @@ sheets:
     owner: '@rakhireddy'
     tabs: 
       - cost_centers_historical
-
   - name: case_creation_data
     owner: '@mfleisher'
     tabs: 
