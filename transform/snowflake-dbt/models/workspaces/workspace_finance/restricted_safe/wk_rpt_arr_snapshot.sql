@@ -287,4 +287,4 @@ final_test AS (
 )
 
 SELECT *
-FROM parent_account_arrs
+FROM final_test
