@@ -250,7 +250,8 @@
       subscriptions_for_all.ATR_term_end_date,
       subscriptions_for_all.dim_crm_account_id, 
       subscriptions_for_all.subscription_name,
-      subscriptions_for_all.zuora_renewal_subscription_name AS renewal_subscription_name, 
+      subscriptions_for_all.zuora_renewal_subscription_name AS renewal_subscription_name,
+      subscriptions_for_all.term_end_month AS renewal_month, 
       prep_charge.quantity, 
       prep_charge.ARR
     FROM subscriptions_for_all    
@@ -294,6 +295,7 @@
 
       --Other attributes
       subscription_charges.renewal_subscription_name  AS renewal_subscription_name,
+      subscription_charges.renewal_month              AS renewal_month,
       subscription_charges.parent_crm_account_name    AS parent_crm_account_name,
 
       --User info
@@ -314,7 +316,7 @@
     FROM subscription_charges 
     LEFT JOIN dim_date
      ON subscription_charges.ATR_term_end_date = dim_date.date_day 
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
 
 )
 
@@ -324,7 +326,7 @@ cte_ref="final",
 created_by="@snalamaru",
 updated_by="@snalamaru",
 created_date="2024-04-01",
-updated_date="2024-09-18"
+updated_date="2024-09-24"
 ) }}
 
 
