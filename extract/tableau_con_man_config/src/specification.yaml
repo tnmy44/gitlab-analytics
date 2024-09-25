@@ -2187,6 +2187,7 @@ groups:
 # ==========================================
 
   - group_name: Test Permissions Group
+  - group_name: Pulse Access Group
 
 # ==========================================
 # Users
@@ -2763,6 +2764,7 @@ users:
     groups:
       - General All Access
       - General SAFE Access
+      - Pulse Access Group
   - user_name: anganga
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5539,6 +5541,7 @@ users:
       - Data Team All Access
       - General All Access
       - General SAFE Access
+      - Pulse Access Group
   - user_name: joshua
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7380,6 +7383,7 @@ users:
       - Go To Market Project Lead
       - Production Project Lead
       - Resources Project Lead
+      - Pulse Access Group
   - user_name: nmcdonald
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7483,6 +7487,7 @@ users:
       - Production Project Lead
       - Resources Project Lead
       - Test Permissions Group
+      - Pulse Access Group
   - user_name: nshah
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10228,6 +10233,37 @@ users:
       - General All Access
       - General SAFE Access
   - user_name: squadri
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: dhom
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access
+  - user_name: akoch
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: dward
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: nhouston
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: srank
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
