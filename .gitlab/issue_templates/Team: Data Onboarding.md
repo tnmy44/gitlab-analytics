@@ -3,15 +3,15 @@
 Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
 
 ## Table of Contents
-- [Getting Started](#getting-started)
-- [Access Requests](#access-requests)
-- [Slack Channels](#slack-channels)
-- [Team Introductions](#team-introductions)
+- [Getting Started](#getting-started-)
+- [Access Requests](#access-requests-)
+- [Slack Channels](#slack-channels-)
+- [Team Introductions](#team-introductions-)
 - [Computer Set Up](#computer-set-up)
-- [Data Stack](#data-stack)
-- [Data Operations](#data-operations)
-- [Important Data Sets](#important-data-sets)
-- [Supporting Information](#supporting-information)
+- [Data Stack](#data-stack-)
+- [Data Operations](#data-operations-)
+- [Important Data Sets](#important-data-sets-)
+- [Supporting Information](#supporting-information-)
 
 ## Getting Started <!-- The purpose of this section is to give the new team member a foundation upon which the subsequent sections build. -->
 
@@ -48,34 +48,35 @@ You will need access to several groups, applications, tools, and data sources fo
 
 **Note:** Manager, many if not all of these [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) can be done with a single issue.  Please review this section for all relevant requests and combine as many of them as possible.
 
-| Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Method |
-| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ |
-|  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | Access Request |
-|  Tableau |  Creator | Creator  | Creator  | Explorer  | Optional | Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858) |
-|  Stitch |  No | No  | No | No | Yes | ? |
-|  Fivetran | No  | No  | No | No | Yes | [Instructions](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
-|  Airflow |  No | Analyst | Admin| Analyst | Admin | |
-|  GCP group: `analytics`| No | No | No | Yes  | Yes  | Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
+| Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Data Governance & Quality Analyst|Method |
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ | ------ | 
+|  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | Yes |Access Request |
+|  Tableau |  Creator | Creator  | Creator  | Explorer  | Optional | Creator |Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858) |
+|  Stitch |  No | No  | No | No | Yes |No | ? |
+|  Fivetran | No  | No  | No | No | Yes | No | [Instructions](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
+|  Airflow |  No | Analyst | Admin| Analyst | Admin |Analyst| |
+|  GCP group: `analytics`| No | No | No | Yes  | Yes  |No| Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Slack alias: `@data-analysts` | No | Yes | No | Yes | No |  PeopleOps Onboarding |
-|  Slack alias: `@data-engineers` | No | No | No | No | Yes |  PeopleOps Onboarding |
-|  Slack alias: `@analytics-engineers` | No | No | Yes | No | No |  PeopleOps Onboarding |
-|  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
-|  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
-|  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
-|  Slack alias: `engineeringanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
-|  Slack alias: `datacollaborationtriage` | No | Yes | No | No | No |  PeopleOps Onboarding |
-|  Slack alias: `dataplatformtriage` | No | No | No | No | Yes |  PeopleOps Onboarding |
-|  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer |
-|  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Namespace: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer | ? |
-| daily Geekbot standup  | No | Optional | Optional | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
-|  Data Program calendar |  Yes | Yes | Yes | Yes | Yes | ?  |
-|  Lucidchart folder: `Data Team` | Yes |Yes | Yes | Yes | Yes |  ? |
-|  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
-|  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |  ? |
-|  Service Account Credentials: Google Cloud | No | No | ? | No | Yes | ? |
-|  Monte Carlo Data | No | No | Editor | Editor | Editor | Access Request | 
+|  Slack alias: `@data-analysts` | No | Yes | No | Yes | No | Yes |PeopleOps Onboarding |
+|  Slack alias: `@data-engineers` | No | No | No | No | Yes | No |PeopleOps Onboarding |
+|  Slack alias: `@analytics-engineers` | No | No | Yes | No | No | No | PeopleOps Onboarding |
+|  Slack alias: `@datagovernanceteam` | No | No| No | No | No | Yes | PeopleOps Onboarding |
+|  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
+|  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
+|  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
+|  Slack alias: `engineeringanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
+|  Slack alias: `datacollaborationtriage` | No | Yes | No | No | No | No |PeopleOps Onboarding |
+|  Slack alias: `dataplatformtriage` | No | No | No | No | Yes | No | No|PeopleOps Onboarding |
+|  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer | Developer |
+|  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes | Yes |PeopleOps Onboarding |
+|  Namespace: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer| Developer | ? |
+| daily Geekbot standup  | No | Optional | Optional | Yes | Yes | Yes|[Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
+|  Data Program calendar |  Yes | Yes | Yes | Yes | Yes | Yes| ?  |
+|  Lucidchart folder: `Data Team` | Yes |Yes | Yes | Yes | Yes | Yes |? |
+|  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes | Yes |? |
+|  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes | Yes |? |
+|  Service Account Credentials: Google Cloud | No | No | ? | No | Yes |No |? |
+|  Monte Carlo Data | No | No | Editor | Editor | Editor | Editor | Access Request | 
 
 - [ ] Manager: Complete access requests for the new team member based on there assigned responsibilities following the provided method.
     - [ ] Snowflake - Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
@@ -111,18 +112,19 @@ There are many slack channels for communication of data team needs and informati
 
 - [ ] Join the Slack channels appropriate for your role:
 
-| Channel | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | 
-| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
-| `data` | Yes | Yes | Yes | Yes | Yes | 
-| `data-lounge` | Yes | Yes | Yes | Yes | Yes |
-| `data-daily` | No | Yes | Yes | Yes | Yes |
-| `data-weekly` | No | Yes | Yes | Yes | Yes |
-| `data-triage` | No | Yes | Yes | Yes | Yes |
-| `data-engineering` | No | Yes | Yes | Yes | Yes |
-| `analytics-pipelines` | No | No | Yes | No | No |
-| `data-prom-alerts` | No | No | No | No | Yes |
-| `bt-data-science` | No | No | No | Yes | No |
-| `data-pipelines` | No | No | No | No | Yes |
+| Channel | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Data Governance & Quality Analyst|
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: |  :-----------: | 
+| `data` | Yes | Yes | Yes | Yes | Yes | Yes|
+| `data-lounge` | Yes | Yes | Yes | Yes | Yes | Yes|
+| `data-daily` | No | Yes | Yes | Yes | Yes | Yes|
+| `data-weekly` | No | Yes | Yes | Yes | Yes | Yes|
+| `data-triage` | No | Yes | Yes | Yes | Yes | Yes|
+| `data-engineering` | No | Yes | Yes | Yes | Yes | Yes|
+| `analytics-pipelines` | No | No | Yes | No | No | No|
+| `data-prom-alerts` | No | No | No | No | Yes | No|
+| `bt-data-science` | No | No | No | Yes | No | No|
+| `data-pipelines` | No | No | No | No | Yes | No|
+| `data-governance-quality-team` | No | No | No | No | No | Yes|
 
 </details>
 
