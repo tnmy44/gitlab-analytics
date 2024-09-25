@@ -60,7 +60,7 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Slack alias: `@data-analysts` | No | Yes | No | Yes | No | Yes |PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | No | No | Yes | No |PeopleOps Onboarding |
 |  Slack alias: `@analytics-engineers` | No | No | Yes | No | No | No | PeopleOps Onboarding |
-|  Slack alias: `@datagovernanceteam` | No | No| No | No | No | Yes | PeopleOps Onboarding |
+|  Slack alias: `@data-governance` | No | No| No | No | No | Yes | PeopleOps Onboarding |
 |  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
 |  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
 |  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No | No |PeopleOps Onboarding |
