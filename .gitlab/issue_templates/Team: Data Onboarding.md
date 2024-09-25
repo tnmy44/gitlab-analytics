@@ -7,7 +7,7 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 - [Access Requests](#access-requests-)
 - [Slack Channels](#slack-channels-)
 - [Team Introductions](#team-introductions-)
-- [Computer Set Up](#computer-set-up)
+- [Computer Set Up](#computer-set-up-)
 - [Data Stack](#data-stack-)
 - [Data Operations](#data-operations-)
 - [Important Data Sets](#important-data-sets-)
