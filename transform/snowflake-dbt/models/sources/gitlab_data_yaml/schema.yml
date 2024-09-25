@@ -32,7 +32,7 @@ models:
       - name: feature_category
 
   - name: geozones_yaml_source
-    description: Source layer for extracting and cleaning data from [geo_zones.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/master/data/geo_zones.yml)
+    description: Source layer for extracting and cleaning data from [geo_zones.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/main/data/geo_zones.yml)
     columns:
       - name: unique_key
       - name: geozone_title
