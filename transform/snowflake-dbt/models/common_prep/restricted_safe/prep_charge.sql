@@ -198,6 +198,7 @@
       DATEDIFF(month, zuora_rate_plan_charge.effective_start_month::DATE, zuora_rate_plan_charge.effective_end_month::DATE)
                                                                         AS charge_term,
       zuora_rate_plan_charge.billing_period,
+      zuora_rate_plan_charge.specific_billing_period,
 
       --Additive Fields
       zuora_rate_plan_charge.mrr,
@@ -332,6 +333,7 @@
       revenue_contract_line_updated_date                                                    AS charge_updated_date,
       DATEDIFF('month', effective_start_month::DATE, effective_end_month::DATE)             AS charge_term,
       NULL                                                                                  AS billing_period,
+      NULL                                                                                  AS specific_billing_period,
       manual_charges_prep.mrr                                                               AS mrr,
       NULL                                                                                  AS previous_mrr_calc,
       NULL                                                                                  AS previous_mrr,
