@@ -218,14 +218,14 @@ Filters:
         installation_subscription.dim_crm_account_ids
         ),
       ' ,'
-      )                                                                       AS enabled_by_dim_crm_account_ids_at_event_time,
+      )                                                                       AS enabled_by_dim_crm_account_id_at_event_time,
     ARRAY_TO_STRING(
       COALESCE(
         namespace_subscription.enabled_by_crm_account_names,
         installation_subscription.crm_account_names
         ),
       ' ,'
-      )                                                                       AS enabled_by_crm_account_names_at_event_time,
+      )                                                                       AS enabled_by_crm_account_name_at_event_time,
     COALESCE(
       namespace_subscription.enabled_by_product_tier_names,
       installation_subscription.product_tier_names
@@ -236,21 +236,21 @@ Filters:
         add_on_installation_sub_product.add_on_dim_subscription_ids
         ),
       ' ,'
-      )                                                                       AS enabled_by_add_on_dim_subscription_ids_at_event_time,
+      )                                                                       AS enabled_by_add_on_dim_subscription_id_at_event_time,
     ARRAY_TO_STRING(
       COALESCE(
         add_on_namespace_sub_product.enabled_by_add_on_dim_crm_account_ids,
         add_on_installation_sub_product.add_on_dim_crm_account_ids
         ),
       ' ,'
-      )                                                                       AS enabled_by_add_on_dim_crm_account_ids_at_event_time,
+      )                                                                       AS enabled_by_add_on_dim_crm_account_id_at_event_time,
     ARRAY_TO_STRING(
       COALESCE(
         add_on_namespace_sub_product.enabled_by_add_on_product_rate_plan_names,
         add_on_installation_sub_product.add_on_product_rate_plan_names
         ),
       ' ,'
-      )                                                                       AS enabled_by_add_on_product_rate_plan_names_at_event_time,
+      )                                                                       AS enabled_by_add_on_product_rate_plan_name_at_event_time,
       COALESCE(
         namespace_subscription.enabled_by_oss_or_edu_rate_plan,
         installation_subscription.oss_or_edu_rate_plans
