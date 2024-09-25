@@ -4116,6 +4116,14 @@ roles:
         - dev_m
         - loading
         - reporting
+        - lab_transforming_xs
+        - lab_transforming_s
+        - lab_transforming_m
+        - lab_transforming_l
+        - lab_transforming_xl
+        - lab_transforming_2xl
+        - lab_transforming_3xl
+        - lab_transforming_4xl
       owns:
         databases:
           - juwong_prep
@@ -7386,6 +7394,22 @@ warehouses:
       size: x-small
   - gitlab_postgres:
       size: x-small
+  - lab_transforming_xs:
+      size: x-small
+  - lab_transforming_s:
+      size: small
+  - lab_transforming_m:
+      size: medium
+  - lab_transforming_l:
+      size: large
+  - lab_transforming_xl:
+      size: x-large
+  - lab_transforming_2xl:
+      size: 2-x-large
+  - lab_transforming_3xl:
+      size: 3-x-large
+  - lab_transforming_4xl:
+      size: 4-x-large
   - loading:
       size: x-small
   - loading_m:
