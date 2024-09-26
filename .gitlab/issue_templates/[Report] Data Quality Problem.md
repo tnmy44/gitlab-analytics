@@ -59,6 +59,7 @@ The Data Quality Problem reporter should review all questions in the below secti
 
 ### Is this issue related to and similar to any other existing DQ issues from [Product Usage Data Quality Issues Epic](https://gitlab.com/groups/gitlab-data/-/epics/216)? If yes, please provide Issue links.
 
+
 ### Is this a missing data problem? 
 
 - [ ] Yes (If yes, then when was the last time(month) the data was available. Please provide screenshots.)
