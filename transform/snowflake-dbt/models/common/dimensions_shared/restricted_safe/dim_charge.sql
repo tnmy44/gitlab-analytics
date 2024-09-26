@@ -26,6 +26,7 @@ WITH prep_charge AS (
       prep_charge.charge_updated_date,
       prep_charge.charge_term,
       prep_charge.billing_period,
+      prep_charge.specific_billing_period,
 
       --ARR Analysis Framework
       prep_charge.type_of_arr_change,
@@ -52,5 +53,5 @@ WITH prep_charge AS (
     created_by="@iweeks",
     updated_by="@apiaseczna",
     created_date="2021-05-10",
-    updated_date="2024-07-18"
+    updated_date="2024-09-25"
 ) }}
