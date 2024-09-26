@@ -227,7 +227,7 @@ final AS (
     COALESCE(
       COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bbug::*([^,]*)'), 'undefined') = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
       AND internal_issues.namespace_id NOT IN (5821789, 1819570, 1986712, 2139148, 4955423, 3786502)
-      AND internal_issues.project_id != 52764962 --change requested by Ethan, this is a test project
+      AND internal_issues.project_id != 57956674 --change requested by https://gitlab.com/gitlab-data/product-analytics/-/issues/2008#note_2118868936
       AND NOT ARRAY_CONTAINS('feature'::VARIANT, internal_issues.labels)
       AND NOT ARRAY_CONTAINS('test'::VARIANT, internal_issues.labels)
       AND NOT ARRAY_CONTAINS('securitybot::ignore'::VARIANT, internal_issues.labels)
