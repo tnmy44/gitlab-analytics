@@ -6,6 +6,9 @@ Instructions:
 
 The Data Quality Problem reporter should review all questions in the below section of the issue template and provide responses for all applicable questions. This will help the Team to validate the Data Quality problem and determine what is the right approach to resolve the problem.
 
+### What is the problem?
+
+
 ### Where did you discover this data quality problem? 
 
 
