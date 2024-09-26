@@ -573,7 +573,20 @@ final AS (
   --DATES
     account_summary.true_event_date,
     snapshot_dates.event_snapshot_type,
-    snapshot_dates.date_day as snapshot_date,
+    snapshot_dates.date_day                 AS snapshot_date,
+    dim_date.fiscal_quarter_name_fy         AS event_fiscal_quarter_fy,
+    dim_date.first_day_of_month             AS event_date_month,
+    dim_date.day_of_month                   AS event_day_of_month,
+    dim_date.month_name                     AS event_month_name,
+    dim_date.month_of_fiscal_year           AS event_month_of_fiscal_year,
+    dim_date.fiscal_month_name_fy           AS event_fiscal_month_name_fy,
+    dim_date.day_of_fiscal_quarter          AS event_day_of_fiscal_quarter,
+    dim_date.day_of_fiscal_year             AS event_day_of_fiscal_year,
+    dim_date.fiscal_quarters_ago            AS event_fiscal_quarters_ago,
+    dim_date.current_day_of_month,
+    dim_date.current_day_of_fiscal_quarter,
+    dim_date.current_day_of_fiscal_year,
+    dim_date.current_fiscal_quarter_name_fy,
     opportunity_campaign_snapshot_base.pipeline_created_date,
   --ACCOUNT FIELDS 
     opportunity_campaign_snapshot_base.account_has_attended_flag,
@@ -707,6 +720,9 @@ final AS (
 
     LEFT JOIN mart_crm_account
     ON opportunity_campaign_snapshot_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
+
+    LEFT JOIN dim_date
+    ON account_summary.true_event_date = dim_date.date_day
 )
 
 
