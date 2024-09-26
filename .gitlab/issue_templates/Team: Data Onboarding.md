@@ -138,14 +138,14 @@ Your computer set up is critical to working efficiently.  This section will help
 
 - [ ] Set up your machine for everyday use based on your role and the steps outlined in the table below
 
-| Step | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | 
-| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
-| [Core Steps](#core-steps) | Yes | Yes | Yes | Yes | Yes | 
-| [Command Line Interface](#command-line-interface) | No | No | No | No | Yes |
-| [Google Cloud](#google-cloud) | No | No | No | Yes | Yes |
-| [Jupyter](#jupyter) | No | No | No | Yes | No |
-| [Airflow local development environment](#airflow) | No | No | No | No | Yes |
-| [Optional Steps](#optional-steps) | No | No | No | Yes | Yes |
+| Step | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer |  Data Governance & Quality Analyst | 
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | :-----------: | 
+| [Core Steps](#core-steps) | Yes | Yes | Yes | Yes | Yes | Yes|
+| [Command Line Interface](#command-line-interface) | No | No | No | No | Yes | No|
+| [Google Cloud](#google-cloud) | No | No | No | Yes | Yes | No|
+| [Jupyter](#jupyter) | No | No | No | Yes | No | No|
+| [Airflow local development environment](#airflow) | No | No | No | No | Yes | No|
+| [Optional Steps](#optional-steps) | No | No | No | Yes | Yes | No|
 
 
 ### Core Steps
