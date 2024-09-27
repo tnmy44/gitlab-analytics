@@ -10,3 +10,7 @@ WITH source AS (
 
 SELECT *
 FROM source
+
+
+
+sfdc_subscription_renewal_case_creation
